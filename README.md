@@ -13,3 +13,8 @@ Looking for help to translate [Obs2mk](https://github.com/Mara-Li/obsidian_mkdoc
 
 ## Readme 
 - [ ] Add link to repo template
+
+## commands
+- [ ] right click on file menu-> share filename 
+- [ ] commands modal : Share filename 
+- [ ] commands modal : Share every file
