@@ -1,4 +1,4 @@
- Mkdocs Obsidian is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault. 
+Obsidian's Mkdocs Publication is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault. 
  
  <h1 align="center"><a href="https://mara-li.github.io/mkdocs_obsidian_template">Documentations & show case</a></center>
  
