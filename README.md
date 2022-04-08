@@ -199,8 +199,7 @@ To create a link, you need to configure :
 ![image](https://user-images.githubusercontent.com/30244939/162501298-892a5819-e720-4928-be39-0c8c5570c863.png)
 
 So, in the end, a menu will appear on file with `share: true` and a `category` configured. This menu is on the left click and the file-menu. You can quickly copy a link from there, like a Google or notion sharing link! 
-![image](https://user-images.githubusercontent.com/30244939/162501356-be834b5b-c256-481a-9ccf-3f6b0f850d53.png)
-
+![https://www.loom.com/share/88c64da2ba194e219578d5911fb8e08d](https://mara-li.github.io/mkdocs_obsidian_template/assets/img/demo.gif)
 
 [^3]: You can found the link in Repository settings > Pages. 
 [^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or with [downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
