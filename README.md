@@ -1,20 +1,164 @@
-Looking for help to translate [Obs2mk](https://github.com/Mara-Li/obsidian_mkdocs) to JS-TS-Obsidian Plugins
+ Mkdocs Obsidian is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault. 
+ 
+ <h1 align="center"><a href="https://mara-li.github.io/mkdocs_obsidian_template">Documentations & show case</a></center>
+ 
+ # TLDR
+ 1. Install the plugins through Obsidian Community or [BRAT](https://github.com/TfTHacker/obsidian42-brat)
+ 2. [Template](https://github.com/Mara-Li/mkdocs_obsidian_template) the blog and configure it 
+ 3. Configure the plugin's options
+ 4. Add `share: true` in Obsidian's note frontmatter 
+ 5. Customize (or not) the `category` key in Obsidian's note frontmatter. 
+ 6. Run the commands throught the file menu or commands palette.
 
-## Todo 
-### Options
-- [ ] Github Token https://github.com/settings/tokens/new?scopes=repo
-- [ ] Github repo name
-- [ ] Github username
+# Quick installation tutorial
+1. Click on [use this template](https://github.com/Mara-Li/mkdocs_obsidian_template/generate)[^1]
+2. Use the name of your choice
+3. Get your [Github Token here](https://github.com/settings/tokens/new?scopes=repo)[^2]. The correct settings should already be applied. If you don't want to generate this every few months, choose the "No expiration" option. Click the "Generate token" button, and copy the token you are presented with on the next page.
+4. In Obsidian fill the options for mkdocs-publish :
+	- Repo name
+	- Your github username
+	- The github token (copyed from earlier)
+	- The share key
 
-## Other
-- [ ] :warning: Publish to github
-- [ ] Convert obs2mk python → JS
-- [ ] Notice for every error
 
-## Readme 
-- [ ] Add link to repo template
+# The blog
+## Creation
 
-## commands
-- [ ] right click on file menu-> share filename 
-- [ ] commands modal : Share filename 
-- [ ] commands modal : Share every file
+In your new `publish_blog` folder, you will spot a `mkdocs.yml`. This file allows you to customize your blog! The most important to edit :
+1. `site_name` 
+2. `site_description`
+3. `site_url` (critical) : By default, it's `https://github_username.io/repo_name`[^3]
+
+To edit the logo and the favicon, first put the chosen file in `assets/logo`, and change `logo` and `favicon` :
+1. `logo: assets/logo/logo_name.png`
+2. `favicon: assets/logo/favicon.png`
+
+You can customize :
+- Font
+- Color scheme, palette, icons 
+- Language  
+
+lso, don't forget to delete the documentation folder, the contents in assets and clean the notes folder!
+
+[Check the documentation to get more information](https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/)
+
+You don't need to touch anything in `features` ; `markdown_extensions…`
+
+## Local testing (optional)
+
+To run locally the blog, you need to install the requirements and run `mkdocs serve`.
+```
+cd publish_blog
+pip install -r requirements.txt
+mkdocs serve
+```
+
+The blog will be published through [GitHub Page](https://pages.github.com/) using the `gh-page` branch. Everything is already configured by the template for that.
+
+## Customization
+### Custom attributes
+
+You can create [Inline Markdown Attribute](https://python-markdown.github.io/extensions/attr_list/) using hashtags in Obsidian. For example, to align some text to right :
+1. Add 
+```css
+#right {
+ display: inline-block;
+ width: 100%;
+ text-align: right;
+ font-weight: normal;
+}
+```
+2. Add `#right` on the last part of a line : 
+```md
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. In mollis, libero porttitor gravida accumsan, justo metus pulvinar nulla, vitae dictum odio ligula non nisl. Vivamus id venenatis nulla. Nullam sed euismod ligula. Pellentesque tempor elit felis, lobortis vulputate risus gravida et. Curabitur auctor sed libero nec consectetur. Nam placerat rhoncus risus, euismod sagittis eros bibendum ac. Maecenas tellus libero, porttitor ac purus sit amet, viverra suscipit dolor. Proin id nisl velit. Ut at tincidunt libero, ac pharetra mi. Integer non luctus nisi. #right
+```
+It will appear as: 
+
+![image](https://user-images.githubusercontent.com/30244939/162494417-5822c814-8103-4a08-a1b4-f123fad059f2.png)
+
+### Folder note
+
+You can create a folder note if you use a `category` front matter key that have the last folder with the same name as the file. For example : 
+`category: folder1/folder2/filename`. The file `filename` will be renamed `index` and the folder will be named `filename`.
+
+To support the citation and link to these page, you need to use an index key (cf [[usage#script-s-configuration]]).
+
+Some examples of citation and their transformation : 
+
+| In Obsidian               | In Publish            |
+| ------------------------- | --------------------- |
+| `[[Real File\|(i) Alias]]` | `[[index\|Alias]]`     |
+| `[[Real File\|(i)]]`       | `[[index\|Real File]]` |
+| `[(i) Alias](Real file) ` | `[Alias](index)`      |
+| `[(i)](real file)`        | `[real file](index)`  | 
+
+### Callout & Admonition
+
+
+he script support custom admonition. For that, you first need to edit [custom_attributes](https://github.com/Mara-Li/mkdocs_obsidian_template/blob/main/docs/assets/css/custom_attributes.css) with adding the support, as follow in [Admonition's docs](https://squidfunk.github.io/mkdocs-material/reference/admonitions/#customization).
+For example, to add a `dictionnary` admonition:
+```css
+:root {
+    --md-admonition-icon--dictionnary: url('data:image/svg+xml;charset=utf-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 22a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-6v7L9.5 7.5 7 9V2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12z"/></svg>')
+}
+.md-typeset .admonition.dictionnary,
+.md-typeset details.dictionnary {
+  border-color: rgb(43, 155, 70);
+}
+.md-typeset .dictionnary > .admonition-title,
+.md-typeset .dictionnary > .summary {
+  background-color: rgba(43, 155, 70, 0.1);
+  border-color: rgb(43, 155, 70);
+}
+.md-typeset .dictionnary > .admonition-title::before,
+.md-typeset .dictionnary > summary::before {
+  background-color: rgb(43, 155, 70);
+  -webkit-mask-image: var(--md-admonition-icon--dictionnary);
+          mask-image: var(--md-admonition-icon--dictionnary);
+
+```
+
+![image](https://user-images.githubusercontent.com/30244939/162494669-fc79a28d-165d-4054-b9e5-03273865e0fa.png)
+
+The `dictionnary` will be recognized, and converted !
+
+# OBS2MK — Github actions
+
+Obs2mk is a python script used here as a github actions. The plugin and the script relies on the frontmatter of the note you want to publish :
+
+1. `share: true` allow publishing the file
+2. `category` to choose where the file will be after conversion ; allowing categorization for the blog.
+    - `category: false` will **hide** the file from navigation.
+    - `category: hidden` will do the same.
+    - `category: folder1/folder2/` will move the file in `folder2`, under `folder1`
+    - `category: folder1/folder2/filename` will rename the file `index` and allow support of [section's index page](https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#section-index-pages)  
+3. `description` : Add a description to the file (for meta-tag sharing)[^4]
+4. `title` : Change the title in the navigation.
+5. `image` : Add an image for meta-tags sharing.[^4] It needs to be the name of the file, as `image.png`. 
+
+## Configuration
+The configuration's file of the actions is `.github-actions`, localized under the `source` folder on your blog. 
+Here, you can configure :
+1. The index keys 
+2. The default category folder name 
+3. the category frontmatter key. 
+
+Default is :
+```yml
+index_key=(i)
+default_blog=notes
+category_key=category
+```
+
+# The plugins
+
+Now, if everything is configured, you will have :
+- In file-menu, a option to publish one file. The file will be sended (with their image) in github, in the `source` folder.
+- In command palette (CTRL+P) you can also publish one file, or every file with `share: true` in their frontmatter.
+
+⚠️ The source folder will be cleaned after the conversion from the script !
+
+[^3]: You can found the link in Repository settings > Pages. 
+[^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or with [downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
+[^2]: You need to be connected to generate it. 
+[^5]: **Meta tags** are snippets of text that describe a page’s content; the meta tags don’t appear on the page itself, but only in the page’s source code. Meta tags are essentially little content descriptors that help tell search engines what a web page is about. [Source](https://www.wordstream.com/meta-tags)
