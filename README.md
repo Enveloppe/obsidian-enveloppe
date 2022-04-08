@@ -158,6 +158,50 @@ Now, if everything is configured, you will have :
 
 ⚠️ The source folder will be cleaned after the conversion from the script !
 
+# Limitations
+- You need to have a cleaned arborescence with **unique name file**. No worry about the display in blog ; the `title` key in frontmatter will change it, so you can have a `ezarezozre` name and use a good title like `reading book`. 
+- I prefer to encourage you to use the `shortlinks` option in obsidian's link option.
+- Obsiously, no obsidian's plugin will work.
+- No graph view
+- index ([from folder-note](#folder-note)) won't be deleted.
+- The github action will don't move the file if you change the category key : you need to manually delete it to prevent duplicate. 
+
+# Update the template
+
+ Using a template (in place of fork) prevent to get the update I do sometimes. So, to keep an eye on it, you need to create a branch based on the template. 
+ 
+In the cloned folder, your blog, do : 
+```bash
+git remote add Template git@github.com:Mara-Li/mkdocs_obsidian_template.git
+git fetch Template
+git checkout -b template Template/main
+```
+To get the update :
+```bash
+git checkout template
+git pull
+```
+You can merge the branch, or just get the updated file with the checkout command : 
+```bash
+git checkout main
+git checkout template path/file/youwant 
+git add . && git commit -am "updated template" && git push
+```
+
+# Metacopy
+
+I choose to use [Metacopy](https://github.com/Mara-Li/obsidian-metacopy) to allow the rapid copy of the link to your blog.
+To create a link, you need to configure : 
+- `category` (you need to use the same from `category_key` from configuration) in **key**
+- Add your `set_url` in **base link**
+- Add the same `category` key in **key link**
+![image](https://user-images.githubusercontent.com/30244939/162501286-26746e15-0e31-4f5a-bc3d-f00c617da869.png)
+![image](https://user-images.githubusercontent.com/30244939/162501298-892a5819-e720-4928-be39-0c8c5570c863.png)
+
+So, in the end, a menu will appear on file with `share: true` and a `category` configured. This menu is on the left click and the file-menu. You can quickly copy a link from there, like a Google or notion sharing link! 
+![image](https://user-images.githubusercontent.com/30244939/162501356-be834b5b-c256-481a-9ccf-3f6b0f850d53.png)
+
+
 [^3]: You can found the link in Repository settings > Pages. 
 [^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or with [downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
 [^2]: You need to be connected to generate it. 
