@@ -1,4 +1,18 @@
-/* Sets all the text color to red! */
-body {
-    color: red;
+.obs2mk-status-view ul {
+    list-style-type: none;
+    position: relative;
+    margin-left: 5px;
+    margin-top: 0;
+    max-height: 250px;
+    overflow: auto;
+}
+
+.obs2mk-status-view h2 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.obs2mk-status-view .collapsable {
+    cursor: pointer;
+    margin-left: 10px;
 }
