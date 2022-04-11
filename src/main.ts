@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import {Notice, Plugin, TFile} from 'obsidian';
 import {
 	mkdocsSettingsTab,
 	mkdocsPublicationSettings,
@@ -6,42 +6,105 @@ import {
 } from "./settings";
 import {ShareStatusBar} from "./status_bar";
 import MkdocsPublish from "./publication";
+import {disablePublish} from './utils'
+
 
 export default class mkdocsPublication extends Plugin {
 	settings: mkdocsPublicationSettings;
-
 
 	async onload() {
 		console.log('Mkdocs Publication loaded');
 		await this.loadSettings();
 		this.addSettingTab(new mkdocsSettingsTab(this.app, this));
 
+		this.registerEvent(
+			this.app.workspace.on('file-menu', (menu, file:TFile) =>{
+				if (!disablePublish(this.app, this.settings, file)){
+					return false;
+				}
+					menu.addSeparator();
+					menu.addItem((item)=>{
+						item.setTitle("Share " + file.name + " on Mkdocs")
+							.setIcon("share")
+							.onClick(async()=>{
+								try {
+									const publish = new MkdocsPublish(this.app.vault, this.app.metadataCache, this.settings);
+									const publishSuccess = await publish.publish(file);
+									if (publishSuccess) {
+									new Notice("Successfully published "+ file.name +" to mkdocs.")
+									}
+								}catch (e) {
+									console.error(e);
+									new Notice("Error publishing to mkdocs.")
+								}
+							});
+					})
+					menu.addSeparator();
+			})
+		)
+
 		this.addCommand({
-			id: 'obs2mk-all',
+			id: 'obs2mk-one',
 			name: 'Share one note',
+			hotkeys:[],
+			checkCallback: (checking) => {
+				if (disablePublish(this.app, this.settings, this.app.workspace.getActiveFile())) {
+					if (!checking) {
+						try {
+							const {vault, workspace, metadataCache} = this.app;
+							const currentFile = workspace.getActiveFile();
+							const publish = new MkdocsPublish(vault, metadataCache, this.settings);
+							const publishSuccess = publish.publish(currentFile);
+							if (publishSuccess) {
+								new Notice("Successfully published to mkdocs.")
+							}
+						} catch (e) {
+							console.error(e);
+							new Notice("Error publishing to mkdocs.")
+						}
+					}
+					return true;
+				}
+				return false;
+			},
+		});
+		this.addCommand({
+			id: 'obs2mk-publish-all',
+			name: 'Share all marked notes',
 			callback: async () => {
+				const statusBarItems = this.addStatusBarItem();
 				try {
-					const {vault, workspace, metadataCache} = this.app;
-					const currentFile = workspace.getActiveFile();
-					if (!currentFile) {
-						new Notice("No file is open/active. Please open a file and try again.")
-						return;
-					}
-					if (currentFile.extension !== 'md') {
-						new Notice("The current file is not a markdown file. Please open a markdown file and try again.")
-						return;
-					}
+					const {vault, metadataCache} = this.app;
 					const publish = new MkdocsPublish(vault, metadataCache, this.settings);
-					const publishSuccess = await publish.publish(currentFile);
-					if (publishSuccess) {
-						new Notice("Successfully published to mkdocs.")
+					const sharedFiles = await publish.getSharedFiles();
+					const statusBar = new ShareStatusBar(statusBarItems, sharedFiles.length);
+					let errorCount = 0;
+					if (sharedFiles.length > 0) {
+						const publishedFiles = sharedFiles.map(file => file.name);
+						// upload list of published files in Source
+						const publishedFilesText = publishedFiles.toString();
+						await publish.uploadText('vault_published.txt', publishedFilesText);
+						for (let files = 0; files < sharedFiles.length; files++) {
+							try {
+								let file = sharedFiles[files]
+								statusBar.increment();
+								await publish.publish(file);
+							} catch {
+								errorCount++;
+								new Notice(`Unable to publish note ${sharedFiles[files].name}, skipping it`)
+							}
+						}
+						statusBar.finish(8000);
+						new Notice(`Successfully published ${publishedFiles.length - errorCount} notes to mkdocs.`);
 					}
 				} catch (e) {
-					console.error(e);
-					new Notice("Error publishing to mkdocs.")
+					statusBarItems.remove();
+					console.error(e)
+					new Notice('Unable to publish multiple notes, something went wrong.')
 				}
 			},
 		});
+
 	}
 	onunload() {
 		console.log('Mkdocs Publication unloaded');
