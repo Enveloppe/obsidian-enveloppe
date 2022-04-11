@@ -44,14 +44,14 @@ export default class MkdocsPublish {
 
 	getLinkedImage(file: TFile) {
 		const embed_files = app.metadataCache.getCache(file.path).embeds;
-		let image_list=[];
+		let image_list = [];
 		if (embed_files != undefined) {
 			for (const embed_file of embed_files) {
-			if (embed_file.link.endsWith(".png") || embed_file.link.endsWith(".jpg") || embed_file.link.endsWith(".jpeg") || embed_file.link.endsWith(".gif") || embed_file.link.endsWith(".svg") || embed_file.link.endsWith(".bmp")) {
-				image_list.push(embed_file.link);
+				if (embed_file.link.endsWith(".png") || embed_file.link.endsWith(".jpg") || embed_file.link.endsWith(".jpeg") || embed_file.link.endsWith(".gif") || embed_file.link.endsWith(".svg") || embed_file.link.endsWith(".bmp")) {
+					image_list.push(embed_file.link);
+				}
 			}
-		}
-		return image_list;
+			return image_list;
 		}
 		return [];
 	}
@@ -67,7 +67,7 @@ export default class MkdocsPublish {
 	}
 
 
-	async publish(file: TFile) {
+	async publish(file: TFile, one_file: boolean = false) {
 		const sharedkey = this.settings.shareKey;
 		const frontmatter = this.metadataCache.getCache(file.path).frontmatter;
 		if (!frontmatter || !frontmatter[sharedkey] || this.checkExcludedFolder(file)) {
@@ -82,54 +82,26 @@ export default class MkdocsPublish {
 					await this.uploadImage(image);
 				}
 			}
+			if (one_file) {
+				await this.uploadFolder();
+			}
 			return true;
 		} catch {
 			return false;
 		}
 	}
 
-	async uploadImage(filePath: string) {
-		const imageTFile = await this.vault.getAbstractFileByPath(filePath) as TFile;
-		const imageBin = await this.vault.readBinary(imageTFile);
-		const image64= arrayBufferToBase64(imageBin);
-		if (!this.settings.githubRepo) {
-			new Notice("Config error : You need to define a github repo in the plugin settings");
-			throw {};
+	async uploadFolder(){
+		console.log("hello")
+		const folder = await this.getSharedFiles();
+		if (folder.length > 0) {
+			const publishedFiles = folder.map(file => file.name);
+			const publishedFilesText = publishedFiles.toString();
+			await this.uploadText('vault_published.txt', publishedFilesText);
 		}
-		if (!this.settings.githubName) {
-			new Notice("Config error : You need to define your github username in the plugin settings");
-			throw {};
-		}
-		const octokit = new Octokit({
-			auth: this.settings.GhToken
-		});
-	const pathLib = require('path')
-		const path = `source/${pathLib.basename(filePath)}`;
-		const payload = {
-			owner: this.settings.githubName,
-			repo: this.settings.githubRepo,
-			path,
-			message: `Adding ${pathLib.basename(filePath)}`,
-			content: image64,
-			sha: '',
-		};
-		try {
-			const response = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-				owner: this.settings.githubName,
-				repo: this.settings.githubRepo,
-				path
-			});
-			if (response.status === 200 && response.data.type === "file") {
-				payload.sha = response.data.sha;
-			}
-		} catch (e) {
-			console.log(e)
-		}
-		payload.message = `Update note ${pathLib.basename(filePath)}`;
-		await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', payload);
 	}
 
-	async uploadText(filePath: string, text: string) {
+	async upload(filePath: string, content: string) {
 		if (!this.settings.githubRepo) {
 			new Notice("Config error : You need to define a github repo in the plugin settings");
 			throw {};
@@ -141,7 +113,6 @@ export default class MkdocsPublish {
 		const octokit = new Octokit({
 			auth: this.settings.GhToken
 		});
-		const contentBase64 = Base64.encode(text);
 		const pathLib = require('path')
 		const path = `source/${pathLib.basename(filePath)}`;
 		const payload = {
@@ -149,7 +120,7 @@ export default class MkdocsPublish {
 			repo: this.settings.githubRepo,
 			path,
 			message: `Adding ${pathLib.basename(filePath)}`,
-			content: contentBase64,
+			content: content,
 			sha: '',
 		};
 		try {
@@ -158,13 +129,29 @@ export default class MkdocsPublish {
 				repo: this.settings.githubRepo,
 				path
 			});
+			// @ts-ignore
 			if (response.status === 200 && response.data.type === "file") {
+				// @ts-ignore
 				payload.sha = response.data.sha;
+
 			}
 		} catch (e) {
 			console.log(e)
 		}
 		payload.message = `Update note ${pathLib.basename(filePath)}`;
 		await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', payload);
+	}
+
+	async uploadImage(filePath: string) {
+		const imageTFile = await this.vault.getAbstractFileByPath(filePath) as TFile;
+		const imageBin = await this.vault.readBinary(imageTFile);
+		const image64 = arrayBufferToBase64(imageBin);
+		await this.upload(filePath, image64);
+
+	}
+
+	async uploadText(filePath: string, text: string) {
+		const contentBase64 = Base64.encode(text);
+		await this.upload(filePath, contentBase64);
 	}
 }

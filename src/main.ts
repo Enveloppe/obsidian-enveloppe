@@ -31,7 +31,7 @@ export default class mkdocsPublication extends Plugin {
 									const publish = new MkdocsPublish(this.app.vault, this.app.metadataCache, this.settings);
 									const publishSuccess = await publish.publish(file);
 									if (publishSuccess) {
-									new Notice("Successfully published "+ file.name +" to mkdocs.")
+									new Notice("Successfully published "+ file.basename +" to mkdocs.")
 									}
 								}catch (e) {
 									console.error(e);
@@ -53,10 +53,10 @@ export default class mkdocsPublication extends Plugin {
 						try {
 							const {vault, workspace, metadataCache} = this.app;
 							const currentFile = workspace.getActiveFile();
-							const publish = new MkdocsPublish(vault, metadataCache, this.settings);
-							const publishSuccess = publish.publish(currentFile);
+							const publishFile = new MkdocsPublish(vault, metadataCache, this.settings);
+							const publishSuccess = publishFile.publish(currentFile, true);
 							if (publishSuccess) {
-								new Notice("Successfully published to mkdocs.")
+								new Notice("Successfully published "+ currentFile.basename +" to mkdocs.")
 							}
 						} catch (e) {
 							console.error(e);
@@ -64,8 +64,7 @@ export default class mkdocsPublication extends Plugin {
 						}
 					}
 					return true;
-				}
-				return false;
+				} return false;
 			},
 		});
 		this.addCommand({
