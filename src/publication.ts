@@ -19,9 +19,7 @@ export default class MkdocsPublish {
 	}
 
 	async getSharedFiles() {
-		console.log('load markdown')
 		const files = this.vault.getMarkdownFiles();
-		console.log('MD loaded')
 		const shared_File = [];
 		const sharedkey = this.settings.shareKey;
 		for (const file of files) {
@@ -38,12 +36,14 @@ export default class MkdocsPublish {
 	}
 
 	getLinkedImage(file: TFile) {
-		const embed_files = app.metadataCache.getCache(file.path).embeds;
+		const embed_files = this.metadataCache.getCache(file.path).embeds;
 		let image_list = [];
 		if (embed_files != undefined) {
 			for (const embed_file of embed_files) {
-				if (embed_file.link.endsWith(".png") || embed_file.link.endsWith(".jpg") || embed_file.link.endsWith(".jpeg") || embed_file.link.endsWith(".gif") || embed_file.link.endsWith(".svg") || embed_file.link.endsWith(".bmp")) {
-					image_list.push(embed_file.link);
+				const imageLink = this.metadataCache.getFirstLinkpathDest(embed_file.link, file.path);
+				const image_ext = imageLink.extension
+				if (image_ext.endsWith("png") || image_ext.endsWith("jpg") || image_ext.endsWith("jpeg") || image_ext.endsWith("gif") || image_ext.endsWith("svg") || image_ext.endsWith(".bmp")) {
+					image_list.push(imageLink);
 				}
 			}
 			return image_list;
@@ -72,7 +72,7 @@ export default class MkdocsPublish {
 		try {
 			const text = await this.vault.cachedRead(file);
 			const linked_image = this.getLinkedImage(file);
-			await this.uploadText(file.path, text);
+			await this.uploadText(file.path, text, file.name);
 			if (linked_image.length > 0) {
 				for (const image of linked_image) {
 					await this.uploadImage(image);
@@ -96,8 +96,7 @@ export default class MkdocsPublish {
 		}
 	}
 
-	async upload(filePath: string, content: string) {
-		new Notice('Starting upload')
+	async upload(filePath: string, content: string, title: string) {
 		if (!this.settings.githubRepo) {
 			new Notice("Config error : You need to define a github repo in the plugin settings");
 			throw {};
@@ -106,55 +105,43 @@ export default class MkdocsPublish {
 			new Notice("Config error : You need to define your github username in the plugin settings");
 			throw {};
 		}
-		new Notice('Upload ....')
 		const octokit = new Octokit({
 			auth: this.settings.GhToken
 		});
-		const pathLib = require('path')
-		const path = `source/${pathLib.basename(filePath)}`;
+		const path = `source/${title}`;
 		const payload = {
 			owner: this.settings.githubName,
 			repo: this.settings.githubRepo,
 			path,
-			message: `Adding ${pathLib.basename(filePath)}`,
+			message: `Adding ${title}`,
 			content: content,
 			sha: '',
 		};
-		new Notice('Get from repo....')
 		try {
 			const response = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
 				owner: this.settings.githubName,
 				repo: this.settings.githubRepo,
 				path
 			});
-			// @ts-ignore
 			if (response.status === 200 && response.data.type === "file") {
-				// @ts-ignore
 				payload.sha = response.data.sha;
-
 			}
 		} catch (e) {
 			console.log(e)
 		}
-		new Notice('Uptading...')
-		payload.message = `Update note ${pathLib.basename(filePath)}`;
+		payload.message = `Update note ${title}`;
 		await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', payload);
-		new Notice('Updated !')
 	}
 
-	async uploadImage(filePath: string) {
-		const imageTFile = await this.vault.getAbstractFileByPath(filePath) as TFile;
-		const imageBin = await this.vault.readBinary(imageTFile);
+	async uploadImage(imageFile:TFile) {
+		const imageBin = await this.vault.readBinary(imageFile);
 		const image64 = arrayBufferToBase64(imageBin);
-		await this.upload(filePath, image64);
+		await this.upload(imageFile.path, image64, imageFile.name);
 
 	}
 
-	async uploadText(filePath: string, text: string) {
-		console.log('uploading text BASE 64')
-		console.log(text);
-		const contentBase64 = Buffer.from(text).toString('base64');
-		console.log('uploading text')
-		await this.upload(filePath, contentBase64);
+	async uploadText(filePath: string, text: string, title: string = "") {
+		const contentBase64 = btoa(text);
+		await this.upload(filePath, contentBase64, title);
 	}
 }
