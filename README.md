@@ -96,7 +96,6 @@ Some examples of citation and their transformation :
 
 ### Callout & Admonition
 
-
 he script support custom admonition. For that, you first need to edit [custom_attributes](https://github.com/Mara-Li/mkdocs_obsidian_template/blob/main/docs/assets/css/custom_attributes.css) with adding the support, as follow in [Admonition's docs](https://squidfunk.github.io/mkdocs-material/reference/admonitions/#customization).
 For example, to add a `dictionnary` admonition:
 ```css
