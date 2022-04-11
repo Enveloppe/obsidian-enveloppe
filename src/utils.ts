@@ -23,7 +23,7 @@ function disablePublish(app: App, settings: mkdocsPublicationSettings, file:TFil
 		return false;
 	} else if (folder_list.length > 0) {
 		for (let i = 0; i < folder_list.length; i++) {
-			if (file.path.contains(folder_list[i])) {
+			if (file.path.contains(folder_list[i].trim())) {
 				return false;
 			}
 		}

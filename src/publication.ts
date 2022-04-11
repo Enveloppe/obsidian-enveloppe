@@ -58,8 +58,8 @@ export default class MkdocsPublish {
 
 	checkExcludedFolder(file: TFile) {
 		const excluded_folder = this.settings.ExcludedFolder.split("/");
-		for (const folder of excluded_folder) {
-			if (file.path.contains(folder)) {
+		for (let i = 0; i < excluded_folder.length; i++) {
+			if (file.path.contains(excluded_folder[i].trim())) {
 				return true;
 			}
 		}
@@ -70,6 +70,7 @@ export default class MkdocsPublish {
 	async publish(file: TFile, one_file: boolean = false) {
 		const sharedkey = this.settings.shareKey;
 		const frontmatter = this.metadataCache.getCache(file.path).frontmatter;
+		 this.checkExcludedFolder(file)
 		if (!frontmatter || !frontmatter[sharedkey] || this.checkExcludedFolder(file)) {
 			return false;
 		}

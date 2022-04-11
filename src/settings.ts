@@ -7,6 +7,7 @@ export interface mkdocsPublicationSettings {
 	GhToken: string;
 	shareKey: string;
 	ExcludedFolder: string;
+	fileMenu: boolean;
 }
 
 export const DEFAULT_SETTINGS: mkdocsPublicationSettings = {
@@ -15,6 +16,7 @@ export const DEFAULT_SETTINGS: mkdocsPublicationSettings = {
 	GhToken: "",
 	shareKey: "share",
 	ExcludedFolder: "",
+	fileMenu: false,
 };
 
 export class mkdocsSettingsTab extends PluginSettingTab {
@@ -93,6 +95,17 @@ export class mkdocsSettingsTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.ExcludedFolder)
 					.onChange(async(value)=>{
 						this.plugin.settings.ExcludedFolder = value;
+						await this.plugin.saveSettings();
+					})
+			);
+		new Setting(containerEl)
+			.setName("File Menu")
+			.setDesc('Add an sharing commands in the file menu')
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.fileMenu)
+					.onChange(async(value)=>{
+						this.plugin.settings.fileMenu = value;
 						await this.plugin.saveSettings();
 					})
 			);

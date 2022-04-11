@@ -19,12 +19,12 @@ export default class mkdocsPublication extends Plugin {
 
 		this.registerEvent(
 			this.app.workspace.on('file-menu', (menu, file:TFile) =>{
-				if (!disablePublish(this.app, this.settings, file)){
+				if (!disablePublish(this.app, this.settings, file) || !this.settings.fileMenu){
 					return false;
 				}
 					menu.addSeparator();
 					menu.addItem((item)=>{
-						item.setTitle("Share " + file.name + " on Mkdocs")
+						item.setTitle("Share " + file.basename + " with Mkdocs Publication")
 							.setIcon("share")
 							.onClick(async()=>{
 								try {
