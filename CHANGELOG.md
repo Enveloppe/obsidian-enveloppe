@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.3](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/1.0.2...1.0.3) (2022-04-11)
+
+
+### Bug Fixes
+
+* Fix sharing one file with filemenu ([5e51626](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/5e51626b98ff0e0f2ade997f9bf54296143c7d09))
+
 ### [1.0.2](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/1.0.1...1.0.2) (2022-04-11)
 
 
