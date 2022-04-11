@@ -4,7 +4,7 @@ import {
 	mkdocsPublicationSettings,
 	DEFAULT_SETTINGS,
 } from "./settings";
-import {ShareStatusBar} from "./status_bar";
+//import {ShareStatusBar} from "./status_bar";
 import MkdocsPublish from "./publication";
 import {disablePublish} from './utils'
 
@@ -55,9 +55,9 @@ export default class mkdocsPublication extends Plugin {
 							const currentFile = workspace.getActiveFile();
 							const publishFile = new MkdocsPublish(vault, metadataCache, this.settings);
 							const publishSuccess = publishFile.publish(currentFile, true);
-							if (publishSuccess) {
-								new Notice("Successfully published "+ currentFile.basename +" to mkdocs.")
-							}
+							//if (publishSuccess) {
+							//	new Notice("Successfully published "+ currentFile.basename +" to mkdocs.")
+							//}
 						} catch (e) {
 							console.error(e);
 							new Notice("Error publishing to mkdocs.")
@@ -71,33 +71,39 @@ export default class mkdocsPublication extends Plugin {
 			id: 'obs2mk-publish-all',
 			name: 'Share all marked notes',
 			callback: async () => {
-				const statusBarItems = this.addStatusBarItem();
+				//const statusBarItems = this.addStatusBarItem();
 				try {
 					const {vault, metadataCache} = this.app;
+					console.log('Publish')
 					const publish = new MkdocsPublish(vault, metadataCache, this.settings);
+					console.log('Shared')
 					const sharedFiles = await publish.getSharedFiles();
-					const statusBar = new ShareStatusBar(statusBarItems, sharedFiles.length);
+					console.log('get shared')
+					//const statusBar = new ShareStatusBar(statusBarItems, sharedFiles.length);
 					let errorCount = 0;
 					if (sharedFiles.length > 0) {
 						const publishedFiles = sharedFiles.map(file => file.name);
 						// upload list of published files in Source
 						const publishedFilesText = publishedFiles.toString();
+						console.log('upload')
 						await publish.uploadText('vault_published.txt', publishedFilesText);
+						console.log('upload2')
 						for (let files = 0; files < sharedFiles.length; files++) {
 							try {
 								let file = sharedFiles[files]
-								statusBar.increment();
+								//statusBar.increment();
+								console.log('publish')
 								await publish.publish(file);
 							} catch {
 								errorCount++;
 								new Notice(`Unable to publish note ${sharedFiles[files].name}, skipping it`)
 							}
 						}
-						statusBar.finish(8000);
+						//statusBar.finish(8000);
 						new Notice(`Successfully published ${publishedFiles.length - errorCount} notes to mkdocs.`);
 					}
 				} catch (e) {
-					statusBarItems.remove();
+					//statusBarItems.remove();
 					console.error(e)
 					new Notice('Unable to publish multiple notes, something went wrong.')
 				}

@@ -5,14 +5,7 @@ import {
 	mkdocsPublicationSettings,
 } from "./settings";
 import { Octokit } from "@octokit/core";
-import {Base64} from "js-base64";
 import {arrayBufferToBase64} from "./utils";
-
-export interface IMkdocsPublish {
-	publish(file:TFile): any,
-	getSharedFile(): any,
-	getLinkedImage(file:TFile): any,
-}
 
 export default class MkdocsPublish {
 	vault: Vault;
@@ -26,7 +19,9 @@ export default class MkdocsPublish {
 	}
 
 	async getSharedFiles() {
+		console.log('load markdown')
 		const files = this.vault.getMarkdownFiles();
+		console.log('MD loaded')
 		const shared_File = [];
 		const sharedkey = this.settings.shareKey;
 		for (const file of files) {
@@ -93,7 +88,6 @@ export default class MkdocsPublish {
 	}
 
 	async uploadFolder(){
-		console.log("hello")
 		const folder = await this.getSharedFiles();
 		if (folder.length > 0) {
 			const publishedFiles = folder.map(file => file.name);
@@ -103,6 +97,7 @@ export default class MkdocsPublish {
 	}
 
 	async upload(filePath: string, content: string) {
+		new Notice('Starting upload')
 		if (!this.settings.githubRepo) {
 			new Notice("Config error : You need to define a github repo in the plugin settings");
 			throw {};
@@ -111,6 +106,7 @@ export default class MkdocsPublish {
 			new Notice("Config error : You need to define your github username in the plugin settings");
 			throw {};
 		}
+		new Notice('Upload ....')
 		const octokit = new Octokit({
 			auth: this.settings.GhToken
 		});
@@ -124,6 +120,7 @@ export default class MkdocsPublish {
 			content: content,
 			sha: '',
 		};
+		new Notice('Get from repo....')
 		try {
 			const response = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
 				owner: this.settings.githubName,
@@ -139,8 +136,10 @@ export default class MkdocsPublish {
 		} catch (e) {
 			console.log(e)
 		}
+		new Notice('Uptading...')
 		payload.message = `Update note ${pathLib.basename(filePath)}`;
 		await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', payload);
+		new Notice('Updated !')
 	}
 
 	async uploadImage(filePath: string) {
@@ -152,7 +151,10 @@ export default class MkdocsPublish {
 	}
 
 	async uploadText(filePath: string, text: string) {
-		const contentBase64 = Base64.encode(text);
+		console.log('uploading text BASE 64')
+		console.log(text);
+		const contentBase64 = Buffer.from(text).toString('base64');
+		console.log('uploading text')
 		await this.upload(filePath, contentBase64);
 	}
 }

@@ -1,4 +1,3 @@
-import { Base64 } from "js-base64";
 import {
 	App,
 	TFile
@@ -12,7 +11,7 @@ function arrayBufferToBase64(buffer: ArrayBuffer) {
 	for (let i = 0; i < len; i++) {
 		binary += String.fromCharCode(bytes[i]);
 	}
-	return Base64.btoa(binary);
+	return window.btoa(binary);
 }
 
 function disablePublish(app: App, settings: mkdocsPublicationSettings, file:TFile) {
