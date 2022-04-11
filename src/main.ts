@@ -29,7 +29,7 @@ export default class mkdocsPublication extends Plugin {
 							.onClick(async()=>{
 								try {
 									const publish = new MkdocsPublish(this.app.vault, this.app.metadataCache, this.settings);
-									const publishSuccess = await publish.publish(file);
+									const publishSuccess = await publish.publish(file, true);
 									if (publishSuccess) {
 									new Notice("Successfully published "+ file.basename +" to mkdocs.")
 									}
