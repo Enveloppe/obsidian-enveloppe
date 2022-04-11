@@ -6,6 +6,7 @@ import {
 } from "./settings";
 import { Octokit } from "@octokit/core";
 import {arrayBufferToBase64} from "./utils";
+import { Base64 } from "js-base64";
 
 export default class MkdocsPublish {
 	vault: Vault;
@@ -65,7 +66,6 @@ export default class MkdocsPublish {
 	async publish(file: TFile, one_file: boolean = false) {
 		const sharedkey = this.settings.shareKey;
 		const frontmatter = this.metadataCache.getCache(file.path).frontmatter;
-		 this.checkExcludedFolder(file)
 		if (!frontmatter || !frontmatter[sharedkey] || this.checkExcludedFolder(file)) {
 			return false;
 		}
@@ -82,7 +82,8 @@ export default class MkdocsPublish {
 				await this.uploadFolder();
 			}
 			return true;
-		} catch {
+		} catch (e) {
+			console.log(e);
 			return false;
 		}
 	}
@@ -92,7 +93,7 @@ export default class MkdocsPublish {
 		if (folder.length > 0) {
 			const publishedFiles = folder.map(file => file.name);
 			const publishedFilesText = publishedFiles.toString();
-			await this.uploadText('vault_published.txt', publishedFilesText);
+			await this.uploadText('vault_published.txt', publishedFilesText, 'vault_published.txt');
 		}
 	}
 
@@ -109,6 +110,7 @@ export default class MkdocsPublish {
 			auth: this.settings.GhToken
 		});
 		const path = `source/${title}`;
+
 		const payload = {
 			owner: this.settings.githubName,
 			repo: this.settings.githubRepo,
@@ -137,11 +139,27 @@ export default class MkdocsPublish {
 		const imageBin = await this.vault.readBinary(imageFile);
 		const image64 = arrayBufferToBase64(imageBin);
 		await this.upload(imageFile.path, image64, imageFile.name);
-
 	}
 
 	async uploadText(filePath: string, text: string, title: string = "") {
-		const contentBase64 = btoa(text);
-		await this.upload(filePath, contentBase64, title);
+		try {
+			const contentBase64 = Base64.encode(text).toString();
+			await this.upload(filePath, contentBase64, title);
+		}
+		catch (e) {
+			console.log(e);
+		}
+	}
+
+	async workflow_gestion() {
+		const octokit = new Octokit({
+			auth: this.settings.GhToken
+		});
+		await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+			owner: this.settings.githubName,
+			repo: this.settings.githubRepo,
+			workflow_id: 'ci.yml',
+			ref: 'main'
+		});
 	}
 }

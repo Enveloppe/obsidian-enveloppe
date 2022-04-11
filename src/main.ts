@@ -58,6 +58,7 @@ export default class mkdocsPublication extends Plugin {
 							if (publishSuccess) {
 								new Notice("Successfully published "+ currentFile.basename +" to mkdocs.")
 							}
+							publishFile.workflow_gestion();
 						} catch (e) {
 							console.error(e);
 							new Notice("Error publishing to mkdocs.")
@@ -95,6 +96,7 @@ export default class mkdocsPublication extends Plugin {
 						}
 						statusBar.finish(8000);
 						new Notice(`Successfully published ${publishedFiles.length - errorCount} notes to mkdocs.`);
+						await publish.workflow_gestion();
 					}
 				} catch (e) {
 					//statusBarItems.remove();

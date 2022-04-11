@@ -2,6 +2,7 @@ import {
 	App,
 	TFile
 } from 'obsidian';
+import { Base64 } from "js-base64";
 import {mkdocsPublicationSettings} from "./settings";
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {
@@ -11,7 +12,7 @@ function arrayBufferToBase64(buffer: ArrayBuffer) {
 	for (let i = 0; i < len; i++) {
 		binary += String.fromCharCode(bytes[i]);
 	}
-	return window.btoa(binary);
+	return Base64.btoa(binary);
 }
 
 function disablePublish(app: App, settings: mkdocsPublicationSettings, file:TFile) {
