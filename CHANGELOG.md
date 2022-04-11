@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/1.0.3...2.0.0) (2022-04-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* This change/erase the previous parameters. Also, the plugin need to be deleted from older installation.
+
+### Bug Fixes
+
+* Mobile multiples errors ([5eecb9a](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/5eecb9a4daa3b67fb1dbb109cd5133ce527ea7f9))
+
+
+* !ci: Rename plugins ([f8926a3](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/f8926a335b0a6adb6763c8c61b3bc72766824864))
+
 ### [1.0.3](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/1.0.2...1.0.3) (2022-04-11)
 
 
