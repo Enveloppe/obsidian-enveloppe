@@ -1,3 +1,5 @@
+Credit : [@oleeskild](https://github.com/oleeskild/obsidian-digital-garden) for the idea and the majority of the code.
+
 Obsidian's Mkdocs Publication is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault. 
  
  <h1 align="center"><a href="https://mara-li.github.io/mkdocs_obsidian_template">Documentations & show case</a></center>
@@ -85,12 +87,12 @@ To support the citation and link to these page, you need to use an index key (cf
 
 Some examples of citation and their transformation : 
 
-| In Obsidian               | In Publish            |
-| ------------------------- | --------------------- |
-| `[[Real File\|(i) Alias]]` | `[[index\|Alias]]`     |
-| `[[Real File\|(i)]]`       | `[[index\|Real File]]` |
-| `[(i) Alias](Real file) ` | `[Alias](index)`      |
-| `[(i)](real file)`        | `[real file](index)`  | 
+| In Obsidian               	| In Publish            	|
+| ------------------------- 	| --------------------- 	|
+| `[[Real File\|(i) Alias]]` 	| `[[index\|Alias]]`     	|
+| `[[Real File\|(i)]]`       	| `[[index\|Real File]]` 	|
+| `[(i) Alias](Real file) ` 	| `[Alias](index)`      	|
+| `[(i)](real file)`        	| `[real file](index)`  	| 
 
 ### Callout & Admonition
 
@@ -200,6 +202,22 @@ To create a link, you need to configure :
 
 So, in the end, a menu will appear on file with `share: true` and a `category` configured. This menu is on the left click and the file-menu. You can quickly copy a link from there, like a Google or notion sharing link! 
 ![https://www.loom.com/share/88c64da2ba194e219578d5911fb8e08d](https://mara-li.github.io/mkdocs_obsidian_template/assets/img/demo.gif)
+
+# Plugins to use with Mkdocs Publication :
+- [Customizable Sidebar](https://github.com/phibr0/obsidian-customizable-sidebar)
+- [Customizable Menu](https://github.com/kzhovn/obsidian-customizable-menu)
+- [Customizable Page Header](https://github.com/kometenstaub/customizable-page-header-buttons)
+- [Alx Folder Notes](https://github.com/aidenlx/alx-folder-note)
+
+For custom attribute :
+- [CM6 Custom Attributes](https://github.com/nothingislost/obsidian-cm6-attributes)
+- [Markdown Attribute](https://github.com/valentine195/obsidian-markdown-attributes)
+- [Contextual Typography](https://github.com/mgmeyers/obsidian-contextual-typography)
+
+# Alternative
+- [Digital Garden](https://github.com/oleeskild/obsidian-digital-garden)
+- [Publish to Ghost](https://github.com/jaynguyens/obsidian-ghost-publish)
+
 
 [^3]: You can found the link in Repository settings > Pages. 
 [^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or with [downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
