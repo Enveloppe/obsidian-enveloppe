@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.2](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/1.0.1...1.0.2) (2022-04-11)
+
+
+### Bug Fixes
+
+* Trim whitespace for excluded folder checking ([2a44ab9](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/2a44ab9b7c97c20eab6f190d59ed6c0a4f0ccb7c))
+
 ### [1.0.1](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/1.0.0...1.0.1) (2022-04-11)
 
 
