@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/2.0.0...2.0.1) (2022-04-11)
+
+
+### Bug Fixes
+
+* Base64 errors on mobile ([26dbe6d](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/26dbe6d514f08ddc4ad60ced7d6cce16c14f2142))
+
 ## [2.0.0](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/1.0.3...2.0.0) (2022-04-11)
 
 
