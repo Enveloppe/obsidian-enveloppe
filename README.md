@@ -160,7 +160,7 @@ Now, if everything is configured, you will have :
 ⚠️ The source folder will be cleaned after the conversion from the script !
 
 # Limitations
-- You need to have a cleaned arborescence with **unique name file**. No worry about the display in blog ; the `title` key in frontmatter will change it, so you can have a `ezarezozre` name and use a good title like `reading book`. 
+- You need to have a clean tree structure with **unique name file**. No worry about the display in blog ; the `title` key in frontmatter will change it, so you can have a `ezarezozre` name and use a good title like `reading book`. 
 - I prefer to encourage you to use the `shortlinks` option in obsidian's link option.
 - Obsiously, no obsidian's plugin will work.
 - No graph view
