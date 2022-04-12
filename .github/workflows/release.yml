@@ -1,10 +1,10 @@
 name: Release Obsidian plugin
 
 on:
+    workflow_dispatch:
     push:
         tags:
             - "*"
-
 env:
     PLUGIN_NAME: obsidian-metacopy # Change this to match the id of your plugin.
 
