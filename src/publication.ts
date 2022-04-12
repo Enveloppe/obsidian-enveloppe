@@ -42,8 +42,9 @@ export default class MkdocsPublish {
 		if (embed_files != undefined) {
 			for (const embed_file of embed_files) {
 				const imageLink = this.metadataCache.getFirstLinkpathDest(embed_file.link, file.path);
-				const image_ext = imageLink.extension
-				if (image_ext.endsWith("png") || image_ext.endsWith("jpg") || image_ext.endsWith("jpeg") || image_ext.endsWith("gif") || image_ext.endsWith("svg") || image_ext.endsWith(".bmp")) {
+				const imgExt = imageLink.extension;
+				const regImg = /(png|jpe?g|svg|bmp|gif)$/i;
+				if (imgExt.match(regImg) {
 					image_list.push(imageLink);
 				}
 			}
