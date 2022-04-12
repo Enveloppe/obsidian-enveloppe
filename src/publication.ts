@@ -44,7 +44,7 @@ export default class MkdocsPublish {
 				const imageLink = this.metadataCache.getFirstLinkpathDest(embed_file.link, file.path);
 				const imgExt = imageLink.extension;
 				const regImg = /(png|jpe?g|svg|bmp|gif)$/i;
-				if (imgExt.match(regImg) {
+				if (imgExt.match(regImg)) {
 					image_list.push(imageLink);
 				}
 			}
