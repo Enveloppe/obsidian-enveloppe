@@ -15,7 +15,7 @@ Obsidian's Mkdocs Publication is an association between a github actions and a M
 # Quick installation tutorial
 1. Click on [use this template](https://github.com/Mara-Li/mkdocs_obsidian_template/generate)[^1]
 2. Use the name of your choice
-3. Get your [Github Token here](https://github.com/settings/tokens/new?scopes=repo)[^2]. The correct settings should already be applied. If you don't want to generate this every few months, choose the "No expiration" option. Click the "Generate token" button, and copy the token you are presented with on the next page.
+3. Get your [Github Token here](https://github.com/settings/tokens/new?scopes=repo,workflow)[^2]. The correct settings should already be applied. If you don't want to generate this every few months, choose the "No expiration" option. Click the "Generate token" button, and copy the token you are presented with on the next page.
 4. In Obsidian fill the options for mkdocs-publish :
 	- Repo name
 	- Your github username
@@ -40,7 +40,7 @@ You can customize :
 - Color scheme, palette, icons 
 - Language  
 
-lso, don't forget to delete the documentation folder, the contents in assets and clean the notes folder!
+Also, don't forget to delete the documentation folder, the contents in assets and clean the notes folder!
 
 [Check the documentation to get more information](https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/)
 
