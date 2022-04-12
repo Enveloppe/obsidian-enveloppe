@@ -20,6 +20,8 @@ jobs:
             - name: Build
               id: build
               run: |
+                git config --global user.name 'github-release'
+                git config --global user.email 'github-release@users.noreply.github.com' 
                   npm install
                   npm run release
                   mkdir ${{ env.PLUGIN_NAME }}
