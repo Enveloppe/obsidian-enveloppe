@@ -58,7 +58,7 @@ export class mkdocsSettingsTab extends PluginSettingTab {
 			span.innerText="A github token with repository permission. You can generate it ";
 			span.createEl("a", null, (link)=> {
 				link.innerText = "here";
-				link.href = "https://github.com/settings/tokens/new?scopes=repo";
+				link.href = "https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
 		})
 		new Setting(containerEl)
