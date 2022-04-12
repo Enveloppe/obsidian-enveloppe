@@ -4,7 +4,7 @@ on:
   workflow_dispatch
 
 env:
-    PLUGIN_NAME: obsidian-metacopy # Change this to match the id of your plugin.
+    PLUGIN_NAME: obsidian-mkdocs-publisher # Change this to match the id of your plugin.
 
 jobs:
   release:
@@ -33,6 +33,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "14.x"
+      - name: Latest-tag
+        id: get-latest-tag
+        uses: actions-ecosystem/action-get-latest-tag@v1
       - name: Build
         id: build
         run: |
@@ -51,8 +54,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ github.ref }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
+          tag_name: ${{ steps.get-latest-tag.outputs.tag }}
+          release_name: ${{ steps.get-latest-tag.outputs.tag }}
           body_path: CHANGELOG-LATEST.md
           draft: false
           prerelease: false
