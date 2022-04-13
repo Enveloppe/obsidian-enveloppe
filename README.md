@@ -16,12 +16,14 @@ Obsidian's Mkdocs Publication is an association between a github actions and a M
 1. Click on [use this template](https://github.com/Mara-Li/mkdocs_obsidian_template/generate)[^1]
 2. Use the name of your choice
 3. Get your [Github Token here](https://github.com/settings/tokens/new?scopes=repo,workflow)[^2]. The correct settings should already be applied. If you don't want to generate this every few months, choose the "No expiration" option. Click the "Generate token" button, and copy the token you are presented with on the next page.
-4. In Obsidian fill the options for mkdocs-publish :
-	- Repo name
-	- Your github username
-	- The github token (copyed from earlier)
-	- The share key
-
+4. In Obsidian fill the options for mkdocs publisher :
+    - Repo name
+    - Your github username
+    - The github token (copyed from earlier)
+    - The share key
+    - The category key name
+    - The category key default value
+    - The key citation for [folder note](#folder-note)
 
 # The blog
 ## Creation
@@ -83,7 +85,7 @@ It will appear as:
 You can create a folder note if you use a `category` front matter key that have the last folder with the same name as the file. For example : 
 `category: folder1/folder2/filename`. The file `filename` will be renamed `index` and the folder will be named `filename`.
 
-To support the citation and link to these page, you need to use an index key (cf [[usage#script-s-configuration]]).
+To support the citation and link to these page, you need to use and configure an index key. 
 
 Some examples of citation and their transformation : 
 
@@ -138,18 +140,11 @@ Obs2mk is a python script used here as a github actions. The plugin and the scri
 5. `image` : Add an image for meta-tags sharing.[^4] It needs to be the name of the file, as `image.png`. 
 
 ## Configuration
-The configuration's file of the actions is `.github-actions`, localized under the `source` folder on your blog. 
-Here, you can configure :
-1. The index keys 
-2. The default category folder name 
-3. the category frontmatter key. 
-
-Default is :
-```yml
-index_key=(i)
-default_blog=notes
-category_key=category
-```
+The configuration's file of the actions is `.github-actions`, localized under the `source` folder on your blog.
+The configuration is handled by the plugin directly, in settings. You can update it any time using the `update settings workflow` command.
+There is three configuration : 
+- The index key, for folder note citation.
+- The default category key and the default folder. For the default folder, using "/" will put the file in the root.
 
 # The plugins
 
@@ -220,5 +215,5 @@ For custom attribute :
 
 [^3]: You can found the link in Repository settings > Pages. 
 [^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or with [downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
-[^2]: You need to be connected to generate it. 
+[^2]: You need to be connected to generate it.
 [^5]: **Meta tags** are snippets of text that describe a page’s content; the meta tags don’t appear on the page itself, but only in the page’s source code. Meta tags are essentially little content descriptors that help tell search engines what a web page is about. [Source](https://www.wordstream.com/meta-tags)
