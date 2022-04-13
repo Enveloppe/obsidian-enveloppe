@@ -3,7 +3,7 @@
 import {MetadataCache, Vault, TFile, Notice } from 'obsidian';
 import {
 	mkdocsPublicationSettings,
-} from "./settings";
+} from "../settings";
 import { Octokit } from "@octokit/core";
 import {arrayBufferToBase64} from "./utils";
 import { Base64 } from "js-base64";

@@ -15,7 +15,7 @@ esbuild.build({
 	banner: {
 		js: banner,
 	},
-	entryPoints: ['src/main.ts'],
+	entryPoints: ['mkdocsPublisher/main.ts'],
 	bundle: true,
 	external: ['obsidian', 'electron', ...builtins],
 	format: 'cjs',

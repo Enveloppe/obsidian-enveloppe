@@ -3,7 +3,7 @@ import {
 	TFile
 } from 'obsidian';
 import { Base64 } from "js-base64";
-import {mkdocsPublicationSettings} from "./settings";
+import {mkdocsPublicationSettings} from "../settings";
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {
 	let binary = "";

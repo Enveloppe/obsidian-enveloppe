@@ -4,9 +4,9 @@ import {
 	mkdocsPublicationSettings,
 	DEFAULT_SETTINGS,
 } from "./settings";
-import {ShareStatusBar} from "./status_bar";
-import MkdocsPublish from "./publication";
-import {disablePublish} from './utils'
+import {ShareStatusBar} from "./utils/status_bar";
+import MkdocsPublish from "./utils/publication";
+import {disablePublish} from './utils/utils'
 
 
 export default class mkdocsPublication extends Plugin {
