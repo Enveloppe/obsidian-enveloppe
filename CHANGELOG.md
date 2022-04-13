@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/2.0.3...2.1.0) (2022-04-13)
+
+
+### Features
+
+* Adding a command to update obs2mk setting using obsidian ([0496bed](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/0496bed29843a03afa1a8cdefb482958796dcffb))
+
 ### 2.0.3 (2022-04-12)
 
 

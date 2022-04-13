@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-mkdocs-publisher",
 	"name": "Mkdocs Publisher",
-	"version": "2.0.3",
+	"version": "2.1.0",
 	"minAppVersion": "0.12.0",
 	"description": "Obsidian's Mkdocs Publisher is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault.",
 	"author": "Mara-Li",
