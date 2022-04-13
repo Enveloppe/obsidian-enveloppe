@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/2.1.0...2.2.0) (2022-04-13)
+
+
+### Features
+
+*  Adding editor menu option to share file on right click ([b7ed228](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/b7ed228989bd5cbaaa01ed001e8fb5ae63e8a6ea))
+
 ## [2.1.0](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/2.0.3...2.1.0) (2022-04-13)
 
 
