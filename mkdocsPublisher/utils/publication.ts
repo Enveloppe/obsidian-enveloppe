@@ -126,7 +126,9 @@ export default class MkdocsPublish {
 				repo: this.settings.githubRepo,
 				path
 			});
+			// @ts-ignore
 			if (response.status === 200 && response.data.type === "file") {
+				// @ts-ignore
 				payload.sha = response.data.sha;
 			}
 		} catch (e) {
@@ -162,5 +164,20 @@ export default class MkdocsPublish {
 			workflow_id: 'ci.yml',
 			ref: 'main'
 		});
+	}
+
+	async updateSettings() {
+		let newSettings = `index_key=${this.settings.indexFolder}
+		default_blog=${this.settings.categoryDefault}
+		category_key=${this.settings.categoryKey}
+		`
+		newSettings=newSettings.replace(/\t/gi, '').trim();
+		try {
+			await this.uploadText('.github-actions', newSettings, '.github-actions');
+			return true
+		}
+		catch {
+			return false
+		}
 	}
 }

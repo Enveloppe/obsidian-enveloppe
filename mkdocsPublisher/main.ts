@@ -105,7 +105,23 @@ export default class mkdocsPublication extends Plugin {
 				}
 			},
 		});
-
+		this.addCommand({
+			id: 'obs2mk-update-settings',
+			name: 'Update settings workflow',
+			callback: async () => {
+				try {
+					const {vault, metadataCache} = this.app;
+					const publish = new MkdocsPublish(vault, metadataCache, this.settings);
+					const successUpdate=await publish.updateSettings();
+					if (successUpdate) {
+						new Notice('Successfully updated settings.')
+					}
+				} catch (e) {
+					console.error(e)
+					new Notice('Unable to update settings, something went wrong.')
+				}
+			},
+		});
 	}
 	onunload() {
 		console.log('Mkdocs Publication unloaded');
