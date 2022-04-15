@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.0...2.2.1) (2022-04-15)
+
+
+### Bug Fixes
+
+* File menu/menu editor doesn't active workflow ([8d2ce3e](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/8d2ce3e2cf7eacb05c8f1a3313623a03dabbd854))
+* If excludedFolder is empty, no file is shared ([f55d950](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/f55d950964b8a438a3c29c53f537f0d748e53caf))
+
 ## [2.2.0](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/2.1.0...2.2.0) (2022-04-13)
 
 
