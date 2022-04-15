@@ -40,12 +40,14 @@ export default class mkdocsPublication extends Plugin {
 									const publishSuccess =
 										await publish.publish(file, true);
 									if (publishSuccess) {
+										await publish.workflow_gestion();
 										new Notice(
 											"Successfully published " +
 												file.basename +
 												" to mkdocs."
 										);
 									}
+
 								} catch (e) {
 									console.error(e);
 									new Notice("Error publishing to mkdocs.");
@@ -81,6 +83,7 @@ export default class mkdocsPublication extends Plugin {
 									const publishSuccess =
 										await publish.publish(view.file, true);
 									if (publishSuccess) {
+										await publish.workflow_gestion();
 										new Notice(
 											"Successfully published " +
 												view.file.basename +
