@@ -18,7 +18,7 @@ function arrayBufferToBase64 (buffer: ArrayBuffer) {
 function disablePublish (app: App, settings: mkdocsPublicationSettings, file:TFile) {
   const fileCache = app.metadataCache.getFileCache(file)
   const meta = fileCache?.frontmatter
-  const folder_list = settings.ExcludedFolder.split(',')
+  const folder_list = settings.ExcludedFolder.split(',').filter(x => x!=='')
   if (meta === undefined) {
     return false
   } else if (folder_list.length > 0) {
