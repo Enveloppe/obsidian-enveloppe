@@ -53,7 +53,6 @@ export default class MkdocsPublish {
 
 	checkExcludedFolder (file: TFile) {
 		const excluded_folder = this.settings.ExcludedFolder.split(',').filter(x=>x!='')
-		console.log(excluded_folder.length)
 		if (excluded_folder.length > 0) {
 			for (let i = 0; i < excluded_folder.length; i++) {
 				if (file.path.contains(excluded_folder[i].trim())) {
@@ -84,7 +83,7 @@ export default class MkdocsPublish {
 			}
 			return true
 		} catch (e) {
-			console.log(e)
+			console.error(e)
 			return false
 		}
 	}
@@ -132,7 +131,7 @@ export default class MkdocsPublish {
 				payload.sha = response.data.sha
 			}
 		} catch (e) {
-			console.log(e)
+			console.error(e)
 		}
 		payload.message = `Update note ${title}`
 		await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', payload)
@@ -149,7 +148,7 @@ export default class MkdocsPublish {
 			const contentBase64 = Base64.encode(text).toString()
 			await this.upload(filePath, contentBase64, title)
 		} catch (e) {
-			console.log(e)
+			console.error(e)
 		}
 	}
 
@@ -157,14 +156,12 @@ export default class MkdocsPublish {
 		const octokit = new Octokit({
 			auth: this.settings.GhToken
 		})
-		console.log('Gestion workflow')
-		const req = await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+		await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
 			owner: this.settings.githubName,
 			repo: this.settings.githubRepo,
 			workflow_id: 'ci.yml',
 			ref: 'main'
 		})
-		console.log(req)
 	}
 
 	async updateSettings () {
