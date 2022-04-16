@@ -131,7 +131,7 @@ export default class MkdocsPublish {
 				payload.sha = response.data.sha
 			}
 		} catch (e) {
-			console.error(e)
+			// ignore
 		}
 		payload.message = `Update note ${title}`
 		await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', payload)
