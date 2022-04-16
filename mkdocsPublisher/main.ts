@@ -127,13 +127,13 @@ export default class mkdocsPublication extends Plugin {
 								true
 							);
 							if (publishSuccess) {
+								publishFile.workflow_gestion();
 								new Notice(
 									"Successfully published " +
 										currentFile.basename +
 										" to mkdocs."
 								);
 							}
-							publishFile.workflow_gestion();
 						} catch (e) {
 							console.error(e);
 							new Notice("Error publishing to mkdocs.");
