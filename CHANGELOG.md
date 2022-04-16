@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.1...2.2.2) (2022-04-16)
+
+
+### Bug Fixes
+
+* Run workflow only on success ([de4f3ce](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/de4f3ce971d5ac0fa2f462a5a26d2a55b0319f85))
+
 ### [2.2.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.0...2.2.1) (2022-04-15)
 
 
