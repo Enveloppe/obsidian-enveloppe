@@ -2,8 +2,6 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### 2.2.3 (2022-04-16)
-
 ### [2.2.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.1...2.2.2) (2022-04-16)
 
 
