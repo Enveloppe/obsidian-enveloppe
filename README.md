@@ -2,7 +2,7 @@ Credit : [@oleeskild](https://github.com/oleeskild/obsidian-digital-garden) for 
 
 Obsidian's Mkdocs Publication is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault. 
  
- <h1 align="center"><a href="https://mara-li.github.io/mkdocs_obsidian_template">Documentations & show case</a></center>
+ <h1 align="center"><a href="https://mara-li.github.io/obsidian-mkdocs-publisher-template/">Documentations & show case</a></center>
  
  # TLDR
  1. Install the plugins through Obsidian Community or [BRAT](https://github.com/TfTHacker/obsidian42-brat)
