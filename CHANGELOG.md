@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.4...2.3.0) (2022-04-18)
+
+
+### Features
+
+* Update notice with repo name ([88ce078](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/88ce078766d9de24eb5a7ef3adb46eb2dae7c816))
+
 ### [2.2.4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.3...2.2.4) (2022-04-18)
 
 ### [2.2.3](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.2...2.2.3) (2022-04-16)
