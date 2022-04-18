@@ -1,20 +1,20 @@
 import { Notice, Plugin, TFile } from "obsidian";
 import {
-	mkdocsSettingsTab,
-	mkdocsPublicationSettings,
+	MkdocsSettingsTab,
+	MkdocsPublicationSettings,
 	DEFAULT_SETTINGS,
 } from "./settings";
 import { ShareStatusBar } from "./utils/status_bar";
 import MkdocsPublish from "./utils/publication";
 import { disablePublish } from "./utils/utils";
 
-export default class mkdocsPublication extends Plugin {
-	settings: mkdocsPublicationSettings;
+export default class MkdocsPublication extends Plugin {
+	settings: MkdocsPublicationSettings;
 
 	async onload() {
 		console.log("Mkdocs Publication loaded");
 		await this.loadSettings();
-		this.addSettingTab(new mkdocsSettingsTab(this.app, this));
+		this.addSettingTab(new MkdocsSettingsTab(this.app, this));
 
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu, file: TFile) => {
@@ -40,7 +40,7 @@ export default class mkdocsPublication extends Plugin {
 									const publishSuccess =
 										await publish.publish(file, true);
 									if (publishSuccess) {
-										await publish.workflow_gestion();
+										await publish.workflowGestion();
 										new Notice(
 											"Successfully published " +
 												file.basename +
@@ -83,7 +83,7 @@ export default class mkdocsPublication extends Plugin {
 									const publishSuccess =
 										await publish.publish(view.file, true);
 									if (publishSuccess) {
-										await publish.workflow_gestion();
+										await publish.workflowGestion();
 										new Notice(
 											"Successfully published " +
 												view.file.basename +
@@ -127,7 +127,7 @@ export default class mkdocsPublication extends Plugin {
 								true
 							);
 							if (publishSuccess) {
-								publishFile.workflow_gestion();
+								publishFile.workflowGestion();
 								new Notice(
 									"Successfully published " +
 										currentFile.basename +
@@ -196,7 +196,7 @@ export default class mkdocsPublication extends Plugin {
 								publishedFiles.length - errorCount
 							} notes to mkdocs.`
 						);
-						await publish.workflow_gestion();
+						await publish.workflowGestion();
 					}
 				} catch (e) {
 					// statusBarItems.remove();

@@ -1,7 +1,7 @@
 // Credit : https://github.com/oleeskild/obsidian-digital-garden @oleeskild
 
 import {MetadataCache, Notice, TFile, Vault} from 'obsidian'
-import {mkdocsPublicationSettings} from '../settings'
+import {MkdocsPublicationSettings} from '../settings'
 import {Octokit} from '@octokit/core'
 import {arrayBufferToBase64} from './utils'
 import {Base64} from 'js-base64'
@@ -9,9 +9,9 @@ import {Base64} from 'js-base64'
 export default class MkdocsPublish {
 	vault: Vault;
 	metadataCache: MetadataCache;
-	settings: mkdocsPublicationSettings;
+	settings: MkdocsPublicationSettings;
 
-	constructor(vault: Vault, metadataCache: MetadataCache, settings: mkdocsPublicationSettings) {
+	constructor(vault: Vault, metadataCache: MetadataCache, settings: MkdocsPublicationSettings) {
 		this.vault = vault
 		this.metadataCache = metadataCache
 		this.settings = settings
@@ -52,10 +52,10 @@ export default class MkdocsPublish {
 	}
 
 	checkExcludedFolder (file: TFile) {
-		const excluded_folder = this.settings.ExcludedFolder.split(',').filter(x=>x!='')
-		if (excluded_folder.length > 0) {
-			for (let i = 0; i < excluded_folder.length; i++) {
-				if (file.path.contains(excluded_folder[i].trim())) {
+		const excludedFolder = this.settings.ExcludedFolder.split(',').filter(x=>x!='')
+		if (excludedFolder.length > 0) {
+			for (let i = 0; i < excludedFolder.length; i++) {
+				if (file.path.contains(excludedFolder[i].trim())) {
 					return true
 				}
 			}
@@ -64,17 +64,17 @@ export default class MkdocsPublish {
 	}
 
 	async publish (file: TFile, one_file = false) {
-		const sharedkey = this.settings.shareKey
+		const sharedKey = this.settings.shareKey
 		const frontmatter = this.metadataCache.getCache(file.path).frontmatter
-		if (!frontmatter || !frontmatter[sharedkey] || this.checkExcludedFolder(file)) {
+		if (!frontmatter || !frontmatter[sharedKey] || this.checkExcludedFolder(file)) {
 			return false
 		}
 		try {
 			const text = await this.vault.cachedRead(file)
-			const linked_image = this.getLinkedImage(file)
+			const linkedImage = this.getLinkedImage(file)
 			await this.uploadText(file.path, text, file.name)
-			if (linked_image.length > 0) {
-				for (const image of linked_image) {
+			if (linkedImage.length > 0) {
+				for (const image of linkedImage) {
 					await this.uploadImage(image)
 				}
 			}
@@ -152,7 +152,7 @@ export default class MkdocsPublish {
 		}
 	}
 
-	async workflow_gestion () {
+	async workflowGestion () {
 		const octokit = new Octokit({
 			auth: this.settings.GhToken
 		})

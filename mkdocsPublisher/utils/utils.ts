@@ -3,7 +3,7 @@ import {
   TFile
 } from 'obsidian'
 import { Base64 } from 'js-base64'
-import { mkdocsPublicationSettings } from '../settings'
+import { MkdocsPublicationSettings } from '../settings'
 
 function arrayBufferToBase64 (buffer: ArrayBuffer) {
   let binary = ''
@@ -15,15 +15,15 @@ function arrayBufferToBase64 (buffer: ArrayBuffer) {
   return Base64.btoa(binary)
 }
 
-function disablePublish (app: App, settings: mkdocsPublicationSettings, file:TFile) {
+function disablePublish (app: App, settings: MkdocsPublicationSettings, file:TFile) {
   const fileCache = app.metadataCache.getFileCache(file)
   const meta = fileCache?.frontmatter
-  const folder_list = settings.ExcludedFolder.split(',').filter(x => x!=='')
+  const folderList = settings.ExcludedFolder.split(',').filter(x => x!=='')
   if (meta === undefined) {
     return false
-  } else if (folder_list.length > 0) {
-    for (let i = 0; i < folder_list.length; i++) {
-      if (file.path.contains(folder_list[i].trim())) {
+  } else if (folderList.length > 0) {
+    for (let i = 0; i < folderList.length; i++) {
+      if (file.path.contains(folderList[i].trim())) {
         return false
       }
     }
