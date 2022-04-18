@@ -1,9 +1,24 @@
 Obsidian's Mkdocs Publication is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault.
 
-# TLDR
+# Useful links
+- [Main Repo](https://github.com/Mara-Li/obsidian_mkdocs_publisher)
+- [Obsidian Plugin](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/)
+- [Python package](https://github.com/Mara-Li/obsidian-mkdocs-publisher-python)
+- [Template](https://github.com/Mara-Li/obsidian-mkdocs-publisher-template)
+- [Documentation](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/)
 
+## How to...
+- [Configure the blog](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/create%20the%20blog/)
+- [Customize the blog](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/blog%20customization/)
+- [Copy the link ?](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/useful%20plugins/#metacopy)
+- [Update the template](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/Q%26A/#2-update-the-template)
+
+
+---
+
+# TLDR
 1. Install the plugins through Obsidian Community or [BRAT](https://github.com/TfTHacker/obsidian42-brat)
-2. [Template](https://github.com/Mara-Li/mkdocs_obsidian_template) the blog and configure it 
+2. [Template](https://github.com/Mara-Li/obsidian-mkdocs-publisher-template) the blog and configure it 
 3. Configure the plugin's options
 4. Add `share: true` in Obsidian's note frontmatter 
 5. Customize (or not) the `category` key in Obsidian's note frontmatter. 
@@ -20,7 +35,7 @@ Obsidian's Mkdocs Publication is an association between a github actions and a M
     - The share key
     - The category key name
     - The category key default value
-    - The key citation for [[folder-note|blog customization#folder-note]]
+    - The key citation for [folder-note](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/blog%20customization/#folder-note)
 
 # Configuration
 The configuration's file of the actions is `.github-actions`, localized under the `source` folder on your blog.
@@ -29,6 +44,13 @@ There is three configuration :
 - The index key, for folder note citation.
 - The default category key and the default folder. For the default folder, using "/" will put the file in the root.
 
+You can use the plugin to update your configuration. To do that, you can edit :
+- The category key name and the default value
+- The citation key
+
+Use the commands "Update settings workflow" to update the `.github-action`. 
+
+
 ---
 
 Now, if everything is configured, you will have :
@@ -36,9 +58,10 @@ Now, if everything is configured, you will have :
 - In command palette (CTRL+P) you can also publish one file, or every file with `share: true` in their frontmatter.
 
 
-The files (and the image) will be send on your github repository template, in the `source` folder. The conversion will be done by the [[github actions]], before the build. You can also add manually the files in `source` or use `obs2mk` in parallels. 
+The files (and the image) will be send on your github repository template, in the `source` folder. The conversion will be done by the [github actions](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/obs2mk/github%20actions/), before the build. You can also add manually the files in `source` or use `obs2mk` in parallels. 
 
 ⚠️ The source folder will be cleaned after the conversion from the script !
+
 
 [^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or [with downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
 [^2]: You need to be connected to generate it.
