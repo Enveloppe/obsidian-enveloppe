@@ -25,40 +25,6 @@ Obsidian's Mkdocs Publication is an association between a github actions and a M
     - The category key default value
     - The key citation for [folder note](#folder-note)
 
-# The blog
-## Creation
-
-In your new `publish_blog` folder, you will spot a `mkdocs.yml`. This file allows you to customize your blog! The most important to edit :
-1. `site_name` 
-2. `site_description`
-3. `site_url` (critical) : By default, it's `https://github_username.io/repo_name`[^3]
-
-To edit the logo and the favicon, first put the chosen file in `assets/logo`, and change `logo` and `favicon` :
-1. `logo: assets/logo/logo_name.png`
-2. `favicon: assets/logo/favicon.png`
-
-You can customize :
-- Font
-- Color scheme, palette, icons 
-- Language  
-
-Also, don't forget to delete the documentation folder, the contents in assets and clean the notes folder!
-
-[Check the documentation to get more information](https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/)
-
-You don't need to touch anything in `features` ; `markdown_extensions…`
-
-## Local testing (optional)
-
-To run locally the blog, you need to install the requirements and run `mkdocs serve`.
-```
-cd publish_blog
-pip install -r requirements.txt
-mkdocs serve
-```
-
-The blog will be published through [GitHub Page](https://pages.github.com/) using the `gh-page` branch. Everything is already configured by the template for that.
-
 # Limitations
 - You need to have a clean tree structure with **unique name file**. No worry about the display in blog ; the `title` key in frontmatter will change it, so you can have a `ezarezozre` name and use a good title like `reading book`. 
 - I prefer to encourage you to use the `shortlinks` option in obsidian's link option.
@@ -73,6 +39,5 @@ The blog will be published through [GitHub Page](https://pages.github.com/) usin
 - [Publish to Ghost](https://github.com/jaynguyens/obsidian-ghost-publish)
 
 
-[^3]: You can found the link in Repository settings > Pages. 
 [^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or with [downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
 [^2]: You need to be connected to generate it.
