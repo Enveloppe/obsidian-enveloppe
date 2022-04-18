@@ -1,43 +1,69 @@
-Credit : [@oleeskild](https://github.com/oleeskild/obsidian-digital-garden) for the idea and the majority of the code.
+---
+title: Start here
+---
+<p align="center">
+	<a href="https://github.com/Mara-Li/mkdocs_obsidian_publish"><img src="https://img.shields.io/github/license/Mara-Li/YAFPA-python"></img></a>
+	<a href="https://www.python.org/"><img src="https://img.shields.io/pypi/pyversions/obs2mk"></img></a>
+	<a href="https://pypi.org/project/obs2mk/"><img src="https://img.shields.io/pypi/v/obs2mk"></img></a>
+	<a href="https://obsidian.md/"><img src="https://img.shields.io/badge/Auxiliary%20Tool-Obsidian-blueviolet"></img></a>
+	<a href="https://github.com/Mara-Li/mkdocs_obsidian_template/wiki/Q&A/"><img src="https://img.shields.io/badge/-Q%26A-blue?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMkM2LjQ4NiAyIDIgNi40ODYgMiAxMnM0LjQ4NiAxMCAxMCAxMCAxMC00LjQ4NiAxMC0xMFMxNy41MTQgMiAxMiAyem0wIDE4Yy00LjQxMSAwLTgtMy41ODktOC04czMuNTg5LTggOC04IDggMy41ODkgOCA4LTMuNTg5IDgtOCA4eiIvPjxwYXRoIGQ9Ik0xMSAxMWgydjZoLTJ6bTAtNGgydjJoLTJ6Ii8+PC9zdmc+"></img></a>
+</p>
+<p align="center"><a href="https://mara-li.github.io/obsidian_mkdocs_publisher_docs/">Documentation</a></p>
+<p align="center"><a href="https://www.mara-li.fr">Owlly Seed (My Blog ; In French)</a></p>
 
-Obsidian's Mkdocs Publication is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault. 
- 
- <h1 align="center"><a href="https://mara-li.github.io/obsidian-mkdocs-publisher-template/">Documentations</a></center>
- 
- # TLDR
- 1. Install the plugins through Obsidian Community or [BRAT](https://github.com/TfTHacker/obsidian42-brat)
- 2. [Template](https://github.com/Mara-Li/mkdocs_obsidian_template) the blog and configure it 
- 3. Configure the plugin's options
- 4. Add `share: true` in Obsidian's note frontmatter 
- 5. Customize (or not) the `category` key in Obsidian's note frontmatter. 
- 6. Run the commands throught the file menu or commands palette.
+The plugins can be accessed with a github actions and a Obsidian's plugin or using a pip install and usage.
 
-# Quick installation tutorial
+# Main links
+- [Main Repo](https://github.com/Mara-Li/obsidian_mkdocs_publisher)
+- [Obsidian Plugin](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/)
+- [Python package](https://github.com/Mara-Li/obsidian-mkdocs-publisher-python)
+- [Template](https://github.com/Mara-Li/obsidian-mkdocs-publisher-template)
+- [Documentation](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/)
+
+# Terminal
+
+![[script_demo.gif]]
+
+Mkdocs Obsidian is an association between a python script and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault.
+
+## TLDR
+1. Install / update with `pip install obs2mk --upgrade`
+2. Template the blog, clone it and configure the blog. 
+3. Configure the script (first run)
+4. Add `share: true` in Obsidian's note frontmatter
+5. Customize the `category` key in Obsidian's note frontmatter
+6. Run the script `obs2mk`
+
+## Prerequisites
+You need : 
+- [Git](https://git-scm.com/) and a [Github Account](https://github.com/)
+- [Python](https://www.python.org/)
+- Optional *(Windows)*: [Windows Terminal](https://docs.microsoft.com/fr-fr/windows/terminal/)
+
+
+# Github actions & Obsidian's plugin
+## TLDR
+1. Install the plugins through Obsidian Community or [BRAT](https://github.com/TfTHacker/obsidian42-brat)
+2. [Template](https://github.com/Mara-Li/mkdocs_obsidian_template) the blog and configure it 
+3. Configure the plugin's options : 
+	- Repo name
+	- Your github username
+	- The github token ([from here](https://github.com/settings/tokens/new?scopes=repo))
+	- The share key
+4. Add `share: true` in Obsidian's note frontmatter 
+5. Customize (or not) the `category` key in Obsidian's note frontmatter. 
+6. Run the commands throught the file menu or commands palette.
+
+Read more about the [[github actions]] and the configuration of the [[obsidian mkdocs publication|plugin]].
+
+## Quick installation tutorial
 1. Click on [use this template](https://github.com/Mara-Li/mkdocs_obsidian_template/generate)[^1]
-2. Use the name of your choice
-3. Get your [Github Token here](https://github.com/settings/tokens/new?scopes=repo,workflow)[^2]. The correct settings should already be applied. If you don't want to generate this every few months, choose the "No expiration" option. Click the "Generate token" button, and copy the token you are presented with on the next page.
-4. In Obsidian fill the options for mkdocs publisher :
-    - Repo name
-    - Your github username
-    - The github token (copyed from earlier)
-    - The share key
-    - The category key name
-    - The category key default value
-    - The key citation for [folder note](#folder-note)
+2. Use the name of your choice.
+3. Click on [code](https://docs.github.com/en/get-started/getting-started-with-git/about-remote-repositories) → SSH ; Copy the link
+4. Run (in terminal):
+```bash
+git clone [[PASTE THE LINK HERE]] publish_blog
+pip install obs2mk --upgrade
+```
 
-# Limitations
-- You need to have a clean tree structure with **unique name file**. No worry about the display in blog ; the `title` key in frontmatter will change it, so you can have a `ezarezozre` name and use a good title like `reading book`. 
-- I prefer to encourage you to use the `shortlinks` option in obsidian's link option.
-- Obsiously, no obsidian's plugin will work.
-- No graph view
-- index ([from folder-note](#folder-note)) won't be deleted.
-- The github action will don't move the file if you change the category key : you need to manually delete it to prevent duplicate. 
-
-
-# Alternative
-- [Digital Garden](https://github.com/oleeskild/obsidian-digital-garden)
-- [Publish to Ghost](https://github.com/jaynguyens/obsidian-ghost-publish)
-
-
-[^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or with [downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
-[^2]: You need to be connected to generate it.
+[^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or [with downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
