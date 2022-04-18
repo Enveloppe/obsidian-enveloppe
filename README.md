@@ -1,6 +1,9 @@
 ---
 title: Start here
 ---
+
+Mkdocs Obsidian is an association between a python script and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault.
+
 <p align="center">
 	<a href="https://github.com/Mara-Li/mkdocs_obsidian_publish"><img src="https://img.shields.io/github/license/Mara-Li/YAFPA-python"></img></a>
 	<a href="https://www.python.org/"><img src="https://img.shields.io/pypi/pyversions/obs2mk"></img></a>
@@ -21,10 +24,11 @@ The plugins can be accessed with a github actions and a Obsidian's plugin or usi
 - [Documentation](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/)
 
 # Terminal
-
-![[script_demo.gif]]
-
-Mkdocs Obsidian is an association between a python script and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault.
+## Prerequisites
+You need : 
+- [Git](https://git-scm.com/) and a [Github Account](https://github.com/)
+- [Python](https://www.python.org/)
+- Optional *(Windows)*: [Windows Terminal](https://docs.microsoft.com/fr-fr/windows/terminal/)
 
 ## TLDR
 1. Install / update with `pip install obs2mk --upgrade`
@@ -33,13 +37,6 @@ Mkdocs Obsidian is an association between a python script and a Material mkdocs 
 4. Add `share: true` in Obsidian's note frontmatter
 5. Customize the `category` key in Obsidian's note frontmatter
 6. Run the script `obs2mk`
-
-## Prerequisites
-You need : 
-- [Git](https://git-scm.com/) and a [Github Account](https://github.com/)
-- [Python](https://www.python.org/)
-- Optional *(Windows)*: [Windows Terminal](https://docs.microsoft.com/fr-fr/windows/terminal/)
-
 
 # Github actions & Obsidian's plugin
 ## TLDR
@@ -54,9 +51,9 @@ You need :
 5. Customize (or not) the `category` key in Obsidian's note frontmatter. 
 6. Run the commands throught the file menu or commands palette.
 
-Read more about the [[github actions]] and the configuration of the [[obsidian mkdocs publication|plugin]].
+Read more about the [Github Actions](docs/documentation/obs2mk/github actions.md) and the configuration of the [plugin](docs/documentation/Obsidian mkdocs publisher.md).
 
-## Quick installation tutorial
+# Quick blog installation tutorial
 1. Click on [use this template](https://github.com/Mara-Li/mkdocs_obsidian_template/generate)[^1]
 2. Use the name of your choice.
 3. Click on [code](https://docs.github.com/en/get-started/getting-started-with-git/about-remote-repositories) → SSH ; Copy the link
