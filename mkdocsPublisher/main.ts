@@ -44,13 +44,13 @@ export default class MkdocsPublication extends Plugin {
 										new Notice(
 											"Successfully published " +
 												file.basename +
-												" to mkdocs."
+												" to " + this.settings.githubRepo + "."
 										);
 									}
 
 								} catch (e) {
 									console.error(e);
-									new Notice("Error publishing to mkdocs.");
+									new Notice("Error publishing to " + this.settings.githubRepo + ".");
 								}
 							});
 					});
@@ -87,12 +87,12 @@ export default class MkdocsPublication extends Plugin {
 										new Notice(
 											"Successfully published " +
 												view.file.basename +
-												" to mkdocs."
+												" to " + this.settings.githubRepo + "."
 										);
 									}
 								} catch (e) {
 									console.error(e);
-									new Notice("Error publishing to mkdocs.");
+									new Notice("Error publishing to " + this.settings.githubRepo + ".");
 								}
 							});
 					});
@@ -131,7 +131,7 @@ export default class MkdocsPublication extends Plugin {
 								new Notice(
 									"Successfully published " +
 										currentFile.basename +
-										" to mkdocs."
+										" to " + this.settings.githubRepo + "."
 								);
 							}
 						} catch (e) {
@@ -194,7 +194,7 @@ export default class MkdocsPublication extends Plugin {
 						new Notice(
 							`Successfully published ${
 								publishedFiles.length - errorCount
-							} notes to mkdocs.`
+							} notes to ${this.settings.githubRepo}`
 						);
 						await publish.workflowGestion();
 					}
@@ -220,7 +220,7 @@ export default class MkdocsPublication extends Plugin {
 					);
 					const successUpdate = await publish.updateSettings();
 					if (successUpdate) {
-						new Notice("Successfully updated settings.");
+						new Notice("Successfully updated " + this.settings.githubRepo + "settings.");
 					}
 				} catch (e) {
 					console.error(e);
