@@ -39,11 +39,15 @@ export default class MkdocsPublish {
 		const image_list = []
 		if (embed_files != undefined) {
 			for (const embed_file of embed_files) {
-				const imageLink = this.metadataCache.getFirstLinkpathDest(embed_file.link, file.path)
-				const imgExt = imageLink.extension
-				const regImg = /(png|jpe?g|svg|bmp|gif)$/i
-				if (imgExt.match(regImg)) {
-					image_list.push(imageLink)
+				try {
+					const imageLink = this.metadataCache.getFirstLinkpathDest(embed_file.link, file.path)
+					const imgExt = imageLink.extension
+					const regImg = /(png|jpe?g|svg|bmp|gif)$/i
+					if (imgExt.match(regImg)) {
+						image_list.push(imageLink)
+					}
+				} catch (e) {
+					console.log('Error with this image : ' + embed_file)
 				}
 			}
 			return image_list
