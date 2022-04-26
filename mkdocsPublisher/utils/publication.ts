@@ -1,9 +1,8 @@
 // Credit : https://github.com/oleeskild/obsidian-digital-garden @oleeskild
 
-import {MetadataCache, Notice, TFile, Vault} from 'obsidian'
+import {MetadataCache, Notice, TFile, Vault, arrayBufferToBase64} from 'obsidian'
 import {MkdocsPublicationSettings} from '../settings'
 import {Octokit} from '@octokit/core'
-import {arrayBufferToBase64} from './utils'
 import {Base64} from 'js-base64'
 
 export default class MkdocsPublish {
@@ -135,8 +134,7 @@ export default class MkdocsPublish {
 				payload.sha = response.data.sha
 			}
 		} catch {
-			throw {}
-
+			console.log('The 404 error is normal ! It means that the file does not exist yet. Don\'t worry ❤️.')
 		}
 		payload.message = `Update note ${title}`
 		await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', payload)
