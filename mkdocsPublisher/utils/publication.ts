@@ -66,7 +66,7 @@ export default class MkdocsPublish {
 	async publish (file: TFile, one_file = false) {
 		const sharedKey = this.settings.shareKey
 		const frontmatter = this.metadataCache.getCache(file.path).frontmatter
-		if (!frontmatter || !frontmatter[sharedKey] || this.checkExcludedFolder(file)) {
+		if (!frontmatter || !frontmatter[sharedKey] || this.checkExcludedFolder(file) || file.extension !== 'md') {
 			return false
 		}
 		try {
@@ -130,8 +130,9 @@ export default class MkdocsPublish {
 				// @ts-ignore
 				payload.sha = response.data.sha
 			}
-		} catch (e) {
-			// ignore
+		} catch {
+			throw {}
+
 		}
 		payload.message = `Update note ${title}`
 		await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', payload)
