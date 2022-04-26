@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-mkdocs-publication",
-	"version": "2.3.0",
+	"version": "2.3.1",
 	"description": "Obsidian's Mkdocs Publication is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault.",
 	"main": "main.js",
 	"scripts": {

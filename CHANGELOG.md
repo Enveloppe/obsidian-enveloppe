@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.3.0...2.3.1) (2022-04-26)
+
+
+### Bug Fixes
+
+* **image:** Add catching error + log when reading metadataCache for image ([9250e23](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/9250e232e85d7ce413cff2bbab124ba3d0936aae))
+* **publish:** Checking file extension during publish ([c44c268](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/c44c268bbfb2f38e28f8a196f82ffea1d3d70000))
+
 ## [2.3.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.4...2.3.0) (2022-04-18)
 
 
