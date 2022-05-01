@@ -47,7 +47,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setPlaceholder('mkdocs-template')
 					.setValue(this.plugin.settings.githubRepo)
 					.onChange(async (value) => {
-						this.plugin.settings.githubRepo = value
+						this.plugin.settings.githubRepo = value.trim()
 						await this.plugin.saveSettings()
 					})
 			)
@@ -59,7 +59,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setPlaceholder('Github-username')
 					.setValue(this.plugin.settings.githubName)
 					.onChange(async (value) => {
-						this.plugin.settings.githubName = value
+						this.plugin.settings.githubName = value.trim()
 						await this.plugin.saveSettings()
 					})
 			)
@@ -79,7 +79,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setPlaceholder('ghb-15457498545647987987112184')
 					.setValue(this.plugin.settings.GhToken)
 					.onChange(async (value) => {
-						this.plugin.settings.GhToken = value
+						this.plugin.settings.GhToken = value.trim()
 						await this.plugin.saveSettings()
 					})
 			)
@@ -92,7 +92,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setPlaceholder('share')
 					.setValue(this.plugin.settings.shareKey)
 					.onChange(async (value) => {
-						this.plugin.settings.shareKey = value
+						this.plugin.settings.shareKey = value.trim()
 						await this.plugin.saveSettings()
 					})
 			)
@@ -141,7 +141,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setPlaceholder('category')
 					.setValue(this.plugin.settings.categoryKey)
 					.onChange(async (value) => {
-						this.plugin.settings.categoryKey = value
+						this.plugin.settings.categoryKey = value.trim()
 						await this.plugin.saveSettings()
 					})
 			)
@@ -154,7 +154,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setPlaceholder('Notes')
 					.setValue(this.plugin.settings.categoryDefault)
 					.onChange(async (value) => {
-						this.plugin.settings.categoryDefault = value
+						this.plugin.settings.categoryDefault = value.trim()
 						await this.plugin.saveSettings()
 					})
 			)
@@ -177,7 +177,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setPlaceholder('(i)')
 					.setValue(this.plugin.settings.indexFolder)
 					.onChange(async (value) => {
-						this.plugin.settings.indexFolder = value
+						this.plugin.settings.indexFolder = value.trim()
 						await this.plugin.saveSettings()
 					})
 			)
