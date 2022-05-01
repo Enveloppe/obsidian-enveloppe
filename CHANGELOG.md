@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.3.1...2.3.2) (2022-05-01)
+
+
+### Bug Fixes
+
+* Trim settings whitespace ([4738991](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/4738991823aee63ad1f76834c0ac28204e525e7f)), closes [#4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/issues/4)
 
 ### [2.3.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.3.1...2.3.2) (2022-05-01)
 
