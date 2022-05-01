@@ -1,21 +1,5 @@
 Obsidian's Mkdocs Publication is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault.
 
-# Useful links
-- [Main Repo](https://github.com/Mara-Li/obsidian_mkdocs_publisher)
-- [Obsidian Plugin](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/)
-- [Python package](https://github.com/Mara-Li/obsidian-mkdocs-publisher-python)
-- [Template](https://github.com/Mara-Li/obsidian-mkdocs-publisher-template)
-- [Documentation](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/)
-
-## How to...
-- [Configure the blog](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/create%20the%20blog/)
-- [Customize the blog](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/blog%20customization/)
-- [Copy the link ?](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/useful%20plugins/#metacopy)
-- [Update the template](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/Q%26A/#2-update-the-template)
-
-
----
-
 # TLDR
 1. Install the plugins through Obsidian Community or [BRAT](https://github.com/TfTHacker/obsidian42-brat)
 2. [Template](https://github.com/Mara-Li/obsidian-mkdocs-publisher-template) the blog and configure it 
@@ -50,10 +34,7 @@ You can use the plugin to update your configuration. To do that, you can edit :
 
 Use the commands "Update settings workflow" to update the `.github-action`. 
 
-
----
-
-Now, if everything is configured, you will have :
+If everything is configured, you will have :
 - In file-menu, a option to publish one file. 
 - In command palette (CTRL+P) you can also publish one file, or every file with `share: true` in their frontmatter.
 
@@ -62,6 +43,37 @@ The files (and the image) will be send on your github repository template, in th
 
 ⚠️ The source folder will be cleaned after the conversion from the script !
 
+---
+# Useful links
+- [Main Repo](https://github.com/Mara-Li/obsidian_mkdocs_publisher)
+- [Obsidian Plugin](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/)
+- [Python package](https://github.com/Mara-Li/obsidian-mkdocs-publisher-python)
+- [Template](https://github.com/Mara-Li/obsidian-mkdocs-publisher-template)
+- [Documentation](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/)
+
+## How to...
+- [Configure the blog](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/create%20the%20blog/)
+- [Customize the blog](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/blog%20customization/)
+- [Copy the link ?](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/useful%20plugins/#metacopy)
+- [Update the template](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/Q%26A/#2-update-the-template)
+
+## Support
+- [x] Wikilinks (`[[Links]]`)
+- [x] File transclusion/embed, both wikilinks and markdown links
+- [x] Obsidian callout and custom callout
+- [x] Folder notes and their citation
+- [x] Custom attributes
+- [x] Sharing state and custom folder hierarchy.
+- [x] Mobile and desktop
+- [x] File mini preview on Hover
+
+## Limitations
+- No plugins (dataview...)
+- No graph view
+- You need to have a clean tree structure with unique name file. No worry about the display in blog ; the `title` key in frontmatter will change it, so you can have a `ezarezozre` name and use a good title like `reading book`. 
+-  I prefer to encourage you to use the `shortlinks`option in obsidian’s link option. 
+-  index (from [folder note](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/blog%20customization/#folder-note)) won’t be deleted : You need to do it manually using github. 
+- Obs2mk will don’t move the file if you change the `category` value : you need to manually delete it to prevent duplicate. 
 
 [^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or [with downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
 [^2]: You need to be connected to generate it.
