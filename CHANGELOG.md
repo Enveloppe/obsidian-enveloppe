@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.3](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/compare/2.3.2...2.3.3) (2022-05-13)
+
+
+### Bug Fixes
+
+* **github:** github action delete filename with coma ([b89f153](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/commit/b89f15318638120f6402a9b18b8f5f444071c9e8))
+
 ### [2.3.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.3.1...2.3.2) (2022-05-01)
 
 
