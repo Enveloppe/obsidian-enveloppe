@@ -95,8 +95,9 @@ export default class MkdocsPublish {
 		const folder = await this.getSharedFiles()
 		if (folder.length > 0) {
 			const publishedFiles = folder.map(file => file.name)
-			const publishedFilesText = publishedFiles.toString()
-			await this.uploadText('vault_published.txt', publishedFilesText, 'vault_published.txt')
+			const publishedFilesText = JSON.stringify(publishedFiles).toString()
+			console.log(publishedFilesText)
+			await this.uploadText('vault_published.json', publishedFilesText, 'vault_published.json')
 		}
 	}
 

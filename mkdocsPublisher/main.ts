@@ -168,11 +168,11 @@ export default class MkdocsPublication extends Plugin {
 							(file) => file.name
 						);
 						// upload list of published files in Source
-						const publishedFilesText = publishedFiles.toString();
+						const publishedFilesText = JSON.stringify(publishedFiles).toString();
 						await publish.uploadText(
-							"vault_published.txt",
+							"vault_published.json",
 							publishedFilesText,
-							"vault_published.txt"
+							"vault_published.json"
 						);
 						for (
 							let files = 0;
