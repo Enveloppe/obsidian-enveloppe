@@ -41,8 +41,7 @@ export default class MkdocsPublish {
 				try {
 					const imageLink = this.metadataCache.getFirstLinkpathDest(embed_file.link, file.path)
 					const imgExt = imageLink.extension
-					const regImg = /(png|jpe?g|svg|bmp|gif)$/i
-					if (imgExt.match(regImg)) {
+					if (imgExt.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
 						image_list.push(imageLink)
 					}
 				} catch (e) {
@@ -96,7 +95,6 @@ export default class MkdocsPublish {
 		if (folder.length > 0) {
 			const publishedFiles = folder.map(file => file.name)
 			const publishedFilesText = JSON.stringify(publishedFiles).toString()
-			console.log(publishedFilesText)
 			await this.uploadText('vault_published.json', publishedFilesText, 'vault_published.json')
 		}
 	}
