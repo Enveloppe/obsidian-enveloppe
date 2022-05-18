@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.3.4...2.4.0) (2022-05-18)
+
+
+### Features
+
+* send a notification when the build workflow is completed ([1808766](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/180876642a195e55b7af21fcd28316b7c8ca45dd))
+
 ### [2.3.4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.3.3...2.3.4) (2022-05-14)
 
 ### [2.3.3](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/compare/2.3.2...2.3.3) (2022-05-13)
