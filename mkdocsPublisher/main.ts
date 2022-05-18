@@ -40,6 +40,7 @@ export default class MkdocsPublication extends Plugin {
 									const publishSuccess =
 										await publish.publish(file, true);
 									if (publishSuccess) {
+										new Notice('Send "' + file.basename + '" to ' + this.settings.githubRepo + ".\nNow, waiting for the workflow to be completed...")
 										await publish.workflowGestion();
 										new Notice(
 											"Successfully published " +
@@ -83,6 +84,7 @@ export default class MkdocsPublication extends Plugin {
 									const publishSuccess =
 										await publish.publish(view.file, true);
 									if (publishSuccess) {
+										new Notice('Send "' + view.file.basename + '" to ' + this.settings.githubRepo + ".\nNow, waiting for the workflow to be completed...")
 										await publish.workflowGestion();
 										new Notice(
 											"Successfully published " +
@@ -127,6 +129,7 @@ export default class MkdocsPublication extends Plugin {
 								true
 							);
 							if (publishSuccess) {
+								new Notice('Send "' + currentFile.basename + '"to ' + this.settings.githubRepo + ".\nNow, waiting for the workflow to be completed...")
 								publishFile.workflowGestion();
 								new Notice(
 									"Successfully published " +
@@ -192,11 +195,16 @@ export default class MkdocsPublication extends Plugin {
 						}
 						statusBar.finish(8000);
 						new Notice(
-							`Successfully published ${
+							`Send ${
 								publishedFiles.length - errorCount
 							} notes to ${this.settings.githubRepo}`
 						);
 						await publish.workflowGestion();
+						new Notice(
+							`Successfully published ${
+								publishedFiles.length - errorCount
+							} notes to ${this.settings.githubRepo}.\nNow, waiting for the workflow to be completed...`
+						);
 					}
 				} catch (e) {
 					// statusBarItems.remove();

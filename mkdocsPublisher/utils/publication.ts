@@ -164,6 +164,21 @@ export default class MkdocsPublish {
 			workflow_id: 'ci.yml',
 			ref: 'main'
 		})
+		let finished = false;
+		while (!finished) {
+			await sleep(10000)
+			const workflowGet=await octokit.request('GET /repos/{owner}/{repo}/actions/runs', {
+				owner: this.settings.githubName,
+				repo: this.settings.githubRepo
+			});
+			if (workflowGet.data.workflow_runs.length > 0) {
+				const build = workflowGet.data.workflow_runs.find(run => run.name === 'ci')
+				if (build.status === 'completed') {
+					finished = true
+				}
+			}
+		}
+
 	}
 
 	async updateSettings () {
