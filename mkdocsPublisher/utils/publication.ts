@@ -74,7 +74,11 @@ export default class MkdocsPublish {
 		try {
 			const text = await this.vault.cachedRead(file);
 			const linkedImage = this.getLinkedImage(file);
-			let path = this.settings.folderDefaultName + '/' + file.name;
+			let folderDefault = this.settings.folderDefaultName
+			if (folderDefault.length > 0) {
+				folderDefault = folderDefault + '/'
+			}
+			let path = folderDefault + file.name;
 			if (this.settings.downloadedFolder === 'yamlFrontmatter') {
 				let folderRoot = this.settings.rootFolder;
 				if (folderRoot.length > 0) {
@@ -83,8 +87,9 @@ export default class MkdocsPublish {
 				if (frontmatter[this.settings.yamlFolderKey]) {
 					path = folderRoot + frontmatter[this.settings.yamlFolderKey] + '/' + file.name;
 				}
+			} else if (this.settings.downloadedFolder === 'obsidianPath') {
+				path = folderDefault + file.path;
 			}
-			console.log(path, this.settings.downloadedFolder, this.settings.yamlFolderKey)
 			await this.uploadText(file.path, text, path, file.name);
 			if (linkedImage.length > 0 && this.settings.transfertEmbeded) {
 				for (const image of linkedImage) {

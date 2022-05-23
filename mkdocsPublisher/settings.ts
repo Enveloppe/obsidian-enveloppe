@@ -115,7 +115,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 				dropDown
 					.addOptions({
 						fixedFolder : 'Fixed Folder',
-						yamlFrontmatter: 'YAML frontmatter'
+						yamlFrontmatter: 'YAML frontmatter',
+						obsidianPath: 'Obsidian Path'
 					})
 					.setValue(this.plugin.settings.downloadedFolder)
 					.onChange(async(value: string)=>{
@@ -140,35 +141,37 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						.setPlaceholder('docs')
 						.setValue(this.plugin.settings.folderDefaultName)
 						.onChange(async (value) => {
-							this.plugin.settings.folderDefaultName = value.replace('/', '');
+							this.plugin.settings.folderDefaultName = value.replace(/\/$/, '');
 							await this.plugin.saveSettings();
 						});
 				});
 
 		const frontmatterKeySettings = new Setting(this.containerEl)
-				.setName('Frontmatter key')
-				.setDesc('Set the key where to get the value of the folder')
-				.addText((text) => {
-					text
-						.setPlaceholder('category')
-						.setValue(this.plugin.settings.yamlFolderKey)
-						.onChange(async (value) => {
-							this.plugin.settings.yamlFolderKey = value.trim();
-							await this.plugin.saveSettings();
-						});
-				});
-		const rootFolderSettings = new Setting(this.containerEl)
-				.setName('Root folder')
-				.setDesc('Append this path to the folder set by the frontmatter key.')
-				.addText((text)=>{
-					text
-						.setPlaceholder('docs')
-						.setValue(this.plugin.settings.rootFolder)
-						.onChange(async(value)=>{
-							this.plugin.settings.rootFolder =value.replace('/', '');
-							await this.plugin.saveSettings();
+			.setName('Frontmatter key')
+			.setClass('mdkocs-settings-tab')
+			.setDesc('Set the key where to get the value of the folder')
+			.addText((text) => {
+				text
+					.setPlaceholder('category')
+					.setValue(this.plugin.settings.yamlFolderKey)
+					.onChange(async (value) => {
+						this.plugin.settings.yamlFolderKey = value.trim();
+						await this.plugin.saveSettings();
 					});
+			});
+		const rootFolderSettings = new Setting(this.containerEl)
+			.setName('Root folder')
+			.setClass('mdkocs-settings-tab')
+			.setDesc('Append this path to the folder set by the frontmatter key.')
+			.addText((text)=>{
+				text
+					.setPlaceholder('docs')
+					.setValue(this.plugin.settings.rootFolder)
+					.onChange(async(value)=>{
+						this.plugin.settings.rootFolder =value.replace(/\/$/, '');
+						await this.plugin.saveSettings();
 				});
+			});
 
 		if (this.plugin.settings.downloadedFolder == 'yamlFrontmatter') {
 			showSettings(frontmatterKeySettings);
@@ -187,7 +190,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setPlaceholder('ci')
 					.setValue(this.plugin.settings.workflowName)
 					.onChange(async(value)=> {
-						this.plugin.settings.workflowName = value.trim().replace('.yml', '') + '.yml'
+						value = value.length>0? value.trim().replace('.yml', '') + '.yml' : value;
+						this.plugin.settings.workflowName = value;
 						await this.plugin.saveSettings();
 					});
 			});
@@ -214,7 +218,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setPlaceholder('docs/images')
 					.setValue(this.plugin.settings.defaultImageFolder)
 					.onChange(async(value)=>{
-						this.plugin.settings.defaultImageFolder = value.replace('/', '');
+						this.plugin.settings.defaultImageFolder = value.replace(/\/$/, '');
 						await this.plugin.saveSettings();
 					});
 			});
