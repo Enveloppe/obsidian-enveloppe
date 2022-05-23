@@ -1,3 +1,7 @@
+---
+share: true
+---
+
 GitHub Publisher is a plugin that help you to send file in a configured GitHub Repository, based on a front matter entry state. 
 
 You can use it to send any markdown file, allowing compatibility thought a lot of Obsidian Publish alternative. 
