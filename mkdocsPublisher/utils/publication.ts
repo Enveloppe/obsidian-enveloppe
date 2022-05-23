@@ -72,16 +72,27 @@ export default class MkdocsPublish {
 			return false
 		}
 		try {
-			const text = await this.vault.cachedRead(file)
-			const linkedImage = this.getLinkedImage(file)
-			await this.uploadText(file.path, text, file.name)
-			if (linkedImage.length > 0) {
+			const text = await this.vault.cachedRead(file);
+			const linkedImage = this.getLinkedImage(file);
+			let path = this.settings.folderDefaultName + '/' + file.name;
+			if (this.settings.downloadedFolder === 'yamlFrontmatter') {
+				let folderRoot = this.settings.rootFolder;
+				if (folderRoot.length > 0) {
+					folderRoot = folderRoot + '/';
+				}
+				if (frontmatter[this.settings.yamlFolderKey]) {
+					path = folderRoot + frontmatter[this.settings.yamlFolderKey] + '/' + file.name;
+				}
+			}
+			console.log(path, this.settings.downloadedFolder, this.settings.yamlFolderKey)
+			await this.uploadText(file.path, text, path, file.name);
+			if (linkedImage.length > 0 && this.settings.transfertEmbeded) {
 				for (const image of linkedImage) {
-					await this.uploadImage(image)
+					await this.uploadImage(image);
 				}
 			}
 			if (one_file) {
-				await this.uploadFolder()
+				await this.uploadFolder();
 			}
 			return true
 		} catch (e) {
@@ -91,15 +102,16 @@ export default class MkdocsPublish {
 	}
 
 	async uploadFolder () {
-		const folder = await this.getSharedFiles()
+		const folder = await this.getSharedFiles();
 		if (folder.length > 0) {
-			const publishedFiles = folder.map(file => file.name)
-			const publishedFilesText = JSON.stringify(publishedFiles).toString()
-			await this.uploadText('vault_published.json', publishedFilesText, 'vault_published.json')
+			const publishedFiles = folder.map(file => file.name);
+			const publishedFilesText = JSON.stringify(publishedFiles).toString();
+			const vaultPublisherJSON = this.settings.folderDefaultName + '/vault_published.json';
+			await this.uploadText('vault_published.json', publishedFilesText, vaultPublisherJSON);
 		}
 	}
 
-	async upload (filePath: string, content: string, title: string) {
+	async upload (filePath: string, content: string, path: string, title='') {
 		if (!this.settings.githubRepo) {
 			new Notice('Config error : You need to define a github repo in the plugin settings')
 			throw {}
@@ -111,7 +123,6 @@ export default class MkdocsPublish {
 		const octokit = new Octokit({
 			auth: this.settings.GhToken
 		})
-		const path = `source/${title}`
 
 		const payload = {
 			owner: this.settings.githubName,
@@ -142,56 +153,48 @@ export default class MkdocsPublish {
 	async uploadImage (imageFile:TFile) {
 		const imageBin = await this.vault.readBinary(imageFile)
 		const image64 = arrayBufferToBase64(imageBin)
-		await this.upload(imageFile.path, image64, imageFile.name)
+		let path = this.settings.folderDefaultName + '/' + imageFile.name;
+		if (this.settings.defaultImageFolder.length > 0) {
+			path = this.settings.defaultImageFolder+ '/' + imageFile.name;
+		}
+		await this.upload(imageFile.path, image64, path)
 	}
 
-	async uploadText (filePath: string, text: string, title = '') {
+	async uploadText (filePath: string, text: string, path: string, title = '') {
 		try {
 			const contentBase64 = Base64.encode(text).toString()
-			await this.upload(filePath, contentBase64, title)
+			await this.upload(filePath, contentBase64, path, title)
 		} catch (e) {
 			console.error(e)
 		}
 	}
 
 	async workflowGestion () {
-		const octokit = new Octokit({
-			auth: this.settings.GhToken
-		})
-		await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
-			owner: this.settings.githubName,
-			repo: this.settings.githubRepo,
-			workflow_id: 'ci.yml',
-			ref: 'main'
-		})
-		let finished = false;
-		while (!finished) {
-			await sleep(10000)
-			const workflowGet=await octokit.request('GET /repos/{owner}/{repo}/actions/runs', {
+		if (this.settings.workflowName.length > 0) {
+			const octokit = new Octokit({
+				auth: this.settings.GhToken
+			})
+			await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
 				owner: this.settings.githubName,
-				repo: this.settings.githubRepo
-			});
-			if (workflowGet.data.workflow_runs.length > 0) {
-				const build = workflowGet.data.workflow_runs.find(run => run.name === 'ci')
-				if (build.status === 'completed') {
-					finished = true
+				repo: this.settings.githubRepo,
+				workflow_id: this.settings.workflowName,
+				ref: 'main'
+			})
+			let finished = false;
+			while (!finished) {
+				await sleep(10000)
+				const workflowGet = await octokit.request('GET /repos/{owner}/{repo}/actions/runs', {
+					owner: this.settings.githubName,
+					repo: this.settings.githubRepo
+				});
+				if (workflowGet.data.workflow_runs.length > 0) {
+					const build = workflowGet.data.workflow_runs.find(run => run.name === this.settings.workflowName.replace('.yml', ''))
+					if (build.status === 'completed') {
+						finished = true
+					}
 				}
 			}
 		}
-
-	}
-
-	async updateSettings () {
-		let newSettings = `index_key=${this.settings.indexFolder}
-		default_blog=${this.settings.categoryDefault}
-		category_key=${this.settings.categoryKey}
-		`
-		newSettings = newSettings.replace(/\t/gi, '').trim()
-		try {
-			await this.uploadText('.github-actions', newSettings, '.github-actions')
-			return true
-		} catch {
-			return false
-		}
+		return;
 	}
 }

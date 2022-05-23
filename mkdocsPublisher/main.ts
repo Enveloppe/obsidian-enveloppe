@@ -172,10 +172,11 @@ export default class MkdocsPublication extends Plugin {
 						);
 						// upload list of published files in Source
 						const publishedFilesText = JSON.stringify(publishedFiles).toString();
+						const publishedJsonPath = this.settings.folderDefaultName + '/vault_published.json'
 						await publish.uploadText(
 							"vault_published.json",
 							publishedFilesText,
-							"vault_published.json"
+							publishedJsonPath
 						);
 						for (
 							let files = 0;
@@ -211,29 +212,6 @@ export default class MkdocsPublication extends Plugin {
 					console.error(e);
 					new Notice(
 						"Unable to publish multiple notes, something went wrong."
-					);
-				}
-			},
-		});
-		this.addCommand({
-			id: "obs2mk-update-settings",
-			name: "Update settings workflow",
-			callback: async () => {
-				try {
-					const { vault, metadataCache } = this.app;
-					const publish = new MkdocsPublish(
-						vault,
-						metadataCache,
-						this.settings
-					);
-					const successUpdate = await publish.updateSettings();
-					if (successUpdate) {
-						new Notice("Successfully updated " + this.settings.githubRepo + "settings.");
-					}
-				} catch (e) {
-					console.error(e);
-					new Notice(
-						"Unable to update settings, something went wrong."
 					);
 				}
 			},
