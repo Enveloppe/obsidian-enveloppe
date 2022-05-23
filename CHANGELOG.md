@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.0.0...3.0.1) (2022-05-23)
+
+
+### Bug Fixes
+
+* double .yml if .yml in workflow name ([2d8dabc](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/2d8dabc7004ff9774986ce9199a8519f2b4e00ad))
+
 ## [3.0.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.4.0...3.0.0) (2022-05-23)
 
 
