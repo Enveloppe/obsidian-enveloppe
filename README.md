@@ -1,50 +1,82 @@
-Obsidian's Mkdocs Publication is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault.
+GitHub Publisher is a plugin that help you to send file in a configured GitHub Repository, based on a front matter entry state. 
 
-# TLDR
-1. Install the plugins through Obsidian Community or [BRAT](https://github.com/TfTHacker/obsidian42-brat)
-2. [Template](https://github.com/Mara-Li/obsidian-mkdocs-publisher-template) the blog and configure it 
-3. Configure the plugin's options
-4. Add `share: true` in Obsidian's note frontmatter 
-5. Customize (or not) the `category` key in Obsidian's note frontmatter. 
-6. Run the commands throught the file menu or commands palette.
+You can use it to send any markdown file, allowing compatibility thought a lot of Obsidian Publish alternative. 
 
-# Quick installation tutorial
-1. Click on [use this template](https://github.com/Mara-Li/mkdocs_obsidian_template/generate)[^1]
-2. Use the name of your choice
-3. Get your [Github Token here](https://github.com/settings/tokens/new?scopes=repo)[^2]. The correct settings should already be applied. If you don't want to generate this every few months, choose the "No expiration" option. Click the "Generate token" button, and copy the token you are presented with on the next page.
-4. In Obsidian fill the options for mkdocs-publish :
-    - Repo name
-    - Your github username
-    - The github token (copyed from earlier)
-    - The share key
-    - The category key name
-    - The category key default value
-    - The key citation for [folder-note](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/blog%20customization/#folder-note)
+# Main configuration
 
-# Configuration
-The configuration's file of the actions is `.github-actions`, localized under the `source` folder on your blog.
-The configuration is handled by the plugin directly, in settings. You can update it any time using the `update settings workflow` command.
-There is three configuration : 
-- The index key, for folder note citation.
-- The default category key and the default folder. For the default folder, using "/" will put the file in the root.
+To use the plugin, you need to fill the correct information to allow the workflow. 
 
-You can use the plugin to update your configuration. To do that, you can edit :
-- The category key name and the default value
-- The citation key
+## 1. GitHub 
 
-Use the commands "Update settings workflow" to update the `.github-action`. 
-
-If everything is configured, you will have :
-- In file-menu, a option to publish one file. 
-- In command palette (CTRL+P) you can also publish one file, or every file with `share: true` in their frontmatter.
+- Repo name: The repository where the information will be sent.
+- GitHub username: Your username.
+- GitHub Token: Get your [GitHub Token here](https://github.com/settings/tokens/new?scopes=repo)[^2]. The correct settings should already be applied. If you want to avoid generating this every few months, choose the “No expiration” option. Click the “Generate token” button, and copy the token you are presented with on the next page.
 
 
-The files (and the image) will be send on your github repository template, in the `source` folder. The conversion will be done by the [github actions](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/obs2mk/github%20actions/), before the build. You can also add manually the files in `source` or use `obs2mk` in parallels. 
+## 2. Download configuration
+### Folder reception settings.
 
-⚠️ The source folder will be cleaned after the conversion from the script !
+You have two options : 
+- Use a “fixed” folder : Every file will be sent in this folder. 
+- Use a folder created based on a `category` key.
+
+You need, in all case, to configure the **default folder** :  The file will be sent here.
+> If you use the option for frontmatter, this folder will be the default folder : file will be send here if the key doesn't exist. 
+
+Using the second option will activate more options : 
+- Front matter key: The key you want to use in your file.
+- Root folder : To prepend a path **before** the category key found (if any key are found!)
+
+For example : 
+- You use `category` in a file with `category: Roleplay/Characters/DND`
+- You set a root folder with `_docs/pages`
+- And you set a default folder on `_docs/draft`
+
+The final path (in GitHub!) will be : `_docs/pages/Roleplay/Characters/DND`
+
+But, if you don't set `category`, the path will be `_docs/draft`
+
+### Workflow dispatch
+
+If your workflow needs to activate a GitHub actions, set the name here. If no name is found, no workflow will be activated by the plugin.
+
+### Embedded file
+
+Occasionally, you want to avoid sending the image linked (why? Don't know. It's your GitHub repo, after all!). You can remove the transfer of these files.
+If you choose to send image, you can set a default folder for image.
+
+# 3. Plugin settings
+
+You can configure :
+- The share key used by the plugin. By default, it is `share`
+- Folder excluded. The share key can't work here. Useful if you forget to remove the `share` (or turn it to `false`) and move a file in your archive…
+- Add the command to share the file on the file menu (right-click on a file in the explorer or using the three dot) and editor menu (right-click on a opened edited note)
 
 ---
-# Useful links
+# For Mkdocs Publisher Workflow
+## Quick installation tutorial
+1. Click on [use this template](https://github.com/Mara-Li/mkdocs_obsidian_template/generate)[^1]
+2. Use the name of your choice
+3. Set and edit the `.github-actions` in the `source` folder if you need.
+
+## Plugin configuration
+![[Settings_Github1.png]]
+![[Github_Publisher_Setting.png]]
+
+- Folder Reception settings : `Fixed Folder`
+- Default folder : `source`
+- Workflow dispatch : `ci.yml`
+- Transfer Image : Set to `true`
+- Leave blank for default image folder
+
+The files (and the image) will be sent on your GitHub repository template, in the `source` folder. The conversion will be done by the [github actions](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/obs2mk/github%20actions/), before the build. You can also add manually the files in `source` or use `obs2mk` in parallels. 
+
+⚠️ The source folder will be cleaned after the conversion from the script!
+
+---
+# Useful informations
+
+## Links
 - [Main Repo](https://github.com/Mara-Li/obsidian_mkdocs_publisher)
 - [Obsidian Plugin](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/)
 - [Python package](https://github.com/Mara-Li/obsidian-mkdocs-publisher-python)
