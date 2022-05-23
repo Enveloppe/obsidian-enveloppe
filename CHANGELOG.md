@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.4.0...3.0.0) (2022-05-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* Remove the workflow update
+
+### Features
+
+* Universalize the plugin ([837ef71](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/837ef710663a2e2eb80613ac4076ffc5d2bb7de8))
+
 ## [2.4.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.3.4...2.4.0) (2022-05-18)
 
 
