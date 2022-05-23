@@ -6,7 +6,7 @@ on:
         tags:
             - "*"
 env:
-    PLUGIN_NAME: obsidian-metacopy # Change this to match the id of your plugin.
+    PLUGIN_NAME: obsidian-github-publisher # Change this to match the id of your plugin.
 
 jobs:
     build:
