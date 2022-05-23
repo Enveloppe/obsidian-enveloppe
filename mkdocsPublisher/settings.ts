@@ -187,7 +187,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setPlaceholder('ci')
 					.setValue(this.plugin.settings.workflowName)
 					.onChange(async(value)=> {
-						this.plugin.settings.workflowName = value.trim() +'.yml';
+						this.plugin.settings.workflowName = value.trim().replace('.yml', '') + '.yml'
 						await this.plugin.saveSettings();
 					});
 			});
