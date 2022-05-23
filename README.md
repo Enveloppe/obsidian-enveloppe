@@ -1,7 +1,3 @@
----
-share: true
----
-
 GitHub Publisher is a plugin that help you to send file in a configured GitHub Repository, based on a front matter entry state. 
 
 You can use it to send any markdown file, allowing compatibility thought a lot of Obsidian Publish alternative. 
@@ -34,26 +30,26 @@ Using the second option will activate two more options :
 - Front matter key: The key you want to use in your file.
 - Root folder : To prepend a path **before** the category key found (if any key are found!)
 
-> [!EXAMPLE] Example
-> - You use `category` in a file with `category: Roleplay/Characters/DND`  
-> - You set a root folder with `_docs/pages`  
-> - And you set a default folder on `_docs/draft`  
->   
-> The final path (in GitHub!) will be : `_docs/pages/Roleplay/Characters/DND`  
->   
-> But, if you don't set `category`, the path will be `_docs/draft`  
+> [!EXAMPLE] 
+>- You use `category` in a file with `category: Roleplay/Characters/DND`
+>- You set a root folder with `_docs/pages`
+>- And you set a default folder on `_docs/draft`
+>
+>The final path (in GitHub!) will be : `_docs/pages/Roleplay/Characters/DND`
+>
+>But, if you don't set `category`, the path will be `_docs/draft`
 
 #### Fixed folder
 Every file will be sent in the default folder. If you leave the default folder blank, it will be sent in the root of the repository. 
 
-> [!EXAMPLE] Example
+> [!EXAMPLE]
 > - If you set `source` for the default folder, any file will be sent in `your_repo/source`, whatever is their frontmatter key or their relative path.
 > - If you leave it blank, it will be sent in `your_repo` directly.
 
 #### Obsidian Path
 It uses the relative path in your Obsidian vault. The default folder will be prepended before the relative obsidian path. You can leave it blank to use the root repository.
 
-> [!EXAMPLE] Example
+> [!EXAMPLE] 
 > For a file in `20. Compendium/DND/Monster`
 > - If you set `source` :  the final path will be `source/20. Compendium/DND/Monster`
 > - If you leave the default folder blank, the final path will be `20. Compendium/DND/Monster`
@@ -74,7 +70,7 @@ If you choose to send image, you can set a default folder for image.
 You can configure :
 - The share key used by the plugin. By default, it is `share`
 - Folder excluded. The share key can't work here. Useful if you forget to remove the `share` (or turn it to `false`) and move a file in your archive…
-- Add the command to share the file on the file menu (right-click on a file in the explorer or using the three dot) and editor menu (right-click on an opened edited note)
+- Add the command to share the file on the file menu (right-click on a file in the explorer or using the three dot) and editor menu (right-click on a opened edited note)
 
 ---
 # Workflow example
@@ -85,8 +81,8 @@ You can configure :
 3. Set and edit the `.github-actions` in the `source` folder if you need.
 
 ### Plugin configuration
-![Mkdocs Publisher Settings for folder](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/Settings_Github1.png)
-![Plugin settings for image](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/Github_Publisher_Setting.png)
+![[Settings_Github1.png]]
+![[Github_Publisher_Setting.png]]
 
 - Folder Reception settings : `Fixed Folder`
 - Default folder : `source`
@@ -98,7 +94,9 @@ The files (and the image) will be sent on your GitHub repository template, in th
 
 ⚠️ The source folder will be cleaned after the conversion from the script!
 
+---
 ### Useful informations
+
 #### Links
 - [Main Repo](https://github.com/Mara-Li/obsidian_mkdocs_publisher)
 - [Obsidian Plugin](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/)
@@ -130,18 +128,17 @@ The files (and the image) will be sent on your GitHub repository template, in th
 -  index (from [folder note](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/blog%20customization/#folder-note)) won’t be deleted : You need to do it manually using github. 
 - Obs2mk will don’t move the file if you change the `category` value : you need to manually delete it to prevent duplicate. 
 
-
 ---
-## [Digital Garden](https://github.com/TuanManhCao/digital-garden)
-
-![Digital Garden settings for folder](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/Garden%20Settings.png)
-![Digital Garden Settings for image](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/digital_garden_embed_setting.png)
-
-
----
-If you find this plugin and workflow useful, you can give me some coffee money.
+If you find this plugin and workflow usefull, you can give me some coffee money.
 
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 [^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or [with downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
 [^2]: You need to be connected to generate it.
+
+
+## [Digital Garden](https://github.com/TuanManhCao/digital-garden)
+
+![[Garden Settings.png]]
+![[digital_garden_embed_setting.png]]
+
