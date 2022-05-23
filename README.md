@@ -74,7 +74,7 @@ If you choose to send image, you can set a default folder for image.
 You can configure :
 - The share key used by the plugin. By default, it is `share`
 - Folder excluded. The share key can't work here. Useful if you forget to remove the `share` (or turn it to `false`) and move a file in your archive…
-- Add the command to share the file on the file menu (right-click on a file in the explorer or using the three dot) and editor menu (right-click on a opened edited note)
+- Add the command to share the file on the file menu (right-click on a file in the explorer or using the three dot) and editor menu (right-click on an opened edited note)
 
 ---
 # Workflow example
@@ -137,8 +137,9 @@ The files (and the image) will be sent on your GitHub repository template, in th
 ![Digital Garden settings for folder](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/Garden%20Settings.png)
 ![Digital Garden Settings for image](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/digital_garden_embed_setting.png)
 
+
 ---
-If you find this plugin and workflow usefull, you can give me some coffee money.
+If you find this plugin and workflow useful, you can give me some coffee money.
 
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
