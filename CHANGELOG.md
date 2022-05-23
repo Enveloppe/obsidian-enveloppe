@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.0.1...3.1.0) (2022-05-23)
+
+
+### Features
+
+* adding obsidian path option ([7714ae4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/7714ae42f6f7b8df9800e593987139de1c95a9d1))
+
 ### [3.0.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.0.0...3.0.1) (2022-05-23)
 
 
