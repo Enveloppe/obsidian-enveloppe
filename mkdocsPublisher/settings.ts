@@ -134,17 +134,17 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 
 
 		new Setting(this.containerEl)
-				.setName('Default Folder')
-				.setDesc('Set the default reception folder')
-				.addText((text) => {
-					text
-						.setPlaceholder('docs')
-						.setValue(this.plugin.settings.folderDefaultName)
-						.onChange(async (value) => {
-							this.plugin.settings.folderDefaultName = value.replace(/\/$/, '');
-							await this.plugin.saveSettings();
-						});
-				});
+			.setName('Default Folder')
+			.setDesc('Set the default reception folder')
+			.addText((text) => {
+				text
+					.setPlaceholder('docs')
+					.setValue(this.plugin.settings.folderDefaultName)
+					.onChange(async (value) => {
+						this.plugin.settings.folderDefaultName = value.replace(/\/$/, '');
+						await this.plugin.saveSettings();
+					});
+			});
 
 		const frontmatterKeySettings = new Setting(this.containerEl)
 			.setName('Frontmatter key')
@@ -170,7 +170,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.onChange(async(value)=>{
 						this.plugin.settings.rootFolder =value.replace(/\/$/, '');
 						await this.plugin.saveSettings();
-				});
+					});
 			});
 
 		if (this.plugin.settings.downloadedFolder == 'yamlFrontmatter') {
