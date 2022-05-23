@@ -130,8 +130,6 @@ The files (and the image) will be sent on your GitHub repository template, in th
 -  index (from [folder note](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/blog%20customization/#folder-note)) won’t be deleted : You need to do it manually using github. 
 - Obs2mk will don’t move the file if you change the `category` value : you need to manually delete it to prevent duplicate. 
 
----
-
 
 ---
 ## [Digital Garden](https://github.com/TuanManhCao/digital-garden)
