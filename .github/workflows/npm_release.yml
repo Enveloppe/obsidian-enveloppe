@@ -4,7 +4,7 @@ on:
   workflow_dispatch
 
 env:
-    PLUGIN_NAME: obsidian-mkdocs-publisher # Change this to match the id of your plugin.
+    PLUGIN_NAME: obsidian-github-publisher # Change this to match the id of your plugin.
 
 jobs:
   release:
