@@ -6,7 +6,7 @@ import {
 } from "./settings";
 import { ShareStatusBar } from "./utils/status_bar";
 import MkdocsPublish from "./utils/publication";
-import { disablePublish } from "./utils/utils";
+import { disablePublish, noticeMessage } from "./utils/utils";
 
 export default class MkdocsPublication extends Plugin {
 	settings: MkdocsPublicationSettings;
@@ -40,13 +40,7 @@ export default class MkdocsPublication extends Plugin {
 									const publishSuccess =
 										await publish.publish(file, true);
 									if (publishSuccess) {
-										new Notice('Send "' + file.basename + '" to ' + this.settings.githubRepo + ".\nNow, waiting for the workflow to be completed...")
-										await publish.workflowGestion();
-										new Notice(
-											"Successfully published " +
-												file.basename +
-												" to " + this.settings.githubRepo + "."
-										);
+										await noticeMessage(publish, file, this.settings)
 									}
 
 								} catch (e) {
@@ -84,13 +78,7 @@ export default class MkdocsPublication extends Plugin {
 									const publishSuccess =
 										await publish.publish(view.file, true);
 									if (publishSuccess) {
-										new Notice('Send "' + view.file.basename + '" to ' + this.settings.githubRepo + ".\nNow, waiting for the workflow to be completed...")
-										await publish.workflowGestion();
-										new Notice(
-											"Successfully published " +
-												view.file.basename +
-												" to " + this.settings.githubRepo + "."
-										);
+										await noticeMessage(publish, view.file, this.settings)
 									}
 								} catch (e) {
 									console.error(e);
@@ -129,13 +117,7 @@ export default class MkdocsPublication extends Plugin {
 								true
 							);
 							if (publishSuccess) {
-								new Notice('Send "' + currentFile.basename + '"to ' + this.settings.githubRepo + ".\nNow, waiting for the workflow to be completed...")
-								publishFile.workflowGestion();
-								new Notice(
-									"Successfully published " +
-										currentFile.basename +
-										" to " + this.settings.githubRepo + "."
-								);
+								noticeMessage(publishFile, currentFile, this.settings);
 							}
 						} catch (e) {
 							console.error(e);
@@ -172,11 +154,11 @@ export default class MkdocsPublication extends Plugin {
 						);
 						// upload list of published files in Source
 						const publishedFilesText = JSON.stringify(publishedFiles).toString();
-						const publishedJsonPath = this.settings.folderDefaultName + '/vault_published.json'
+						const vaultPublisherJSON = this.settings.folderDefaultName.length>0? `${this.settings.folderDefaultName}/vault_published.json`:`vault_published.json`;
 						await publish.uploadText(
 							"vault_published.json",
 							publishedFilesText,
-							publishedJsonPath
+							vaultPublisherJSON
 						);
 						for (
 							let files = 0;
@@ -195,17 +177,8 @@ export default class MkdocsPublication extends Plugin {
 							}
 						}
 						statusBar.finish(8000);
-						new Notice(
-							`Send ${
-								publishedFiles.length - errorCount
-							} notes to ${this.settings.githubRepo}`
-						);
-						await publish.workflowGestion();
-						new Notice(
-							`Successfully published ${
-								publishedFiles.length - errorCount
-							} notes to ${this.settings.githubRepo}.\nNow, waiting for the workflow to be completed...`
-						);
+						const noticeValue = `${publishedFiles.length - errorCount} notes`
+						await noticeMessage(publish, noticeValue, this.settings)
 					}
 				} catch (e) {
 					// statusBarItems.remove();

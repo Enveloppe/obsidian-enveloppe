@@ -111,7 +111,7 @@ export default class MkdocsPublish {
 		if (folder.length > 0) {
 			const publishedFiles = folder.map(file => file.name);
 			const publishedFilesText = JSON.stringify(publishedFiles).toString();
-			const vaultPublisherJSON = this.settings.folderDefaultName + '/vault_published.json';
+			const vaultPublisherJSON = this.settings.folderDefaultName.length>0? `${this.settings.folderDefaultName}/vault_published.json`:`vault_published.json`;
 			await this.uploadText('vault_published.json', publishedFilesText, vaultPublisherJSON);
 		}
 	}
@@ -175,7 +175,10 @@ export default class MkdocsPublish {
 	}
 
 	async workflowGestion () {
-		if (this.settings.workflowName.length > 0) {
+		let finished=false;
+		if (this.settings.workflowName.length === 0) {
+			return false;
+		} else {
 			const octokit = new Octokit({
 				auth: this.settings.GhToken
 			})
@@ -185,7 +188,6 @@ export default class MkdocsPublish {
 				workflow_id: this.settings.workflowName,
 				ref: 'main'
 			})
-			let finished = false;
 			while (!finished) {
 				await sleep(10000)
 				const workflowGet = await octokit.request('GET /repos/{owner}/{repo}/actions/runs', {
@@ -195,11 +197,11 @@ export default class MkdocsPublish {
 				if (workflowGet.data.workflow_runs.length > 0) {
 					const build = workflowGet.data.workflow_runs.find(run => run.name === this.settings.workflowName.replace('.yml', ''))
 					if (build.status === 'completed') {
-						finished = true
+						finished = true;
+						return true;
 					}
 				}
 			}
 		}
-		return;
 	}
 }
