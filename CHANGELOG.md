@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/compare/3.1.0...3.2.0) (2022-05-24)
+
+
+### Features
+
+* add cleanning command ([a91e0e4](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/commit/a91e0e4088ccba505fe6a1b4de0d4e5e7c02ad32))
+
+
+### Bug Fixes
+
+* add cleanning command ([a5a0c87](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/commit/a5a0c874db4046407b8f75d829a61e204003422e))
+
 ## [3.1.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.0.1...3.1.0) (2022-05-23)
 
 
