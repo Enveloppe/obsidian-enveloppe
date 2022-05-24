@@ -168,6 +168,7 @@ export default class MkdocsPublish {
 			}
 			if (one_file) {
 				await this.uploadFolder();
+				await this.deleteFromGithub(true);
 			}
 			return true;
 		} catch (e) {
@@ -253,7 +254,7 @@ export default class MkdocsPublish {
 		return sharedFilesInRepo;
 	}
 
-	async deleteFromGithub() {
+	async deleteFromGithub(silent = false) {
 		const octokit = new Octokit({
 			auth: this.settings.GhToken,
 		});
@@ -274,8 +275,9 @@ export default class MkdocsPublish {
 				) {
 					errorMsg =
 						"You need to configure a root folder in the settings to use this command.";
+				} if (!silent) {
+					new Notice("Error : " + errorMsg);
 				}
-				new Notice("Error : " + errorMsg);
 			}
 			return false;
 		}
@@ -314,7 +316,9 @@ export default class MkdocsPublish {
 		if (deletedFailed > 0) {
 			failedMsg = `Failed to delete ${deletedFailed} files.`
 		}
-		new Notice(successMsg + failedMsg)
+		if (!silent) {
+			new Notice(successMsg + failedMsg)
+		}
 		return true;
 	}
 

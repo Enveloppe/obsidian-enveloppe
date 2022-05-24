@@ -146,7 +146,7 @@ export default class MkdocsPublication extends Plugin {
 								this.settings
 							);
 							new Notice(`Starting cleaning ${this.settings.githubRepo} `)
-							publish.deleteFromGithub();
+							publish.deleteFromGithub(false);
 						} catch (e) {
 							console.error(e);
 						}
@@ -169,7 +169,7 @@ export default class MkdocsPublication extends Plugin {
 						metadataCache,
 						this.settings
 					);
-					const sharedFiles = await publish.getSharedFiles();
+					const sharedFiles = publish.getSharedFiles();
 					const statusBar = new ShareStatusBar(
 						statusBarItems,
 						sharedFiles.length
@@ -206,6 +206,7 @@ export default class MkdocsPublication extends Plugin {
 						statusBar.finish(8000);
 						const noticeValue = `${publishedFiles.length - errorCount} notes`
 						await noticeMessage(publish, noticeValue, this.settings)
+						await publish.deleteFromGithub(true);
 					}
 				} catch (e) {
 					// statusBarItems.remove();
