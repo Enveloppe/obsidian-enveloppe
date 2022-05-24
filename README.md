@@ -58,11 +58,21 @@ It uses the relative path in your Obsidian vault. The default folder will be pre
 > - If you set `source` :  the final path will be `source/20. Compendium/DND/Monster`
 > - If you leave the default folder blank, the final path will be `20. Compendium/DND/Monster`
 
-### Workflow dispatch
+### Workflow 
 
 If your workflow needs to activate a GitHub actions, set the name here. 
 
 Leave it blank to disable the GitHub actions activation.
+
+You can also set up an "auto-delete" when you use the commands to delete files:
+- Deleted from your vault
+- Which you have stopped sharing
+
+This option will also add a new command to delete file (without sharing new file).
+
+> [!WARNING] WARNING
+> You can't use the delete command if you don't have set a default folder (and a root folder if you use the YAML configuration)
+> Also, you can lost some files using this commands, so be careful! Don't forget that you can revert commit in case the plugin delete a file you don't want to delete.
 
 ### Embedded file
 
@@ -88,11 +98,15 @@ You can configure :
 ![Mkdocs Publisher Settings for folder](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/Settings_Github1.png)
 ![Plugin settings for image](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/Github_Publisher_Setting.png)
 
-- Folder Reception settings : `Fixed Folder`
-- Default folder : `source`
-- Workflow dispatch : `ci.yml`
-- Transfer Image : Set to `true`
-- Leave blank for default image folder
+1. Folder reception settings : 
+    - Reception settings : `Fixed Folder`
+    - Default folder : `source`
+2. Workflow : 
+    - Workflow name : `ci`
+    - **Turn off autoclean**
+3. Images settings : 
+    - Turn on transfer image
+    - Leave blank default image folder (it will send in `source`)
 
 The files (and the image) will be sent on your GitHub repository template, in the `source` folder. The conversion will be done by the [github actions](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/obs2mk/github%20actions/), before the build. You can also add manually the files in `source` or use `obs2mk` in parallels. 
 
@@ -137,7 +151,15 @@ The files (and the image) will be sent on your GitHub repository template, in th
 ![Digital Garden settings for folder](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/Garden%20Settings.png)
 ![Digital Garden Settings for image](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/digital_garden_embed_setting.png)
 
-
+1. Folder reception settings : 
+    - Reception settings : `Obsidian Path`
+    - Default folder : `posts`
+2. Workflow : 
+    - Leave blank
+    - Turn on autoclean
+3. Images settings :
+    - Transfer image on true
+    - Default folder : `posts/Attachments`
 ---
 If you find this plugin and workflow useful, you can give me some coffee money.
 
