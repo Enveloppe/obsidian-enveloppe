@@ -129,14 +129,23 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						if (value == 'yamlFrontmatter') {
 							showSettings(frontmatterKeySettings);
 							showSettings(rootFolderSettings);
+							if (this.plugin.settings.rootFolder.length === 0) {
+								autoCleanSetting.setDisabled(true);
+								autoCleanSetting.components[0].toggleEl.classList.remove('is-enabled')
+							} else {
+								autoCleanSetting.setDisabled(false);
+								autoCleanSetting.components[0].toggleEl.classList.add('is-enabled')
+							}
 						} else {
+							if (this.plugin.settings.folderDefaultName.length > 0) {
+								autoCleanSetting.setDisabled(false);
+							}
 							hideSettings(frontmatterKeySettings);
 							hideSettings(rootFolderSettings);
 						}
 						await this.plugin.saveSettings();
 					});
 			});
-
 
 		new Setting(this.containerEl)
 			.setName('Default Folder')
@@ -147,6 +156,16 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.folderDefaultName)
 					.onChange(async (value) => {
 						this.plugin.settings.folderDefaultName = value.replace(/\/$/, '');
+						if (value.length === 0) {
+							this.plugin.settings.autoCleanUp = false;
+							autoCleanSetting.setDisabled(true);
+							autoCleanSetting.components[0].toggleEl.classList.remove('is-enabled')
+						} else {
+							autoCleanSetting.setDisabled(false);
+							if (this.plugin.settings.autoCleanUp) {
+								autoCleanSetting.components[0].toggleEl.classList.add('is-enabled')
+							}
+						}
 						await this.plugin.saveSettings();
 					});
 			});
@@ -174,6 +193,16 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.rootFolder)
 					.onChange(async(value)=>{
 						this.plugin.settings.rootFolder =value.replace(/\/$/, '');
+						if (value.length === 0 && this.plugin.settings.downloadedFolder==='yamlFrontmatter') {
+							this.plugin.settings.autoCleanUp = false;
+							autoCleanSetting.setDisabled(true);
+							autoCleanSetting.components[0].toggleEl.classList.remove('is-enabled')
+						} else {
+							autoCleanSetting.setDisabled(false);
+							if (this.plugin.settings.autoCleanUp) {
+								autoCleanSetting.components[0].toggleEl.classList.add('is-enabled')
+							}
+						}
 						await this.plugin.saveSettings();
 					});
 			});
@@ -202,11 +231,14 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-
-		new Setting(containerEl)
+		const condition = (this.plugin.settings.downloadedFolder === "yamlFrontmatter" &&
+				(this.plugin.settings.rootFolder.length === 0) ||
+				(this.plugin.settings.folderDefaultName.length === 0));
+		const autoCleanSetting= new Setting(containerEl)
 			.setName('Auto clean up')
 			.setDesc('If the plugin must remove from github the removed' +
 				' files (stop share or deleted)')
+			.setDisabled(condition)
 			.addToggle((toggle)=>{
 				toggle
 					.setValue(this.plugin.settings.autoCleanUp)
@@ -215,6 +247,17 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
+		if (condition) {
+			autoCleanSetting.setDisabled(true);
+			autoCleanSetting.components[0].toggleEl.classList.remove('is-enabled')
+			this.plugin.settings.autoCleanUp = false;
+			this.plugin.saveSettings().then();
+		} else {
+			autoCleanSetting.setDisabled(false);
+			if (this.plugin.settings.autoCleanUp) {
+				autoCleanSetting.components[0].toggleEl.classList.add('is-enabled')
+			}
+		}
 
 		containerEl.createEl('h5', {text: 'Embedded files'})
 		new Setting(containerEl)
