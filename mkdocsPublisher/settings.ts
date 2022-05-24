@@ -16,6 +16,7 @@ export interface MkdocsPublicationSettings {
 	workflowName: string;
 	transfertEmbeded: boolean;
 	defaultImageFolder: string;
+	autoCleanUp: boolean;
 }
 
 export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
@@ -27,12 +28,16 @@ export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
 	fileMenu: false,
 	editorMenu: false,
 	downloadedFolder: 'fixedFolder',
+	//fixedFolder
+	//yamlFrontmatter
+	//obsidianPath
 	folderDefaultName: '',
 	yamlFolderKey: '',
 	rootFolder: '',
 	workflowName: '',
 	transfertEmbeded: true,
 	defaultImageFolder: '',
+	autoCleanUp: false,
 }
 
 function showSettings(containerEl: Setting) {
@@ -181,10 +186,12 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			hideSettings(rootFolderSettings);
 		}
 
-		containerEl.createEl('h5', {text: 'Workflow dispatches'})
+		containerEl.createEl('h5', {text: 'Workflow'})
 		new Setting(containerEl)
-			.setName('Name')
-			.setDesc('If you want to activate a github action when the plugin push the file, set the name.')
+			.setName('Github action name')
+			.setDesc('If you want to activate a github action when the' +
+				' plugin push the file, set the name of the file (in your' +
+				'.github/worfklows folder).')
 			.addText((text)=>{
 				text
 					.setPlaceholder('ci')
@@ -192,6 +199,19 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.onChange(async(value)=> {
 						value = value.length>0? value.trim().replace('.yml', '') + '.yml' : value;
 						this.plugin.settings.workflowName = value;
+						await this.plugin.saveSettings();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName('Auto clean up')
+			.setDesc('If the plugin must remove from github the removed' +
+				' files (stop share or deleted)')
+			.addToggle((toggle)=>{
+				toggle
+					.setValue(this.plugin.settings.autoCleanUp)
+					.onChange(async(value)=>{
+						this.plugin.settings.autoCleanUp = value;
 						await this.plugin.saveSettings();
 					});
 			});

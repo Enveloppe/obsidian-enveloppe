@@ -131,6 +131,33 @@ export default class MkdocsPublication extends Plugin {
 		});
 
 		this.addCommand({
+			id: "Obs2MK-delete-clean",
+			name: "Delete from repository",
+			hotkeys: [],
+			checkCallback: (checking) => {
+				if (this.settings.autoCleanUp) {
+					if (!checking) {
+						try {
+							const { vault, metadataCache } =
+								this.app;
+							const publish = new MkdocsPublish(
+								vault,
+								metadataCache,
+								this.settings
+							);
+							new Notice(`Starting cleaning ${this.settings.githubRepo} `)
+							publish.deleteFromGithub();
+						} catch (e) {
+							console.error(e);
+						}
+					}
+					return true;
+				}
+				return false;
+			},
+		});
+
+		this.addCommand({
 			id: "obs2mk-publish-all",
 			name: "Share all marked notes",
 			callback: async () => {
