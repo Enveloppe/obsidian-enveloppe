@@ -1,12 +1,11 @@
 import { Notice, Plugin, TFile } from "obsidian";
 import {
 	MkdocsSettingsTab,
-	MkdocsPublicationSettings,
-	DEFAULT_SETTINGS,
 } from "./settings";
 import { ShareStatusBar } from "./utils/status_bar";
 import MkdocsPublish from "./utils/publication";
 import { disablePublish, noticeMessage } from "./utils/utils";
+import {MkdocsPublicationSettings, DEFAULT_SETTINGS} from './settings/interface'
 
 export default class MkdocsPublication extends Plugin {
 	settings: MkdocsPublicationSettings;

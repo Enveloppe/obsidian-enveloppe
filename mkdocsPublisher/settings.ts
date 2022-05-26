@@ -1,56 +1,12 @@
 import {App, PluginSettingTab, Setting} from 'obsidian'
 import MkdocsPublication from './main'
-
-export interface MkdocsPublicationSettings {
-	githubRepo: string;
-	githubName: string;
-	GhToken: string;
-	shareKey: string;
-	ExcludedFolder: string;
-	fileMenu: boolean;
-	editorMenu: boolean;
-	downloadedFolder: string;
-	folderDefaultName: string;
-	yamlFolderKey: string;
-	rootFolder: string;
-	workflowName: string;
-	transfertEmbeded: boolean;
-	defaultImageFolder: string;
-	autoCleanUp: boolean;
-}
-
-export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
-	githubRepo: '',
-	githubName: '',
-	GhToken: '',
-	shareKey: 'share',
-	ExcludedFolder: '',
-	fileMenu: false,
-	editorMenu: false,
-	downloadedFolder: 'fixedFolder',
-	//fixedFolder
-	//yamlFrontmatter
-	//obsidianPath
-	folderDefaultName: '',
-	yamlFolderKey: '',
-	rootFolder: '',
-	workflowName: '',
-	transfertEmbeded: true,
-	defaultImageFolder: '',
-	autoCleanUp: false,
-}
-
-function showSettings(containerEl: Setting) {
-	containerEl.descEl.show();
-	containerEl.nameEl.show();
-	containerEl.controlEl.show();
-}
-
-function hideSettings(containerEl: Setting) {
-	containerEl.descEl.hide();
-	containerEl.nameEl.hide();
-	containerEl.controlEl.hide();
-}
+import {
+	hideSettings,
+	showSettings,
+	autoCleanCondition,
+	yamlFrontmatterSettings,
+	autoCleanUpSettingsOnCondition
+} from "./settings/stylesSettings";
 
 export class MkdocsSettingsTab extends PluginSettingTab {
 	plugin: MkdocsPublication;
@@ -126,23 +82,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.downloadedFolder)
 					.onChange(async(value: string)=>{
 						this.plugin.settings.downloadedFolder=value;
-						if (value == 'yamlFrontmatter') {
-							showSettings(frontmatterKeySettings);
-							showSettings(rootFolderSettings);
-							if (this.plugin.settings.rootFolder.length === 0) {
-								autoCleanSetting.setDisabled(true);
-								autoCleanSetting.components[0].toggleEl.classList.remove('is-enabled')
-							} else {
-								autoCleanSetting.setDisabled(false);
-								autoCleanSetting.components[0].toggleEl.classList.add('is-enabled')
-							}
-						} else {
-							if (this.plugin.settings.folderDefaultName.length > 0) {
-								autoCleanSetting.setDisabled(false);
-							}
-							hideSettings(frontmatterKeySettings);
-							hideSettings(rootFolderSettings);
-						}
+						await yamlFrontmatterSettings(frontmatterKeySettings, rootFolderSettings, autoCleanSetting, value, this.plugin)
 						await this.plugin.saveSettings();
 					});
 			});
@@ -156,16 +96,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.folderDefaultName)
 					.onChange(async (value) => {
 						this.plugin.settings.folderDefaultName = value.replace(/\/$/, '');
-						if (value.length === 0) {
-							this.plugin.settings.autoCleanUp = false;
-							autoCleanSetting.setDisabled(true);
-							autoCleanSetting.components[0].toggleEl.classList.remove('is-enabled')
-						} else {
-							autoCleanSetting.setDisabled(false);
-							if (this.plugin.settings.autoCleanUp) {
-								autoCleanSetting.components[0].toggleEl.classList.add('is-enabled')
-							}
-						}
+						await autoCleanCondition(value, autoCleanSetting, this.plugin)
 						await this.plugin.saveSettings();
 					});
 			});
@@ -193,27 +124,10 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.rootFolder)
 					.onChange(async(value)=>{
 						this.plugin.settings.rootFolder =value.replace(/\/$/, '');
-						if (value.length === 0 && this.plugin.settings.downloadedFolder==='yamlFrontmatter') {
-							this.plugin.settings.autoCleanUp = false;
-							autoCleanSetting.setDisabled(true);
-							autoCleanSetting.components[0].toggleEl.classList.remove('is-enabled')
-						} else {
-							autoCleanSetting.setDisabled(false);
-							if (this.plugin.settings.autoCleanUp) {
-								autoCleanSetting.components[0].toggleEl.classList.add('is-enabled')
-							}
-						}
+						await autoCleanCondition(value, autoCleanSetting, this.plugin);
 						await this.plugin.saveSettings();
 					});
 			});
-
-		if (this.plugin.settings.downloadedFolder == 'yamlFrontmatter') {
-			showSettings(frontmatterKeySettings);
-			showSettings(rootFolderSettings);
-		} else {
-			hideSettings(frontmatterKeySettings);
-			hideSettings(rootFolderSettings);
-		}
 
 		containerEl.createEl('h5', {text: 'Workflow'})
 		new Setting(containerEl)
@@ -234,7 +148,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 		const condition = (this.plugin.settings.downloadedFolder === "yamlFrontmatter" &&
 				(this.plugin.settings.rootFolder.length === 0) ||
 				(this.plugin.settings.folderDefaultName.length === 0));
-		const autoCleanSetting= new Setting(containerEl)
+
+		const autoCleanSetting = new Setting(containerEl)
 			.setName('Auto clean up')
 			.setDesc('If the plugin must remove from github the removed' +
 				' files (stop share or deleted)')
@@ -247,17 +162,6 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-		if (condition) {
-			autoCleanSetting.setDisabled(true);
-			autoCleanSetting.components[0].toggleEl.classList.remove('is-enabled')
-			this.plugin.settings.autoCleanUp = false;
-			this.plugin.saveSettings().then();
-		} else {
-			autoCleanSetting.setDisabled(false);
-			if (this.plugin.settings.autoCleanUp) {
-				autoCleanSetting.components[0].toggleEl.classList.add('is-enabled')
-			}
-		}
 
 		containerEl.createEl('h5', {text: 'Embedded files'})
 		new Setting(containerEl)
@@ -265,9 +169,9 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			.setDesc('Send image linked to a file in github')
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.transfertEmbeded)
+					.setValue(this.plugin.settings.transferEmbedded)
 					.onChange(async (value) => {
-						this.plugin.settings.transfertEmbeded = value;
+						this.plugin.settings.transferEmbedded = value;
 						value ? showSettings(settingsDefaultImage) : hideSettings(settingsDefaultImage);
 						await this.plugin.saveSettings();
 					});
@@ -285,8 +189,6 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-
-		this.plugin.settings.transfertEmbeded ? showSettings(settingsDefaultImage) : hideSettings(settingsDefaultImage);
 
 		containerEl.createEl('h1', { text: 'Plugin Settings' })
 		new Setting(containerEl)
@@ -335,5 +237,9 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings()
 					})
 			)
+
+		autoCleanUpSettingsOnCondition(condition, autoCleanSetting, this.plugin);
+		yamlFrontmatterSettings(frontmatterKeySettings, rootFolderSettings, autoCleanSetting, this.plugin.settings.downloadedFolder, this.plugin).then();
+		this.plugin.settings.transferEmbedded ? showSettings(settingsDefaultImage) : hideSettings(settingsDefaultImage);
 	}
 }

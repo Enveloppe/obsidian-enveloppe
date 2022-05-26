@@ -7,7 +7,7 @@ import {
 	Vault,
 	arrayBufferToBase64,
 } from "obsidian";
-import { MkdocsPublicationSettings } from "../settings";
+import { MkdocsPublicationSettings } from "../settings/interface";
 import { Octokit } from "@octokit/core";
 import { Base64 } from "js-base64";
 
@@ -161,7 +161,7 @@ export default class MkdocsPublish {
 				path = folderDefault + file.path;
 			}
 			await this.uploadText(file.path, text, path, file.name);
-			if (linkedImage.length > 0 && this.settings.transfertEmbeded) {
+			if (linkedImage.length > 0 && this.settings.transferEmbedded) {
 				for (const image of linkedImage) {
 					await this.uploadImage(image);
 				}

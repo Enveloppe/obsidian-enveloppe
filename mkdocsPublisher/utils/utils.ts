@@ -3,7 +3,7 @@ import {
 	TFile,
 	Notice
 } from 'obsidian'
-import { MkdocsPublicationSettings } from '../settings'
+import { MkdocsPublicationSettings } from '../settings/interface'
 import MkdocsPublish from "./publication";
 
 
