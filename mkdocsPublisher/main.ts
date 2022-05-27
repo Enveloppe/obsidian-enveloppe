@@ -3,9 +3,14 @@ import {
 	MkdocsSettingsTab,
 } from "./settings";
 import { ShareStatusBar } from "./utils/status_bar";
-import MkdocsPublish from "./utils/publication";
+import MkdocsPublish from "./githubInteraction/upload";
 import { disablePublish, noticeMessage } from "./utils/utils";
 import {MkdocsPublicationSettings, DEFAULT_SETTINGS} from './settings/interface'
+import { deleteFromGithub } from './githubInteraction/delete'
+import { GetFiles } from "./githubInteraction/getFiles";
+import {GithubBranch} from "./githubInteraction/branch";
+import { Octokit } from "@octokit/core";
+
 
 export default class MkdocsPublication extends Plugin {
 	settings: MkdocsPublicationSettings;
@@ -14,6 +19,16 @@ export default class MkdocsPublication extends Plugin {
 		console.log("Mkdocs Publication loaded");
 		await this.loadSettings();
 		this.addSettingTab(new MkdocsSettingsTab(this.app, this));
+		const octokit = new Octokit({auth: this.settings.GhToken});
+		const publish = new MkdocsPublish(
+			this.app.vault,
+			this.app.metadataCache,
+			this.settings,
+			octokit
+		);
+		const githubBranch = new GithubBranch(this.settings, octokit);
+		const shareFiles = new GetFiles(this.app.vault, this.app.metadataCache, this.settings, octokit);
+
 
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu, file: TFile) => {
@@ -31,15 +46,13 @@ export default class MkdocsPublication extends Plugin {
 							.setIcon("share")
 							.onClick(async () => {
 								try {
-									const publish = new MkdocsPublish(
-										this.app.vault,
-										this.app.metadataCache,
-										this.settings
-									);
+									const branchName = this.app.vault.getName() + "-" + new Date().toLocaleDateString('en-US').replace(/\//g, '-');
+									await githubBranch.newBranch(branchName);
 									const publishSuccess =
-										await publish.publish(file, true);
+										await publish.publish(file, true, branchName);
 									if (publishSuccess) {
 										await noticeMessage(publish, file, this.settings)
+										await githubBranch.updateRepository(branchName);
 									}
 
 								} catch (e) {
@@ -69,15 +82,19 @@ export default class MkdocsPublication extends Plugin {
 							.setIcon("share")
 							.onClick(async () => {
 								try {
-									const publish = new MkdocsPublish(
-										this.app.vault,
-										this.app.metadataCache,
-										this.settings
-									);
+									const branchName = this.app.vault.getName() + "-" + new Date().toLocaleDateString('en-US').replace(/\//g, '-');
+									const allBranch = await octokit.request('GET' + ' /repos/{owner}/{repo}/branches', {
+										owner: this.settings.githubName,
+										repo: this.settings.githubRepo,
+									});
+									const mainBranch = allBranch.data.find((branch: { name: string; }) => branch.name === 'main' || branch.name === 'master');
+									console.log(mainBranch)
+									await githubBranch.newBranch(branchName);
 									const publishSuccess =
-										await publish.publish(view.file, true);
+										await publish.publish(view.file, true, branchName);
 									if (publishSuccess) {
-										await noticeMessage(publish, view.file, this.settings)
+										await noticeMessage(publish, view.file, this.settings);
+										await githubBranch.updateRepository(branchName);
 									}
 								} catch (e) {
 									console.error(e);
@@ -103,24 +120,25 @@ export default class MkdocsPublication extends Plugin {
 				) {
 					if (!checking) {
 						try {
-							const { vault, workspace, metadataCache } =
+							const { workspace} =
 								this.app;
 							const currentFile = workspace.getActiveFile();
-							const publishFile = new MkdocsPublish(
-								vault,
-								metadataCache,
-								this.settings
-							);
-							const publishSuccess = publishFile.publish(
+							const branchName = this.app.vault.getName() + "-" + new Date().toLocaleDateString('en-US').replace(/\//g, '-');
+							const githubBranch = new GithubBranch(this.settings, octokit);
+							githubBranch.newBranch(branchName);
+							const publishSuccess = publish.publish(
 								currentFile,
-								true
+								true,
+								branchName
 							);
 							if (publishSuccess) {
-								noticeMessage(publishFile, currentFile, this.settings);
+								noticeMessage(publish, currentFile, this.settings);
+								githubBranch.updateRepository(branchName);
+
 							}
 						} catch (e) {
 							console.error(e);
-							new Notice("Error publishing to mkdocs.");
+							new Notice("Error publishing to github.");
 						}
 					}
 					return true;
@@ -137,15 +155,11 @@ export default class MkdocsPublication extends Plugin {
 				if (this.settings.autoCleanUp) {
 					if (!checking) {
 						try {
-							const { vault, metadataCache } =
-								this.app;
-							const publish = new MkdocsPublish(
-								vault,
-								metadataCache,
-								this.settings
-							);
 							new Notice(`Starting cleaning ${this.settings.githubRepo} `)
-							publish.deleteFromGithub(false);
+							const branchName = this.app.vault.getName() + "-" + new Date().toLocaleDateString('en-US').replace(/\//g, '-');
+							githubBranch.newBranch(branchName);
+							deleteFromGithub(false, this.settings,octokit, branchName, shareFiles);
+							githubBranch.updateRepository(branchName);
 						} catch (e) {
 							console.error(e);
 						}
@@ -162,13 +176,7 @@ export default class MkdocsPublication extends Plugin {
 			callback: async () => {
 				const statusBarItems = this.addStatusBarItem();
 				try {
-					const { vault, metadataCache } = this.app;
-					const publish = new MkdocsPublish(
-						vault,
-						metadataCache,
-						this.settings
-					);
-					const sharedFiles = publish.getSharedFiles();
+					const sharedFiles = shareFiles.getSharedFiles();
 					const statusBar = new ShareStatusBar(
 						statusBarItems,
 						sharedFiles.length
@@ -178,13 +186,16 @@ export default class MkdocsPublication extends Plugin {
 						const publishedFiles = sharedFiles.map(
 							(file) => file.name
 						);
-						// upload list of published files in Source
+						// octokit list of published files in Source
 						const publishedFilesText = JSON.stringify(publishedFiles).toString();
+						const githubBranch = new GithubBranch(this.settings, octokit);
+						const branchName = this.app.vault.getName() + "-" + new Date().toLocaleDateString('en-US').replace(/\//g, '-');
+						await githubBranch.newBranch(branchName);
 						const vaultPublisherJSON = this.settings.folderDefaultName.length>0? `${this.settings.folderDefaultName}/vault_published.json`:`vault_published.json`;
 						await publish.uploadText(
 							"vault_published.json",
 							publishedFilesText,
-							vaultPublisherJSON
+							vaultPublisherJSON,"", branchName
 						);
 						for (
 							let files = 0;
@@ -194,7 +205,7 @@ export default class MkdocsPublication extends Plugin {
 							try {
 								const file = sharedFiles[files];
 								statusBar.increment();
-								await publish.publish(file);
+								await publish.publish(file, false, branchName);
 							} catch {
 								errorCount++;
 								new Notice(
@@ -205,7 +216,8 @@ export default class MkdocsPublication extends Plugin {
 						statusBar.finish(8000);
 						const noticeValue = `${publishedFiles.length - errorCount} notes`
 						await noticeMessage(publish, noticeValue, this.settings)
-						await publish.deleteFromGithub(true);
+						await deleteFromGithub(true, this.settings, octokit, branchName, shareFiles);
+						await githubBranch.updateRepository(branchName);
 					}
 				} catch (e) {
 					// statusBarItems.remove();
@@ -219,7 +231,7 @@ export default class MkdocsPublication extends Plugin {
 	}
 
 	onunload() {
-		console.log("Mkdocs Publication unloaded");
+		console.log("Github Publisher unloaded");
 	}
 
 	async loadSettings() {

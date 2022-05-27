@@ -4,7 +4,7 @@ import {
 	Notice
 } from 'obsidian'
 import { MkdocsPublicationSettings } from '../settings/interface'
-import MkdocsPublish from "./publication";
+import MkdocsPublish from "../githubInteraction/getFiles";
 
 
 function disablePublish (app: App, settings: MkdocsPublicationSettings, file:TFile) {
