@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/Mara-Li/obsidian-github-publisher/compare/3.2.0...3.3.0) (2022-05-27)
+
+
+### Features
+
+* use PR + merge + delete branch instead of force push files ([ec8a367](https://github.com/Mara-Li/obsidian-github-publisher/commit/ec8a367f79a322deb9e3494890a1779d1fa5217a))
+
+
+### Bug Fixes
+
+* fix error with pullrequest & workflow ([af3e25b](https://github.com/Mara-Li/obsidian-github-publisher/commit/af3e25b70cef2f4e779d7cf61bcf1efb17be85f3))
+
 ## [3.2.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/compare/3.1.0...3.2.0) (2022-05-24)
 
 
