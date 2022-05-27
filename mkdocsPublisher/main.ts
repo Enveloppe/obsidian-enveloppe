@@ -51,8 +51,10 @@ export default class MkdocsPublication extends Plugin {
 									const publishSuccess =
 										await publish.publish(file, true, branchName);
 									if (publishSuccess) {
-										await noticeMessage(publish, file, this.settings)
-										await githubBranch.updateRepository(branchName);
+										const update=await githubBranch.updateRepository(branchName);
+										if (update) {
+											await noticeMessage(publish, file, this.settings)
+										}
 									}
 
 								} catch (e) {
@@ -93,8 +95,13 @@ export default class MkdocsPublication extends Plugin {
 									const publishSuccess =
 										await publish.publish(view.file, true, branchName);
 									if (publishSuccess) {
-										await noticeMessage(publish, view.file, this.settings);
-										await githubBranch.updateRepository(branchName);
+										const update = await githubBranch.updateRepository(branchName);
+										if (update) {
+											await noticeMessage(publish, view.file, this.settings);
+										} else {
+											new Notice("Error publishing to " + this.settings.githubRepo + ".");
+
+										}
 									}
 								} catch (e) {
 									console.error(e);
@@ -132,8 +139,12 @@ export default class MkdocsPublication extends Plugin {
 								branchName
 							);
 							if (publishSuccess) {
-								noticeMessage(publish, currentFile, this.settings);
-								githubBranch.updateRepository(branchName);
+								const update = githubBranch.updateRepository(branchName);
+								if (update) {
+									noticeMessage(publish, currentFile, this.settings);
+								} else {
+									new Notice("Error publishing to " + this.settings.githubRepo + ".");
+								}
 
 							}
 						} catch (e) {
@@ -215,9 +226,14 @@ export default class MkdocsPublication extends Plugin {
 						}
 						statusBar.finish(8000);
 						const noticeValue = `${publishedFiles.length - errorCount} notes`
-						await noticeMessage(publish, noticeValue, this.settings)
 						await deleteFromGithub(true, this.settings, octokit, branchName, shareFiles);
-						await githubBranch.updateRepository(branchName);
+						const update=await githubBranch.updateRepository(branchName);
+						if (update) {
+							await noticeMessage(publish, noticeValue, this.settings)
+						} else {
+							new Notice("Error publishing to " + this.settings.githubRepo + ".");
+
+						}
 					}
 				} catch (e) {
 					// statusBarItems.remove();

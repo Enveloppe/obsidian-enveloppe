@@ -77,5 +77,6 @@ export class GithubBranch {
 		// @ts-ignore
 		await this.mergePullRequest(branchName, true, pullRequest.data.number);
 		await this.deleteBranch(branchName);
+		return true
 	}
 }

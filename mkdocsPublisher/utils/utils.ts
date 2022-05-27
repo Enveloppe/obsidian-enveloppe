@@ -4,8 +4,7 @@ import {
 	Notice
 } from 'obsidian'
 import { MkdocsPublicationSettings } from '../settings/interface'
-import MkdocsPublish from "../githubInteraction/getFiles";
-
+import MkdocsPublish from "../githubInteraction/upload";
 
 function disablePublish (app: App, settings: MkdocsPublicationSettings, file:TFile) {
 	const fileCache = app.metadataCache.getFileCache(file)
