@@ -71,6 +71,18 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 	return true;
 }
 
+function excludedFileFromDelete(file: string, settings: MkdocsPublicationSettings) {
+	const autoCleanExcluded = settings.autoCleanUpExcluded.split(',')
+	if (autoCleanExcluded.length > 0) {
+		for (const excludedFile of autoCleanExcluded) {
+			if (file.includes(excludedFile) && excludedFile.length > 0) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 export async function filterGithubFile(fileInRepo: { file: string; sha: string }[], settings: MkdocsPublicationSettings) {
 	const sharedFilesInRepo = [];
 	for (const file of fileInRepo) {
@@ -82,11 +94,14 @@ export async function filterGithubFile(fileInRepo: { file: string; sha: string }
 			return false;
 		}
 		if (
-			file.file.includes(settings.folderDefaultName) ||
-				(settings.downloadedFolder === "yamlFrontmatter" &&
-					file.file.includes(settings.rootFolder)) ||
-				(settings.defaultImageFolder.length > 0 &&
-					file.file.includes(settings.defaultImageFolder))
+			(file.file.includes(settings.folderDefaultName) ||
+			(settings.downloadedFolder === "yamlFrontmatter" &&
+				file.file.includes(settings.rootFolder)) ||
+			(settings.defaultImageFolder.length > 0 &&
+				file.file.includes(settings.defaultImageFolder)))
+			&&
+			!excludedFileFromDelete(file.file, settings) &&
+			file.file.match(/(md|jpe?g|png|gif|bmp|svg|mp3|webm|wav|m4a|ogg|3gp|flac|mp4|ogv|pdf)$/)
 		) {
 			sharedFilesInRepo.push(file);
 		}

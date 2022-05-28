@@ -14,6 +14,7 @@ export interface MkdocsPublicationSettings {
 	transferEmbedded: boolean;
 	defaultImageFolder: string;
 	autoCleanUp: boolean;
+	autoCleanUpExcluded: string;
 }
 
 export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
@@ -35,4 +36,5 @@ export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
 	transferEmbedded: true,
 	defaultImageFolder: '',
 	autoCleanUp: false,
+	autoCleanUpExcluded: '',
 }

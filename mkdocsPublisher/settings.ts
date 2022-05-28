@@ -159,9 +159,35 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.autoCleanUp)
 					.onChange(async(value)=>{
 						this.plugin.settings.autoCleanUp = value;
+						if (value) {
+							showSettings(autoCleanExcludedSettings);
+						} else {
+							hideSettings(autoCleanExcludedSettings);
+						}
 						await this.plugin.saveSettings();
 					});
 			});
+
+		const autoCleanExcludedSettings = new Setting(containerEl)
+			.setName('Excluded files')
+			.setDesc('If you want to exclude some folder from the auto clean' +
+				' up, set their path.')
+			.addTextArea((textArea)=>{
+				textArea
+					.setPlaceholder('docs/assets/js, docs/assets/logo')
+					.setValue(this.plugin.settings.autoCleanUpExcluded)
+					.onChange(async(value)=>{
+						this.plugin.settings.autoCleanUpExcluded = value;
+						await this.plugin.saveSettings();
+					});
+			});
+
+		if (this.plugin.settings.autoCleanUp) {
+			showSettings(autoCleanExcludedSettings);
+		} else {
+			hideSettings(autoCleanExcludedSettings);
+		}
+
 
 		containerEl.createEl('h5', {text: 'Embedded files'})
 		new Setting(containerEl)
