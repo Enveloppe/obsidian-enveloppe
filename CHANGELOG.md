@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.0](https://github.com/Mara-Li/obsidian-github-publisher/compare/3.3.1...3.4.0) (2022-05-28)
+
+
+### Features
+
+* you can now exclude folder path from be deleted ! ([32a9737](https://github.com/Mara-Li/obsidian-github-publisher/commit/32a973728a3eb9d15b3fe195fe186d44597504a5))
+
 ### [3.3.1](https://github.com/Mara-Li/obsidian-github-publisher/compare/3.3.0...3.3.1) (2022-05-28)
 
 ## [3.3.0](https://github.com/Mara-Li/obsidian-github-publisher/compare/3.2.0...3.3.0) (2022-05-27)
