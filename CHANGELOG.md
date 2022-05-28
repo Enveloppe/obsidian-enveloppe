@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.3.1](https://github.com/Mara-Li/obsidian-github-publisher/compare/3.3.0...3.3.1) (2022-05-28)
+
 ## [3.3.0](https://github.com/Mara-Li/obsidian-github-publisher/compare/3.2.0...3.3.0) (2022-05-27)
 
 
