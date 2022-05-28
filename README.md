@@ -6,6 +6,9 @@ GitHub Publisher is a plugin that help you to send file in a configured GitHub R
 
 You can use it to send any markdown file, allowing compatibility thought a lot of Obsidian Publish alternative. 
 
+When a shared file is found, it will be send in a new branch named by `your_vault_name-month-day-year`. A pull request followed by a merge will be done, and if everything is okay, the branch will be deleted after the merge. 
+Thus, you can easily revert commit, and create workflow based on PR, merged PR, specific push... 
+
 # Main configuration
 
 To use the plugin, you need to fill the correct information to allow the workflow. 
