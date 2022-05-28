@@ -37,7 +37,6 @@ export async function autoCleanCondition(value: string, autoCleanSetting: Settin
 
 export async function yamlFrontmatterSettings(frontmatterKeySettings: Setting, rootFolderSettings: Setting, autoCleanSetting: Setting, value: string, plugin: MkdocsPublication) {
 	const settings = plugin.settings;
-	console.log(settings.rootFolder)
 	if (value == 'yamlFrontmatter') {
 		showSettings(frontmatterKeySettings);
 		showSettings(rootFolderSettings);

@@ -17,7 +17,6 @@ export class GithubBranch {
 		});
 		const mainBranch = allBranch.data.find((branch: { name: string; }) => branch.name === 'main' || branch.name === 'master');
 		const shaMainBranch = mainBranch.commit.sha;
-		console.log(mainBranch)
 		const branch = await this.octokit.request(
 			"POST" + " /repos/{owner}/{repo}/git/refs",
 			{

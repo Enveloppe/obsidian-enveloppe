@@ -85,12 +85,6 @@ export default class MkdocsPublication extends Plugin {
 							.onClick(async () => {
 								try {
 									const branchName = this.app.vault.getName() + "-" + new Date().toLocaleDateString('en-US').replace(/\//g, '-');
-									const allBranch = await octokit.request('GET' + ' /repos/{owner}/{repo}/branches', {
-										owner: this.settings.githubName,
-										repo: this.settings.githubRepo,
-									});
-									const mainBranch = allBranch.data.find((branch: { name: string; }) => branch.name === 'main' || branch.name === 'master');
-									console.log(mainBranch)
 									await githubBranch.newBranch(branchName);
 									const publishSuccess =
 										await publish.publish(view.file, true, branchName);

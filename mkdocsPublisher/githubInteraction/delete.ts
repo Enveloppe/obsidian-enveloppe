@@ -97,13 +97,6 @@ export async function filterGithubFile(fileInRepo: { file: string; sha: string }
 async function getAllFileFromRepo(ref="main", octokit: Octokit, settings: MkdocsPublicationSettings) {
 	const filesInRepo = [];
 	try {
-		const allBranch = await octokit.request('GET' +
-			' /repos/{owner}/{repo}/branches', {
-			owner: settings.githubName,
-			repo: settings.githubRepo,
-		});
-		const refBranch = allBranch.data.find((branch: { name: string; }) => branch.name === ref);
-		console.log(refBranch)
 		const repoContents = await octokit.request(
 			"GET" + " /repos/{owner}/{repo}/git/trees/{tree_sha}",
 			{
