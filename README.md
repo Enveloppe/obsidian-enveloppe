@@ -14,7 +14,7 @@ To use the plugin, you need to fill the correct information to allow the workflo
 
 - Repo name: The repository where the information will be sent.
 - GitHub username: Your username.
-- GitHub Token: Get your [GitHub Token here](https://github.com/settings/tokens/new?scopes=repo)[^2]. The correct settings should already be applied. If you want to avoid generating this every few months, choose the “No expiration” option. Click the “Generate token” button, and copy the token you are presented with on the next page.
+- GitHub Token: Get your [GitHub Token here](https://github.com/settings/tokens/new?scopes=repo)[^2]. The correct settings should already be applied. If you want to avoid generating this every few months, select the “No expiration” option. Click the “Generate token” button, and copy the token you are presented with on the next page.
 
 
 ## 2. Download configuration
@@ -74,6 +74,8 @@ This option will also add a new command to delete file (without sharing new file
 > You can't use the delete command if you don't have set a default folder (and a root folder if you use the YAML configuration)
 > Also, you can lost some files using this commands, so be careful! Don't forget that you can revert commit in case the plugin delete a file you don't want to delete.
 
+You can set the path of folder you don't want to delete the file. Separate these folder by a comma. 
+
 ### Embedded file
 
 Occasionally, you want to avoid sending the image linked (why? Don't know. It's your GitHub repo, after all!). You can remove the transfer of these files.
@@ -92,25 +94,26 @@ You can configure :
 ### Quick installation tutorial
 1. Click on [use this template](https://github.com/Mara-Li/mkdocs_obsidian_template/generate)[^1]
 2. Use the name of your choice
-3. Set and edit the `.github-actions` in the `source` folder if you need.
+3. Set and edit the `.obs2mk` in the root of the repository.
 
 ### Plugin configuration
-![Mkdocs Publisher Settings for folder](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/Settings_Github1.png)
-![Plugin settings for image](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/Github_Publisher_Setting.png)
+![Download configuration](https://github.com/Mara-Li/obsidian_mkdocs_publisher_docs/blob/aca4fd035367015f5a8150880590e6480b599635/docs/assets/img/obs2mk Settings_1.png)
+![](https://github.com/Mara-Li/obsidian_mkdocs_publisher_docs/blob/aca4fd035367015f5a8150880590e6480b599635/docs/assets/img/obs2mk settings 2.png)
 
 1. Folder reception settings : 
-    - Reception settings : `Fixed Folder`
-    - Default folder : `source`
-2. Workflow : 
-    - Workflow name : `ci`
-    - **Turn off autoclean**
-3. Images settings : 
+    - Reception settings : `YAML frontmatter`
+    - Default folder : `docs/notes`
+    - Choose your frontmatter key, same as in `.obs2mk`, by default: `category`
+    - Root folder : `docs`
+2. Workflow
+    - Leave blank the github actions
+    - Auto clean up : `TRUE`
+    - Excluded folder : `docs/assets/logo, docs/assets/js, docs/assets/css`[^3]
+2. Images settings : 
     - Turn on transfer image
-    - Leave blank default image folder (it will send in `source`)
+    - Choose `docs/assets/img`
 
-The files (and the image) will be sent on your GitHub repository template, in the `source` folder. The conversion will be done by the [github actions](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/obs2mk/github%20actions/), before the build. You can also add manually the files in `source` or use `obs2mk` in parallels. 
-
-⚠️ The source folder will be cleaned after the conversion from the script!
+The files (and the image) will be sent on your GitHub repository template, in the specified folder. The conversion will be done by the [github actions](https://github.com/Mara-Li/obsidian-mkdocs-publisher-template/blob/main/.github/workflows/ci.yml) when the branch were merged. 
 
 ### Useful informations
 #### Links
@@ -167,3 +170,4 @@ If you find this plugin and workflow useful, you can give me some coffee money.
 
 [^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or [with downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
 [^2]: You need to be connected to generate it.
+[^3]: Normally, only file supported by obsidian are deleted, but some image exists only on the blog (for logo, for example). To prevent bad surprise, exclude these folder here. 
