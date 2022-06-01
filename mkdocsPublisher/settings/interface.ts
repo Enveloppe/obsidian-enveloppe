@@ -15,6 +15,7 @@ export interface MkdocsPublicationSettings {
 	defaultImageFolder: string;
 	autoCleanUp: boolean;
 	autoCleanUpExcluded: string;
+	folderNote: boolean;
 }
 
 export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
@@ -37,4 +38,5 @@ export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
 	defaultImageFolder: '',
 	autoCleanUp: false,
 	autoCleanUpExcluded: '',
+	folderNote: false
 }

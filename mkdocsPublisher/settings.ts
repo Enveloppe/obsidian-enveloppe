@@ -216,6 +216,18 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					});
 			});
 
+		new Setting(containerEl)
+			.setName('Folder note')
+			.setDesc('Rename files with the same name as their parent folder (or category) "index.md"')
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.folderNote)
+					.onChange(async (value)=>{
+						this.plugin.settings.folderNote=value;
+						await this.plugin.saveSettings();
+					})
+			})
+
 		containerEl.createEl('h1', { text: 'Plugin Settings' })
 		new Setting(containerEl)
 			.setName('Share Key')

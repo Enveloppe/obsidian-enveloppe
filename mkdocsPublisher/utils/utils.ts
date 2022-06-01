@@ -1,9 +1,5 @@
-import {
-	App,
-	TFile,
-	Notice
-} from 'obsidian'
-import { MkdocsPublicationSettings } from '../settings/interface'
+import {App, Notice, TFile} from 'obsidian'
+import {MkdocsPublicationSettings} from '../settings/interface'
 import MkdocsPublish from "../githubInteraction/upload";
 
 function disablePublish (app: App, settings: MkdocsPublicationSettings, file:TFile) {

@@ -63,24 +63,24 @@ export class GetFiles {
 				const frontMatter = this.metadataCache.getCache(
 					file.path
 				).frontmatter;
-				let filepath =
-					this.settings.folderDefaultName.length > 0
-						? this.settings.folderDefaultName + "/" + file.path
-						: file.path;
+				let filepath = this.settings.folderDefaultName.length > 0 ? this.settings.folderDefaultName + "/" + file.name : file.name;
 				if (frontMatter && frontMatter[shareKey] === true) {
 					if (this.settings.downloadedFolder === "yamlFrontmatter") {
 						if (frontMatter[this.settings.yamlFolderKey]) {
+							const category = frontMatter[this.settings.yamlFolderKey]
+							let parentCatFolder = category.split('/').at(-1)
+							parentCatFolder = parentCatFolder.length === 0 ? category.split('/').at(-2) : parentCatFolder
+							const fileName = this.settings.folderNote && parentCatFolder === file.name ? 'index.md' : file.name
 							filepath =
 								this.settings.rootFolder.length > 0
 									? this.settings.rootFolder + "/" + frontMatter[this.settings.yamlFolderKey] +
-									"/" + file.name : file.name;
+									"/" + fileName : fileName;
 						}
 					} else if (
-						this.settings.downloadedFolder === "fixedFolder"
+						this.settings.downloadedFolder === "obsidianPath"
 					) {
-						filepath =
-							this.settings.folderDefaultName.length > 0
-								? this.settings.folderDefaultName + "/" + file.name : file.name;
+						const fileName = file.name.replace('.md', '') === file.parent.name && this.settings.folderNote ? 'index.md' : file.name
+						filepath = this.settings.folderDefaultName.length > 0 ? this.settings.folderDefaultName + "/" + file.path.replace(file.name, fileName) : file.path.replace(file.name, fileName);
 					}
 					allFileWithPath.push(filepath);
 				}

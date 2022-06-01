@@ -55,14 +55,18 @@ export default class MkdocsPublish {
 					folderRoot = folderRoot + "/";
 				}
 				if (frontmatter[this.settings.yamlFolderKey]) {
+					const category = frontmatter[this.settings.yamlFolderKey]
+					let parentCatFolder = category.split('/').at(-1)
+					parentCatFolder = parentCatFolder.length === 0 ? category.split('/').at(-2) : parentCatFolder
+					const fileName = this.settings.folderNote && parentCatFolder === file.name ? 'index.md' : file.name
 					path =
 						folderRoot +
 						frontmatter[this.settings.yamlFolderKey] +
-						"/" +
-						file.name;
+						"/" + fileName;
 				}
 			} else if (this.settings.downloadedFolder === "obsidianPath") {
-				path = folderDefault + file.path;
+				const fileName = file.name.replace('.md', '') === file.parent.name && this.settings.folderNote ? 'index.md' : file.name
+				path = folderDefault + file.path.replace(file.name, fileName);
 			}
 			await this.uploadText(file.path, text, path, file.name, ref);
 			if (linkedImage.length > 0 && this.settings.transferEmbedded) {
