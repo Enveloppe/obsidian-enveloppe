@@ -1,7 +1,3 @@
----
-share: true
----
-
 GitHub Publisher is a plugin that help you to send file in a configured GitHub Repository, based on a front matter entry state. 
 
 You can use it to send any markdown file, allowing compatibility thought a lot of Obsidian Publish alternative. 
@@ -97,25 +93,26 @@ You can configure :
 ### Quick installation tutorial
 1. Click on [use this template](https://github.com/Mara-Li/mkdocs_obsidian_template/generate)[^1]
 2. Use the name of your choice
-3. Set and edit the `.obs2mk` in the root of the repository.
+3. Set and edit the `configuration.yml` in the root of the repository.
 
 ### Plugin configuration
 ![Download configuration](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/obs2mk%20Settings_1.png)
 ![](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/obs2mk%20Settings%202.png)
-![Download configuration](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/obs2mk%20settings%202.png)
+![](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/github_publisher_setting2.png)
 
 1. Folder reception settings : 
     - Reception settings : `YAML frontmatter`
     - Default folder : `docs/notes`
-    - Choose your frontmatter key, same as in `.obs2mk`, by default: `category`
+    - Choose your frontmatter key, same as in `configuration.yml`, by default: `category`
     - Root folder : `docs`
 2. Workflow
-    - Leave blank the github actions
-    - Auto clean up : `TRUE`
+    - Leave blank the GitHub actions
+    - Auto-clean up : `TRUE`
     - Excluded folder : `docs/assets/logo, docs/assets/js, docs/assets/css`[^3]
 2. Images settings : 
     - Turn on transfer image
     - Choose `docs/assets/img`
+3. Folder note : `True`
 
 The files (and the image) will be sent on your GitHub repository template, in the specified folder. The conversion will be done by the [github actions](https://github.com/Mara-Li/obsidian-mkdocs-publisher-template/blob/main/.github/workflows/ci.yml) when the branch were merged. 
 
