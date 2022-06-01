@@ -100,8 +100,9 @@ You can configure :
 3. Set and edit the `.obs2mk` in the root of the repository.
 
 ### Plugin configuration
-![Download configuration](https://github.com/Mara-Li/obsidian_mkdocs_publisher_docs/blob/aca4fd035367015f5a8150880590e6480b599635/docs/assets/img/obs2mk%20Settings_1.png)
-![](https://github.com/Mara-Li/obsidian_mkdocs_publisher_docs/blob/aca4fd035367015f5a8150880590e6480b599635/docs/assets/img/obs2mk%20settings%202.png)
+![Download configuration](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/obs2mk%20Settings_1.png)
+![](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/obs2mk%20Settings%202.png)
+![Download configuration](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/obs2mk%20settings%202.png)
 
 1. Folder reception settings : 
     - Reception settings : `YAML frontmatter`
@@ -147,7 +148,6 @@ The files (and the image) will be sent on your GitHub repository template, in th
 - No graph view
 - You need to have a clean tree structure with unique name file. No worry about the display in blog ; the `title` key in frontmatter will change it, so you can have a `ezarezozre` name and use a good title like `reading book`. 
 -  I prefer to encourage you to use the `shortlinks` option in obsidian’s link option. 
--  index (from [folder note](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/blog%20customization/#folder-note)) won’t be deleted : You need to do it manually using github. 
 - Obs2mk will don’t move the file if you change the `category` value : you need to manually delete it to prevent duplicate. 
 
 
