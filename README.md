@@ -100,8 +100,8 @@ You can configure :
 3. Set and edit the `.obs2mk` in the root of the repository.
 
 ### Plugin configuration
-![Download configuration](https://github.com/Mara-Li/obsidian_mkdocs_publisher_docs/blob/aca4fd035367015f5a8150880590e6480b599635/docs/assets/img/obs2mk Settings_1.png)
-![](https://github.com/Mara-Li/obsidian_mkdocs_publisher_docs/blob/aca4fd035367015f5a8150880590e6480b599635/docs/assets/img/obs2mk settings 2.png)
+![Download configuration](https://github.com/Mara-Li/obsidian_mkdocs_publisher_docs/blob/aca4fd035367015f5a8150880590e6480b599635/docs/assets/img/obs2mk%20Settings_1.png)
+![](https://github.com/Mara-Li/obsidian_mkdocs_publisher_docs/blob/aca4fd035367015f5a8150880590e6480b599635/docs/assets/img/obs2mk%20settings%202.png)
 
 1. Folder reception settings : 
     - Reception settings : `YAML frontmatter`
