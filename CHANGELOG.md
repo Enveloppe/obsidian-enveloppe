@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.5.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.4.0...3.5.0) (2022-06-01)
+
+
+### Features
+
+* Adding support for folder note ! ([cde9603](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/cde96039d7537aa508f0a13967b465a06e3374b1))
+
 ## [3.4.0](https://github.com/Mara-Li/obsidian-github-publisher/compare/3.3.1...3.4.0) (2022-05-28)
 
 
