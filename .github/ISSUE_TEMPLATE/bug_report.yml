@@ -6,7 +6,9 @@ assignees:
   - Mara-Li
 body:
   - type: markdown
-    value: Thanks for taking the time to fill out this bug report!
+    attributes:
+    value: |
+      Thanks for taking the time to fill out this bug report.
   - type: dropdown
     id: type-workflow
     attributes:
