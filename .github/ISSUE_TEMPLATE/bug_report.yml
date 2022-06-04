@@ -5,10 +5,6 @@ labels: ["bug", "triage"]
 assignees:
   - Mara-Li
 body:
-  - type: markdown
-    attributes:
-    value: |
-      Thanks for taking the time to fill out this bug report.
   - type: dropdown
     id: type-workflow
     attributes:
