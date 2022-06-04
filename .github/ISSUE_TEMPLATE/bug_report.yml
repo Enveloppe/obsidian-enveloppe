@@ -11,7 +11,6 @@ body:
     id: type-workflow
     attributes:
       label: What part of the workflow is concerned ?
-      multiple: false
       options:
         - mkdocs Worfklow (github actions) 
         - Obsidian plugin
@@ -21,7 +20,6 @@ body:
       label: Describe the bug
       description: A clear and concise description of what the bug is.
       placeholder: "Tell us what you see! And don't forget the error"
-      value: "A bug happened!"
     validations:
       required: true
   - type: textarea
