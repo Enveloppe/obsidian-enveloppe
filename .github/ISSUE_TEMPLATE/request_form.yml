@@ -12,6 +12,7 @@ body:
       options:
         - mkdocs Worfklow (github actions) 
         - Obsidian plugin
+      multiple: true
   - type: textarea
     id: describe-request
     attributes:
