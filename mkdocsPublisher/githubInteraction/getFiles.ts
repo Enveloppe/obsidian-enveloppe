@@ -7,6 +7,7 @@ import {
 } from "obsidian";
 import { MkdocsPublicationSettings } from "../settings/interface";
 import { Octokit } from "@octokit/core";
+import {getReceiptFolder} from "../utils/utils";
 
 export class GetFiles {
 	vault: Vault;
@@ -26,9 +27,9 @@ export class GetFiles {
 		this.octokit = octokit;
 	}
 
-	getSharedFiles() {
+	getSharedFiles(): TFile[] {
 		const files = this.vault.getMarkdownFiles();
-		const shared_File = [];
+		const shared_File: TFile[] = [];
 		const sharedkey = this.settings.shareKey;
 		for (const file of files) {
 			try {
@@ -63,25 +64,8 @@ export class GetFiles {
 				const frontMatter = this.metadataCache.getCache(
 					file.path
 				).frontmatter;
-				let filepath = this.settings.folderDefaultName.length > 0 ? this.settings.folderDefaultName + "/" + file.name : file.name;
 				if (frontMatter && frontMatter[shareKey] === true) {
-					if (this.settings.downloadedFolder === "yamlFrontmatter") {
-						if (frontMatter[this.settings.yamlFolderKey]) {
-							const category = frontMatter[this.settings.yamlFolderKey]
-							let parentCatFolder = category.split('/').at(-1)
-							parentCatFolder = parentCatFolder.length === 0 ? category.split('/').at(-2) : parentCatFolder
-							const fileName = this.settings.folderNote && parentCatFolder === file.name ? 'index.md' : file.name
-							filepath =
-								this.settings.rootFolder.length > 0
-									? this.settings.rootFolder + "/" + frontMatter[this.settings.yamlFolderKey] +
-									"/" + fileName : fileName;
-						}
-					} else if (
-						this.settings.downloadedFolder === "obsidianPath"
-					) {
-						const fileName = file.name.replace('.md', '') === file.parent.name && this.settings.folderNote ? 'index.md' : file.name
-						filepath = this.settings.folderDefaultName.length > 0 ? this.settings.folderDefaultName + "/" + file.path.replace(file.name, fileName) : file.path.replace(file.name, fileName);
-					}
+					const filepath = getReceiptFolder(file, this.settings)
 					allFileWithPath.push(filepath);
 				}
 			}
@@ -119,24 +103,25 @@ export class GetFiles {
 	}
 	
 	getLinkedImage(file: TFile) {
-		const embed_files = this.metadataCache.getCache(file.path).embeds;
-		const image_list = [];
-		if (embed_files != undefined) {
-			for (const embed_file of embed_files) {
+		const embedCaches = this.metadataCache.getCache(file.path).embeds;
+		const imageList = [];
+		if (embedCaches != undefined) {
+			for (const embedCach of embedCaches) {
 				try {
 					const imageLink = this.metadataCache.getFirstLinkpathDest(
-						embed_file.link,
+						embedCach.link,
 						file.path
 					);
 					const imgExt = imageLink.extension;
 					if (imgExt.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
-						image_list.push(imageLink);
+						imageList.push(imageLink);
 					}
 				} catch (e) {
-					console.log("Error with this image : " + embed_file);
+					console.log(e)
+					console.log("Error with this image : " + embedCach.displayText);
 				}
 			}
-			return image_list;
+			return imageList;
 		}
 		return [];
 	}
