@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.6.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.0...3.6.1) (2022-06-05)
+
+
+### Bug Fixes
+
+* Alt text for wikilinks if index.md ([811592b](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/811592b18256d3e591e746f280a4e978c4756ef8))
+
 ## [3.6.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.5.0...3.6.0) (2022-06-05)
 
 
