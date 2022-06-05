@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.6.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.5.0...3.6.0) (2022-06-05)
+
+
+### Features
+
+* Adding internal links converter and wikilinks to mdlinks ([742077a](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/742077a61112234aa05234ab7cf888a93a43e0e3))
+
 ## [3.5.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.4.0...3.5.0) (2022-06-01)
 
 
