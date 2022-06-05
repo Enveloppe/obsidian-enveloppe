@@ -36,21 +36,23 @@ function convertWikilinks(fileContent: string, settings: MkdocsPublicationSettin
 	}
 	const wikiRegex = /\[\[.*?\]\]/g;
 	const wikiMatches = fileContent.match(wikiRegex);
-
 	if (wikiMatches) {
 		const fileRegex = /(?<=\[\[).*?(?=([\]|]))/;
 		for (const wikiMatch of wikiMatches) {
 			const fileMatch = wikiMatch.match(fileRegex);
 			if (fileMatch) {
-				const linked=linkedFiles.find(item => item.linkFrom===fileMatch[0])
+				const fileName = fileMatch[0]
+				const linked=linkedFiles.find(item => item.linkFrom===fileName)
 				if (linked) {
-					const linkCreator = `[${linked.altText}](${encodeURI(linked.linkFrom)})`
+					const altText = linked.altText.length > 0 ? linked.altText : linked.linked.basename
+					const linkCreator = `[${altText}](${encodeURI(linked.linkFrom)})`
 					fileContent = fileContent.replace(wikiMatch, linkCreator)
 				} else if (!fileMatch[0].startsWith('http')) {
 					const altRegex = /(?<=\|).*(?=]])/;
 					const altMatch = wikiMatch.match(altRegex);
-					const altLink = altMatch ? altMatch[0] : '';
-					const linkCreator = `[${altLink}](${encodeURI(fileMatch[0].trim())})`
+					const altCreator = fileName.split('/');
+					const altLink = altMatch ? altMatch[0] : altCreator.length > 1 ? altCreator[altCreator.length-2] : altCreator[0];
+					const linkCreator = `[${altLink}](${encodeURI(fileName.trim())})`
 					fileContent = fileContent.replace(wikiMatch, linkCreator)
 				}
 			}
