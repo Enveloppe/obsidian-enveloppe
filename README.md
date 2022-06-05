@@ -63,6 +63,8 @@ If your workflow needs to activate a GitHub actions, set the name here.
 
 Leave it blank to disable the GitHub actions activation.
 
+#### Auto clean-up
+
 You can also set up an "auto-delete" when you use the commands to delete files:
 - Deleted from your vault
 - Which you have stopped sharing
@@ -73,9 +75,44 @@ This option will also add a new command to delete file (without sharing new file
 > You can't use the delete command if you don't have set a default folder (and a root folder if you use the YAML configuration)
 > Also, you can lost some files using this commands, so be careful! Don't forget that you can revert commit in case the plugin delete a file you don't want to delete.
 
-You can set the path of folder you don't want to delete the file. Separate these folder by a comma. 
 
-### Embedded file
+>[!warning] Changing settings
+> In case you change the folder configuration, the precedent file won't be deleted and result of a error of this workflow's part. Be careful!
+
+You can set the path of the folder you want to avoid deleting the file. Separate folders a comma. 
+>[!Note] Regex are not supported here!
+
+### Links' conversion
+
+#### Index & folder note
+
+Some publishing solution support folder note, but these note need to be named `index`. In case you use [Folder Note](https://github.com/aidenlx/alx-folder-note) with [the `same name` strategies](https://github.com/aidenlx/alx-folder-note/wiki/folder-note-pref) you will have a problem, no? By chance, I have a solution for you, guys!
+Now, the plugin will convert these file into `index` if you activate the settings. Here some examples of renaming, using the different parameters from the default folder.
+
+> [!example] frontmatter example with a file named `folder2`
+> - Using a category value : `folder1/folder2` 
+> 	- With root value named `docs` ⇒ `docs/folder1/folder2/index.md`
+> 	- Without root : `folder1/folder2/index.md` 
+> - Without category value, with default folder named `drafts` : `draft/folder2.md` (the name won't be converted!)
+
+>[!example] Example with Obsidian Path & a file named `folder2`
+> With a path like : `folder1/folder2` the new path will be :
+> - If you use a default folder named `docs` : `docs/folder1/folder2/index.md`
+> - Without : `folder1/folder2/index.md`
+
+>[!warning] This option doesn't work with fixed folder. 
+
+>[!note] These settings won't change your file's content in your vault
+
+#### Internal links
+
+This option will convert the internal link of the shared file to match the file in your repo. The path won't be converted if the file doesn't exist in your vault. 
+
+#### wikilinks to markdown link
+
+In case you use wikilinks as daily but your obsidian publish solution doesn't support it, you can use this settings to convert the wiki to md link. 
+
+### Image
 
 Occasionally, you want to avoid sending the image linked (why? Don't know. It's your GitHub repo, after all!). You can remove the transfer of these files.
 If you choose to send image, you can set a default folder for image.
