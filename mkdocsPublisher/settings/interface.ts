@@ -16,6 +16,8 @@ export interface MkdocsPublicationSettings {
 	autoCleanUp: boolean;
 	autoCleanUpExcluded: string;
 	folderNote: boolean;
+	convertWikiLinks: boolean;
+	convertForGithub: boolean;
 }
 
 export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
@@ -38,5 +40,7 @@ export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
 	defaultImageFolder: '',
 	autoCleanUp: false,
 	autoCleanUpExcluded: '',
-	folderNote: false
+	folderNote: false,
+	convertWikiLinks: false,
+	convertForGithub: false,
 }

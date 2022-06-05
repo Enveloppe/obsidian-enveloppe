@@ -30,4 +30,68 @@ async function noticeMessage(publish: MkdocsPublish, file: TFile | string, setti
 	}
 }
 
-export {disablePublish, noticeMessage }
+function convertWikilinks(fileContent: string, settings: MkdocsPublicationSettings, linkedFiles: {linked: TFile, linkFrom: string, altText: string}[]) {
+	if (!settings.convertWikiLinks) {
+		return fileContent;
+	}
+	const wikiRegex = /\[\[.*?\]\]/g;
+	const wikiMatches = fileContent.match(wikiRegex);
+
+	if (wikiMatches) {
+		const fileRegex = /(?<=\[\[).*?(?=([\]|]))/;
+		for (const wikiMatch of wikiMatches) {
+			const fileMatch = wikiMatch.match(fileRegex);
+			if (fileMatch) {
+				const linked=linkedFiles.find(item => item.linkFrom===fileMatch[0])
+				if (linked) {
+					const linkCreator = `[${linked.altText}](${encodeURI(linked.linkFrom)})`
+					fileContent = fileContent.replace(wikiMatch, linkCreator)
+				} else if (!fileMatch[0].startsWith('http')) {
+					const altRegex = /(?<=\|).*(?=]])/;
+					const altMatch = wikiMatch.match(altRegex);
+					const altLink = altMatch ? altMatch[0] : '';
+					const linkCreator = `[${altLink}](${encodeURI(fileMatch[0].trim())})`
+					fileContent = fileContent.replace(wikiMatch, linkCreator)
+				}
+			}
+		}
+	}
+	return fileContent;
+}
+
+function getReceiptFolder(file: TFile, settings:MkdocsPublicationSettings) {
+	const folderDefault = settings.folderDefaultName;
+	let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + file.name : file.name;
+
+	if (settings.downloadedFolder === "yamlFrontmatter") {
+		const frontmatter = this.metadataCache.getCache(file.path).frontmatter
+		let folderRoot = settings.rootFolder;
+		if (folderRoot.length > 0) {
+			folderRoot = folderRoot + "/";
+		}
+		if (frontmatter[settings.yamlFolderKey]) {
+			const category = frontmatter[settings.yamlFolderKey]
+			let parentCatFolder = category.split('/').at(-1)
+			parentCatFolder = parentCatFolder.length === 0 ? category.split('/').at(-2) : parentCatFolder
+			const fileName = settings.folderNote && parentCatFolder === file.name ? 'index.md' : file.name
+			path = folderRoot + frontmatter[settings.yamlFolderKey] + "/" + fileName;
+		}
+	} else if (settings.downloadedFolder === "obsidianPath") {
+		const fileName = file.name.replace('.md', '') === file.parent.name && settings.folderNote ? 'index.md' : file.name
+		path = folderDefault + '/' + file.path.replace(file.name, fileName);
+	}
+	return path
+}
+
+function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSettings, linkedFiles : {linked: TFile, linkFrom: string, altText: string}[]) {
+	if (!settings.convertForGithub) {
+		return fileContent;
+	}
+	for (const linkedFile of linkedFiles) {
+		const pathInGithub = getReceiptFolder(linkedFile.linked, settings)
+		fileContent = fileContent.replace(linkedFile.linkFrom, pathInGithub)
+	}
+	return fileContent;
+}
+
+export {disablePublish, noticeMessage, convertWikilinks, convertLinkCitation, getReceiptFolder }

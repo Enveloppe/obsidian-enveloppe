@@ -10,6 +10,11 @@ import { GetFiles } from "./getFiles";
 import { Octokit } from "@octokit/core";
 import { Base64 } from "js-base64";
 import {deleteFromGithub} from "./delete"
+import {
+	convertLinkCitation,
+	convertWikilinks,
+	getReceiptFolder
+} from "../utils/utils";
 
 export default class MkdocsPublish {
 	vault: Vault;
@@ -42,32 +47,12 @@ export default class MkdocsPublish {
 			return false;
 		}
 		try {
-			const text = await this.vault.cachedRead(file);
+			let text = await this.vault.cachedRead(file);
 			const linkedImage = shareFiles.getLinkedImage(file);
-			let folderDefault = this.settings.folderDefaultName;
-			if (folderDefault.length > 0) {
-				folderDefault = folderDefault + "/";
-			}
-			let path = folderDefault + file.name;
-			if (this.settings.downloadedFolder === "yamlFrontmatter") {
-				let folderRoot = this.settings.rootFolder;
-				if (folderRoot.length > 0) {
-					folderRoot = folderRoot + "/";
-				}
-				if (frontmatter[this.settings.yamlFolderKey]) {
-					const category = frontmatter[this.settings.yamlFolderKey]
-					let parentCatFolder = category.split('/').at(-1)
-					parentCatFolder = parentCatFolder.length === 0 ? category.split('/').at(-2) : parentCatFolder
-					const fileName = this.settings.folderNote && parentCatFolder === file.name ? 'index.md' : file.name
-					path =
-						folderRoot +
-						frontmatter[this.settings.yamlFolderKey] +
-						"/" + fileName;
-				}
-			} else if (this.settings.downloadedFolder === "obsidianPath") {
-				const fileName = file.name.replace('.md', '') === file.parent.name && this.settings.folderNote ? 'index.md' : file.name
-				path = folderDefault + file.path.replace(file.name, fileName);
-			}
+			const linkedFiles = shareFiles.getLinkedFiles(file);
+			text = convertLinkCitation(text, this.settings, linkedFiles)
+			text = convertWikilinks(text, this.settings, linkedFiles);
+			const path = getReceiptFolder(file, this.settings)
 			await this.uploadText(file.path, text, path, file.name, ref);
 			if (linkedImage.length > 0 && this.settings.transferEmbedded) {
 				for (const image of linkedImage) {
