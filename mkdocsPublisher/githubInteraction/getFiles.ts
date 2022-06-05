@@ -89,6 +89,35 @@ export class GetFiles {
 		return allFileWithPath;
 	}
 
+	getLinkedFiles(file: TFile): {linked: TFile, linkFrom: string, altText: string}[] {
+		const embedCaches = this.metadataCache.getCache(file.path).links;
+		const embedList = [];
+		if (embedCaches != undefined) {
+			for (const embedCache of embedCaches) {
+				try {
+					const linkedFile = this.metadataCache.getFirstLinkpathDest(
+						embedCache.link,
+						file.path
+					);
+					if (linkedFile) {
+						if (linkedFile.extension === 'md') {
+							embedList.push({
+								'linked': linkedFile,
+								'linkFrom' : embedCache.link,
+								'altText' : embedCache.displayText
+							})
+						}
+					}
+				} catch (e) {
+					console.log(e)
+					console.log("Error with this links : " + embedCache.link);
+				}
+			}
+			return embedList;
+		}
+		return [];
+	}
+	
 	getLinkedImage(file: TFile) {
 		const embed_files = this.metadataCache.getCache(file.path).embeds;
 		const image_list = [];
