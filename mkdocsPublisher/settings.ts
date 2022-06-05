@@ -20,7 +20,6 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 		const {containerEl} = this
 		containerEl.empty();
 		containerEl.createEl('h1', {text: 'Github Configuration'})
-		containerEl.createEl('h2', {text: 'Github settings'})
 		new Setting(containerEl)
 			.setName('Repo Name')
 			.setDesc('The name of the repository where you store your blog.')
@@ -66,9 +65,9 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					})
 			)
 
-		containerEl.createEl('h2', {text: 'Download configuration'})
+		containerEl.createEl('h2', {text: 'Upload configuration'})
 
-		containerEl.createEl('h5', {text: 'Folder reception settings'})
+		containerEl.createEl('h3', {text: 'Folder reception settings'})
 		new Setting(this.containerEl)
 			.setName('Folder Reception settings')
 			.setDesc('Choose between a fixed folder or the value of a frontmatter key.')
@@ -83,6 +82,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.onChange(async(value: string)=>{
 						this.plugin.settings.downloadedFolder=value;
 						await yamlFrontmatterSettings(frontmatterKeySettings, rootFolderSettings, autoCleanSetting, value, this.plugin)
+						value === 'fixedFolder' ? hideSettings(folderNoteSettings):showSettings(folderNoteSettings)
 						await this.plugin.saveSettings();
 					});
 			});
@@ -129,7 +129,73 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					});
 			});
 
-		containerEl.createEl('h5', {text: 'Workflow'})
+		containerEl.createEl('h3', {text: "Link's conversion"})
+
+		const folderNoteSettings = new Setting(containerEl)
+			.setName('Folder note')
+			.setClass('mdkocs-settings-tab')
+			.setDesc('Rename files with the same name as their parent folder (or category) "index.md"')
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.folderNote)
+					.onChange(async (value)=>{
+						this.plugin.settings.folderNote=value;
+						await this.plugin.saveSettings();
+					})
+			})
+		new Setting(containerEl)
+			.setName('Internals Links')
+			.setDesc('Convert the internal link in shared file to match the' +
+				' folder settings')
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.convertForGithub)
+					.onChange(async(value)=>{
+						this.plugin.settings.convertForGithub = value;
+						await this.plugin.saveSettings();
+					})
+			})
+
+		new Setting(containerEl)
+			.setName('Wikilinks')
+			.setDesc('Convert Wikilinks to MDlinks, without changing the' +
+				' contents')
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.convertWikiLinks)
+					.onChange(async (value)=>{
+						this.plugin.settings.convertWikiLinks = value;
+						await this.plugin.saveSettings();
+					})
+			})
+
+		containerEl.createEl('h3', {text: 'Image'})
+		new Setting(containerEl)
+			.setName('Transfer image')
+			.setDesc('Send image linked to a file in github')
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.transferEmbedded)
+					.onChange(async (value) => {
+						this.plugin.settings.transferEmbedded = value;
+						value ? showSettings(settingsDefaultImage) : hideSettings(settingsDefaultImage);
+						await this.plugin.saveSettings();
+					});
+			});
+		const settingsDefaultImage = new Setting(containerEl)
+			.setName('Default image folder')
+			.setDesc('To use a folder different from default')
+			.addText((text)=>{
+				text
+					.setPlaceholder('docs/images')
+					.setValue(this.plugin.settings.defaultImageFolder)
+					.onChange(async(value)=>{
+						this.plugin.settings.defaultImageFolder = value.replace(/\/$/, '');
+						await this.plugin.saveSettings();
+					});
+			});
+
+		containerEl.createEl('h3', {text: 'Github Workflow'})
 		new Setting(containerEl)
 			.setName('Github action name')
 			.setDesc('If you want to activate a github action when the' +
@@ -159,11 +225,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.autoCleanUp)
 					.onChange(async(value)=>{
 						this.plugin.settings.autoCleanUp = value;
-						if (value) {
-							showSettings(autoCleanExcludedSettings);
-						} else {
-							hideSettings(autoCleanExcludedSettings);
-						}
+						value ? showSettings(autoCleanExcludedSettings): hideSettings(autoCleanExcludedSettings)
 						await this.plugin.saveSettings();
 					});
 			});
@@ -182,51 +244,6 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					});
 			});
 
-		if (this.plugin.settings.autoCleanUp) {
-			showSettings(autoCleanExcludedSettings);
-		} else {
-			hideSettings(autoCleanExcludedSettings);
-		}
-
-
-		containerEl.createEl('h5', {text: 'Embedded files'})
-		new Setting(containerEl)
-			.setName('Transfer image')
-			.setDesc('Send image linked to a file in github')
-			.addToggle((toggle) => {
-				toggle
-					.setValue(this.plugin.settings.transferEmbedded)
-					.onChange(async (value) => {
-						this.plugin.settings.transferEmbedded = value;
-						value ? showSettings(settingsDefaultImage) : hideSettings(settingsDefaultImage);
-						await this.plugin.saveSettings();
-					});
-			});
-
-		const settingsDefaultImage = new Setting(containerEl)
-			.setName('Default image folder')
-			.setDesc('To use a folder different from default')
-			.addText((text)=>{
-				text
-					.setPlaceholder('docs/images')
-					.setValue(this.plugin.settings.defaultImageFolder)
-					.onChange(async(value)=>{
-						this.plugin.settings.defaultImageFolder = value.replace(/\/$/, '');
-						await this.plugin.saveSettings();
-					});
-			});
-
-		new Setting(containerEl)
-			.setName('Folder note')
-			.setDesc('Rename files with the same name as their parent folder (or category) "index.md"')
-			.addToggle((toggle) => {
-				toggle
-					.setValue(this.plugin.settings.folderNote)
-					.onChange(async (value)=>{
-						this.plugin.settings.folderNote=value;
-						await this.plugin.saveSettings();
-					})
-			})
 
 		containerEl.createEl('h1', { text: 'Plugin Settings' })
 		new Setting(containerEl)
@@ -277,7 +294,9 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			)
 
 		autoCleanUpSettingsOnCondition(condition, autoCleanSetting, this.plugin);
+		this.plugin.settings.downloadedFolder === 'fixedFolder' ? hideSettings(folderNoteSettings):showSettings(folderNoteSettings)
 		yamlFrontmatterSettings(frontmatterKeySettings, rootFolderSettings, autoCleanSetting, this.plugin.settings.downloadedFolder, this.plugin).then();
 		this.plugin.settings.transferEmbedded ? showSettings(settingsDefaultImage) : hideSettings(settingsDefaultImage);
+		this.plugin.settings.autoCleanUp ? showSettings(autoCleanExcludedSettings):hideSettings(autoCleanExcludedSettings);
 	}
 }
