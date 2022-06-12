@@ -17,16 +17,30 @@ export class GithubBranch {
 		});
 		const mainBranch = allBranch.data.find((branch: { name: string; }) => branch.name === 'main' || branch.name === 'master');
 		const shaMainBranch = mainBranch.commit.sha;
-		const branch = await this.octokit.request(
-			"POST" + " /repos/{owner}/{repo}/git/refs",
-			{
-				owner: this.settings.githubName,
-				repo: this.settings.githubRepo,
-				ref: "refs/heads/" + branchName,
-				sha: shaMainBranch,
-			}
-		);
-		return branch.status === 201;
+		try {
+			const branch = await this.octokit.request(
+				"POST" + " /repos/{owner}/{repo}/git/refs",
+				{
+					owner: this.settings.githubName,
+					repo: this.settings.githubRepo,
+					ref: "refs/heads/" + branchName,
+					sha: shaMainBranch,
+				}
+			);
+			return branch.status === 201;
+		} catch (e) {
+			await this.deleteBranch(branchName);
+			const branch = await this.octokit.request(
+				"POST" + " /repos/{owner}/{repo}/git/refs",
+				{
+					owner: this.settings.githubName,
+					repo: this.settings.githubRepo,
+					ref: "refs/heads/" + branchName,
+					sha: shaMainBranch,
+				}
+			);
+			return branch.status === 201;
+		}
 	}
 
 	async pullRequest(branchName: string) {
