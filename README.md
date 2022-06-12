@@ -2,7 +2,7 @@ GitHub Publisher is a plugin that help you to send file in a configured GitHub R
 
 You can use it to send any markdown file, allowing compatibility thought a lot of Obsidian Publish alternative. 
 
-When a shared file is found, it will be send in a new branch named by `your_vault_name-month-day-year`. A pull request followed by a merge will be done, and if everything is okay, the branch will be deleted after the merge. 
+When a shared file is found, it will be sent in a new branch named by `your_vault_name-month-day-year`. A pull request followed by a merge will be done, and if everything is okay, the branch will be deleted after the merge. 
 Thus, you can easily revert commit, and create workflow based on PR, merged PR, specific push... 
 
 # Main configuration
@@ -126,14 +126,14 @@ You can configure :
 
 ---
 # Workflow example
-## [Mkdocs Publisher](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/)
+## [Mkdocs Publisher](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs/)
 ### Quick installation tutorial
-1. Click on [use this template](https://github.com/Mara-Li/mkdocs_obsidian_template/generate)[^1]
+1. Click on [use this template](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template/generate)[^1]
 2. Use the name of your choice
 3. Set and edit the `configuration.yml` in the root of the repository.
 
 ### Plugin configuration
-![Download configuration](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/obs2mk%20Settings_1.png)
+![Download configuration](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs//assets/img/obs2mk%20Settings_1.png)
 ![](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/obs2mk%20Settings%202.png)
 ![](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/github_publisher_setting2.png)
 
@@ -155,17 +155,15 @@ The files (and the image) will be sent on your GitHub repository template, in th
 
 ### Useful informations
 #### Links
-- [Main Repo](https://github.com/Mara-Li/obsidian_mkdocs_publisher)
-- [Obsidian Plugin](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/)
-- [Python package](https://github.com/Mara-Li/obsidian-mkdocs-publisher-python)
-- [Template](https://github.com/Mara-Li/obsidian-mkdocs-publisher-template)
-- [Documentation](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/)
+- [Obsidian Plugin](https://github.com/obsidianMkdocs/obsidian-github-publisher)
+- [Python package](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-python)
+- [Template](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template)
 
 #### How to...
-- [Configure the blog](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/create%20the%20blog/)
-- [Customize the blog](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/blog%20customization/)
-- [Copy the link ?](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/useful%20plugins/#metacopy)
-- [Update the template](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/documentation/Q%26A/#2-update-the-template)
+- [Configure the blog](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs/documentation/create%20the%20blog/)
+- [Customize the blog](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs/documentation/blog%20customization/)
+- [Copy the link ?](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs/documentation/useful%20plugins/#metacopy)
+- [Update the template](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs/documentation/Q%26A/#2-update-the-template)
 
 #### Support
 - [x] Wikilinks (`[[Links]]`)
@@ -188,8 +186,8 @@ The files (and the image) will be sent on your GitHub repository template, in th
 ---
 ## [Digital Garden](https://github.com/TuanManhCao/digital-garden)
 
-![Digital Garden settings for folder](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/Garden%20Settings.png)
-![Digital Garden Settings for image](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/digital_garden_embed_setting.png)
+![Digital Garden settings for folder](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs/assets/img/Garden%20Settings.png)
+![Digital Garden Settings for image](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs/assets/img/digital_garden_embed_setting.png)
 
 1. Folder reception settings : 
     - Reception settings : `Obsidian Path`
