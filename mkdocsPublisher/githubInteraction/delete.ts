@@ -172,7 +172,6 @@ async function checkIndexFiles(octokit: Octokit, settings: MkdocsPublicationSett
 			// @ts-ignore
 			const fileContent = Base64.decode(fileRequest.data.content);
 			const fileFrontmatter = parseYamlFrontmatter(fileContent);
-			console.log(fileFrontmatter)
 			// if not share => don't delete
 			// Key preventing deletion :
 			//	- index: true
