@@ -2,6 +2,7 @@ import { Octokit } from "@octokit/core";
 import { Notice } from "obsidian";
 import { MkdocsPublicationSettings } from "../settings/interface";
 import { GetFiles } from "./getFiles";
+import {Base64} from "js-base64";
 
 export async function deleteFromGithub(silent = false, settings: MkdocsPublicationSettings, octokit: Octokit, branchName='main', GetFiles: GetFiles) {
 	const getAllFile = await getAllFileFromRepo(branchName, octokit, settings);
@@ -35,22 +36,25 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 	for (const file of filesInRepo) {
 		if (!allSharedFiles.includes(file.file)) {
 			try {
-				console.log('trying to delete file : ' + file.file);
-				const reponse = await octokit.request(
-					"DELETE" + " /repos/{owner}/{repo}/contents/{path}",
-					{
-						owner: settings.githubName,
-						repo: settings.githubRepo,
-						path: file.file,
-						message: "Delete file",
-						sha: file.sha,
-						branch: branchName
+				const checkingIndex = file.file.contains('index') ? await checkIndexFiles(octokit, settings, file.file):false;
+				if (!checkingIndex) {
+					console.log('trying to delete file : ' + file.file);
+					const reponse = await octokit.request(
+						"DELETE" + " /repos/{owner}/{repo}/contents/{path}",
+						{
+							owner: settings.githubName,
+							repo: settings.githubRepo,
+							path: file.file,
+							message: "Delete file",
+							sha: file.sha,
+							branch: branchName
+						}
+					);
+					if (reponse.status === 200) {
+						deletedSuccess++;
+					} else {
+						deletedFailed++;
 					}
-				);
-				if (reponse.status === 200) {
-					deletedSuccess++;
-				} else {
-					deletedFailed++;
 				}
 			} catch (e) {
 				console.error(e);
@@ -145,3 +149,39 @@ async function getAllFileFromRepo(ref="main", octokit: Octokit, settings: Mkdocs
 	return filesInRepo;
 }
 
+function parseYamlFrontmatter(file: string) {
+	const yamlFrontmatter = file.split("---")[1];
+	const yamlFrontmatterParsed = yamlFrontmatter.split("\n");
+	const yamlFrontmatterParsedCleaned: {[k:string]:string} = {};
+	for (const line of yamlFrontmatterParsed) {
+		if (line.trim().length > 0) {
+			yamlFrontmatterParsedCleaned[line.split(":")[0].trim()] = line.split(":")[1].trim();
+		}
+	}
+	return yamlFrontmatterParsedCleaned;
+}
+
+async function checkIndexFiles(octokit: Octokit, settings: MkdocsPublicationSettings, path:string) {
+	try {
+		const fileRequest = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
+			owner: settings.githubName,
+			repo: settings.githubRepo,
+			path: path,
+		});
+		if (fileRequest.status === 200) {
+			// @ts-ignore
+			const fileContent = Base64.decode(fileRequest.data.content);
+			const fileFrontmatter = parseYamlFrontmatter(fileContent);
+			console.log(fileFrontmatter)
+			// if not share => don't delete
+			// Key preventing deletion :
+			//	- index: true
+			//	- autoclean: false
+			// return true for NO DELETION
+			return fileFrontmatter.index === "true" || fileFrontmatter.autoclean === "false" || !fileFrontmatter.share;
+		}
+	} catch (e) {
+		console.log(e);
+		return false;
+	}
+}
