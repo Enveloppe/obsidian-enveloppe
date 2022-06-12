@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.6.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.1...3.6.2) (2022-06-12)
+
+
+### Bug Fixes
+
+* error using category frontmatter because of metadataCache ([79c2dbe](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/79c2dbebbb0c7e00f5d1a2e57144fbcdfaace353))
+
 ### [3.6.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.0...3.6.1) (2022-06-05)
 
 
