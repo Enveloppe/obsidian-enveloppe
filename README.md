@@ -75,12 +75,16 @@ This option will also add a new command to delete file (without sharing new file
 > You can't use the delete command if you don't have set a default folder (and a root folder if you use the YAML configuration)
 > Also, you can lost some files using this commands, so be careful! Don't forget that you can revert commit in case the plugin delete a file you don't want to delete.
 
-
 >[!warning] Changing settings
 > In case you change the folder configuration, the precedent file won't be deleted and result of a error of this workflow's part. Be careful!
 
 You can set the path of the folder you want to avoid deleting the file. Separate folders a comma. 
 >[!Note] Regex are not supported here!
+
+Finally, to prevent deleting `index` created outside of obsidian, you could use some parameters in your front matter : 
+- `autoclean: false`
+- `index: true`
+Or removing the `share` key.
 
 ### Links' conversion
 
