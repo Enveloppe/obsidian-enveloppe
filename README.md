@@ -133,9 +133,9 @@ You can configure :
 3. Set and edit the `configuration.yml` in the root of the repository.
 
 ### Plugin configuration
-![Download configuration](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs//assets/img/obs2mk%20Settings_1.png)
-![](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/obs2mk%20Settings%202.png)
-![](https://mara-li.github.io/obsidian_mkdocs_publisher_docs/assets/img/github_publisher_setting2.png)
+
+![](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs/assets/upload/obs2mk-1.png)
+![](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs/assets/upload/obs2mk-2.png)
 
 1. Folder reception settings : 
     - Reception settings : `YAML frontmatter`
@@ -186,8 +186,8 @@ The files (and the image) will be sent on your GitHub repository template, in th
 ---
 ## [Digital Garden](https://github.com/TuanManhCao/digital-garden)
 
-![Digital Garden settings for folder](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs/assets/img/Garden%20Settings.png)
-![Digital Garden Settings for image](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs/assets/img/digital_garden_embed_setting.png)
+![](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs/assets/upload/digital-garden-1.png)
+![](https://obsidianmkdocs.github.io/obsidian_mkdocs_publisher_docs/assets/upload/digital-garden-2.png)
 
 1. Folder reception settings : 
     - Reception settings : `Obsidian Path`
