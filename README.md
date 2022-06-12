@@ -1,3 +1,5 @@
+---
+---
 GitHub Publisher is a plugin that help you to send file in a configured GitHub Repository, based on a front matter entry state. 
 
 You can use it to send any markdown file, allowing compatibility thought a lot of Obsidian Publish alternative. 
@@ -33,29 +35,29 @@ Using the second option will activate two more options :
 - Front matter key: The key you want to use in your file.
 - Root folder : To prepend a path **before** the category key found (if any key are found!)
 
-> [!EXAMPLE] Example
-> - You use `category` in a file with `category: Roleplay/Characters/DND`  
-> - You set a root folder with `_docs/pages`  
-> - And you set a default folder on `_docs/draft`  
->   
-> The final path (in GitHub!) will be : `_docs/pages/Roleplay/Characters/DND`  
->   
-> But, if you don't set `category`, the path will be `_docs/draft`  
+!!! EXAMPLE "Example"
+	- You use `category` in a file with `category: Roleplay/Characters/DND`  
+	- You set a root folder with `_docs/pages`  
+	- And you set a default folder on `_docs/draft`  
+	  
+	The final path (in GitHub!) will be : `_docs/pages/Roleplay/Characters/DND`  
+	  
+	But, if you don't set `category`, the path will be `_docs/draft`  
 
 #### Fixed folder
 Every file will be sent in the default folder. If you leave the default folder blank, it will be sent in the root of the repository. 
 
-> [!EXAMPLE] Example
-> - If you set `source` for the default folder, any file will be sent in `your_repo/source`, whatever is their frontmatter key or their relative path.
-> - If you leave it blank, it will be sent in `your_repo` directly.
+!!! EXAMPLE "Example"
+	- If you set `source` for the default folder, any file will be sent in `your_repo/source`, whatever is their frontmatter key or their relative path.
+	- If you leave it blank, it will be sent in `your_repo` directly.
 
 #### Obsidian Path
 It uses the relative path in your Obsidian vault. The default folder will be prepended before the relative obsidian path. You can leave it blank to use the root repository.
 
-> [!EXAMPLE] Example
-> For a file in `20. Compendium/DND/Monster`
-> - If you set `source` :  the final path will be `source/20. Compendium/DND/Monster`
-> - If you leave the default folder blank, the final path will be `20. Compendium/DND/Monster`
+!!! EXAMPLE "Example"
+	For a file in `20. Compendium/DND/Monster`
+	- If you set `source` :  the final path will be `source/20. Compendium/DND/Monster`
+	- If you leave the default folder blank, the final path will be `20. Compendium/DND/Monster`
 
 ### Workflow 
 
@@ -71,15 +73,15 @@ You can also set up an "auto-delete" when you use the commands to delete files:
 
 This option will also add a new command to delete file (without sharing new file).
 
-> [!WARNING] WARNING
-> You can't use the delete command if you don't have set a default folder (and a root folder if you use the YAML configuration)
-> Also, you can lost some files using this commands, so be careful! Don't forget that you can revert commit in case the plugin delete a file you don't want to delete.
+!!! WARNING "WARNING"
+	You can't use the delete command if you don't have set a default folder (and a root folder if you use the YAML configuration)
+	Also, you can lost some files using this commands, so be careful! Don't forget that you can revert commit in case the plugin delete a file you don't want to delete.
 
->[!warning] Changing settings
-> In case you change the folder configuration, the precedent file won't be deleted and result of a error of this workflow's part. Be careful!
+!!! warning "Changing settings"
+	In case you change the folder configuration, the precedent file won't be deleted and result of a error of this workflow's part. Be careful!
 
 You can set the path of the folder you want to avoid deleting the file. Separate folders a comma. 
->[!Note] Regex are not supported here!
+!!! Note "Regex are not supported here!"
 
 Finally, to prevent deleting `index` created outside of obsidian, you could use some parameters in your front matter : 
 - `autoclean: false`
@@ -93,20 +95,20 @@ Or removing the `share` key.
 Some publishing solution support folder note, but these note need to be named `index`. In case you use [Folder Note](https://github.com/aidenlx/alx-folder-note) with [the `same name` strategies](https://github.com/aidenlx/alx-folder-note/wiki/folder-note-pref) you will have a problem, no? By chance, I have a solution for you, guys!
 Now, the plugin will convert these file into `index` if you activate the settings. Here some examples of renaming, using the different parameters from the default folder.
 
-> [!example] frontmatter example with a file named `folder2`
-> - Using a category value : `folder1/folder2` 
-> 	- With root value named `docs` ⇒ `docs/folder1/folder2/index.md`
-> 	- Without root : `folder1/folder2/index.md` 
-> - Without category value, with default folder named `drafts` : `draft/folder2.md` (the name won't be converted!)
+!!! example "frontmatter example with a file named `folder2`"
+	- Using a category value : `folder1/folder2` 
+		- With root value named `docs` ⇒ `docs/folder1/folder2/index.md`
+		- Without root : `folder1/folder2/index.md` 
+	- Without category value, with default folder named `drafts` : `draft/folder2.md` (the name won't be converted!)
 
->[!example] Example with Obsidian Path & a file named `folder2`
-> With a path like : `folder1/folder2` the new path will be :
-> - If you use a default folder named `docs` : `docs/folder1/folder2/index.md`
-> - Without : `folder1/folder2/index.md`
+!!! example "Example with Obsidian Path & a file named `folder2`"
+	With a path like : `folder1/folder2` the new path will be :
+	- If you use a default folder named `docs` : `docs/folder1/folder2/index.md`
+	- Without : `folder1/folder2/index.md`
 
->[!warning] This option doesn't work with fixed folder. 
+!!! warning "This option doesn't work with fixed folder."
 
->[!note] These settings won't change your file's content in your vault
+!!! note "These settings won't change your file's content in your vault"
 
 #### Internal links
 
@@ -208,4 +210,4 @@ If you find this plugin and workflow useful, you can give me some coffee money.
 
 [^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or [with downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
 [^2]: You need to be connected to generate it.
-[^3]: Normally, only file supported by obsidian are deleted, but some image exists only on the blog (for logo, for example). To prevent bad surprise, exclude these folder here. 
+[^3]: Normally, only file supported by obsidian are deleted, but some image exists only on the blog (for logo, for example). To prevent bad surprise, exclude these folder here.
