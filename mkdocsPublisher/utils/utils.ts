@@ -1,4 +1,4 @@
-import {App, Notice, TFile} from 'obsidian'
+import {App, Notice, TFile, MetadataCache} from 'obsidian'
 import {MkdocsPublicationSettings} from '../settings/interface'
 import MkdocsPublish from "../githubInteraction/upload";
 
@@ -61,12 +61,12 @@ function convertWikilinks(fileContent: string, settings: MkdocsPublicationSettin
 	return fileContent;
 }
 
-function getReceiptFolder(file: TFile, settings:MkdocsPublicationSettings) {
+function getReceiptFolder(file: TFile, settings:MkdocsPublicationSettings, metadataCache: MetadataCache) {
 	const folderDefault = settings.folderDefaultName;
 	let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + file.name : file.name;
 
 	if (settings.downloadedFolder === "yamlFrontmatter") {
-		const frontmatter = this.metadataCache.getCache(file.path).frontmatter
+		const frontmatter = metadataCache.getCache(file.path).frontmatter
 		let folderRoot = settings.rootFolder;
 		if (folderRoot.length > 0) {
 			folderRoot = folderRoot + "/";
@@ -85,12 +85,12 @@ function getReceiptFolder(file: TFile, settings:MkdocsPublicationSettings) {
 	return path
 }
 
-function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSettings, linkedFiles : {linked: TFile, linkFrom: string, altText: string}[]) {
+function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSettings, linkedFiles : {linked: TFile, linkFrom: string, altText: string}[], metadataCache: MetadataCache) {
 	if (!settings.convertForGithub) {
 		return fileContent;
 	}
 	for (const linkedFile of linkedFiles) {
-		const pathInGithub = getReceiptFolder(linkedFile.linked, settings)
+		const pathInGithub = getReceiptFolder(linkedFile.linked, settings, metadataCache )
 		fileContent = fileContent.replace(linkedFile.linkFrom, pathInGithub)
 	}
 	return fileContent;

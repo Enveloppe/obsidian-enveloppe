@@ -37,7 +37,7 @@ export default class MkdocsPublish {
 	async publish(file: TFile, one_file = false, ref = "main") {
 		const shareFiles = new GetFiles(this.vault, this.metadataCache, this.settings, this.octokit);
 		const sharedKey = this.settings.shareKey;
-		const frontmatter = this.metadataCache.getCache(file.path).frontmatter;
+		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
 		if (
 			!frontmatter ||
 			!frontmatter[sharedKey] ||
@@ -50,9 +50,9 @@ export default class MkdocsPublish {
 			let text = await this.vault.cachedRead(file);
 			const linkedImage = shareFiles.getLinkedImage(file);
 			const linkedFiles = shareFiles.getLinkedFiles(file);
-			text = convertLinkCitation(text, this.settings, linkedFiles)
+			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache)
 			text = convertWikilinks(text, this.settings, linkedFiles);
-			const path = getReceiptFolder(file, this.settings)
+			const path = getReceiptFolder(file, this.settings, this.metadataCache)
 			await this.uploadText(file.path, text, path, file.name, ref);
 			if (linkedImage.length > 0 && this.settings.transferEmbedded) {
 				for (const image of linkedImage) {

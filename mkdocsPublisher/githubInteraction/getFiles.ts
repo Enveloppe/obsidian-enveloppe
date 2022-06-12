@@ -65,7 +65,7 @@ export class GetFiles {
 					file.path
 				).frontmatter;
 				if (frontMatter && frontMatter[shareKey] === true) {
-					const filepath = getReceiptFolder(file, this.settings)
+					const filepath = getReceiptFolder(file, this.settings, this.metadataCache);
 					allFileWithPath.push(filepath);
 				}
 			}
