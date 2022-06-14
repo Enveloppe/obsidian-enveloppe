@@ -12,7 +12,7 @@ import { Base64 } from "js-base64";
 import {deleteFromGithub} from "./delete"
 import {
 	convertLinkCitation,
-	convertWikilinks,
+	convertWikilinks, getImageLinkOptions,
 	getReceiptFolder
 } from "../utils/utils";
 
@@ -49,8 +49,8 @@ export default class MkdocsPublish {
 		try {
 			let text = await this.vault.cachedRead(file);
 			const linkedImage = shareFiles.getLinkedImage(file);
-			const linkedFiles = shareFiles.getLinkedFiles(file);
-			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache)
+			const linkedFiles = shareFiles.getLinkedImageAndFiles(file);
+			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file)
 			text = convertWikilinks(text, this.settings, linkedFiles);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache)
 			await this.uploadText(file.path, text, path, file.name, ref);
@@ -140,10 +140,7 @@ export default class MkdocsPublish {
 	async uploadImage(imageFile: TFile, ref = "main") {
 		const imageBin = await this.vault.readBinary(imageFile);
 		const image64 = arrayBufferToBase64(imageBin);
-		let path = this.settings.folderDefaultName + "/" + imageFile.name;
-		if (this.settings.defaultImageFolder.length > 0) {
-			path = this.settings.defaultImageFolder + "/" + imageFile.name;
-		}
+		const path = getImageLinkOptions(imageFile, this.settings);
 		await this.upload(imageFile.path, image64, path, "", ref);
 	}
 

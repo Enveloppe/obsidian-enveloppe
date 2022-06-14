@@ -7,7 +7,7 @@ import {
 } from "obsidian";
 import { MkdocsPublicationSettings } from "../settings/interface";
 import { Octokit } from "@octokit/core";
-import {getReceiptFolder} from "../utils/utils";
+import {getReceiptFolder, getImageLinkOptions} from "../utils/utils";
 
 export class GetFiles {
 	vault: Vault;
@@ -33,9 +33,7 @@ export class GetFiles {
 		const sharedkey = this.settings.shareKey;
 		for (const file of files) {
 			try {
-				const frontMatter = this.metadataCache.getCache(
-					file.path
-				).frontmatter;
+				const frontMatter = this.metadataCache.getCache(file.path).frontmatter;
 				if (frontMatter && frontMatter[sharedkey] === true) {
 					shared_File.push(file);
 				}
@@ -46,17 +44,6 @@ export class GetFiles {
 		return shared_File;
 	}
 
-	createDefaultImagePath(file: TFile) {
-		let fileDefaultPath = file.path;
-		const fileName = file.name;
-		if (this.settings.defaultImageFolder.length > 0) {
-			fileDefaultPath = this.settings.defaultImageFolder + "/" + fileName;
-		} else if (this.settings.folderDefaultName.length > 0) {
-			fileDefaultPath = this.settings.folderDefaultName + "/" + fileName;
-		}
-		return fileDefaultPath;
-	}
-
 	getAllFileWithPath() {
 		const files = this.vault.getFiles();
 		const allFileWithPath = [];
@@ -64,19 +51,38 @@ export class GetFiles {
 		for (const file of files) {
 			const fileExtension = file.extension;
 			if (fileExtension.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
-				const filepath = this.createDefaultImagePath(file);
+				const filepath = getImageLinkOptions(file, this.settings);
 				allFileWithPath.push(filepath);
 			} else if (file.extension == "md") {
 				const frontMatter = this.metadataCache.getCache(
 					file.path
 				).frontmatter;
-				if (frontMatter && frontMatter[shareKey] === true) {
+				if (frontMatter && frontMatter[shareKey] === true && file.extension === "md") {
 					const filepath = getReceiptFolder(file, this.settings, this.metadataCache);
 					allFileWithPath.push(filepath);
 				}
 			}
 		}
 		return allFileWithPath;
+	}
+	
+	getLinkedImageAndFiles(file: TFile) {
+		const linkedFiles = this.getLinkedFiles(file);
+		const imageEmbedded = this.metadataCache.getFileCache(file).embeds;
+		if (imageEmbedded != undefined){
+			for (const image of imageEmbedded) {
+				const imageLink = this.metadataCache.getFirstLinkpathDest(image.link, file.path)
+				const imageExt = imageLink.extension;
+				if (imageExt.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
+					linkedFiles.push({
+						'linked': imageLink,
+						'linkFrom' : image.link,
+						'altText' : image.displayText
+					})
+				}
+			}
+		}
+		return linkedFiles;
 	}
 
 	getLinkedFiles(file: TFile): {linked: TFile, linkFrom: string, altText: string}[] {
