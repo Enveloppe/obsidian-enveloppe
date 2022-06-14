@@ -31,6 +31,13 @@ body:
         3. Scroll down to '....'
         4. See error 
   - type: textarea
+    attributes:
+      label: Configuration
+      description: |
+        Please, send me a screenshot or a list with your plugin configuration!
+    validations:
+      required: true    
+  - type: textarea
     id: logs
     attributes:
       label: Relevant log output
