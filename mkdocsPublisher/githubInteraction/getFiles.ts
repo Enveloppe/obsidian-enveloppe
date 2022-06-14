@@ -46,6 +46,17 @@ export class GetFiles {
 		return shared_File;
 	}
 
+	createDefaultImagePath(file: TFile) {
+		let fileDefaultPath = file.path;
+		const fileName = file.name;
+		if (this.settings.defaultImageFolder.length > 0) {
+			fileDefaultPath = this.settings.defaultImageFolder + "/" + fileName;
+		} else if (this.settings.folderDefaultName.length > 0) {
+			fileDefaultPath = this.settings.folderDefaultName + "/" + fileName;
+		}
+		return fileDefaultPath;
+	}
+
 	getAllFileWithPath() {
 		const files = this.vault.getFiles();
 		const allFileWithPath = [];
@@ -53,12 +64,7 @@ export class GetFiles {
 		for (const file of files) {
 			const fileExtension = file.extension;
 			if (fileExtension.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
-				const filepath =
-					this.settings.defaultImageFolder.length > 0
-						? this.settings.defaultImageFolder + "/" + file.path
-						: this.settings.folderDefaultName.length > 0
-							? this.settings.folderDefaultName + "/" + file.path
-							: file.path;
+				const filepath = this.createDefaultImagePath(file);
 				allFileWithPath.push(filepath);
 			} else if (file.extension == "md") {
 				const frontMatter = this.metadataCache.getCache(

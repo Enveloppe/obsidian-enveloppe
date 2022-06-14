@@ -189,7 +189,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 				text
 					.setPlaceholder('docs/images')
 					.setValue(this.plugin.settings.defaultImageFolder)
-					.onChange(async(value)=>{
+					.onChange(async(value) => {
 						this.plugin.settings.defaultImageFolder = value.replace(/\/$/, '');
 						await this.plugin.saveSettings();
 					});
