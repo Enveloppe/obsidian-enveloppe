@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.6.4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.3...3.6.4) (2022-06-14)
+
+
+### Bug Fixes
+
+* relative links and image not converted with wiki to md ([0755d37](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/0755d375e672ceeab1a0216e0c9f4bf63ec762f7)), closes [#8](https://github.com/Mara-Li/obsidian-mkdocs-publisher/issues/8)
+
 ### [3.6.3](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.2...3.6.3) (2022-06-14)
 
 
