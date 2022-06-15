@@ -59,14 +59,18 @@ export class GithubBranch {
 		const octokit = new Octokit({
 			auth: this.settings.GhToken,
 		});
-		const branch = await octokit.request(
-			"DELETE" + " /repos/{owner}/{repo}/git/refs/heads/" + branchName,
-			{
-				owner: this.settings.githubName,
-				repo: this.settings.githubRepo,
-			}
-		);
-		return branch.status === 200;
+		try {
+			const branch = await octokit.request(
+				"DELETE" + " /repos/{owner}/{repo}/git/refs/heads/" + branchName,
+				{
+					owner: this.settings.githubName,
+					repo: this.settings.githubRepo,
+				}
+			);
+			return branch.status === 200;
+		} catch (e) {
+			return false;
+		}
 	}
 
 
