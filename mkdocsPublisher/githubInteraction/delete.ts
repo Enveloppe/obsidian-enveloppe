@@ -31,7 +31,6 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 		return false;
 	}
 	const allSharedFiles = GetFiles.getAllFileWithPath();
-	console.log(allSharedFiles)
 	let deletedSuccess = 0;
 	let deletedFailed = 0;
 	for (const file of filesInRepo) {
@@ -108,7 +107,6 @@ export async function filterGithubFile(fileInRepo: { file: string; sha: string }
 			!excludedFileFromDelete(file.file, settings) &&
 			file.file.match(/(md|jpe?g|png|gif|bmp|svg|mp3|webm|wav|m4a|ogg|3gp|flac|mp4|ogv|pdf)$/)
 		) {
-			console.log('shared')
 			sharedFilesInRepo.push(file);
 		}
 	}
