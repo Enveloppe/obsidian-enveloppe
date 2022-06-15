@@ -71,14 +71,18 @@ export class GetFiles {
 		const imageEmbedded = this.metadataCache.getFileCache(file).embeds;
 		if (imageEmbedded != undefined){
 			for (const image of imageEmbedded) {
-				const imageLink = this.metadataCache.getFirstLinkpathDest(image.link, file.path)
-				const imageExt = imageLink.extension;
-				if (imageExt.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
-					linkedFiles.push({
-						'linked': imageLink,
-						'linkFrom' : image.link,
-						'altText' : image.displayText
-					})
+				try {
+					const imageLink = this.metadataCache.getFirstLinkpathDest(image.link, file.path)
+					const imageExt = imageLink.extension;
+					if (imageExt.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
+						linkedFiles.push({
+							'linked': imageLink,
+							'linkFrom': image.link,
+							'altText': image.displayText
+						})
+					}
+				} catch (e) {
+					// ignore error
 				}
 			}
 		}
