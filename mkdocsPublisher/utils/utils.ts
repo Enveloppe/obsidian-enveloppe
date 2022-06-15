@@ -99,7 +99,7 @@ function getReceiptFolder(file: TFile, settings:MkdocsPublicationSettings, metad
 			if (folderRoot.length > 0) {
 				folderRoot = folderRoot + "/";
 			}
-			if (frontmatter[settings.yamlFolderKey]) {
+			if (frontmatter && frontmatter[settings.yamlFolderKey]) {
 				const category = frontmatter[settings.yamlFolderKey]
 				let parentCatFolder = category.split('/').at(-1)
 				parentCatFolder = parentCatFolder.length === 0 ? category.split('/').at(-2) : parentCatFolder
@@ -122,7 +122,12 @@ function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSet
 		let pathInGithub=linkedFile.linked.extension === 'md' ? getReceiptFolder(linkedFile.linked, settings, metadataCache) : getImageLinkOptions(linkedFile.linked, settings);
 		const sourcePath = getReceiptFolder(sourceFile, settings, metadataCache);
 		pathInGithub = createRelativePath(sourcePath, pathInGithub);
-		fileContent = fileContent.replace(linkedFile.linkFrom, pathInGithub)
+		const regexToReplace = new RegExp(`(\\[{2}.*${linkedFile.linkFrom}.*\\]{2})|(\\[.*\\]\\(.*${linkedFile.linkFrom}.*\\))`, 'g');
+		const matchedLink = fileContent.match(regexToReplace);
+		for (const link of matchedLink) {
+			const newLink = link.replace(linkedFile.linkFrom, pathInGithub);
+			fileContent = fileContent.replace(link, newLink);
+		}
 	}
 	return fileContent;
 }
