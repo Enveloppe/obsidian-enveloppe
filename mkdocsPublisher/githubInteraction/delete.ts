@@ -31,10 +31,11 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 		return false;
 	}
 	const allSharedFiles = GetFiles.getAllFileWithPath();
+	console.log(allSharedFiles)
 	let deletedSuccess = 0;
 	let deletedFailed = 0;
 	for (const file of filesInRepo) {
-		if (!allSharedFiles.includes(file.file)) {
+		if (!allSharedFiles.includes(file.file.trim())) {
 			try {
 				const checkingIndex = file.file.contains('index') ? await checkIndexFiles(octokit, settings, file.file):false;
 				if (!checkingIndex) {
@@ -79,7 +80,7 @@ function excludedFileFromDelete(file: string, settings: MkdocsPublicationSetting
 	const autoCleanExcluded = settings.autoCleanUpExcluded.split(',')
 	if (autoCleanExcluded.length > 0) {
 		for (const excludedFile of autoCleanExcluded) {
-			if (file.includes(excludedFile) && excludedFile.length > 0) {
+			if (file.trim().includes(excludedFile.trim()) && excludedFile.length > 0) {
 				return true;
 			}
 		}
@@ -107,6 +108,7 @@ export async function filterGithubFile(fileInRepo: { file: string; sha: string }
 			!excludedFileFromDelete(file.file, settings) &&
 			file.file.match(/(md|jpe?g|png|gif|bmp|svg|mp3|webm|wav|m4a|ogg|3gp|flac|mp4|ogv|pdf)$/)
 		) {
+			console.log('shared')
 			sharedFilesInRepo.push(file);
 		}
 	}
