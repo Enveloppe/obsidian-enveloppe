@@ -80,7 +80,7 @@ export class GithubBranch {
 				owner: this.settings.githubName,
 				repo: this.settings.githubRepo,
 				pull_number: pullRequestNumber,
-				state: "closed",
+				commit_title: `[PUBLISHER] Merge #${pullRequestNumber}`,
 			}
 		);
 		return branch.status === 200;
