@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.6.6](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.5...3.6.6) (2022-06-15)
+
+
+### Bug Fixes
+
+* fix regex convertor ([ca0e8ff](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/ca0e8ff9ae154c3892c6ee05d052b2865dc61293))
+
 ### [3.6.5](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.4...3.6.5) (2022-06-15)
 
 
