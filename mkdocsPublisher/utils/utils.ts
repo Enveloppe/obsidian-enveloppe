@@ -124,9 +124,11 @@ function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSet
 		pathInGithub = createRelativePath(sourcePath, pathInGithub);
 		const regexToReplace = new RegExp(`(\\[{2}.*${linkedFile.linkFrom}.*\\]{2})|(\\[.*\\]\\(.*${linkedFile.linkFrom}.*\\))`, 'g');
 		const matchedLink = fileContent.match(regexToReplace);
-		for (const link of matchedLink) {
-			const newLink = link.replace(linkedFile.linkFrom, pathInGithub);
-			fileContent = fileContent.replace(link, newLink);
+		if (matchedLink) {
+			for (const link of matchedLink) {
+				const newLink = link.replace(linkedFile.linkFrom, pathInGithub);
+				fileContent = fileContent.replace(link, newLink);
+			}
 		}
 	}
 	return fileContent;
