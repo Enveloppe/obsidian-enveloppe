@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.6.5](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.4...3.6.5) (2022-06-15)
+
+
+### Bug Fixes
+
+* trim whitespace excluding autoclean ([f45ba1b](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/f45ba1bd8cfb4c1d7c479e779a683af4f6e0734c))
+
 ### [3.6.4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.3...3.6.4) (2022-06-14)
 
 
