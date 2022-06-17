@@ -102,14 +102,31 @@ export async function shareNewNote(githubBranch: GithubBranch, publish:MkdocsPub
 
 }
 
-export async function shareAllEditedNotes(statusBarElement: HTMLElement, publish: MkdocsPublish, settings: MkdocsPublicationSettings, octokit: Octokit, shareFiles: GetFiles, githubBranch: GithubBranch, branchName: string, vault: Vault) {
+export async function shareAllEditedNotes(publish: MkdocsPublish, settings: MkdocsPublicationSettings, octokit: Octokit, filesManagement: FilesManagement, githubBranch: GithubBranch, branchName: string, vault: Vault) {
 	const branchMaster = await githubBranch.getMasterBranch();
-	const sharedFilesWithPaths = shareFiles.getAllFileWithPath();
-	const githubSharedNotes = await shareFiles.getAllFileFromRepo(branchMaster, octokit, settings);
-	const newlySharedNotes = await shareFiles.getAllplusNewEditedFiles(sharedFilesWithPaths, githubSharedNotes, vault);
+	const sharedFilesWithPaths = filesManagement.getAllFileWithPath();
+	const githubSharedNotes = await filesManagement.getAllFileFromRepo(branchMaster, octokit, settings);
+	const newSharedFiles = filesManagement.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
+	const newlySharedNotes = await filesManagement.getEditedFiles(sharedFilesWithPaths, githubSharedNotes, vault, newSharedFiles);
 	if (newlySharedNotes.length > 0) {
 		await githubBranch.newBranch(branchName);
-		await shareAllMarkedNotes(publish, settings, octokit, shareFiles, githubBranch, statusBarElement, branchName, newlySharedNotes);
+		const statusBarElement = this.addStatusBarItem();
+		await shareAllMarkedNotes(publish, settings, octokit, filesManagement, githubBranch, statusBarElement, branchName, newlySharedNotes);
+	} else {
+		new Notice("No new notes to publish.");
+	}
+}
+
+export async function shareOnlyEdited(publish: MkdocsPublish, settings: MkdocsPublicationSettings, octokit: Octokit, filesManagement: FilesManagement, githubBranch: GithubBranch, branchName: string, vault: Vault) {
+	const branchMaster = await githubBranch.getMasterBranch();
+	const sharedFilesWithPaths = filesManagement.getAllFileWithPath();
+	const githubSharedNotes = await filesManagement.getAllFileFromRepo(branchMaster, octokit, settings);
+	const newSharedFiles:TFile[]=[]
+	const newlySharedNotes = await filesManagement.getEditedFiles(sharedFilesWithPaths, githubSharedNotes, vault, newSharedFiles);
+	if (newlySharedNotes.length > 0) {
+		const statusBarElement = this.addStatusBarItem();
+		await githubBranch.newBranch(branchName);
+		await shareAllMarkedNotes(publish, settings, octokit, filesManagement, githubBranch, statusBarElement, branchName, newlySharedNotes);
 	} else {
 		new Notice("No new notes to publish.");
 	}

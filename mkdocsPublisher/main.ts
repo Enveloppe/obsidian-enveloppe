@@ -129,21 +129,20 @@ export default class MkdocsPublication extends Plugin {
 		});
 		
 		this.addCommand({
-			id: "obs2mk-upload-new",
-			name: "Share newly note",
+			id: "publisher-upload-all-edited-new",
+			name: "Upload all new and edited note since last upload",
 			callback: async () => {
-				await shareNewNote(githubBranch, publish, this.settings, octokit, shareFiles, branchName, this.app.vault);
+				await shareAllEditedNotes(publish, this.settings, octokit, filesManagement, githubBranch, branchName, this.app.vault);
 			}
 		});
 		
 		this.addCommand({
-			id: "obs2mk-upload-edited",
-			name: "Upload all new and edited note",
+			id: 'publisher-upload-edited',
+			name: 'Upload all edited note since last upload',
 			callback: async () => {
-				const statusBarElement = this.addStatusBarItem();
-				await shareAllEditedNotes(statusBarElement, publish, this.settings, octokit, shareFiles, githubBranch, branchName, this.app.vault);
+				await shareOnlyEdited(publish, this.settings, octokit, filesManagement, githubBranch, branchName, this.app.vault);
 			}
-		});
+		})
 	}
 
 	onunload() {
