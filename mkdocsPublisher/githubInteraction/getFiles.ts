@@ -7,14 +7,14 @@ import {
 } from "obsidian";
 import { MkdocsPublicationSettings } from "../settings/interface";
 import { Octokit } from "@octokit/core";
-import {getReceiptFolder, getImageLinkOptions} from "../utils/utils";
+import {getReceiptFolder, getImageLinkOptions} from "../utils/filePathConvertor";
 
 export class GetFiles {
 	vault: Vault;
 	metadataCache: MetadataCache;
 	settings: MkdocsPublicationSettings;
 	octokit: Octokit;
-
+	
 	constructor(
 		vault: Vault,
 		metadataCache: MetadataCache,
@@ -26,7 +26,7 @@ export class GetFiles {
 		this.settings = settings;
 		this.octokit = octokit;
 	}
-
+	
 	getSharedFiles(): TFile[] {
 		const files = this.vault.getMarkdownFiles();
 		const shared_File: TFile[] = [];
@@ -43,7 +43,7 @@ export class GetFiles {
 		}
 		return shared_File;
 	}
-
+	
 	getAllFileWithPath() {
 		const files = this.vault.getFiles();
 		const allFileWithPath = [];
@@ -52,14 +52,20 @@ export class GetFiles {
 			const fileExtension = file.extension;
 			if (fileExtension.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
 				const filepath = getImageLinkOptions(file, this.settings);
-				allFileWithPath.push(filepath);
+				allFileWithPath.push({
+					'converted': filepath,
+					'real': file.path
+				});
 			} else if (file.extension == "md") {
 				const frontMatter = this.metadataCache.getCache(
 					file.path
 				).frontmatter;
 				if (frontMatter && frontMatter[shareKey] === true && file.extension === "md") {
 					const filepath = getReceiptFolder(file, this.settings, this.metadataCache);
-					allFileWithPath.push(filepath);
+					allFileWithPath.push({
+						'converted': filepath,
+						'real': file.path
+					});
 				}
 			}
 		}
@@ -69,7 +75,7 @@ export class GetFiles {
 	getLinkedImageAndFiles(file: TFile) {
 		const linkedFiles = this.getLinkedFiles(file);
 		const imageEmbedded = this.metadataCache.getFileCache(file).embeds;
-		if (imageEmbedded != undefined){
+		if (imageEmbedded != undefined) {
 			for (const image of imageEmbedded) {
 				try {
 					const imageLink = this.metadataCache.getFirstLinkpathDest(image.link, file.path)
@@ -88,8 +94,8 @@ export class GetFiles {
 		}
 		return linkedFiles;
 	}
-
-	getLinkedFiles(file: TFile): {linked: TFile, linkFrom: string, altText: string}[] {
+	
+	getLinkedFiles(file: TFile): { linked: TFile, linkFrom: string, altText: string }[] {
 		const embedCaches = this.metadataCache.getCache(file.path).links;
 		const embedList = [];
 		if (embedCaches != undefined) {
@@ -103,8 +109,8 @@ export class GetFiles {
 						if (linkedFile.extension === 'md') {
 							embedList.push({
 								'linked': linkedFile,
-								'linkFrom' : embedCache.link,
-								'altText' : embedCache.displayText
+								'linkFrom': embedCache.link,
+								'altText': embedCache.displayText
 							})
 						}
 					}
@@ -141,7 +147,7 @@ export class GetFiles {
 		}
 		return [];
 	}
-
+	
 	checkExcludedFolder(file: TFile) {
 		const excludedFolder = this.settings.ExcludedFolder.split(",").filter(
 			(x) => x != ""
@@ -155,7 +161,56 @@ export class GetFiles {
 		}
 		return false;
 	}
-
-
-
+	
+	async getAllFileFromRepo(ref = "main", octokit: Octokit, settings: MkdocsPublicationSettings) {
+		const filesInRepo = [];
+		try {
+			const repoContents = await octokit.request(
+				"GET" + " /repos/{owner}/{repo}/git/trees/{tree_sha}",
+				{
+					owner: settings.githubName,
+					repo: settings.githubRepo,
+					tree_sha: ref,
+					recursive: "true",
+				}
+			);
+			
+			if (repoContents.status === 200) {
+				const files = repoContents.data.tree;
+				for (const file of files) {
+					const basename = (name: string) =>
+						/([^/\\.]*)(\..*)?$/.exec(name)[1]; //don't delete file starting with .
+					if (
+						file.type === "blob" &&
+						basename(file.path).length > 0 &&
+						basename(file.path) != 'vault_published'
+					) {
+						filesInRepo.push({
+							file: file.path,
+							sha: file.sha,
+						});
+					}
+				}
+			}
+		} catch (e) {
+			console.log(e)
+		}
+		return filesInRepo;
+	}
+	
+	getNewFiles(allFileWithPath:{converted: string, real: string}[] , githubSharedFiles: { file: string, sha: string }[], vault: Vault): TFile[] {
+		const newFiles = []; //new file : present in allFileswithPath but not in githubSharedFiles
+		for (const file of allFileWithPath) {
+			if (!githubSharedFiles.some((x) => x.file === file.converted.trim())) {
+				//get TFile from file
+				const fileInVault = vault.getAbstractFileByPath(file.real.trim())
+				if (fileInVault && (fileInVault instanceof TFile) && (fileInVault.extension === 'md')) {
+					newFiles.push(fileInVault);
+				}
+			}
+		}
+		return newFiles;
+	}
+	
+	
 }

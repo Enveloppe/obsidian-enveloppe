@@ -1,5 +1,5 @@
-import { Octokit } from "@octokit/core";
-import { MkdocsPublicationSettings } from "../settings/interface";
+import {Octokit} from "@octokit/core";
+import {MkdocsPublicationSettings} from "../settings/interface";
 
 export class GithubBranch {
 	settings: MkdocsPublicationSettings;
@@ -9,7 +9,16 @@ export class GithubBranch {
 		this.settings = settings;
 		this.octokit = octokit;
 	}
-
+	
+	async getMasterBranch() {
+		const allBranch = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/branches', {
+			owner: this.settings.githubName,
+			repo: this.settings.githubRepo,
+		});
+		const mainBranch = allBranch.data.find((branch: { name: string; }) => branch.name === 'main' || branch.name === 'master');
+		return mainBranch.name;
+	}
+	
 	async newBranch(branchName: string) {
 		const allBranch = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/branches', {
 			owner: this.settings.githubName,
