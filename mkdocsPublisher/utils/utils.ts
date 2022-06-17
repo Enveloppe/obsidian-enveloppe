@@ -101,8 +101,7 @@ function getReceiptFolder(file: TFile, settings:MkdocsPublicationSettings, metad
 			}
 			if (frontmatter && frontmatter[settings.yamlFolderKey]) {
 				const category = frontmatter[settings.yamlFolderKey]
-				let parentCatFolder = category.split('/').at(-1)
-				parentCatFolder = parentCatFolder.length === 0 ? category.split('/').at(-2) : parentCatFolder
+				const parentCatFolder = !category.endsWith('/') ? category.split('/').at(-1): category.split('/').at(-2);
 				const fileName = settings.folderNote && parentCatFolder === file.name ? 'index.md' : file.name
 				path = folderRoot + frontmatter[settings.yamlFolderKey] + "/" + fileName;
 			}
