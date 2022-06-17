@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.7.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.8...3.7.0) (2022-06-17)
+
+
+### Features
+
+* Adding a command to share only new shared notes ([176f586](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/176f586afed36d9b567f42bade9ade4883cfda60))
+
 ### [3.6.8](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.7...3.6.8) (2022-06-17)
 
 
