@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.6.8](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.7...3.6.8) (2022-06-17)
+
+
+### Bug Fixes
+
+* index deleted by error using frontmatter settings ([dbcfe2b](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/dbcfe2bc3230dbd8b9d53f087cb7e66c11191767))
+
 ### [3.6.7](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.6...3.6.7) (2022-06-17)
 
 ### [3.6.6](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.5...3.6.6) (2022-06-15)
