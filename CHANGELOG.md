@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.8.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.0...3.8.1) (2022-06-17)
+
+
+### Bug Fixes
+
+* **foldernote:** fix not renaming using frontmatter ([bb54447](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/bb54447abf1801c1623e444ea651e49ef0e5a49c))
+
 ## [3.8.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.7.0...3.8.0) (2022-06-17)
 
 
