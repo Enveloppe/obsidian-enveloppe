@@ -3,13 +3,13 @@ import MkdocsPublish from "../githubInteraction/upload";
 import { noticeMessage } from "./utils";
 import {MkdocsPublicationSettings} from '../settings/interface'
 import { deleteFromGithub } from '../githubInteraction/delete'
-import { GetFiles } from "../githubInteraction/getFiles";
+import { FilesManagement } from "../githubInteraction/filesManagement";
 import {GithubBranch} from "../githubInteraction/branch";
 import { Octokit } from "@octokit/core";
 import {Notice, TFile, Vault} from "obsidian";
 
 
-export async function shareAllMarkedNotes(publish: MkdocsPublish, settings: MkdocsPublicationSettings, octokit: Octokit, shareFiles: GetFiles, githubBranch: GithubBranch, statusBarItems: HTMLElement, branchName: string, sharedFiles: TFile[], createGithubBranch=true) {
+export async function shareAllMarkedNotes(publish: MkdocsPublish, settings: MkdocsPublicationSettings, octokit: Octokit, filesManagement: FilesManagement, githubBranch: GithubBranch, statusBarItems: HTMLElement, branchName: string, sharedFiles: TFile[], createGithubBranch=true) {
 	try {
 		const statusBar = new ShareStatusBar(
 			statusBarItems,
@@ -38,7 +38,7 @@ export async function shareAllMarkedNotes(publish: MkdocsPublish, settings: Mkdo
 			}
 			statusBar.finish(8000);
 			const noticeValue = `${publishedFiles.length - errorCount} notes`
-			await deleteFromGithub(true, settings, octokit, branchName, shareFiles);
+			await deleteFromGithub(true, settings, octokit, branchName, filesManagement);
 			const update = await githubBranch.updateRepository(branchName);
 			if (update) {
 				await noticeMessage(publish, noticeValue, settings)
@@ -55,11 +55,11 @@ export async function shareAllMarkedNotes(publish: MkdocsPublish, settings: Mkdo
 	}
 }
 
-export async function deleteUnsharedDeletedNotes(githubBranch: GithubBranch, settings: MkdocsPublicationSettings, octokit: Octokit, shareFiles: GetFiles, branchName: string) {
+export async function deleteUnsharedDeletedNotes(githubBranch: GithubBranch, settings: MkdocsPublicationSettings, octokit: Octokit, filesManagement: FilesManagement, branchName: string) {
 	try {
 		new Notice(`Starting cleaning ${settings.githubRepo} `)
 		await githubBranch.newBranch(branchName);
-		await deleteFromGithub(false, settings,octokit, branchName, shareFiles);
+		await deleteFromGithub(false, settings,octokit, branchName, filesManagement);
 		await githubBranch.updateRepository(branchName);
 	} catch (e) {
 		console.error(e);
@@ -87,15 +87,15 @@ export async function shareOneNote(branchName: string, githubBranch: GithubBranc
 	}
 }
 
-export async function shareNewNote(githubBranch: GithubBranch, publish:MkdocsPublish ,settings: MkdocsPublicationSettings, octokit: Octokit, shareFiles: GetFiles, branchName: string, vault: Vault) {
+export async function shareNewNote(githubBranch: GithubBranch, publish:MkdocsPublish , settings: MkdocsPublicationSettings, octokit: Octokit, filesManagement: FilesManagement, branchName: string, vault: Vault) {
 	const branchMaster = await githubBranch.getMasterBranch();
-	const sharedFilesWithPaths = shareFiles.getAllFileWithPath();
-	const githubSharedNotes = await shareFiles.getAllFileFromRepo(branchMaster, octokit, settings);
-	const newlySharedNotes = shareFiles.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
+	const sharedFilesWithPaths = filesManagement.getAllFileWithPath();
+	const githubSharedNotes = await filesManagement.getAllFileFromRepo(branchMaster, octokit, settings);
+	const newlySharedNotes = filesManagement.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
 	if (newlySharedNotes.length > 0) {
 		const statusBarElement = this.addStatusBarItem();
 		await githubBranch.newBranch(branchName);
-		await shareAllMarkedNotes(publish, this.settings, octokit, shareFiles, githubBranch, statusBarElement, branchName, newlySharedNotes);
+		await shareAllMarkedNotes(publish, this.settings, octokit, filesManagement, githubBranch, statusBarElement, branchName, newlySharedNotes);
 	} else {
 		new Notice("No new notes to share.");
 	}

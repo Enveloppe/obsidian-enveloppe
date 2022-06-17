@@ -5,7 +5,7 @@ import {MkdocsPublicationSettings} from "../settings/interface";
 import {Octokit} from "@octokit/core";
 import {getImageLinkOptions, getReceiptFolder} from "../utils/filePathConvertor";
 
-export class GetFiles {
+export class FilesManagement {
 	vault: Vault;
 	metadataCache: MetadataCache;
 	settings: MkdocsPublicationSettings;
@@ -219,8 +219,7 @@ export class GetFiles {
 		return newFiles;
 	}
 	
-	async getAllplusNewEditedFiles(allFileWithPath:{converted: string, real: string}[] , githubSharedFiles: { file: string, sha: string }[], vault: Vault): Promise<TFile[]>{
-		const newFiles = this.getNewFiles(allFileWithPath, githubSharedFiles, vault); //new file : present in allFileswithPath but not in githubSharedFiles
+	async getEditedFiles(allFileWithPath:{converted: string, real: string}[] , githubSharedFiles: { file: string, sha: string }[], vault: Vault, newFiles: TFile[]): Promise<TFile[]>{
 		for (const file of allFileWithPath) {
 			if (githubSharedFiles.some((x) => x.file === file.converted.trim())) {
 				const githubSharedFile = githubSharedFiles.find((x) => x.file === file.converted.trim());

@@ -6,7 +6,7 @@ import {
 	Vault
 } from "obsidian";
 import { MkdocsPublicationSettings } from "../settings/interface";
-import { GetFiles } from "./getFiles";
+import { FilesManagement } from "./filesManagement";
 import { Octokit } from "@octokit/core";
 import { Base64 } from "js-base64";
 import {deleteFromGithub} from "./delete"
@@ -39,7 +39,7 @@ export default class MkdocsPublish {
 	}
 
 	async publish(file: TFile, one_file = false, ref = "main") {
-		const shareFiles = new GetFiles(this.vault, this.metadataCache, this.settings, this.octokit);
+		const shareFiles = new FilesManagement(this.vault, this.metadataCache, this.settings, this.octokit);
 		const sharedKey = this.settings.shareKey;
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
 		if (

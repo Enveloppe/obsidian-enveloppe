@@ -5,7 +5,7 @@ import {
 import MkdocsPublish from "./githubInteraction/upload";
 import { disablePublish } from "./utils/utils";
 import {MkdocsPublicationSettings, DEFAULT_SETTINGS} from './settings/interface'
-import { GetFiles } from "./githubInteraction/getFiles";
+import { FilesManagement } from "./githubInteraction/filesManagement";
 import {GithubBranch} from "./githubInteraction/branch";
 import { Octokit } from "@octokit/core";
 import {
@@ -13,7 +13,7 @@ import {
 	shareAllEditedNotes,
 	shareAllMarkedNotes,
 	shareNewNote,
-	shareOneNote
+	shareOneNote, shareOnlyEdited
 } from "./utils/commands";
 
 
@@ -32,7 +32,7 @@ export default class MkdocsPublication extends Plugin {
 			octokit
 		);
 		const githubBranch = new GithubBranch(this.settings, octokit);
-		const shareFiles = new GetFiles(this.app.vault, this.app.metadataCache, this.settings, octokit);
+		const filesManagement = new FilesManagement(this.app.vault, this.app.metadataCache, this.settings, octokit);
 		const branchName = app.vault.getName() + "-" + new Date().toLocaleDateString('en-US').replace(/\//g, '-');
 
 
@@ -83,8 +83,8 @@ export default class MkdocsPublication extends Plugin {
 		);
 
 		this.addCommand({
-			id: "obs2mk-one",
-			name: "Share active file with Mkdocs Publisher",
+			id: "publisher-one",
+			name: "Share active file",
 			hotkeys: [],
 			checkCallback: (checking) => {
 				if (
@@ -104,13 +104,13 @@ export default class MkdocsPublication extends Plugin {
 		});
 
 		this.addCommand({
-			id: "Obs2MK-delete-clean",
-			name: "Delete from repository",
+			id: "publisher-delete-clean",
+			name: "Remove unshared and deleted file in repository",
 			hotkeys: [],
 			checkCallback: (checking) => {
 				if (this.settings.autoCleanUp) {
 					if (!checking) {
-						deleteUnsharedDeletedNotes(githubBranch, this.settings, octokit, shareFiles, branchName);
+						deleteUnsharedDeletedNotes(githubBranch, this.settings, octokit, filesManagement, branchName);
 					}
 					return true;
 				}
@@ -119,12 +119,20 @@ export default class MkdocsPublication extends Plugin {
 		});
 
 		this.addCommand({
-			id: "obs2mk-publish-all",
-			name: "Share all marked notes",
+			id: "publisher-publish-all",
+			name: "Upload all shared notes",
 			callback: async () => {
-				const statusBarElement = this.addStatusBarItem()
-				const sharedFiles = shareFiles.getSharedFiles();
-				await shareAllMarkedNotes(publish, this.settings, octokit, shareFiles, githubBranch, statusBarElement, branchName, sharedFiles);
+				const sharedFiles = filesManagement.getSharedFiles();
+				const statusBarItems = this.addStatusBarItem()
+				await shareAllMarkedNotes(publish, this.settings, octokit, filesManagement, githubBranch, statusBarItems, branchName, sharedFiles, true);
+			}
+		});
+		
+		this.addCommand({
+			id: "publisher-upload-new",
+			name: "Upload new shared notes",
+			callback: async () => {
+				await shareNewNote(githubBranch, publish, this.settings, octokit, filesManagement, branchName, this.app.vault);
 			}
 		});
 		

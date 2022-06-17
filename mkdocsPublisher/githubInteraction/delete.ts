@@ -1,11 +1,11 @@
 import { Octokit } from "@octokit/core";
 import { Notice } from "obsidian";
 import { MkdocsPublicationSettings } from "../settings/interface";
-import { GetFiles } from "./getFiles";
+import { FilesManagement } from "./filesManagement";
 import {Base64} from "js-base64";
 
-export async function deleteFromGithub(silent = false, settings: MkdocsPublicationSettings, octokit: Octokit, branchName='main', GetFiles: GetFiles) {
-	const getAllFile = await GetFiles.getAllFileFromRepo(branchName, octokit, settings);
+export async function deleteFromGithub(silent = false, settings: MkdocsPublicationSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement) {
+	const getAllFile = await filesManagement.getAllFileFromRepo(branchName, octokit, settings);
 	const filesInRepo = await filterGithubFile(getAllFile,
 		settings
 	);
@@ -30,7 +30,7 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 		}
 		return false;
 	}
-	const allSharedFiles = GetFiles.getAllFileWithPath();
+	const allSharedFiles = filesManagement.getAllFileWithPath();
 	const allSharedConverted = allSharedFiles.map((file) => { return file.converted; });
 	let deletedSuccess = 0;
 	let deletedFailed = 0;
