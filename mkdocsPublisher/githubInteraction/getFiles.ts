@@ -162,6 +162,16 @@ export class GetFiles {
 		return false;
 	}
 	
+	async getLastEditedTimeRepo(octokit: Octokit, githubRepo: {file: string, sha: string}, settings: MkdocsPublicationSettings) {
+		const commits = await octokit.request('GET /repos/{owner}/{repo}/commits', {
+			owner: settings.githubName,
+			repo: settings.githubRepo,
+			path: githubRepo.file,
+		})
+		const lastCommittedFile = commits.data[0];
+		return new Date(lastCommittedFile.commit.committer.date);
+	}
+	
 	async getAllFileFromRepo(ref = "main", octokit: Octokit, settings: MkdocsPublicationSettings) {
 		const filesInRepo = [];
 		try {
@@ -212,5 +222,22 @@ export class GetFiles {
 		return newFiles;
 	}
 	
-	
+	async getAllplusNewEditedFiles(allFileWithPath:{converted: string, real: string}[] , githubSharedFiles: { file: string, sha: string }[], vault: Vault): Promise<TFile[]>{
+		const newFiles = this.getNewFiles(allFileWithPath, githubSharedFiles, vault); //new file : present in allFileswithPath but not in githubSharedFiles
+		for (const file of allFileWithPath) {
+			if (githubSharedFiles.some((x) => x.file === file.converted.trim())) {
+				const githubSharedFile = githubSharedFiles.find((x) => x.file === file.converted.trim());
+				const repoEditedTime = await this.getLastEditedTimeRepo(this.octokit, githubSharedFile, this.settings);
+				const fileInVault = vault.getAbstractFileByPath(file.real.trim())
+				if (fileInVault && (fileInVault instanceof TFile) && (fileInVault.extension === 'md')) {
+					const vaultEditedTime = new Date(fileInVault.stat.mtime);
+					if (vaultEditedTime > repoEditedTime) {
+						console.log('edited file ', fileInVault.path, ' / ', vaultEditedTime, ' vs ', repoEditedTime)
+						newFiles.push(fileInVault);
+					}
+				}
+			}
+		}
+		return newFiles;
+	}
 }

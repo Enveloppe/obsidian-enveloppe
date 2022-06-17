@@ -8,7 +8,13 @@ import {MkdocsPublicationSettings, DEFAULT_SETTINGS} from './settings/interface'
 import { GetFiles } from "./githubInteraction/getFiles";
 import {GithubBranch} from "./githubInteraction/branch";
 import { Octokit } from "@octokit/core";
-import {deleteUnsharedDeletedNotes, shareAllMarkedNotes, shareOneNote} from "./utils/commands";
+import {
+	deleteUnsharedDeletedNotes,
+	shareAllEditedNotes,
+	shareAllMarkedNotes,
+	shareNewNote,
+	shareOneNote
+} from "./utils/commands";
 
 
 export default class MkdocsPublication extends Plugin {
@@ -124,20 +130,18 @@ export default class MkdocsPublication extends Plugin {
 		this.addCommand({
 			id: "obs2mk-upload-new",
 			name: "Share newly note",
-			// @ts-ignore I really need async here
-			checkCallback: async (checking) => {
+			callback: async () => {
+				await shareNewNote(githubBranch, publish, this.settings, octokit, shareFiles, branchName, this.app.vault);
+			}
+		});
+		
+		this.addCommand({
+			id: "obs2mk-upload-edited",
+			name: "Upload all new and edited note",
+			callback: async () => {
 				const statusBarElement = this.addStatusBarItem();
-				const branchMaster = await githubBranch.getMasterBranch();
-				const sharedFilesWithPaths= shareFiles.getAllFileWithPath();
-				const githubSharedNotes = await shareFiles.getAllFileFromRepo(branchMaster, octokit, this.settings);
-				const newlySharedNotes = shareFiles.getNewFiles(sharedFilesWithPaths, githubSharedNotes, this.app.vault);
-				if (newlySharedNotes.length > 0) {
-					if (!checking) {
-						await githubBranch.newBranch(branchName);
-						await shareAllMarkedNotes(publish, this.settings, octokit, shareFiles, githubBranch, statusBarElement, branchName, newlySharedNotes);
-					} return true;
-				} return false;
-			},
+				await shareAllEditedNotes(statusBarElement, publish, this.settings, octokit, shareFiles, githubBranch, branchName, this.app.vault);
+			}
 		});
 	}
 

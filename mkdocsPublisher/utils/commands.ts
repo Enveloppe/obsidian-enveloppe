@@ -95,3 +95,17 @@ export async function shareOneNote(branchName: string, githubBranch: GithubBranc
 }
 
 
+}
+
+export async function shareAllEditedNotes(statusBarElement: HTMLElement, publish: MkdocsPublish, settings: MkdocsPublicationSettings, octokit: Octokit, shareFiles: GetFiles, githubBranch: GithubBranch, branchName: string, vault: Vault) {
+	const branchMaster = await githubBranch.getMasterBranch();
+	const sharedFilesWithPaths = shareFiles.getAllFileWithPath();
+	const githubSharedNotes = await shareFiles.getAllFileFromRepo(branchMaster, octokit, settings);
+	const newlySharedNotes = await shareFiles.getAllplusNewEditedFiles(sharedFilesWithPaths, githubSharedNotes, vault);
+	if (newlySharedNotes.length > 0) {
+		await githubBranch.newBranch(branchName);
+		await shareAllMarkedNotes(publish, settings, octokit, shareFiles, githubBranch, statusBarElement, branchName, newlySharedNotes);
+	} else {
+		new Notice("No new notes to publish.");
+	}
+}
