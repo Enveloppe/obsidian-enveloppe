@@ -64,7 +64,6 @@ export default class MkdocsPublish {
 				}
 			}
 			if (one_file) {
-				await this.uploadFolder(ref);
 				await deleteFromGithub(true, this.settings, this.octokit, ref, shareFiles);
 			}
 			return true;
@@ -73,24 +72,7 @@ export default class MkdocsPublish {
 			return false;
 		}
 	}
-	async uploadFolder(ref = "main") {
-		const shareFiles = new GetFiles(this.vault, this.metadataCache, this.settings, this.octokit);
-		const folder = shareFiles.getSharedFiles();
-		if (folder.length > 0) {
-			const publishedFiles = folder.map((file) => file.name);
-			const publishedFilesText =
-				JSON.stringify(publishedFiles).toString();
-			const vaultPublisherJSON =
-				this.settings.folderDefaultName.length > 0
-					? `${this.settings.folderDefaultName}/vault_published.json`
-					: `vault_published.json`;
-			await this.uploadText(
-				"vault_published.json",
-				publishedFilesText,
-				vaultPublisherJSON, "", ref
-			);
-		}
-	}
+	
 	async upload(filePath: string, content: string, path: string, title = "", ref = "main") {
 		if (!this.settings.githubRepo) {
 			new Notice(

@@ -1,13 +1,9 @@
 // Credit : https://github.com/oleeskild/obsidian-digital-garden @oleeskild
 
-import {
-	MetadataCache,
-	TFile,
-	Vault,
-} from "obsidian";
-import { MkdocsPublicationSettings } from "../settings/interface";
-import { Octokit } from "@octokit/core";
-import {getReceiptFolder, getImageLinkOptions} from "../utils/filePathConvertor";
+import {MetadataCache, TFile, Vault,} from "obsidian";
+import {MkdocsPublicationSettings} from "../settings/interface";
+import {Octokit} from "@octokit/core";
+import {getImageLinkOptions, getReceiptFolder} from "../utils/filePathConvertor";
 
 export class GetFiles {
 	vault: Vault;
@@ -210,6 +206,7 @@ export class GetFiles {
 	
 	getNewFiles(allFileWithPath:{converted: string, real: string}[] , githubSharedFiles: { file: string, sha: string }[], vault: Vault): TFile[] {
 		const newFiles = []; //new file : present in allFileswithPath but not in githubSharedFiles
+		
 		for (const file of allFileWithPath) {
 			if (!githubSharedFiles.some((x) => x.file === file.converted.trim())) {
 				//get TFile from file

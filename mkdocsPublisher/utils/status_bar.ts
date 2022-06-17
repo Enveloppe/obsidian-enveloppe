@@ -11,7 +11,7 @@ export class ShareStatusBar {
 		this.counter = 0
 		this.numberOfNotesToPublish = numberOfNotesToPublish
 
-		this.statusBarItem.createEl('span', { text: 'Mkdocs Publication: ' })
+		this.statusBarItem.createEl('span', { text: '' })
 		this.status = this.statusBarItem.createEl('span', { text: `${this.numberOfNotesToPublish} files marked for sharing` })
 	}
 

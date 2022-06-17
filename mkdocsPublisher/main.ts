@@ -1,4 +1,4 @@
-import {Plugin, TFile } from "obsidian";
+import {Plugin, TFile} from "obsidian";
 import {
 	MkdocsSettingsTab,
 } from "./settings";
@@ -21,7 +21,7 @@ export default class MkdocsPublication extends Plugin {
 	settings: MkdocsPublicationSettings;
 
 	async onload() {
-		console.log("Mkdocs Publication loaded");
+		console.log("Github Publisher loaded");
 		await this.loadSettings();
 		this.addSettingTab(new MkdocsSettingsTab(this.app, this));
 		const octokit = new Octokit({auth: this.settings.GhToken});
@@ -74,6 +74,7 @@ export default class MkdocsPublication extends Plugin {
 						)
 							.setIcon("share")
 							.onClick(async () => {
+								
 								await shareOneNote(branchName, githubBranch, publish, this.settings, view.file);
 							});
 					});
