@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.8.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.7.0...3.8.0) (2022-06-17)
+
+
+### Features
+
+* Add a command for only edited notes ([a08c157](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/a08c157ee4a17fd88ec01b613f9ef4c529f0dac3))
+* share new and edited notes ([629296e](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/629296ef8fb5ec4f3b1cfb7a865416d20999c953))
+
+
+### Bug Fixes
+
+* error with checkcallback ([98f8b30](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/98f8b3045b287a4170617e851bc122a422a5d026))
+
 ## [3.7.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.8...3.7.0) (2022-06-17)
 
 
