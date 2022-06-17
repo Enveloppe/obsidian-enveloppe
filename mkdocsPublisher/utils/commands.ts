@@ -7,6 +7,7 @@ import { FilesManagement } from "../githubInteraction/filesManagement";
 import {GithubBranch} from "../githubInteraction/branch";
 import { Octokit } from "@octokit/core";
 import {Notice, TFile, Vault} from "obsidian";
+import MkdocsPublication from "../main";
 
 
 export async function shareAllMarkedNotes(publish: MkdocsPublish, settings: MkdocsPublicationSettings, octokit: Octokit, filesManagement: FilesManagement, githubBranch: GithubBranch, statusBarItems: HTMLElement, branchName: string, sharedFiles: TFile[], createGithubBranch=true) {
@@ -87,13 +88,13 @@ export async function shareOneNote(branchName: string, githubBranch: GithubBranc
 	}
 }
 
-export async function shareNewNote(githubBranch: GithubBranch, publish:MkdocsPublish , settings: MkdocsPublicationSettings, octokit: Octokit, filesManagement: FilesManagement, branchName: string, vault: Vault) {
+export async function shareNewNote(githubBranch: GithubBranch, publish:MkdocsPublish , settings: MkdocsPublicationSettings, octokit: Octokit, filesManagement: FilesManagement, branchName: string, vault: Vault, plugin: MkdocsPublication) {
 	const branchMaster = await githubBranch.getMasterBranch();
 	const sharedFilesWithPaths = filesManagement.getAllFileWithPath();
 	const githubSharedNotes = await filesManagement.getAllFileFromRepo(branchMaster, octokit, settings);
 	const newlySharedNotes = filesManagement.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
 	if (newlySharedNotes.length > 0) {
-		const statusBarElement = this.addStatusBarItem();
+		const statusBarElement = plugin.addStatusBarItem();
 		await githubBranch.newBranch(branchName);
 		await shareAllMarkedNotes(publish, this.settings, octokit, filesManagement, githubBranch, statusBarElement, branchName, newlySharedNotes);
 	} else {
@@ -102,7 +103,7 @@ export async function shareNewNote(githubBranch: GithubBranch, publish:MkdocsPub
 
 }
 
-export async function shareAllEditedNotes(publish: MkdocsPublish, settings: MkdocsPublicationSettings, octokit: Octokit, filesManagement: FilesManagement, githubBranch: GithubBranch, branchName: string, vault: Vault) {
+export async function shareAllEditedNotes(publish: MkdocsPublish, settings: MkdocsPublicationSettings, octokit: Octokit, filesManagement: FilesManagement, githubBranch: GithubBranch, branchName: string, vault: Vault, plugin: MkdocsPublication) {
 	const branchMaster = await githubBranch.getMasterBranch();
 	const sharedFilesWithPaths = filesManagement.getAllFileWithPath();
 	const githubSharedNotes = await filesManagement.getAllFileFromRepo(branchMaster, octokit, settings);
@@ -110,21 +111,21 @@ export async function shareAllEditedNotes(publish: MkdocsPublish, settings: Mkdo
 	const newlySharedNotes = await filesManagement.getEditedFiles(sharedFilesWithPaths, githubSharedNotes, vault, newSharedFiles);
 	if (newlySharedNotes.length > 0) {
 		await githubBranch.newBranch(branchName);
-		const statusBarElement = this.addStatusBarItem();
+		const statusBarElement = plugin.addStatusBarItem();
 		await shareAllMarkedNotes(publish, settings, octokit, filesManagement, githubBranch, statusBarElement, branchName, newlySharedNotes);
 	} else {
 		new Notice("No new notes to publish.");
 	}
 }
 
-export async function shareOnlyEdited(publish: MkdocsPublish, settings: MkdocsPublicationSettings, octokit: Octokit, filesManagement: FilesManagement, githubBranch: GithubBranch, branchName: string, vault: Vault) {
+export async function shareOnlyEdited(publish: MkdocsPublish, settings: MkdocsPublicationSettings, octokit: Octokit, filesManagement: FilesManagement, githubBranch: GithubBranch, branchName: string, vault: Vault, plugin: MkdocsPublication) {
 	const branchMaster = await githubBranch.getMasterBranch();
 	const sharedFilesWithPaths = filesManagement.getAllFileWithPath();
 	const githubSharedNotes = await filesManagement.getAllFileFromRepo(branchMaster, octokit, settings);
 	const newSharedFiles:TFile[]=[]
 	const newlySharedNotes = await filesManagement.getEditedFiles(sharedFilesWithPaths, githubSharedNotes, vault, newSharedFiles);
 	if (newlySharedNotes.length > 0) {
-		const statusBarElement = this.addStatusBarItem();
+		const statusBarElement = plugin.addStatusBarItem();
 		await githubBranch.newBranch(branchName);
 		await shareAllMarkedNotes(publish, settings, octokit, filesManagement, githubBranch, statusBarElement, branchName, newlySharedNotes);
 	} else {

@@ -132,7 +132,7 @@ export default class MkdocsPublication extends Plugin {
 			id: "publisher-upload-new",
 			name: "Upload new shared notes",
 			callback: async () => {
-				await shareNewNote(githubBranch, publish, this.settings, octokit, filesManagement, branchName, this.app.vault);
+				await shareNewNote(githubBranch, publish, this.settings, octokit, filesManagement, branchName, this.app.vault, this);
 			}
 		});
 		
