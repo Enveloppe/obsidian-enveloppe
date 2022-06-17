@@ -6,7 +6,7 @@ import { deleteFromGithub } from '../githubInteraction/delete'
 import { GetFiles } from "../githubInteraction/getFiles";
 import {GithubBranch} from "../githubInteraction/branch";
 import { Octokit } from "@octokit/core";
-import {Notice, TFile} from "obsidian";
+import {Notice, TFile, Vault} from "obsidian";
 
 
 export async function shareAllMarkedNotes(publish: MkdocsPublish, settings: MkdocsPublicationSettings, octokit: Octokit, shareFiles: GetFiles, githubBranch: GithubBranch, statusBarItems: HTMLElement, branchName: string, sharedFiles: TFile[], createGithubBranch=true) {
@@ -19,14 +19,7 @@ export async function shareAllMarkedNotes(publish: MkdocsPublish, settings: Mkdo
 		if (sharedFiles.length > 0) {
 			const publishedFiles = sharedFiles.map(
 				(file) => file.name);
-			const publishedFilesText = JSON.stringify(publishedFiles).toString();
 			if (createGithubBranch) {await githubBranch.newBranch(branchName);}
-			const vaultPublisherJSON = settings.folderDefaultName.length > 0 ? `${settings.folderDefaultName}/vault_published.json` : `vault_published.json`;
-			await publish.uploadText(
-				"vault_published.json",
-				publishedFilesText,
-				vaultPublisherJSON, "", branchName
-			);
 			for (
 				let files = 0;
 				files < sharedFiles.length;
@@ -90,10 +83,22 @@ export async function shareOneNote(branchName: string, githubBranch: GithubBranc
 	}
 	catch (error) {
 		console.error(error);
-		new Notice("Error publishing to " + this.settings.githubRepo + ".");
+		new Notice("Error publishing to " + settings.githubRepo + ".");
 	}
 }
 
+export async function shareNewNote(githubBranch: GithubBranch, publish:MkdocsPublish ,settings: MkdocsPublicationSettings, octokit: Octokit, shareFiles: GetFiles, branchName: string, vault: Vault) {
+	const branchMaster = await githubBranch.getMasterBranch();
+	const sharedFilesWithPaths = shareFiles.getAllFileWithPath();
+	const githubSharedNotes = await shareFiles.getAllFileFromRepo(branchMaster, octokit, settings);
+	const newlySharedNotes = shareFiles.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
+	if (newlySharedNotes.length > 0) {
+		const statusBarElement = this.addStatusBarItem();
+		await githubBranch.newBranch(branchName);
+		await shareAllMarkedNotes(publish, this.settings, octokit, shareFiles, githubBranch, statusBarElement, branchName, newlySharedNotes);
+	} else {
+		new Notice("No new notes to share.");
+	}
 
 }
 
