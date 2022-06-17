@@ -10,11 +10,15 @@ import { GetFiles } from "./getFiles";
 import { Octokit } from "@octokit/core";
 import { Base64 } from "js-base64";
 import {deleteFromGithub} from "./delete"
+
 import {
 	convertLinkCitation,
-	convertWikilinks, getImageLinkOptions,
-	getReceiptFolder
-} from "../utils/utils";
+	convertWikilinks
+} from "../utils/convertText";
+
+import {
+	getReceiptFolder, getImageLinkOptions
+} from "../utils/filePathConvertor";
 
 export default class MkdocsPublish {
 	vault: Vault;
@@ -152,6 +156,7 @@ export default class MkdocsPublish {
 			console.error(e);
 		}
 	}
+	
 	async workflowGestion() {
 		let finished = false;
 		if (this.settings.workflowName.length === 0) {

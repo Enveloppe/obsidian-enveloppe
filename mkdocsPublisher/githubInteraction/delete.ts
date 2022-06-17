@@ -5,7 +5,7 @@ import { GetFiles } from "./getFiles";
 import {Base64} from "js-base64";
 
 export async function deleteFromGithub(silent = false, settings: MkdocsPublicationSettings, octokit: Octokit, branchName='main', GetFiles: GetFiles) {
-	const getAllFile = await getAllFileFromRepo(branchName, octokit, settings);
+	const getAllFile = await GetFiles.getAllFileFromRepo(branchName, octokit, settings);
 	const filesInRepo = await filterGithubFile(getAllFile,
 		settings
 	);
@@ -31,10 +31,11 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 		return false;
 	}
 	const allSharedFiles = GetFiles.getAllFileWithPath();
+	const allSharedConverted = allSharedFiles.map((file) => { return file.converted; });
 	let deletedSuccess = 0;
 	let deletedFailed = 0;
 	for (const file of filesInRepo) {
-		if (!allSharedFiles.includes(file.file.trim())) {
+		if (!allSharedConverted.includes(file.file.trim())) {
 			try {
 				const checkingIndex = file.file.contains('index') ? await checkIndexFiles(octokit, settings, file.file):false;
 				if (!checkingIndex) {
@@ -113,41 +114,7 @@ export async function filterGithubFile(fileInRepo: { file: string; sha: string }
 	return sharedFilesInRepo;
 }
 
-async function getAllFileFromRepo(ref="main", octokit: Octokit, settings: MkdocsPublicationSettings) {
-	const filesInRepo = [];
-	try {
-		const repoContents = await octokit.request(
-			"GET" + " /repos/{owner}/{repo}/git/trees/{tree_sha}",
-			{
-				owner: settings.githubName,
-				repo: settings.githubRepo,
-				tree_sha: ref,
-				recursive: "true",
-			}
-		);
 
-		if (repoContents.status === 200) {
-			const files = repoContents.data.tree;
-			for (const file of files) {
-				const basename = (name: string) =>
-					/([^/\\.]*)(\..*)?$/.exec(name)[1]; //don't delete file starting with .
-				if (
-					file.type === "blob" &&
-						basename(file.path).length > 0 &&
-						basename(file.path) != 'vault_published'
-				) {
-					filesInRepo.push({
-						file: file.path,
-						sha: file.sha,
-					});
-				}
-			}
-		}
-	} catch (e) {
-		console.log(e)
-	}
-	return filesInRepo;
-}
 
 function parseYamlFrontmatter(file: string) {
 	const yamlFrontmatter = file.split("---")[1];
