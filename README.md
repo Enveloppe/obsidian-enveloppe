@@ -84,15 +84,15 @@ You can also set up an "auto-delete" when you use the commands to delete files:
 
 This option will also add a new command to delete file (without sharing new file).
 
->[!warning] Warning
->	You can't use the delete command if you don't have set a default folder (and a root folder if you use the YAML configuration)
->	Also, you can lost some files using this commands, so be careful! Don't forget that you can revert commit in case the plugin delete a file you don't want to delete.
+> [!warning] Warning
+> You can't use the delete command if you don't have set a default folder (and a root folder if you use the YAML configuration)
+> Also, you can lost some files using this commands, so be careful! Don't forget that you can revert commit in case the plugin delete a file you don't want to delete.
 
->[!warning] Changing the option
->	In case you change the folder configuration, the precedent file won't be deleted and result of a error of this workflow's part. Be careful!
+> [!warning] Changing the option
+> In case you change the folder configuration, the precedent file won't be deleted and result of a error of this workflow's part. Be careful!
 
 You can set the path of the folder you want to avoid deleting the file. Separate folders a comma. 
->[!note] Regex are not supported here!
+> [!note] Regex are not supported here!
 
 Finally, to prevent deleting `index` created outside of obsidian, you could use some parameters in your front matter : 
 - `autoclean: false`
@@ -101,7 +101,7 @@ Or removing the `share` key.
 
 ### Links' conversion
 
->[!note] These settings won't change your file's content in your vault
+> [!note] These settings won't change your file's content in your vault
 
 #### Index & folder note
 
@@ -109,10 +109,10 @@ Some publishing solution support folder note, but these note need to be named `i
 Now, the plugin will convert these file into `index` if you activate the settings. Here some examples of renaming, using the different parameters from the default folder.
 
 > [!example] frontmatter example with a file named `folder2`
->	- Using a category value : `folder1/folder2` 
->		- With root value named `docs` ⇒ `docs/folder1/folder2/index.md`
->		- Without root : `folder1/folder2/index.md` 
->	- Without category value, with default folder named `drafts` : `draft/folder2.md` (the name won't be converted!)
+> - Using a category value : `folder1/folder2` 
+> - With root value named `docs` ⇒ `docs/folder1/folder2/index.md`
+> - Without root : `folder1/folder2/index.md` 
+> - Without category value, with default folder named `drafts` : `draft/folder2.md` (the name won't be converted!)
 
 > [!example] Example with Obsidian Path & a file named `folder2`
 >	With a path like : `folder1/folder2` the new path will be :
