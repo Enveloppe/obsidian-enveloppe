@@ -32,7 +32,8 @@ function getReceiptFolder(file: TFile, settings:MkdocsPublicationSettings, metad
 			if (frontmatter && frontmatter[settings.yamlFolderKey]) {
 				const category = frontmatter[settings.yamlFolderKey]
 				const parentCatFolder = !category.endsWith('/') ? category.split('/').at(-1): category.split('/').at(-2);
-				const fileName = settings.folderNote && parentCatFolder === file.name ? 'index.md' : file.name
+				const fileName = settings.folderNote && parentCatFolder === file.name.replace('.md', '') ? 'index.md' : file.name
+				console.log(file.name, parentCatFolder, fileName);
 				path = folderRoot + frontmatter[settings.yamlFolderKey] + "/" + fileName;
 			}
 		} else if (settings.downloadedFolder === "obsidianPath") {
