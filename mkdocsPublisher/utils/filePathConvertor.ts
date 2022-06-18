@@ -37,7 +37,8 @@ function getReceiptFolder(file: TFile, settings:MkdocsPublicationSettings, metad
 			}
 		} else if (settings.downloadedFolder === "obsidianPath") {
 			const fileName = file.name.replace('.md', '') === file.parent.name && settings.folderNote ? 'index.md' : file.name
-			path = folderDefault + '/' + file.path.replace(file.name, fileName);
+			const rootFolder = folderDefault.length > 0 ? folderDefault + "/" : ''
+			path = rootFolder + file.path.replace(file.name, fileName);
 		}
 		return path
 	}
