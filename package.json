@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-mkdocs-publication",
-	"version": "3.8.3",
+	"version": "3.8.1",
 	"description": "Obsidian's Mkdocs Publication is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault.",
 	"main": "main.js",
 	"scripts": {
@@ -8,11 +8,18 @@
 		"devseed": "node esbuild.config.mjs production && copy main.js \"N:\\Seed\\.obsidian\\plugins\\obsidian-mkdocs-publisher\"",
 		"build": "node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
-		"release": "standard-version",
-		"beta": "standard-version --prerelease --tag-build beta --bumpFiles manifest-beta.json"
+		"update": "standard-version",
+		"beta": "standard-version --prerelease --tag-build beta",
+		"release": "standard-version --bumpFiles manifest.json"
 	},
 	"standard-version": {
-		"t": ""
+		"t": "",
+		"bumpFiles": [
+			{
+				"filename": "manifest-beta.json",
+				"type": "json"
+			}
+		]
 	},
 	"keywords": [],
 	"author": "Mara",
@@ -35,8 +42,11 @@
 	},
 	"dependencies": {
 		"@octokit/core": "^3.5.1",
+		"detect-indent": "^7.0.0",
+		"detect-newline": "^4.0.0",
 		"js-base64": "^3.7.2",
 		"release-please": "^13.18.3",
-		"standard-version": "^9.3.2"
+		"standard-version": "^9.5.0",
+		"stringify-package": "^1.0.1"
 	}
 }
