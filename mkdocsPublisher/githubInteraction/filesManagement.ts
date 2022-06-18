@@ -4,8 +4,9 @@ import {MetadataCache, TFile, Vault,} from "obsidian";
 import {MkdocsPublicationSettings} from "../settings/interface";
 import {Octokit} from "@octokit/core";
 import {getImageLinkOptions, getReceiptFolder} from "../utils/filePathConvertor";
+import MkdocsPublish from "./upload";
 
-export class FilesManagement {
+export class FilesManagement extends MkdocsPublish {
 	vault: Vault;
 	metadataCache: MetadataCache;
 	settings: MkdocsPublicationSettings;
@@ -17,6 +18,7 @@ export class FilesManagement {
 		settings: MkdocsPublicationSettings,
 		octokit: Octokit
 	) {
+		super(vault, metadataCache, settings, octokit);
 		this.vault = vault;
 		this.metadataCache = metadataCache;
 		this.settings = settings;

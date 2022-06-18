@@ -18,11 +18,11 @@ function disablePublish (app: App, settings: MkdocsPublicationSettings, file:TFi
 	return meta[settings.shareKey]
 }
 
-async function noticeMessage(publish: MkdocsPublish, file: TFile | string, settings: MkdocsPublicationSettings) {
+async function noticeMessage(PublisherManager: MkdocsPublish, file: TFile | string, settings: MkdocsPublicationSettings) {
 	const noticeValue = (file instanceof TFile) ? '"' + file.basename + '"' : file
 	const msg = settings.workflowName.length>0? '.\nNow, waiting for the workflow to be completed...':'.'
 	new Notice('Send ' + noticeValue + ' to ' + settings.githubRepo + msg);
-	const successWorkflow = await publish.workflowGestion();
+	const successWorkflow = await PublisherManager.workflowGestion();
 	if (successWorkflow) {
 		new Notice(
 			"Successfully published " + noticeValue + " to " + settings.githubRepo + "."
