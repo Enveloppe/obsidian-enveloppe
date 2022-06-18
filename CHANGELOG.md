@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.8.2-0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.1...3.8.2-0) (2022-06-18)
+
+
+### Bug Fixes
+
+* crash with multiple send ([45989ce](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/45989ce278669d0024c35c4ac4813f766efe539f))
+
 ### [3.8.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.0...3.8.1) (2022-06-17)
 
 
