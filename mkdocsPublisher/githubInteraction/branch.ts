@@ -99,6 +99,7 @@ export class GithubBranch extends FilesManagement {
 				repo: this.settings.githubRepo,
 				pull_number: pullRequestNumber,
 				commit_title: `[PUBLISHER] Merge #${pullRequestNumber}`,
+				merge_method: "squash",
 			}
 		);
 		return branch.status === 200;
