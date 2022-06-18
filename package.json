@@ -8,6 +8,7 @@
 		"devseed": "node esbuild.config.mjs production && copy main.js \"N:\\Seed\\.obsidian\\plugins\\obsidian-mkdocs-publisher\"",
 		"build": "node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
+		"version beta" : "node version-beta.mjs && git add manifest-beta.json versions.json",
 		"update": "standard-version",
 		"beta": "standard-version --prerelease --tag-build beta",
 		"release": "standard-version --bumpFiles manifest.json"
