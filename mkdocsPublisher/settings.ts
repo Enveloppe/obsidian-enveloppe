@@ -66,12 +66,17 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					})
 			)
 
+		/* ------------------------------
+		* Github Workflow & upload
+		*  ------------------------------ */
+		
 		containerEl.createEl('h2', {text: 'Upload configuration'})
-
-		containerEl.createEl('h3', {text: 'Folder reception settings'})
+		
+		containerEl.createEl('h3', {text: 'Path settings'})
+		
 		new Setting(this.containerEl)
-			.setName('Folder Reception settings')
-			.setDesc('Choose between a fixed folder or the value of a frontmatter key.')
+			.setName('Folder behavior')
+			.setDesc('Choose between a fixed folder, the value of a frontmatter key or your obsidian relative path.')
 			.addDropdown((dropDown) => {
 				dropDown
 					.addOptions({
@@ -267,8 +272,11 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					});
 			});
 
-
+		/* ------------------------------
+		* Plugin settings
+		*  ------------------------------ */
 		containerEl.createEl('h1', { text: 'Plugin Settings' })
+		
 		new Setting(containerEl)
 			.setName('Share Key')
 			.setDesc('The frontmatter key to publish your file on the website.')
