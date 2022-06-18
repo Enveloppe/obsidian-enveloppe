@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.9.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.3-1...3.9.0) (2022-06-18)
+
+
+### Features
+
+* adding subfolder sync ([117c200](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/117c200977392da117649bb0f02fe1002e817763)), closes [#9](https://github.com/Mara-Li/obsidian-mkdocs-publisher/issues/9)
+
+
+### Bug Fixes
+
+* crash on empty default path ([89815c2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/89815c2878721718812023afc0229833253eb75c)), closes [#10](https://github.com/Mara-Li/obsidian-mkdocs-publisher/issues/10)
+
 ### [3.8.3-1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.2...3.8.3-1) (2022-06-18)
 
 ### [3.8.3-0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.2...3.8.3-0) (2022-06-18)
