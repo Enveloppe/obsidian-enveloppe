@@ -132,8 +132,7 @@ export class FilesManagement extends MkdocsPublish {
 						embedCach.link,
 						file.path
 					);
-					const imgExt = imageLink.extension;
-					if (imgExt.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
+					if (imageLink.name.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
 						imageList.push(imageLink);
 					}
 				} catch (e) {
