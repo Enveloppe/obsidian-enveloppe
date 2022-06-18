@@ -1,6 +1,6 @@
 import { Octokit } from "@octokit/core";
 import { Notice } from "obsidian";
-import { MkdocsPublicationSettings } from "../settings/interface";
+import {folderSettings, MkdocsPublicationSettings} from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
 import {Base64} from "js-base64";
 
@@ -18,8 +18,8 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 						" default folder name in the" +
 						" settings to use this command.";
 			} else if (
-				settings.downloadedFolder === "yamlFrontmatter" &&
-					settings.rootFolder
+				settings.downloadedFolder === folderSettings.yaml &&
+					settings.rootFolder.length === 0
 			) {
 				errorMsg =
 						"You need to configure a root folder in the settings to use this command.";
@@ -92,7 +92,7 @@ export async function filterGithubFile(fileInRepo: { file: string; sha: string }
 	const sharedFilesInRepo = [];
 	for (const file of fileInRepo) {
 		if (
-			(settings.downloadedFolder === "yamlFrontmatter" &&
+			(settings.downloadedFolder === folderSettings.yaml &&
 					settings.rootFolder.length === 0) ||
 				settings.folderDefaultName.length === 0
 		) {
@@ -100,7 +100,7 @@ export async function filterGithubFile(fileInRepo: { file: string; sha: string }
 		}
 		if (
 			(file.file.includes(settings.folderDefaultName) ||
-			(settings.downloadedFolder === "yamlFrontmatter" &&
+			(settings.downloadedFolder === folderSettings.yaml &&
 				file.file.includes(settings.rootFolder)) ||
 			(settings.defaultImageFolder.length > 0 &&
 				file.file.includes(settings.defaultImageFolder)))

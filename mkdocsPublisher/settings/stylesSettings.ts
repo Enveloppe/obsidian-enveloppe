@@ -1,5 +1,6 @@
 import { Setting } from "obsidian";
 import MkdocsPublication from "../main";
+import {folderSettings} from "./interface";
 
 export function showSettings(containerEl: Setting) {
 	containerEl.descEl.show();
@@ -15,13 +16,13 @@ export function hideSettings(containerEl: Setting) {
 
 export async function autoCleanCondition(value: string, autoCleanSetting: Setting, plugin: MkdocsPublication) {
 	const settings = plugin.settings;
-	if (value.length === 0 && settings.downloadedFolder === 'yamlFrontmatter') {
+	if (value.length === 0 && settings.downloadedFolder) {
 		settings.autoCleanUp = false;
 		await plugin.saveSettings();
 		autoCleanSetting.setDisabled(true);
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove('is-enabled')
-	} else if (value.length === 0 && settings.downloadedFolder !== "yamlFrontmatter") {
+	} else if (value.length === 0 && settings.downloadedFolder !== folderSettings.yaml) {
 		settings.autoCleanUp = false;
 		autoCleanSetting.setDisabled(true);
 		// @ts-ignore
@@ -35,19 +36,27 @@ export async function autoCleanCondition(value: string, autoCleanSetting: Settin
 	}
 }
 
-export async function yamlFrontmatterSettings(frontmatterKeySettings: Setting, rootFolderSettings: Setting, autoCleanSetting: Setting, value: string, plugin: MkdocsPublication) {
+export async function folderHideShowSettings(frontmatterKeySettings: Setting, rootFolderSettings: Setting, autoCleanSetting: Setting, value: string, plugin: MkdocsPublication, subFolderSettings: Setting) {
 	const settings = plugin.settings;
-	if (value == 'yamlFrontmatter') {
+	if (value === folderSettings.yaml) {
 		showSettings(frontmatterKeySettings);
 		showSettings(rootFolderSettings);
 		autoCleanCondition(settings.rootFolder, autoCleanSetting, plugin).then();
+		hideSettings(subFolderSettings)
 	} else {
 		if (settings.folderDefaultName.length > 0) {
 			autoCleanSetting.setDisabled(false);
-			if (settings.autoCleanUp)	{
+			if (settings.autoCleanUp)
+			{
 				// @ts-ignore
 				autoCleanSetting.components[0].toggleEl.classList.add('is-enabled')
 			}
+		}
+		if (settings.downloadedFolder === folderSettings.obsidian) {
+			showSettings(subFolderSettings)
+		} else { // is folderSettings.fixed
+			hideSettings(subFolderSettings)
+			
 		}
 		hideSettings(frontmatterKeySettings);
 		hideSettings(rootFolderSettings);

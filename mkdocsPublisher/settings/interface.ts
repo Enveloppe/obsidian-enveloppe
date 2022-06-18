@@ -18,6 +18,13 @@ export interface MkdocsPublicationSettings {
 	folderNote: boolean;
 	convertWikiLinks: boolean;
 	convertForGithub: boolean;
+	subFolder: string;
+}
+
+export enum folderSettings {
+	yaml = "yaml",
+	obsidian = "obsidian",
+	fixed = "fixed",
 }
 
 export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
@@ -28,7 +35,7 @@ export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
 	ExcludedFolder: '',
 	fileMenu: false,
 	editorMenu: false,
-	downloadedFolder: 'fixedFolder',
+	downloadedFolder: folderSettings.fixed,
 	//fixedFolder
 	//yamlFrontmatter
 	//obsidianPath
@@ -43,4 +50,5 @@ export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
 	folderNote: false,
 	convertWikiLinks: false,
 	convertForGithub: false,
+	subFolder: ''
 }

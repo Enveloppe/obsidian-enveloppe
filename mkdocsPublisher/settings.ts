@@ -4,9 +4,10 @@ import {
 	hideSettings,
 	showSettings,
 	autoCleanCondition,
-	yamlFrontmatterSettings,
+	folderHideShowSettings,
 	autoCleanUpSettingsOnCondition
 } from "./settings/stylesSettings";
+import {folderSettings} from "./settings/interface";
 
 export class MkdocsSettingsTab extends PluginSettingTab {
 	plugin: MkdocsPublication;
@@ -74,15 +75,23 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			.addDropdown((dropDown) => {
 				dropDown
 					.addOptions({
-						fixedFolder : 'Fixed Folder',
-						yamlFrontmatter: 'YAML frontmatter',
-						obsidianPath: 'Obsidian Path'
+						fixed : 'Fixed Folder',
+						yaml: 'YAML frontmatter',
+						obsidian: 'Obsidian Path'
 					})
 					.setValue(this.plugin.settings.downloadedFolder)
 					.onChange(async(value: string)=>{
 						this.plugin.settings.downloadedFolder=value;
-						await yamlFrontmatterSettings(frontmatterKeySettings, rootFolderSettings, autoCleanSetting, value, this.plugin)
-						value === 'fixedFolder' ? hideSettings(folderNoteSettings):showSettings(folderNoteSettings)
+						
+						await folderHideShowSettings(frontmatterKeySettings, rootFolderSettings, autoCleanSetting, value, this.plugin, subFolderSettings)
+						if (value === folderSettings.fixed) {
+							hideSettings(folderNoteSettings)
+						} else {
+							showSettings(folderNoteSettings)
+							if (value === folderSettings.obsidian) {
+								showSettings(subFolderSettings)
+							}
+						}
 						await this.plugin.saveSettings();
 					});
 			});
@@ -97,6 +106,20 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.folderDefaultName = value.replace(/\/$/, '');
 						await autoCleanCondition(value, autoCleanSetting, this.plugin)
+						await this.plugin.saveSettings();
+					});
+			});
+		
+		const subFolderSettings = new Setting(this.containerEl)
+			.setName('Path removing')
+			.setClass('mdkocs-settings-tab')
+			.setDesc('Allow to publish only subfolder by removing the path before that :')
+			.addText((text) => {
+				text
+					.setPlaceholder('GardenSketch')
+					.setValue(this.plugin.settings.subFolder)
+					.onChange(async (value) => {
+						this.plugin.settings.subFolder = value.replace(/\/$/, '').trim();
 						await this.plugin.saveSettings();
 					});
 			});
@@ -211,7 +234,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-		const condition = (this.plugin.settings.downloadedFolder === "yamlFrontmatter" &&
+		const condition = (this.plugin.settings.downloadedFolder === folderSettings.yaml &&
 				(this.plugin.settings.rootFolder.length === 0) ||
 				(this.plugin.settings.folderDefaultName.length === 0));
 
@@ -294,8 +317,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			)
 
 		autoCleanUpSettingsOnCondition(condition, autoCleanSetting, this.plugin);
-		this.plugin.settings.downloadedFolder === 'fixedFolder' ? hideSettings(folderNoteSettings):showSettings(folderNoteSettings)
-		yamlFrontmatterSettings(frontmatterKeySettings, rootFolderSettings, autoCleanSetting, this.plugin.settings.downloadedFolder, this.plugin).then();
+		this.plugin.settings.downloadedFolder === folderSettings.fixed ? hideSettings(folderNoteSettings):showSettings(folderNoteSettings)
+		folderHideShowSettings(frontmatterKeySettings, rootFolderSettings, autoCleanSetting, this.plugin.settings.downloadedFolder, this.plugin, subFolderSettings).then();
 		this.plugin.settings.transferEmbedded ? showSettings(settingsDefaultImage) : hideSettings(settingsDefaultImage);
 		this.plugin.settings.autoCleanUp ? showSettings(autoCleanExcludedSettings):hideSettings(autoCleanExcludedSettings);
 	}
