@@ -119,7 +119,7 @@ Now, the plugin will convert these file into `index` if you activate the setting
 >	- If you use a default folder named `docs` : `docs/folder1/folder2/index.md`
 >	- Without : `folder1/folder2/index.md`
 
->[!warning] This option doesn't work with fixed folder.
+> [!warning] This option doesn't work with fixed folder.
 
 #### Internal links
 
