@@ -70,6 +70,14 @@ It uses the relative path in your Obsidian vault. The default folder will be pre
 >	- If you set `source` :  the final path will be `source/20. Compendium/DND/Monster`
 >	- If you leave the default folder blank, the final path will be `20. Compendium/DND/Monster`
 
+The `path removing` allow you to remove part of the path created, to, for example, sync subfolder. If the removed path is not found, the normal behavior apply. 
+
+> [!example] Sync subfolder
+> You can using this option to designate a subfolder as the "vault" for syncing the repository. You could plug in `vault/sub` as the path removed. The sync will flow `vault/sub` as `repo`. 
+> A file in `vault/sub/folderA` will be sync in `repo/folderA`
+
+
+
 ### Workflow 
 
 If your workflow needs to activate a GitHub actions, set the name here. 
