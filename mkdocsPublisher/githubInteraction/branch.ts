@@ -43,17 +43,13 @@ export class GithubBranch extends FilesManagement {
 			);
 			return branch.status === 201;
 		} catch (e) {
-			await this.deleteBranch(branchName);
-			const branch = await this.octokit.request(
-				"POST" + " /repos/{owner}/{repo}/git/refs",
-				{
-					owner: this.settings.githubName,
-					repo: this.settings.githubRepo,
-					ref: "refs/heads/" + branchName,
-					sha: shaMainBranch,
-				}
-			);
-			return branch.status === 201;
+			// catch the old branch
+			const allBranch = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/branches', {
+				owner: this.settings.githubName,
+				repo: this.settings.githubRepo,
+			});
+			const mainBranch = allBranch.data.find((branch: { name: string; }) => branch.name === branchName);
+			return !!mainBranch;
 		}
 	}
 
