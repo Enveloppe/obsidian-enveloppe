@@ -1,6 +1,13 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+### [3.9.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.0...3.9.1) (2022-06-19)
+
+
+### Bug Fixes
+
+* crash if branch already exists and plugin take some times to scanning (adding notice) ([0dc7366](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/0dc73664049faf0df4ac005af68c623ec7ae23b7))
 
 ## [3.9.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.3-1...3.9.0) (2022-06-18)
 
