@@ -5,13 +5,12 @@ labels: ["bug", "triage"]
 assignees:
   - Mara-Li
 body:
-  - type: dropdown
-    id: type-workflow
+  - type: markdown
+    id: info-user
     attributes:
-      label: What part of the workflow is concerned ?
-      options:
-        - mkdocs Worfklow (github actions) 
-        - Obsidian plugin
+      value: |
+        Thanks for taking the time to fill out this bug report.
+        If your problem concern the [template](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template) (including workflow and mkdocs build), create an [issue](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template/issues/new?assignees=Mara-Li&labels=bug%2Ctriage&template=bug_report.yml&title=%5BBug%5D%3A+) here.
   - type: textarea
     id: describe-bug
     attributes:

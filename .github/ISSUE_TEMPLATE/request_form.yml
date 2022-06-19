@@ -5,14 +5,11 @@ labels: ["enhancement"]
 assignees:
   - Mara-Li
 body:
-  - type: dropdown
-    id: type-workflow
+  - type: markdown
+    id: info-user
     attributes:
-      label: What part of the workflow do you want to improve ?
-      options:
-        - mkdocs Worfklow (github actions) 
-        - Obsidian plugin
-      multiple: true
+      value: |
+        If your request concern the [template](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template) (including workflow and mkdocs build), create an [request](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template/issues/new?assignees=Mara-Li&labels=enhancement&template=feature_request.yml&title=%5BFR%5D%3A+) here.
   - type: textarea
     id: describe-request
     attributes:
