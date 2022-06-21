@@ -9,18 +9,18 @@ function convertWikilinks(fileContent: string, settings: MkdocsPublicationSettin
 	const wikiRegex = /\[\[.*?\]\]/g;
 	const wikiMatches = fileContent.match(wikiRegex);
 	if (wikiMatches) {
-		const fileRegex = /(?<=\[\[).*?(?=([\]|]))/;
+		const fileRegex = /(\[\[).*?([\]|])/;
 		for (const wikiMatch of wikiMatches) {
 			const fileMatch = wikiMatch.match(fileRegex);
 			if (fileMatch) {
-				const fileName = fileMatch[0];
+				const fileName = fileMatch[0].replace('[[', '').replace('|', '');
 				const linkedFile=linkedFiles.find(item => item.linkFrom===fileName);
 				if (linkedFile) {
 					const altText = linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.extension === 'md' ? linkedFile.linked.basename : "";
 					const linkCreator = `[${altText}](${encodeURI(linkedFile.linkFrom)})`;
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
 				} else if (!fileName.startsWith('http')) {
-					const altMatch = wikiMatch.match(/(?<=\|).*(?=]])/);
+					const altMatch = wikiMatch.match(/(\|).*(]])/);
 					const altCreator = fileName.split('/');
 					const altLink = creatorAltLink(altMatch, altCreator, fileName.split('.').at(-1));
 					const linkCreator = `[${altLink}](${encodeURI(fileName.trim())})`;
@@ -54,7 +54,7 @@ function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSet
 
 function creatorAltLink(altMatch: RegExpMatchArray, altCreator: string[], fileExtension: string) {
 	if (altMatch) {
-		return altMatch[0]
+		return altMatch[0].replace(']]', '').replace('|', '');
 	}
 	if (fileExtension === 'md') {
 		return altCreator.length > 1 ? altCreator[altCreator.length-1] : altCreator[0] //alt text based on filename for markdown files
