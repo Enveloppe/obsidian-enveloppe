@@ -46,7 +46,8 @@ function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSet
 		console.log(matchedLink)
 		if (matchedLink) {
 			for (const link of matchedLink) {
-				const newLink = link.replace(linkedFile.linkFrom, pathInGithub);
+				const regToReplace = new RegExp(`${linkedFile.linkFrom}`);
+				const newLink = link.replace(regToReplace, pathInGithub); //strict replacement of link
 				fileContent = fileContent.replace(link, newLink);
 			}
 		}
