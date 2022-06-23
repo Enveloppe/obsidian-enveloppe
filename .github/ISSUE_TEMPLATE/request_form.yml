@@ -9,7 +9,9 @@ body:
     id: info-user
     attributes:
       value: |
-        If your request concern the [template](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template) (including workflow and mkdocs build), create an [request](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template/issues/new?assignees=Mara-Li&labels=enhancement&template=feature_request.yml&title=%5BFR%5D%3A+) here.
+        Thanks for this report!
+        - If your request concern the [template](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template) (including workflow and mkdocs build), create an [request](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template/issues/new?assignees=Mara-Li&labels=enhancement&template=feature_request.yml&title=%5BFR%5D%3A+) here.
+         - If your problem concern the [Obsidian Plugin](https://github.com/obsidianMkdocs/obsidian-github-publisher), create the issue [here](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/new?assignees=Mara-Li&labels=bug%2Ctriage&template=bug_report.yml&title=%5BBug%5D%3A+)
   - type: textarea
     id: describe-request
     attributes:
