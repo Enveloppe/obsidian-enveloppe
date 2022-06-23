@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [3.9.3-0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.2...3.9.3-0) (2022-06-23)
+
+
+### Bug Fixes
+
+* use a strict replacement of link ([ac5ae73](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/ac5ae734658b86cfa89f35d9be5e1e68bace98d3))
+
 ### [3.9.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.1...3.9.2) (2022-06-23)
 
 
