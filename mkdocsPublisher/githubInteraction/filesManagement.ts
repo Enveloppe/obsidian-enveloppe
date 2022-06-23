@@ -78,12 +78,13 @@ export class FilesManagement extends MkdocsPublish {
 				try {
 					const imageLink = this.metadataCache.getFirstLinkpathDest(image.link, file.path)
 					const imageExt = imageLink.extension;
-					if (imageExt.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
+					if (imageExt.match(/(png|jpe?g|svg|bmp|gif|md)$/i)) {
 						linkedFiles.push({
 							'linked': imageLink,
 							'linkFrom': image.link,
 							'altText': image.displayText
 						})
+
 					}
 				} catch (e) {
 					// ignore error
