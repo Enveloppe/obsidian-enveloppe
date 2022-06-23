@@ -10,7 +10,8 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report.
-        If your problem concern the [template](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template) (including workflow and mkdocs build), create an [issue](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template/issues/new?assignees=Mara-Li&labels=bug%2Ctriage&template=bug_report.yml&title=%5BBug%5D%3A+) here.
+        - If your problem concern the [template](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template) (including workflow and mkdocs build), create an [issue](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template/issues/new?assignees=Mara-Li&labels=bug%2Ctriage&template=bug_report.yml&title=%5BBug%5D%3A+) here.
+        - If your problem concern the [Python Package](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-python), create the issue [here](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-python/issues/new?assignees=Mara-Li&labels=enhancement&template=feature_request.yml&title=%5BFR%5D%3A+)
   - type: textarea
     id: describe-bug
     attributes:
