@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.10.0-0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.3-1...3.10.0-0) (2022-06-28)
+
+
+### Features
+
+* support of setSection for items ([af6fca3](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/af6fca3be4ddc79f1034f26ff71319e6b53f7ad3))
+
 ### [3.9.3-1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.3-0...3.9.3-1) (2022-06-23)
 
 ### [3.9.3-0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.2...3.9.3-0) (2022-06-23)
