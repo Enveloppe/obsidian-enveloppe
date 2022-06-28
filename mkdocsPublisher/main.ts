@@ -1,4 +1,4 @@
-import {Plugin, TFile} from "obsidian";
+import {Plugin, TFile, Menu} from "obsidian";
 import {
 	MkdocsSettingsTab,
 } from "./settings";
@@ -29,13 +29,13 @@ export default class MkdocsPublication extends Plugin {
 
 
 		this.registerEvent(
-			this.app.workspace.on("file-menu", (menu, file: TFile) => {
+			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
 				if (
 					disablePublish(this.app, this.settings, file) &&
 					this.settings.fileMenu
 				) {
-					menu.addSeparator();
 					menu.addItem((item) => {
+						item.setSection('action');
 						item.setTitle(
 							'Share "' +
 								file.basename +
@@ -59,6 +59,7 @@ export default class MkdocsPublication extends Plugin {
 				) {
 					menu.addSeparator();
 					menu.addItem((item) => {
+						item.setSection('mkdocs-publisher');
 						item.setTitle(
 							'Share "' +
 								view.file.basename +
