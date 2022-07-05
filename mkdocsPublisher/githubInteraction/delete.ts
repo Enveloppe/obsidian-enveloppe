@@ -121,7 +121,7 @@ function parseYamlFrontmatter(file: string) {
 	const yamlFrontmatterParsed = yamlFrontmatter.split("\n");
 	const yamlFrontmatterParsedCleaned: {[k:string]:string} = {};
 	for (const line of yamlFrontmatterParsed) {
-		if (line.length > 0 && file.trim().length > 1) {
+		if (typeof line !== 'undefined' && (line.length > 1 || line.trim().length > 1)) {
 			yamlFrontmatterParsedCleaned[line.split(":")[0].trim()] = line.split(":")[1].trim();
 		}
 	}
