@@ -36,8 +36,8 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 	let deletedFailed = 0;
 	for (const file of filesInRepo) {
 		if (!allSharedConverted.includes(file.file.trim())) {
+			const checkingIndex = file.file.contains('index') ? await checkIndexFiles(octokit, settings, file.file):false;
 			try {
-				const checkingIndex = file.file.contains('index') ? await checkIndexFiles(octokit, settings, file.file):false;
 				if (!checkingIndex) {
 					console.log('trying to delete file : ' + file.file);
 					const reponse = await octokit.request(
@@ -121,8 +121,12 @@ function parseYamlFrontmatter(file: string) {
 	const yamlFrontmatterParsed = yamlFrontmatter.split("\n");
 	const yamlFrontmatterParsedCleaned: {[k:string]:string} = {};
 	for (const line of yamlFrontmatterParsed) {
-		if (typeof line !== 'undefined' && (line.length > 1 || line.trim().length > 1)) {
-			yamlFrontmatterParsedCleaned[line.split(":")[0].trim()] = line.split(":")[1].trim();
+		if (typeof line !== 'undefined' && line.length > 1) {
+			const yamlFrontmatter = line.split(':')
+			const undefinedType = (element:string) => typeof element === 'undefined'
+			if (!yamlFrontmatter.some(undefinedType)) {
+				yamlFrontmatterParsedCleaned[line.split(":")[0].trim()] = line.split(":")[1].trim();
+			}
 		}
 	}
 	return yamlFrontmatterParsedCleaned;
