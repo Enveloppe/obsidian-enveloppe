@@ -3,6 +3,7 @@ import { Notice } from "obsidian";
 import {folderSettings, MkdocsPublicationSettings} from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
 import {Base64} from "js-base64";
+import {trimObject} from "../utils/utils";
 
 export async function deleteFromGithub(silent = false, settings: MkdocsPublicationSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement) {
 	const getAllFile = await filesManagement.getAllFileFromRepo(branchName, octokit, settings);
@@ -119,16 +120,14 @@ export async function filterGithubFile(fileInRepo: { file: string; sha: string }
 function parseYamlFrontmatter(file: string) {
 	const yamlFrontmatter = file.split("---")[1];
 	const yamlFrontmatterParsed = yamlFrontmatter.split("\n");
-	const yamlFrontmatterParsedCleaned: {[k:string]:string} = {};
+	let yamlFrontmatterParsedCleaned: {[k:string]:string} = {};
 	for (const line of yamlFrontmatterParsed) {
 		if (typeof line !== 'undefined' && line.length > 1) {
 			const yamlFrontmatter = line.split(':')
-			const undefinedType = (element:string) => typeof element === 'undefined'
-			if (!yamlFrontmatter.some(undefinedType)) {
-				yamlFrontmatterParsedCleaned[line.split(":")[0].trim()] = line.split(":")[1].trim();
-			}
+			yamlFrontmatterParsedCleaned[yamlFrontmatter[0]] = yamlFrontmatter[1];
 		}
 	}
+	yamlFrontmatterParsedCleaned = trimObject(yamlFrontmatterParsedCleaned);
 	return yamlFrontmatterParsedCleaned;
 }
 
@@ -148,7 +147,7 @@ async function checkIndexFiles(octokit: Octokit, settings: MkdocsPublicationSett
 			//	- index: true
 			//	- autoclean: false
 			// return true for NO DELETION
-			return fileFrontmatter.index === "true" || fileFrontmatter.autoclean === "false" || !fileFrontmatter.share;
+			return fileFrontmatter.index === "true" || fileFrontmatter.autoclean === "true" || !fileFrontmatter.share ;
 		}
 	} catch (e) {
 		console.log(e);

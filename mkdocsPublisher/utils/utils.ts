@@ -30,7 +30,18 @@ async function noticeMessage(PublisherManager: MkdocsPublish, file: TFile | stri
 	}
 }
 
+function trimObject(obj: {[p: string]: string}){
+	const trimmed = JSON.stringify(obj, (key, value) => {
+		if (typeof value === 'string') {
+			return value.trim().toLowerCase();
+		}
+		return value;
+	});
+	return JSON.parse(trimmed);
+}
+
 export {
 	disablePublish,
 	noticeMessage,
+	trimObject
 }
