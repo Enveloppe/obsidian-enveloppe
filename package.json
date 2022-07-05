@@ -5,7 +5,7 @@
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
-		"devseed": "node esbuild.config.mjs production && copy main.js \"N:\\Seed\\.obsidian\\plugins\\obsidian-mkdocs-publisher\"",
+		"devseed": "node esbuild.config.mjs production && copy main.js \"I:\\Seed\\.obsidian\\plugins\\obsidian-mkdocs-publisher\"",
 		"build": "node esbuild.config.mjs production",
 		"release": "commit-and-tag-version",
 		"beta": "commit-and-tag-version  --prerelease --tag-build beta",
