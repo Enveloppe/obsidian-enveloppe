@@ -1,7 +1,12 @@
 import {MetadataCache, TFile} from "obsidian";
 import {folderSettings, MkdocsPublicationSettings} from "../settings/interface";
 
-function createRelativePath(sourcePath: string, targetPath: string) {
+function createRelativePath(sourceFile: TFile, targetPath: string, metadata: MetadataCache, settings: MkdocsPublicationSettings) {
+	const sourcePath = getReceiptFolder(sourceFile, settings, metadata);
+	const frontmatter = metadata.getCache(sourcePath)? metadata.getCache(sourcePath).frontmatter : null;
+	if (!frontmatter || !frontmatter[settings.shareKey]) {
+		return sourceFile.name;
+	}
 	const sourceList = sourcePath.split('/');
 	const targetList = targetPath.split('/');
 	const diffSourcePath = sourceList.filter(x => !targetList.includes(x));
@@ -39,6 +44,9 @@ function createFrontmatterPath(file: TFile, settings: MkdocsPublicationSettings,
 	let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + file.name : file.name;
 	const frontmatter = metadataCache.getCache(file.path).frontmatter
 	let folderRoot = settings.rootFolder;
+	if (frontmatter && !frontmatter[settings.shareKey]) {
+		return file.name;
+	}
 	if (folderRoot.length > 0) {
 		folderRoot = folderRoot + "/";
 	}
