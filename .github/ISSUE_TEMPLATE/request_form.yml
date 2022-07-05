@@ -10,8 +10,6 @@ body:
     attributes:
       value: |
         Thanks for this report!
-        - If your request concern the [template](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template) (including workflow and mkdocs build), create an [request](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template/issues/new?assignees=Mara-Li&labels=enhancement&template=feature_request.yml&title=%5BFR%5D%3A+) here.
-         - If your request concern the [Python Package](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-python), create the issue [here](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-python/issues/new?assignees=Mara-Li&labels=bug%2Ctriage&template=bug_report.yml&title=%5BBug%5D%3A+)
   - type: checkboxes
     attributes:
       label: Issue validation
