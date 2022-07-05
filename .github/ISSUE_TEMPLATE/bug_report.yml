@@ -15,14 +15,24 @@ body:
       label: Issue validation
       description: "Thanks to check if your issue is relative to the repository. Any non relative or duplicate issue will be closed."
       options:
-        - label: "My issue doesn't concern the [mkdocs template](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template), nor the workflow and the mkdocs build. (*[You can create an bug report here](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template/issues/new?assignees=Mara-Li&labels=bug%2Ctriage&template=bug_report.yml&title=%5BBug%5D%3A+)*)"
-          required: true
-        - label: "My issue doesn't concern the [Python Package](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-python). (*[You can create an bug report here](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-python/issues/new?assignees=Mara-Li&labels=enhancement&template=feature_request.yml&title=%5BFR%5D%3A+)*)"
-          required: true
         - label: "My issue is not a question relative to [Material Mkdocs](https://squidfunk.github.io/mkdocs-material/) nor [Mkdocs](https://www.mkdocs.org/) (*[You can open a discussion to get more help!](https://github.com/squidfunk/mkdocs-material/discussions)*)"
           required: true
         - label: "I checked the issue to prevent duplicate"
           required: true
+        - label: "I checked my configurations files and the documentation"
+          required: true
+  - type: dropdown
+    attributes:
+      label: Workflow
+      description: "Your problem concern : *(please, choose in the list)*"
+      multiple: true
+      options:
+        - Template Material Mkdocs
+        - Python package
+        - Obsidian plugin
+        - Unknow (please save me!)
+    validations:
+      required: true   
   - type: textarea
     id: describe-bug
     attributes:
@@ -45,7 +55,11 @@ body:
     attributes:
       label: Configuration
       description: |
-        Please, send me a screenshot or a list with your plugin configuration!
+        Please, send me a screenshot or a file with your configuration!
+        The configuration will be :
+          - For obsidian, the plugin's configuration, you can send the `data.json` (in `.obsidian/plugins/obsidian-mkdocs-publisher`). 
+          - For the template, please add a link to your repository (if public) or the `mkdocs.yml`.
+          - For the python package, the configuration file will be `configuration.yml`
     validations:
       required: true    
   - type: textarea
@@ -53,7 +67,9 @@ body:
     attributes:
       label: Relevant log output
       description: |
-        Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks. You can open the Obsidian's console with "CTRL+MAJ+I"
+        Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks. 
+        - For the Obsidian plugin, you can open the Obsidian's console with "CTRL+MAJ+I."
+        - For the template, add a screenshot or link to the actions if the error appear during build.
       render: shell
   - type: dropdown
     id: version

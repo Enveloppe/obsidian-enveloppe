@@ -15,14 +15,21 @@ body:
       label: Issue validation
       description: "Thanks to check if your issue is relative to the repository. Any non relative or duplicate issue will be closed."
       options:
-        - label: "My issue doesn't concern the [mkdocs template](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template), nor the workflow and the mkdocs build. (*[Make a feature request here](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-template/issues/new?assignees=Mara-Li&labels=enhancement&template=feature_request.yml&title=%5BFR%5D%3A+)*)"
-          required: true
-        - label: "My issue doesn't concern the [Python Package](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-python). (*[Make a feature request here](https://github.com/obsidianMkdocs/obsidian-mkdocs-publisher-python/issues/new?assignees=Mara-Li&labels=bug%2Ctriage&template=bug_report.yml&title=%5BBug%5D%3A+)*)"
-          required: true
         - label: "My issue is not a question relative to [Material Mkdocs](https://squidfunk.github.io/mkdocs-material/) nor [Mkdocs](https://www.mkdocs.org/) (*[You can open a discussion to get more help!](https://github.com/squidfunk/mkdocs-material/discussions)*)"
           required: true
         - label: "I checked the issue to prevent duplicate"
           required: true  
+  - type: dropdown
+    attributes:
+      label: Workflow
+      description: "Your problem concern : *(please, choose in the list)*"
+      multiple: true
+      options:
+        - Template Material Mkdocs
+        - Python package
+        - Obsidian plugin
+    validations:
+      required: true
   - type: textarea
     id: describe-request
     attributes:
