@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.10.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0-1...3.10.0-2) (2022-07-05)
+
+
+### Bug Fixes
+
+* Fix trim reading of undefined ([610022c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/610022c591195b6cb3839684be8303a86e2f0c6b))
+
 ## [3.10.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0-0...3.10.0-1) (2022-07-05)
 
 ## [3.10.0-0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.3-1...3.10.0-0) (2022-06-28)
