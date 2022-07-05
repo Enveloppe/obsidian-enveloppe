@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.10.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0-2...3.10.0-3) (2022-07-05)
+
+
+### Bug Fixes
+
+* finally fix this fucking trim & length error ([16a0763](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16a07636fb677885cf2dd8ea6f4b012e8b3e346b))
+
 ## [3.10.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0-1...3.10.0-2) (2022-07-05)
 
 
