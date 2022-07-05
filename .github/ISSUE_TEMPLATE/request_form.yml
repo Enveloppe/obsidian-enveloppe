@@ -25,9 +25,9 @@ body:
       description: "Your problem concern : *(please, choose in the list)*"
       multiple: true
       options:
-        - Template Material Mkdocs
-        - Python package
-        - Obsidian plugin
+        - Template Material Mkdocs 🗃️
+        - Python package 🐍
+        - Obsidian plugin 💠
     validations:
       required: true
   - type: textarea

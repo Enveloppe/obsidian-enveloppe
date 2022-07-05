@@ -1,5 +1,5 @@
 name: Bug Report
-description: File a bug report
+description: Fill a bug report
 title: "[Bug]: "
 labels: ["bug", "triage"]
 assignees:
@@ -27,10 +27,10 @@ body:
       description: "Your problem concern : *(please, choose in the list)*"
       multiple: true
       options:
-        - Template Material Mkdocs
-        - Python package
-        - Obsidian plugin
-        - Unknow (please save me!)
+        - Template Material Mkdocs 🗃️
+        - Python package 🐍
+        - Obsidian plugin 💠
+        - Unknow 😿 (please save me!)
     validations:
       required: true   
   - type: textarea
@@ -75,7 +75,7 @@ body:
     id: version
     attributes:
       label: OS
-      description: What OS do you use ? 
+      description: Check your OS if your bug is relative to the Obsidian plugin. Skip otherwise.
       multiple: true
       options:
         - IOS
@@ -83,8 +83,6 @@ body:
         - MacOS
         - Windows
         - Linux
-    validations:
-      required: true
   - type: textarea
     attributes:
       label: Anything else?
