@@ -1,5 +1,5 @@
 import {MkdocsPublicationSettings} from "../settings/interface";
-import {MetadataCache, TFile} from "obsidian";
+import {MetadataCache, TFile, Notice} from "obsidian";
 import {getReceiptFolder, createRelativePath, getImageLinkOptions} from "./filePathConvertor";
 
 function convertWikilinks(fileContent: string, settings: MkdocsPublicationSettings, linkedFiles: {linked: TFile, linkFrom: string, altText: string}[]) {
@@ -43,6 +43,7 @@ function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSet
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {
 			for (const link of matchedLink) {
+				new Notice(`${link}, ${matchedLink}, ${linkedFile.linkFrom}`);
 				const regToReplace = new RegExp(`${linkedFile.linkFrom}`);
 				const newLink = link.replace(regToReplace, pathInGithub); //strict replacement of link
 				fileContent = fileContent.replace(link, newLink);
