@@ -102,6 +102,7 @@ export class GithubBranch extends FilesManagement {
 		return branch.status === 200;
 	}
 	async updateRepository(branchName: string) {
+		new Notice(`Update repository with ${branchName}`)
 		const pullRequest = await this.pullRequest(branchName);
 		// @ts-ignore
 		await this.mergePullRequest(branchName, true, pullRequest.data.number);
