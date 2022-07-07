@@ -59,9 +59,13 @@ export default class MkdocsPublish {
 			const path = getReceiptFolder(file, this.settings, this.metadataCache)
 			await this.uploadText(file.path, text, path, file.name, ref);
 			if (linkedImage.length > 0 && this.settings.transferEmbedded) {
+				new Notice(`Upload ${linkedImage.length} images!`)
+				let i=0;
 				for (const image of linkedImage) {
 					await this.uploadImage(image, ref);
+					i++;
 				}
+				new Notice(`Uploaded successfully ${i} images!`);
 			}
 			if (one_file) {
 				await deleteFromGithub(true, this.settings, this.octokit, ref, shareFiles);
