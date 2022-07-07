@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [3.10.2-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-5...3.10.2-6) (2022-07-07)
+
 ### [3.10.2-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-4...3.10.2-5) (2022-07-07)
 
 ### [3.10.2-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-3...3.10.2-4) (2022-07-07)
