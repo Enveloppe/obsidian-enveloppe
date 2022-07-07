@@ -71,6 +71,11 @@ export class FilesManagement extends MkdocsPublish {
 	}
 	
 	getLinkedImageAndFiles(file: TFile) {
+		/**
+		 * Create a database with every internal links and embeded image and files 
+		 * @param file: the source file
+		 * @return linkedFiles: array of linked files
+		 */
 		const linkedFiles = this.getLinkedFiles(file);
 		const imageEmbedded = this.metadataCache.getFileCache(file).embeds;
 		if (imageEmbedded != undefined) {
@@ -80,9 +85,9 @@ export class FilesManagement extends MkdocsPublish {
 					const imageExt = imageLink.extension;
 					if (imageExt.match(/(png|jpe?g|svg|bmp|gif|md)$/i)) {
 						linkedFiles.push({
-							'linked': imageLink,
-							'linkFrom': image.link,
-							'altText': image.displayText
+							'linked': imageLink, //TFile found
+							'linkFrom': image.link, //path of the founded file
+							'altText': image.displayText //alt text if exists, filename otherwise
 						})
 
 					}
@@ -95,6 +100,11 @@ export class FilesManagement extends MkdocsPublish {
 	}
 	
 	getLinkedFiles(file: TFile): { linked: TFile, linkFrom: string, altText: string }[] {
+		/**
+		 * Create an objet of all files embedded in the shared files
+		 * @param file: The file shared
+		 * @return the file linked (Tfile), the path to it, and the alt text if exists
+		 */
 		const embedCaches = this.metadataCache.getCache(file.path).links;
 		const embedList = [];
 		if (embedCaches != undefined) {

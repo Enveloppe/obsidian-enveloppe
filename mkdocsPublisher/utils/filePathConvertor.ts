@@ -1,12 +1,21 @@
 import {MetadataCache, TFile} from "obsidian";
 import {folderSettings, MkdocsPublicationSettings} from "../settings/interface";
 
-function createRelativePath(sourceFile: TFile, targetPath: string, metadata: MetadataCache, settings: MkdocsPublicationSettings) {
+function createRelativePath(sourceFile: TFile, targetFile: TFile, metadata: MetadataCache, settings: MkdocsPublicationSettings) {
+	/**
+	 * Create relative path from a sourceFile to a targetPath. If the target file is a note, only share if the frontmatter sharekey is present and true
+	 * @param sourceFile: TFile, the shared file containing all links, embed etc
+	 * @param targetFile: Tfile, the targeted file 
+	 * @param settings: MkdocsPublicationSettings
+	 * @param metadata: metadataCache
+	 * @return string : relative created path
+	 */
 	const sourcePath = getReceiptFolder(sourceFile, settings, metadata);
-	const frontmatter = metadata.getCache(sourcePath)? metadata.getCache(sourcePath).frontmatter : null;
-	if (!frontmatter || !frontmatter[settings.shareKey]) {
+	const frontmatter = metadata.getCache(targetFile.path) ? metadata.getCache(targetFile.path).frontmatter : null;
+	if (targetFile.extension === '.md' && (!frontmatter || !frontmatter[settings.shareKey])) {
 		return sourceFile.name;
 	}
+	const targetPath = targetFile.extension === 'md' ? getReceiptFolder(targetFile, settings, metadata) : getImageLinkOptions(targetFile, settings);
 	const sourceList = sourcePath.split('/');
 	const targetList = targetPath.split('/');
 	const diffSourcePath = sourceList.filter(x => !targetList.includes(x));

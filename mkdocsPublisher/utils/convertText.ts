@@ -33,12 +33,21 @@ function convertWikilinks(fileContent: string, settings: MkdocsPublicationSettin
 }
 
 function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSettings, linkedFiles : {linked: TFile, linkFrom: string, altText: string}[], metadataCache: MetadataCache, sourceFile: TFile) {
+	/** 
+	* Convert internal links with changing the path to the relative path in the github repository
+	* @param fileContent: The file content
+	* @param settings: Settings of the plugins
+	* @param linkedFiles: A list of linked files including the linked file in TFile format and the linked file (string) including the alt text
+	* @param metadataCache: Metadata cache 
+	* @param sourceFile: The original file
+	* @return the file contents with converted internal links
+
+	*/
 	if (!settings.convertForGithub) {
 		return fileContent;
 	}
 	for (const linkedFile of linkedFiles) {
-		let pathInGithub=linkedFile.linked.extension === 'md' ? getReceiptFolder(linkedFile.linked, settings, metadataCache) : getImageLinkOptions(linkedFile.linked, settings);
-		pathInGithub = createRelativePath(sourceFile, pathInGithub, metadataCache, settings).replace('.md', '');
+		const pathInGithub = createRelativePath(sourceFile, linkedFile.linked, metadataCache, settings).replace('.md', '');
 		const regexToReplace = new RegExp(`(\\[{2}${linkedFile.linkFrom}(\\|.*)?\\]{2})|(\\[.*\\]\\(${linkedFile.linkFrom}\\))`, 'g');
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {
