@@ -68,6 +68,7 @@ export async function deleteUnsharedDeletedNotes(PublisherManager: GithubBranch,
 export async function shareOneNote(branchName: string, PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, file: TFile) {
 	try {
 		await PublisherManager.newBranch(branchName);
+		new Notice('Branch created')
 		const publishSuccess =
 			await PublisherManager.publish(file, true, branchName);
 		new Notice(`${branchName} created and ${publishSuccess}`)
