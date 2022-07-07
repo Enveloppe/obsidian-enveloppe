@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-mkdocs-publisher",
 	"name": "Github Publisher",
-	"version": "3.10.1",
+	"version": "3.10.2",
 	"minAppVersion": "0.14.5",
 	"description": "Github Publisher is a plugin that help you to send file in a configured Github Repository, based on a frontmatter entry state.",
 	"author": "Mara-Li",

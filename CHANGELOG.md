@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [3.10.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-7...3.10.2) (2022-07-07)
+
+
+### Bug Fixes
+
+* image path not converted correctly ([627172c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/627172ccb402191327c6d0321b7a852bee9b953e))
+
 ### [3.10.2-7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-6...3.10.2-7) (2022-07-07)
 
 ### [3.10.2-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-5...3.10.2-6) (2022-07-07)
