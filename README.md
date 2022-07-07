@@ -22,6 +22,7 @@ But the plugin can do a lot more !
 - Rename folder note with same name strategies with `index.md` (+ respecting the folder settings)
 
 ---
+
 # Configuration
 
 To use the plugin, you need to fill the correct information to allow the workflow. 
@@ -51,36 +52,35 @@ Using the second option will activate two more options :
 - Root folder : To prepend a path **before** the category key found (if any key are found!)
 
 > [!EXAMPLE] Example
->	- You use `category` in a file with `category: Roleplay/Characters/DND`  
->	- You set a root folder with `_docs/pages`  
->	- And you set a default folder on `_docs/draft`  
+> - You use `category` in a file with `category: Roleplay/Characters/DND`  
+> - You set a root folder with `_docs/pages`  
+> - And you set a default folder on `_docs/draft`  
 >	  
->	The final path (in GitHub!) will be : `_docs/pages/Roleplay/Characters/DND`  
+> The final path (in GitHub!) will be : `_docs/pages/Roleplay/Characters/DND`  
 >	  
->	But, if you don't set `category`, the path will be `_docs/draft`  
+> But, if you don't set `category`, the path will be `_docs/draft`  
 
 #### Fixed folder
 Every file will be sent in the default folder. If you leave the default folder blank, it will be sent in the root of the repository. 
 
 > [!example] Example
->	- If you set `source` for the default folder, any file will be sent in `your_repo/source`, whatever is their frontmatter key or their relative path.
->	- If you leave it blank, it will be sent in `your_repo` directly.
+> - If you set `source` for the default folder, any file will be sent in `your_repo/source`, whatever is their frontmatter key or their relative path.
+> - If you leave it blank, it will be sent in `your_repo` directly.
 
 #### Obsidian Path
 It uses the relative path in your Obsidian vault. The default folder will be prepended before the relative obsidian path. You can leave it blank to use the root repository.
 
 > [!example] Example
->	For a file in `20. Compendium/DND/Monster`
->	- If you set `source` :  the final path will be `source/20. Compendium/DND/Monster`
->	- If you leave the default folder blank, the final path will be `20. Compendium/DND/Monster`
+> For a file in `20. Compendium/DND/Monster`
+> - If you set `source` :  the final path will be `source/20. Compendium/DND/Monster`
+> - If you leave the default folder blank, the final path will be `20. Compendium/DND/Monster`
 
 The `path removing` allow you to remove part of the path created, to, for example, sync subfolder. If the removed path is not found, the normal behavior apply. 
 
 > [!example] Sync subfolder
-> You can using this option to designate a subfolder as the "vault" for syncing the repository. You could plug in `vault/sub` as the path removed. The sync will flow `vault/sub` as `repo`. 
+> You can using this option to designate a subfolder as the "vault" for syncing the repository.
+> You could plug in `vault/sub` as the path removed. The sync will flow `vault/sub` as `repo`. 
 > A file in `vault/sub/folderA` will be sync in `repo/folderA`
-
-
 
 ### Workflow 
 
@@ -127,24 +127,28 @@ Now, the plugin will convert these file into `index` if you activate the setting
 > - Without category value, with default folder named `drafts` : `draft/folder2.md` (the name won't be converted!)
 
 > [!example] Example with Obsidian Path & a file named `folder2`
->	With a path like : `folder1/folder2` the new path will be :
->	- If you use a default folder named `docs` : `docs/folder1/folder2/index.md`
->	- Without : `folder1/folder2/index.md`
+> With a path like : `folder1/folder2` the new path will be :
+> - If you use a default folder named `docs` : `docs/folder1/folder2/index.md`
+> - Without : `folder1/folder2/index.md`
 
 > [!warning] This option doesn't work with fixed folder.
 
 #### Internal links
 
-This option will convert the internal link of the shared file to match the file in your repo. The path won't be converted if the file doesn't exist in your vault. 
+This option will convert the internal links (including image links!) of the shared file to match the relative file in your repo. Only **existant** and **shared** filepath will be converted.
+> [!example] 
+> Cited file : `docs/XX/YY/my_file.md`
+> File to convert : `docs/XX/ZZ/new_file.md`
+> Path created : `../YY/my_file.md`
 
-#### wikilinks to markdown link
+#### Wikilinks to markdown link
 
 In case you use wikilinks as daily but your obsidian publish solution doesn't support it, you can use this settings to convert the wiki to md link. 
 
-### Image
+### Image and embedded files
 
 Occasionally, you want to avoid sending the image linked (why? Don't know. It's your GitHub repo, after all!). You can remove the transfer of these files.
-If you choose to send image, you can set a default folder for image.
+If you choose to send them, you can set a default folder for image.
 
 # 3. Plugin settings
 
