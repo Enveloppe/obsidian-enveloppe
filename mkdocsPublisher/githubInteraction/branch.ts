@@ -1,7 +1,7 @@
 import {Octokit} from "@octokit/core";
 import {MkdocsPublicationSettings} from "../settings/interface";
 import {FilesManagement} from "./filesManagement";
-import {MetadataCache, Vault} from "obsidian";
+import {MetadataCache, Vault, Notice} from "obsidian";
 
 export class GithubBranch extends FilesManagement {
 	settings: MkdocsPublicationSettings;
@@ -85,6 +85,7 @@ export class GithubBranch extends FilesManagement {
 
 
 	async mergePullRequest (branchName: string, silent = false, pullRequestNumber: number) {
+		new Notice('Trying to merge request with pull request number ' + pullRequestNumber + ' in ' + branchName);
 		const octokit = new Octokit({
 			auth: this.settings.GhToken,
 		});

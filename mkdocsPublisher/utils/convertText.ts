@@ -52,7 +52,6 @@ function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSet
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {
 			for (const link of matchedLink) {
-				new Notice(`${pathInGithub}`);
 				const regToReplace = new RegExp(`${linkedFile.linkFrom}`);
 				const newLink = link.replace(regToReplace, pathInGithub); //strict replacement of link
 				fileContent = fileContent.replace(link, newLink);
