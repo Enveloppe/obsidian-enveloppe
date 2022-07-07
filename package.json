@@ -10,7 +10,7 @@
 		"version": "commit-and-tag-version",
 		"bump": "node version-bump.mjs",
 		"beta": "commit-and-tag-version  --prerelease --tag-build beta && node version-beta.mjs",
-		"publish": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json && node version-beta.mjs && git add version-beta.mjs && git commit --amend --no-edit"
+		"publish": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json && node version-beta.mjs && git add manifest-beta.mjs && git commit --amend --no-edit"
 	},
 	"commit-and-tag-version": {
 		"t": "",
