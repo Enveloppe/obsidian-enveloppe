@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [3.10.2-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-2...3.10.2-3) (2022-07-07)
+
+
+### Bug Fixes
+
+* attemps to fix image relative creator ([68a00b8](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/68a00b8a3ee7163ec2a1245f26d0d104d59659a6))
+* use alt text for linked files ([1b800cd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1b800cd3edf79ed14d33772292a61de1ff763aeb))
+
 ### [3.10.2-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-1...3.10.2-2) (2022-07-07)
 
 ### [3.10.2-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-0...3.10.2-1) (2022-07-07)
