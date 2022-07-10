@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.11.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.3-0...3.11.0-0) (2022-07-10)
+
+
+### Features
+
+* **embed:** Adding specific settings to share embedded notes ([7396d6b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7396d6bbdab944a5ce5b1465e5676a4463a674f2))
+* **embed:** share embed files too! ([558cc74](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/558cc7474079a7529b1cb5d9ef7d5b919596e194))
+* **image:** adding statusbar for shared image ([4c3c57a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4c3c57a3194ec13664a9a2603cc3ed6a1426c521))
+
 ### [3.10.3-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2...3.10.3-0) (2022-07-10)
 
 ### [3.10.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-7...3.10.2) (2022-07-07)
