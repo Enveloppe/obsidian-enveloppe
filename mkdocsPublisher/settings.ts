@@ -197,19 +197,32 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					})
 			})
 
-		containerEl.createEl('h3', {text: 'Image'})
+		containerEl.createEl('h3', {text: 'Embed'})
 		new Setting(containerEl)
 			.setName('Transfer image')
-			.setDesc('Send image linked to a file in github')
+			.setDesc('Send image embedded in a file to github')
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.transferEmbedded)
+					.setValue(this.plugin.settings.embedImage)
 					.onChange(async (value) => {
-						this.plugin.settings.transferEmbedded = value;
+						this.plugin.settings.embedImage = value;
 						value ? showSettings(settingsDefaultImage) : hideSettings(settingsDefaultImage);
 						await this.plugin.saveSettings();
 					});
 			});
+
+		new Setting(containerEl)
+			.setName('Transfer embedded notes')
+			.setDesc('Send embedded notes in a shared file to github. Only shared files will be send!')
+			.addToggle((toggle)=>{
+				toggle
+					.setValue(this.plugin.settings.embedNotes)
+					.onChange(async(value)=>{
+						this.plugin.settings.embedNotes = value;
+						await this.plugin.saveSettings();
+					})
+			})
+
 		const settingsDefaultImage = new Setting(containerEl)
 			.setName('Default image folder')
 			.setDesc('To use a folder different from default')
@@ -327,7 +340,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 		autoCleanUpSettingsOnCondition(condition, autoCleanSetting, this.plugin);
 		this.plugin.settings.downloadedFolder === folderSettings.fixed ? hideSettings(folderNoteSettings):showSettings(folderNoteSettings)
 		folderHideShowSettings(frontmatterKeySettings, rootFolderSettings, autoCleanSetting, this.plugin.settings.downloadedFolder, this.plugin, subFolderSettings).then();
-		this.plugin.settings.transferEmbedded ? showSettings(settingsDefaultImage) : hideSettings(settingsDefaultImage);
+		this.plugin.settings.embedImage ? showSettings(settingsDefaultImage) : hideSettings(settingsDefaultImage);
 		this.plugin.settings.autoCleanUp ? showSettings(autoCleanExcludedSettings):hideSettings(autoCleanExcludedSettings);
 	}
 }

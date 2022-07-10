@@ -44,7 +44,7 @@ export default class MkdocsPublish {
 	}
 
 	async statusBarForEmbed(linkedFiles: TFile[], ref="main"){
-		if (linkedFiles.length > 0 && this.settings.transferEmbedded) {
+		if (linkedFiles.length > 0) {
 			if (linkedFiles.length > 1) {
 				const statusBarItems = this.plugin.addStatusBarItem();
 				const statusBar = new ShareStatusBar(statusBarItems, linkedFiles.length);

@@ -11,7 +11,7 @@ export interface MkdocsPublicationSettings {
 	yamlFolderKey: string;
 	rootFolder: string;
 	workflowName: string;
-	transferEmbedded: boolean;
+	embedImage: boolean;
 	defaultImageFolder: string;
 	autoCleanUp: boolean;
 	autoCleanUpExcluded: string;
@@ -19,6 +19,7 @@ export interface MkdocsPublicationSettings {
 	convertWikiLinks: boolean;
 	convertForGithub: boolean;
 	subFolder: string;
+	embedNotes: boolean;
 }
 
 export enum folderSettings {
@@ -43,12 +44,13 @@ export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
 	yamlFolderKey: '',
 	rootFolder: '',
 	workflowName: '',
-	transferEmbedded: true,
+	embedImage: true,
 	defaultImageFolder: '',
 	autoCleanUp: false,
 	autoCleanUpExcluded: '',
 	folderNote: false,
 	convertWikiLinks: false,
 	convertForGithub: false,
-	subFolder: ''
+	subFolder: '',
+	embedNotes: false,
 }

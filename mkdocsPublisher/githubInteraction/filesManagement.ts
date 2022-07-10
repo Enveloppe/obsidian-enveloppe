@@ -148,14 +148,14 @@ export class FilesManagement extends MkdocsPublish {
 						embed.link,
 						file.path
 					);
-					if (imageLink.name.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
+					if (imageLink.name.match(/(png|jpe?g|svg|bmp|gif)$/i) && this.settings.embedImage) {
 						imageList.push(imageLink);
 					} else if (imageLink.extension==='md') {
 						const sharedKey = this.settings.shareKey;
 						const frontmatter = this.metadataCache.getFileCache(imageLink).frontmatter;
 						if (
 							frontmatter && frontmatter[sharedKey] &&
-							!this.checkExcludedFolder(imageLink)
+							!this.checkExcludedFolder(imageLink) && this.settings.embedNotes
 						) {
 							imageList.push(imageLink);
 						}
