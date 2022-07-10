@@ -1,18 +1,21 @@
 import {Octokit} from "@octokit/core";
 import {MkdocsPublicationSettings} from "../settings/interface";
 import {FilesManagement} from "./filesManagement";
-import {MetadataCache, Vault, Notice} from "obsidian";
+import {MetadataCache, Vault} from "obsidian";
+import MkdocsPublication from "../main";
 
 export class GithubBranch extends FilesManagement {
 	settings: MkdocsPublicationSettings;
 	octokit: Octokit;
 	vault: Vault;
 	metadataCache: MetadataCache;
+	plugin: MkdocsPublication;
 
-	constructor(settings: MkdocsPublicationSettings, octokit: Octokit, vault: Vault, metadataCache: MetadataCache) {
-		super(vault, metadataCache, settings, octokit);
+	constructor(settings: MkdocsPublicationSettings, octokit: Octokit, vault: Vault, metadataCache: MetadataCache, plugin: MkdocsPublication) {
+		super(vault, metadataCache, settings, octokit, plugin);
 		this.settings = settings;
 		this.octokit = octokit;
+		this.plugin = plugin;
 	}
 	
 	async getMasterBranch() {
@@ -85,7 +88,6 @@ export class GithubBranch extends FilesManagement {
 
 
 	async mergePullRequest (branchName: string, silent = false, pullRequestNumber: number) {
-		new Notice('Trying to merge request with pull request number ' + pullRequestNumber + ' in ' + branchName);
 		const octokit = new Octokit({
 			auth: this.settings.GhToken,
 		});
@@ -102,7 +104,6 @@ export class GithubBranch extends FilesManagement {
 		return branch.status === 200;
 	}
 	async updateRepository(branchName: string) {
-		new Notice(`Update repository with ${branchName}`)
 		const pullRequest = await this.pullRequest(branchName);
 		// @ts-ignore
 		await this.mergePullRequest(branchName, true, pullRequest.data.number);
