@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.11.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.11.0-1) (2022-07-10)
+
+
+### Bug Fixes
+
+* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
+
 ## [3.11.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.3-0...3.11.0-0) (2022-07-10)
 
 
