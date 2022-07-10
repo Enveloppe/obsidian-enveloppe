@@ -43,14 +43,16 @@ export default class MkdocsPublish {
 		this.plugin = plugin;
 	}
 
-	async statusBarForEmbed(linkedFiles: TFile[], ref="main"){
+	async statusBarForEmbed(linkedFiles: TFile[], fileHistory:TFile[], ref="main"){
+		console.log(fileHistory);
 		if (linkedFiles.length > 0) {
 			if (linkedFiles.length > 1) {
 				const statusBarItems = this.plugin.addStatusBarItem();
 				const statusBar = new ShareStatusBar(statusBarItems, linkedFiles.length);
 				for (const image of linkedFiles) {
-					if (image.extension === 'md') {
-						await this.publish(image, false, ref)
+					if ((image.extension === 'md') && !(fileHistory.includes(image))) {
+						fileHistory.push(image);
+						await this.publish(image, false, ref, fileHistory);
 					} else {
 						await this.uploadImage(image, ref)
 					}
@@ -59,16 +61,19 @@ export default class MkdocsPublish {
 				statusBar.finish(8000);
 			} else { // 1 one item to send
 				const embed = linkedFiles[0];
-				if (embed.extension === 'md') {
-					await this.publish(embed, false, ref);
+				if (embed.extension === 'md' && !(fileHistory.includes(embed))) {
+					fileHistory.push(embed);
+					await this.publish(embed, false, ref, fileHistory);
 				} else {
 					await this.uploadImage(embed, ref);
 				}
 			}
 		}
+		return fileHistory;
 	}
 
-	async publish(file: TFile, one_file = false, ref = "main") {
+
+	async publish(file: TFile, one_file = false, ref = "main", fileHistory:TFile[]=[]) {
 		const shareFiles = new FilesManagement(this.vault, this.metadataCache, this.settings, this.octokit, this.plugin);
 		const sharedKey = this.settings.shareKey;
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
@@ -76,19 +81,20 @@ export default class MkdocsPublish {
 			!frontmatter ||
 			!frontmatter[sharedKey] ||
 			shareFiles.checkExcludedFolder(file) ||
-			file.extension !== "md"
+			file.extension !== "md" || fileHistory.includes(file)
 		) {
 			return false;
 		}
 		try {
 			let text = await this.vault.cachedRead(file);
+			fileHistory.push(file)
 			const embedFiles = shareFiles.getEmbed(file);
 			const linkedFiles = shareFiles.getLinkedImageAndFiles(file);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file)
 			text = convertWikilinks(text, this.settings, linkedFiles);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache)
 			await this.uploadText(file.path, text, path, file.name, ref);
-			await this.statusBarForEmbed(embedFiles, ref)
+			await this.statusBarForEmbed(embedFiles, fileHistory, ref);
 			if (one_file) {
 				await deleteFromGithub(true, this.settings, this.octokit, ref, shareFiles);
 			}
