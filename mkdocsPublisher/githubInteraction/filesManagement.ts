@@ -150,10 +150,19 @@ export class FilesManagement extends MkdocsPublish {
 					);
 					if (imageLink.name.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
 						imageList.push(imageLink);
+					} else if (imageLink.extension==='md') {
+						const sharedKey = this.settings.shareKey;
+						const frontmatter = this.metadataCache.getFileCache(imageLink).frontmatter;
+						if (
+							frontmatter && frontmatter[sharedKey] &&
+							!this.checkExcludedFolder(imageLink)
+						) {
+							imageList.push(imageLink);
+						}
 					}
 				} catch (e) {
 					console.log(e)
-					console.log("Error with this image : " + embedCach.displayText);
+					console.log("Error with this file : " + embed.displayText);
 				}
 			}
 			return imageList;
