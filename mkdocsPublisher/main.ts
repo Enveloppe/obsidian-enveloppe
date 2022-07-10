@@ -24,7 +24,7 @@ export default class MkdocsPublication extends Plugin {
 		this.addSettingTab(new MkdocsSettingsTab(this.app, this));
 		const octokit = new Octokit({auth: this.settings.GhToken});
 		
-		const PublisherManager = new GithubBranch(this.settings, octokit, this.app.vault, this.app.metadataCache);
+		const PublisherManager = new GithubBranch(this.settings, octokit, this.app.vault, this.app.metadataCache, this);
 		const branchName = app.vault.getName() + "-" + new Date().toLocaleDateString('en-US').replace(/\//g, '-');
 
 
@@ -116,7 +116,7 @@ export default class MkdocsPublication extends Plugin {
 			name: "Upload all shared notes",
 			callback: async () => {
 				const sharedFiles = PublisherManager.getSharedFiles();
-				const statusBarItems = this.addStatusBarItem()
+				const statusBarItems = this.addStatusBarItem();
 				await shareAllMarkedNotes(PublisherManager, this.settings, octokit, statusBarItems, branchName, sharedFiles, true);
 			}
 		});

@@ -19,27 +19,57 @@ import {
 import {
 	getReceiptFolder, getImageLinkOptions
 } from "../utils/filePathConvertor";
+import {ShareStatusBar} from "../utils/status_bar";
+import MkdocsPublication from "../main";
 
 export default class MkdocsPublish {
 	vault: Vault;
 	metadataCache: MetadataCache;
 	settings: MkdocsPublicationSettings;
 	octokit: Octokit;
+	plugin: MkdocsPublication;
 
 	constructor(
 		vault: Vault,
 		metadataCache: MetadataCache,
 		settings: MkdocsPublicationSettings,
-		octokit: Octokit
+		octokit: Octokit,
+		plugin: MkdocsPublication
 	) {
 		this.vault = vault;
 		this.metadataCache = metadataCache;
 		this.settings = settings;
 		this.octokit = octokit;
+		this.plugin = plugin;
+	}
+
+	async statusBarForEmbed(linkedFiles: TFile[], ref="main"){
+		if (linkedFiles.length > 0 && this.settings.transferEmbedded) {
+			if (linkedFiles.length > 1) {
+				const statusBarItems = this.plugin.addStatusBarItem();
+				const statusBar = new ShareStatusBar(statusBarItems, linkedFiles.length);
+				for (const image of linkedFiles) {
+					if (image.extension === 'md') {
+						await this.publish(image, false, ref)
+					} else {
+						await this.uploadImage(image, ref)
+					}
+					statusBar.increment();
+				}
+				statusBar.finish(8000);
+			} else { // 1 one item to send
+				const embed = linkedFiles[0];
+				if (embed.extension === 'md') {
+					await this.publish(embed, false, ref);
+				} else {
+					await this.uploadImage(embed, ref);
+				}
+			}
+		}
 	}
 
 	async publish(file: TFile, one_file = false, ref = "main") {
-		const shareFiles = new FilesManagement(this.vault, this.metadataCache, this.settings, this.octokit);
+		const shareFiles = new FilesManagement(this.vault, this.metadataCache, this.settings, this.octokit, this.plugin);
 		const sharedKey = this.settings.shareKey;
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
 		if (
@@ -52,21 +82,13 @@ export default class MkdocsPublish {
 		}
 		try {
 			let text = await this.vault.cachedRead(file);
-			const linkedImage = shareFiles.getLinkedImage(file);
+			const embedFiles = shareFiles.getEmbed(file);
 			const linkedFiles = shareFiles.getLinkedImageAndFiles(file);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file)
 			text = convertWikilinks(text, this.settings, linkedFiles);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache)
 			await this.uploadText(file.path, text, path, file.name, ref);
-			if (linkedImage.length > 0 && this.settings.transferEmbedded) {
-				new Notice(`Upload ${linkedImage.length} images!`)
-				let i=0;
-				for (const image of linkedImage) {
-					await this.uploadImage(image, ref);
-					i++;
-				}
-				new Notice(`Uploaded successfully ${i} images!`);
-			}
+			await this.statusBarForEmbed(embedFiles, ref)
 			if (one_file) {
 				await deleteFromGithub(true, this.settings, this.octokit, ref, shareFiles);
 			}

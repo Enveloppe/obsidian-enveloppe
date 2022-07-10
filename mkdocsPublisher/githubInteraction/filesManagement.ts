@@ -5,24 +5,28 @@ import {MkdocsPublicationSettings} from "../settings/interface";
 import {Octokit} from "@octokit/core";
 import {getImageLinkOptions, getReceiptFolder} from "../utils/filePathConvertor";
 import MkdocsPublish from "./upload";
+import MkdocsPublication from "../main";
 
 export class FilesManagement extends MkdocsPublish {
 	vault: Vault;
 	metadataCache: MetadataCache;
 	settings: MkdocsPublicationSettings;
 	octokit: Octokit;
+	plugin: MkdocsPublication
 	
 	constructor(
 		vault: Vault,
 		metadataCache: MetadataCache,
 		settings: MkdocsPublicationSettings,
-		octokit: Octokit
+		octokit: Octokit,
+		plugin: MkdocsPublication
 	) {
-		super(vault, metadataCache, settings, octokit);
+		super(vault, metadataCache, settings, octokit, plugin);
 		this.vault = vault;
 		this.metadataCache = metadataCache;
 		this.settings = settings;
 		this.octokit = octokit;
+		this.plugin = plugin;
 	}
 	
 	getSharedFiles(): TFile[] {
@@ -76,7 +80,7 @@ export class FilesManagement extends MkdocsPublish {
 		 * @param file: the source file
 		 * @return linkedFiles: array of linked files
 		 */
-		const linkedFiles = this.getLinkedFiles(file);
+		const linkedFiles = this.getEmbedFiles(file);
 		const imageEmbedded = this.metadataCache.getFileCache(file).embeds;
 		if (imageEmbedded != undefined) {
 			for (const image of imageEmbedded) {
@@ -99,7 +103,7 @@ export class FilesManagement extends MkdocsPublish {
 		return linkedFiles;
 	}
 	
-	getLinkedFiles(file: TFile): { linked: TFile, linkFrom: string, altText: string }[] {
+	getEmbedFiles(file: TFile): { linked: TFile, linkFrom: string, altText: string }[] {
 		/**
 		 * Create an objet of all files embedded in the shared files
 		 * @param file: The file shared
@@ -132,15 +136,16 @@ export class FilesManagement extends MkdocsPublish {
 		}
 		return [];
 	}
+
 	
-	getLinkedImage(file: TFile) {
+	getEmbed(file: TFile) {
 		const embedCaches = this.metadataCache.getCache(file.path).embeds;
 		const imageList = [];
 		if (embedCaches != undefined) {
-			for (const embedCach of embedCaches) {
+			for (const embed of embedCaches) {
 				try {
 					const imageLink = this.metadataCache.getFirstLinkpathDest(
-						embedCach.link,
+						embed.link,
 						file.path
 					);
 					if (imageLink.name.match(/(png|jpe?g|svg|bmp|gif)$/i)) {

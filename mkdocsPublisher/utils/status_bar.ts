@@ -16,11 +16,11 @@ export class ShareStatusBar {
 	}
 
 	increment () {
-		this.status.setText(`⌛Sharing Notes: ${++this.counter}/${this.numberOfNotesToPublish}`)
+		this.status.setText(`⌛Sharing files: ${++this.counter}/${this.numberOfNotesToPublish}`)
 	}
 
 	finish (displayDurationMillisec: number) {
-		this.status.setText(`✅ Published Notes: ${this.counter}/${this.numberOfNotesToPublish}`)
+		this.status.setText(`✅ Published files: ${this.counter}/${this.numberOfNotesToPublish}`)
 		setTimeout(() => {
 			this.statusBarItem.remove()
 		}, displayDurationMillisec)
