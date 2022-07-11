@@ -9,6 +9,16 @@ import MkdocsPublication from "../main";
 
 
 export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, octokit: Octokit, statusBarItems: HTMLElement, branchName: string, sharedFiles: TFile[], createGithubBranch=true) {
+	/**
+	 * Share all marked note (share: true) from Obsidian to GitHub
+	 * @class publisherManager : the main class with all function and parameters
+	 * @class settings
+	 * @class octokit
+	 * @param statusBarItem Allowing statusbar (only PC)
+	 * @param branchName
+	 * @param sharedFiles File marked to true
+	 * @param createGitHubBranch prevent to multiple creation of branch if already exists
+	 */
 	try {
 		const statusBar = new ShareStatusBar(
 			statusBarItems,
@@ -55,6 +65,13 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 }
 
 export async function deleteUnsharedDeletedNotes(PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, octokit: Octokit, branchName: string) {
+	/**
+	 * Delete unshared/deleted in the repo
+	 * @class publisherManager
+	 * @class settings
+	 * @class octokit
+	 * @param branchName
+	 */
 	try {
 		new Notice(`Starting cleaning ${settings.githubRepo} `)
 		await PublisherManager.newBranch(branchName);
@@ -66,6 +83,13 @@ export async function deleteUnsharedDeletedNotes(PublisherManager: GithubBranch,
 }
 
 export async function shareOneNote(branchName: string, PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, file: TFile) {
+	/**
+	 * Share only **one** note and their embedded contents (including note)
+	 * @param branchName branch name
+	 * @class publisherManager GithubBranch class
+	 * @class settings plugin's settings
+	 * @param file origin file
+	 */
 	try {
 		await PublisherManager.newBranch(branchName);
 		const publishSuccess =
@@ -86,6 +110,14 @@ export async function shareOneNote(branchName: string, PublisherManager: GithubB
 }
 
 export async function shareNewNote(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: MkdocsPublication) {
+	/**
+	 * Deepscanning of the repository and send only new notes (not exists on the repo yet)
+	 * @class PublisherManager
+	 * @class octokit
+	 * @param branchName
+	 * @class Vault
+	 * @class plugin
+	 */
 	const settings = plugin.settings;
 	new Notice('Scanning the repository, may take a while...');
 	const branchMaster = await PublisherManager.getMasterBranch();
@@ -104,6 +136,14 @@ export async function shareNewNote(PublisherManager: GithubBranch, octokit: Octo
 }
 
 export async function shareAllEditedNotes(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: MkdocsPublication) {
+	/**
+	 * Share edited notes : they exist on the repo, BUT the last edited time in Obsidian is after the last upload. Also share new notes.
+	 * @class PublisherManager
+	 * @class octokit
+	 * @param branchName
+	 * @class vault
+	 * @class plugin
+	 */
 	const settings = plugin.settings;
 	new Notice('Scanning the repository, may take a while...');
 	const branchMaster = await PublisherManager.getMasterBranch();
@@ -122,6 +162,14 @@ export async function shareAllEditedNotes(PublisherManager: GithubBranch, octoki
 }
 
 export async function shareOnlyEdited(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: MkdocsPublication) {
+	/**
+	 * share **only** edited notes : they exist on the repo, but the last edited time is after the last upload.
+	 * @class PublisherManager
+	 * @class octokit
+	 * @param branchName
+	 * @class vault
+	 * @class plugin
+	 */
 	const settings = plugin.settings;
 	new Notice('Scanning the repository, may take a while...');
 	const branchMaster = await PublisherManager.getMasterBranch();

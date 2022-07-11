@@ -6,6 +6,14 @@ import {Base64} from "js-base64";
 import {trimObject} from "../utils/utils";
 
 export async function deleteFromGithub(silent = false, settings: MkdocsPublicationSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement) {
+	/**
+	 * Delete file from github
+	 * @param silent no logging
+	 * @class settings
+	 * @class octokit
+	 * @param branchName
+	 * @class filesManagement
+	 */
 	const getAllFile = await filesManagement.getAllFileFromRepo(branchName, octokit, settings);
 	const filesInRepo = await filterGithubFile(getAllFile,
 		settings
@@ -78,6 +86,11 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 }
 
 function excludedFileFromDelete(file: string, settings: MkdocsPublicationSettings) {
+	/**
+	 * Prevent deletion of specific file by checking their presence in the excludedFile list
+	 * @param file file to eventually delete
+	 * @class settings
+	 */
 	const autoCleanExcluded = settings.autoCleanUpExcluded.split(',')
 	if (autoCleanExcluded.length > 0) {
 		for (const excludedFile of autoCleanExcluded) {
@@ -90,6 +103,16 @@ function excludedFileFromDelete(file: string, settings: MkdocsPublicationSetting
 }
 
 export async function filterGithubFile(fileInRepo: { file: string; sha: string }[], settings: MkdocsPublicationSettings) {
+	/**
+	 * Scan all file in repo, and excluding some from the list. Also check for some parameters.
+	 * Only file supported by GitHub are checked.
+	 * Only include file with the folder Default name or the rootFolder (yaml) or default image folder
+	 * Ex : Include all files in a rootfolder docs/*
+	 * Also the function check if the file is excluded from deletion
+	 * @param fileInRepo All files from repository
+	 * @class settings
+	 * @return sharedFilesInRepo TFile[] containing valid file to check if they must be deleted
+	 */
 	const sharedFilesInRepo = [];
 	for (const file of fileInRepo) {
 		if (
@@ -117,8 +140,12 @@ export async function filterGithubFile(fileInRepo: { file: string; sha: string }
 
 
 
-function parseYamlFrontmatter(file: string) {
-	const yamlFrontmatter = file.split("---")[1];
+function parseYamlFrontmatter(contents: string) {
+	/**
+	 * Parse the YAML metadata from github repository files.
+	 * @param contents file contents to parse
+	 */
+	const yamlFrontmatter = contents.split("---")[1];
 	const yamlFrontmatterParsed = yamlFrontmatter.split("\n");
 	let yamlFrontmatterParsedCleaned: {[k:string]:string} = {};
 	for (const line of yamlFrontmatterParsed) {
@@ -132,6 +159,16 @@ function parseYamlFrontmatter(file: string) {
 }
 
 async function checkIndexFiles(octokit: Octokit, settings: MkdocsPublicationSettings, path:string) {
+	/**
+	 * If folder note, check if the index must be excluded or included in deletion.
+	 * Always ignore file with :
+	 * - index: true
+	 * - autoClean: false
+	 * - share: false
+	 * @class octokit
+	 * @class settings
+	 * @param path
+	 */
 	try {
 		const fileRequest = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
 			owner: settings.githubName,
@@ -147,7 +184,7 @@ async function checkIndexFiles(octokit: Octokit, settings: MkdocsPublicationSett
 			//	- index: true
 			//	- autoclean: false
 			// return true for NO DELETION
-			return fileFrontmatter.index === "true" || fileFrontmatter.autoclean === "true" || !fileFrontmatter.share ;
+			return fileFrontmatter.index === "true" || fileFrontmatter.autoclean === "false" || !fileFrontmatter.share ;
 		}
 	} catch (e) {
 		console.log(e);

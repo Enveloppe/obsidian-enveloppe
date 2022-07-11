@@ -28,6 +28,11 @@ export class GithubBranch extends FilesManagement {
 	}
 	
 	async newBranch(branchName: string) {
+		/**
+		 * Create a new branch on the repo named "Vault-date"
+		 * Pass if the branch already exists
+		 * @param branchName
+		 */
 		const allBranch = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/branches', {
 			owner: this.settings.githubName,
 			repo: this.settings.githubRepo,
@@ -57,6 +62,10 @@ export class GithubBranch extends FilesManagement {
 	}
 
 	async pullRequest(branchName: string) {
+		/**
+		 * Create a pull request on main/master from the new branch
+		 * @param branchName
+		 */
 		return await this.octokit.request('POST' +
 			' /repos/{owner}/{repo}/pulls', {
 			owner: this.settings.githubName,
@@ -69,6 +78,10 @@ export class GithubBranch extends FilesManagement {
 	}
 
 	async deleteBranch(branchName: string) {
+		/**
+		 * After the merge, delete the new branch
+		 * @param branchName
+		 */
 		const octokit = new Octokit({
 			auth: this.settings.GhToken,
 		});
@@ -88,6 +101,12 @@ export class GithubBranch extends FilesManagement {
 
 
 	async mergePullRequest (branchName: string, silent = false, pullRequestNumber: number) {
+		/**
+		 * Automatically merge pull request from the plugin
+		 * @param branchName
+		 * @param silent No logging message
+		 * @param pullRequestNumber number of the new pullrequest
+		 */
 		const octokit = new Octokit({
 			auth: this.settings.GhToken,
 		});
@@ -104,6 +123,10 @@ export class GithubBranch extends FilesManagement {
 		return branch.status === 200;
 	}
 	async updateRepository(branchName: string) {
+		/**
+		 * Run merging + deleting branch in once
+		 * @param branchName
+		 */
 		const pullRequest = await this.pullRequest(branchName);
 		// @ts-ignore
 		await this.mergePullRequest(branchName, true, pullRequest.data.number);

@@ -44,7 +44,13 @@ export default class MkdocsPublish {
 	}
 
 	async statusBarForEmbed(linkedFiles: TFile[], fileHistory:TFile[], ref="main", deepScan:boolean){
-		console.log(fileHistory);
+		/**
+		 * Add a status bar + send embed to GitHub. Deep-scanning files.
+		 * @param linkedFiles File embedded
+		 * @param fileHistory already sent files
+		 * @param ref branch name
+		 * @param Deepscan starts the conversion+push of md file. If false, just sharing image
+		 */
 		if (linkedFiles.length > 0) {
 			if (linkedFiles.length > 1) {
 				const statusBarItems = this.plugin.addStatusBarItem();
@@ -74,6 +80,14 @@ export default class MkdocsPublish {
 
 
 	async publish(file: TFile, autoclean = false, ref = "main", fileHistory:TFile[]=[], deepScan=false) {
+		/**
+		 * Main prog to scan notes, their embed files and send it to GitHub.
+		 * @param file Origin file
+		 * @param autoclean If the autoclean must be done right after the file
+		 * @param ref branch name
+		 * @param fileHistory File already sent during DeepScan
+		 * @param DeepScan if the plugin must check the embed notes too.
+		 */
 		const shareFiles = new FilesManagement(this.vault, this.metadataCache, this.settings, this.octokit, this.plugin);
 		const sharedKey = this.settings.shareKey;
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
@@ -106,6 +120,14 @@ export default class MkdocsPublish {
 	}
 	
 	async upload(filePath: string, content: string, path: string, title = "", ref = "main") {
+		/**
+		 * Upload file to GitHub
+		 * @param filePath filepath in obsidian (origin)
+		 * @param content Contents of the file sent
+		 * @param title for commit message, name of the file
+		 * @param ref branch name
+		 * @param path path in GitHub
+		 */
 		if (!this.settings.githubRepo) {
 			new Notice(
 				"Config error : You need to define a github repo in the plugin settings"
@@ -156,6 +178,11 @@ export default class MkdocsPublish {
 	}
 
 	async uploadImage(imageFile: TFile, ref = "main") {
+		/**
+		 * Convert image in base64
+		 * @param imageFile the image
+		 * @param ref branch name
+		 */
 		const imageBin = await this.vault.readBinary(imageFile);
 		const image64 = arrayBufferToBase64(imageBin);
 		const path = getImageLinkOptions(imageFile, this.settings);
@@ -163,6 +190,14 @@ export default class MkdocsPublish {
 	}
 
 	async uploadText(filePath: string, text: string, path: string, title = "", ref = "main") {
+		/**
+		 * Convert text contents to base64
+		 * @param filePath Obsidian filepath (origin)
+		 * @param text contents of the note
+		 * @param path new Path in GitHub
+		 * @param title name note for message commit
+		 * @param ref branch name
+		 */
 		try {
 			const contentBase64 = Base64.encode(text).toString();
 			await this.upload(filePath, contentBase64, path, title, ref);
@@ -172,6 +207,10 @@ export default class MkdocsPublish {
 	}
 	
 	async workflowGestion() {
+		/**
+		 * Allow to activate a workflow dispatch GitHub action
+		 *
+		 */
 		let finished = false;
 		if (this.settings.workflowName.length === 0) {
 			return false;
