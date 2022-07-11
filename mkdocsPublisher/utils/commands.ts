@@ -69,7 +69,7 @@ export async function shareOneNote(branchName: string, PublisherManager: GithubB
 	try {
 		await PublisherManager.newBranch(branchName);
 		const publishSuccess =
-			await PublisherManager.publish(file, true, branchName);
+			await PublisherManager.publish(file, true, branchName, [], true);
 		if (publishSuccess) {
 			const update = await PublisherManager.updateRepository(branchName);
 			if (update) {
