@@ -12,7 +12,7 @@ Thus, you can easily revert commit, and create workflow based on PR, merged PR, 
 # What the plugin do
 
 - Read the frontmatter to check the value of a configured `share` key.
-- Send the file (and their embedded image if any) to GitHub
+- Send the file (and their embedded image or notes if any) to a GitHub repository
 
 But the plugin can do a lot more !
 - Convert wikilinks to markdown links (without changing your file)
@@ -29,7 +29,7 @@ To use the plugin, you need to fill the correct information to allow the workflo
 
 ## 1. GitHub 
 
-- Repo name: The repository where the information will be sent.
+- Repo name: The repository where the files will be sent.
 - GitHub username: Your username.
 - GitHub Token: Get your [GitHub Token here](https://github.com/settings/tokens/new?scopes=repo)[^2]. The correct settings should already be applied. If you want to avoid generating this every few months, select the “No expiration” option. Click the “Generate token” button, and copy the token you are presented with on the next page.
 
@@ -145,10 +145,11 @@ This option will convert the internal links (including image links!) of the shar
 
 In case you use wikilinks as daily but your obsidian publish solution doesn't support it, you can use this settings to convert the wiki to md link. 
 
-### Image and embedded files
+### Embed
 
-Occasionally, you want to avoid sending the image linked (why? Don't know. It's your GitHub repo, after all!). You can remove the transfer of these files.
-If you choose to send them, you can set a default folder for image.
+You can choose to send embeded files :
+- images : The image will be copied in the repository in an optionnaly settled folder.
+- notes : Only shared files will be copied in the repository, in their respected folder (following your settings).
 
 # 3. Plugin settings
 
@@ -156,6 +157,7 @@ You can configure :
 - The share key used by the plugin. By default, it is `share`
 - Folder excluded. The share key can't work here. Useful if you forget to remove the `share` (or turn it to `false`) and move a file in your archive…
 - Add the command to share the file on the file menu (right-click on a file in the explorer or using the three dot) and editor menu (right-click on an opened edited note)
+> [!note] The right-click menu command can also send the file under your cursor if it's a link! 
 ---
 If you find this plugin and workflow useful, you can give me some coffee money.
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
