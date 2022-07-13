@@ -13,6 +13,7 @@ import {
 	shareNewNote,
 	shareOneNote, shareOnlyEdited
 } from "./utils/commands";
+import t from "./i18n"
 
 
 export default class MkdocsPublication extends Plugin {
@@ -77,7 +78,7 @@ export default class MkdocsPublication extends Plugin {
 
 		this.addCommand({
 			id: "publisher-one",
-			name: "Share active file",
+			name: t('shareActiveFile') as string,
 			hotkeys: [],
 			checkCallback: (checking) => {
 				if (
@@ -98,7 +99,7 @@ export default class MkdocsPublication extends Plugin {
 
 		this.addCommand({
 			id: "publisher-delete-clean",
-			name: "Remove unshared and deleted file in repository",
+			name: t('publisherDeleteClean') as string,
 			hotkeys: [],
 			checkCallback: (checking) => {
 				if (this.settings.autoCleanUp) {
@@ -113,7 +114,7 @@ export default class MkdocsPublication extends Plugin {
 
 		this.addCommand({
 			id: "publisher-publish-all",
-			name: "Upload all shared notes",
+			name: t('uploadAllNotes') as string,
 			callback: async () => {
 				const sharedFiles = PublisherManager.getSharedFiles();
 				const statusBarItems = this.addStatusBarItem();
@@ -123,7 +124,7 @@ export default class MkdocsPublication extends Plugin {
 		
 		this.addCommand({
 			id: "publisher-upload-new",
-			name: "Upload new shared notes",
+			name: t('uploadNewNotes') as string,
 			callback: async () => {
 				await shareNewNote(PublisherManager, octokit, branchName, this.app.vault, this);
 			}
@@ -131,7 +132,7 @@ export default class MkdocsPublication extends Plugin {
 		
 		this.addCommand({
 			id: "publisher-upload-all-edited-new",
-			name: "Upload all new and edited note since last upload",
+			name: t('uploadAllNewEditedNote') as string,
 			callback: async () => {
 				await shareAllEditedNotes(PublisherManager, octokit, branchName, this.app.vault, this);
 			}
@@ -139,7 +140,7 @@ export default class MkdocsPublication extends Plugin {
 		
 		this.addCommand({
 			id: 'publisher-upload-edited',
-			name: 'Upload all edited note since last upload',
+			name: t('uploadAllEditedNote') as string,
 			callback: async () => {
 				await shareOnlyEdited(PublisherManager, octokit, branchName, this.app.vault, this);
 			}

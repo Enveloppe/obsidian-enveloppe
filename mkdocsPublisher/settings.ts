@@ -8,6 +8,7 @@ import {
 	autoCleanUpSettingsOnCondition
 } from "./settings/stylesSettings";
 import {folderSettings} from "./settings/interface";
+import t from './i18n'
 
 export class MkdocsSettingsTab extends PluginSettingTab {
 	plugin: MkdocsPublication;
@@ -20,10 +21,10 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 	display(): void {
 		const {containerEl} = this
 		containerEl.empty();
-		containerEl.createEl('h1', {text: 'Github Configuration'})
+		containerEl.createEl('h1', {text: t('githubConfiguration') as string})
 		new Setting(containerEl)
-			.setName('Repo Name')
-			.setDesc('The name of the repository where you store your blog.')
+			.setName(t('repoName') as string)
+			.setDesc(t('repoNameDesc') as string)
 			.addText((text) =>
 				text
 					.setPlaceholder('mkdocs-template')
@@ -34,11 +35,11 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					})
 			)
 		new Setting(containerEl)
-			.setName('Github Username')
-			.setDesc('Your github username.')
+			.setName(t('githubUsername') as string)
+			.setDesc(t('githubUsernameDesc') as string)
 			.addText((text) =>
 				text
-					.setPlaceholder('Github-username')
+					.setPlaceholder(t('githubUsername') as string)
 					.setValue(this.plugin.settings.githubName)
 					.onChange(async (value) => {
 						this.plugin.settings.githubName = value.trim()
@@ -47,14 +48,14 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			)
 		const desc_ghToken = document.createDocumentFragment()
 		desc_ghToken.createEl('span', null, (span) => {
-			span.innerText = 'A github token with repository permission. You can generate it '
+			span.innerText = t('ghTokenDesc') as string
 			span.createEl('a', null, (link) => {
-				link.innerText = 'here'
+				link.innerText = t('here') as string
 				link.href = 'https://github.com/settings/tokens/new?scopes=repo,workflow'
 			})
 		})
 		new Setting(containerEl)
-			.setName('Github Token')
+			.setName(t('githubToken') as string)
 			.setDesc(desc_ghToken)
 			.addText((text) =>
 				text
@@ -70,19 +71,19 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 		* Github Workflow & upload
 		*  ------------------------------ */
 		
-		containerEl.createEl('h2', {text: 'Upload configuration'})
+		containerEl.createEl('h2', {text: t('uploadConfig') as string})
 		
-		containerEl.createEl('h3', {text: 'Path settings'})
+		containerEl.createEl('h3', {text: t('pathSetting') as string})
 		
 		new Setting(this.containerEl)
-			.setName('Folder behavior')
-			.setDesc('Choose between a fixed folder, the value of a frontmatter key or your obsidian relative path.')
+			.setName(t('folderBehavior') as string)
+			.setDesc(t('folderBehaviorDesc') as string)
 			.addDropdown((dropDown) => {
 				dropDown
 					.addOptions({
-						fixed : 'Fixed Folder',
-						yaml: 'YAML frontmatter',
-						obsidian: 'Obsidian Path'
+						fixed : t('fixedFolder') as string,
+						yaml: t('yaml') as string,
+						obsidian: t('obsidianPath') as string
 					})
 					.setValue(this.plugin.settings.downloadedFolder)
 					.onChange(async(value: string)=>{
@@ -102,8 +103,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(this.containerEl)
-			.setName('Default Folder')
-			.setDesc('Set the default reception folder')
+			.setName(t('defaultFolder') as string)
+			.setDesc(t('defaultFolderDesc') as string)
 			.addText((text) => {
 				text
 					.setPlaceholder('docs')
@@ -116,12 +117,12 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			});
 		
 		const subFolderSettings = new Setting(this.containerEl)
-			.setName('Path removing')
+			.setName(t('pathRemoving') as string)
 			.setClass('mdkocs-settings-tab')
-			.setDesc('Allow to publish only subfolder by removing the path before that :')
+			.setDesc(t('pathRemovingDesc') as string)
 			.addText((text) => {
 				text
-					.setPlaceholder('GardenSketch')
+					.setPlaceholder(t('pathRemovingPlaceholder') as string)
 					.setValue(this.plugin.settings.subFolder)
 					.onChange(async (value) => {
 						this.plugin.settings.subFolder = value.replace(/\/$/, '').trim();
@@ -130,9 +131,9 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			});
 
 		const frontmatterKeySettings = new Setting(this.containerEl)
-			.setName('Frontmatter key')
+			.setName(t('frontmatterKey') as string)
 			.setClass('mdkocs-settings-tab')
-			.setDesc('Set the key where to get the value of the folder')
+			.setDesc(t('frontmatterKeyDesc') as string)
 			.addText((text) => {
 				text
 					.setPlaceholder('category')
@@ -143,9 +144,9 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					});
 			});
 		const rootFolderSettings = new Setting(this.containerEl)
-			.setName('Root folder')
+			.setName(t('rootFolder') as string)
 			.setClass('mdkocs-settings-tab')
-			.setDesc('Append this path to the folder set by the frontmatter key.')
+			.setDesc(t('rootFolderDesc') as string)
 			.addText((text)=>{
 				text
 					.setPlaceholder('docs')
@@ -157,12 +158,12 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					});
 			});
 
-		containerEl.createEl('h3', {text: "Link's conversion"})
+		containerEl.createEl('h3', {text: t('linksConversion') as string})
 
 		const folderNoteSettings = new Setting(containerEl)
-			.setName('Folder note')
+			.setName(t('folderNote') as string)
 			.setClass('mdkocs-settings-tab')
-			.setDesc('Rename files with the same name as their parent folder (or category) "index.md"')
+			.setDesc(t('folderNoteDesc') as string)
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.folderNote)
@@ -172,9 +173,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					})
 			})
 		new Setting(containerEl)
-			.setName('Internals Links')
-			.setDesc('Convert the internal link in shared file to match the' +
-				' folder settings')
+			.setName(t('internalsLinks') as string)
+			.setDesc(t('internalsLinksDesc') as string)
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.convertForGithub)
@@ -185,9 +185,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			})
 
 		new Setting(containerEl)
-			.setName('Wikilinks')
-			.setDesc('Convert Wikilinks to MDlinks, without changing the' +
-				' contents')
+			.setName(t('wikilinks') as string)
+			.setDesc(t('wikilinksDesc') as string)
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.convertWikiLinks)
@@ -197,10 +196,10 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					})
 			})
 
-		containerEl.createEl('h3', {text: 'Embed'})
+		containerEl.createEl('h3', {text: t('embed') as string})
 		new Setting(containerEl)
-			.setName('Transfer image')
-			.setDesc('Send image embedded in a file to github')
+			.setName(t('transferImage') as string)
+			.setDesc(t('transferImageDesc') as string)
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.embedImage)
@@ -212,8 +211,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName('Transfer embedded notes')
-			.setDesc('Send embedded notes in a shared file to github. Only shared files will be send!')
+			.setName(t('transferEmbeddedNotes') as string)
+			.setDesc(t('transferEmbeddedNotesDesc') as string)
 			.addToggle((toggle)=>{
 				toggle
 					.setValue(this.plugin.settings.embedNotes)
@@ -224,8 +223,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			})
 
 		const settingsDefaultImage = new Setting(containerEl)
-			.setName('Default image folder')
-			.setDesc('To use a folder different from default')
+			.setName(t('defaultImageFolder') as string)
+			.setDesc(t('defaultImageFolderDesc') as string)
 			.addText((text)=>{
 				text
 					.setPlaceholder('docs/images')
@@ -238,10 +237,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 
 		containerEl.createEl('h3', {text: 'Github Workflow'})
 		new Setting(containerEl)
-			.setName('Github action name')
-			.setDesc('If you want to activate a github action when the' +
-				' plugin push the file, set the name of the file (in your' +
-				'.github/worfklows folder).')
+			.setName(t('githubActionName') as string)
+			.setDesc(t('githubActionNameDesc') as string)
 			.addText((text)=>{
 				text
 					.setPlaceholder('ci')
@@ -257,9 +254,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 				(this.plugin.settings.folderDefaultName.length === 0));
 
 		const autoCleanSetting = new Setting(containerEl)
-			.setName('Auto clean up')
-			.setDesc('If the plugin must remove from github the removed' +
-				' files (stop share or deleted)')
+			.setName(t('autoCleanUp') as string)
+			.setDesc(t('autoCleanUpDesc') as string)
 			.setDisabled(condition)
 			.addToggle((toggle)=>{
 				toggle
@@ -272,9 +268,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			});
 
 		const autoCleanExcludedSettings = new Setting(containerEl)
-			.setName('Excluded files')
-			.setDesc('If you want to exclude some folder from the auto clean' +
-				' up, set their path.')
+			.setName(t('excludedFiles') as string)
+			.setDesc(t('excludedFilesDesc') as string)
 			.addTextArea((textArea)=>{
 				textArea
 					.setPlaceholder('docs/assets/js, docs/assets/logo')
@@ -288,11 +283,11 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 		/* ------------------------------
 		* Plugin settings
 		*  ------------------------------ */
-		containerEl.createEl('h1', { text: 'Plugin Settings' })
+		containerEl.createEl('h1', { text: t('pluginSettings') as string })
 		
 		new Setting(containerEl)
-			.setName('Share Key')
-			.setDesc('The frontmatter key to publish your file on the website.')
+			.setName(t('shareKey') as string)
+			.setDesc(t('shareKeyDesc') as string)
 			.addText((text) =>
 				text
 					.setPlaceholder('share')
@@ -303,8 +298,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					})
 			)
 		new Setting(containerEl)
-			.setName('Excluded Folder')
-			.setDesc('Never publish file in these folder, regardless of the share key. Separate folder name by comma.')
+			.setName(t('excludedFolder') as string)
+			.setDesc(t('excludedFolderDesc') as string)
 			.addTextArea((textArea) =>
 				textArea
 					.setPlaceholder('_assets, Archive')
@@ -315,8 +310,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					})
 			)
 		new Setting(containerEl)
-			.setName('File Menu')
-			.setDesc('Add an sharing commands in the file menu')
+			.setName(t('fileMenu') as string)
+			.setDesc(t('fileMenuDesc') as string)
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.fileMenu)
@@ -326,8 +321,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					})
 			)
 		new Setting(containerEl)
-			.setName('Editor Menu')
-			.setDesc('Add a sharing commands in the right-click menu')
+			.setName(t('editorMenu') as string)
+			.setDesc(t('editorMenuDesc') as string)
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.editorMenu)

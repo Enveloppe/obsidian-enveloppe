@@ -6,6 +6,8 @@ import {GithubBranch} from "../githubInteraction/branch";
 import { Octokit } from "@octokit/core";
 import {Notice, TFile, Vault} from "obsidian";
 import MkdocsPublication from "../main";
+import t from '../i18n'
+import type { StringFunc } from "../i18n";
 
 
 export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, octokit: Octokit, statusBarItems: HTMLElement, branchName: string, sharedFiles: TFile[], createGithubBranch=true) {
@@ -41,7 +43,7 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 				} catch {
 					errorCount++;
 					new Notice(
-						`Unable to publish note ${sharedFiles[files].name}, skipping it`
+						(t("unablePublishNote") as StringFunc)(sharedFiles[files].name)
 					);
 				}
 			}
@@ -52,14 +54,14 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 			if (update) {
 				await noticeMessage(PublisherManager, noticeValue, settings);
 			} else {
-				new Notice("Error publishing to " + settings.githubRepo + ".");
+				new Notice((t("errorPublish") as StringFunc)(settings.githubRepo));
 				
 			}
 		}
 	} catch (error) {
 		console.error(error);
 		new Notice(
-			"Unable to publish multiple notes, something went wrong."
+			t("unablePublishMultiNotes") as string
 		);
 	}
 }
@@ -73,7 +75,7 @@ export async function deleteUnsharedDeletedNotes(PublisherManager: GithubBranch,
 	 * @param branchName
 	 */
 	try {
-		new Notice(`Starting cleaning ${settings.githubRepo} `)
+		new Notice((t("startingClean") as StringFunc)(settings.githubRepo))
 		await PublisherManager.newBranch(branchName);
 		await deleteFromGithub(false, settings,octokit, branchName, PublisherManager);
 		await PublisherManager.updateRepository(branchName);
@@ -99,13 +101,13 @@ export async function shareOneNote(branchName: string, PublisherManager: GithubB
 			if (update) {
 				await noticeMessage(PublisherManager, file, settings)
 			} else {
-				new Notice("Error publishing to " + settings.githubRepo + ".");
+				new Notice((t("errorPublish") as StringFunc)(settings.githubRepo));
 			}
 		}
 	}
 	catch (error) {
 		console.error(error);
-		new Notice("Error publishing to " + settings.githubRepo + ".");
+		new Notice((t("errorPublish") as StringFunc)(settings.githubRepo));
 	}
 }
 
@@ -119,18 +121,18 @@ export async function shareNewNote(PublisherManager: GithubBranch, octokit: Octo
 	 * @class plugin
 	 */
 	const settings = plugin.settings;
-	new Notice('Scanning the repository, may take a while...');
+	new Notice(t("scanningRepo") as string);
 	const branchMaster = await PublisherManager.getMasterBranch();
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings);
 	const newlySharedNotes = PublisherManager.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
 	if (newlySharedNotes.length > 0) {
-		new Notice('Found ' + newlySharedNotes.length + ' new notes to send.');
+		new Notice((t("foundNoteToSend") as StringFunc)(`${newlySharedNotes.length}`));
 		const statusBarElement = plugin.addStatusBarItem();
 		await PublisherManager.newBranch(branchName);
 		await shareAllMarkedNotes(PublisherManager, plugin.settings, octokit, statusBarElement, branchName, newlySharedNotes);
 	} else {
-		new Notice("No new notes to share.");
+		new Notice(t("noNewNote") as string);
 	}
 
 }
@@ -145,19 +147,19 @@ export async function shareAllEditedNotes(PublisherManager: GithubBranch, octoki
 	 * @class plugin
 	 */
 	const settings = plugin.settings;
-	new Notice('Scanning the repository, may take a while...');
+	new Notice(t("scanningRepo") as string);
 	const branchMaster = await PublisherManager.getMasterBranch();
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings);
 	const newSharedFiles = PublisherManager.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
 	const newlySharedNotes = await PublisherManager.getEditedFiles(sharedFilesWithPaths, githubSharedNotes, vault, newSharedFiles);
 	if (newlySharedNotes.length > 0) {
-		new Notice('Found ' + newlySharedNotes.length + ' notes to send.');
+		new Notice((t("foundNoteToSend") as StringFunc)(`${newlySharedNotes.length}`));
 		const statusBarElement = plugin.addStatusBarItem();
 		await PublisherManager.newBranch(branchName);
 		await shareAllMarkedNotes(PublisherManager, settings, octokit, statusBarElement, branchName, newlySharedNotes);
 	} else {
-		new Notice("No new notes to publish.");
+		new Notice(t("noNewNote") as string);
 	}
 }
 
@@ -171,18 +173,18 @@ export async function shareOnlyEdited(PublisherManager: GithubBranch, octokit: O
 	 * @class plugin
 	 */
 	const settings = plugin.settings;
-	new Notice('Scanning the repository, may take a while...');
+	new Notice(t("scanningRepo") as string);
 	const branchMaster = await PublisherManager.getMasterBranch();
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings);
 	const newSharedFiles:TFile[]=[]
 	const newlySharedNotes = await PublisherManager.getEditedFiles(sharedFilesWithPaths, githubSharedNotes, vault, newSharedFiles);
 	if (newlySharedNotes.length > 0) {
-		new Notice('Found ' + newlySharedNotes.length + ' edited notes to send.');
+		new Notice((t("foundNoteToSend") as StringFunc)(`${newlySharedNotes.length}`));
 		const statusBarElement = plugin.addStatusBarItem();
 		await PublisherManager.newBranch(branchName);
 		await shareAllMarkedNotes(PublisherManager, settings, octokit, statusBarElement, branchName, newlySharedNotes);
 	} else {
-		new Notice("No new notes to publish.");
+		new Notice(t("noNewNote") as string);
 	}
 }
