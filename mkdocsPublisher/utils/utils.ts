@@ -1,6 +1,8 @@
 import {App, Notice, TFile} from 'obsidian'
 import {MkdocsPublicationSettings} from '../settings/interface'
 import MkdocsPublish from "../githubInteraction/upload";
+import t from '../i18n'
+import type { StringFunc } from "../i18n";
 
 function disablePublish (app: App, settings: MkdocsPublicationSettings, file:TFile) {
 	const fileCache = app.metadataCache.getFileCache(file)
@@ -18,14 +20,21 @@ function disablePublish (app: App, settings: MkdocsPublicationSettings, file:TFi
 	return meta[settings.shareKey]
 }
 
+
 async function noticeMessage(PublisherManager: MkdocsPublish, file: TFile | string, settings: MkdocsPublicationSettings) {
 	const noticeValue = (file instanceof TFile) ? '"' + file.basename + '"' : file
-	const msg = settings.workflowName.length>0? '.\nNow, waiting for the workflow to be completed...':'.'
-	new Notice('Send ' + noticeValue + ' to ' + settings.githubRepo + msg);
-	const successWorkflow = await PublisherManager.workflowGestion();
-	if (successWorkflow) {
+	if (settings.workflowName.length > 0) {
+		new Notice((t("sendMessage") as StringFunc)([noticeValue, settings.githubRepo, `.\n${t("waitingWorkflow")}`]));
+		const successWorkflow = await PublisherManager.workflowGestion();
+		if (successWorkflow) {
+			new Notice(
+				(t("successfullPublish") as StringFunc)([noticeValue, settings.githubRepo])
+			);
+		}
+	}
+	else {
 		new Notice(
-			"Successfully published " + noticeValue + " to " + settings.githubRepo + "."
+			(t("successfullPublish") as StringFunc)([noticeValue, settings.githubRepo])
 		);
 	}
 }

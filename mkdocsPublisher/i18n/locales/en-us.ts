@@ -64,6 +64,9 @@ export default {
 	editorMenu: "Editor Menu",
 	editorMenuDesc: "Add a sharing commands in the right-click menu",
 
+	//commands menus
+	shareViewFiles:(viewFile:string): string => `Share "${viewFile}" with Mkdocs Publisher`,
+
 	//notice
 	unablePublishNote: (fileInfo: string): string => `Unable to publish note ${fileInfo}，skipping it`,
 	errorPublish: (repoInfo: string): string => `Error publishing to ${repoInfo}.`,
@@ -71,5 +74,8 @@ export default {
 	startingClean: (repoInfo: string): string => `Starting cleaning ${repoInfo}`,
 	scanningRepo: "Scanning the repository, may take a while...",
 	foundNoteToSend: (noteLength: string)=> `Found ${noteLength} new notes to send`,
-	noNewNote: "No new notes to share."
+	noNewNote: "No new notes to share.",
+	successfullPublish:(noticeValue: string[])=>`Successfully published ${noticeValue[0]} to ${noticeValue[1]}.`,
+	waitingWorkflow: "Now, waiting for the workflow to be completed...",
+	sendMessage:(noticeValue: string[])=>`Send ${noticeValue[0]} to ${noticeValue[1]}${noticeValue[2]}`
 }

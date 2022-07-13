@@ -13,7 +13,7 @@ import {
 	shareNewNote,
 	shareOneNote, shareOnlyEdited
 } from "./utils/commands";
-import t from "./i18n"
+import t, {StringFunc} from "./i18n"
 
 
 export default class MkdocsPublication extends Plugin {
@@ -38,9 +38,7 @@ export default class MkdocsPublication extends Plugin {
 					menu.addItem((item) => {
 						item.setSection('action');
 						item.setTitle(
-							'Share "' +
-								file.basename +
-								'" with Mkdocs Publisher'
+							(t("shareViewFiles") as StringFunc)(file.basename)
 						)
 							.setIcon("share")
 							.onClick(async () => {
@@ -62,9 +60,7 @@ export default class MkdocsPublication extends Plugin {
 					menu.addItem((item) => {
 						item.setSection('mkdocs-publisher');
 						item.setTitle(
-							'Share "' +
-								view.file.basename +
-								'" with Mkdocs Publisher'
+							(t("shareViewFiles") as StringFunc)(view.file.basename)
 						)
 							.setIcon("share")
 							.onClick(async () => {

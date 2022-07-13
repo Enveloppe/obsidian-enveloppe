@@ -63,6 +63,9 @@ export default {
 	fileMenuDesc: "在文件树添加右键分享命令",
 	editorMenu: "编辑器菜单",
 	editorMenuDesc: "在右键添加分享命令",
+	//commands
+	shareViewFiles:(viewFile:string): string => `Share "${viewFile}" with Mkdocs Publisher`,
+
 	//notice
 	unablePublishNote: (fileInfo: string): string => { return `不能上传文件${fileInfo}，已跳过` },
 	errorPublish: (repoInfo: string): string => `上传至${repoInfo}错误！`,
@@ -70,5 +73,8 @@ export default {
 	startingClean: (repoInfo: string): string => `开始清理 ${repoInfo}`,
 	scanningRepo: "扫描仓库中，稍等...",
 	foundNoteToSend: (noteLength: string)=> `发现 ${noteLength} 篇笔记需要上传`,
-	noNewNote: "没有新笔记需要上传."
+	noNewNote: "没有新笔记需要上传.",
+	successfullPublish:(noticeValue: string[])=>`Successfully published ${noticeValue[0]} to ${noticeValue[1]}.`,
+	waitingWorkflow: "Now, waiting for the workflow to be completed...",
+	sendMessage:(noticeValue: string[])=>`Send ${noticeValue[0]} to ${noticeValue[1]}${noticeValue[2]}`
 }
