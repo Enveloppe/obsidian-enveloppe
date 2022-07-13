@@ -1,6 +1,6 @@
 import {MkdocsPublicationSettings} from "../settings/interface";
-import {MetadataCache, TFile, Notice} from "obsidian";
-import {getReceiptFolder, createRelativePath, getImageLinkOptions} from "./filePathConvertor";
+import {MetadataCache, TFile} from "obsidian";
+import {createRelativePath} from "./filePathConvertor";
 
 function convertWikilinks(fileContent: string, settings: MkdocsPublicationSettings, linkedFiles: {linked: TFile, linkFrom: string, altText: string}[]) {
 	if (!settings.convertWikiLinks) {

@@ -1,4 +1,4 @@
-import {MetadataCache, Notice, TFile} from "obsidian";
+import {MetadataCache, TFile} from "obsidian";
 import {folderSettings, MkdocsPublicationSettings} from "../settings/interface";
 
 function createRelativePath(sourceFile: TFile, targetFile: {linked: TFile, linkFrom: string, altText: string }, metadata: MetadataCache, settings: MkdocsPublicationSettings) {
