@@ -151,13 +151,43 @@ You can choose to send embeded files :
 - images : The image will be copied in the repository in an optionnaly settled folder.
 - notes : Only shared files will be copied in the repository, in their respected folder (following your settings).
 
-# 3. Plugin settings
+## 3. Plugin settings
 
 You can configure :
 - The share key used by the plugin. By default, it is `share`
 - Folder excluded. The share key can't work here. Useful if you forget to remove the `share` (or turn it to `false`) and move a file in your archive…
 - Add the command to share the file on the file menu (right-click on a file in the explorer or using the three dot) and editor menu (right-click on an opened edited note)
 > [!note] The right-click menu command can also send the file under your cursor if it's a link! 
+
+---
+
+# 🤖 Developping
+## General
+
+You can help me to develop the plugin using `npm` !
+1. First clone the project on your computer with `git clone git@github.com:obsidianMkdocs/obsidian-github-publisher.git`
+2. `cd obsidian-github-publisher`
+3. `npm install`
+4. Enjoy!
+
+Some notes:
+- I use [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/) to generate the commit message, so please respect the format!
+- To forget to documents your function!
+
+## Translation
+
+Using [i18n](https://www.i18next.com/), you can translate the plugin. 
+
+To add a new language :
+- Clone the `i18n/locales/en-us.ts` and rename it to your langage.
+- Get your locale language from Obsidian using [obsidian translation](https://github.com/obsidianmd/obsidian-translations) or using the commands (in templater for example) : `<% tp.obsidian.moment.locale() %>` 
+- Translate the file and save it.
+- In `i18n/index.ts` :
+  - Import the new file as `import language from '.locales/language'
+  - add the new language in the `localeMap` json object: `{ "language": language }`
+- Additionnaly, you can test if your translation is okay.
+- Create a PR to add your translation!
+
 ---
 If you find this plugin and workflow useful, you can give me some coffee money.
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
