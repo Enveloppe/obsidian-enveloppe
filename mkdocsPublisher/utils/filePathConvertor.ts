@@ -12,7 +12,7 @@ function createRelativePath(sourceFile: TFile, targetFile: {linked: TFile, linkF
 	 */
 	const sourcePath = getReceiptFolder(sourceFile, settings, metadata);
 	const frontmatter = metadata.getCache(targetFile.linked.path) ? metadata.getCache(targetFile.linked.path).frontmatter : null;
-	if (targetFile.linked.extension === '.md' && (!frontmatter || !frontmatter[settings.shareKey])) {
+	if (targetFile.linked.extension === 'md' && (!frontmatter || !frontmatter[settings.shareKey] || (frontmatter[settings.shareKey] === false))) {
 		return targetFile.altText;
 	}
 	const targetPath = targetFile.linked.extension === 'md' ? getReceiptFolder(targetFile.linked, settings, metadata) : getImageLinkOptions(targetFile.linked, settings);
