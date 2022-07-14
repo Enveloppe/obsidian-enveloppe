@@ -44,12 +44,14 @@ async function createLink(file: TFile, settings: MkdocsPublicationSettings, meta
 	}
 	baseLink = checkSlash(baseLink);
 	if (settings.linkRemover.length > 0){
-		filepath = filepath.replace(settings.linkRemover, '')
+		const tobeRemoved = settings.linkRemover.split(',')
+		for (const part of tobeRemoved) {
+			if (part.length > 0) {
+				filepath = filepath.replace(part.trim(), '')
+			}
+		}
 	}
-	const url = encodeURI(baseLink + filepath)
-	new Notice(
-		(t("copylinkMsg") as StringFunc)(file.name)
-	)
+	const url = encodeURI(baseLink + filepath.replace(".md", ''))
 	await navigator.clipboard.writeText(url);
 	return;
 
