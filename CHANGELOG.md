@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.13.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.13.0) (2022-07-14)
+
+
+### Features
+
+* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
+* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
+* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
+* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+
+
+### Bug Fixes
+
+* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
+* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
+* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
+* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+
 ## [3.12.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.12.0) (2022-07-13)
 
 
