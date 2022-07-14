@@ -66,11 +66,10 @@ export default {
 	editorMenuDesc: "Ajouter une commande de partage dans le menu du clic droit",
 	copylinkSetting: "Paramètre de copie",
 	copylinkDesc: "Envoyer un lien vers votre note dans votre presse-papier.",
-	copylinkMsg: (fileName:string):string => `Lien de ${fileName} envoyé vers le presse-papier..`,
 	baselink: "Lien du blog",
 	baselinkDesc: "Créer le lien du presse-papiers avec cette base. Par défaut : https://username.github.io/repo/",
 	linkpathremover: "Retirer une partie du lien",
-	linkpathremoverDesc: "Supprimer cette partie des liens créés",
+	linkpathremoverDesc: "Supprimer cette partie des liens créés. Séparer par une virgule si plusieurs valeurs doivent être supprimées.",
 	//notice
 	unablePublishNote: (fileInfo: string): string => `Impossible de publier la note ${fileInfo}, ignorée.`,
 	errorPublish: (repoInfo: string): string => `Erreur lors de la publication sur ${repoInfo}.`,

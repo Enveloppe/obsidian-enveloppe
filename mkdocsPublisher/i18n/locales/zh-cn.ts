@@ -67,11 +67,10 @@ export default {
 	editorMenuDesc: "在右键添加分享命令",
 	copylinkSetting: "复制链接设置",
 	copylinkDesc: "在你的剪贴板中发送一个链接到你的笔记上",
-	copylinkMsg: (fileName:string):string => `发送${fileName}链接到剪贴板。`,
 	baselink: "博客链接",
 	baselinkDesc: "以此为基础创建剪贴板链接。默认情况下 : https://username.github.io/repo/",
 	linkpathremover: "删除链接部分",
-	linkpathremoverDesc: "从创建的链接中删除这部分内容",
+	linkpathremoverDesc: "从创建的链接中删除这部分。如果必须删除多个值，请用逗号分开。",
 	//notice
 	unablePublishNote: (fileInfo: string): string => { return `不能上传文件${fileInfo}，已跳过` },
 	errorPublish: (repoInfo: string): string => `上传至${repoInfo}错误！`,

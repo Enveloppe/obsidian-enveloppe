@@ -67,11 +67,10 @@ export default {
 	editorMenuDesc: "Add a sharing commands in the right-click menu",
 	copylinkSetting: "Copy link setting",
 	copylinkDesc: "Send a link to your note in your clipboard",
-	copylinkMsg: (fileName:string):string => `Send ${fileName} link to clipboard.`,
 	baselink: "Blog link",
 	baselinkDesc: "Create the clipboard link with this base. By default : https://username.github.io/repo/",
 	linkpathremover: "Remove link part",
-	linkpathremoverDesc: "Remove this part from the created links",
+	linkpathremoverDesc: "Remove this part from the created links. Separate by comma if multiple value must be removed.",
 
 	//notice
 	unablePublishNote: (fileInfo: string): string => `Unable to publish note ${fileInfo}，skipping it`,
