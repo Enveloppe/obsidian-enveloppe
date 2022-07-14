@@ -79,3 +79,7 @@ export function autoCleanUpSettingsOnCondition(condition: boolean, autoCleanSett
 		}
 	}
 }
+
+export function shortcutsHideShow(condition: string|boolean, toDisplay: Setting) {
+	condition ? showSettings(toDisplay) : hideSettings(toDisplay)
+}

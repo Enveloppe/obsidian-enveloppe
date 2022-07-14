@@ -36,13 +36,16 @@ async function createLink(file: TFile, settings: MkdocsPublicationSettings, meta
 	if (!settings.copyLink){
 		return;
 	}
-	const filepath = getReceiptFolder(file, settings, metadataCache)
+	let filepath = getReceiptFolder(file, settings, metadataCache)
 
 	let baseLink = settings.mainLink;
 	if (baseLink.length === 0) {
 		baseLink = `https://${settings.githubName}.github.io/${settings.githubRepo}/`
 	}
 	baseLink = checkSlash(baseLink);
+	if (settings.linkRemover.length > 0){
+		filepath = filepath.replace(settings.linkRemover, '')
+	}
 	const url = encodeURI(baseLink + filepath)
 	new Notice(
 		(t("copylinkMsg") as StringFunc)(file.name)

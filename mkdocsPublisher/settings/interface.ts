@@ -22,6 +22,7 @@ export interface MkdocsPublicationSettings {
 	embedNotes: boolean;
 	copyLink: boolean;
 	mainLink: string;
+	linkRemover: string;
 }
 
 export enum folderSettings {
@@ -57,5 +58,6 @@ export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
 	embedNotes: false,
 	copyLink: false,
 	mainLink:'',
+	linkRemover:''
 
 }

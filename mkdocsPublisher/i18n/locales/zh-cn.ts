@@ -70,6 +70,8 @@ export default {
 	copylinkMsg: (fileName:string):string => `发送${fileName}链接到剪贴板。`,
 	baselink: "博客链接",
 	baselinkDesc: "以此为基础创建剪贴板链接。默认情况下 : https://username.github.io/repo/",
+	linkpathremover: "删除链接部分",
+	linkpathremoverDesc: "从创建的链接中删除这部分内容",
 	//notice
 	unablePublishNote: (fileInfo: string): string => { return `不能上传文件${fileInfo}，已跳过` },
 	errorPublish: (repoInfo: string): string => `上传至${repoInfo}错误！`,

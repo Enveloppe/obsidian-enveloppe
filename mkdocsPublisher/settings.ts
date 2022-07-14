@@ -5,7 +5,7 @@ import {
 	showSettings,
 	autoCleanCondition,
 	folderHideShowSettings,
-	autoCleanUpSettingsOnCondition
+	autoCleanUpSettingsOnCondition, shortcutsHideShow
 } from "./settings/stylesSettings";
 import {folderSettings} from "./settings/interface";
 import t from './i18n'
@@ -205,7 +205,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.embedImage)
 					.onChange(async (value) => {
 						this.plugin.settings.embedImage = value;
-						value ? showSettings(settingsDefaultImage) : hideSettings(settingsDefaultImage);
+						shortcutsHideShow(value, settingsDefaultImage)
 						await this.plugin.saveSettings();
 					});
 			});
@@ -262,7 +262,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.autoCleanUp)
 					.onChange(async(value)=>{
 						this.plugin.settings.autoCleanUp = value;
-						value ? showSettings(autoCleanExcludedSettings): hideSettings(autoCleanExcludedSettings)
+						shortcutsHideShow(value, autoCleanExcludedSettings)
 						await this.plugin.saveSettings();
 					});
 			});
@@ -339,7 +339,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.copyLink)
 					.onChange(async(value)=>{
 						this.plugin.settings.copyLink = value;
-						value ? showSettings(baseLinkSettings):hideSettings(baseLinkSettings);
+						shortcutsHideShow(value, baseLinkSettings);
+						shortcutsHideShow(value, pathRemover);
 						await this.plugin.saveSettings();
 					})
 			)
@@ -356,13 +357,27 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
+		const pathRemover=new Setting(containerEl)
+			.setName(t("linkpathremover") as string)
+			.setDesc(t("linkpathremoverDesc") as string)
+			.setClass('mdkocs-settings-tab')
+			.addText((text)=>{
+				text
+					.setPlaceholder('docs/')
+					.setValue(this.plugin.settings.linkRemover)
+					.onChange(async(value)=>{
+						this.plugin.settings.linkRemover = value;
+						await this.plugin.saveSettings();
+					})
+			})
 
 
 		autoCleanUpSettingsOnCondition(condition, autoCleanSetting, this.plugin);
 		this.plugin.settings.downloadedFolder === folderSettings.fixed ? hideSettings(folderNoteSettings):showSettings(folderNoteSettings)
 		folderHideShowSettings(frontmatterKeySettings, rootFolderSettings, autoCleanSetting, this.plugin.settings.downloadedFolder, this.plugin, subFolderSettings).then();
-		this.plugin.settings.embedImage ? showSettings(settingsDefaultImage) : hideSettings(settingsDefaultImage);
-		this.plugin.settings.autoCleanUp ? showSettings(autoCleanExcludedSettings):hideSettings(autoCleanExcludedSettings);
-		this.plugin.settings.copyLink ? showSettings(baseLinkSettings):hideSettings(baseLinkSettings);
+		shortcutsHideShow(this.plugin.settings.embedImage, settingsDefaultImage)
+		shortcutsHideShow(this.plugin.settings.autoCleanUp, autoCleanExcludedSettings)
+		shortcutsHideShow(this.plugin.settings.copyLink, baseLinkSettings)
+		shortcutsHideShow(this.plugin.settings.copyLink, pathRemover)
 	}
 }
