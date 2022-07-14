@@ -6,6 +6,8 @@ export default {
 	uploadNewNotes: "上传新分享的文件",
 	uploadAllNewEditedNote: "上传新建立文件的和更新已编辑的分享文件",
 	uploadAllEditedNote: "更新所有已编辑的文件",
+	shareViewFiles:(viewFile:string): string => `用Mkdocs Publisher共享"${viewFile}"。`,
+
 	//setting tabs
 	githubConfiguration: "Github设置",
 	repoName: "仓库名",
@@ -63,9 +65,11 @@ export default {
 	fileMenuDesc: "在文件树添加右键分享命令",
 	editorMenu: "编辑器菜单",
 	editorMenuDesc: "在右键添加分享命令",
-	//commands
-	shareViewFiles:(viewFile:string): string => `Share "${viewFile}" with Mkdocs Publisher`,
-
+	copylinkSetting: "复制链接设置",
+	copylinkDesc: "在你的剪贴板中发送一个链接到你的笔记上",
+	copylinkMsg: (fileName:string):string => `发送${fileName}链接到剪贴板。`,
+	baselink: "博客链接",
+	baselinkDesc: "以此为基础创建剪贴板链接。默认情况下 : https://username.github.io/repo/",
 	//notice
 	unablePublishNote: (fileInfo: string): string => { return `不能上传文件${fileInfo}，已跳过` },
 	errorPublish: (repoInfo: string): string => `上传至${repoInfo}错误！`,
@@ -74,7 +78,7 @@ export default {
 	scanningRepo: "扫描仓库中，稍等...",
 	foundNoteToSend: (noteLength: string)=> `发现 ${noteLength} 篇笔记需要上传`,
 	noNewNote: "没有新笔记需要上传.",
-	successfullPublish:(noticeValue: string[])=>`Successfully published ${noticeValue[0]} to ${noticeValue[1]}.`,
-	waitingWorkflow: "Now, waiting for the workflow to be completed...",
-	sendMessage:(noticeValue: string[])=>`Send ${noticeValue[0]} to ${noticeValue[1]}${noticeValue[2]}`
+	successfullPublish:(noticeValue: string[])=>`成功地将${noticeValue[0]}发布到${noticeValue[1]}。`,
+	waitingWorkflow: "现在，等待工作流程的完成...",
+	sendMessage:(noticeValue: string[])=>`将${noticeValue[0]}发送到${noticeValue[1]}${noticeValue[2]}。`
 }
