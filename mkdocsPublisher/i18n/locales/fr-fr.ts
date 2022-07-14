@@ -6,6 +6,7 @@ export default {
 	uploadNewNotes: "Publier les nouvelles notes",
 	uploadAllNewEditedNote: "Publier toutes les notes nouvelles et modifiées depuis le dernier envoi.",
 	uploadAllEditedNote: "Publier toutes les notes éditées depuis le dernier envoie",
+	shareViewFiles:(viewFile:string): string => `Partager "${viewFile}" avec Mkdocs Publisher`,
 	//setting tabs
 	githubConfiguration: "Configuration GitHub",
 	repoName: "Nom du dépôt",
@@ -63,9 +64,11 @@ export default {
 	fileMenuDesc: "Ajouter une commande de partage dans le menu \"Fichier\"",
 	editorMenu: "Menu \"Edition\"",
 	editorMenuDesc: "Ajouter une commande de partage dans le menu du clic droit",
-	//commands menus
-	shareViewFiles:(viewFile:string): string => `Partager "${viewFile}" avec Mkdocs Publisher`,
-
+	copylinkSetting: "Paramètre de copie",
+	copylinkDesc: "Envoyer un lien vers votre note dans votre presse-papier.",
+	copylinkMsg: (fileName:string):string => `Lien de ${fileName} envoyé vers le presse-papier..`,
+	baselink: "Lien du blog",
+	baselinkDesc: "Créer le lien du presse-papiers avec cette base. Par défaut : https://username.github.io/repo/",
 	//notice
 	unablePublishNote: (fileInfo: string): string => `Impossible de publier la note ${fileInfo}, ignorée.`,
 	errorPublish: (repoInfo: string): string => `Erreur lors de la publication sur ${repoInfo}.`,

@@ -293,8 +293,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setPlaceholder('share')
 					.setValue(this.plugin.settings.shareKey)
 					.onChange(async (value) => {
-						this.plugin.settings.shareKey = value.trim()
-						await this.plugin.saveSettings()
+						this.plugin.settings.shareKey = value.trim();
+						await this.plugin.saveSettings();
 					})
 			)
 		new Setting(containerEl)
@@ -305,8 +305,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					.setPlaceholder('_assets, Archive')
 					.setValue(this.plugin.settings.ExcludedFolder)
 					.onChange(async (value) => {
-						this.plugin.settings.ExcludedFolder = value
-						await this.plugin.saveSettings()
+						this.plugin.settings.ExcludedFolder = value;
+						await this.plugin.saveSettings();
 					})
 			)
 		new Setting(containerEl)
@@ -316,8 +316,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 				toggle
 					.setValue(this.plugin.settings.fileMenu)
 					.onChange(async (value) => {
-						this.plugin.settings.fileMenu = value
-						await this.plugin.saveSettings()
+						this.plugin.settings.fileMenu = value;
+						await this.plugin.saveSettings();
 					})
 			)
 		new Setting(containerEl)
@@ -327,15 +327,42 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 				toggle
 					.setValue(this.plugin.settings.editorMenu)
 					.onChange(async (value) => {
-						this.plugin.settings.editorMenu = value
-						await this.plugin.saveSettings()
+						this.plugin.settings.editorMenu = value;
+						await this.plugin.saveSettings();
 					})
 			)
+		new Setting(containerEl)
+			.setName(t("copylinkSetting") as string)
+			.setDesc(t("copylinkDesc") as string)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.copyLink)
+					.onChange(async(value)=>{
+						this.plugin.settings.copyLink = value;
+						value ? showSettings(baseLinkSettings):hideSettings(baseLinkSettings);
+						await this.plugin.saveSettings();
+					})
+			)
+		const baseLinkSettings = new Setting(containerEl)
+			.setName(t('baselink') as string)
+			.setDesc(t("baselinkDesc") as string)
+			.setClass('mdkocs-settings-tab')
+			.addText((text) =>{
+				text
+					.setPlaceholder('my_blog.com')
+					.setValue(this.plugin.settings.mainLink)
+					.onChange(async(value)=>{
+						this.plugin.settings.mainLink = value;
+						await this.plugin.saveSettings();
+					});
+			});
+
 
 		autoCleanUpSettingsOnCondition(condition, autoCleanSetting, this.plugin);
 		this.plugin.settings.downloadedFolder === folderSettings.fixed ? hideSettings(folderNoteSettings):showSettings(folderNoteSettings)
 		folderHideShowSettings(frontmatterKeySettings, rootFolderSettings, autoCleanSetting, this.plugin.settings.downloadedFolder, this.plugin, subFolderSettings).then();
 		this.plugin.settings.embedImage ? showSettings(settingsDefaultImage) : hideSettings(settingsDefaultImage);
 		this.plugin.settings.autoCleanUp ? showSettings(autoCleanExcludedSettings):hideSettings(autoCleanExcludedSettings);
+		this.plugin.settings.copyLink ? showSettings(baseLinkSettings):hideSettings(baseLinkSettings);
 	}
 }

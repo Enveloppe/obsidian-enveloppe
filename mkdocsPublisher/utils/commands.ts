@@ -1,10 +1,10 @@
 import { ShareStatusBar } from "./status_bar";
-import { noticeMessage } from "./utils";
+import {createLink, noticeMessage} from "./utils";
 import {MkdocsPublicationSettings} from '../settings/interface'
 import { deleteFromGithub } from '../githubInteraction/delete'
 import {GithubBranch} from "../githubInteraction/branch";
 import { Octokit } from "@octokit/core";
-import {Notice, TFile, Vault} from "obsidian";
+import {MetadataCache, Notice, TFile, Vault} from "obsidian";
 import MkdocsPublication from "../main";
 import t from '../i18n'
 import type { StringFunc } from "../i18n";
@@ -84,7 +84,7 @@ export async function deleteUnsharedDeletedNotes(PublisherManager: GithubBranch,
 	}
 }
 
-export async function shareOneNote(branchName: string, PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, file: TFile) {
+export async function shareOneNote(branchName: string, PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, file: TFile, metadataCache: MetadataCache) {
 	/**
 	 * Share only **one** note and their embedded contents (including note)
 	 * @param branchName branch name
@@ -100,6 +100,8 @@ export async function shareOneNote(branchName: string, PublisherManager: GithubB
 			const update = await PublisherManager.updateRepository(branchName);
 			if (update) {
 				await noticeMessage(PublisherManager, file, settings)
+
+				await createLink(file, settings, metadataCache);
 			} else {
 				new Notice((t("errorPublish") as StringFunc)(settings.githubRepo));
 			}

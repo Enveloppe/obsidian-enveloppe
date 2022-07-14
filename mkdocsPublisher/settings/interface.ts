@@ -20,6 +20,8 @@ export interface MkdocsPublicationSettings {
 	convertForGithub: boolean;
 	subFolder: string;
 	embedNotes: boolean;
+	copyLink: boolean;
+	mainLink: string;
 }
 
 export enum folderSettings {
@@ -53,4 +55,7 @@ export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
 	convertForGithub: false,
 	subFolder: '',
 	embedNotes: false,
+	copyLink: false,
+	mainLink:'',
+
 }

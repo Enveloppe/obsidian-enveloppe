@@ -42,7 +42,7 @@ export default class MkdocsPublication extends Plugin {
 						)
 							.setIcon("share")
 							.onClick(async () => {
-								await shareOneNote(branchName, PublisherManager, this.settings, file);
+								await shareOneNote(branchName, PublisherManager, this.settings, file, this.app.metadataCache);
 							});
 					});
 					menu.addSeparator();
@@ -65,7 +65,7 @@ export default class MkdocsPublication extends Plugin {
 							.setIcon("share")
 							.onClick(async () => {
 								
-								await shareOneNote(branchName, PublisherManager, this.settings, view.file);
+								await shareOneNote(branchName, PublisherManager, this.settings, view.file, this.app.metadataCache);
 							});
 					});
 				}
@@ -85,7 +85,7 @@ export default class MkdocsPublication extends Plugin {
 					)
 				) {
 					if (!checking) {
-						shareOneNote(branchName, PublisherManager, this.settings, this.app.workspace.getActiveFile());
+						shareOneNote(branchName, PublisherManager, this.settings, this.app.workspace.getActiveFile(), this.app.metadataCache);
 					}
 					return true;
 				}
