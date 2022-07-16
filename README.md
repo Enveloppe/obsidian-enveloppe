@@ -20,7 +20,7 @@ But the plugin can do a lot more !
 - Convert internal's links to match the configuration
 - Clean your repo with removing deleted and unshared files
 - Rename folder note with same name strategies with `index.md` (+ respecting the folder settings)
-
+- Send a link's note in your clipboard after sharing.
 ---
 
 # Configuration
@@ -96,7 +96,7 @@ You can also set up an "auto-delete" when you use the commands to delete files:
 
 This option will also add a new command to delete file (without sharing new file).
 
-> [!warning] Warning
+> [!warning] Warning[^1]
 > You can't use the delete command if you don't have set a default folder (and a root folder if you use the YAML configuration)
 > Also, you can lost some files using this commands, so be careful! Don't forget that you can revert commit in case the plugin delete a file you don't want to delete.
 
@@ -157,6 +157,7 @@ You can configure :
 - The share key used by the plugin. By default, it is `share`
 - Folder excluded. The share key can't work here. Useful if you forget to remove the `share` (or turn it to `false`) and move a file in your archive…
 - Add the command to share the file on the file menu (right-click on a file in the explorer or using the three dot) and editor menu (right-click on an opened edited note)
+- Added the link's shared note in your clipboard after sharing. You can configure the path created here, with removing some part. As it supports multiple part, you can separate the part using comma. For example, you can remove docs and the extension using : `docs/, .md`
 > [!note] The right-click menu command can also send the file under your cursor if it's a link! 
 
 ---
@@ -192,6 +193,4 @@ To add a new language :
 If you find this plugin and workflow useful, you can give me some coffee money.
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
-[^1]: You must be connected to copy the template ! You can test locally through clone > https : `git clone https://github.com/Mara-Li/mkdocs_obsidian_template.git` or [with downloading the ZIP](https://github.com/Mara-Li/mkdocs_obsidian_template/archive/refs/heads/main.zip)
-[^2]: You need to be connected to generate it.
-[^3]: Normally, only file supported by obsidian are deleted, but some image exists only on the blog (for logo, for example). To prevent bad surprise, exclude these folder here.
+[^1]: Only file supported by Obsidian will be deleted. 
