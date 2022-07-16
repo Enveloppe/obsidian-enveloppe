@@ -3,11 +3,13 @@ share: true
 title: Index
 ---
 
-GitHub Publisher est un plugin qui vous aide à envoyer des fichiers dans un référentiel GitHub configuré, en fonction de l'état d'une clé de partage situé dans votre bloc de métadonnée (frontmatter).
+[EN](https://github.com/obsidianMkdocs/obsidian-github-publisher#readme)
 
-Vous pouvez l'utiliser pour envoyer n'importe quel fichier markdown, permettant la compatibilité avec de nombreuses alternatives d'Obsidian Publish. 
+GitHub Publisher est un plugin qui vous aide à envoyer des fichiers dans un dépôt GitHub configuré, en fonction de l'état d'une clé de partage situé dans votre bloc de métadonnée (frontmatter).
 
-Lorsqu'un fichier partagé est trouvé, il sera envoyé dans une nouvelle branche nommée par `votre_nom_de_vacances-mois-jour-année`. Une pull request suivie d'une fusion sera faite, et si tout est correct, la branche sera supprimée après la fusion. 
+Vous pouvez l'utiliser pour envoyer n'importe quel fichier markdown sur GitHub, permettant la compatibilité avec de nombreuses alternatives d'Obsidian Publish. 
+
+Lorsqu'un fichier partagé est trouvé, il sera envoyé dans une nouvelle branche nommée par `votre_nom_du_coffre-mois-jour-année`. Une pull request suivie d'une fusion sera faite, et si tout est correct, la branche sera supprimée après la fusion. 
 Ainsi, vous pouvez facilement revenir sur un commit, et créer un workflow basé sur un PR, un PR fusionné, un push spécifique... 
 
 # Ce que fait le plugin
@@ -197,3 +199,4 @@ Si vous trouvez ce module et ce workflow utile, vous pouvez m'envoyer de quoi m'
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 [^1]: Seuls les fichiers supportés par Obsidian seront supprimés. 
+[^2]: De manière évidente, vous devez être connectés pour pouvoir créer le token. De fait, vous êtes obligés d'avoir un compte github!
