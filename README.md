@@ -194,3 +194,4 @@ If you find this plugin and workflow useful, you can give me some coffee money.
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 [^1]: Only file supported by Obsidian will be deleted. 
+[^2]: Obviously, you need to be connected and have a GitHub account to create this token!
