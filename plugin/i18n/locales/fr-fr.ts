@@ -45,7 +45,7 @@ export default {
 	embed: "Transclusion",
 	transferImage: "Transférer les images",
 	transferImageDesc: "Envoyer les images intégrées dans un fichier dans le dépôt.",
-	transferEmbeddedNotes: "Transférer les notes transcluent.",
+	transferEmbeddedNotes: "Transférer les notes transclues",
 	transferEmbeddedNotesDesc: "Envoyez des notes transcluent dans un fichier partagé dans le dépôt. Seuls les fichiers partagés seront envoyés !",
 	defaultImageFolder: "Dossier d'images par défaut",
 	defaultImageFolderDesc: "Pour utiliser un dossier différent de celui par défaut pour les images",
