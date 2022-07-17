@@ -3,7 +3,7 @@ share: true
 title: Index
 ---
 
-[EN](https://github.com/obsidianMkdocs/obsidian-github-publisher#readme)
+[EN 🇬🇧](https://github.com/obsidianMkdocs/obsidian-github-publisher#readme)
 
 GitHub Publisher est un plugin qui vous aide à envoyer des fichiers dans un dépôt GitHub configuré, en fonction de l'état d'une clé de partage situé dans votre bloc de métadonnée (frontmatter).
 
