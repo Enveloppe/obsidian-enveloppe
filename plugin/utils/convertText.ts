@@ -1,6 +1,30 @@
 import {MkdocsPublicationSettings} from "../settings/interface";
-import {MetadataCache, TFile} from "obsidian";
+import {MetadataCache, TFile, Notice} from "obsidian";
 import {createRelativePath} from "./filePathConvertor";
+import { getAPI } from "obsidian-dataview";
+
+async function convertDataviewQueries(text: string, path: string): Promise<string> {
+	/* Credit : Ole Eskild Steensen from Obsidian Digital Garden */
+	let replacedText = text;
+	const dataviewRegex = /```dataview(.+?)```/gsm;
+	const dvApi = getAPI();
+	const matches = text.matchAll(dataviewRegex);
+	if (!matches) return;
+	for (const queryBlock of matches){
+		try {
+			const block = queryBlock[0];
+			const query = queryBlock[1];
+			const md = await dvApi.tryQueryMarkdown(query, path);
+			replacedText = replacedText.replace(block, md);
+
+		} catch (e) {
+			console.log(e);
+			new Notice('Unable to render dataview query. Please update the dataview plugin to the last version.')
+			return queryBlock[0];
+		}
+	}
+	return replacedText;
+}
 
 function convertWikilinks(fileContent: string, settings: MkdocsPublicationSettings, linkedFiles: {linked: TFile, linkFrom: string, altText: string}[]) {
 	if (!settings.convertWikiLinks) {
@@ -72,4 +96,4 @@ function creatorAltLink(altMatch: RegExpMatchArray, altCreator: string[], fileEx
 }
 
 
-export {convertWikilinks, convertLinkCitation, creatorAltLink};
+export {convertWikilinks, convertLinkCitation, creatorAltLink, convertDataviewQueries};

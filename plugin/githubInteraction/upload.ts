@@ -12,6 +12,7 @@ import { Base64 } from "js-base64";
 import {deleteFromGithub} from "./delete"
 
 import {
+	convertDataviewQueries,
 	convertLinkCitation,
 	convertWikilinks
 } from "../utils/convertText";
@@ -104,6 +105,7 @@ export default class MkdocsPublish {
 			fileHistory.push(file)
 			const embedFiles = shareFiles.getEmbed(file);
 			const linkedFiles = shareFiles.getLinkedImageAndFiles(file);
+			text = await convertDataviewQueries(text, file.path);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file)
 			text = convertWikilinks(text, this.settings, linkedFiles);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache)
