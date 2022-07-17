@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file. See [commit
 ### Features
 
 * adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
+* Dataview simple query are now correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
 * **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
 * send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
 * **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
