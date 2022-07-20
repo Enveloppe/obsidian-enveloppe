@@ -3,7 +3,10 @@ share: true
 title: Index
 ---
 
-[EN 🇬🇧](https://github.com/obsidianMkdocs/obsidian-github-publisher#readme)
+[EN 🇬🇧](https://github.com/obsidianPublisher/obsidian-github-publisher#readme)
+
+# Liens utiles
+
 
 GitHub Publisher est un plugin qui vous aide à envoyer des fichiers dans un dépôt GitHub configuré, en fonction de l'état d'une clé de partage situé dans votre bloc de métadonnée (frontmatter).
 
@@ -25,6 +28,7 @@ Mais le plugin peut faire beaucoup plus !
 - Renommer le dossier note avec les mêmes stratégies de nom avec `index.md` (+ respecter les paramètres du dossier)
 - Partager les fichiers transcluent automatiquement (uniquement s'ils ont la clé de partage)
 - Copier un lien vers votre presse-papier !
+- Convertir les block `dataview` !
 
 ---
 
@@ -171,7 +175,7 @@ Vous pouvez configurer :
 ## Général
 
 Vous pouvez m'aider à développer le plugin en utilisant `npm` !
-1. Tout d'abord, clonez le projet sur votre ordinateur avec `git clone git@github.com:obsidianMkdocs/obsidian-github-publisher.git`.
+1. Tout d'abord, clonez le projet sur votre ordinateur avec `git clone git@github.com:obsidianPublisher/obsidian-github-publisher.git`.
 2. `cd obsidian-github-publisher`.
 3. `npm install`
 
@@ -195,6 +199,7 @@ Pour ajouter un nouveau langage :
 - Créez un PR pour ajouter votre traduction !
 
 ---
+
 Si vous trouvez ce module et ce workflow utile, vous pouvez m'envoyer de quoi m'acheter du café en grande quantité :
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
