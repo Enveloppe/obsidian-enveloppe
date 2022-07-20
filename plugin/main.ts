@@ -1,4 +1,4 @@
-import {Plugin, TFile, Menu, Vault} from "obsidian";
+import {Plugin, TFile, Menu} from "obsidian";
 import {
 	MkdocsSettingsTab,
 } from "./settings";
