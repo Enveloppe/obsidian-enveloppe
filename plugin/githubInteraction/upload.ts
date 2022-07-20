@@ -106,9 +106,10 @@ export default class MkdocsPublish {
 			const embedFiles = shareFiles.getEmbed(file);
 			const linkedFiles = shareFiles.getLinkedImageAndFiles(file);
 			text = await convertDataviewQueries(text, file.path);
-			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file)
+			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault);
 			text = convertWikilinks(text, this.settings, linkedFiles);
-			const path = getReceiptFolder(file, this.settings, this.metadataCache)
+			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
+			console.log(`Upload ${file.name}:${path} on ${this.settings.githubName}/${this.settings.githubRepo}:${ref}`);
 			await this.uploadText(file.path, text, path, file.name, ref);
 			await this.statusBarForEmbed(embedFiles, fileHistory, ref, deepScan);
 			if (autoclean) {

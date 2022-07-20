@@ -1,5 +1,5 @@
 import {MkdocsPublicationSettings} from "../settings/interface";
-import {MetadataCache, TFile, Notice} from "obsidian";
+import {MetadataCache, TFile, Notice, Vault} from "obsidian";
 import {createRelativePath} from "./filePathConvertor";
 import { getAPI } from "obsidian-dataview";
 
@@ -56,7 +56,7 @@ function convertWikilinks(fileContent: string, settings: MkdocsPublicationSettin
 	return fileContent;
 }
 
-function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSettings, linkedFiles : {linked: TFile, linkFrom: string, altText: string}[], metadataCache: MetadataCache, sourceFile: TFile) {
+function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSettings, linkedFiles : {linked: TFile, linkFrom: string, altText: string}[], metadataCache: MetadataCache, sourceFile: TFile, vault: Vault) {
 	/** 
 	* Convert internal links with changing the path to the relative path in the github repository
 	* @param fileContent: The file content
@@ -71,7 +71,7 @@ function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSet
 		return fileContent;
 	}
 	for (const linkedFile of linkedFiles) {
-		const pathInGithub = createRelativePath(sourceFile, linkedFile, metadataCache, settings).replace('.md', '');
+		const pathInGithub = createRelativePath(sourceFile, linkedFile, metadataCache, settings, vault).replace('.md', '');
 		const regexToReplace = new RegExp(`(\\[{2}${linkedFile.linkFrom}(\\|.*)?\\]{2})|(\\[.*\\]\\(${linkedFile.linkFrom}\\))`, 'g');
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {

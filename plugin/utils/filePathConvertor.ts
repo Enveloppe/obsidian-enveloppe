@@ -1,7 +1,7 @@
-import {MetadataCache, TFile} from "obsidian";
+import {MetadataCache, TFile, Vault, TFolder} from "obsidian";
 import {folderSettings, MkdocsPublicationSettings} from "../settings/interface";
 
-function createRelativePath(sourceFile: TFile, targetFile: {linked: TFile, linkFrom: string, altText: string }, metadata: MetadataCache, settings: MkdocsPublicationSettings) {
+function createRelativePath(sourceFile: TFile, targetFile: {linked: TFile, linkFrom: string, altText: string }, metadata: MetadataCache, settings: MkdocsPublicationSettings, vault: Vault) {
 	/**
 	 * Create relative path from a sourceFile to a targetPath. If the target file is a note, only share if the frontmatter sharekey is present and true
 	 * @param sourceFile: TFile, the shared file containing all links, embed etc
@@ -10,12 +10,12 @@ function createRelativePath(sourceFile: TFile, targetFile: {linked: TFile, linkF
 	 * @param metadata: metadataCache
 	 * @return string : relative created path
 	 */
-	const sourcePath = getReceiptFolder(sourceFile, settings, metadata);
+	const sourcePath = getReceiptFolder(sourceFile, settings, metadata, vault);
 	const frontmatter = metadata.getCache(targetFile.linked.path) ? metadata.getCache(targetFile.linked.path).frontmatter : null;
 	if (targetFile.linked.extension === 'md' && (!frontmatter || !frontmatter[settings.shareKey] || (frontmatter[settings.shareKey] === false))) {
 		return targetFile.altText;
 	}
-	const targetPath = targetFile.linked.extension === 'md' ? getReceiptFolder(targetFile.linked, settings, metadata) : getImageLinkOptions(targetFile.linked, settings);
+	const targetPath = targetFile.linked.extension === 'md' ? getReceiptFolder(targetFile.linked, settings, metadata, vault) : getImageLinkOptions(targetFile.linked, settings);
 	const sourceList = sourcePath.split('/');
 	const targetList = targetPath.split('/');
 	const diffSourcePath = sourceList.filter(x => !targetList.includes(x));
@@ -32,7 +32,17 @@ function createRelativePath(sourceFile: TFile, targetFile: {linked: TFile, linkF
 	return diffTarget(diffSourcePath).concat(diffTargetPath).join('/')
 }
 
-function createObsidianPath(file: TFile, settings:MkdocsPublicationSettings) {
+function folderNoteIndex(file: TFile, vault: Vault, settings: MkdocsPublicationSettings) {
+	if (!settings.folderNote) return file.name;
+	const fileName = file.name.replace('.md', '');
+	const folderParent = file.parent.name;
+	if (fileName === folderParent) return 'index.md';
+	const outsideFolder = vault.getAbstractFileByPath(file.path.replace('.md', ''));
+	if (outsideFolder && outsideFolder instanceof TFolder) return 'index.md'
+	return file.name;
+}
+
+function createObsidianPath(file: TFile, settings:MkdocsPublicationSettings, vault: Vault) {
 	/**
 	 * Create link path based on settings and file path
 	 * @param file : TFile - Image TFile
@@ -40,7 +50,7 @@ function createObsidianPath(file: TFile, settings:MkdocsPublicationSettings) {
 	 * @returns string - Link path
 	 */
 	const folderDefault = settings.folderDefaultName;
-	const fileName = file.name.replace('.md', '') === file.parent.name && settings.folderNote ? 'index.md' : file.name
+	const fileName = folderNoteIndex(file, vault, settings);
 	const rootFolder = folderDefault.length > 0 ? folderDefault + "/" : ''
 	const path = rootFolder + file.path.replace(file.name, fileName);
 	if (settings.subFolder.length > 0) {
@@ -68,14 +78,14 @@ function createFrontmatterPath(file: TFile, settings: MkdocsPublicationSettings,
 	return path
 }
 
-function getReceiptFolder(file: TFile, settings:MkdocsPublicationSettings, metadataCache: MetadataCache) {
+function getReceiptFolder(file: TFile, settings:MkdocsPublicationSettings, metadataCache: MetadataCache, vault: Vault) {
 	if (file.extension === 'md') {
 		let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + file.name : file.name;
 		
 		if (settings.downloadedFolder === folderSettings.yaml) {
 			path = createFrontmatterPath(file, settings, metadataCache)
 		} else if (settings.downloadedFolder === folderSettings.obsidian) {
-			path = createObsidianPath(file, settings)
+			path = createObsidianPath(file, settings, vault)
 		}
 		return path
 	}

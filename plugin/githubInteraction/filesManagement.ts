@@ -1,6 +1,6 @@
 // Credit : https://github.com/oleeskild/obsidian-digital-garden @oleeskild
 
-import {MetadataCache, TFile, Vault,} from "obsidian";
+import {MetadataCache, TFile, Vault} from "obsidian";
 import {MkdocsPublicationSettings} from "../settings/interface";
 import {Octokit} from "@octokit/core";
 import {getImageLinkOptions, getReceiptFolder} from "../utils/filePathConvertor";
@@ -63,7 +63,7 @@ export class FilesManagement extends MkdocsPublish {
 					file.path
 				).frontmatter;
 				if (frontMatter && frontMatter[shareKey] === true && file.extension === "md") {
-					const filepath = getReceiptFolder(file, this.settings, this.metadataCache);
+					const filepath = getReceiptFolder(file, this.settings, this.metadataCache, this.vault);
 					allFileWithPath.push({
 						'converted': filepath,
 						'real': file.path

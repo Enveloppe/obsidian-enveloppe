@@ -1,4 +1,4 @@
-import {Plugin, TFile, Menu} from "obsidian";
+import {Plugin, TFile, Menu, Vault} from "obsidian";
 import {
 	MkdocsSettingsTab,
 } from "./settings";
@@ -42,7 +42,7 @@ export default class MkdocsPublication extends Plugin {
 						)
 							.setIcon("share")
 							.onClick(async () => {
-								await shareOneNote(branchName, PublisherManager, this.settings, file, this.app.metadataCache);
+								await shareOneNote(branchName, PublisherManager, this.settings, file, this.app.metadataCache, this.app.vault);
 							});
 					});
 					menu.addSeparator();
@@ -65,7 +65,7 @@ export default class MkdocsPublication extends Plugin {
 							.setIcon("share")
 							.onClick(async () => {
 								
-								await shareOneNote(branchName, PublisherManager, this.settings, view.file, this.app.metadataCache);
+								await shareOneNote(branchName, PublisherManager, this.settings, view.file, this.app.metadataCache, this.app.vault);
 							});
 					});
 				}
@@ -85,7 +85,7 @@ export default class MkdocsPublication extends Plugin {
 					)
 				) {
 					if (!checking) {
-						shareOneNote(branchName, PublisherManager, this.settings, this.app.workspace.getActiveFile(), this.app.metadataCache);
+						shareOneNote(branchName, PublisherManager, this.settings, this.app.workspace.getActiveFile(), this.app.metadataCache, this.app.vault);
 					}
 					return true;
 				}

@@ -84,7 +84,7 @@ export async function deleteUnsharedDeletedNotes(PublisherManager: GithubBranch,
 	}
 }
 
-export async function shareOneNote(branchName: string, PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, file: TFile, metadataCache: MetadataCache) {
+export async function shareOneNote(branchName: string, PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, file: TFile, metadataCache: MetadataCache, vault: Vault) {
 	/**
 	 * Share only **one** note and their embedded contents (including note)
 	 * @param branchName branch name
@@ -100,7 +100,7 @@ export async function shareOneNote(branchName: string, PublisherManager: GithubB
 			const update = await PublisherManager.updateRepository(branchName);
 			if (update) {
 				await noticeMessage(PublisherManager, file, settings)
-				await createLink(file, settings, metadataCache);
+				await createLink(file, settings, metadataCache, vault);
 			} else {
 				new Notice((t("errorPublish") as StringFunc)(settings.githubRepo));
 			}

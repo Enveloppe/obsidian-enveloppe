@@ -1,4 +1,4 @@
-import {App, MetadataCache, Notice, TFile} from 'obsidian'
+import {App, MetadataCache, Notice, TFile, Vault} from 'obsidian'
 import {MkdocsPublicationSettings} from '../settings/interface'
 import MkdocsPublish from "../githubInteraction/upload";
 import t from '../i18n'
@@ -44,7 +44,7 @@ function checkSlash(
 }
 
 
-async function createLink(file: TFile, settings: MkdocsPublicationSettings, metadataCache: MetadataCache) {
+async function createLink(file: TFile, settings: MkdocsPublicationSettings, metadataCache: MetadataCache, vault: Vault) {
 	/**
 	 * Create the link for the file and add it to the clipboard
 	 * The path is based with the receipt folder but part can be removed using settings.
@@ -57,7 +57,7 @@ async function createLink(file: TFile, settings: MkdocsPublicationSettings, meta
 	if (!settings.copyLink){
 		return;
 	}
-	let filepath = getReceiptFolder(file, settings, metadataCache)
+	let filepath = getReceiptFolder(file, settings, metadataCache, vault)
 
 	let baseLink = settings.mainLink;
 	if (baseLink.length === 0) {
