@@ -2,7 +2,7 @@
 share: true
 ---
 
-[FR 🇫🇷](https://github.com/obsidianMkdocs/obsidian-github-publisher/blob/master/docs/README_FR.md)
+[FR 🇫🇷](https://github.com/obsidianPublisher/obsidian-github-publisher/blob/master/docs/README_FR.md)
 
 GitHub Publisher is a plugin that help you to send file in a configured GitHub Repository, based on a front matter entry state. 
 
@@ -23,6 +23,9 @@ But the plugin can do a lot more !
 - Clean your repo with removing deleted and unshared files
 - Rename folder note with same name strategies with `index.md` (+ respecting the folder settings)
 - Send a link's note in your clipboard after sharing.
+- Convert simple dataview query in markdown !
+
+
 ---
 
 # Configuration
@@ -168,7 +171,7 @@ You can configure :
 ## General
 
 You can help me to develop the plugin using `npm` !
-1. First clone the project on your computer with `git clone git@github.com:obsidianMkdocs/obsidian-github-publisher.git`
+1. First clone the project on your computer with `git clone git@github.com:obsidianPublisher/obsidian-github-publisher.git`
 2. `cd obsidian-github-publisher`
 3. `npm install`
 4. Enjoy!
