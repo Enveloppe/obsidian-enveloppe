@@ -2,9 +2,9 @@ import {Plugin, TFile, Menu} from "obsidian";
 import {
 	MkdocsSettingsTab,
 } from "./settings";
-import { disablePublish } from "./utils/utils";
+import { disablePublish } from "./src/utils";
 import {MkdocsPublicationSettings, DEFAULT_SETTINGS} from './settings/interface'
-import {GithubBranch} from "./githubInteraction/branch";
+import {GithubBranch} from "./publishing/branch";
 import { Octokit } from "@octokit/core";
 import {
 	deleteUnsharedDeletedNotes,
@@ -12,7 +12,7 @@ import {
 	shareAllMarkedNotes,
 	shareNewNote,
 	shareOneNote, shareOnlyEdited
-} from "./utils/commands";
+} from "./src/commands";
 import t, {StringFunc} from "./i18n"
 
 

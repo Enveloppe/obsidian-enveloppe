@@ -3,10 +3,10 @@
 import {MetadataCache, TFile, Vault} from "obsidian";
 import {MkdocsPublicationSettings} from "../settings/interface";
 import {Octokit} from "@octokit/core";
-import {getImageLinkOptions, getReceiptFolder} from "../utils/filePathConvertor";
+import {getImageLinkOptions, getReceiptFolder} from "../src/filePathConvertor";
 import MkdocsPublish from "./upload";
 import MkdocsPublication from "../main";
-import { noticeLog } from "plugin/utils/utils";
+import { noticeLog } from "plugin/src/utils";
 
 export class FilesManagement extends MkdocsPublish {
 	vault: Vault;

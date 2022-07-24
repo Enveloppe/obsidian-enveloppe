@@ -3,7 +3,7 @@ import { Notice } from "obsidian";
 import {folderSettings, MkdocsPublicationSettings} from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
 import {Base64} from "js-base64";
-import {noticeLog, trimObject} from "../utils/utils";
+import {noticeLog, trimObject} from "../src/utils";
 
 export async function deleteFromGithub(silent = false, settings: MkdocsPublicationSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement) {
 	/**

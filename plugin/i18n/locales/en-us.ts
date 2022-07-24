@@ -73,7 +73,7 @@ export default {
 	linkpathremover: "Remove link part",
 	linkpathremoverDesc: "Remove this part from the created links. Separate by comma if multiple value must be removed.",
 	hardBreakTitle: "Markdown hard line break",
-	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line. It will also convert '\\' to newline ('<br/>').",
+	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line.",
 	logNoticeHeader: 'Notice every error',
 	logNoticeDesc: 'On mobile, it can be hard to debug the plugin. Enable this option to log every error in a Notice.',
 

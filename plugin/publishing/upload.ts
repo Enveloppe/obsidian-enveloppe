@@ -16,14 +16,14 @@ import {
 	convertLinkCitation,
 	convertWikilinks,
 	addHardLineBreak
-} from "../utils/convertText";
+} from "../src/convertText";
 
 import {
 	getReceiptFolder, getImageLinkOptions
-} from "../utils/filePathConvertor";
-import {ShareStatusBar} from "../utils/status_bar";
+} from "../src/filePathConvertor";
+import {ShareStatusBar} from "../src/status_bar";
 import MkdocsPublication from "../main";
-import { noticeLog } from "plugin/utils/utils";
+import { noticeLog } from "plugin/src/utils";
 
 export default class MkdocsPublish {
 	vault: Vault;

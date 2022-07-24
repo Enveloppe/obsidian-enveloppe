@@ -1,6 +1,6 @@
 import {App, MetadataCache, Notice, TFile, Vault} from 'obsidian'
 import {MkdocsPublicationSettings} from '../settings/interface'
-import MkdocsPublish from "../githubInteraction/upload";
+import MkdocsPublish from "../publishing/upload";
 import t from '../i18n'
 import type { StringFunc } from "../i18n";
 import {getReceiptFolder} from "./filePathConvertor";

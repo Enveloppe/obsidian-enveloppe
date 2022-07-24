@@ -72,8 +72,10 @@ export default {
 	baselinkDesc: "以此为基础创建剪贴板链接。默认情况下 : https://username.github.io/repo/",
 	linkpathremover: "删除链接部分",
 	linkpathremoverDesc: "从创建的链接中删除这部分。如果必须删除多个值，请用逗号分开。",
-	hardBreakTitle: "Markdown hard line break",
-	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line. It will also convert '\\' to newline ('<br/>').",
+	hardBreakTitle: "马克顿的硬断行",
+	hardBreakDesc: "在每一行之后添加一个标记性的硬断行（双倍空白）。",
+	logNoticeHeader: '注意每一个错误',
+	logNoticeDesc: '在移动设备上，调试模块可能很困难。启用该选项可以通过Obsidian通知来通知所有错误。',
 	//notice
 	unablePublishNote: (fileInfo: string): string => { return `不能上传文件${fileInfo}，已跳过` },
 	errorPublish: (repoInfo: string): string => `上传至${repoInfo}错误！`,

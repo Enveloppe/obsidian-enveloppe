@@ -1,8 +1,8 @@
 import { ShareStatusBar } from "./status_bar";
 import {createLink, noticeMessage} from "./utils";
 import {MkdocsPublicationSettings} from '../settings/interface'
-import { deleteFromGithub } from '../githubInteraction/delete'
-import {GithubBranch} from "../githubInteraction/branch";
+import { deleteFromGithub } from '../publishing/delete'
+import {GithubBranch} from "../publishing/branch";
 import { Octokit } from "@octokit/core";
 import {MetadataCache, Notice, TFile, Vault} from "obsidian";
 import MkdocsPublication from "../main";

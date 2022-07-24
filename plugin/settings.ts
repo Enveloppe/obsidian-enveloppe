@@ -6,7 +6,7 @@ import {
 	autoCleanCondition,
 	folderHideShowSettings,
 	autoCleanUpSettingsOnCondition, shortcutsHideShow
-} from "./settings/stylesSettings";
+} from "./settings/style";
 import {folderSettings} from "./settings/interface";
 import t from './i18n'
 
