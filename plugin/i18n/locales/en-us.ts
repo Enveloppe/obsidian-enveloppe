@@ -36,7 +36,8 @@ export default {
 	frontmatterKeyPlaceholder: "category",
 	rootFolder: "Root folder",
 	rootFolderDesc: "Append this path to the folder set by the frontmatter key.",
-	linksConversion: "Link's conversion",
+	textConversion: "Text conversion",
+	linksConversion: "Links",
 	folderNote: "Folder note",
 	folderNoteDesc: "Rename files with the same name as their parent folder (or category) \"index.md\"",
 	internalsLinks: "Internals Links",
@@ -71,6 +72,8 @@ export default {
 	baselinkDesc: "Create the clipboard link with this base. By default : https://username.github.io/repo/",
 	linkpathremover: "Remove link part",
 	linkpathremoverDesc: "Remove this part from the created links. Separate by comma if multiple value must be removed.",
+	hardBreakTitle: "Markdown hard line break",
+	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line. It will also convert '\\' to newline ('\n').",
 
 	//notice
 	unablePublishNote: (fileInfo: string): string => `Unable to publish note ${fileInfo}，skipping it`,

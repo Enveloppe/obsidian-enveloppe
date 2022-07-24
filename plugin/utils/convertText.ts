@@ -3,6 +3,14 @@ import {MetadataCache, TFile, Notice, Vault} from "obsidian";
 import {createRelativePath} from "./filePathConvertor";
 import { getAPI } from "obsidian-dataview";
 
+function addHardLineBreak(text: string, settings: MkdocsPublicationSettings) {
+	text = text.replace(/^\s\\\s*$/gmi, '<br/>');
+	if (settings.hardBreak) {
+		text = text.replace(/\n/gm, '  \n');
+	}
+	return text;
+}
+
 async function convertDataviewQueries(text: string, path: string): Promise<string> {
 	/* Credit : Ole Eskild Steensen from Obsidian Digital Garden */
 	let replacedText = text;
@@ -96,4 +104,4 @@ function creatorAltLink(altMatch: RegExpMatchArray, altCreator: string[], fileEx
 }
 
 
-export {convertWikilinks, convertLinkCitation, creatorAltLink, convertDataviewQueries};
+export {convertWikilinks, convertLinkCitation, creatorAltLink, convertDataviewQueries, addHardLineBreak};

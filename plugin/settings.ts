@@ -21,6 +21,11 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 	display(): void {
 		const {containerEl} = this
 		containerEl.empty();
+
+		/* ------------------------ * 
+		* 	Github configuration	*
+	   	* ------------------------- */
+
 		containerEl.createEl('h1', {text: t('githubConfiguration') as string})
 		new Setting(containerEl)
 			.setName(t('repoName') as string)
@@ -67,9 +72,9 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					})
 			)
 
-		/* ------------------------------
-		* Github Workflow & upload
-		*  ------------------------------ */
+		/* ------------------------------- *
+		 * 	Github Workflow & upload  	   *
+		 * ------------------------------- */
 		
 		containerEl.createEl('h2', {text: t('uploadConfig') as string})
 		
@@ -157,8 +162,28 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
+			/*
+			* ----------------------------- *
+		   	*	      Texts conversion      *
+			*  ---------------------------- * 
+		   */
 
-		containerEl.createEl('h3', {text: t('linksConversion') as string})
+		containerEl.createEl('h3', {text: t('textConversion') as string})
+
+		new Setting(this.containerEl)
+			.setName(t('hardBreakTitle') as string)
+			.setDesc(t('hardBreakDesc') as string)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.hardBreak)
+					.onChange(async (value) => {
+						this.plugin.settings.hardBreak = value;
+						await this.plugin.saveSettings();
+					});
+			}
+		)
+
+		containerEl.createEl('h4', {text: t('linksConversion') as string})
 
 		const folderNoteSettings = new Setting(containerEl)
 			.setName(t('folderNote') as string)
@@ -196,7 +221,15 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					})
 			})
 
+		/*
+			* ----------------------------- *
+			*	      	Embed               *
+			*  ---------------------------- * 
+		   */
+		
 		containerEl.createEl('h3', {text: t('embed') as string})
+
+
 		new Setting(containerEl)
 			.setName(t('transferImage') as string)
 			.setDesc(t('transferImageDesc') as string)

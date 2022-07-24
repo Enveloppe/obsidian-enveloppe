@@ -36,6 +36,7 @@ export default {
 	frontmatterKeyPlaceholder: "category",
 	rootFolder: "根文件夹",
 	rootFolderDesc: "将此路径追加到文件夹前",
+	textConversion: "Text conversion",
 	linksConversion: "链接转换",
 	folderNote: "Folder note",
 	folderNoteDesc: "重命名文件为其父文件夹名(或category名) \"index.md\"",
@@ -71,6 +72,8 @@ export default {
 	baselinkDesc: "以此为基础创建剪贴板链接。默认情况下 : https://username.github.io/repo/",
 	linkpathremover: "删除链接部分",
 	linkpathremoverDesc: "从创建的链接中删除这部分。如果必须删除多个值，请用逗号分开。",
+	hardBreakTitle: "Markdown hard line break",
+	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line. It will also convert '\\' to newline ('\n').",
 	//notice
 	unablePublishNote: (fileInfo: string): string => { return `不能上传文件${fileInfo}，已跳过` },
 	errorPublish: (repoInfo: string): string => `上传至${repoInfo}错误！`,

@@ -35,7 +35,8 @@ export default {
 	frontmatterKeyPlaceholder: "catégorie",
 	rootFolder: "Dossier racine",
 	rootFolderDesc: "Ajoutez ce chemin au dossier défini par la clé de métadonnées.",
-	linksConversion: "Conversion des liens",
+	textConversion: "Convertion du texte",
+	linksConversion: "Liens",
 	folderNote: "Note de dossier",
 	folderNoteDesc: "Renommer les fichiers portant le même nom que leur dossier (ou catégorie) parent \"index.md\".",
 	internalsLinks: "Liens internes",
@@ -70,6 +71,8 @@ export default {
 	baselinkDesc: "Créer le lien du presse-papiers avec cette base. Par défaut : https://username.github.io/repo/",
 	linkpathremover: "Retirer une partie du lien",
 	linkpathremoverDesc: "Supprimer cette partie des liens créés. Séparer par une virgule si plusieurs valeurs doivent être supprimées.",
+	hardBreakTitle: "Saut de ligne strict",
+	hardBreakDesc: "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne. Il convertit également '\\' en nouvelle ligne ('\n').",
 	//notice
 	unablePublishNote: (fileInfo: string): string => `Impossible de publier la note ${fileInfo}, ignorée.`,
 	errorPublish: (repoInfo: string): string => `Erreur lors de la publication sur ${repoInfo}.`,

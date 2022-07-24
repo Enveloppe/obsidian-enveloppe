@@ -14,7 +14,8 @@ import {deleteFromGithub} from "./delete"
 import {
 	convertDataviewQueries,
 	convertLinkCitation,
-	convertWikilinks
+	convertWikilinks,
+	addHardLineBreak
 } from "../utils/convertText";
 
 import {
@@ -106,6 +107,7 @@ export default class MkdocsPublish {
 			const embedFiles = shareFiles.getEmbed(file);
 			const linkedFiles = shareFiles.getLinkedImageAndFiles(file);
 			text = await convertDataviewQueries(text, file.path);
+			text = addHardLineBreak(text, settings);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault);
 			text = convertWikilinks(text, this.settings, linkedFiles);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
