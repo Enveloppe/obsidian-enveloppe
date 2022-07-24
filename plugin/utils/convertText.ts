@@ -6,7 +6,7 @@ import { noticeLog } from "./utils";
 
 function addHardLineBreak(text: string, settings: MkdocsPublicationSettings) {
 	try {
-		text = text.replace(/^\s\\\s*$/gmi, '<br/>');
+		text = text.replace(/^\s*\\\s*$/gmi, '<br/>');
 		if (settings.hardBreak) {
 			text = text.replace(/\n/gm, '  \n');
 		}

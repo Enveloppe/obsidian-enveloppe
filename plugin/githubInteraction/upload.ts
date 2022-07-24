@@ -107,8 +107,8 @@ export default class MkdocsPublish {
 			fileHistory.push(file)
 			const embedFiles = shareFiles.getEmbed(file);
 			const linkedFiles = shareFiles.getLinkedImageAndFiles(file);
-			text = await convertDataviewQueries(text, file.path);
-			text = addHardLineBreak(text, settings);
+			text = await convertDataviewQueries(text, file.path, this.settings);
+			text = addHardLineBreak(text, this.settings);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault);
 			text = convertWikilinks(text, this.settings, linkedFiles);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
@@ -120,7 +120,7 @@ export default class MkdocsPublish {
 			}
 			return true;
 		} catch (e) {
-			console.error(e);
+			noticeLog(e, this.settings);
 			return false;
 		}
 	}
