@@ -73,7 +73,7 @@ export default {
 	linkpathremover: "删除链接部分",
 	linkpathremoverDesc: "从创建的链接中删除这部分。如果必须删除多个值，请用逗号分开。",
 	hardBreakTitle: "Markdown hard line break",
-	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line. It will also convert '\\' to newline ('\n').",
+	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line. It will also convert '\\' to newline ('<br/>').",
 	//notice
 	unablePublishNote: (fileInfo: string): string => { return `不能上传文件${fileInfo}，已跳过` },
 	errorPublish: (repoInfo: string): string => `上传至${repoInfo}错误！`,

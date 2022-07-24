@@ -66,14 +66,14 @@ export default {
 	fileMenuDesc: "Add an sharing commands in the file menu",
 	editorMenu: "Editor Menu",
 	editorMenuDesc: "Add a sharing commands in the right-click menu",
-	copylinkSetting: "Copy link setting",
+	copylinkSetting: "Copy link",
 	copylinkDesc: "Send a link to your note in your clipboard",
 	baselink: "Blog link",
 	baselinkDesc: "Create the clipboard link with this base. By default : https://username.github.io/repo/",
 	linkpathremover: "Remove link part",
 	linkpathremoverDesc: "Remove this part from the created links. Separate by comma if multiple value must be removed.",
 	hardBreakTitle: "Markdown hard line break",
-	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line. It will also convert '\\' to newline ('\n').",
+	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line. It will also convert '\\' to newline ('<br/>').",
 
 	//notice
 	unablePublishNote: (fileInfo: string): string => `Unable to publish note ${fileInfo}，skipping it`,
