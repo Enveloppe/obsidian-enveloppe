@@ -2,16 +2,23 @@ import {MkdocsPublicationSettings} from "../settings/interface";
 import {MetadataCache, TFile, Notice, Vault} from "obsidian";
 import {createRelativePath} from "./filePathConvertor";
 import { getAPI } from "obsidian-dataview";
+import { noticeLog } from "./utils";
 
 function addHardLineBreak(text: string, settings: MkdocsPublicationSettings) {
-	text = text.replace(/^\s\\\s*$/gmi, '<br/>');
-	if (settings.hardBreak) {
-		text = text.replace(/\n/gm, '  \n');
+	try {
+		text = text.replace(/^\s\\\s*$/gmi, '<br/>');
+		if (settings.hardBreak) {
+			text = text.replace(/\n/gm, '  \n');
+		}
+		return text;
 	}
-	return text;
+	catch (e) {
+		noticeLog(e, settings);
+		return text;
+	}
 }
 
-async function convertDataviewQueries(text: string, path: string): Promise<string> {
+async function convertDataviewQueries(text: string, path: string, settings: MkdocsPublicationSettings): Promise<string> {
 	/* Credit : Ole Eskild Steensen from Obsidian Digital Garden */
 	let replacedText = text;
 	const dataviewRegex = /```dataview(.+?)```/gsm;
@@ -26,7 +33,7 @@ async function convertDataviewQueries(text: string, path: string): Promise<strin
 			replacedText = replacedText.replace(block, md);
 
 		} catch (e) {
-			console.log(e);
+			noticeLog(e, settings);
 			new Notice('Unable to render dataview query. Please update the dataview plugin to the last version.')
 			return queryBlock[0];
 		}

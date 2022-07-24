@@ -5,6 +5,20 @@ import t from '../i18n'
 import type { StringFunc } from "../i18n";
 import {getReceiptFolder} from "./filePathConvertor";
 
+function noticeLog(message: string, settings: MkdocsPublicationSettings) {
+	/**
+	 * Create a notice message for the log
+	 * @param message: string
+	 * @param settings: MkdocsPublicationSettings
+	 * @returns null
+	 */
+	if (settings.logNotice) {
+		new Notice(message);
+	} else {
+		console.log(message);
+	}
+}
+
 function disablePublish (app: App, settings: MkdocsPublicationSettings, file:TFile) {
 	/**
 	 * Disable publishing if the file hasn't a valid frontmatter or if the file is in the folder list to ignore
@@ -122,5 +136,6 @@ export {
 	disablePublish,
 	noticeMessage,
 	trimObject,
-	createLink
+	createLink,
+	noticeLog
 }

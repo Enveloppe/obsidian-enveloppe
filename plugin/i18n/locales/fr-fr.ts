@@ -73,6 +73,9 @@ export default {
 	linkpathremoverDesc: "Supprimer cette partie des liens créés. Séparer par une virgule si plusieurs valeurs doivent être supprimées.",
 	hardBreakTitle: "Saut de ligne strict",
 	hardBreakDesc: "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne. Il convertit également '\\' en nouvelle ligne ('<br/>').",
+	logNoticeHeader: 'Notifier toutes les erreurs',
+	logNoticeDesc: 'Sur mobile, il peut être difficile de debug le module. Activer cette option pour notifier toutes les erreurs.',
+
 	//notice
 	unablePublishNote: (fileInfo: string): string => `Impossible de publier la note ${fileInfo}, ignorée.`,
 	errorPublish: (repoInfo: string): string => `Erreur lors de la publication sur ${repoInfo}.`,

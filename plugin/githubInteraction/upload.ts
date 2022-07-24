@@ -23,6 +23,7 @@ import {
 } from "../utils/filePathConvertor";
 import {ShareStatusBar} from "../utils/status_bar";
 import MkdocsPublication from "../main";
+import { noticeLog } from "plugin/utils/utils";
 
 export default class MkdocsPublish {
 	vault: Vault;
@@ -111,7 +112,7 @@ export default class MkdocsPublish {
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault);
 			text = convertWikilinks(text, this.settings, linkedFiles);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
-			console.log(`Upload ${file.name}:${path} on ${this.settings.githubName}/${this.settings.githubRepo}:${ref}`);
+			noticeLog(`Upload ${file.name}:${path} on ${this.settings.githubName}/${this.settings.githubRepo}:${ref}`, this.settings);
 			await this.uploadText(file.path, text, path, file.name, ref);
 			await this.statusBarForEmbed(embedFiles, fileHistory, ref, deepScan);
 			if (autoclean) {

@@ -403,7 +403,18 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			})
-
+		new Setting(containerEl)
+			.setName(t('logNoticeHeader') as string)
+			.setDesc(t('logNoticeDesc') as string)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.logNotice)
+					.onChange(async (value) => {
+						this.plugin.settings.logNotice = value;
+						await this.plugin.saveSettings();
+					})
+		)
+		
 
 		autoCleanUpSettingsOnCondition(condition, autoCleanSetting, this.plugin);
 		this.plugin.settings.downloadedFolder === folderSettings.fixed ? hideSettings(folderNoteSettings):showSettings(folderNoteSettings)

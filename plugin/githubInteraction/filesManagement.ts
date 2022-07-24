@@ -6,6 +6,7 @@ import {Octokit} from "@octokit/core";
 import {getImageLinkOptions, getReceiptFolder} from "../utils/filePathConvertor";
 import MkdocsPublish from "./upload";
 import MkdocsPublication from "../main";
+import { noticeLog } from "plugin/utils/utils";
 
 export class FilesManagement extends MkdocsPublish {
 	vault: Vault;
@@ -128,8 +129,8 @@ export class FilesManagement extends MkdocsPublish {
 						}
 					}
 				} catch (e) {
-					console.log(e)
-					console.log("Error with this links : " + embedCache.link);
+					noticeLog(e, this.settings)
+					noticeLog("Error with this links : " + embedCache.link, this.settings);
 				}
 			}
 			return embedList;
@@ -161,8 +162,8 @@ export class FilesManagement extends MkdocsPublish {
 						}
 					}
 				} catch (e) {
-					console.log(e)
-					console.log("Error with this file : " + embed.displayText);
+					noticeLog(e, this.settings)
+					noticeLog("Error with this file : " + embed.displayText, this.settings);
 				}
 			}
 			return imageList;
@@ -225,7 +226,7 @@ export class FilesManagement extends MkdocsPublish {
 				}
 			}
 		} catch (e) {
-			console.log(e)
+			noticeLog(e, settings)
 		}
 		return filesInRepo;
 	}
@@ -254,7 +255,7 @@ export class FilesManagement extends MkdocsPublish {
 				if (fileInVault && (fileInVault instanceof TFile) && (fileInVault.extension === 'md')) {
 					const vaultEditedTime = new Date(fileInVault.stat.mtime);
 					if (vaultEditedTime > repoEditedTime) {
-						console.log('edited file ', fileInVault.path, ' / ', vaultEditedTime, ' vs ', repoEditedTime)
+						noticeLog(`edited file : ${fileInVault.path} / ${vaultEditedTime} vs ${repoEditedTime}`, this.settings);
 						newFiles.push(fileInVault);
 					}
 				}

@@ -74,6 +74,8 @@ export default {
 	linkpathremoverDesc: "Remove this part from the created links. Separate by comma if multiple value must be removed.",
 	hardBreakTitle: "Markdown hard line break",
 	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line. It will also convert '\\' to newline ('<br/>').",
+	logNoticeHeader: 'Notice every error',
+	logNoticeDesc: 'On mobile, it can be hard to debug the plugin. Enable this option to log every error in a Notice.',
 
 	//notice
 	unablePublishNote: (fileInfo: string): string => `Unable to publish note ${fileInfo}，skipping it`,

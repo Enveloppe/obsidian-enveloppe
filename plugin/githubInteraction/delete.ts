@@ -3,7 +3,7 @@ import { Notice } from "obsidian";
 import {folderSettings, MkdocsPublicationSettings} from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
 import {Base64} from "js-base64";
-import {trimObject} from "../utils/utils";
+import {noticeLog, trimObject} from "../utils/utils";
 
 export async function deleteFromGithub(silent = false, settings: MkdocsPublicationSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement) {
 	/**
@@ -48,7 +48,7 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 			const checkingIndex = file.file.contains('index') ? await checkIndexFiles(octokit, settings, file.file):false;
 			try {
 				if (!checkingIndex) {
-					console.log('trying to delete file : ' + file.file);
+					noticeLog('trying to delete file : ' + file.file, settings);
 					const reponse = await octokit.request(
 						"DELETE" + " /repos/{owner}/{repo}/contents/{path}",
 						{
@@ -67,7 +67,7 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 					}
 				}
 			} catch (e) {
-				console.error(e);
+				noticeLog(e, settings);
 			}
 		}
 	}
@@ -187,7 +187,7 @@ async function checkIndexFiles(octokit: Octokit, settings: MkdocsPublicationSett
 			return fileFrontmatter.index === "true" || fileFrontmatter.autoclean === "false" || !fileFrontmatter.share ;
 		}
 	} catch (e) {
-		console.log(e);
+		noticeLog(e, settings);
 		return false;
 	}
 }
