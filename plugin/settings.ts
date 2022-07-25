@@ -405,7 +405,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						this.plugin.settings.logNotice = value;
 						await this.plugin.saveSettings();
 					})
-		)
+			)
 		
 
 		autoCleanUpSettingsOnCondition(condition, autoCleanSetting, this.plugin);
