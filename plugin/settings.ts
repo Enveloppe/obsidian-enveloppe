@@ -22,9 +22,9 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 		const {containerEl} = this
 		containerEl.empty();
 
-		/* ------------------------ * 
-		* 	Github configuration	*
-	   	* ------------------------- */
+		/* ------------------------------ *
+		 * 			Github Config		  *
+		 * ------------------------------ */
 
 		containerEl.createEl('h1', {text: t('githubConfiguration') as string})
 		new Setting(containerEl)
@@ -72,10 +72,9 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					})
 			)
 
-		/* ------------------------------- *
-		 * 	Github Workflow & upload  	   *
-		 * ------------------------------- */
-		
+		/* ------------------------------ *
+		 * 			Upload config		  *
+		 * ------------------------------ */
 		containerEl.createEl('h2', {text: t('uploadConfig') as string})
 		
 		containerEl.createEl('h3', {text: t('pathSetting') as string})
@@ -123,7 +122,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 		
 		const subFolderSettings = new Setting(this.containerEl)
 			.setName(t('pathRemoving') as string)
-			.setClass('mdkocs-settings-tab')
+			.setClass('obs-git-publisher')
 			.setDesc(t('pathRemovingDesc') as string)
 			.addText((text) => {
 				text
@@ -137,7 +136,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 
 		const frontmatterKeySettings = new Setting(this.containerEl)
 			.setName(t('frontmatterKey') as string)
-			.setClass('mdkocs-settings-tab')
+			.setClass('obs-git-publisher')
 			.setDesc(t('frontmatterKeyDesc') as string)
 			.addText((text) => {
 				text
@@ -150,7 +149,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			});
 		const rootFolderSettings = new Setting(this.containerEl)
 			.setName(t('rootFolder') as string)
-			.setClass('mdkocs-settings-tab')
+			.setClass('obs-git-publisher')
 			.setDesc(t('rootFolderDesc') as string)
 			.addText((text)=>{
 				text
@@ -162,14 +161,13 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-			/*
-			* ----------------------------- *
-		   	*	      Texts conversion      *
-			*  ---------------------------- * 
-		   */
+
+		/* ------------------------------ *
+		 * 		  Text conversion		  *
+		 * ------------------------------ */
 
 		containerEl.createEl('h3', {text: t('textConversion') as string})
-
+		containerEl.createEl('h5', {text: t('textHeader') as string})
 		new Setting(this.containerEl)
 			.setName(t('hardBreakTitle') as string)
 			.setDesc(t('hardBreakDesc') as string)
@@ -180,14 +178,11 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						this.plugin.settings.hardBreak = value;
 						await this.plugin.saveSettings();
 					});
-			}
-		)
-
-		containerEl.createEl('h4', {text: t('linksConversion') as string})
-
+			});
+		containerEl.createEl('h5', {text: t('linkHeader') as string})
 		const folderNoteSettings = new Setting(containerEl)
 			.setName(t('folderNote') as string)
-			.setClass('mdkocs-settings-tab')
+			.setClass('obs-git-publisher')
 			.setDesc(t('folderNoteDesc') as string)
 			.addToggle((toggle) => {
 				toggle
@@ -221,12 +216,9 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					})
 			})
 
-		/*
-			* ----------------------------- *
-			*	      	Embed               *
-			*  ---------------------------- * 
-		   */
-		
+		/* ------------------------------ *
+		 * 				Embed			  *
+		 * ------------------------------ */
 		containerEl.createEl('h3', {text: t('embed') as string})
 
 
@@ -313,9 +305,9 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					});
 			});
 
-		/* ------------------------------
-		* Plugin settings
-		*  ------------------------------ */
+		/* ------------------------------ *
+		 * 		Plugin settings			  *
+		 * ------------------------------ */
 		containerEl.createEl('h1', { text: t('pluginSettings') as string })
 		
 		new Setting(containerEl)
@@ -380,7 +372,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 		const baseLinkSettings = new Setting(containerEl)
 			.setName(t('baselink') as string)
 			.setDesc(t("baselinkDesc") as string)
-			.setClass('mdkocs-settings-tab')
+			.setClass('obs-git-publisher')
 			.addText((text) =>{
 				text
 					.setPlaceholder('my_blog.com')
@@ -393,7 +385,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 		const pathRemover=new Setting(containerEl)
 			.setName(t("linkpathremover") as string)
 			.setDesc(t("linkpathremoverDesc") as string)
-			.setClass('mdkocs-settings-tab')
+			.setClass('obs-git-publisher')
 			.addText((text)=>{
 				text
 					.setPlaceholder('docs/')

@@ -1,5 +1,7 @@
 export default {
-	//command
+	/* ------------ *
+	 *	 Commands   *
+	 * ------------ */
 	shareActiveFile: "Share active file",
 	publisherDeleteClean: "Remove unshared and deleted file in repository",
 	uploadAllNotes: "Upload all shared notes",
@@ -8,7 +10,9 @@ export default {
 	uploadAllEditedNote: "Upload all edited note since last upload",
 	shareViewFiles:(viewFile:string): string => `Share "${viewFile}" with Mkdocs Publisher`,
 
-	//setting tabs
+	/* ------------ *
+	 *	 Settings   *
+	 * ------------ */
 	githubConfiguration: "Github Configuration",
 	repoName: "Repo Name",
 	repoNameDesc: "The name of the repository where you store your blog.",
@@ -16,8 +20,11 @@ export default {
 	githubUsername: "Github Username",
 	githubUsernameDesc: "Your github username.",
 	ghTokenDesc: "A github token with repository permission. You can generate it ",
-	here: "here",
+	here: "here.",
 	githubToken: "Github Token",
+
+	// ---
+	// # Upload configuration # //
 	uploadConfig: "Upload configuration",
 	pathSetting: "Path settings",
 	folderBehavior: "Folder behavior",
@@ -36,14 +43,23 @@ export default {
 	frontmatterKeyPlaceholder: "category",
 	rootFolder: "Root folder",
 	rootFolderDesc: "Append this path to the folder set by the frontmatter key.",
+
+	// ---
+	// # Text conversion # //
 	textConversion: "Text conversion",
-	linksConversion: "Links",
+	textHeader: "Text",
+	linkHeader: "Links",
 	folderNote: "Folder note",
-	folderNoteDesc: "Rename files with the same name as their parent folder (or category) \"index.md\"",
+	folderNoteDesc: "Rename files to \"index.md\" if it has the same name as their parent folder/category (also works if the note is out of the folder).",
 	internalsLinks: "Internals Links",
 	internalsLinksDesc: "Convert the internal link in shared file to match the folder settings",
 	wikilinks: "Wikilinks",
 	wikilinksDesc: "Convert Wikilinks to MDlinks, without changing the contents",
+	hardBreakTitle: "Markdown hard line break",
+	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line.",
+
+	// ---
+	// # Embed # //
 	embed: "Embed",
 	transferImage: "Transfer image",
 	transferImageDesc: "Send image embedded in a file to github",
@@ -51,12 +67,18 @@ export default {
 	transferEmbeddedNotesDesc: "Send embedded notes in a shared file to github. Only shared files will be send!",
 	defaultImageFolder: "Default image folder",
 	defaultImageFolderDesc: "To use a folder different from default",
+
+	// ---
+	// # Github Workflow # //
 	githubActionName: "Github action name",
 	githubActionNameDesc: "If you want to activate a github action when the plugin push the file, set the name of the file (in your .github/worfklows folder).",
 	autoCleanUp: "Auto clean up",
 	autoCleanUpDesc: "If the plugin must remove from github the removed files (stop share or deleted)",
 	excludedFiles: "Excluded files",
 	excludedFilesDesc: "If you want to exclude some folder from the auto clean up, set their path.",
+
+	// ---
+	// # Plugin settings # //
 	pluginSettings: "Plugin Settings",
 	shareKey: "Share Key",
 	shareKeyDesc: "The frontmatter key to publish your file on the website.",
@@ -72,12 +94,12 @@ export default {
 	baselinkDesc: "Create the clipboard link with this base. By default : https://username.github.io/repo/",
 	linkpathremover: "Remove link part",
 	linkpathremoverDesc: "Remove this part from the created links. Separate by comma if multiple value must be removed.",
-	hardBreakTitle: "Markdown hard line break",
-	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line.",
 	logNoticeHeader: 'Notice every error',
 	logNoticeDesc: 'On mobile, it can be hard to debug the plugin. Enable this option to log every error in a Notice.',
 
-	//notice
+	/* ------------ *
+	 *	 Notice   *
+	 * ------------ */
 	unablePublishNote: (fileInfo: string): string => `Unable to publish note ${fileInfo}，skipping it`,
 	errorPublish: (repoInfo: string): string => `Error publishing to ${repoInfo}.`,
 	unablePublishMultiNotes: "Unable to publish multiple notes, something went wrong.",

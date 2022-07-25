@@ -1,5 +1,7 @@
 export default {
-	//command
+	/* ------------ *
+	 *	 Commands   *
+	 * ------------ */
 	shareActiveFile: "上传当前文件",
 	publisherDeleteClean: "云端移除本地未分享和已删除的文件",
 	uploadAllNotes: "上传所有分享的文件",
@@ -8,7 +10,9 @@ export default {
 	uploadAllEditedNote: "更新所有已编辑的文件",
 	shareViewFiles:(viewFile:string): string => `用Mkdocs Publisher共享"${viewFile}"。`,
 
-	//setting tabs
+	/* ------------ *
+	 *	 Settings   *
+	 * ------------ */
 	githubConfiguration: "Github设置",
 	repoName: "仓库名",
 	repoNameDesc: "你博客所在的github仓库名",
@@ -18,6 +22,9 @@ export default {
 	ghTokenDesc: "github仓库的操作需要github token给予权限，你可以在",
 	here: "这里生成",
 	githubToken: "Github Token",
+
+	// ---
+	// # Upload configuration # //
 	uploadConfig: "上传设置",
 	pathSetting: "路径设置",
 	folderBehavior: "文件夹操作",
@@ -36,14 +43,23 @@ export default {
 	frontmatterKeyPlaceholder: "category",
 	rootFolder: "根文件夹",
 	rootFolderDesc: "将此路径追加到文件夹前",
-	textConversion: "Text conversion",
-	linksConversion: "链接转换",
+
+	// ---
+	// # Text conversion # //
+	textConversion: "文本转换",
+	textHeader: "文本",
+	linkHeader: "链接",
 	folderNote: "Folder note",
 	folderNoteDesc: "重命名文件为其父文件夹名(或category名) \"index.md\"",
 	internalsLinks: "内部链接",
 	internalsLinksDesc: "转换发布文件中的内部链接",
 	wikilinks: "Wikilinks",
 	wikilinksDesc: "转换wiki link为md link，不改变文件内容",
+	hardBreakTitle: "马克顿的硬断行",
+	hardBreakDesc: "在每一行之后添加一个标记性的硬断行（双倍空白）。",
+
+	// ---
+	// # Embed # //
 	embed: "嵌入",
 	transferImage: "转换图片",
 	transferImageDesc: "发送文件中插入的图片至github",
@@ -51,12 +67,18 @@ export default {
 	transferEmbeddedNotesDesc: "发布文件中嵌入的文件至github.该嵌入文件需要允许被发布",
 	defaultImageFolder: "默认图片文件夹",
 	defaultImageFolderDesc: "使用与默认文档夹不同的文档夹",
+
+	// ---
+	// # Github Workflow # //
 	githubActionName: "Github action名",
 	githubActionNameDesc: "如果要在插件推送文档时激活 github action，请设置对应的action名称（在 .github/worfklows 文档夹中）。",
 	autoCleanUp: "自动清理",
 	autoCleanUpDesc: "如果插件必须从github中删除本地已删除的文档（停止共享或删除）",
 	excludedFiles: "排除文件",
 	excludedFilesDesc: "如果要从自动清理中排除某些文档夹，请设置其路径。",
+
+	// ---
+	// # Plugin settings # //
 	pluginSettings: "插件设置",
 	shareKey: "分享键",
 	shareKeyDesc: "在网站上发布文档的frontmatter的键",
@@ -72,11 +94,12 @@ export default {
 	baselinkDesc: "以此为基础创建剪贴板链接。默认情况下 : https://username.github.io/repo/",
 	linkpathremover: "删除链接部分",
 	linkpathremoverDesc: "从创建的链接中删除这部分。如果必须删除多个值，请用逗号分开。",
-	hardBreakTitle: "马克顿的硬断行",
-	hardBreakDesc: "在每一行之后添加一个标记性的硬断行（双倍空白）。",
 	logNoticeHeader: '注意每一个错误',
 	logNoticeDesc: '在移动设备上，调试模块可能很困难。启用该选项可以通过Obsidian通知来通知所有错误。',
-	//notice
+
+	/* ------------ *
+	 *	 Notice   *
+	 * ------------ */
 	unablePublishNote: (fileInfo: string): string => { return `不能上传文件${fileInfo}，已跳过` },
 	errorPublish: (repoInfo: string): string => `上传至${repoInfo}错误！`,
 	unablePublishMultiNotes: "不能上传多个文件，出了点问题",

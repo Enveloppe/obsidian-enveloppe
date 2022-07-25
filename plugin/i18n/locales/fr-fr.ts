@@ -1,5 +1,7 @@
 export default {
-	//command
+	/* ------------ *
+	 *	 Commands   *
+	 * ------------ */
 	shareActiveFile: "Partager le fichier actif",
 	publisherDeleteClean: "Suppression des fichiers non partagés et/ou supprimé du dépôt ",
 	uploadAllNotes: "Publier toutes les notes partagées",
@@ -7,7 +9,11 @@ export default {
 	uploadAllNewEditedNote: "Publier toutes les notes nouvelles et modifiées depuis le dernier envoi.",
 	uploadAllEditedNote: "Publier toutes les notes éditées depuis le dernier envoie",
 	shareViewFiles:(viewFile:string): string => `Partager "${viewFile}" avec Mkdocs Publisher`,
-	//setting tabs
+
+	/* ------------ *
+	 *	 Settings   *
+	 * ------------ */
+
 	githubConfiguration: "Configuration GitHub",
 	repoName: "Nom du dépôt",
 	repoNameDesc: "Le nom du dépôt dans lequel vous enregistrez votre blog",
@@ -15,9 +21,13 @@ export default {
 	githubUsername: "Nom d'utilisateur GitHub",
 	githubUsernameDesc: "Votre nom d'utilisateur GitHub",
 	ghTokenDesc: "Un token GitHub avec autorisation de dépôt. Vous pouvez le générer ",
-	here: "ici",
+	here: "ici.",
 	githubToken: "Token GitHub",
-	uploadConfig: "Configuration d'envoie",
+
+	// ---
+	// # Upload configuration # //
+
+	uploadConfig: "Configuration d'upload", //désolée du franglais ici mais je trouve pas de traduction propre
 	pathSetting: "Paramètres du chemin d'accès",
 	folderBehavior: "Comportement du dossier",
 	folderBehaviorDesc: "Choisissez entre un dossier fixe, la valeur d'une clé de métadonnée ou votre chemin relatif dans Obsidian.",
@@ -35,14 +45,24 @@ export default {
 	frontmatterKeyPlaceholder: "catégorie",
 	rootFolder: "Dossier racine",
 	rootFolderDesc: "Ajoutez ce chemin au dossier défini par la clé de métadonnées.",
+
+	// ---
+	// # Text conversions # //
 	textConversion: "Conversion du texte",
-	linksConversion: "Liens",
-	folderNote: "Note de dossier",
-	folderNoteDesc: "Renommer les fichiers portant le même nom que leur dossier (ou catégorie) parent \"index.md\".",
+	textHeader: "Texte",
+	linkHeader: "Liens",
+	folderNote: "Folder Note",
+	folderNoteDesc: "Renommer les fichiers en \"index.md\" s'il porte le même nom que leur dossier/catégorie parent (fonctionne aussi si la note est à l'extérieur du dossier).",
 	internalsLinks: "Liens internes",
 	internalsLinksDesc: "Convertir le lien interne dans le fichier partagé pour qu'il corresponde aux paramètres du dossier",
 	wikilinks: "Wikilinks",
 	wikilinksDesc: "Convertir les liens Wikilinks en liens markdown, sans en modifier le contenu",
+	hardBreakTitle: "Saut de ligne strict",
+	hardBreakDesc: "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne.",
+
+	// ---
+	// # Embed # //
+
 	embed: "Transclusion",
 	transferImage: "Transférer les images",
 	transferImageDesc: "Envoyer les images intégrées dans un fichier dans le dépôt.",
@@ -50,12 +70,19 @@ export default {
 	transferEmbeddedNotesDesc: "Envoyez des notes transcluent dans un fichier partagé dans le dépôt. Seuls les fichiers partagés seront envoyés !",
 	defaultImageFolder: "Dossier d'images par défaut",
 	defaultImageFolderDesc: "Pour utiliser un dossier différent de celui par défaut pour les images",
+
+	// ---
+	// # Github Workflow # //
+
 	githubActionName: "Nom de l'action GitHub",
-	githubActionNameDesc: "Si vous souhaitez activer une action github lorsque le plugin pousse le fichier, indiquez le nom du fichier (dans votre dossier .github/worfklows).",
+	githubActionNameDesc: "Si vous souhaitez activer une action github lorsque le plugin pousse le fichier, indiquez le nom du fichier (dans votre dossier \".github/worfklows\").",
 	autoCleanUp: "Auto-nettoyage",
 	autoCleanUpDesc: "Si le plugin doit retirer de votre dépôt les fichiers supprimés (arrêt de partage ou supprimé)",
 	excludedFiles: "Fichier exclus",
 	excludedFilesDesc: "Si vous voulez exclure certains dossiers du nettoyage automatique, définissez leur chemin.",
+
+	// ---
+	// # Plugin settings # //
 	pluginSettings: "Paramètres du plugin",
 	shareKey: "Clé de partage",
 	shareKeyDesc: "La clé de métadonnées pour publier votre fichier sur le dépôt.",
@@ -71,12 +98,13 @@ export default {
 	baselinkDesc: "Créer le lien du presse-papiers avec cette base. Par défaut : https://username.github.io/repo/",
 	linkpathremover: "Retirer une partie du lien",
 	linkpathremoverDesc: "Supprimer cette partie des liens créés. Séparer par une virgule si plusieurs valeurs doivent être supprimées.",
-	hardBreakTitle: "Saut de ligne strict",
-	hardBreakDesc: "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne.",
 	logNoticeHeader: 'Notifier toutes les erreurs',
 	logNoticeDesc: 'Sur mobile, il peut être difficile de debug le module. Activer cette option pour notifier toutes les erreurs via une notification Obsidian.',
 
-	//notice
+	/* ------------ *
+	 *	 Notice   *
+	 * ------------ */
+
 	unablePublishNote: (fileInfo: string): string => `Impossible de publier la note ${fileInfo}, ignorée.`,
 	errorPublish: (repoInfo: string): string => `Erreur lors de la publication sur ${repoInfo}.`,
 	unablePublishMultiNotes: "Impossible de publier plusieurs notes, quelque chose s'est mal passé.",
