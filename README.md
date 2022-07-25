@@ -3,6 +3,31 @@ share: true
 ---
 
 [FR 🇫🇷](https://github.com/obsidianPublisher/obsidian-github-publisher/blob/master/docs/README_FR.md)
+<!-- TOC -->
+
+- [What the plugin do](#what-the-plugin-do)
+- [Configuration](#configuration)
+    - [➡️ Configuration example](#-configuration-example)
+    - [GitHub](#github)
+    - [Download configuration](#download-configuration)
+        - [Folder reception settings.](#folder-reception-settings)
+            - [Metadata frontmatter](#metadata-frontmatter)
+            - [Fixed folder](#fixed-folder)
+            - [Obsidian Path](#obsidian-path)
+        - [Workflow](#workflow)
+            - [Auto clean-up](#auto-clean-up)
+        - [Links' conversion](#links-conversion)
+            - [Index & folder note](#index--folder-note)
+            - [Internal links](#internal-links)
+            - [Wikilinks to markdown link](#wikilinks-to-markdown-link)
+        - [Embed](#embed)
+    - [Plugin settings](#plugin-settings)
+- [🤖 Developping](#-developping)
+    - [General](#general)
+    - [Translation](#translation)
+
+<!-- /TOC -->
+
 
 GitHub Publisher is a plugin that help you to send file in a configured GitHub Repository, based on a front matter entry state. 
 
@@ -32,14 +57,21 @@ But the plugin can do a lot more !
 
 To use the plugin, you need to fill the correct information to allow the workflow. 
 
-## 1. GitHub 
+## ➡️ Configuration example
+
+You will find [here](https://obsidianpublisher.github.io/obsidian-mkdocs-publisher-docs/Obsidian%20Github%20Publisher/Configuration%20example/) configuration example for some Obsidian Publish alternative, as Obsidian Mkdocs Publisher and [TuanManhCao Digital Garden](https://github.com/TuanManhCao/digital-garden).
+
+> [!note] Adding configuration
+> You can send me or do a pullrequest to add new configuration for any Obsidian **free** publish alternative. 
+
+## GitHub 
 
 - Repo name: The repository where the files will be sent.
 - GitHub username: Your username.
 - GitHub Token: Get your [GitHub Token here](https://github.com/settings/tokens/new?scopes=repo)[^2]. The correct settings should already be applied. If you want to avoid generating this every few months, select the “No expiration” option. Click the “Generate token” button, and copy the token you are presented with on the next page.
 
+## Download configuration
 
-## 2. Download configuration
 ### Folder reception settings.
 
 You have two options : 
@@ -124,6 +156,7 @@ Or removing the `share` key.
 
 Some publishing solution support folder note, but these note need to be named `index`. In case you use [Folder Note](https://github.com/aidenlx/alx-folder-note) with [the `same name` strategies](https://github.com/aidenlx/alx-folder-note/wiki/folder-note-pref) you will have a problem, no? By chance, I have a solution for you, guys!
 Now, the plugin will convert these file into `index` if you activate the settings. Here some examples of renaming, using the different parameters from the default folder.
+Note : This option doesn't work for Obsidian Path + Same name strategies **outside** of folder. 
 
 > [!example] frontmatter example with a file named `folder2`
 > - Using a category value : `folder1/folder2` 
@@ -140,7 +173,7 @@ Now, the plugin will convert these file into `index` if you activate the setting
 
 #### Internal links
 
-This option will convert the internal links (including image links!) of the shared file to match the relative file in your repo. Only **existant** and **shared** filepath will be converted.
+This option will convert the internal links (including image links!) of the shared file to match the relative file in your repo. Only **existant** and **shared** file will be converted.
 > [!example] 
 > Cited file : `docs/XX/YY/my_file.md`
 > File to convert : `docs/XX/ZZ/new_file.md`
@@ -153,10 +186,10 @@ In case you use wikilinks as daily but your obsidian publish solution doesn't su
 ### Embed
 
 You can choose to send embeded files :
-- images : The image will be copied in the repository in an optionnaly settled folder.
-- notes : Only shared files will be copied in the repository, in their respected folder (following your settings).
+- Images : The image will be copied in the repository in an optionnaly settled folder.
+- Notes : Only shared files will be copied in the repository, in their respected folder (following your settings).
 
-## 3. Plugin settings
+## Plugin settings
 
 You can configure :
 - The share key used by the plugin. By default, it is `share`
@@ -168,6 +201,7 @@ You can configure :
 ---
 
 # 🤖 Developping
+
 ## General
 
 You can help me to develop the plugin using `npm` !
