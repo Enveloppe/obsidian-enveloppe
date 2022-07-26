@@ -7,24 +7,24 @@ share: true
 
 - [What the plugin do](#what-the-plugin-do)
 - [Configuration](#configuration)
-    - [➡️ Configuration example](#-configuration-example)
-    - [GitHub](#github)
-    - [Download configuration](#download-configuration)
-        - [Folder reception settings.](#folder-reception-settings)
-            - [Metadata frontmatter](#metadata-frontmatter)
-            - [Fixed folder](#fixed-folder)
-            - [Obsidian Path](#obsidian-path)
-        - [Workflow](#workflow)
-            - [Auto clean-up](#auto-clean-up)
-        - [Links' conversion](#links-conversion)
-            - [Index & folder note](#index--folder-note)
-            - [Internal links](#internal-links)
-            - [Wikilinks to markdown link](#wikilinks-to-markdown-link)
-        - [Embed](#embed)
-    - [Plugin settings](#plugin-settings)
-- [🤖 Developping](#-developping)
-    - [General](#general)
-    - [Translation](#translation)
+  - [Configuration example](#configuration-example)
+  - [GitHub](#github)
+  - [Download configuration](#download-configuration)
+    - [Folder reception settings.](#folder-reception-settings)
+      - [Metadata frontmatter](#metadata-frontmatter)
+      - [Fixed folder](#fixed-folder)
+      - [Obsidian Path](#obsidian-path)
+    - [Workflow](#workflow)
+      - [Auto clean-up](#auto-clean-up)
+    - [Links' conversion](#links-conversion)
+      - [Index & folder note](#index--folder-note)
+      - [Internal links](#internal-links)
+      - [Wikilinks to markdown link](#wikilinks-to-markdown-link)
+    - [Embed](#embed)
+  - [Plugin settings](#plugin-settings)
+- [Developping](#developping)
+  - [General](#general)
+  - [Translation](#translation)
 
 <!-- /TOC -->
 
@@ -57,9 +57,9 @@ But the plugin can do a lot more !
 
 To use the plugin, you need to fill the correct information to allow the workflow. 
 
-## ➡️ Configuration example
+## Configuration example
 
-You will find [here](https://obsidianpublisher.github.io/obsidian-mkdocs-publisher-docs/Obsidian%20Github%20Publisher/Configuration%20example/) configuration example for some Obsidian Publish alternative, as Obsidian Mkdocs Publisher and [TuanManhCao Digital Garden](https://github.com/TuanManhCao/digital-garden).
+You will find [here](https://obsidian-publisher.netlify.appObsidian%20Github%20Publisher/Configuration%20example/) configuration example for some Obsidian Publish alternative, as Obsidian Mkdocs Publisher and [TuanManhCao Digital Garden](https://github.com/TuanManhCao/digital-garden).
 
 > [!note] Adding configuration
 > You can send me or do a pullrequest to add new configuration for any Obsidian **free** publish alternative. 
@@ -200,7 +200,7 @@ You can configure :
 
 ---
 
-# 🤖 Developping
+# Developping
 
 ## General
 
