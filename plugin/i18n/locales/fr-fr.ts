@@ -59,6 +59,8 @@ export default {
 	wikilinksDesc: "Convertir les liens Wikilinks en liens markdown, sans en modifier le contenu",
 	hardBreakTitle: "Saut de ligne strict",
 	hardBreakDesc: "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne.",
+	headerDataview: "Dataview",
+	headerDataviewDesc: "Convertir dataview en markdown.",
 
 	// ---
 	// # Embed # //

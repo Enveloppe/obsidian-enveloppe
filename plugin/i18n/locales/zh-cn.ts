@@ -57,6 +57,8 @@ export default {
 	wikilinksDesc: "转换wiki link为md link，不改变文件内容",
 	hardBreakTitle: "马克顿的硬断行",
 	hardBreakDesc: "在每一行之后添加一个标记性的硬断行（双倍空白）。",
+	headerDataview: "Dataview",
+	headerDataviewDesc: "Convert dataview to markdown.",
 
 	// ---
 	// # Embed # //

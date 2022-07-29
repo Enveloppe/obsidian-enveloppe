@@ -24,7 +24,7 @@ async function convertDataviewQueries(text: string, path: string, settings: Mkdo
 	const dataviewRegex = /```dataview(.+?)```/gsm;
 	const dvApi = getAPI();
 	const matches = text.matchAll(dataviewRegex);
-	if (!matches) return;
+	if (!matches || !settings.convertDataview) return;
 	for (const queryBlock of matches){
 		try {
 			const block = queryBlock[0];

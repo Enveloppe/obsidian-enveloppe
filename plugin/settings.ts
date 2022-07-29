@@ -179,6 +179,19 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
+
+		new Setting(this.containerEl)
+			.setName(t('headerDataview') as string)
+			.setDesc(t('headerDataviewDesc') as string)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.convertDataview)
+					.onChange(async (value) => {
+						this.plugin.settings.convertDataview = value;
+						await this.plugin.saveSettings();
+					});
+			});
+
 		containerEl.createEl('h5', {text: t('linkHeader') as string})
 		const folderNoteSettings = new Setting(containerEl)
 			.setName(t('folderNote') as string)

@@ -25,6 +25,7 @@ export interface MkdocsPublicationSettings {
 	linkRemover: string;
 	hardBreak: boolean;
 	logNotice: boolean;
+	convertDataview: boolean;
 }
 
 export enum folderSettings {
@@ -63,4 +64,5 @@ export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
 	linkRemover: '',
 	hardBreak: false,
 	logNotice: false,
+	convertDataview: true,
 }
