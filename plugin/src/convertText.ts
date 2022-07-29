@@ -24,12 +24,12 @@ async function convertDataviewQueries(text: string, path: string, settings: Mkdo
 	const dataviewRegex = /```dataview(.+?)```/gsm;
 	const dvApi = getAPI();
 	const matches = text.matchAll(dataviewRegex);
-	if (!matches || !settings.convertDataview) return;
+	if (!matches) return;
 	for (const queryBlock of matches){
 		try {
 			const block = queryBlock[0];
 			const query = queryBlock[1];
-			const md = await dvApi.tryQueryMarkdown(query, path);
+			const md = settings.convertDataview ? await dvApi.tryQueryMarkdown(query, path) : "";
 			replacedText = replacedText.replace(block, md);
 
 		} catch (e) {
