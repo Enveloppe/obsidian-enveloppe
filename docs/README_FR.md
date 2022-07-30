@@ -5,8 +5,30 @@ title: Index
 
 [EN 🇬🇧](https://github.com/obsidianPublisher/obsidian-github-publisher#readme)
 
-# Liens utiles
+<!-- TOC -->
 
+- [Ce que fait le plugin](#ce-que-fait-le-plugin)
+- [Configuration](#configuration)
+  - [Example de configuration](#example-de-configuration)
+  - [GitHub](#github)
+  - [Configuration de l'upload](#configuration-de-lupload)
+    - [Dossiers de réceptions](#dossiers-de-réceptions)
+      - [Bloc de métadonnées](#bloc-de-métadonnées)
+      - [Dossier fixé](#dossier-fixé)
+      - [Chemin Obsidian](#chemin-obsidian)
+    - [Workflow](#workflow)
+      - [Auto-nettoyage](#auto-nettoyage)
+    - [Conversion des liens](#conversion-des-liens)
+      - [Index & folder note](#index--folder-note)
+      - [Lien internes](#lien-internes)
+      - [Lien Wikilinks vers lien markdown](#lien-wikilinks-vers-lien-markdown)
+    - [Transclusion (embed)](#transclusion-embed)
+  - [Paramètres du plugin](#paramètres-du-plugin)
+- [Développement](#développement)
+  - [Général](#général)
+  - [Traduction](#traduction)
+
+<!-- /TOC -->
 
 GitHub Publisher est un plugin qui vous aide à envoyer des fichiers dans un dépôt GitHub configuré, en fonction de l'état d'une clé de partage situé dans votre bloc de métadonnée (frontmatter).
 
@@ -36,16 +58,21 @@ Mais le plugin peut faire beaucoup plus !
 
 Pour utiliser le plugin, vous devez remplir les informations correctes afin de pouvoir envoyer des fichiers dans un dépôt GitHub.
 
-## 1. GitHub 
+## Example de configuration
 
+Vous trouverez [ici](https://obsidian-publisher.netlify.appfr/Obsidian%20Github%20Publisher/configuration%20example/) quelque exemple de configuration possible pour le plugin, comme par exemple Mkdocs Publisher ou [@TuanManhCao Digital Garden](https://github.com/TuanManhCao/digital-garden).
+
+> [!Note] Ajouter des exemples
+> Il est tout à fait possible de m'envoyer ou de pull-request de nouvelles configurations pour d'autres alternatives **gratuites** à Obsidian Publish. 
+
+## GitHub 
 - Nom du dépôt : Le dépôt dans lequel les fichiers seront envoyés
 - Pseudonyme GitHub: Votre pseudonyme.
 - Token GitHub :  Obtenez votre [Token GitHub ici](https://github.com/settings/tokens/new?scopes=repo)[^2]. Les paramètres corrects devraient déjà être appliqués. Si vous voulez éviter de générer ce jeton tous les quelques mois, sélectionnez l'option "No expiration". Cliquez sur le bouton "Generate token", et copiez le jeton qui vous est présenté sur la page suivante.
 
+## Configuration de l'upload
 
-## 2. Configuration des envoies
 ### Dossiers de réceptions
-
 Vous avez trois possibilités : 
 - Utiliser un dossier "fixe" : Chaque fichier sera envoyé dans ce dossier. 
 - Utiliser un dossier créé à partir d'une clé `category`.
@@ -74,7 +101,7 @@ Chaque fichier sera envoyé dans le dossier par défaut. Si vous laissez le doss
 
 > [!example] Par exemple
 > - Si vous définissez `source` pour le dossier par défaut, tout fichier sera envoyé dans `votre_repo/source`, quelque soit sa clé frontmatter ou son chemin relatif.
-> Si vous le laissez vide, il sera envoyé directement dans `votre_repo`.
+> - Si vous le laissez vide, il sera envoyé directement dans `votre_repo`.
 
 #### Chemin Obsidian
 Il utilise le chemin relatif dans votre coffre-fort Obsidian. Le dossier par défaut sera ajouté avant le chemin relatif d'Obsidian. Vous pouvez le laisser vide pour utiliser la racine de votre dépôt.
@@ -160,7 +187,7 @@ Vous pouvez choisir d'envoyer des fichiers transcluent :
 - Des images : L'image sera copiée dans le dépôt dans un dossier défini en option ou dans le dossier par défaut.
 - Notes : Seuls les fichiers partagés seront copiés dans le dépôt, dans leur dossier respectifs (suivant vos paramètres).
 
-## 3. Paramètres du plugin
+## Paramètres du plugin
 
 Vous pouvez configurer :
 - La clé de partage utilisée par le plugin. Par défaut, c'est `share`.
@@ -171,7 +198,8 @@ Vous pouvez configurer :
 
 ---
 
-# 🤖 Développement
+# Développement
+
 ## Général
 
 Vous pouvez m'aider à développer le plugin en utilisant `npm` !
