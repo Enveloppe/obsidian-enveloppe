@@ -45,7 +45,12 @@ function createRelativePath(
 	 */
 	const sourcePath = getReceiptFolder(sourceFile, settings, metadata, vault);
 	const frontmatter = metadata.getCache(targetFile.linked.path) ? metadata.getCache(targetFile.linked.path).frontmatter : null;
-	if (targetFile.linked.extension === 'md' && (!frontmatter || !frontmatter[settings.shareKey] || (frontmatter[settings.shareKey] === false))) {
+	if (
+		targetFile.linked.extension === 'md'
+		&& (
+			!frontmatter
+			|| !frontmatter[settings.shareKey]
+			|| (frontmatter[settings.shareKey] === false))) {
 		return targetFile.altText;
 	}
 	const targetPath = targetFile.linked.extension === 'md' ? getReceiptFolder(targetFile.linked, settings, metadata, vault) : getImageLinkOptions(targetFile.linked, settings);
@@ -68,7 +73,8 @@ function createRelativePath(
 function folderNoteIndex(
 	file: TFile,
 	vault: Vault,
-	settings: MkdocsPublicationSettings) {
+	settings: MkdocsPublicationSettings)
+{
 	if (!settings.folderNote) return file.name;
 	const fileName = file.name.replace('.md', '');
 	const folderParent = file.parent.name;
