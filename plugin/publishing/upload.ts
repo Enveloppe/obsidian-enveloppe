@@ -107,7 +107,7 @@ export default class MkdocsPublish {
 			fileHistory.push(file)
 			const embedFiles = shareFiles.getEmbed(file);
 			const linkedFiles = shareFiles.getLinkedImageAndFiles(file);
-			text = await convertDataviewQueries(text, file.path, this.settings);
+			text = await convertDataviewQueries(text, file.path, this.settings, this.vault, this.metadataCache, file);
 			text = addHardLineBreak(text, this.settings);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault);
 			text = convertWikilinks(text, this.settings, linkedFiles);

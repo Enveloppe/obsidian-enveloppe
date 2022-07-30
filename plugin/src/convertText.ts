@@ -1,6 +1,6 @@
 import {MkdocsPublicationSettings} from "../settings/interface";
 import {MetadataCache, TFile, Notice, Vault} from "obsidian";
-import {createRelativePath} from "./filePathConvertor";
+import {createRelativePath, getDataviewPath} from "./filePathConvertor";
 import { getAPI } from "obsidian-dataview";
 import { noticeLog } from "./utils";
 
@@ -18,7 +18,14 @@ function addHardLineBreak(text: string, settings: MkdocsPublicationSettings) {
 	}
 }
 
-async function convertDataviewQueries(text: string, path: string, settings: MkdocsPublicationSettings): Promise<string> {
+async function convertDataviewQueries(
+	text: string,
+	path: string,
+	settings: MkdocsPublicationSettings,
+	vault: Vault,
+	metadataCache: MetadataCache,
+	sourceFile: TFile): Promise<string>
+{
 	/* Credit : Ole Eskild Steensen from Obsidian Digital Garden */
 	let replacedText = text;
 	const dataviewRegex = /```dataview(.+?)```/gsm;
@@ -29,7 +36,11 @@ async function convertDataviewQueries(text: string, path: string, settings: Mkdo
 		try {
 			const block = queryBlock[0];
 			const query = queryBlock[1];
-			const md = settings.convertDataview ? await dvApi.tryQueryMarkdown(query, path) : "";
+			let md = settings.convertDataview ? await dvApi.tryQueryMarkdown(query, path) : "";
+			const dataviewPath = getDataviewPath(md, settings, vault);
+
+			md = convertLinkCitation(md, settings, dataviewPath, metadataCache, sourceFile, vault);
+			md = convertWikilinks(md, settings, dataviewPath);
 			replacedText = replacedText.replace(block, md);
 
 		} catch (e) {
@@ -41,7 +52,11 @@ async function convertDataviewQueries(text: string, path: string, settings: Mkdo
 	return replacedText;
 }
 
-function convertWikilinks(fileContent: string, settings: MkdocsPublicationSettings, linkedFiles: {linked: TFile, linkFrom: string, altText: string}[]) {
+function convertWikilinks(
+	fileContent: string,
+	settings: MkdocsPublicationSettings,
+	linkedFiles: {linked: TFile, linkFrom: string, altText: string}[])
+{
 	if (!settings.convertWikiLinks) {
 		return fileContent;
 	}
@@ -71,7 +86,13 @@ function convertWikilinks(fileContent: string, settings: MkdocsPublicationSettin
 	return fileContent;
 }
 
-function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSettings, linkedFiles : {linked: TFile, linkFrom: string, altText: string}[], metadataCache: MetadataCache, sourceFile: TFile, vault: Vault) {
+function convertLinkCitation(
+	fileContent: string,
+	settings: MkdocsPublicationSettings,
+	linkedFiles : {linked: TFile, linkFrom: string, altText: string}[],
+	metadataCache: MetadataCache,
+	sourceFile: TFile,
+	vault: Vault) {
 	/** 
 	* Convert internal links with changing the path to the relative path in the github repository
 	* @param fileContent: The file content
@@ -100,7 +121,10 @@ function convertLinkCitation(fileContent: string, settings: MkdocsPublicationSet
 	return fileContent;
 }
 
-function creatorAltLink(altMatch: RegExpMatchArray, altCreator: string[], fileExtension: string) {
+function creatorAltLink(
+	altMatch: RegExpMatchArray,
+	altCreator: string[],
+	fileExtension: string) {
 	if (altMatch) {
 		return altMatch[0].replace(']]', '').replace('|', '');
 	}

@@ -1,7 +1,40 @@
 import {MetadataCache, TFile, Vault, TFolder} from "obsidian";
 import {folderSettings, MkdocsPublicationSettings} from "../settings/interface";
 
-function createRelativePath(sourceFile: TFile, targetFile: {linked: TFile, linkFrom: string, altText: string }, metadata: MetadataCache, settings: MkdocsPublicationSettings, vault: Vault) {
+function getDataviewPath(
+	markdown: string,
+	settings: MkdocsPublicationSettings,
+	vault: Vault) {
+	if (!settings.convertDataview) {
+		return [];
+	}
+	const wikiRegex = /\[\[(.*?)\]\]/gmi;
+	const wikiMatches = markdown.matchAll(wikiRegex);
+	const linkedFiles = [];
+	if (!wikiMatches) return [];
+	if (wikiMatches) {
+		for (const wikiMatch of wikiMatches) {
+			const altText = wikiMatch[1].replace(/(.*)\|/i, '');
+			const linkFrom = wikiMatch[1].replace(/\|(.*)/, '');
+			const linked = vault.getAbstractFileByPath(linkFrom) instanceof TFile ? vault.getAbstractFileByPath(linkFrom) as TFile: null;
+			if (linked) {
+				linkedFiles.push({
+					linked: linked,
+					linkFrom: linkFrom,
+					altText: altText
+				})
+			}
+		}
+	}
+	return linkedFiles;
+}
+
+function createRelativePath(
+	sourceFile: TFile,
+	targetFile: {linked: TFile, linkFrom: string, altText: string },
+	metadata: MetadataCache,
+	settings: MkdocsPublicationSettings,
+	vault: Vault) {
 	/**
 	 * Create relative path from a sourceFile to a targetPath. If the target file is a note, only share if the frontmatter sharekey is present and true
 	 * @param sourceFile: TFile, the shared file containing all links, embed etc
@@ -32,7 +65,10 @@ function createRelativePath(sourceFile: TFile, targetFile: {linked: TFile, linkF
 	return diffTarget(diffSourcePath).concat(diffTargetPath).join('/')
 }
 
-function folderNoteIndex(file: TFile, vault: Vault, settings: MkdocsPublicationSettings) {
+function folderNoteIndex(
+	file: TFile,
+	vault: Vault,
+	settings: MkdocsPublicationSettings) {
 	if (!settings.folderNote) return file.name;
 	const fileName = file.name.replace('.md', '');
 	const folderParent = file.parent.name;
@@ -42,7 +78,10 @@ function folderNoteIndex(file: TFile, vault: Vault, settings: MkdocsPublicationS
 	return file.name;
 }
 
-function createObsidianPath(file: TFile, settings:MkdocsPublicationSettings, vault: Vault) {
+function createObsidianPath(
+	file: TFile,
+	settings:MkdocsPublicationSettings,
+	vault: Vault) {
 	/**
 	 * Create link path based on settings and file path
 	 * @param file : TFile - Image TFile
@@ -59,7 +98,10 @@ function createObsidianPath(file: TFile, settings:MkdocsPublicationSettings, vau
 	return path;
 }
 
-function createFrontmatterPath(file: TFile, settings: MkdocsPublicationSettings, metadataCache: MetadataCache) {
+function createFrontmatterPath(
+	file: TFile,
+	settings: MkdocsPublicationSettings,
+	metadataCache: MetadataCache) {
 	let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + file.name : file.name;
 	const frontmatter = metadataCache.getCache(file.path).frontmatter
 	let folderRoot = settings.rootFolder;
@@ -78,7 +120,11 @@ function createFrontmatterPath(file: TFile, settings: MkdocsPublicationSettings,
 	return path
 }
 
-function getReceiptFolder(file: TFile, settings:MkdocsPublicationSettings, metadataCache: MetadataCache, vault: Vault) {
+function getReceiptFolder(
+	file: TFile,
+	settings:MkdocsPublicationSettings,
+	metadataCache: MetadataCache,
+	vault: Vault) {
 	if (file.extension === 'md') {
 		let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + file.name : file.name;
 		
@@ -111,5 +157,6 @@ function getImageLinkOptions(file: TFile, settings: MkdocsPublicationSettings) {
 export {
 	getReceiptFolder,
 	getImageLinkOptions,
-	createRelativePath
+	createRelativePath,
+	getDataviewPath
 }
