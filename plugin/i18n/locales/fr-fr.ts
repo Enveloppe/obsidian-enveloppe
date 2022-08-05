@@ -8,7 +8,7 @@ export default {
 	uploadNewNotes: "Publier les nouvelles notes",
 	uploadAllNewEditedNote: "Publier toutes les notes nouvelles et modifiées depuis le dernier envoi.",
 	uploadAllEditedNote: "Publier toutes les notes éditées depuis le dernier envoie",
-	shareViewFiles:(viewFile:string): string => `Partager "${viewFile}" avec Mkdocs Publisher`,
+	shareViewFiles:(viewFile:string): string => `Partager "${viewFile}" avec Github Publisher`,
 
 	/* ------------ *
 	 *	 Settings   *
