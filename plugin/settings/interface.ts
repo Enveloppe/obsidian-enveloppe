@@ -26,6 +26,7 @@ export interface MkdocsPublicationSettings {
 	hardBreak: boolean;
 	logNotice: boolean;
 	convertDataview: boolean;
+	useFrontmatterTitle: boolean;
 }
 
 export enum folderSettings {
@@ -65,4 +66,5 @@ export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
 	hardBreak: false,
 	logNotice: false,
 	convertDataview: true,
+	useFrontmatterTitle: false,
 }

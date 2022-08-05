@@ -61,7 +61,8 @@ export default {
 	hardBreakDesc: "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne.",
 	headerDataview: "Dataview",
 	headerDataviewDesc: "Convertir dataview en markdown.",
-
+	useFrontmatterTitle: "Utiliser la clé frontmatter \"title\"",
+	useFrontmatterTitleDesc: "Utilisez le champ \"title\" du frontmatter à la place du nom du fichier.",
 	// ---
 	// # Embed # //
 

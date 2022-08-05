@@ -87,15 +87,23 @@ function folderNoteIndex(
 function createObsidianPath(
 	file: TFile,
 	settings:MkdocsPublicationSettings,
-	vault: Vault) {
+	vault: Vault,
+	metadataCache: MetadataCache) {
 	/**
 	 * Create link path based on settings and file path
 	 * @param file : TFile - Image TFile
 	 * @param settings : MkdocsPublicationSettings - Settings
 	 * @returns string - Link path
 	 */
+	const frontmatter = metadataCache.getCache(file.path).frontmatter
+	if (!frontmatter || !frontmatter[settings.shareKey]) {
+		return file.name
+	}
 	const folderDefault = settings.folderDefaultName;
-	const fileName = folderNoteIndex(file, vault, settings);
+	let fileName = folderNoteIndex(file, vault, settings);
+	if (fileName === file.name && settings.useFrontmatterTitle && frontmatter['title']) {
+		fileName = frontmatter['title'];
+	}
 	const rootFolder = folderDefault.length > 0 ? folderDefault + "/" : ''
 	const path = rootFolder + file.path.replace(file.name, fileName);
 	if (settings.subFolder.length > 0) {
@@ -135,9 +143,9 @@ function getReceiptFolder(
 		let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + file.name : file.name;
 		
 		if (settings.downloadedFolder === folderSettings.yaml) {
-			path = createFrontmatterPath(file, settings, metadataCache)
+			path = createFrontmatterPath(file, settings, metadataCache);
 		} else if (settings.downloadedFolder === folderSettings.obsidian) {
-			path = createObsidianPath(file, settings, vault)
+			path = createObsidianPath(file, settings, vault, metadataCache);
 		}
 		return path
 	}

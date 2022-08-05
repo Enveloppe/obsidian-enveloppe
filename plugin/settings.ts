@@ -161,7 +161,17 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-
+		new Setting(this.containerEl)
+			.setName(t('useFrontmatterTitle') as string)
+			.setDesc(t('useFrontmatterTitleDesc') as string)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.useFrontmatterTitle)
+					.onChange(async (value) => {
+						this.plugin.settings.useFrontmatterTitle = value;
+						await this.plugin.saveSettings();
+					});
+			});
 		/* ------------------------------ *
 		 * 		  Text conversion		  *
 		 * ------------------------------ */

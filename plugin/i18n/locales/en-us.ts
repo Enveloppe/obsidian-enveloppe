@@ -59,6 +59,8 @@ export default {
 	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line.",
 	headerDataview: "Dataview",
 	headerDataviewDesc: "Convert dataview to markdown.",
+	useFrontmatterTitle: "Use frontmatter title",
+	useFrontmatterTitleDesc: "Use frontmatter \"title\" field instead of the file name.",
 
 	// ---
 	// # Embed # //
