@@ -101,7 +101,7 @@ function createObsidianPath(
 	}
 	const folderDefault = settings.folderDefaultName;
 	let fileName = folderNoteIndex(file, vault, settings);
-	if (fileName === file.name && settings.useFrontmatterTitle && frontmatter['title']) {
+	if (fileName === file.name && settings.useFrontmatterTitle && frontmatter['title'] && fileName !== frontmatter['title']) {
 		fileName = frontmatter['title'] + '.md';
 	}
 	const rootFolder = folderDefault.length > 0 ? folderDefault + "/" : ''
@@ -129,7 +129,7 @@ function createFrontmatterPath(
 		const category = frontmatter[settings.yamlFolderKey]
 		const parentCatFolder = !category.endsWith('/') ? category.split('/').at(-1): category.split('/').at(-2);
 		let fileName = settings.folderNote && parentCatFolder === file.name.replace('.md', '') ? 'index.md' : file.name
-		if (fileName != "index.md" && frontmatter['title'] && frontmatter['title'] !== file.name) {
+		if (fileName === file.name && frontmatter['title'] && frontmatter['title'] !== file.name) {
 			fileName = frontmatter['title'] + '.md';
 		}
 		path = folderRoot + frontmatter[settings.yamlFolderKey] + "/" + fileName;
@@ -144,7 +144,7 @@ function getReceiptFolder(
 	vault: Vault) {
 	if (file.extension === 'md') {
 		let fileName = file.name
-		if (settings.useFrontmatterTitle && metadataCache.getCache(file.path).frontmatter['title']) {
+		if (settings.useFrontmatterTitle && metadataCache.getCache(file.path).frontmatter['title'] && metadataCache.getCache(file.path).frontmatter['title'] !== file.name) {
 			fileName = metadataCache.getCache(file.path).frontmatter['title'] + '.md'
 		}
 		let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + fileName : fileName;
