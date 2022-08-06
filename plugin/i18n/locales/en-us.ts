@@ -9,6 +9,12 @@ export default {
 	uploadAllNewEditedNote: "Upload all new and edited note since last upload",
 	uploadAllEditedNote: "Upload all edited note since last upload",
 	shareViewFiles:(viewFile:string): string => `Share "${viewFile}" with Github Publisher`,
+	/* ------ Delete string -----	*/
+	errorDeleteDefaultFolder: "You need a default folder name in the settings to use this command.",
+	errorDeleteRootFolder: 'You need to configure a root folder in the settings to use this command.',
+	successDeleting:(nb:string): string => `Successfully deleted ${nb} files.`,
+	failedDeleting:(nb:string): string => `Failed to delete ${nb} files.`,
+	noFileDeleted: 'No files have been deleted.',
 
 	/* ------------ *
 	 *	 Settings   *

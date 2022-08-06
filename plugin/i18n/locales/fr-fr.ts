@@ -9,7 +9,12 @@ export default {
 	uploadAllNewEditedNote: "Publier toutes les notes nouvelles et modifiées depuis le dernier envoi.",
 	uploadAllEditedNote: "Publier toutes les notes éditées depuis le dernier envoie",
 	shareViewFiles:(viewFile:string): string => `Partager "${viewFile}" avec Github Publisher`,
-
+	/* ------ Delete string -----	*/
+	errorDeleteDefaultFolder: "Vous avez besoin d'un dossier par défaut dans les paramètres pour utiliser cette commande.",
+	errorDeleteRootFolder: 'Vous devez configurer un dossier racine dans les paramètres pour utiliser cette commande.',
+	successDeleting:(nb:string): string => `Suppression réussie de ${nb} fichiers.`,
+	failedDeleting:(nb:string): string => `Échec de la suppression de ${nb} files.`,
+	noFileDeleted: "Aucun fichier n'a été supprimé",
 	/* ------------ *
 	 *	 Settings   *
 	 * ------------ */

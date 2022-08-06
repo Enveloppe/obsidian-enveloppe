@@ -4,7 +4,7 @@ import {folderSettings, MkdocsPublicationSettings} from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
 import {Base64} from "js-base64";
 import {noticeLog, trimObject} from "../src/utils";
-
+import t, {StringFunc} from "../i18n"
 export async function deleteFromGithub(silent = false, settings: MkdocsPublicationSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement) {
 	/**
 	 * Delete file from github
@@ -22,16 +22,12 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 		let errorMsg = "";
 		if (settings.folderDefaultName.length > 0) {
 			if (settings.folderDefaultName.length > 0) {
-				errorMsg =
-						"You need to configure a" +
-						" default folder name in the" +
-						" settings to use this command.";
+				errorMsg = (t("errorDeleteDefaultFolder") as string)
 			} else if (
 				settings.downloadedFolder === folderSettings.yaml &&
 					settings.rootFolder.length === 0
 			) {
-				errorMsg =
-						"You need to configure a root folder in the settings to use this command.";
+				errorMsg = (t("errorDeleteRootFolder") as string)
 			}
 			if (!silent) {
 				new Notice("Error : " + errorMsg);
@@ -71,13 +67,13 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 			}
 		}
 	}
-	let successMsg = 'No files have been deleted';
+	let successMsg = t('noFileDeleted') as string;
 	let failedMsg = '';
 	if (deletedSuccess > 0) {
-		successMsg = `Successfully deleted ${deletedSuccess} files`
+		successMsg = (t("successDeleting") as StringFunc)(deletedSuccess.toString());
 	}
 	if (deletedFailed > 0) {
-		failedMsg = `Failed to delete ${deletedFailed} files.`
+		failedMsg = (t('failedDeleting') as StringFunc)(deletedFailed.toString());
 	}
 	if (!silent) {
 		new Notice(successMsg + failedMsg)

@@ -7,7 +7,7 @@ import { Octokit } from "@octokit/core";
 import {MetadataCache, Notice, TFile, Vault} from "obsidian";
 import MkdocsPublication from "../main";
 import t from '../i18n'
-import type { StringFunc } from "../i18n";
+import { StringFunc } from "../i18n";
 
 
 export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, octokit: Octokit, statusBarItems: HTMLElement, branchName: string, sharedFiles: TFile[], createGithubBranch=true) {
