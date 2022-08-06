@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [3.14.5-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.4...3.14.5-0) (2022-08-06)
+
+
+### Bug Fixes
+
+* deleted translation forgotten ([a2835c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a2835c1ddb3229338d9ef8671c6fa7421bb478c8))
+
 ### [3.14.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.3...3.14.4) (2022-08-06)
 
 
