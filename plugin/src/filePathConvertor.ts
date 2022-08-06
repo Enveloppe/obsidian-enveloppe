@@ -128,7 +128,10 @@ function createFrontmatterPath(
 	if (frontmatter && frontmatter[settings.yamlFolderKey]) {
 		const category = frontmatter[settings.yamlFolderKey]
 		const parentCatFolder = !category.endsWith('/') ? category.split('/').at(-1): category.split('/').at(-2);
-		const fileName = settings.folderNote && parentCatFolder === file.name.replace('.md', '') ? 'index.md' : file.name
+		let fileName = settings.folderNote && parentCatFolder === file.name.replace('.md', '') ? 'index.md' : file.name
+		if (fileName != "index.md" && frontmatter['title'] && frontmatter['title'] !== file.name) {
+			fileName = frontmatter['title'];
+		}
 		path = folderRoot + frontmatter[settings.yamlFolderKey] + "/" + fileName;
 	}
 	return path
@@ -140,7 +143,11 @@ function getReceiptFolder(
 	metadataCache: MetadataCache,
 	vault: Vault) {
 	if (file.extension === 'md') {
-		let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + file.name : file.name;
+		let fileName = file.name
+		if (settings.useFrontmatterTitle && metadataCache.getCache(file.path).frontmatter['title']) {
+			fileName = metadataCache.getCache(file.path).frontmatter['title']
+		}
+		let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + fileName : fileName;
 		
 		if (settings.downloadedFolder === folderSettings.yaml) {
 			path = createFrontmatterPath(file, settings, metadataCache);
