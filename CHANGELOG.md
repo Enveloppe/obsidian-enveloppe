@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [3.14.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.2...3.14.3) (2022-08-06)
+
+
+### Bug Fixes
+
+* hotfix for title file generation ([b86cc34](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b86cc345043992e897213d8aad5d31723981d1cd))
+
 ### [3.14.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.1...3.14.2) (2022-08-06)
 
 
