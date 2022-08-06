@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [3.14.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.1...3.14.2) (2022-08-06)
+
+
+### Features
+
+* Add using frontmatter title field for generate filename ([b1bad43](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b1bad4392e5ecb0a99e999cd1343385d7eee9ca8))
+
+
+### Bug Fixes
+
+* title wasn't used with frontmatter/fixed folder settings ([1489024](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1489024efffa0e8cc47221c27941a4215ceaae01))
+
 ### [3.14.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.11.0-0...3.14.1) (2022-08-05)
 
 
