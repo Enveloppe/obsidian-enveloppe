@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [3.14.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.3...3.14.4) (2022-08-06)
+
+
+### Bug Fixes
+
+* adding more check for changing filename to frontmatter title ([3944e88](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3944e88ade09ede7fd15a9342a7990b1f73fd6ff))
+
 ### [3.14.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.2...3.14.3) (2022-08-06)
 
 
