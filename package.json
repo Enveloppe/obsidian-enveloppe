@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-mkdocs-publication",
-	"version": "3.14.1",
+	"version": "3.14.2",
 	"description": "Obsidian's Mkdocs Publication is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault.",
 	"main": "main.js",
 	"scripts": {
@@ -12,7 +12,7 @@
 		"version": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json",
 		"bump": "node version-bump.mjs",
 		"beta": "commit-and-tag-version  --prerelease --tag-build beta && node version-beta.mjs && git add manifest-beta.json && git commit --amend --no-edit",
-		"publish": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json && node version-beta.mjs && git add manifest-beta.json && git commit --amend --no-edit && git push --tags"
+		"publish": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json"
 	},
 	"commit-and-tag-version": {
 		"t": "",
