@@ -107,8 +107,10 @@ export async function shareOneNote(branchName: string, PublisherManager: GithubB
 		}
 	}
 	catch (error) {
-		console.error(error);
-		new Notice((t("errorPublish") as StringFunc)(settings.githubRepo));
+		if (!(error instanceof DOMException)) {
+			console.error(error);
+			new Notice((t("errorPublish") as StringFunc)(settings.githubRepo));
+		}
 	}
 }
 

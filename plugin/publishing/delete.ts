@@ -64,7 +64,7 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 					}
 				}
 			} catch (e) {
-				noticeLog(e, settings);
+				if (!(e instanceof DOMException)) noticeLog(e, settings);
 			}
 		}
 	}
@@ -184,7 +184,9 @@ async function checkIndexFiles(octokit: Octokit, settings: MkdocsPublicationSett
 			return fileFrontmatter.index === "true" || fileFrontmatter.autoclean === "false" || !fileFrontmatter.share ;
 		}
 	} catch (e) {
-		noticeLog(e, settings);
-		return false;
+		if (!(e instanceof DOMException)) {
+			noticeLog(e, settings);
+			return false;
+		}
 	}
 }
