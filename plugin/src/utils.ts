@@ -3,7 +3,7 @@ import {MkdocsPublicationSettings} from '../settings/interface'
 import MkdocsPublish from "../publishing/upload";
 import t from '../i18n'
 import type { StringFunc } from "../i18n";
-import {getReceiptFolder} from "./filePathConvertor";
+import {getReceiptFolder} from "../contents_conversion/filePathConvertor";
 
 function noticeLog(message: string, settings: MkdocsPublicationSettings) {
 	/**

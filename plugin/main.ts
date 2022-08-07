@@ -12,7 +12,7 @@ import {
 	shareAllMarkedNotes,
 	shareNewNote,
 	shareOneNote, shareOnlyEdited
-} from "./src/commands";
+} from "./commands";
 import t, {StringFunc} from "./i18n"
 
 

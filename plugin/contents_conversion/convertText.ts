@@ -1,8 +1,8 @@
-import {MkdocsPublicationSettings} from "../settings/interface";
+import {LinkedNotes, MkdocsPublicationSettings} from "../settings/interface";
 import {MetadataCache, TFile, Notice, Vault} from "obsidian";
 import {createRelativePath, getDataviewPath} from "./filePathConvertor";
 import { getAPI } from "obsidian-dataview";
-import { noticeLog } from "./utils";
+import { noticeLog } from "../src/utils";
 
 function addHardLineBreak(text: string, settings: MkdocsPublicationSettings) {
 	try {
@@ -55,7 +55,7 @@ async function convertDataviewQueries(
 function convertWikilinks(
 	fileContent: string,
 	settings: MkdocsPublicationSettings,
-	linkedFiles: {linked: TFile, linkFrom: string, altText: string}[])
+	linkedFiles: LinkedNotes[]):string
 {
 	if (!settings.convertWikiLinks) {
 		return fileContent;
@@ -89,10 +89,10 @@ function convertWikilinks(
 function convertLinkCitation(
 	fileContent: string,
 	settings: MkdocsPublicationSettings,
-	linkedFiles : {linked: TFile, linkFrom: string, altText: string}[],
+	linkedFiles : LinkedNotes[],
 	metadataCache: MetadataCache,
 	sourceFile: TFile,
-	vault: Vault) {
+	vault: Vault):string {
 	/** 
 	* Convert internal links with changing the path to the relative path in the github repository
 	* @param fileContent: The file content
@@ -124,7 +124,7 @@ function convertLinkCitation(
 function creatorAltLink(
 	altMatch: RegExpMatchArray,
 	altCreator: string[],
-	fileExtension: string) {
+	fileExtension: string):string {
 	if (altMatch) {
 		return altMatch[0].replace(']]', '').replace('|', '');
 	}

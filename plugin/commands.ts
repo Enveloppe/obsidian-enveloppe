@@ -1,13 +1,13 @@
-import { ShareStatusBar } from "./status_bar";
-import {createLink, noticeMessage} from "./utils";
-import {MkdocsPublicationSettings} from '../settings/interface'
-import { deleteFromGithub } from '../publishing/delete'
-import {GithubBranch} from "../publishing/branch";
+import { ShareStatusBar } from "./src/status_bar";
+import {createLink, noticeMessage} from "./src/utils";
+import {MkdocsPublicationSettings} from './settings/interface'
+import { deleteFromGithub } from './publishing/delete'
+import {GithubBranch} from "./publishing/branch";
 import { Octokit } from "@octokit/core";
 import {MetadataCache, Notice, TFile, Vault} from "obsidian";
-import MkdocsPublication from "../main";
-import t from '../i18n'
-import { StringFunc } from "../i18n";
+import MkdocsPublication from "./main";
+import t from './i18n'
+import { StringFunc } from "./i18n";
 
 
 export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, octokit: Octokit, statusBarItems: HTMLElement, branchName: string, sharedFiles: TFile[], createGithubBranch=true) {

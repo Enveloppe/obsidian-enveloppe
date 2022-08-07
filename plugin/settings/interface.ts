@@ -1,3 +1,5 @@
+import {TFile} from "obsidian";
+
 export interface MkdocsPublicationSettings {
 	githubRepo: string;
 	githubName: string;
@@ -67,4 +69,20 @@ export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
 	logNotice: false,
 	convertDataview: true,
 	useFrontmatterTitle: false,
+}
+
+export interface LinkedNotes {
+	linked: TFile,
+	linkFrom: string,
+	altText: string,
+}
+
+export interface ConvertedLink {
+	converted: string,
+	real: string
+}
+
+export interface GithubRepo {
+	file: string,
+	sha: string,
 }

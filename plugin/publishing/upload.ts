@@ -16,11 +16,11 @@ import {
 	convertLinkCitation,
 	convertWikilinks,
 	addHardLineBreak
-} from "../src/convertText";
+} from "../contents_conversion/convertText";
 
 import {
 	getReceiptFolder, getImageLinkOptions
-} from "../src/filePathConvertor";
+} from "../contents_conversion/filePathConvertor";
 import {ShareStatusBar} from "../src/status_bar";
 import MkdocsPublication from "../main";
 import { noticeLog } from "plugin/src/utils";

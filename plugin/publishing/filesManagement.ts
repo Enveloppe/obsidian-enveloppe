@@ -1,9 +1,9 @@
 // Credit : https://github.com/oleeskild/obsidian-digital-garden @oleeskild
 
 import {MetadataCache, TFile, Vault} from "obsidian";
-import {MkdocsPublicationSettings} from "../settings/interface";
+import {ConvertedLink, GithubRepo, LinkedNotes, MkdocsPublicationSettings} from "../settings/interface";
 import {Octokit} from "@octokit/core";
-import {getImageLinkOptions, getReceiptFolder} from "../src/filePathConvertor";
+import {getImageLinkOptions, getReceiptFolder} from "../contents_conversion/filePathConvertor";
 import MkdocsPublish from "./upload";
 import MkdocsPublication from "../main";
 import { noticeLog } from "plugin/src/utils";
@@ -47,17 +47,17 @@ export class FilesManagement extends MkdocsPublish {
 		return shared_File;
 	}
 	
-	getAllFileWithPath() {
+	getAllFileWithPath(): ConvertedLink[] {
 		const files = this.vault.getFiles();
-		const allFileWithPath = [];
+		const allFileWithPath:ConvertedLink[] = [];
 		const shareKey = this.settings.shareKey;
 		for (const file of files) {
 			const fileExtension = file.extension;
 			if (fileExtension.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
 				const filepath = getImageLinkOptions(file, this.settings);
 				allFileWithPath.push({
-					'converted': filepath,
-					'real': file.path
+					converted: filepath,
+					real: file.path
 				});
 			} else if (file.extension == "md") {
 				const frontMatter = this.metadataCache.getCache(
@@ -66,8 +66,8 @@ export class FilesManagement extends MkdocsPublish {
 				if (frontMatter && frontMatter[shareKey] === true && file.extension === "md") {
 					const filepath = getReceiptFolder(file, this.settings, this.metadataCache, this.vault);
 					allFileWithPath.push({
-						'converted': filepath,
-						'real': file.path
+						converted: filepath,
+						real: file.path
 					});
 				}
 			}
@@ -75,13 +75,13 @@ export class FilesManagement extends MkdocsPublish {
 		return allFileWithPath;
 	}
 	
-	getLinkedImageAndFiles(file: TFile) {
+	getLinkedImageAndFiles(file: TFile):LinkedNotes[] {
 		/**
 		 * Create a database with every internal links and embeded image and files 
 		 * @param file: the source file
 		 * @return linkedFiles: array of linked files
 		 */
-		const linkedFiles = this.getEmbedFiles(file);
+		const linkedFiles:LinkedNotes[] = this.getEmbedFiles(file);
 		const imageEmbedded = this.metadataCache.getFileCache(file).embeds;
 		if (imageEmbedded != undefined) {
 			for (const image of imageEmbedded) {
@@ -90,9 +90,9 @@ export class FilesManagement extends MkdocsPublish {
 					const imageExt = imageLink.extension;
 					if (imageExt.match(/(png|jpe?g|svg|bmp|gif|md)$/i)) {
 						linkedFiles.push({
-							'linked': imageLink, //TFile found
-							'linkFrom': image.link, //path of the founded file
-							'altText': image.displayText //alt text if exists, filename otherwise
+							linked: imageLink, //TFile found
+							linkFrom: image.link, //path of the founded file
+							altText: image.displayText //alt text if exists, filename otherwise
 						})
 
 					}
@@ -104,14 +104,14 @@ export class FilesManagement extends MkdocsPublish {
 		return linkedFiles;
 	}
 	
-	getEmbedFiles(file: TFile): { linked: TFile, linkFrom: string, altText: string }[] {
+	getEmbedFiles(file: TFile): LinkedNotes[] {
 		/**
 		 * Create an objet of all files embedded in the shared files
 		 * @param file: The file shared
-		 * @return the file linked (Tfile), the path to it, and the alt text if exists
+		 * @return the file linked (TFile), the path to it, and the alt text if exists
 		 */
 		const embedCaches = this.metadataCache.getCache(file.path).links;
-		const embedList = [];
+		const embedList:LinkedNotes[] = [];
 		if (embedCaches != undefined) {
 			for (const embedCache of embedCaches) {
 				try {
@@ -122,9 +122,9 @@ export class FilesManagement extends MkdocsPublish {
 					if (linkedFile) {
 						if (linkedFile.extension === 'md') {
 							embedList.push({
-								'linked': linkedFile,
-								'linkFrom': embedCache.link,
-								'altText': embedCache.displayText
+								linked: linkedFile,
+								linkFrom: embedCache.link,
+								altText: embedCache.displayText
 							})
 						}
 					}
@@ -139,9 +139,9 @@ export class FilesManagement extends MkdocsPublish {
 	}
 
 	
-	getEmbed(file: TFile) {
+	getEmbed(file: TFile):TFile[] {
 		const embedCaches = this.metadataCache.getCache(file.path).embeds;
-		const imageList = [];
+		const imageList:TFile[] = [];
 		if (embedCaches != undefined) {
 			for (const embed of embedCaches) {
 				try {
@@ -171,7 +171,7 @@ export class FilesManagement extends MkdocsPublish {
 		return [];
 	}
 	
-	checkExcludedFolder(file: TFile) {
+	checkExcludedFolder(file: TFile): boolean {
 		const excludedFolder = this.settings.ExcludedFolder.split(",").filter(
 			(x) => x != ""
 		);
@@ -185,7 +185,7 @@ export class FilesManagement extends MkdocsPublish {
 		return false;
 	}
 	
-	async getLastEditedTimeRepo(octokit: Octokit, githubRepo: {file: string, sha: string}, settings: MkdocsPublicationSettings) {
+	async getLastEditedTimeRepo(octokit: Octokit, githubRepo: GithubRepo, settings: MkdocsPublicationSettings) {
 		const commits = await octokit.request('GET /repos/{owner}/{repo}/commits', {
 			owner: settings.githubName,
 			repo: settings.githubRepo,
@@ -195,8 +195,8 @@ export class FilesManagement extends MkdocsPublish {
 		return new Date(lastCommittedFile.commit.committer.date);
 	}
 	
-	async getAllFileFromRepo(ref = "main", octokit: Octokit, settings: MkdocsPublicationSettings) {
-		const filesInRepo = [];
+	async getAllFileFromRepo(ref = "main", octokit: Octokit, settings: MkdocsPublicationSettings):Promise<GithubRepo[]> {
+		const filesInRepo:GithubRepo[] = [];
 		try {
 			const repoContents = await octokit.request(
 				"GET" + " /repos/{owner}/{repo}/git/trees/{tree_sha}",
@@ -231,8 +231,8 @@ export class FilesManagement extends MkdocsPublish {
 		return filesInRepo;
 	}
 	
-	getNewFiles(allFileWithPath:{converted: string, real: string}[] , githubSharedFiles: { file: string, sha: string }[], vault: Vault): TFile[] {
-		const newFiles = []; //new file : present in allFileswithPath but not in githubSharedFiles
+	getNewFiles(allFileWithPath:ConvertedLink[] , githubSharedFiles: GithubRepo[], vault: Vault): TFile[] {
+		const newFiles:TFile[] = []; //new file : present in allFileswithPath but not in githubSharedFiles
 		
 		for (const file of allFileWithPath) {
 			if (!githubSharedFiles.some((x) => x.file === file.converted.trim())) {
@@ -246,7 +246,7 @@ export class FilesManagement extends MkdocsPublish {
 		return newFiles;
 	}
 	
-	async getEditedFiles(allFileWithPath:{converted: string, real: string}[] , githubSharedFiles: { file: string, sha: string }[], vault: Vault, newFiles: TFile[]): Promise<TFile[]>{
+	async getEditedFiles(allFileWithPath:ConvertedLink[] , githubSharedFiles: GithubRepo[], vault: Vault, newFiles: TFile[]): Promise<TFile[]>{
 		for (const file of allFileWithPath) {
 			if (githubSharedFiles.some((x) => x.file === file.converted.trim())) {
 				const githubSharedFile = githubSharedFiles.find((x) => x.file === file.converted.trim());
