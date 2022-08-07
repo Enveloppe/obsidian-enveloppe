@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [3.14.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.5...3.14.6) (2022-08-07)
+
+
+### Bug Fixes
+
+* remove error when DOMException : document is not focused ([6a99c02](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6a99c02b86cb8e1220de1471062341cac878d327))
+
 ### [3.14.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.4...3.14.5) (2022-08-07)
 
 
