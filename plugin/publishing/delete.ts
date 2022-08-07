@@ -1,10 +1,11 @@
 import { Octokit } from "@octokit/core";
 import { Notice } from "obsidian";
-import {folderSettings, MkdocsPublicationSettings} from "../settings/interface";
+import {folderSettings, GithubRepo, MkdocsPublicationSettings} from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
 import {Base64} from "js-base64";
 import {noticeLog, trimObject} from "../src/utils";
 import t, {StringFunc} from "../i18n"
+
 export async function deleteFromGithub(silent = false, settings: MkdocsPublicationSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement) {
 	/**
 	 * Delete file from github
@@ -98,7 +99,7 @@ function excludedFileFromDelete(file: string, settings: MkdocsPublicationSetting
 	return false;
 }
 
-export async function filterGithubFile(fileInRepo: { file: string; sha: string }[], settings: MkdocsPublicationSettings) {
+export async function filterGithubFile(fileInRepo: GithubRepo[], settings: MkdocsPublicationSettings): Promise<GithubRepo[]> {
 	/**
 	 * Scan all file in repo, and excluding some from the list. Also check for some parameters.
 	 * Only file supported by GitHub are checked.
@@ -109,14 +110,14 @@ export async function filterGithubFile(fileInRepo: { file: string; sha: string }
 	 * @class settings
 	 * @return sharedFilesInRepo TFile[] containing valid file to check if they must be deleted
 	 */
-	const sharedFilesInRepo = [];
+	const sharedFilesInRepo:GithubRepo[] = [];
 	for (const file of fileInRepo) {
 		if (
 			(settings.downloadedFolder === folderSettings.yaml &&
 					settings.rootFolder.length === 0) ||
 				settings.folderDefaultName.length === 0
 		) {
-			return false;
+			return null;
 		}
 		if (
 			(file.file.includes(settings.folderDefaultName) ||
