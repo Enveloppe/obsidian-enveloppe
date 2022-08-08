@@ -1,6 +1,6 @@
 ---
 share: true
-title: Index
+title: Obsidian Github Publisher
 ---
 
 [EN 🇬🇧](https://github.com/obsidianPublisher/obsidian-github-publisher#readme)
