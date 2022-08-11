@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [3.14.7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.6...3.14.7) (2022-08-11)
+
+
+### Bug Fixes
+
+* character not removed when wikilinks are created ([6a175db](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6a175db4bedb5fd50cae84ad544682d07c6276bd)), closes [#19](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/19)
+
 ### [3.14.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.5...3.14.6) (2022-08-07)
 
 
