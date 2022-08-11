@@ -1,5 +1,6 @@
 ---
 share: true
+title: Obsidian Github Publisher
 ---
 
 [FR 🇫🇷](https://github.com/obsidianPublisher/obsidian-github-publisher/blob/master/docs/README_FR.md)
