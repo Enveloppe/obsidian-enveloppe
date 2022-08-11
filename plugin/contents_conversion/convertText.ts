@@ -67,17 +67,20 @@ function convertWikilinks(
 		for (const wikiMatch of wikiMatches) {
 			const fileMatch = wikiMatch.match(fileRegex);
 			if (fileMatch) {
-				const fileName = fileMatch[0].replace('[[', '').replace('|', '');
+				// @ts-ignore
+				const fileName = fileMatch[0].replaceAll('[', '').replaceAll('|', '').replaceAll(']', '');
 				const linkedFile=linkedFiles.find(item => item.linkFrom===fileName);
 				if (linkedFile) {
 					const altText = linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.extension === 'md' ? linkedFile.linked.basename : "";
 					const linkCreator = `[${altText}](${encodeURI(linkedFile.linkFrom)})`;
+					console.log('Linked', linkCreator);
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
 				} else if (!fileName.startsWith('http')) {
 					const altMatch = wikiMatch.match(/(\|).*(]])/);
 					const altCreator = fileName.split('/');
 					const altLink = creatorAltLink(altMatch, altCreator, fileName.split('.').at(-1));
 					const linkCreator = `[${altLink}](${encodeURI(fileName.trim())})`;
+					console.log('link creator not linked', linkCreator);
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
 				}
 			}
