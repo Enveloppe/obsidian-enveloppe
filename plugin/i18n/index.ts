@@ -27,11 +27,13 @@ import { moment } from 'obsidian';
 import enUS from './locales/en-us';
 import zhCN from './locales/zh-cn';
 import frFR from "./locales/fr-fr";
+import ruRU from "./locales/ru";
 
 const localeMap: { [k: string]: Partial<typeof enUS> } = {
 	enUS,
 	'zh-cn': zhCN,
-	'fr': frFR
+	'fr': frFR,
+	'ru': ruRU									
 };
 
 const locale = localeMap[moment.locale()];
