@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.15.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.7...3.15.0) (2022-08-12)
+
+
+### Features
+
+* **i18n:** integrate ru translation ([ff1bfe7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ff1bfe71fda50e0cd8e18171a79a2464f18e0450))
+* **i18n:** ru translation ([218de5b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/218de5ba369b0827ab1ed4259efbd4cb423e533b))
+
 ### [3.14.7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.6...3.14.7) (2022-08-11)
 
 
