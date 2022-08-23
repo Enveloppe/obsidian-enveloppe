@@ -30,7 +30,7 @@ title: Obsidian Github Publisher
 
 <!-- /TOC -->
 
-GitHub Publisher est un plugin qui vous aide à envoyer des fichiers dans un dépôt GitHub configuré, en fonction de l'état d'une clé de partage situé dans votre bloc de métadonnée (frontmatter).
+GitHub Publisher est un module qui vous aide à envoyer des fichiers dans un dépôt GitHub en fonction de l'état d'une clé de métadonnée situé dans frontmatter.
 
 Vous pouvez l'utiliser pour envoyer n'importe quel fichier markdown sur GitHub, permettant la compatibilité avec de nombreuses alternatives d'Obsidian Publish. 
 
