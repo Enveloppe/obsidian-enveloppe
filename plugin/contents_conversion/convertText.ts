@@ -18,6 +18,19 @@ function addHardLineBreak(text: string, settings: MkdocsPublicationSettings) {
 	}
 }
 
+function censorText(text: string, settings: MkdocsPublicationSettings): string {
+	if (!settings.censorText) {
+		return text;
+	}
+	for (const censor of settings.censorText) {
+		const regex = new RegExp(censor.entry, 'ig');
+		console.log(typeof censor.replace);
+		// @ts-ignore
+		text = text.replaceAll(regex, censor.replace);
+	}
+	return text;
+}
+
 async function convertDataviewQueries(
 	text: string,
 	path: string,
@@ -138,4 +151,4 @@ function creatorAltLink(
 }
 
 
-export {convertWikilinks, convertLinkCitation, creatorAltLink, convertDataviewQueries, addHardLineBreak};
+export {convertWikilinks, convertLinkCitation, creatorAltLink, convertDataviewQueries, addHardLineBreak, censorText};

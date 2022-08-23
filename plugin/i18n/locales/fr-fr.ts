@@ -68,6 +68,14 @@ export default {
 	headerDataviewDesc: "Convertir dataview en markdown.",
 	useFrontmatterTitle: "Utiliser la clé frontmatter \"title\"",
 	useFrontmatterTitleDesc: "Utilisez le champ \"title\" du frontmatter (à la place du nom du fichier) pour générer le chemin du fichier.",
+	censorTextHeader: "Replacement de texte",
+	censorTextDesc: "Replacement de texte (ou regex) par un autre texte",
+	censorTextInsensitive: "Insensible à la casse",
+	censorTextEmpty: 'Le remplacement de texte peut être vide afin de supprimer le texte.',
+	censorToolTipAdd: 'Ajouter un nouveau remplacement',
+	censorToolTipRemove: 'Supprimer ce remplacement',
+	censorPlaceHolder: 'Regex ou text à remplacer',
+	censorValuePlaceHolder: 'Remplacement',
 	// ---
 	// # Embed # //
 

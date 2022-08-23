@@ -2,3 +2,19 @@
 	border-top: transparent;
 	padding: 0 0 3px 0;
 }
+.obs-git-publisher-censor-desc p {
+	margin: 0 !important;
+}
+
+.setting-item.obs-git-publisher-censor-desc {
+	padding: 0;
+}
+
+.setting-item.obs-git-publisher-censor-entry {
+	border: 0 !important;
+	padding: 0 !important;
+}
+hr.obs-git-publisher-hr {
+	margin: 1px !important;
+	padding-bottom: 1px;
+}

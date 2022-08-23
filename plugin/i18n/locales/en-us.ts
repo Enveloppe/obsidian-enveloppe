@@ -67,6 +67,14 @@ export default {
 	headerDataviewDesc: "Convert dataview to markdown.",
 	useFrontmatterTitle: "Use frontmatter title",
 	useFrontmatterTitleDesc: "Use frontmatter \"title\" field instead of the file name.",
+	censorTextHeader: "Text replacer",
+	censorTextDesc: "Replace text (or regex) in the file with the given value.",
+	censorTextInsensitive: "Case insensitive",
+	censorTextEmpty: 'Replacement can be empty to remove the whole string.',
+	censorToolTipAdd: 'Add a new text replacer',
+	censorToolTipRemove: 'Delete this text replacer',
+	censorPlaceHolder: 'Regex or text to replace',
+	censorValuePlaceHolder: 'Replacement value',
 
 	// ---
 	// # Embed # //

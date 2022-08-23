@@ -15,7 +15,8 @@ import {
 	convertDataviewQueries,
 	convertLinkCitation,
 	convertWikilinks,
-	addHardLineBreak
+	addHardLineBreak,
+	censorText
 } from "../contents_conversion/convertText";
 
 import {
@@ -111,6 +112,7 @@ export default class MkdocsPublish {
 			text = addHardLineBreak(text, this.settings);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault);
 			text = convertWikilinks(text, this.settings, linkedFiles);
+			text = censorText(text, this.settings);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
 			noticeLog(`Upload ${file.name}:${path} on ${this.settings.githubName}/${this.settings.githubRepo}:${ref}`, this.settings);
 			await this.uploadText(file.path, text, path, file.name, ref);

@@ -29,6 +29,7 @@ export interface MkdocsPublicationSettings {
 	logNotice: boolean;
 	convertDataview: boolean;
 	useFrontmatterTitle: boolean;
+	censorText: TextCleaner[];
 }
 
 export enum folderSettings {
@@ -69,6 +70,7 @@ export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
 	logNotice: false,
 	convertDataview: true,
 	useFrontmatterTitle: false,
+	censorText: [],
 }
 
 export interface LinkedNotes {
@@ -85,4 +87,9 @@ export interface ConvertedLink {
 export interface GithubRepo {
 	file: string,
 	sha: string,
+}
+
+export interface TextCleaner {
+	entry: string
+	replace: string,
 }

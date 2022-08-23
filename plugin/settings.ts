@@ -7,7 +7,7 @@ import {
 	folderHideShowSettings,
 	autoCleanUpSettingsOnCondition, shortcutsHideShow
 } from "./settings/style";
-import {folderSettings} from "./settings/interface";
+import {folderSettings, TextCleaner} from "./settings/interface";
 import t from './i18n'
 
 export class MkdocsSettingsTab extends PluginSettingTab {
@@ -202,6 +202,62 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					});
 			});
 
+		const censorTextDesc = document.createDocumentFragment();
+		censorTextDesc.createEl('p', {text: t('censorTextDesc') as string})
+		censorTextDesc.createEl('p', {text: t('censorTextInsensitive') as string})
+		censorTextDesc.createEl('p', {text: t('censorTextEmpty') as string})
+
+		new Setting(this.containerEl)
+			.setName(t('censorTextHeader') as string)
+			.setClass('obs-git-publisher-censor-desc')
+			.setDesc(censorTextDesc)
+			.addButton((btn) => {
+				btn
+					.setIcon('plus')
+					.setTooltip(t('censorToolTipAdd') as string)
+					.onClick(async () => {
+						const censorText: TextCleaner = {
+							entry: '',
+							replace: '',
+						}
+						this.plugin.settings.censorText.push(censorText);
+						await this.plugin.saveSettings();
+						this.display();
+					})
+			})
+
+		for (const censorText of this.plugin.settings.censorText) {
+			new Setting(this.containerEl)
+				.setClass('obs-git-publisher-censor-entry')
+				.addText((text) => {
+					text
+						.setPlaceholder(t('censorPlaceHolder') as string)
+						.setValue(censorText.entry)
+						.onChange(async (value) => {
+							censorText.entry = value;
+							await this.plugin.saveSettings();
+						});
+				})
+				.addText((text) => {
+					text
+						.setPlaceholder(t('censorValuePlaceHolder') as string)
+						.setValue(censorText.replace)
+						.onChange(async (value) => {
+							censorText.replace = value;
+							await this.plugin.saveSettings();
+						});
+				})
+				.addExtraButton((btn) => {
+					btn
+						.setIcon('trash')
+						.setTooltip(t('censorToolTipRemove') as string)
+						.onClick(async () => {
+							this.plugin.settings.censorText.splice(this.plugin.settings.censorText.indexOf(censorText), 1);
+							await this.plugin.saveSettings();
+							this.display();
+						})
+				})
+		}
 		containerEl.createEl('h5', {text: t('linkHeader') as string})
 		const folderNoteSettings = new Setting(containerEl)
 			.setName(t('folderNote') as string)
