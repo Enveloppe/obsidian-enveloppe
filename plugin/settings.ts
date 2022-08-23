@@ -177,6 +177,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 		 * ------------------------------ */
 
 		containerEl.createEl('h3', {text: t('textConversion') as string})
+		containerEl.createEl('span', {text: t('textConversionDesc') as string})
 		containerEl.createEl('h5', {text: t('textHeader') as string})
 		new Setting(this.containerEl)
 			.setName(t('hardBreakTitle') as string)

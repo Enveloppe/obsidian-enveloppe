@@ -52,7 +52,8 @@ export default {
 
 	// ---
 	// # Text conversion # //
-	textConversion: "Text conversion",
+	textConversion: "Content's conversion",
+	textConversionDesc:'Theses option won\'t change the content of the file in your Obsidian Vault, but will change the content of the file in Github.',
 	textHeader: "Text",
 	linkHeader: "Links",
 	folderNote: "Folder note",

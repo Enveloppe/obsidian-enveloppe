@@ -53,7 +53,8 @@ export default {
 
 	// ---
 	// # Text conversions # //
-	textConversion: "Conversion du texte",
+	textConversion: "Conversion du contenu",
+	textConversionDesc:'Ces options ne changent pas le contenu du fichier dans votre coffre Obsidian, mais changeront le contenu du fichier publié sur GitHub.',
 	textHeader: "Texte",
 	linkHeader: "Liens",
 	folderNote: "Folder Note",
