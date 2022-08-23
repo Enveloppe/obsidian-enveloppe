@@ -115,7 +115,7 @@ export default class MkdocsPublish {
 			noticeLog(`Upload ${file.name}:${path} on ${this.settings.githubName}/${this.settings.githubRepo}:${ref}`, this.settings);
 			await this.uploadText(file.path, text, path, file.name, ref);
 			await this.statusBarForEmbed(embedFiles, fileHistory, ref, deepScan);
-			if (autoclean) {
+			if (autoclean && this.settings.autoCleanUp) {
 				await deleteFromGithub(true, this.settings, this.octokit, ref, shareFiles);
 			}
 			return true;
