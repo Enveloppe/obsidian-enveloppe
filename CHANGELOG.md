@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [3.16.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.16.1...3.16.2) (2022-08-23)
+
+
+### Bug Fixes
+
+* add some docs directly in settings ([0ca53f2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0ca53f2b33e86c98f466712a3149b2f8aa7f78db))
+
 ### [3.16.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.16.0...3.16.1) (2022-08-23)
 
 ## [3.16.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.15.0...3.16.0) (2022-08-23)
