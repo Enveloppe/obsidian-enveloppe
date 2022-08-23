@@ -204,8 +204,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 
 		const censorTextDesc = document.createDocumentFragment();
 		censorTextDesc.createEl('p', {text: t('censorTextDesc') as string})
-		censorTextDesc.createEl('p', {text: t('censorTextInsensitive') as string})
-		censorTextDesc.createEl('p', {text: t('censorTextEmpty') as string})
+		censorTextDesc.createEl('li', {text: t('censorTextInsensitive') as string})
+		censorTextDesc.createEl('li', {text: t('censorTextEmpty') as string})
 
 		new Setting(this.containerEl)
 			.setName(t('censorTextHeader') as string)
