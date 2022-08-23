@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.16.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.15.0...3.16.0) (2022-08-23)
+
+
+### Features
+
+* allow to regex replace some text ([649be97](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/649be978a3466d95b20f4ba2986efcadf695339e))
+
+
+### Bug Fixes
+
+* in some condition, autoclean can be activated same if the parameters is false ([4e46e02](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4e46e026fa70625b054257a1efe7f0f7734d88e2))
+
 ## [3.15.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.7...3.15.0) (2022-08-12)
 
 
