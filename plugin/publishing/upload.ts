@@ -3,9 +3,9 @@ import {
 	MetadataCache,
 	Notice,
 	TFile,
-	Vault
+	Vault,
 } from "obsidian";
-import { MkdocsPublicationSettings } from "../settings/interface";
+import { GitHubPublisherSettings } from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
 import { Octokit } from "@octokit/core";
 import { Base64 } from "js-base64";
@@ -23,22 +23,22 @@ import {
 	getReceiptFolder, getImageLinkOptions
 } from "../contents_conversion/filePathConvertor";
 import {ShareStatusBar} from "../src/status_bar";
-import MkdocsPublication from "../main";
+import GithubPublisherPlugin from "../main";
 import { noticeLog } from "plugin/src/utils";
 
-export default class MkdocsPublish {
+export default class Publisher {
 	vault: Vault;
 	metadataCache: MetadataCache;
-	settings: MkdocsPublicationSettings;
+	settings: GitHubPublisherSettings;
 	octokit: Octokit;
-	plugin: MkdocsPublication;
+	plugin: GithubPublisherPlugin;
 
 	constructor(
 		vault: Vault,
 		metadataCache: MetadataCache,
-		settings: MkdocsPublicationSettings,
+		settings: GitHubPublisherSettings,
 		octokit: Octokit,
-		plugin: MkdocsPublication
+		plugin: GithubPublisherPlugin,
 	) {
 		this.vault = vault;
 		this.metadataCache = metadataCache;

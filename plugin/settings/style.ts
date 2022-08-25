@@ -1,5 +1,5 @@
 import { Setting } from "obsidian";
-import MkdocsPublication from "../main";
+import GithubPublisherPlugin from "../main";
 import {folderSettings} from "./interface";
 
 export function showSettings(containerEl: Setting) {
@@ -14,7 +14,7 @@ export function hideSettings(containerEl: Setting) {
 	containerEl.controlEl.hide();
 }
 
-export async function autoCleanCondition(value: string, autoCleanSetting: Setting, plugin: MkdocsPublication) {
+export async function autoCleanCondition(value: string, autoCleanSetting: Setting, plugin: GithubPublisherPlugin) {
 	const settings = plugin.settings;
 	if (value.length === 0 && settings.downloadedFolder) {
 		settings.autoCleanUp = false;
@@ -36,7 +36,7 @@ export async function autoCleanCondition(value: string, autoCleanSetting: Settin
 	}
 }
 
-export async function folderHideShowSettings(frontmatterKeySettings: Setting, rootFolderSettings: Setting, autoCleanSetting: Setting, value: string, plugin: MkdocsPublication, subFolderSettings: Setting) {
+export async function folderHideShowSettings(frontmatterKeySettings: Setting, rootFolderSettings: Setting, autoCleanSetting: Setting, value: string, plugin: GithubPublisherPlugin, subFolderSettings: Setting) {
 	const settings = plugin.settings;
 	if (value === folderSettings.yaml) {
 		showSettings(frontmatterKeySettings);
@@ -63,7 +63,7 @@ export async function folderHideShowSettings(frontmatterKeySettings: Setting, ro
 	}
 }
 
-export function autoCleanUpSettingsOnCondition(condition: boolean, autoCleanSetting: Setting,plugin: MkdocsPublication) {
+export function autoCleanUpSettingsOnCondition(condition: boolean, autoCleanSetting: Setting,plugin: GithubPublisherPlugin) {
 	const settings = plugin.settings;
 	if (condition) {
 		autoCleanSetting.setDisabled(true);

@@ -1,7 +1,7 @@
 // Credit : https://github.com/oleeskild/obsidian-digital-garden @oleeskild
 
 import {MetadataCache, TFile, Vault} from "obsidian";
-import {ConvertedLink, GithubRepo, LinkedNotes, MkdocsPublicationSettings} from "../settings/interface";
+import {ConvertedLink, GithubRepo, LinkedNotes, GitHubPublisherSettings} from "../settings/interface";
 import {Octokit} from "@octokit/core";
 import {getImageLinkOptions, getReceiptFolder} from "../contents_conversion/filePathConvertor";
 import MkdocsPublish from "./upload";
@@ -11,14 +11,14 @@ import { noticeLog } from "plugin/src/utils";
 export class FilesManagement extends MkdocsPublish {
 	vault: Vault;
 	metadataCache: MetadataCache;
-	settings: MkdocsPublicationSettings;
+	settings: GitHubPublisherSettings;
 	octokit: Octokit;
 	plugin: MkdocsPublication
 	
 	constructor(
 		vault: Vault,
 		metadataCache: MetadataCache,
-		settings: MkdocsPublicationSettings,
+		settings: GitHubPublisherSettings,
 		octokit: Octokit,
 		plugin: MkdocsPublication
 	) {
@@ -185,7 +185,7 @@ export class FilesManagement extends MkdocsPublish {
 		return false;
 	}
 	
-	async getLastEditedTimeRepo(octokit: Octokit, githubRepo: GithubRepo, settings: MkdocsPublicationSettings) {
+	async getLastEditedTimeRepo(octokit: Octokit, githubRepo: GithubRepo, settings: GitHubPublisherSettings) {
 		const commits = await octokit.request('GET /repos/{owner}/{repo}/commits', {
 			owner: settings.githubName,
 			repo: settings.githubRepo,
@@ -195,7 +195,7 @@ export class FilesManagement extends MkdocsPublish {
 		return new Date(lastCommittedFile.commit.committer.date);
 	}
 	
-	async getAllFileFromRepo(ref = "main", octokit: Octokit, settings: MkdocsPublicationSettings):Promise<GithubRepo[]> {
+	async getAllFileFromRepo(ref = "main", octokit: Octokit, settings: GitHubPublisherSettings):Promise<GithubRepo[]> {
 		const filesInRepo:GithubRepo[] = [];
 		try {
 			const repoContents = await octokit.request(

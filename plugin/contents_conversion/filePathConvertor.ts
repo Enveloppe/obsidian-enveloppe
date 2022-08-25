@@ -1,9 +1,9 @@
 import {MetadataCache, TFile, Vault, TFolder, FrontMatterCache} from "obsidian";
-import {folderSettings, LinkedNotes, MkdocsPublicationSettings} from "../settings/interface";
+import {folderSettings, LinkedNotes, GitHubPublisherSettings} from "../settings/interface";
 
 function getDataviewPath(
 	markdown: string,
-	settings: MkdocsPublicationSettings,
+	settings: GitHubPublisherSettings,
 	vault: Vault):LinkedNotes[] {
 	if (!settings.convertDataview) {
 		return [];
@@ -33,13 +33,13 @@ function createRelativePath(
 	sourceFile: TFile,
 	targetFile: LinkedNotes,
 	metadata: MetadataCache,
-	settings: MkdocsPublicationSettings,
+	settings: GitHubPublisherSettings,
 	vault: Vault):string {
 	/**
 	 * Create relative path from a sourceFile to a targetPath. If the target file is a note, only share if the frontmatter sharekey is present and true
 	 * @param sourceFile: TFile, the shared file containing all links, embed etc
 	 * @param targetFile: {linked: TFile, linkFrom: string, altText: string}
-	 * @param settings: MkdocsPublicationSettings
+	 * @param settings: GitHubPublisherSettings
 	 * @param metadata: metadataCache
 	 * @return string : relative created path
 	 */
@@ -73,7 +73,7 @@ function createRelativePath(
 function folderNoteIndex(
 	file: TFile,
 	vault: Vault,
-	settings: MkdocsPublicationSettings): string
+	settings: GitHubPublisherSettings): string
 {
 	if (!settings.folderNote) return file.name;
 	const fileName = file.name.replace('.md', '');
@@ -86,13 +86,13 @@ function folderNoteIndex(
 
 function createObsidianPath(
 	file: TFile,
-	settings:MkdocsPublicationSettings,
+	settings:GitHubPublisherSettings,
 	vault: Vault,
 	fileName: string): string {
 	/**
 	 * Create link path based on settings and file path
 	 * @param file : TFile - Image TFile
-	 * @param settings : MkdocsPublicationSettings - Settings
+	 * @param settings : GitHubPublisherSettings - Settings
 	 * @returns string - Link path
 	 */
 
@@ -109,7 +109,7 @@ function createObsidianPath(
 
 function createFrontmatterPath(
 	file: TFile,
-	settings: MkdocsPublicationSettings,
+	settings: GitHubPublisherSettings,
 	frontmatter: FrontMatterCache,
 	fileName: string): string {
 	let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + file.name : file.name;
@@ -126,7 +126,7 @@ function createFrontmatterPath(
 	return path
 }
 
-function getTitleField(frontmatter: FrontMatterCache, file: TFile, settings: MkdocsPublicationSettings): string {
+function getTitleField(frontmatter: FrontMatterCache, file: TFile, settings: GitHubPublisherSettings): string {
 	if (!settings.useFrontmatterTitle || !frontmatter) {
 		return file.name;
 	} else if (frontmatter && frontmatter['title'] && frontmatter['title'] !== file.name) {
@@ -137,7 +137,7 @@ function getTitleField(frontmatter: FrontMatterCache, file: TFile, settings: Mkd
 
 function getReceiptFolder(
 	file: TFile,
-	settings:MkdocsPublicationSettings,
+	settings:GitHubPublisherSettings,
 	metadataCache: MetadataCache,
 	vault: Vault): string {
 	if (file.extension === 'md') {
@@ -160,11 +160,11 @@ function getReceiptFolder(
 	}
 }
 
-function getImageLinkOptions(file: TFile, settings: MkdocsPublicationSettings):string {
+function getImageLinkOptions(file: TFile, settings: GitHubPublisherSettings):string {
 	/**
 	 * Create link path based on settings and file path
 	 * @param file : TFile - Image TFile
-	 * @param settings : MkdocsPublicationSettings - Settings
+	 * @param settings : GitHubPublisherSettings - Settings
 	 * @returns string - Link path
 	 */
 	let fileDefaultPath = file.path;

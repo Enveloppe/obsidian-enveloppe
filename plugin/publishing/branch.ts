@@ -1,17 +1,21 @@
 import {Octokit} from "@octokit/core";
-import {MkdocsPublicationSettings} from "../settings/interface";
+import {GitHubPublisherSettings} from "../settings/interface";
 import {FilesManagement} from "./filesManagement";
 import {MetadataCache, Vault} from "obsidian";
-import MkdocsPublication from "../main";
+import GithubPublisherPlugin from "../main";
 
 export class GithubBranch extends FilesManagement {
-	settings: MkdocsPublicationSettings;
+	settings: GitHubPublisherSettings;
 	octokit: Octokit;
 	vault: Vault;
 	metadataCache: MetadataCache;
-	plugin: MkdocsPublication;
+	plugin: GithubPublisherPlugin;
 
-	constructor(settings: MkdocsPublicationSettings, octokit: Octokit, vault: Vault, metadataCache: MetadataCache, plugin: MkdocsPublication) {
+	constructor(settings: GitHubPublisherSettings,
+		octokit: Octokit,
+		vault: Vault,
+		metadataCache: MetadataCache,
+		plugin: GithubPublisherPlugin) {
 		super(vault, metadataCache, settings, octokit, plugin);
 		this.settings = settings;
 		this.octokit = octokit;

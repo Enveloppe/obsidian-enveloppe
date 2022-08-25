@@ -1,12 +1,12 @@
-import { Octokit } from "@octokit/core";
-import { Notice } from "obsidian";
-import {folderSettings, GithubRepo, MkdocsPublicationSettings} from "../settings/interface";
-import { FilesManagement } from "./filesManagement";
+import {Octokit} from "@octokit/core";
+import {Notice, parseYaml} from "obsidian";
+import {folderSettings, GitHubPublisherSettings, GithubRepo} from "../settings/interface";
+import {FilesManagement} from "./filesManagement";
 import {Base64} from "js-base64";
 import {noticeLog, trimObject} from "../src/utils";
 import t, {StringFunc} from "../i18n"
 
-export async function deleteFromGithub(silent = false, settings: MkdocsPublicationSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement) {
+export async function deleteFromGithub(silent = false, settings: GitHubPublisherSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement) {
 	/**
 	 * Delete file from github
 	 * @param silent no logging
@@ -82,7 +82,7 @@ export async function deleteFromGithub(silent = false, settings: MkdocsPublicati
 	return true;
 }
 
-function excludedFileFromDelete(file: string, settings: MkdocsPublicationSettings) {
+function excludedFileFromDelete(file: string, settings: GitHubPublisherSettings) {
 	/**
 	 * Prevent deletion of specific file by checking their presence in the excludedFile list
 	 * @param file file to eventually delete
@@ -99,7 +99,7 @@ function excludedFileFromDelete(file: string, settings: MkdocsPublicationSetting
 	return false;
 }
 
-export async function filterGithubFile(fileInRepo: GithubRepo[], settings: MkdocsPublicationSettings): Promise<GithubRepo[]> {
+export async function filterGithubFile(fileInRepo: GithubRepo[], settings: GitHubPublisherSettings): Promise<GithubRepo[]> {
 	/**
 	 * Scan all file in repo, and excluding some from the list. Also check for some parameters.
 	 * Only file supported by GitHub are checked.
@@ -155,7 +155,7 @@ function parseYamlFrontmatter(contents: string) {
 	return yamlFrontmatterParsedCleaned;
 }
 
-async function checkIndexFiles(octokit: Octokit, settings: MkdocsPublicationSettings, path:string) {
+async function checkIndexFiles(octokit: Octokit, settings: GitHubPublisherSettings, path:string) {
 	/**
 	 * If folder note, check if the index must be excluded or included in deletion.
 	 * Always ignore file with :

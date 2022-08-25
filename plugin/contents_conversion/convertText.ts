@@ -1,10 +1,10 @@
-import {LinkedNotes, MkdocsPublicationSettings} from "../settings/interface";
-import {MetadataCache, TFile, Notice, Vault} from "obsidian";
+import {GitHubPublisherSettings, LinkedNotes} from "../settings/interface";
+import {App, MetadataCache, Notice, parseFrontMatterTags, parseYaml, stringifyYaml, TFile, Vault} from "obsidian";
 import {createRelativePath, getDataviewPath} from "./filePathConvertor";
-import { getAPI } from "obsidian-dataview";
-import { noticeLog } from "../src/utils";
+import {getAPI} from "obsidian-dataview";
+import {noticeLog} from "../src/utils";
 
-function addHardLineBreak(text: string, settings: MkdocsPublicationSettings) {
+function addHardLineBreak(text: string, settings: GitHubPublisherSettings) {
 	try {
 		text = text.replace(/^\s*\\\s*$/gmi, '<br/>');
 		if (settings.hardBreak) {
@@ -67,7 +67,7 @@ async function convertDataviewQueries(
 
 function convertWikilinks(
 	fileContent: string,
-	settings: MkdocsPublicationSettings,
+	settings: GitHubPublisherSettings,
 	linkedFiles: LinkedNotes[]):string
 {
 	if (!settings.convertWikiLinks) {

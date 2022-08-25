@@ -1,6 +1,6 @@
 import { ShareStatusBar } from "./src/status_bar";
 import {createLink, noticeMessage} from "./src/utils";
-import {MkdocsPublicationSettings} from './settings/interface'
+import {GitHubPublisherSettings} from './settings/interface'
 import { deleteFromGithub } from './publishing/delete'
 import {GithubBranch} from "./publishing/branch";
 import { Octokit } from "@octokit/core";
@@ -10,7 +10,7 @@ import t from './i18n'
 import { StringFunc } from "./i18n";
 
 
-export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, octokit: Octokit, statusBarItems: HTMLElement, branchName: string, sharedFiles: TFile[], createGithubBranch=true) {
+export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settings: GitHubPublisherSettings, octokit: Octokit, statusBarItems: HTMLElement, branchName: string, sharedFiles: TFile[], createGithubBranch=true) {
 	/**
 	 * Share all marked note (share: true) from Obsidian to GitHub
 	 * @class publisherManager : the main class with all function and parameters
@@ -66,7 +66,7 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 	}
 }
 
-export async function deleteUnsharedDeletedNotes(PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, octokit: Octokit, branchName: string) {
+export async function deleteUnsharedDeletedNotes(PublisherManager: GithubBranch, settings: GitHubPublisherSettings, octokit: Octokit, branchName: string) {
 	/**
 	 * Delete unshared/deleted in the repo
 	 * @class publisherManager
@@ -84,7 +84,7 @@ export async function deleteUnsharedDeletedNotes(PublisherManager: GithubBranch,
 	}
 }
 
-export async function shareOneNote(branchName: string, PublisherManager: GithubBranch, settings: MkdocsPublicationSettings, file: TFile, metadataCache: MetadataCache, vault: Vault) {
+export async function shareOneNote(branchName: string, PublisherManager: GithubBranch, settings: GitHubPublisherSettings, file: TFile, metadataCache: MetadataCache, vault: Vault) {
 	/**
 	 * Share only **one** note and their embedded contents (including note)
 	 * @param branchName branch name

@@ -1,5 +1,5 @@
 import {App, PluginSettingTab, Setting} from 'obsidian'
-import MkdocsPublication from './main'
+import GithubPublisherPlugin from './main'
 import {
 	hideSettings,
 	showSettings,
@@ -11,9 +11,9 @@ import {folderSettings, TextCleaner} from "./settings/interface";
 import t from './i18n'
 
 export class MkdocsSettingsTab extends PluginSettingTab {
-	plugin: MkdocsPublication;
+	plugin: GithubPublisherPlugin;
 
-	constructor(app: App, plugin: MkdocsPublication) {
+	constructor(app: App, plugin: GithubPublisherPlugin) {
 		super(app, plugin)
 		this.plugin = plugin
 	}

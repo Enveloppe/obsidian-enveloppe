@@ -1,15 +1,15 @@
 import {App, MetadataCache, Notice, TFile, Vault} from 'obsidian'
-import {MkdocsPublicationSettings} from '../settings/interface'
-import MkdocsPublish from "../publishing/upload";
+import {GitHubPublisherSettings} from '../settings/interface'
+import Publisher from "../publishing/upload";
 import t from '../i18n'
 import type { StringFunc } from "../i18n";
 import {getReceiptFolder} from "../contents_conversion/filePathConvertor";
 
-function noticeLog(message: string, settings: MkdocsPublicationSettings) {
+function noticeLog(message: string, settings: GitHubPublisherSettings) {
 	/**
 	 * Create a notice message for the log
 	 * @param message: string
-	 * @param settings: MkdocsPublicationSettings
+	 * @param settings: GitHubPublisherSettings
 	 * @returns null
 	 */
 	if (settings.logNotice) {
@@ -19,11 +19,11 @@ function noticeLog(message: string, settings: MkdocsPublicationSettings) {
 	}
 }
 
-function disablePublish (app: App, settings: MkdocsPublicationSettings, file:TFile) {
+function disablePublish (app: App, settings: GitHubPublisherSettings, file:TFile) {
 	/**
 	 * Disable publishing if the file hasn't a valid frontmatter or if the file is in the folder list to ignore
 	 * @param app: App
-	 * @param settings: MkdocsPublicationSettings
+	 * @param settings: GitHubPublisherSettings
 	 * @param file: TFile
 	 * @returns boolean with the meta[settings.shareKey] if valid or false if not
 	 */
@@ -58,13 +58,13 @@ function checkSlash(
 }
 
 
-async function createLink(file: TFile, settings: MkdocsPublicationSettings, metadataCache: MetadataCache, vault: Vault) {
+async function createLink(file: TFile, settings: GitHubPublisherSettings, metadataCache: MetadataCache, vault: Vault) {
 	/**
 	 * Create the link for the file and add it to the clipboard
 	 * The path is based with the receipt folder but part can be removed using settings.
 	 * By default, use a github.io page for the link.
 	 * @param file: TFile
-	 * @param settings: MkdocsPublicationSettings
+	 * @param settings: GitHubPublisherSettings
 	 * @param metadataCache: MetadataCache
 	 * @returns null
 	 */
@@ -92,12 +92,12 @@ async function createLink(file: TFile, settings: MkdocsPublicationSettings, meta
 
 }
 
-async function noticeMessage(PublisherManager: MkdocsPublish, file: TFile | string, settings: MkdocsPublicationSettings) {
+async function noticeMessage(PublisherManager: Publisher, file: TFile | string, settings: GitHubPublisherSettings) {
 	/**
 	 * Create a notice message for the sharing ; the message can be delayed if a workflow is used. 
-	 * @param PublisherManager: MkdocsPublish
+	 * @param PublisherManager: Publisher
 	 * @param file: TFile | string
-	 * @param settings: MkdocsPublicationSettings
+	 * @param settings: GitHubPublisherSettings
 	 * @returns null
 	 */
 	const noticeValue = (file instanceof TFile) ? '"' + file.basename + '"' : file

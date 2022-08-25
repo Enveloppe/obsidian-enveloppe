@@ -1,6 +1,6 @@
 import {TFile} from "obsidian";
 
-export interface MkdocsPublicationSettings {
+export interface GitHubPublisherSettings {
 	githubRepo: string;
 	githubName: string;
 	GhToken: string;
@@ -38,7 +38,7 @@ export enum folderSettings {
 	fixed = "fixed",
 }
 
-export const DEFAULT_SETTINGS: MkdocsPublicationSettings = {
+export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	githubRepo: '',
 	githubName: '',
 	GhToken: '',

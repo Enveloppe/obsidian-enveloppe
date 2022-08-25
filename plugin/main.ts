@@ -3,7 +3,7 @@ import {
 	MkdocsSettingsTab,
 } from "./settings";
 import { disablePublish } from "./src/utils";
-import {MkdocsPublicationSettings, DEFAULT_SETTINGS} from './settings/interface'
+import {GitHubPublisherSettings, DEFAULT_SETTINGS} from './settings/interface'
 import {GithubBranch} from "./publishing/branch";
 import { Octokit } from "@octokit/core";
 import {
@@ -17,7 +17,7 @@ import t, {StringFunc} from "./i18n"
 
 
 export default class MkdocsPublication extends Plugin {
-	settings: MkdocsPublicationSettings;
+	settings: GitHubPublisherSettings;
 
 	async onload() {
 		console.log("Github Publisher loaded");
