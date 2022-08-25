@@ -18,7 +18,26 @@ function addHardLineBreak(text: string, settings: GitHubPublisherSettings) {
 	}
 }
 
-function censorText(text: string, settings: MkdocsPublicationSettings): string {
+async function addInlineTags(settings: GitHubPublisherSettings, file:TFile, metadataCache: MetadataCache, app: App): Promise<string> {
+	if (!settings.inlineTags) {
+		return app.vault.cachedRead(file);
+	}
+	const inlineTagsInText= metadataCache.getFileCache(file)?.tags?.map(
+		t => t.tag.replace('#', '')
+			.replaceAll('/', '_'));
+	//@ts-ignore
+	const yamlTags= parseFrontMatterTags(metadataCache.getFileCache(file)?.frontmatter).map(t => t.replace('#', '')
+		.replaceAll("/", "_"));
+	const yaml = (await app.vault.cachedRead(file)).split("---")[1];
+	const yamlObject = parseYaml(yaml);
+	//@ts-ignore
+	yamlObject.tags = [...new Set([...inlineTagsInText, ...yamlTags])];
+	const returnToYaml = stringifyYaml(yamlObject);
+	const fileContentsOnly= (await app.vault.cachedRead(file)).split("---")[2];
+	return `---\n${returnToYaml}---\n${fileContentsOnly}`;
+}
+
+function censorText(text: string, settings: GitHubPublisherSettings): string {
 	if (!settings.censorText) {
 		return text;
 	}
@@ -34,7 +53,7 @@ function censorText(text: string, settings: MkdocsPublicationSettings): string {
 async function convertDataviewQueries(
 	text: string,
 	path: string,
-	settings: MkdocsPublicationSettings,
+	settings: GitHubPublisherSettings,
 	vault: Vault,
 	metadataCache: MetadataCache,
 	sourceFile: TFile): Promise<string>
@@ -104,7 +123,7 @@ function convertWikilinks(
 
 function convertLinkCitation(
 	fileContent: string,
-	settings: MkdocsPublicationSettings,
+	settings: GitHubPublisherSettings,
 	linkedFiles : LinkedNotes[],
 	metadataCache: MetadataCache,
 	sourceFile: TFile,
@@ -151,4 +170,10 @@ function creatorAltLink(
 }
 
 
-export {convertWikilinks, convertLinkCitation, creatorAltLink, convertDataviewQueries, addHardLineBreak, censorText};
+export {convertWikilinks,
+	convertLinkCitation,
+	creatorAltLink,
+	convertDataviewQueries,
+	addHardLineBreak,
+	censorText,
+	addInlineTags};

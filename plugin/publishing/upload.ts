@@ -16,7 +16,7 @@ import {
 	convertLinkCitation,
 	convertWikilinks,
 	addHardLineBreak,
-	censorText
+	censorText, addInlineTags
 } from "../contents_conversion/convertText";
 
 import {
@@ -104,10 +104,10 @@ export default class Publisher {
 			return false;
 		}
 		try {
-			let text = await this.vault.cachedRead(file);
 			fileHistory.push(file)
 			const embedFiles = shareFiles.getEmbed(file);
 			const linkedFiles = shareFiles.getLinkedImageAndFiles(file);
+			let text = await addInlineTags(this.settings, file, this.metadataCache, this.plugin.app);
 			text = await convertDataviewQueries(text, file.path, this.settings, this.vault, this.metadataCache, file);
 			text = addHardLineBreak(text, this.settings);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault);

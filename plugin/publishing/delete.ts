@@ -143,16 +143,9 @@ function parseYamlFrontmatter(contents: string) {
 	 * @param contents file contents to parse
 	 */
 	const yamlFrontmatter = contents.split("---")[1];
-	const yamlFrontmatterParsed = yamlFrontmatter.split("\n");
-	let yamlFrontmatterParsedCleaned: {[k:string]:string} = {};
-	for (const line of yamlFrontmatterParsed) {
-		if (typeof line !== 'undefined' && line.length > 1) {
-			const yamlFrontmatter = line.split(':')
-			yamlFrontmatterParsedCleaned[yamlFrontmatter[0]] = yamlFrontmatter[1];
-		}
-	}
-	yamlFrontmatterParsedCleaned = trimObject(yamlFrontmatterParsedCleaned);
-	return yamlFrontmatterParsedCleaned;
+	const yamlFrontmatterParsed = parseYaml(yamlFrontmatter);
+
+	return trimObject(yamlFrontmatterParsed);
 }
 
 async function checkIndexFiles(octokit: Octokit, settings: GitHubPublisherSettings, path:string) {

@@ -202,6 +202,17 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
+		new Setting(this.containerEl)
+			.setName('Convert inline tags')
+			.setDesc('Convert inline tags to adding them in the frontmatter')
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.inlineTags)
+					.onChange(async (value) => {
+						this.plugin.settings.inlineTags = value;
+						await this.plugin.saveSettings();
+					})
+			});
 
 		const censorTextDesc = document.createDocumentFragment();
 		censorTextDesc.createEl('p', {text: t('censorTextDesc') as string})

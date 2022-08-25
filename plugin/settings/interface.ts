@@ -30,6 +30,7 @@ export interface GitHubPublisherSettings {
 	convertDataview: boolean;
 	useFrontmatterTitle: boolean;
 	censorText: TextCleaner[];
+	inlineTags: boolean;
 }
 
 export enum folderSettings {
@@ -71,6 +72,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	convertDataview: true,
 	useFrontmatterTitle: false,
 	censorText: [],
+	inlineTags: false,
 }
 
 export interface LinkedNotes {
