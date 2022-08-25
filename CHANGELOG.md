@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [3.17.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.17.0...3.17.1) (2022-08-25)
+
+
+### Bug Fixes
+
+* forgot language string ([f575cab](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f575cab712c086ad5f7729e62d3494298a74837e))
+
 ## [3.17.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.16.2...3.17.0) (2022-08-25)
 
 
