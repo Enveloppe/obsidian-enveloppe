@@ -77,6 +77,9 @@ export default {
 	censorToolTipRemove: 'Supprimer ce remplacement',
 	censorPlaceHolder: 'Regex ou text à remplacer',
 	censorValuePlaceHolder: 'Remplacement',
+	inlineTagsHeader: 'Inlines tags',
+	inlineTagsDesc: 'Ajoute vos tags inline dans votre bloc de métadonnée et convertit les tags imbriqués en remplaçant "/" par "_"',
+
 	// ---
 	// # Embed # //
 

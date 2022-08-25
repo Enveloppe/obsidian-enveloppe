@@ -59,6 +59,18 @@ export default {
 	hardBreakDesc: "在每一行之后添加一个标记性的硬断行（双倍空白）。",
 	headerDataview: "Dataview",
 	headerDataviewDesc: "Convert dataview to markdown.",
+	useFrontmatterTitle: "Use frontmatter title",
+	useFrontmatterTitleDesc: "Use frontmatter \"title\" field instead of the file name.",
+	censorTextHeader: "Text replacer",
+	censorTextDesc: "Replace text (or regex) in the file with the given value.",
+	censorTextInsensitive: "Case insensitive",
+	censorTextEmpty: 'Replacement can be empty to remove the whole string.',
+	censorToolTipAdd: 'Add a new text replacer',
+	censorToolTipRemove: 'Delete this text replacer',
+	censorPlaceHolder: 'Regex or text to replace',
+	censorValuePlaceHolder: 'Replacement value',
+	inlineTagsHeader: 'Inline tags',
+	inlineTagsDesc: 'Add your inline tags in your frontmatter tags field and converting nested tags with replacing "/" with "_"',
 
 	// ---
 	// # Embed # //

@@ -76,6 +76,8 @@ export default {
 	censorToolTipRemove: 'Delete this text replacer',
 	censorPlaceHolder: 'Regex or text to replace',
 	censorValuePlaceHolder: 'Replacement value',
+	inlineTagsHeader: 'Inline tags',
+	inlineTagsDesc: 'Add your inline tags in your frontmatter tags field and converting nested tags with replacing "/" with "_"',
 
 	// ---
 	// # Embed # //

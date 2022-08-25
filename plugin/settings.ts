@@ -203,8 +203,8 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					});
 			});
 		new Setting(this.containerEl)
-			.setName('Convert inline tags')
-			.setDesc('Convert inline tags to adding them in the frontmatter')
+			.setName(t('inlineTagsHeader') as string)
+			.setDesc(t('inlineTagsDesc') as string)
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.inlineTags)
