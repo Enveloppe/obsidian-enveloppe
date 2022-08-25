@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [3.17.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.16.2...3.17.0) (2022-08-25)
+
+
+### Features
+
+* add inline tags in tags frontmatter ([54de5ad](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/54de5ad8ab03ee005e9610729c4102ba6780f24d)), closes [#23](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/23)
+
 ### [3.16.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.16.1...3.16.2) (2022-08-23)
 
 
