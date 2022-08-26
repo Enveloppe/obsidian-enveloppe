@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.0.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.0.1...4.0.2) (2022-08-26)
+
+
+### Bug Fixes
+
+* **inlineTags:** handle the case where is no frontmatter tags in a note ([b75e914](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b75e9148379601f68c81e95dd01152a7bf742105)), closes [#24](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/24)
+
 ### [4.0.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.0.0...4.0.1) (2022-08-26)
 
 
