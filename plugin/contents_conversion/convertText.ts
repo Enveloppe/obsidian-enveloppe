@@ -22,9 +22,10 @@ async function addInlineTags(settings: GitHubPublisherSettings, file:TFile, meta
 	if (!settings.inlineTags) {
 		return app.vault.cachedRead(file);
 	}
-	const inlineTagsInText= metadataCache.getFileCache(file)?.tags?.map(
+	const inlineTags = metadataCache.getFileCache(file)?.tags;
+	const inlineTagsInText= inlineTags ? inlineTags.map(
 		t => t.tag.replace('#', '')
-			.replaceAll('/', '_'));
+			.replaceAll('/', '_')) : [];
 	//@ts-ignore
 	const yamlTags= parseFrontMatterTags(metadataCache.getFileCache(file)?.frontmatter).map(t => t.replace('#', '')
 		.replaceAll("/", "_"));
