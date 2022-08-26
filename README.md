@@ -4,8 +4,8 @@ title: Obsidian Github Publisher
 ---
 
 [FR 🇫🇷](https://github.com/obsidianPublisher/obsidian-github-publisher/blob/master/docs/README_FR.md)
-<!-- TOC -->
 
+<!-- TOC -->
 - [What the plugin do](#what-the-plugin-do)
   - [What the plugin doesn't do](#what-the-plugin-doesnt-do)
 - [Configuration](#configuration)
@@ -30,7 +30,7 @@ title: Obsidian Github Publisher
 - [Developping](#developping)
   - [General](#general)
   - [Translation](#translation)
-
+- [Useful links](#useful-links)
 <!-- /TOC -->
 
 
@@ -270,7 +270,7 @@ To add a new language :
 - [The discord server](https://discord.gg/8FqxxjxGYx)
 
 ---
-If you find this plugin and workflow useful, you can give me some coffee money.
+If you find this plugin and workflow useful, you can give me some coffee money : <br/>
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 [^1]: Only file supported by Obsidian will be deleted. 
