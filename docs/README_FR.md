@@ -6,7 +6,6 @@ title: Obsidian Github Publisher
 [EN 🇬🇧](https://github.com/obsidianPublisher/obsidian-github-publisher#readme)
 
 <!-- TOC -->
-
 - [Ce que fait le plugin](#ce-que-fait-le-plugin)
   - [Ce que ne fait pas le plugin](#ce-que-ne-fait-pas-le-plugin)
 - [Configuration](#configuration)
@@ -31,7 +30,6 @@ title: Obsidian Github Publisher
   - [Général](#général)
   - [Traduction](#traduction)
 - [Liens utiles](#liens-utiles)
-
 <!-- /TOC -->
 
 GitHub Publisher est un module qui vous aide à envoyer des fichiers dans un dépôt GitHub en fonction de l'état d'une clé de métadonnée situé dans votre frontmatter.
@@ -263,7 +261,7 @@ Pour ajouter un nouveau langage :
 
 ---
 
-Si vous trouvez ce module et ce workflow utile, vous pouvez m'envoyer de quoi m'acheter du café en grande quantité :
+Si vous trouvez ce module et ce workflow utile, vous pouvez m'envoyer de quoi m'acheter du café en grande quantité :<br/>
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 [^1]: Seuls les fichiers supportés par Obsidian seront supprimés. 
