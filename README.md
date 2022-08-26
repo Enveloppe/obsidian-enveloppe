@@ -7,21 +7,25 @@ title: Obsidian Github Publisher
 <!-- TOC -->
 
 - [What the plugin do](#what-the-plugin-do)
+  - [What the plugin doesn't do](#what-the-plugin-doesnt-do)
 - [Configuration](#configuration)
   - [Configuration example](#configuration-example)
   - [GitHub](#github)
-  - [Download configuration](#download-configuration)
+  - [Upload configuration](#upload-configuration)
     - [Folder reception settings.](#folder-reception-settings)
       - [Metadata frontmatter](#metadata-frontmatter)
       - [Fixed folder](#fixed-folder)
       - [Obsidian Path](#obsidian-path)
-    - [Workflow](#workflow)
-      - [Auto clean-up](#auto-clean-up)
-    - [Links' conversion](#links-conversion)
-      - [Index & folder note](#index--folder-note)
-      - [Internal links](#internal-links)
-      - [Wikilinks to markdown link](#wikilinks-to-markdown-link)
+    - [Frontmatter title](#frontmatter-title)
+    - [Content's conversion](#contents-conversion)
+      - [Text](#text)
+      - [Links](#links)
+        - [Index & folder note](#index--folder-note)
+        - [Internal links](#internal-links)
+        - [Wikilinks to markdown link](#wikilinks-to-markdown-link)
     - [Embed](#embed)
+    - [Github Workflow](#github-workflow)
+      - [Auto clean-up](#auto-clean-up)
   - [Plugin settings](#plugin-settings)
 - [Developping](#developping)
   - [General](#general)
@@ -30,9 +34,9 @@ title: Obsidian Github Publisher
 <!-- /TOC -->
 
 
-GitHub Publisher is a plugin that help you to send file in a configured GitHub Repository, based on a front matter entry state. 
+GitHub Publisher is a plugin that help you to send file in a configured GitHub Repository, based on a frontmatter sharing key. 
 
-You can use it to send any markdown file, allowing compatibility thought a lot of Obsidian Publish alternative. 
+You can use it to send any markdown file, allowing compatibility thought a lot of Obsidian Publish alternative (like Mkdocs, Jekyll, Hugo or any solution that use Markdown files). 
 
 When a shared file is found, it will be sent in a new branch named by `your_vault_name-month-day-year`. A pull request followed by a merge will be done, and if everything is okay, the branch will be deleted after the merge. 
 Thus, you can easily revert commit, and create workflow based on PR, merged PR, specific push... 
@@ -50,7 +54,14 @@ But the plugin can do a lot more !
 - Rename folder note with same name strategies with `index.md` (+ respecting the folder settings)
 - Send a link's note in your clipboard after sharing.
 - Convert simple dataview query in markdown !
+- ✨ Replace text using regex expression (or a simple string...)!
+- ✨ Send your inlines tags to your frontmatter (in the `tags` key)
 
+## What the plugin doesn't do 
+- [ ] Using a local folder instead of a Github Repository (see [local folder](https://obsidian-publisher.netlify.app/obsidian/local%20folder/))
+- [ ] Synchronize a GitHub repository with your vault (See [Obsidian Git](https://github.com/denolehov/obsidian-git) / [Obsidian Git Mobile](https://github.com/Vinzent03/obsidian-git-mobile))
+- [ ] Do a coffee 🍵
+- [ ] Bring back the loved one (the dead one)
 
 ---
 
@@ -60,7 +71,7 @@ To use the plugin, you need to fill the correct information to allow the workflo
 
 ## Configuration example
 
-You will find [here](https://obsidian-publisher.netlify.appObsidian%20Github%20Publisher/Configuration%20example/) configuration example for some Obsidian Publish alternative, as Obsidian Mkdocs Publisher and [TuanManhCao Digital Garden](https://github.com/TuanManhCao/digital-garden).
+You will find [here](https://obsidian-publisher.netlify.appObsidian%20Github%20Publisher/Configuration%20example/) configuration example for some Obsidian Publish alternative, as Obsidian Mkdocs Publisher and [@TuanManhCao Digital Garden](https://github.com/TuanManhCao/digital-garden).
 
 > [!note] Adding configuration
 > You can send me or do a pullrequest to add new configuration for any Obsidian **free** publish alternative. 
@@ -71,11 +82,11 @@ You will find [here](https://obsidian-publisher.netlify.appObsidian%20Github%20P
 - GitHub username: Your username.
 - GitHub Token: Get your [GitHub Token here](https://github.com/settings/tokens/new?scopes=repo)[^2]. The correct settings should already be applied. If you want to avoid generating this every few months, select the “No expiration” option. Click the “Generate token” button, and copy the token you are presented with on the next page.
 
-## Download configuration
+## Upload configuration
 
 ### Folder reception settings.
 
-You have two options : 
+You have tree options : 
 - Use a “fixed” folder : Every file will be sent in this folder. 
 - Use a folder created based on a `category` key.
 - Use the relative path from obsidian. You can prepend a folder using the default folder. 
@@ -120,11 +131,73 @@ The `path removing` allow you to remove part of the path created, to, for exampl
 > You could plug in `vault/sub` as the path removed. The sync will flow `vault/sub` as `repo`. 
 > A file in `vault/sub/folderA` will be sync in `repo/folderA`
 
-### Workflow 
+### Frontmatter title
 
-If your workflow needs to activate a GitHub actions, set the name here. 
+You can change the filename with the `title` frontmatter key.
+> [!example] Example
+> `title: My title`
+> `filename` : `28-03-2020-1845.md`
+> Final filename : `My title.md`
 
-Leave it blank to disable the GitHub actions activation.
+
+### Content's conversion
+
+> [!note] These settings won't change your file's content in your vault
+
+#### Text
+For some reason, you can need to convert text in your file. Here you can configure to :
+- Use "hard break line" of the markdown specification, aka adding two space at the end of each line.
+- Convert dataview queries to markdown. If this option is disabled, dataview queries will be removed entirely in the converted file.
+- Text replacement : you can replace text by another one in the converted file, using a simple string or regex. 
+  - The given text is insensitive to case.
+  - The replacement can be empty to remove the whole string.
+- Add your inlines tags into your frontmatter and convert nested tags with replacing the `/` to `_` (for example, `#tag/subtag` will be converted to `tag_subtag`), also, consequently, fix your frontmatter as YAML standard. 
+
+
+#### Links
+##### Index & folder note
+
+Some publishing solution support folder note, but these note need to be named `index`. In case you use [Folder Note](https://github.com/aidenlx/alx-folder-note) with [the `same name` strategies](https://github.com/aidenlx/alx-folder-note/wiki/folder-note-pref) you will have a problem, no? By chance, I have a solution for you, guys!
+Now, the plugin will convert these file into `index` if you activate the settings. Here some examples of renaming, using the different parameters from the default folder.
+Note : This option doesn't work for Obsidian Path + Same name strategies **outside** of folder. 
+
+> [!example] frontmatter example with a file named `folder2`
+> - Using a category value : `folder1/folder2` 
+> - With root value named `docs` ⇒ `docs/folder1/folder2/index.md`
+> - Without root : `folder1/folder2/index.md` 
+> - Without category value, with default folder named `drafts` : `draft/folder2.md` (the name won't be converted!)
+
+> [!example] Example with Obsidian Path & a file named `folder2`
+> With a path like : `folder1/folder2` the new path will be :
+> - If you use a default folder named `docs` : `docs/folder1/folder2/index.md`
+> - Without : `folder1/folder2/index.md`
+
+> [!warning] This option doesn't work with fixed folder.
+
+##### Internal links
+
+This option will convert the internal links (including image links!) of the shared file to match the relative file in your repo. Only **existant** and **shared** file will be converted.
+> [!example] 
+> Cited file : `docs/XX/YY/my_file.md`
+> File to convert : `docs/XX/ZZ/new_file.md`
+> Path created : `../YY/my_file.md`
+
+##### Wikilinks to markdown link
+
+In case you use wikilinks as daily but your obsidian publish solution doesn't support it, you can use this settings to convert the wiki to md link. 
+
+### Embed
+
+You can choose to send embeded files :
+- Images : The image will be copied in the repository in an optionnaly settled folder.
+- Notes : Only shared files will be copied in the repository, in their respected folder (following your settings).
+
+### Github Workflow
+
+If you workflow must activate a GitHub action, set the name of it here. 
+Leave empty to remove it.
+
+> [!note] The action will be triggered by a `workflow_dispatche` event.
 
 #### Auto clean-up
 
@@ -149,46 +222,6 @@ Finally, to prevent deleting `index` created outside of obsidian, you could use 
 - `index: true`
 Or removing the `share` key.
 
-### Links' conversion
-
-> [!note] These settings won't change your file's content in your vault
-
-#### Index & folder note
-
-Some publishing solution support folder note, but these note need to be named `index`. In case you use [Folder Note](https://github.com/aidenlx/alx-folder-note) with [the `same name` strategies](https://github.com/aidenlx/alx-folder-note/wiki/folder-note-pref) you will have a problem, no? By chance, I have a solution for you, guys!
-Now, the plugin will convert these file into `index` if you activate the settings. Here some examples of renaming, using the different parameters from the default folder.
-Note : This option doesn't work for Obsidian Path + Same name strategies **outside** of folder. 
-
-> [!example] frontmatter example with a file named `folder2`
-> - Using a category value : `folder1/folder2` 
-> - With root value named `docs` ⇒ `docs/folder1/folder2/index.md`
-> - Without root : `folder1/folder2/index.md` 
-> - Without category value, with default folder named `drafts` : `draft/folder2.md` (the name won't be converted!)
-
-> [!example] Example with Obsidian Path & a file named `folder2`
-> With a path like : `folder1/folder2` the new path will be :
-> - If you use a default folder named `docs` : `docs/folder1/folder2/index.md`
-> - Without : `folder1/folder2/index.md`
-
-> [!warning] This option doesn't work with fixed folder.
-
-#### Internal links
-
-This option will convert the internal links (including image links!) of the shared file to match the relative file in your repo. Only **existant** and **shared** file will be converted.
-> [!example] 
-> Cited file : `docs/XX/YY/my_file.md`
-> File to convert : `docs/XX/ZZ/new_file.md`
-> Path created : `../YY/my_file.md`
-
-#### Wikilinks to markdown link
-
-In case you use wikilinks as daily but your obsidian publish solution doesn't support it, you can use this settings to convert the wiki to md link. 
-
-### Embed
-
-You can choose to send embeded files :
-- Images : The image will be copied in the repository in an optionnaly settled folder.
-- Notes : Only shared files will be copied in the repository, in their respected folder (following your settings).
 
 ## Plugin settings
 
@@ -228,6 +261,13 @@ To add a new language :
   - add the new language in the `localeMap` json object: `{ "language": language }`
 - Additionnaly, you can test if your translation is okay.
 - Create a PR to add your translation!
+
+---
+# Useful links
+- [The documentation](https://obsidian-publisher.netlify.app/)
+- [The repository](https://github.com/ObsidianPublisher/obsidian-github-publisher)
+- [Mkdocs Template](https://github.com/ObsidianPublisher/obsidian-mkdocs-publisher-template)
+- [The discord server](https://discord.gg/8FqxxjxGYx)
 
 ---
 If you find this plugin and workflow useful, you can give me some coffee money.
