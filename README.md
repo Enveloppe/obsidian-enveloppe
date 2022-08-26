@@ -257,7 +257,7 @@ To add a new language :
 - Get your locale language from Obsidian using [obsidian translation](https://github.com/obsidianmd/obsidian-translations) or using the commands (in templater for example) : `<% tp.obsidian.moment.locale() %>` 
 - Translate the file and save it.
 - In `i18n/index.ts` :
-  - Import the new file as `import language from '.locales/language'
+  - Import the new file as `import language from '.locales/language'`
   - add the new language in the `localeMap` json object: `{ "language": language }`
 - Additionnaly, you can test if your translation is okay.
 - Create a PR to add your translation!
