@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.0.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.0.0...4.0.1) (2022-08-26)
+
+
+### Bug Fixes
+
+* addinlinetags removes part of note containing --- (keeping only the first) ([b196bbf](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b196bbf3288116184b68e751d5841a82b10beae0)), closes [#25](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/25)
+* handle the case where is no inline tags in a note ([99e87be](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/99e87be5e940fc9d847ff8e007bc5160b1076e4e)), closes [#24](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/24)
+
 ## [4.0.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.17.1...4.0.0) (2022-08-26)
 
 ### [3.17.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.17.0...3.17.1) (2022-08-25)
