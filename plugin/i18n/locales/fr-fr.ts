@@ -79,7 +79,10 @@ export default {
 	censorValuePlaceHolder: 'Remplacement',
 	inlineTagsHeader: 'Inlines tags',
 	inlineTagsDesc: 'Ajoute vos tags inline dans votre bloc de métadonnée et convertit les tags imbriqués en remplaçant "/" par "_"',
-
+	dataviewFieldHeader: 'Conversion des champs du frontmatter/dataview en tags',
+	dataviewFieldDesc: 'Ceci convertira tous les champs du frontmatter/dataview en tags. Séparez les champs par une virgule.',
+	dataviewExcludeHeader: 'Exclure des valeurs de la conversion',
+	dataviewExcludeDesc: 'Exclure la valeur de la conversion. Séparez les valeurs par une virgule.',
 	// ---
 	// # Embed # //
 

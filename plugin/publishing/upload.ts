@@ -16,7 +16,7 @@ import {
 	convertLinkCitation,
 	convertWikilinks,
 	addHardLineBreak,
-	censorText, addInlineTags
+	censorText, addInlineTags, convertInlineDataview
 } from "../contents_conversion/convertText";
 
 import {
@@ -109,6 +109,7 @@ export default class Publisher {
 			const linkedFiles = shareFiles.getLinkedImageAndFiles(file);
 			let text = await addInlineTags(this.settings, file, this.metadataCache, this.plugin.app);
 			text = await convertDataviewQueries(text, file.path, this.settings, this.vault, this.metadataCache, file);
+			text = await convertInlineDataview(text, this.settings, file);
 			text = addHardLineBreak(text, this.settings);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault);
 			text = convertWikilinks(text, this.settings, linkedFiles);

@@ -1,7 +1,7 @@
 import {GitHubPublisherSettings, LinkedNotes} from "../settings/interface";
 import {App, MetadataCache, Notice, parseFrontMatterTags, parseYaml, stringifyYaml, TFile, Vault} from "obsidian";
 import {createRelativePath, getDataviewPath} from "./filePathConvertor";
-import {getAPI} from "obsidian-dataview";
+import {getAPI, Link} from "obsidian-dataview";
 import {noticeLog} from "../src/utils";
 
 function addHardLineBreak(text: string, settings: GitHubPublisherSettings) {
@@ -18,6 +18,15 @@ function addHardLineBreak(text: string, settings: GitHubPublisherSettings) {
 	}
 }
 
+async function addToYAML(text: string, toAdd: string[]) {
+	const yaml = text.split("---")[1];
+	const yamlObject = parseYaml(yaml);
+	yamlObject.tags = toAdd;
+	const returnToYaml = stringifyYaml(yamlObject);
+	const fileContentsOnly= text.split("---").slice(2).join("---");
+	return `---\n${returnToYaml}---\n${fileContentsOnly}`;
+}
+
 async function addInlineTags(settings: GitHubPublisherSettings, file:TFile, metadataCache: MetadataCache, app: App): Promise<string> {
 	if (!settings.inlineTags) {
 		return app.vault.cachedRead(file);
@@ -29,12 +38,9 @@ async function addInlineTags(settings: GitHubPublisherSettings, file:TFile, meta
 	const frontmatterTags = parseFrontMatterTags(metadataCache.getFileCache(file)?.frontmatter);
 	const yamlTags = frontmatterTags ? frontmatterTags.map(t => t.replace('#', '')
 		.replaceAll("/", "_")) : [];
-	const yaml = (await app.vault.cachedRead(file)).split("---")[1];
-	const yamlObject = parseYaml(yaml);
-	yamlObject.tags = [...new Set([...inlineTagsInText, ...yamlTags])];
-	const returnToYaml = stringifyYaml(yamlObject);
-	const fileContentsOnly= (await app.vault.cachedRead(file)).split("---").slice(2).join("---");
-	return `---\n${returnToYaml}---\n${fileContentsOnly}`;
+	const toAdd = [...new Set([...inlineTagsInText, ...yamlTags])];
+	const text = (await app.vault.cachedRead(file))
+	return await addToYAML(text, toAdd);
 }
 
 function censorText(text: string, settings: GitHubPublisherSettings): string {
@@ -46,6 +52,50 @@ function censorText(text: string, settings: GitHubPublisherSettings): string {
 		console.log(typeof censor.replace);
 		// @ts-ignore
 		text = text.replaceAll(regex, censor.replace);
+	}
+	return text;
+}
+
+function dataviewExtract(fieldValue: Link): string {
+	const basename = (name: string) =>
+		/([^/\\.]*)(\..*)?$/.exec(name)[1];
+	return fieldValue.display ? fieldValue.display : basename(fieldValue.path);
+}
+
+async function convertInlineDataview(text: string, settings: GitHubPublisherSettings, sourceFile: TFile) {
+	if (settings.dataviewFields.length === 0) {
+		return text;
+	}
+	const dvApi = getAPI();
+	const dataviewLinks = await dvApi.page(sourceFile.path);
+	const valueToAdd:string[] = [];
+	for (const field of settings.dataviewFields) {
+		const fieldValue = dataviewLinks[field];
+		console.log(settings.excludeDataviewValue)
+		if (fieldValue) {
+			if (fieldValue.constructor.name === 'Link') {
+				const stringifyField = dataviewExtract(fieldValue);
+				if (!settings.excludeDataviewValue.includes(stringifyField)) {
+					valueToAdd.push(stringifyField);
+				}
+			} else if (fieldValue.constructor.name === 'Array') {
+				for (const item of fieldValue) {
+					let stringifyField = item;
+					if (item.constructor.name === 'Link') {
+						stringifyField = dataviewExtract(item);
+					}
+					if (!settings.excludeDataviewValue.includes(stringifyField.toString())) {
+						valueToAdd.push(stringifyField.toString());
+					}
+				}
+			} else if (!settings.excludeDataviewValue.includes(fieldValue.toString())) {
+				valueToAdd.push(fieldValue.toString());
+			}
+		}
+	}
+	console.log(valueToAdd)
+	if (valueToAdd.length > 0) {
+		return await addToYAML(text, valueToAdd);
 	}
 	return text;
 }
@@ -174,6 +224,7 @@ export {convertWikilinks,
 	convertLinkCitation,
 	creatorAltLink,
 	convertDataviewQueries,
+	convertInlineDataview,
 	addHardLineBreak,
 	censorText,
 	addInlineTags};

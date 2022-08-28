@@ -10,6 +10,17 @@ import {
 import {folderSettings, TextCleaner} from "./settings/interface";
 import t from './i18n'
 
+
+function openDetails(groupName: string, detailsState: boolean) {
+	for (let i = 0; i < document.getElementsByTagName('details').length; i++) {
+		const details = document.getElementsByTagName('details')[i] as HTMLDetailsElement;
+		console.log(details.innerText)
+		if (details.innerText === groupName && detailsState) {
+			details.open = true;
+		}
+	}
+}
+
 export class MkdocsSettingsTab extends PluginSettingTab {
 	plugin: GithubPublisherPlugin;
 
@@ -191,17 +202,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 					});
 			});
 
-		new Setting(this.containerEl)
-			.setName(t('headerDataview') as string)
-			.setDesc(t('headerDataviewDesc') as string)
-			.addToggle((toggle) => {
-				toggle
-					.setValue(this.plugin.settings.convertDataview)
-					.onChange(async (value) => {
-						this.plugin.settings.convertDataview = value;
-						await this.plugin.saveSettings();
-					});
-			});
+
 		new Setting(this.containerEl)
 			.setName(t('inlineTagsHeader') as string)
 			.setDesc(t('inlineTagsDesc') as string)
@@ -218,9 +219,9 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 		censorTextDesc.createEl('p', {text: t('censorTextDesc') as string})
 		censorTextDesc.createEl('li', {text: t('censorTextInsensitive') as string})
 		censorTextDesc.createEl('li', {text: t('censorTextEmpty') as string})
-
-		new Setting(this.containerEl)
-			.setName(t('censorTextHeader') as string)
+		const details = containerEl.createEl('details');
+		details.createEl('summary', {text: t('censorTextHeader') as string})
+		new Setting(details)
 			.setClass('obs-git-publisher-censor-desc')
 			.setDesc(censorTextDesc)
 			.addButton((btn) => {
@@ -235,11 +236,12 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						this.plugin.settings.censorText.push(censorText);
 						await this.plugin.saveSettings();
 						this.display();
+						openDetails('Replacement de texte', true)
 					})
 			})
 
 		for (const censorText of this.plugin.settings.censorText) {
-			new Setting(this.containerEl)
+			new Setting(details)
 				.setClass('obs-git-publisher-censor-entry')
 				.addText((text) => {
 					text
@@ -267,9 +269,49 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 							this.plugin.settings.censorText.splice(this.plugin.settings.censorText.indexOf(censorText), 1);
 							await this.plugin.saveSettings();
 							this.display();
+							openDetails('Replacement de texte', true)
 						})
 				})
 		}
+
+		containerEl.createEl('h5', {text: 'Dataview'})
+		new Setting(this.containerEl)
+			.setName(t('headerDataview') as string)
+			.setDesc(t('headerDataviewDesc') as string)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.convertDataview)
+					.onChange(async (value) => {
+						this.plugin.settings.convertDataview = value;
+						await this.plugin.saveSettings();
+					});
+			});
+
+		new Setting(this.containerEl)
+			.setName(t('dataviewFieldHeader') as string)
+			.setDesc(t('dataviewFieldDesc') as string)
+			.addTextArea((text) => {
+				text
+					.setPlaceholder('field_name')
+					.setValue(this.plugin.settings.dataviewFields.join(','))
+					.onChange(async (value) => {
+						this.plugin.settings.dataviewFields = value.split(',').map((field) => field.trim());
+						await this.plugin.saveSettings();
+					});
+			});
+		new Setting(this.containerEl)
+			.setName(t('dataviewExcludeHeader') as string)
+			.setDesc(t('dataviewExcludeDesc') as string)
+			.addTextArea((text) => {
+				text
+					.setPlaceholder('field value')
+					.setValue(this.plugin.settings.excludeDataviewValue.join(','))
+					.onChange(async (value) => {
+						this.plugin.settings.excludeDataviewValue = value.split(',').map((field) => field.trim());
+						await this.plugin.saveSettings();
+					});
+			});
+
 		containerEl.createEl('h5', {text: t('linkHeader') as string})
 		const folderNoteSettings = new Setting(containerEl)
 			.setName(t('folderNote') as string)

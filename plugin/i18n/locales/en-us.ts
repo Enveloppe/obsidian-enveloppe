@@ -78,7 +78,10 @@ export default {
 	censorValuePlaceHolder: 'Replacement value',
 	inlineTagsHeader: 'Inline tags',
 	inlineTagsDesc: 'Add your inline tags in your frontmatter tags field and converting nested tags with replacing "/" with "_"',
-
+	dataviewFieldHeader: 'Convert frontmatter/dataview field to tags',
+	dataviewFieldDesc: 'This will convert any frontmatter or dataview inline field into frontmatter tags. Separate fields with a comma.',
+	dataviewExcludeHeader: 'Exclude value from conversion',
+	dataviewExcludeDesc: 'This will exclude value from being converted. Separate fields with a comma.',
 	// ---
 	// # Embed # //
 	embed: "Embed",
