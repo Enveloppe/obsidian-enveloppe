@@ -201,18 +201,16 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-
-
 		new Setting(this.containerEl)
-			.setName(t('inlineTagsHeader') as string)
-			.setDesc(t('inlineTagsDesc') as string)
+			.setName(t('headerDataview') as string)
+			.setDesc(t('headerDataviewDesc') as string)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.inlineTags)
+					.setValue(this.plugin.settings.convertDataview)
 					.onChange(async (value) => {
-						this.plugin.settings.inlineTags = value;
+						this.plugin.settings.convertDataview = value;
 						await this.plugin.saveSettings();
-					})
+					});
 			});
 
 		const censorTextDesc = document.createDocumentFragment();
@@ -274,17 +272,17 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 				})
 		}
 
-		containerEl.createEl('h5', {text: 'Dataview'})
+		containerEl.createEl('h5', {text: 'Tags'})
 		new Setting(this.containerEl)
-			.setName(t('headerDataview') as string)
-			.setDesc(t('headerDataviewDesc') as string)
+			.setName(t('inlineTagsHeader') as string)
+			.setDesc(t('inlineTagsDesc') as string)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.convertDataview)
+					.setValue(this.plugin.settings.inlineTags)
 					.onChange(async (value) => {
-						this.plugin.settings.convertDataview = value;
+						this.plugin.settings.inlineTags = value;
 						await this.plugin.saveSettings();
-					});
+					})
 			});
 
 		new Setting(this.containerEl)
