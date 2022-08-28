@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.1.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.0.2...4.1.0-1) (2022-08-28)
+
+
+### Features
+
+* field to tags conversion ([f8af7af](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f8af7afb58e1d5423b89665fd21d313159ae23fa)), closes [#26](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/26)
+
+
+### Bug Fixes
+
+* inlines / previous tags removed if dataview inline field ([d040239](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d0402392574edabb076c996f34c50419ee7746ac)), closes [#26](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/26)
+
 ## [4.1.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.0.2...4.1.0-0) (2022-08-28)
 
 
