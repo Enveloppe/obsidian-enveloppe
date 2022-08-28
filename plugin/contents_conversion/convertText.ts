@@ -21,15 +21,25 @@ function addHardLineBreak(text: string, settings: GitHubPublisherSettings) {
 async function addToYAML(text: string, toAdd: string[]) {
 	const yaml = text.split("---")[1];
 	const yamlObject = parseYaml(yaml);
-	yamlObject.tags = toAdd;
+	if (yamlObject.tag) {
+		toAdd = [...new Set([...toAdd, ...yamlObject.tag])];
+	}
+	if (yamlObject.tags) {
+		yamlObject.tags = [...new Set([...yamlObject.tags, ...toAdd])];
+	} else {
+		yamlObject.tags = toAdd;
+	}
 	const returnToYaml = stringifyYaml(yamlObject);
 	const fileContentsOnly= text.split("---").slice(2).join("---");
+	console.log(returnToYaml);
 	return `---\n${returnToYaml}---\n${fileContentsOnly}`;
 }
 
 async function addInlineTags(settings: GitHubPublisherSettings, file:TFile, metadataCache: MetadataCache, app: App): Promise<string> {
+	const text = await app.vault.cachedRead(file);
+
 	if (!settings.inlineTags) {
-		return app.vault.cachedRead(file);
+		return text;
 	}
 	const inlineTags = metadataCache.getFileCache(file)?.tags;
 	const inlineTagsInText= inlineTags ? inlineTags.map(
@@ -38,9 +48,11 @@ async function addInlineTags(settings: GitHubPublisherSettings, file:TFile, meta
 	const frontmatterTags = parseFrontMatterTags(metadataCache.getFileCache(file)?.frontmatter);
 	const yamlTags = frontmatterTags ? frontmatterTags.map(t => t.replace('#', '')
 		.replaceAll("/", "_")) : [];
-	const toAdd = [...new Set([...inlineTagsInText, ...yamlTags])];
-	const text = (await app.vault.cachedRead(file))
-	return await addToYAML(text, toAdd);
+	const toAdd = [...new Set([...inlineTagsInText, ...yamlTags])]
+	if (toAdd.length > 0) {
+		return await addToYAML(text, toAdd);
+	}
+	return text;
 }
 
 function censorText(text: string, settings: GitHubPublisherSettings): string {
@@ -71,7 +83,6 @@ async function convertInlineDataview(text: string, settings: GitHubPublisherSett
 	const valueToAdd:string[] = [];
 	for (const field of settings.dataviewFields) {
 		const fieldValue = dataviewLinks[field];
-		console.log(settings.excludeDataviewValue)
 		if (fieldValue) {
 			if (fieldValue.constructor.name === 'Link') {
 				const stringifyField = dataviewExtract(fieldValue);
@@ -93,7 +104,6 @@ async function convertInlineDataview(text: string, settings: GitHubPublisherSett
 			}
 		}
 	}
-	console.log(valueToAdd)
 	if (valueToAdd.length > 0) {
 		return await addToYAML(text, valueToAdd);
 	}
