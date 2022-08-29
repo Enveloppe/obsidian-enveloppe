@@ -68,10 +68,13 @@ function censorText(text: string, settings: GitHubPublisherSettings): string {
 	return text;
 }
 
-function dataviewExtract(fieldValue: Link): string {
+function dataviewExtract(fieldValue: Link) {
 	const basename = (name: string) =>
 		/([^/\\.]*)(\..*)?$/.exec(name)[1];
-	return fieldValue.display ? fieldValue.display : basename(fieldValue.path);
+	return {
+		filename: basename(fieldValue.path).toString(),
+		display: fieldValue.display ? fieldValue.display.toString() : basename(fieldValue.path).toString(),
+	};
 }
 
 async function convertInlineDataview(text: string, settings: GitHubPublisherSettings, sourceFile: TFile) {
@@ -86,16 +89,21 @@ async function convertInlineDataview(text: string, settings: GitHubPublisherSett
 		if (fieldValue) {
 			if (fieldValue.constructor.name === 'Link') {
 				const stringifyField = dataviewExtract(fieldValue);
-				if (!settings.excludeDataviewValue.includes(stringifyField)) {
-					valueToAdd.push(stringifyField);
+				if (!settings.excludeDataviewValue.includes(stringifyField.display)
+					&& !settings.excludeDataviewValue.includes(stringifyField.filename)) {
+					valueToAdd.push(stringifyField.display);
 				}
 			} else if (fieldValue.constructor.name === 'Array') {
 				for (const item of fieldValue) {
 					let stringifyField = item;
 					if (item.constructor.name === 'Link') {
 						stringifyField = dataviewExtract(item);
+						if (!settings.excludeDataviewValue.includes(stringifyField.display)
+							&& !settings.excludeDataviewValue.includes(stringifyField.filename)) {
+							valueToAdd.push(stringifyField.display);
+						}
 					}
-					if (!settings.excludeDataviewValue.includes(stringifyField.toString())) {
+					else if (!settings.excludeDataviewValue.includes(stringifyField.toString())) {
 						valueToAdd.push(stringifyField.toString());
 					}
 				}
