@@ -31,7 +31,6 @@ async function addToYAML(text: string, toAdd: string[]) {
 	}
 	const returnToYaml = stringifyYaml(yamlObject);
 	const fileContentsOnly= text.split("---").slice(2).join("---");
-	console.log(returnToYaml);
 	return `---\n${returnToYaml}---\n${fileContentsOnly}`;
 }
 
@@ -61,20 +60,21 @@ function censorText(text: string, settings: GitHubPublisherSettings): string {
 	}
 	for (const censor of settings.censorText) {
 		const regex = new RegExp(censor.entry, 'ig');
-		console.log(typeof censor.replace);
 		// @ts-ignore
 		text = text.replaceAll(regex, censor.replace);
 	}
 	return text;
 }
 
-function dataviewExtract(fieldValue: Link) {
+function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings) {
 	const basename = (name: string) =>
 		/([^/\\.]*)(\..*)?$/.exec(name)[1];
-	return {
-		filename: basename(fieldValue.path).toString(),
-		display: fieldValue.display ? fieldValue.display.toString() : basename(fieldValue.path).toString(),
-	};
+	const filename = basename(fieldValue.path).toString();
+	const display = fieldValue.display ? fieldValue.display.toString() : filename;
+	if (!settings.excludeDataviewValue.includes(display) && !settings.excludeDataviewValue.includes(filename)) {
+		return display;
+	}
+	return null;
 }
 
 async function convertInlineDataview(text: string, settings: GitHubPublisherSettings, sourceFile: TFile) {
@@ -88,20 +88,14 @@ async function convertInlineDataview(text: string, settings: GitHubPublisherSett
 		const fieldValue = dataviewLinks[field];
 		if (fieldValue) {
 			if (fieldValue.constructor.name === 'Link') {
-				const stringifyField = dataviewExtract(fieldValue);
-				if (!settings.excludeDataviewValue.includes(stringifyField.display)
-					&& !settings.excludeDataviewValue.includes(stringifyField.filename)) {
-					valueToAdd.push(stringifyField.display);
-				}
+				const stringifyField = dataviewExtract(fieldValue, settings);
+				valueToAdd.push(stringifyField);
 			} else if (fieldValue.constructor.name === 'Array') {
 				for (const item of fieldValue) {
 					let stringifyField = item;
 					if (item.constructor.name === 'Link') {
-						stringifyField = dataviewExtract(item);
-						if (!settings.excludeDataviewValue.includes(stringifyField.display)
-							&& !settings.excludeDataviewValue.includes(stringifyField.filename)) {
-							valueToAdd.push(stringifyField.display);
-						}
+						stringifyField = dataviewExtract(item, settings);
+						valueToAdd.push(stringifyField);
 					}
 					else if (!settings.excludeDataviewValue.includes(stringifyField.toString())) {
 						valueToAdd.push(stringifyField.toString());
@@ -113,7 +107,7 @@ async function convertInlineDataview(text: string, settings: GitHubPublisherSett
 		}
 	}
 	if (valueToAdd.length > 0) {
-		return await addToYAML(text, valueToAdd);
+		return await addToYAML(text, valueToAdd.filter(Boolean));
 	}
 	return text;
 }
@@ -173,14 +167,12 @@ function convertWikilinks(
 				if (linkedFile) {
 					const altText = linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.extension === 'md' ? linkedFile.linked.basename : "";
 					const linkCreator = `[${altText}](${encodeURI(linkedFile.linkFrom)})`;
-					console.log('Linked', linkCreator);
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
 				} else if (!fileName.startsWith('http')) {
 					const altMatch = wikiMatch.match(/(\|).*(]])/);
 					const altCreator = fileName.split('/');
 					const altLink = creatorAltLink(altMatch, altCreator, fileName.split('.').at(-1));
 					const linkCreator = `[${altLink}](${encodeURI(fileName.trim())})`;
-					console.log('link creator not linked', linkCreator);
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
 				}
 			}
