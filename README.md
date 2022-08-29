@@ -41,7 +41,8 @@ You can use it to send any markdown file, allowing compatibility thought a lot o
 When a shared file is found, it will be sent in a new branch named by `your_vault_name-month-day-year`. A pull request followed by a merge will be done, and if everything is okay, the branch will be deleted after the merge. 
 Thus, you can easily revert commit, and create workflow based on PR, merged PR, specific push... 
 
-# What the plugin do
+# What the plugin ...
+## Do ?
 
 - Read the frontmatter to check the value of a configured `share` key.
 - Send the file (and their embedded image or notes if any) to a GitHub repository
@@ -55,9 +56,9 @@ But the plugin can do a lot more !
 - Send a link's note in your clipboard after sharing.
 - Convert simple dataview query in markdown !
 - ✨ Replace text using regex expression (or a simple string...)!
-- ✨ Send your inlines tags to your frontmatter (in the `tags` key)
+- ✨ Send your inlines tags to your frontmatter (in the `tags` key) **and** convert some field value to tags
 
-## What the plugin doesn't do 
+## Doesn't do ?
 - [ ] Using a local folder instead of a Github Repository (see [local folder](https://obsidian-publisher.netlify.app/obsidian/local%20folder/))
 - [ ] Synchronize a GitHub repository with your vault (See [Obsidian Git](https://github.com/denolehov/obsidian-git) / [Obsidian Git Mobile](https://github.com/Vinzent03/obsidian-git-mobile))
 - [ ] Do a coffee 🍵
@@ -151,8 +152,12 @@ For some reason, you can need to convert text in your file. Here you can configu
 - Text replacement : you can replace text by another one in the converted file, using a simple string or regex. 
   - The given text is insensitive to case.
   - The replacement can be empty to remove the whole string.
-- Add your inlines tags into your frontmatter and convert nested tags with replacing the `/` to `_` (for example, `#tag/subtag` will be converted to `tag_subtag`), also, consequently, fix your frontmatter as YAML standard. 
 
+#### Tags
+This part allows pulling some contents to add them into your frontmatter `tags` field.
+- <u>Inline Tags: </u> Add your inlines tags into your frontmatter and convert nested tags with replacing the `/` to `_` (for example, `#tag/subtag` will be converted to `tag_subtag`), also, consequently, fix your frontmatter as YAML standard. 
+- <u>Convert frontmatter/inline field into tags</u> : This will convert the value associated to preconfigured field into frontmatter tags. You can also prevent some value to be converted with the second field.
+	*Note:* If the value is a **link**, the converted value will be the filename or the displayed name. You can either exclude the filename or the displayed name. 
 
 #### Links
 ##### Index & folder note
