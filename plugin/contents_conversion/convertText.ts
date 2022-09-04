@@ -137,7 +137,7 @@ async function convertDataviewQueries(
 	const dvApi = getAPI();
 	const matches = text.matchAll(dataviewRegex);
 	if (!matches) return;
-	const settingsDataview = settings.convertDataview || frontmatter?.dataview;
+	const settingsDataview = frontmatter.dataview !== undefined ? frontmatter?.dataview : settings.convertDataview;
 	for (const queryBlock of matches){
 		try {
 			const block = queryBlock[0];
@@ -164,10 +164,8 @@ function convertWikilinks(
 	linkedFiles: LinkedNotes[]):string
 {
 	if (!settings.convertWikiLinks && !frontmatter?.mdlinks && frontmatter?.links) {
-		console.log('not convert')
 		return fileContent;
 	}
-	console.log('convert wikilinks')
 	const wikiRegex = /!?\[\[.*?\]\]/g;
 	const wikiMatches = fileContent.match(wikiRegex);
 	if (wikiMatches) {
