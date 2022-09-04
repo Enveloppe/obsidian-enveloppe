@@ -47,14 +47,14 @@ export class FilesManagement extends MkdocsPublish {
 		return shared_File;
 	}
 	
-	getAllFileWithPath(): ConvertedLink[] {
+	getAllFileWithPath(deleteOpt=false): ConvertedLink[] {
 		const files = this.vault.getFiles();
 		const allFileWithPath:ConvertedLink[] = [];
 		const shareKey = this.settings.shareKey;
 		for (const file of files) {
 			const fileExtension = file.extension;
-			if (fileExtension.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
-				const filepath = getImageLinkOptions(file, this.settings);
+			if (fileExtension.match(/(png|jpe?g|svg|bmp|gif)$/i) && deleteOpt) {
+				const filepath = getImageLinkOptions(file, this.settings, null);
 				allFileWithPath.push({
 					converted: filepath,
 					real: file.path
@@ -63,7 +63,7 @@ export class FilesManagement extends MkdocsPublish {
 				const frontMatter = this.metadataCache.getCache(
 					file.path
 				).frontmatter;
-				if (frontMatter && frontMatter[shareKey] === true && file.extension === "md") {
+				if (frontMatter && frontMatter[shareKey] === true) {
 					const filepath = getReceiptFolder(file, this.settings, this.metadataCache, this.vault);
 					allFileWithPath.push({
 						converted: filepath,
@@ -150,9 +150,9 @@ export class FilesManagement extends MkdocsPublish {
 						embed.link,
 						file.path
 					);
+					const transferImage = frontmatterSourceFile.image !== undefined ? frontmatterSourceFile.image : this.settings.embedImage;
 					if (imageLink.name.match(/(png|jpe?g|svg|bmp|gif)$/i)
-						&& (this.settings.embedImage || frontmatterSourceFile.image === true)
-						&& frontmatterSourceFile.image !== false
+						&& transferImage
 					) {
 						imageList.push(imageLink);
 					} else if (imageLink.extension==='md') {
@@ -162,8 +162,7 @@ export class FilesManagement extends MkdocsPublish {
 							frontmatter
 							&& frontmatter[sharedKey]
 							&& !this.checkExcludedFolder(imageLink)
-							&& (this.settings.embedNotes || frontmatterSourceFile.embed === true)
-							&& frontmatterSourceFile.embed !== false
+							&& transferImage
 						) {
 							imageList.push(imageLink);
 						}

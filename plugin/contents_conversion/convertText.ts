@@ -186,7 +186,7 @@ function convertWikilinks(
 					if (frontmatter?.links === false && (linkedFile.linked.extension === 'md')) {
 						linkCreator = altText;
 					}
-					if (frontmatter.image === false && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg'))) {
+					if ((frontmatter.image === false || !settings.embedImage) && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg'))) {
 						linkCreator = '';
 					}
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
@@ -197,9 +197,11 @@ function convertWikilinks(
 					if (settings.convertWikiLinks || frontmatter?.mdlinks){
 						linkCreator = `${isEmbed}[${altLink}](${encodeURI(fileName.trim())})`;
 					}
-					if (frontmatter?.links === false && fileName.split('.').at(-1).match('md')) {
+					if (frontmatter?.links === false && fileName.match('md$')) {
 						linkCreator = altLink;
-					} if (frontmatter.image === false && fileName.split('.').at(-1).match('png|jpg|jpeg|gif|svg')) {
+					} if (
+						(frontmatter.image === false || !settings.embedImage)
+						&& fileName.match('(png|jpg|jpeg|gif|svg)$')) {
 						linkCreator = '';
 					}
 

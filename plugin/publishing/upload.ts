@@ -192,7 +192,6 @@ export default class Publisher {
 		 * @param imageFile the image
 		 * @param ref branch name
 		 */
-		if (!this.settings.embedImage) return;
 		const imageBin = await this.vault.readBinary(imageFile);
 		const image64 = arrayBufferToBase64(imageBin);
 		const path = getImageLinkOptions(imageFile, this.settings, sourcefrontmatter);

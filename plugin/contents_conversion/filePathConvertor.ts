@@ -160,7 +160,7 @@ function getReceiptFolder(
 	}
 }
 
-function getImageLinkOptions(file: TFile, settings: GitHubPublisherSettings, sourceFrontmatter: FrontMatterCache):string {
+function getImageLinkOptions(file: TFile, settings: GitHubPublisherSettings, sourceFrontmatter: FrontMatterCache | null):string {
 	/**
 	 * Create link path based on settings and file path
 	 * @param file : TFile - Image TFile
