@@ -64,7 +64,7 @@ export default {
 	wikilinks: "Wikilinks",
 	wikilinksDesc: "Convert Wikilinks to MDlinks, without changing the contents. This option can be overridden by the frontmatter key \"mdlinks\".",
 	hardBreakTitle: "Markdown hard line break",
-	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line. This settings can be overridden by the frontmatter key \"hardBreak\".",
+	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line. This settings can be overridden by the frontmatter key \"hardbreak\".",
 	headerDataview: "Dataview",
 	headerDataviewDesc: "Convert dataview to markdown. This settings can be overridden by the frontmatter key \"dataview\".",
 	useFrontmatterTitle: "Use frontmatter title",

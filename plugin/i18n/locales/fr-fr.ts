@@ -65,7 +65,7 @@ export default {
 	wikilinks: "Wikilinks",
 	wikilinksDesc: "Convertir les liens Wikilinks en liens markdown, sans en modifier le contenu. Ce paramètre peut être outrepassé par la clé de métadonnées \"mdlinks\".",
 	hardBreakTitle: "Saut de ligne strict",
-	hardBreakDesc: "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne. Ce paramètre peut être outrepassé par la clé de métadonnées \"hardBreak\".",
+	hardBreakDesc: "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne. Ce paramètre peut être outrepassé par la clé de métadonnées \"hardbreak\".",
 	headerDataview: "Dataview",
 	headerDataviewDesc: "Convertir dataview en markdown. Ce paramètre peut être outrepassé par la clé de métadonnées \"dataview\".",
 	useFrontmatterTitle: "Utiliser la clé frontmatter \"title\"",

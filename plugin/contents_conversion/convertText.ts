@@ -179,7 +179,7 @@ function convertWikilinks(
 				if (linkedFile) {
 					const altText = linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.extension === 'md' ? linkedFile.linked.basename : "";
 					let linkCreator = `[${altText}](${encodeURI(linkedFile.linkFrom)})`;
-					if (!frontmatter?.links) {
+					if (frontmatter?.links === false) {
 						linkCreator = altText;
 					}
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
@@ -188,7 +188,7 @@ function convertWikilinks(
 					const altCreator = fileName.split('/');
 					const altLink = creatorAltLink(altMatch, altCreator, fileName.split('.').at(-1));
 					let linkCreator = `[${altLink}](${encodeURI(fileName.trim())})`;
-					if (!frontmatter?.links) {
+					if (frontmatter?.links === false) {
 						linkCreator = altLink;
 					}
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
