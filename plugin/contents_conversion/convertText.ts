@@ -17,7 +17,8 @@ import {noticeLog} from "../src/utils";
 function addHardLineBreak(text: string, settings: GitHubPublisherSettings, frontmatter: FrontMatterCache): string {
 	try {
 		text = text.replace(/^\s*\\\s*$/gmi, '<br/>');
-		if (settings.hardBreak || frontmatter?.hardbreak) {
+		const hardBreak = frontmatter?.hardBreak !== undefined ? frontmatter?.hardBreak : settings.hardBreak;
+		if (hardBreak) {
 			text = text.replace(/\n/gm, '  \n');
 		}
 		return text;
