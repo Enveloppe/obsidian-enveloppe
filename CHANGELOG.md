@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.2.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.2...4.2.0-1) (2022-09-04)
+
+
+### Features
+
+* frontmatter key for per file settings ([a49bc98](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a49bc98fe2bdd335df86f292c1be907c54da5c13))
+
+
+### Bug Fixes
+
+* true/false between mdlinks parameters and links ([71dad6f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/71dad6f149ee179b404f7993eab11086f5fd9b15))
+
 ## [4.2.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.2...4.2.0-0) (2022-09-04)
 
 
