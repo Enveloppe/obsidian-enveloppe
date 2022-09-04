@@ -47,13 +47,13 @@ export class FilesManagement extends MkdocsPublish {
 		return shared_File;
 	}
 	
-	getAllFileWithPath(deleteOpt=false): ConvertedLink[] {
+	getAllFileWithPath(): ConvertedLink[] {
 		const files = this.vault.getFiles();
 		const allFileWithPath:ConvertedLink[] = [];
 		const shareKey = this.settings.shareKey;
 		for (const file of files) {
 			const fileExtension = file.extension;
-			if (fileExtension.match(/(png|jpe?g|svg|bmp|gif)$/i) && deleteOpt) {
+			if (fileExtension.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
 				const filepath = getImageLinkOptions(file, this.settings, null);
 				allFileWithPath.push({
 					converted: filepath,

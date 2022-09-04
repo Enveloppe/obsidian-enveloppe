@@ -36,7 +36,7 @@ export async function deleteFromGithub(silent = false, settings: GitHubPublisher
 		}
 		return false;
 	}
-	const allSharedFiles = filesManagement.getAllFileWithPath(true);
+	const allSharedFiles = filesManagement.getAllFileWithPath();
 	const allSharedConverted = allSharedFiles.map((file) => { return file.converted; });
 	let deletedSuccess = 0;
 	let deletedFailed = 0;
