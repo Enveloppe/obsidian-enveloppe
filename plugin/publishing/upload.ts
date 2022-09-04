@@ -1,5 +1,5 @@
 import {
-	arrayBufferToBase64,
+	arrayBufferToBase64, FrontMatterCache,
 	MetadataCache,
 	Notice,
 	TFile,
@@ -47,7 +47,7 @@ export default class Publisher {
 		this.plugin = plugin;
 	}
 
-	async statusBarForEmbed(linkedFiles: TFile[], fileHistory:TFile[], ref="main", deepScan:boolean){
+	async statusBarForEmbed(linkedFiles: TFile[], fileHistory:TFile[], ref="main", deepScan:boolean, sourceFrontmatter: FrontMatterCache) {
 		/**
 		 * Add a status bar + send embed to GitHub. Deep-scanning files.
 		 * @param linkedFiles File embedded
@@ -64,7 +64,7 @@ export default class Publisher {
 						fileHistory.push(image);
 						await this.publish(image, false, ref, fileHistory, true);
 					} else {
-						await this.uploadImage(image, ref)
+						await this.uploadImage(image, ref, sourceFrontmatter)
 					}
 					statusBar.increment();
 				}
@@ -75,7 +75,7 @@ export default class Publisher {
 					fileHistory.push(embed);
 					await this.publish(embed, false, ref, fileHistory, true);
 				} else {
-					await this.uploadImage(embed, ref);
+					await this.uploadImage(embed, ref, sourceFrontmatter);
 				}
 			}
 		}
@@ -117,7 +117,7 @@ export default class Publisher {
 			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
 			noticeLog(`Upload ${file.name}:${path} on ${this.settings.githubName}/${this.settings.githubRepo}:${ref}`, this.settings);
 			await this.uploadText(file.path, text, path, file.name, ref);
-			await this.statusBarForEmbed(embedFiles, fileHistory, ref, deepScan);
+			await this.statusBarForEmbed(embedFiles, fileHistory, ref, deepScan, frontmatter);
 			if (autoclean && this.settings.autoCleanUp) {
 				await deleteFromGithub(true, this.settings, this.octokit, ref, shareFiles);
 			}
@@ -186,7 +186,7 @@ export default class Publisher {
 		);
 	}
 
-	async uploadImage(imageFile: TFile, ref = "main") {
+	async uploadImage(imageFile: TFile, ref = "main", sourcefrontmatter: FrontMatterCache) {
 		/**
 		 * Convert image in base64
 		 * @param imageFile the image
@@ -195,7 +195,7 @@ export default class Publisher {
 		if (!this.settings.embedImage) return;
 		const imageBin = await this.vault.readBinary(imageFile);
 		const image64 = arrayBufferToBase64(imageBin);
-		const path = getImageLinkOptions(imageFile, this.settings);
+		const path = getImageLinkOptions(imageFile, this.settings, sourcefrontmatter);
 		await this.upload(imageFile.path, image64, path, "", ref);
 	}
 

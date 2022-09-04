@@ -53,7 +53,7 @@ function createRelativePath(
 			|| (frontmatter[settings.shareKey] === false))) {
 		return targetFile.altText;
 	}
-	const targetPath = targetFile.linked.extension === 'md' ? getReceiptFolder(targetFile.linked, settings, metadata, vault) : getImageLinkOptions(targetFile.linked, settings);
+	const targetPath = targetFile.linked.extension === 'md' ? getReceiptFolder(targetFile.linked, settings, metadata, vault) : getImageLinkOptions(targetFile.linked, settings, frontmatter);
 	const sourceList = sourcePath.split('/');
 	const targetList = targetPath.split('/');
 	const diffSourcePath = sourceList.filter(x => !targetList.includes(x));
@@ -160,21 +160,23 @@ function getReceiptFolder(
 	}
 }
 
-function getImageLinkOptions(file: TFile, settings: GitHubPublisherSettings):string {
+function getImageLinkOptions(file: TFile, settings: GitHubPublisherSettings, sourceFrontmatter: FrontMatterCache):string {
 	/**
 	 * Create link path based on settings and file path
 	 * @param file : TFile - Image TFile
 	 * @param settings : GitHubPublisherSettings - Settings
 	 * @returns string - Link path
 	 */
-	let fileDefaultPath = file.path;
-	const fileName = file.name;
-	if (settings.defaultImageFolder.length > 0) {
-		fileDefaultPath = settings.defaultImageFolder + "/" + fileName;
-	} else if (settings.folderDefaultName.length > 0) {
-		fileDefaultPath = settings.folderDefaultName + "/" + fileName;
+
+	if (sourceFrontmatter?.imageLink) {
+		return sourceFrontmatter.imageLink.toString().replace(/\/$/, '') + "/" + file.name;
 	}
-	return fileDefaultPath;
+	else if (settings.defaultImageFolder.length > 0) {
+		return settings.defaultImageFolder + "/" + file.name;
+	} else if (settings.folderDefaultName.length > 0) {
+		return settings.folderDefaultName + "/" + file.name;
+	}
+	return file.path;
 }
 
 export {
