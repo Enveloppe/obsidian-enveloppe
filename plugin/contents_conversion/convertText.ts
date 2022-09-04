@@ -15,9 +15,15 @@ import {getAPI, Link} from "obsidian-dataview";
 import {noticeLog} from "../src/utils";
 
 function addHardLineBreak(text: string, settings: GitHubPublisherSettings, frontmatter: FrontMatterCache): string {
+	/*
+	* Convert soft line breaks to hard line breaks, adding two space at the end of the line.
+	* This settings can be set for global or perfile using a frontmatter key 'hardbreak'
+	* If both are set, the perfile setting will override the global setting.
+	* If neither are set, the default is false.
+	 */
 	try {
 		text = text.replace(/^\s*\\\s*$/gmi, '<br/>');
-		const hardBreak = frontmatter?.hardBreak !== undefined ? frontmatter?.hardBreak : settings.hardBreak;
+		const hardBreak = frontmatter?.hardbreak !== undefined ? frontmatter?.hardbreak : settings.hardBreak;
 		if (hardBreak) {
 			text = text.replace(/\n/gm, '  \n');
 		}
@@ -29,7 +35,11 @@ function addHardLineBreak(text: string, settings: GitHubPublisherSettings, front
 	}
 }
 
-async function addToYAML(text: string, toAdd: string[]) {
+async function addToYAML(text: string, toAdd: string[]): Promise<string> {
+	/*
+	* Add the string list to the YAML frontmatter tags key
+	* If the tags key does not exist, it will be created
+	 */
 	const yaml = text.split("---")[1];
 	const yamlObject = parseYaml(yaml);
 	if (yamlObject.tag) {
@@ -45,7 +55,15 @@ async function addToYAML(text: string, toAdd: string[]) {
 	return `---\n${returnToYaml}---\n${fileContentsOnly}`;
 }
 
-async function addInlineTags(settings: GitHubPublisherSettings, file:TFile, metadataCache: MetadataCache, app: App): Promise<string> {
+async function addInlineTags(
+	settings: GitHubPublisherSettings,
+	file:TFile,
+	metadataCache: MetadataCache,
+	app: App): Promise<string> {
+	/*
+	* Add inlines tags to frontmatter tags keys.
+	* Duplicate tags will be removed.
+	*/
 	const text = await app.vault.cachedRead(file);
 
 	if (!settings.inlineTags) {
@@ -66,6 +84,9 @@ async function addInlineTags(settings: GitHubPublisherSettings, file:TFile, meta
 }
 
 function censorText(text: string, settings: GitHubPublisherSettings): string {
+	/*
+	* Censor text using the settings
+	 */
 	if (!settings.censorText) {
 		return text;
 	}
@@ -78,6 +99,11 @@ function censorText(text: string, settings: GitHubPublisherSettings): string {
 }
 
 function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings) {
+	/*
+	* stringify the dataview link by extracting the value from the link
+	* extract the alt text if it exists, otherwise extract the filename
+	* return null if the alt text or the filename is excluded
+	 */
 	const basename = (name: string) =>
 		/([^/\\.]*)(\..*)?$/.exec(name)[1];
 	const filename = basename(fieldValue.path).toString();
@@ -89,6 +115,11 @@ function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings) {
 }
 
 async function convertInlineDataview(text: string, settings: GitHubPublisherSettings, sourceFile: TFile) {
+	/*
+	* Add inlines dataview or frontmatter keys to the tags key in the frontmatter
+	* Will be recursive for array
+	* stringify with extract alt text for links
+	 */
 	if (settings.dataviewFields.length === 0) {
 		return text;
 	}
@@ -132,7 +163,13 @@ async function convertDataviewQueries(
 	frontmatter: FrontMatterCache,
 	sourceFile: TFile): Promise<string>
 {
+	/*
+	* Convert dataview queries to markdown
+	* Empty the block if settings.convertDataview is false or if the frontmatter key dataview is false
+	* The global settings can be overrides by the frontmatter key dataview
+	 */
 	/* Credit : Ole Eskild Steensen from Obsidian Digital Garden */
+
 	let replacedText = text;
 	const dataviewRegex = /```dataview(.+?)```/gsm;
 	const dvApi = getAPI();
@@ -164,6 +201,9 @@ function convertWikilinks(
 	settings: GitHubPublisherSettings,
 	linkedFiles: LinkedNotes[]):string
 {
+	/*
+	* Convert wikilinks to markdown
+	 */
 	if (!settings.convertWikiLinks && !frontmatter?.mdlinks && frontmatter?.links) {
 		return fileContent;
 	}
@@ -253,6 +293,10 @@ function creatorAltLink(
 	altMatch: RegExpMatchArray,
 	altCreator: string[],
 	fileExtension: string):string {
+	/*
+	* Create the alt text for the link
+	* if no alt text is given, the alt text is the filename without the extension
+	 */
 	if (altMatch) {
 		return altMatch[0].replace(']]', '').replace('|', '');
 	}
