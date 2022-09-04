@@ -175,8 +175,8 @@ export default class Publisher {
 				payload.sha = response.data.sha;
 			}
 		} catch {
-			console.log(
-				"The 404 error is normal ! It means that the file does not exist yet. Don't worry ❤️."
+			noticeLog(
+				"The 404 error is normal ! It means that the file does not exist yet. Don't worry ❤️.", this.settings
 			);
 		}
 		payload.message = `Update note ${title}`;
@@ -192,6 +192,7 @@ export default class Publisher {
 		 * @param imageFile the image
 		 * @param ref branch name
 		 */
+		if (!this.settings.embedImage) return;
 		const imageBin = await this.vault.readBinary(imageFile);
 		const image64 = arrayBufferToBase64(imageBin);
 		const path = getImageLinkOptions(imageFile, this.settings);

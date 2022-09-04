@@ -141,6 +141,7 @@ export class FilesManagement extends MkdocsPublish {
 	
 	getEmbed(file: TFile):TFile[] {
 		const embedCaches = this.metadataCache.getCache(file.path).embeds;
+		const frontmatterSourceFile = this.metadataCache.getFileCache(file).frontmatter;
 		const imageList:TFile[] = [];
 		if (embedCaches != undefined) {
 			for (const embed of embedCaches) {
@@ -149,14 +150,20 @@ export class FilesManagement extends MkdocsPublish {
 						embed.link,
 						file.path
 					);
-					if (imageLink.name.match(/(png|jpe?g|svg|bmp|gif)$/i) && this.settings.embedImage) {
+					if (imageLink.name.match(/(png|jpe?g|svg|bmp|gif)$/i)
+						&& (this.settings.embedImage || frontmatterSourceFile.image === true)
+						&& frontmatterSourceFile.image !== false
+					) {
 						imageList.push(imageLink);
 					} else if (imageLink.extension==='md') {
 						const sharedKey = this.settings.shareKey;
 						const frontmatter = this.metadataCache.getFileCache(imageLink).frontmatter;
 						if (
-							frontmatter && frontmatter[sharedKey] &&
-							!this.checkExcludedFolder(imageLink) && this.settings.embedNotes
+							frontmatter
+							&& frontmatter[sharedKey]
+							&& !this.checkExcludedFolder(imageLink)
+							&& (this.settings.embedNotes || frontmatterSourceFile.embed === true)
+							&& frontmatterSourceFile.embed !== false
 						) {
 							imageList.push(imageLink);
 						}

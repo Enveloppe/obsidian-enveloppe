@@ -87,9 +87,9 @@ export default {
 	// # Embed # //
 	embed: "Embed",
 	transferImage: "Transfer image",
-	transferImageDesc: "Send image embedded in a file to github",
+	transferImageDesc: "Send image embedded in a file to github. This option can be overridden by the frontmatter key \"image\".",
 	transferEmbeddedNotes: "Transfer embedded notes",
-	transferEmbeddedNotesDesc: "Send embedded notes in a shared file to github. Only shared files will be send!",
+	transferEmbeddedNotesDesc: "Send embedded notes in a shared file to github. Only shared files will be send! This option can be overridden by the frontmatter key \"embed\".",
 	defaultImageFolder: "Default image folder",
 	defaultImageFolderDesc: "To use a folder different from default",
 

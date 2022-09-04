@@ -164,33 +164,47 @@ function convertWikilinks(
 	linkedFiles: LinkedNotes[]):string
 {
 	if (!settings.convertWikiLinks && !frontmatter?.mdlinks && frontmatter?.links) {
+		console.log('not convert')
 		return fileContent;
 	}
-	const wikiRegex = /\[\[.*?\]\]/g;
+	console.log('convert wikilinks')
+	const wikiRegex = /!?\[\[.*?\]\]/g;
 	const wikiMatches = fileContent.match(wikiRegex);
 	if (wikiMatches) {
 		const fileRegex = /(\[\[).*?([\]|])/;
 		for (const wikiMatch of wikiMatches) {
 			const fileMatch = wikiMatch.match(fileRegex);
+			const isEmbed = wikiMatch.startsWith('!') ? '!' : '';
 			if (fileMatch) {
 				// @ts-ignore
+				let linkCreator = wikiMatch;
 				const fileName = fileMatch[0].replaceAll('[', '').replaceAll('|', '').replaceAll(']', '');
 				const linkedFile=linkedFiles.find(item => item.linkFrom===fileName);
 				if (linkedFile) {
 					const altText = linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.extension === 'md' ? linkedFile.linked.basename : "";
-					let linkCreator = `[${altText}](${encodeURI(linkedFile.linkFrom)})`;
-					if (frontmatter?.links === false) {
+					if (settings.convertWikiLinks || frontmatter?.mdlinks) {
+						linkCreator = `${isEmbed}[${altText}](${encodeURI(linkedFile.linkFrom)})`;
+					}
+					if (frontmatter?.links === false && (linkedFile.linked.extension === 'md')) {
 						linkCreator = altText;
+					}
+					if (frontmatter.image === false && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg'))) {
+						linkCreator = '';
 					}
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
 				} else if (!fileName.startsWith('http')) {
 					const altMatch = wikiMatch.match(/(\|).*(]])/);
 					const altCreator = fileName.split('/');
 					const altLink = creatorAltLink(altMatch, altCreator, fileName.split('.').at(-1));
-					let linkCreator = `[${altLink}](${encodeURI(fileName.trim())})`;
-					if (frontmatter?.links === false) {
-						linkCreator = altLink;
+					if (settings.convertWikiLinks || frontmatter?.mdlinks){
+						linkCreator = `${isEmbed}[${altLink}](${encodeURI(fileName.trim())})`;
 					}
+					if (frontmatter?.links === false && fileName.split('.').at(-1).match('md')) {
+						linkCreator = altLink;
+					} if (frontmatter.image === false && fileName.split('.').at(-1).match('png|jpg|jpeg|gif|svg')) {
+						linkCreator = '';
+					}
+
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
 				}
 			}
