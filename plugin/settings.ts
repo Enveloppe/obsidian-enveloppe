@@ -311,6 +311,7 @@ export class MkdocsSettingsTab extends PluginSettingTab {
 			});
 
 		containerEl.createEl('h5', {text: t('linkHeader') as string})
+		containerEl.createEl('p', {text: t('linkDesc') as string})
 		const folderNoteSettings = new Setting(containerEl)
 			.setName(t('folderNote') as string)
 			.setClass('obs-git-publisher')

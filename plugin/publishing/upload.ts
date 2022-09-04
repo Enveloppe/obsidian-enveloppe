@@ -108,11 +108,11 @@ export default class Publisher {
 			const embedFiles = shareFiles.getEmbed(file);
 			const linkedFiles = shareFiles.getLinkedImageAndFiles(file);
 			let text = await addInlineTags(this.settings, file, this.metadataCache, this.plugin.app);
-			text = await convertDataviewQueries(text, file.path, this.settings, this.vault, this.metadataCache, file);
+			text = await convertDataviewQueries(text, file.path, this.settings, this.vault, this.metadataCache, frontmatter, file);
 			text = await convertInlineDataview(text, this.settings, file);
-			text = addHardLineBreak(text, this.settings);
+			text = addHardLineBreak(text, this.settings, frontmatter);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault);
-			text = convertWikilinks(text, this.settings, linkedFiles);
+			text = convertWikilinks(text, frontmatter, this.settings, linkedFiles);
 			text = censorText(text, this.settings);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
 			noticeLog(`Upload ${file.name}:${path} on ${this.settings.githubName}/${this.settings.githubRepo}:${ref}`, this.settings);

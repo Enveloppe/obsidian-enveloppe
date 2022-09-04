@@ -1,13 +1,23 @@
 import {GitHubPublisherSettings, LinkedNotes} from "../settings/interface";
-import {App, MetadataCache, Notice, parseFrontMatterTags, parseYaml, stringifyYaml, TFile, Vault} from "obsidian";
+import {
+	App,
+	FrontMatterCache,
+	MetadataCache,
+	Notice,
+	parseFrontMatterTags,
+	parseYaml,
+	stringifyYaml,
+	TFile,
+	Vault
+} from "obsidian";
 import {createRelativePath, getDataviewPath} from "./filePathConvertor";
 import {getAPI, Link} from "obsidian-dataview";
 import {noticeLog} from "../src/utils";
 
-function addHardLineBreak(text: string, settings: GitHubPublisherSettings) {
+function addHardLineBreak(text: string, settings: GitHubPublisherSettings, frontmatter: FrontMatterCache): string {
 	try {
 		text = text.replace(/^\s*\\\s*$/gmi, '<br/>');
-		if (settings.hardBreak) {
+		if (settings.hardBreak || frontmatter?.hardbreak) {
 			text = text.replace(/\n/gm, '  \n');
 		}
 		return text;
@@ -118,6 +128,7 @@ async function convertDataviewQueries(
 	settings: GitHubPublisherSettings,
 	vault: Vault,
 	metadataCache: MetadataCache,
+	frontmatter: FrontMatterCache,
 	sourceFile: TFile): Promise<string>
 {
 	/* Credit : Ole Eskild Steensen from Obsidian Digital Garden */
@@ -126,15 +137,15 @@ async function convertDataviewQueries(
 	const dvApi = getAPI();
 	const matches = text.matchAll(dataviewRegex);
 	if (!matches) return;
+	const settingsDataview = settings.convertDataview || frontmatter?.dataview;
 	for (const queryBlock of matches){
 		try {
 			const block = queryBlock[0];
 			const query = queryBlock[1];
-			let md = settings.convertDataview ? await dvApi.tryQueryMarkdown(query, path) : "";
+			let md = settingsDataview ? await dvApi.tryQueryMarkdown(query, path) : "";
 			const dataviewPath = getDataviewPath(md, settings, vault);
-
 			md = convertLinkCitation(md, settings, dataviewPath, metadataCache, sourceFile, vault);
-			md = convertWikilinks(md, settings, dataviewPath);
+			md = convertWikilinks(md, frontmatter, settings, dataviewPath);
 			replacedText = replacedText.replace(block, md);
 
 		} catch (e) {
@@ -148,10 +159,11 @@ async function convertDataviewQueries(
 
 function convertWikilinks(
 	fileContent: string,
+	frontmatter: FrontMatterCache,
 	settings: GitHubPublisherSettings,
 	linkedFiles: LinkedNotes[]):string
 {
-	if (!settings.convertWikiLinks) {
+	if (!settings.convertWikiLinks && !frontmatter?.mdlinks && frontmatter?.links) {
 		return fileContent;
 	}
 	const wikiRegex = /\[\[.*?\]\]/g;
@@ -166,13 +178,19 @@ function convertWikilinks(
 				const linkedFile=linkedFiles.find(item => item.linkFrom===fileName);
 				if (linkedFile) {
 					const altText = linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.extension === 'md' ? linkedFile.linked.basename : "";
-					const linkCreator = `[${altText}](${encodeURI(linkedFile.linkFrom)})`;
+					let linkCreator = `[${altText}](${encodeURI(linkedFile.linkFrom)})`;
+					if (!frontmatter?.links) {
+						linkCreator = altText;
+					}
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
 				} else if (!fileName.startsWith('http')) {
 					const altMatch = wikiMatch.match(/(\|).*(]])/);
 					const altCreator = fileName.split('/');
 					const altLink = creatorAltLink(altMatch, altCreator, fileName.split('.').at(-1));
-					const linkCreator = `[${altLink}](${encodeURI(fileName.trim())})`;
+					let linkCreator = `[${altLink}](${encodeURI(fileName.trim())})`;
+					if (!frontmatter?.links) {
+						linkCreator = altLink;
+					}
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
 				}
 			}
