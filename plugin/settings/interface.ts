@@ -33,6 +33,7 @@ export interface GitHubPublisherSettings {
 	inlineTags: boolean;
 	dataviewFields: string[];
 	excludeDataviewValue: string[];
+	metadataFileFields: string[];
 }
 
 export enum folderSettings {
@@ -77,6 +78,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	inlineTags: false,
 	dataviewFields: [],
 	excludeDataviewValue: [],
+	metadataFileFields:[],
 }
 
 export interface LinkedNotes {

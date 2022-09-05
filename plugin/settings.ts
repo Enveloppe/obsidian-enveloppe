@@ -368,6 +368,20 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
+			.setName(t('transferMetaFile') as string)
+			.setDesc(t('transferMetaFileDesc') as string)
+			.addTextArea((text) => {
+				text
+					.setPlaceholder('banner')
+					.setValue(this.plugin.settings.metadataFileFields.join(','))
+					.onChange(async (value) => {
+						this.plugin.settings.metadataFileFields = value.split(',').map((field) => field.trim());
+						await this.plugin.saveSettings();
+					})
+			})
+
+
+		new Setting(containerEl)
 			.setName(t('transferEmbeddedNotes') as string)
 			.setDesc(t('transferEmbeddedNotesDesc') as string)
 			.addToggle((toggle)=>{

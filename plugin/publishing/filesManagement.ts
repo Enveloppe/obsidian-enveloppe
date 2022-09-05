@@ -4,11 +4,12 @@ import {MetadataCache, TFile, Vault} from "obsidian";
 import {ConvertedLink, GithubRepo, LinkedNotes, GitHubPublisherSettings} from "../settings/interface";
 import {Octokit} from "@octokit/core";
 import {getImageLinkOptions, getReceiptFolder} from "../contents_conversion/filePathConvertor";
-import MkdocsPublish from "./upload";
+import Publisher from "./upload";
 import GithubPublisher from "../main";
 import { noticeLog } from "plugin/src/utils";
+import {getAPI, Link} from "obsidian-dataview";
 
-export class FilesManagement extends MkdocsPublish {
+export class FilesManagement extends Publisher {
 	vault: Vault;
 	metadataCache: MetadataCache;
 	settings: GitHubPublisherSettings;
@@ -251,6 +252,62 @@ export class FilesManagement extends MkdocsPublish {
 		}
 		return newFiles;
 	}
+
+	getImageByPath(path: Link | string, field: Link | string): TFile {
+		if (field.constructor.name === 'Link') {
+			// @ts-ignore
+			field = field.path
+		}
+		if (path.constructor.name === 'Link') {
+			// @ts-ignore
+			path = path.path
+		}
+		// @ts-ignore
+		const imageLink = this.metadataCache.getFirstLinkpathDest(field, path);
+		if (imageLink.name.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
+			return imageLink;
+		}
+		return null
+	}
+
+	async getMetadataImages(file: TFile, embedFiles: TFile[]) {
+
+		const frontmatterSourceFile = this.metadataCache.getFileCache(file).frontmatter;
+		for (const field of this.settings.metadataFileFields) {
+			if (frontmatterSourceFile[field] != undefined) {
+				const imageLink = this.metadataCache.getFirstLinkpathDest(
+					frontmatterSourceFile[field],
+					file.path
+				);
+				if (imageLink.name.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
+					embedFiles.push(imageLink);
+				}
+			}
+		}
+		// @ts-ignore
+		if (this.plugin.app.plugins.enabledPlugins.has('dataview')) {
+			const dvApi = getAPI();
+			const dataviewMetadata = await dvApi.page(file.path)
+			console.log(dataviewMetadata)
+			for (const field of this.settings.metadataFileFields) {
+				const fieldValue = dataviewMetadata[field];
+
+				if (fieldValue != undefined) {
+					if (fieldValue.constructor.name === 'Array') {
+						for (const value of fieldValue) {
+							embedFiles.push(this.getImageByPath(value, fieldValue))
+						}
+					}
+					else {
+						embedFiles.push(this.getImageByPath(fieldValue, fieldValue))
+					}
+				}
+			}
+		}
+
+		console.log([...new Set(embedFiles)]);
+		return [...new Set(embedFiles)];
+	}
 	
 	async getEditedFiles(allFileWithPath:ConvertedLink[] , githubSharedFiles: GithubRepo[], vault: Vault, newFiles: TFile[]): Promise<TFile[]>{
 		for (const file of allFileWithPath) {
@@ -270,3 +327,4 @@ export class FilesManagement extends MkdocsPublish {
 		return newFiles;
 	}
 }
+

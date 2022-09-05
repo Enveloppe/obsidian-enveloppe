@@ -105,11 +105,12 @@ export default class Publisher {
 		}
 		try {
 			fileHistory.push(file)
-			const embedFiles = shareFiles.getEmbed(file);
+			let embedFiles = shareFiles.getEmbed(file);
+			embedFiles = await shareFiles.getMetadataImages(file, embedFiles)
 			const linkedFiles = shareFiles.getLinkedImageAndFiles(file);
 			let text = await addInlineTags(this.settings, file, this.metadataCache, this.plugin.app);
-			text = await convertDataviewQueries(text, file.path, this.settings, this.vault, this.metadataCache, frontmatter, file);
-			text = await convertInlineDataview(text, this.settings, file);
+			text = await convertDataviewQueries(text, file.path, this.settings, this.plugin.app, this.metadataCache, frontmatter, file);
+			text = await convertInlineDataview(text, this.settings, file, this.plugin.app);
 			text = addHardLineBreak(text, this.settings, frontmatter);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault);
 			text = convertWikilinks(text, frontmatter, this.settings, linkedFiles);
@@ -150,6 +151,11 @@ export default class Publisher {
 			throw {};
 		}
 		const octokit = this.octokit;
+		let msg = `PUSH NOTE : ${title}`;
+		if (path.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
+			title = path.split('/')[path.split('/').length - 1];
+			msg = `PUSH IMAGE : ${title}`;
+		}
 		const payload = {
 			owner: this.settings.githubName,
 			repo: this.settings.githubRepo,
@@ -179,7 +185,8 @@ export default class Publisher {
 				"The 404 error is normal ! It means that the file does not exist yet. Don't worry ❤️.", this.settings
 			);
 		}
-		payload.message = `Update note ${title}`;
+
+		payload.message = msg;
 		await octokit.request(
 			"PUT /repos/{owner}/{repo}/contents/{path}",
 			payload

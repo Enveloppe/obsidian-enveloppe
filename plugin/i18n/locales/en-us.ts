@@ -92,7 +92,8 @@ export default {
 	transferEmbeddedNotesDesc: "Send embedded notes in a shared file to github. Only shared files will be send! This option can be overridden by the frontmatter key \"embed\".",
 	defaultImageFolder: "Default image folder",
 	defaultImageFolderDesc: "To use a folder different from default",
-
+	transferMetaFile: "Send images using a metadata field",
+	transferMetaFileDesc: 'Set the names of the metadata field you want to use to send image files. Separate fields with a comma. Dataview inline field are supported.',
 	// ---
 	// # Github Workflow # //
 	githubActionName: "Github action name",
