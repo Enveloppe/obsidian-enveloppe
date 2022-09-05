@@ -173,7 +173,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 		new Setting(this.containerEl)
-			.setName(t(''useFrontmatterFileName) as string)
+			.setName(t('useFrontmatterFileName') as string)
 			.setDesc(t('useFrontmatterFileNameDesc') as string)
 			.addToggle((toggle) => {
 				toggle
