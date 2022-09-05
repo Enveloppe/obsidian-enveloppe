@@ -121,7 +121,7 @@ async function convertInlineDataview(text: string, settings: GitHubPublisherSett
 	* stringify with extract alt text for links
 	 */
 	// @ts-ignore
-	if (settings.dataviewFields.length === 0 || app.plugins.enabledPlugins['dataview'] === undefined) {
+	if (settings.dataviewFields.length === 0 || !app.plugins.enabledPlugins.has('dataview')) {
 		return text;
 	}
 	const dvApi = getAPI();
@@ -171,7 +171,7 @@ async function convertDataviewQueries(
 	 */
 	/* Credit : Ole Eskild Steensen from Obsidian Digital Garden */
 	// @ts-ignore
-	if (app.plugins.enabledPlugins['dataview'] === undefined) {
+	if (!app.plugins.enabledPlugins.has('dataview')) {
 		return text;
 	}
 	const vault = app.vault;
