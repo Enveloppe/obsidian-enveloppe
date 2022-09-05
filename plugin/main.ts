@@ -26,7 +26,7 @@ export default class MkdocsPublication extends Plugin {
 		const octokit = new Octokit({auth: this.settings.GhToken});
 		
 		const PublisherManager = new GithubBranch(this.settings, octokit, this.app.vault, this.app.metadataCache, this);
-		const branchName = app.vault.getName() + "-" + new Date().toLocaleDateString('en-US').replace(/\//g, '-');
+		const branchName = app.vault.getName().replace(' ', '-') + "-" + new Date().toLocaleDateString('en-US').replace(/\//g, '-');
 
 
 		this.registerEvent(
