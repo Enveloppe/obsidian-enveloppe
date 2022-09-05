@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.2.0-9](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.2...4.2.0-9) (2022-09-05)
+
+
+### Features
+
+* add image & embed frontmatter perfile settings ([708b04a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/708b04a83e897855c7aac6028b481a6756bcfafe))
+* add imageLink options ([e087cca](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e087ccad8fd5f7362e6218015bc4fdd1cac55b34))
+* frontmatter key for per file settings ([a49bc98](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a49bc98fe2bdd335df86f292c1be907c54da5c13))
+
+
+### Bug Fixes
+
+* forgot to replaceALL space. Not the first ([198da5a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/198da5ae2053cc5bac3ccacead36f48c158eb3fd))
+* image not shared/embeded also send ([2fcae41](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2fcae4124f595ab416bf2cf59bd42dc881fc332a))
+* overriding dataview in better condition ([97c719b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/97c719ba1337ca0d500a2fab3795fcfa153de068))
+* overriding of hardbreak ([0d2a0e7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0d2a0e7fbb38de485e7e92e622e20e49f158bda9))
+* space in vault name broke the plugin ([d940069](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d94006945bc181591e3de34ec4a19843cf1e1086))
+* true/false between mdlinks parameters and links ([71dad6f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/71dad6f149ee179b404f7993eab11086f5fd9b15))
+
 ## [4.2.0-8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.2...4.2.0-8) (2022-09-05)
 
 
