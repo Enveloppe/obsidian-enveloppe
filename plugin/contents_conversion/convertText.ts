@@ -209,7 +209,9 @@ function convertWikilinks(
 	/*
 	* Convert wikilinks to markdown
 	 */
-	if (!settings.convertWikiLinks && !frontmatter?.mdlinks && frontmatter?.links) {
+	const convertWikilink: boolean = frontmatter.mdlinks !== undefined ? frontmatter?.mdlinks : settings.convertWikiLinks;
+	const imageSettings: boolean = frontmatter.image !== undefined ? frontmatter?.image : settings.embedImage;
+	if (!convertWikilink && frontmatter?.links && imageSettings) {
 		return fileContent;
 	}
 	const wikiRegex = /!?\[\[.*?\]\]/g;
@@ -222,17 +224,17 @@ function convertWikilinks(
 			if (fileMatch) {
 				// @ts-ignore
 				let linkCreator = wikiMatch;
-				const fileName = fileMatch[0].replaceAll('[', '').replaceAll('|', '').replaceAll(']', '');
+				const fileName = fileMatch[0].replaceAll('[', '').replaceAll('|', '').replaceAll(']', '').replaceAll('\\', '');
 				const linkedFile=linkedFiles.find(item => item.linkFrom===fileName);
 				if (linkedFile) {
 					const altText = linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.extension === 'md' ? linkedFile.linked.basename : "";
-					if (settings.convertWikiLinks || frontmatter?.mdlinks) {
+					if (convertWikilink) {
 						linkCreator = `${isEmbed}[${altText}](${encodeURI(linkedFile.linkFrom)})`;
 					}
 					if (frontmatter?.links === false && (linkedFile.linked.extension === 'md')) {
 						linkCreator = altText;
 					}
-					if ((frontmatter.image === false || !settings.embedImage) && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg'))) {
+					if (imageSettings && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg'))) {
 						linkCreator = '';
 					}
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
@@ -240,14 +242,14 @@ function convertWikilinks(
 					const altMatch = wikiMatch.match(/(\|).*(]])/);
 					const altCreator = fileName.split('/');
 					const altLink = creatorAltLink(altMatch, altCreator, fileName.split('.').at(-1));
-					if (settings.convertWikiLinks || frontmatter?.mdlinks){
+					if (convertWikilink){
 						linkCreator = `${isEmbed}[${altLink}](${encodeURI(fileName.trim())})`;
 					}
-					if (frontmatter?.links === false && fileName.match('md$')) {
+					if (frontmatter?.links === false && fileName.trim().match('md$')) {
 						linkCreator = altLink;
 					} if (
-						(frontmatter.image === false || !settings.embedImage)
-						&& fileName.match('(png|jpg|jpeg|gif|svg)$')) {
+						imageSettings
+						&& fileName.trim().match('(png|jpg|jpeg|gif|svg)$')) {
 						linkCreator = '';
 					}
 
