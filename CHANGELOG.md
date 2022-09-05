@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file. See [commit
 * space in vault name broke the plugin ([d940069](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d94006945bc181591e3de34ec4a19843cf1e1086))
 * true/false between mdlinks parameters and links ([71dad6f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/71dad6f149ee179b404f7993eab11086f5fd9b15))
 
+
 ### [4.1.3-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.2...4.1.3-1) (2022-08-29)
 
 ### [4.1.3-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.2...4.1.3-0) (2022-08-29)
