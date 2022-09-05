@@ -1,6 +1,6 @@
 import {Plugin, TFile, Menu} from "obsidian";
 import {
-	MkdocsSettingsTab,
+	GithubPublisherSettings,
 } from "./settings";
 import { disablePublish } from "./src/utils";
 import {GitHubPublisherSettings, DEFAULT_SETTINGS} from './settings/interface'
@@ -16,13 +16,13 @@ import {
 import t, {StringFunc} from "./i18n"
 
 
-export default class MkdocsPublication extends Plugin {
+export default class GithubPublisher extends Plugin {
 	settings: GitHubPublisherSettings;
 
 	async onload() {
 		console.log("Github Publisher loaded");
 		await this.loadSettings();
-		this.addSettingTab(new MkdocsSettingsTab(this.app, this));
+		this.addSettingTab(new GithubPublisherSettings(this.app, this));
 		const octokit = new Octokit({auth: this.settings.GhToken});
 		
 		const PublisherManager = new GithubBranch(this.settings, octokit, this.app.vault, this.app.metadataCache, this);

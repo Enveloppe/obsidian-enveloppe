@@ -5,7 +5,7 @@ import {ConvertedLink, GithubRepo, LinkedNotes, GitHubPublisherSettings} from ".
 import {Octokit} from "@octokit/core";
 import {getImageLinkOptions, getReceiptFolder} from "../contents_conversion/filePathConvertor";
 import MkdocsPublish from "./upload";
-import MkdocsPublication from "../main";
+import GithubPublisher from "../main";
 import { noticeLog } from "plugin/src/utils";
 
 export class FilesManagement extends MkdocsPublish {
@@ -13,14 +13,14 @@ export class FilesManagement extends MkdocsPublish {
 	metadataCache: MetadataCache;
 	settings: GitHubPublisherSettings;
 	octokit: Octokit;
-	plugin: MkdocsPublication
+	plugin: GithubPublisher
 	
 	constructor(
 		vault: Vault,
 		metadataCache: MetadataCache,
 		settings: GitHubPublisherSettings,
 		octokit: Octokit,
-		plugin: MkdocsPublication
+		plugin: GithubPublisher
 	) {
 		super(vault, metadataCache, settings, octokit, plugin);
 		this.vault = vault;

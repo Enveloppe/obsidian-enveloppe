@@ -21,7 +21,7 @@ function openDetails(groupName: string, detailsState: boolean) {
 	}
 }
 
-export class MkdocsSettingsTab extends PluginSettingTab {
+export class GithubPublisherSettings extends PluginSettingTab {
 	plugin: GithubPublisherPlugin;
 
 	constructor(app: App, plugin: GithubPublisherPlugin) {

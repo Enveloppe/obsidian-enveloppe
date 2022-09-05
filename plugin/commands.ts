@@ -5,7 +5,7 @@ import { deleteFromGithub } from './publishing/delete'
 import {GithubBranch} from "./publishing/branch";
 import { Octokit } from "@octokit/core";
 import {MetadataCache, Notice, TFile, Vault} from "obsidian";
-import MkdocsPublication from "./main";
+import GithubPublisher from "./main";
 import t from './i18n'
 import { StringFunc } from "./i18n";
 
@@ -114,7 +114,7 @@ export async function shareOneNote(branchName: string, PublisherManager: GithubB
 	}
 }
 
-export async function shareNewNote(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: MkdocsPublication) {
+export async function shareNewNote(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: GithubPublisher) {
 	/**
 	 * Deepscanning of the repository and send only new notes (not exists on the repo yet)
 	 * @class PublisherManager
@@ -140,7 +140,7 @@ export async function shareNewNote(PublisherManager: GithubBranch, octokit: Octo
 
 }
 
-export async function shareAllEditedNotes(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: MkdocsPublication) {
+export async function shareAllEditedNotes(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: GithubPublisher) {
 	/**
 	 * Share edited notes : they exist on the repo, BUT the last edited time in Obsidian is after the last upload. Also share new notes.
 	 * @class PublisherManager
@@ -166,7 +166,7 @@ export async function shareAllEditedNotes(PublisherManager: GithubBranch, octoki
 	}
 }
 
-export async function shareOnlyEdited(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: MkdocsPublication) {
+export async function shareOnlyEdited(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: GithubPublisher) {
 	/**
 	 * share **only** edited notes : they exist on the repo, but the last edited time is after the last upload.
 	 * @class PublisherManager
