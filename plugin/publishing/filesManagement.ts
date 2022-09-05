@@ -264,7 +264,7 @@ export class FilesManagement extends Publisher {
 		}
 		// @ts-ignore
 		const imageLink = this.metadataCache.getFirstLinkpathDest(field, path);
-		if (imageLink.name.match(/(md|png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)$/i)) {
+		if (imageLink !== null) {
 			return imageLink;
 		}
 		return null
@@ -279,7 +279,7 @@ export class FilesManagement extends Publisher {
 					frontmatterSourceFile[field],
 					file.path
 				);
-				if (imageLink.name.match(/(md|png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)$/i)) {
+				if (imageLink !== null) {
 					embedFiles.push(imageLink);
 				}
 			}
@@ -304,8 +304,8 @@ export class FilesManagement extends Publisher {
 			}
 		}
 
-		console.log([...new Set(embedFiles)]);
-		return [...new Set(embedFiles)];
+		console.log([...new Set(embedFiles)].filter((x) => x != null));
+		return [...new Set(embedFiles)].filter((x) => x != null);
 	}
 	
 	async getEditedFiles(allFileWithPath:ConvertedLink[] , githubSharedFiles: GithubRepo[], vault: Vault, newFiles: TFile[]): Promise<TFile[]>{
