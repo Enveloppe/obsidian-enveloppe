@@ -94,8 +94,8 @@ export default {
 	transferEmbeddedNotesDesc: "Envoyez des notes transcluent dans un fichier partagé dans le dépôt. Seuls les fichiers partagés seront envoyés ! Ce paramètre peut être outrepassé par la clé de métadonnées \"embed\".",
 	defaultImageFolder: "Dossier d'images par défaut",
 	defaultImageFolderDesc: "Pour utiliser un dossier différent de celui par défaut pour les images.",
-	transferMetaFile: "Envoyer des images en utilisant une clé de métadonnée",
-	transferMetaFileDesc: 'Mettez les noms des champs de métadonnées que vous voulez utiliser pour envoyer les fichiers d\'images. Séparez les champs par une virgule. Les champs Dataview sont pris en charge.',
+	transferMetaFile: "Envoyer des fichiers en utilisant une clé de métadonnée",
+	transferMetaFileDesc: 'Mettez les noms des champs de métadonnées que vous voulez utiliser pour envoyer les fichiers. Séparez les champs par une virgule. Les champs Dataview sont pris en charge.',
 	// ---
 	// # Github Workflow # //
 
