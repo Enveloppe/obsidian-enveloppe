@@ -304,7 +304,6 @@ export class FilesManagement extends Publisher {
 			}
 		}
 
-		console.log([...new Set(embedFiles)].filter((x) => x != null));
 		return [...new Set(embedFiles)].filter((x) => x != null);
 	}
 	
