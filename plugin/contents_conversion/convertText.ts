@@ -114,13 +114,14 @@ function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings) {
 	return null;
 }
 
-async function convertInlineDataview(text: string, settings: GitHubPublisherSettings, sourceFile: TFile) {
+async function convertInlineDataview(text: string, settings: GitHubPublisherSettings, sourceFile: TFile, app: App) {
 	/*
 	* Add inlines dataview or frontmatter keys to the tags key in the frontmatter
 	* Will be recursive for array
 	* stringify with extract alt text for links
 	 */
-	if (settings.dataviewFields.length === 0) {
+	// @ts-ignore
+	if (settings.dataviewFields.length === 0 || app.plugins.enabledPlugins['dataview'] === undefined) {
 		return text;
 	}
 	const dvApi = getAPI();
@@ -158,7 +159,7 @@ async function convertDataviewQueries(
 	text: string,
 	path: string,
 	settings: GitHubPublisherSettings,
-	vault: Vault,
+	app: App,
 	metadataCache: MetadataCache,
 	frontmatter: FrontMatterCache,
 	sourceFile: TFile): Promise<string>
@@ -169,7 +170,11 @@ async function convertDataviewQueries(
 	* The global settings can be overrides by the frontmatter key dataview
 	 */
 	/* Credit : Ole Eskild Steensen from Obsidian Digital Garden */
-
+	// @ts-ignore
+	if (app.plugins.enabledPlugins['dataview'] === undefined) {
+		return text;
+	}
+	const vault = app.vault;
 	let replacedText = text;
 	const dataviewRegex = /```dataview(.+?)```/gsm;
 	const dvApi = getAPI();
