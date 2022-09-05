@@ -1,6 +1,6 @@
 // Credit : https://github.com/oleeskild/obsidian-digital-garden @oleeskild
 
-import {MetadataCache, TFile, Vault} from "obsidian";
+import {FrontMatterCache, MetadataCache, TFile, Vault} from "obsidian";
 import {ConvertedLink, GithubRepo, LinkedNotes, GitHubPublisherSettings} from "../settings/interface";
 import {Octokit} from "@octokit/core";
 import {getImageLinkOptions, getReceiptFolder} from "../contents_conversion/filePathConvertor";
@@ -54,7 +54,7 @@ export class FilesManagement extends Publisher {
 		const shareKey = this.settings.shareKey;
 		for (const file of files) {
 			const fileExtension = file.extension;
-			if (fileExtension.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
+			if (fileExtension.match(/(png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)$/i)) {
 				const filepath = getImageLinkOptions(file, this.settings, null);
 				allFileWithPath.push({
 					converted: filepath,
@@ -76,38 +76,49 @@ export class FilesManagement extends Publisher {
 		return allFileWithPath;
 	}
 	
-	getLinkedImageAndFiles(file: TFile):LinkedNotes[] {
+	getLinkedByEmbedding(file: TFile):LinkedNotes[] {
 		/**
-		 * Create a database with every internal links and embeded image and files 
+		 * Create a database with every internal links and embeded image and files
+		 * Used for the links conversion (for markdown links and receipt folder)
 		 * @param file: the source file
 		 * @return linkedFiles: array of linked files
 		 */
-		const linkedFiles:LinkedNotes[] = this.getEmbedFiles(file);
+		const linkedFiles:LinkedNotes[] = this.getLinkedFiles(file);
 		const imageEmbedded = this.metadataCache.getFileCache(file).embeds;
 		if (imageEmbedded != undefined) {
 			for (const image of imageEmbedded) {
 				try {
 					const imageLink = this.metadataCache.getFirstLinkpathDest(image.link, file.path)
-					const imageExt = imageLink.extension;
-					if (imageExt.match(/(png|jpe?g|svg|bmp|gif|md)$/i)) {
-						linkedFiles.push({
-							linked: imageLink, //TFile found
-							linkFrom: image.link, //path of the founded file
-							altText: image.displayText //alt text if exists, filename otherwise
-						})
-
+					if (imageLink !== null) {
+						if (imageLink.extension === 'md') {
+							const checkFrontmatter = this.metadataCache.getCache(imageLink.path).frontmatter;
+							if (checkFrontmatter && checkFrontmatter[this.settings.shareKey] === true) {
+								linkedFiles.push({
+									linked: imageLink, //TFile found
+									linkFrom: image.link, //path of the founded file
+									altText: image.displayText //alt text if exists, filename otherwise
+								})
+							}
+						} else {
+							linkedFiles.push({
+								linked: imageLink, //TFile found
+								linkFrom: image.link, //path of the founded file
+								altText: image.displayText //alt text if exists, filename otherwise
+							})
+						}
 					}
 				} catch (e) {
 					// ignore error
 				}
 			}
 		}
-		return linkedFiles;
+		return [...new Set(linkedFiles)];
 	}
 	
-	getEmbedFiles(file: TFile): LinkedNotes[] {
+	getLinkedFiles(file: TFile): LinkedNotes[] {
 		/**
 		 * Create an objet of all files embedded in the shared files
+		 * Used during links conversion (for markdown links and receipt folder)
 		 * @param file: The file shared
 		 * @return the file linked (TFile), the path to it, and the alt text if exists
 		 */
@@ -121,26 +132,29 @@ export class FilesManagement extends Publisher {
 						file.path
 					);
 					if (linkedFile) {
-						if (linkedFile.extension === 'md') {
-							embedList.push({
-								linked: linkedFile,
-								linkFrom: embedCache.link,
-								altText: embedCache.displayText
-							})
-						}
+						embedList.push({
+							linked: linkedFile,
+							linkFrom: embedCache.link,
+							altText: embedCache.displayText
+						})
 					}
 				} catch (e) {
 					noticeLog(e, this.settings)
 					noticeLog("Error with this links : " + embedCache.link, this.settings);
 				}
 			}
-			return embedList;
+			return [...new Set(embedList)];
 		}
 		return [];
 	}
 
 	
-	getEmbed(file: TFile):TFile[] {
+	getSharedEmbed(file: TFile):TFile[] {
+		/*
+		* Get all files embedded in the shared file
+		* If the settings are true, allowing to publish the files (for attachments)
+		* Markdown files attachments are always verified using the main publish function
+		 */
 		const embedCaches = this.metadataCache.getCache(file.path).embeds;
 		const frontmatterSourceFile = this.metadataCache.getFileCache(file).frontmatter;
 		const imageList:TFile[] = [];
@@ -151,29 +165,13 @@ export class FilesManagement extends Publisher {
 						embed.link,
 						file.path
 					);
-					const transferImage = frontmatterSourceFile.image !== undefined ? frontmatterSourceFile.image : this.settings.embedImage;
-					if (imageLink.name.match(/(png|jpe?g|svg|bmp|gif)$/i)
-						&& transferImage
-					) {
-						imageList.push(imageLink);
-					} else if (imageLink.extension==='md') {
-						const sharedKey = this.settings.shareKey;
-						const frontmatter = this.metadataCache.getFileCache(imageLink).frontmatter;
-						if (
-							frontmatter
-							&& frontmatter[sharedKey]
-							&& !this.checkExcludedFolder(imageLink)
-							&& transferImage
-						) {
-							imageList.push(imageLink);
-						}
-					}
+					imageList.push(this.imageSharedOrNote(imageLink, frontmatterSourceFile));
 				} catch (e) {
 					noticeLog(e, this.settings)
 					noticeLog("Error with this file : " + embed.displayText, this.settings);
 				}
 			}
-			return imageList;
+			return [...new Set(imageList)].filter(x => x !== null);
 		}
 		return [];
 	}
@@ -253,7 +251,7 @@ export class FilesManagement extends Publisher {
 		return newFiles;
 	}
 
-	getImageByPath(path: Link | string, field: Link | string): TFile {
+	getImageByPath(path: Link | string, field: Link | string, frontmatterSourceFile: FrontMatterCache): TFile {
 		if (field.constructor.name === 'Link') {
 			// @ts-ignore
 			field = field.path
@@ -265,13 +263,22 @@ export class FilesManagement extends Publisher {
 		// @ts-ignore
 		const imageLink = this.metadataCache.getFirstLinkpathDest(field, path);
 		if (imageLink !== null) {
-			return imageLink;
+			return this.imageSharedOrNote(imageLink, frontmatterSourceFile);
 		}
 		return null
 	}
 
-	async getMetadataImages(file: TFile, embedFiles: TFile[]) {
+	private imageSharedOrNote(file: TFile, frontmatterSourceFile: FrontMatterCache) {
+		const transferImage = frontmatterSourceFile.image !== undefined ? frontmatterSourceFile.image : this.settings.embedImage;
+		if (file.extension.match(/(png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)/i)
+			&& transferImage
+		) {
+			return file
+		}
+		return file
+	}
 
+	async getMetadataLinks(file: TFile, embedFiles: TFile[]) {
 		const frontmatterSourceFile = this.metadataCache.getFileCache(file).frontmatter;
 		for (const field of this.settings.metadataFileFields) {
 			if (frontmatterSourceFile[field] != undefined) {
@@ -280,7 +287,7 @@ export class FilesManagement extends Publisher {
 					file.path
 				);
 				if (imageLink !== null) {
-					embedFiles.push(imageLink);
+					embedFiles.push(this.imageSharedOrNote(file, frontmatterSourceFile));
 				}
 			}
 		}
@@ -294,11 +301,11 @@ export class FilesManagement extends Publisher {
 				if (fieldValue != undefined) {
 					if (fieldValue.constructor.name === 'Array') {
 						for (const value of fieldValue) {
-							embedFiles.push(this.getImageByPath(value, fieldValue))
+							embedFiles.push(this.getImageByPath(value, fieldValue, frontmatterSourceFile))
 						}
 					}
 					else {
-						embedFiles.push(this.getImageByPath(fieldValue, fieldValue))
+						embedFiles.push(this.getImageByPath(fieldValue, fieldValue, frontmatterSourceFile))
 					}
 				}
 			}

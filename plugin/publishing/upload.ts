@@ -105,9 +105,9 @@ export default class Publisher {
 		}
 		try {
 			fileHistory.push(file)
-			let embedFiles = shareFiles.getEmbed(file);
-			embedFiles = await shareFiles.getMetadataImages(file, embedFiles)
-			const linkedFiles = shareFiles.getLinkedImageAndFiles(file);
+			let embedFiles = shareFiles.getSharedEmbed(file);
+			embedFiles = await shareFiles.getMetadataLinks(file, embedFiles)
+			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
 			let text = await addInlineTags(this.settings, file, this.metadataCache, this.plugin.app);
 			text = await convertDataviewQueries(text, file.path, this.settings, this.plugin.app, this.metadataCache, frontmatter, file);
 			text = await convertInlineDataview(text, this.settings, file, this.plugin.app);
