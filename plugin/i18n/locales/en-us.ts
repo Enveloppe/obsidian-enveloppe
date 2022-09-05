@@ -8,12 +8,12 @@ export default {
 	uploadNewNotes: "Upload new shared notes",
 	uploadAllNewEditedNote: "Upload all new and edited note since last upload",
 	uploadAllEditedNote: "Upload all edited note since last upload",
-	shareViewFiles:(viewFile:string): string => `Share "${viewFile}" with Github Publisher`,
+	shareViewFiles: (viewFile: string): string => `Share "${viewFile}" with Github Publisher`,
 	/* ------ Delete string -----	*/
 	errorDeleteDefaultFolder: "You need a default folder name in the settings to use this command.",
 	errorDeleteRootFolder: 'You need to configure a root folder in the settings to use this command.',
-	successDeleting:(nb:string): string => `Successfully deleted ${nb} files.`,
-	failedDeleting:(nb:string): string => `Failed to delete ${nb} files.`,
+	successDeleting: (nb: string): string => `Successfully deleted ${nb} files.`,
+	failedDeleting: (nb: string): string => `Failed to delete ${nb} files.`,
 	noFileDeleted: 'No files have been deleted.',
 
 	/* ------------ *
@@ -53,7 +53,7 @@ export default {
 	// ---
 	// # Text conversion # //
 	textConversion: "Content's conversion",
-	textConversionDesc:'Theses option won\'t change the content of the file in your Obsidian Vault, but will change the content of the file in Github.',
+	textConversionDesc: 'Theses option won\'t change the content of the file in your Obsidian Vault, but will change the content of the file in Github.',
 	textHeader: "Text",
 	linkHeader: "Links",
 	folderNote: "Folder note",
@@ -67,8 +67,8 @@ export default {
 	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line. This settings can be overridden by the frontmatter key \"hardbreak\".",
 	headerDataview: "Dataview",
 	headerDataviewDesc: "Convert dataview to markdown. This settings can be overridden by the frontmatter key \"dataview\".",
-	useFrontmatterTitle: "Use frontmatter title",
-	useFrontmatterTitleDesc: "Use frontmatter \"title\" field instead of the file name.",
+	useFrontmatterFileName: "Use frontmatter filename key",
+	useFrontmatterFileNameDesc: "Use frontmatter \"filename\" field instead of the file name.",
 	censorTextHeader: "Text replacer",
 	censorTextDesc: "Replace text (or regex) in the file with the given value.",
 	censorTextInsensitive: "Case insensitive",
@@ -131,9 +131,9 @@ export default {
 	unablePublishMultiNotes: "Unable to publish multiple notes, something went wrong.",
 	startingClean: (repoInfo: string): string => `Starting cleaning ${repoInfo}`,
 	scanningRepo: "Scanning the repository, may take a while...",
-	foundNoteToSend: (noteLength: string)=> `Found ${noteLength} new notes to send`,
+	foundNoteToSend: (noteLength: string) => `Found ${noteLength} new notes to send`,
 	noNewNote: "No new notes to share.",
-	successfullPublish:(noticeValue: string[])=>`Successfully published ${noticeValue[0]} to ${noticeValue[1]}.`,
+	successfullPublish: (noticeValue: string[]) => `Successfully published ${noticeValue[0]} to ${noticeValue[1]}.`,
 	waitingWorkflow: "Now, waiting for the workflow to be completed...",
-	sendMessage:(noticeValue: string[])=>`Send ${noticeValue[0]} to ${noticeValue[1]}${noticeValue[2]}`
+	sendMessage: (noticeValue: string[]) => `Send ${noticeValue[0]} to ${noticeValue[1]}${noticeValue[2]}`
 }

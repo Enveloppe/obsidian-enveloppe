@@ -1,4 +1,4 @@
-import {App, PluginSettingTab, Setting} from 'obsidian'
+import { App, PluginSettingTab, Setting } from 'obsidian'
 import GithubPublisherPlugin from './main'
 import {
 	hideSettings,
@@ -7,7 +7,7 @@ import {
 	folderHideShowSettings,
 	autoCleanUpSettingsOnCondition, shortcutsHideShow
 } from "./settings/style";
-import {folderSettings, TextCleaner} from "./settings/interface";
+import { folderSettings, TextCleaner } from "./settings/interface";
 import t from './i18n'
 
 
@@ -30,14 +30,14 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	}
 
 	display(): void {
-		const {containerEl} = this
+		const { containerEl } = this
 		containerEl.empty();
 
 		/* ------------------------------ *
 		 * 			Github Config		  *
 		 * ------------------------------ */
 
-		containerEl.createEl('h1', {text: t('githubConfiguration') as string})
+		containerEl.createEl('h1', { text: t('githubConfiguration') as string })
 		new Setting(containerEl)
 			.setName(t('repoName') as string)
 			.setDesc(t('repoNameDesc') as string)
@@ -86,24 +86,24 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		/* ------------------------------ *
 		 * 			Upload config		  *
 		 * ------------------------------ */
-		containerEl.createEl('h2', {text: t('uploadConfig') as string})
-		
-		containerEl.createEl('h3', {text: t('pathSetting') as string})
-		
+		containerEl.createEl('h2', { text: t('uploadConfig') as string })
+
+		containerEl.createEl('h3', { text: t('pathSetting') as string })
+
 		new Setting(this.containerEl)
 			.setName(t('folderBehavior') as string)
 			.setDesc(t('folderBehaviorDesc') as string)
 			.addDropdown((dropDown) => {
 				dropDown
 					.addOptions({
-						fixed : t('fixedFolder') as string,
+						fixed: t('fixedFolder') as string,
 						yaml: t('yaml') as string,
 						obsidian: t('obsidianPath') as string
 					})
 					.setValue(this.plugin.settings.downloadedFolder)
-					.onChange(async(value: string)=>{
-						this.plugin.settings.downloadedFolder=value;
-						
+					.onChange(async (value: string) => {
+						this.plugin.settings.downloadedFolder = value;
+
 						await folderHideShowSettings(frontmatterKeySettings, rootFolderSettings, autoCleanSetting, value, this.plugin, subFolderSettings)
 						if (value === folderSettings.fixed) {
 							hideSettings(folderNoteSettings)
@@ -130,7 +130,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-		
+
 		const subFolderSettings = new Setting(this.containerEl)
 			.setName(t('pathRemoving') as string)
 			.setClass('obs-git-publisher')
@@ -162,34 +162,35 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setName(t('rootFolder') as string)
 			.setClass('obs-git-publisher')
 			.setDesc(t('rootFolderDesc') as string)
-			.addText((text)=>{
+			.addText((text) => {
 				text
 					.setPlaceholder('docs')
 					.setValue(this.plugin.settings.rootFolder)
-					.onChange(async(value)=>{
-						this.plugin.settings.rootFolder =value.replace(/\/$/, '');
+					.onChange(async (value) => {
+						this.plugin.settings.rootFolder = value.replace(/\/$/, '');
 						await autoCleanCondition(value, autoCleanSetting, this.plugin);
 						await this.plugin.saveSettings();
 					});
 			});
 		new Setting(this.containerEl)
-			.setName(t('useFrontmatterTitle') as string)
-			.setDesc(t('useFrontmatterTitleDesc') as string)
+			.setName(t(''useFrontmatterFileName) as string)
+			.setDesc(t('useFrontmatterFileNameDesc') as string)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.useFrontmatterTitle)
+					.setValue(this.plugin.settings.useFrontmatterFileName)
 					.onChange(async (value) => {
-						this.plugin.settings.useFrontmatterTitle = value;
+						this.plugin.settings.useFrontmatterFileName = value;
 						await this.plugin.saveSettings();
 					});
 			});
+
 		/* ------------------------------ *
 		 * 		  Text conversion		  *
 		 * ------------------------------ */
 
-		containerEl.createEl('h3', {text: t('textConversion') as string})
-		containerEl.createEl('span', {text: t('textConversionDesc') as string})
-		containerEl.createEl('h5', {text: t('textHeader') as string})
+		containerEl.createEl('h3', { text: t('textConversion') as string })
+		containerEl.createEl('span', { text: t('textConversionDesc') as string })
+		containerEl.createEl('h5', { text: t('textHeader') as string })
 		new Setting(this.containerEl)
 			.setName(t('hardBreakTitle') as string)
 			.setDesc(t('hardBreakDesc') as string)
@@ -214,11 +215,11 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		const censorTextDesc = document.createDocumentFragment();
-		censorTextDesc.createEl('p', {text: t('censorTextDesc') as string})
-		censorTextDesc.createEl('li', {text: t('censorTextInsensitive') as string})
-		censorTextDesc.createEl('li', {text: t('censorTextEmpty') as string})
+		censorTextDesc.createEl('p', { text: t('censorTextDesc') as string })
+		censorTextDesc.createEl('li', { text: t('censorTextInsensitive') as string })
+		censorTextDesc.createEl('li', { text: t('censorTextEmpty') as string })
 		const details = containerEl.createEl('details');
-		details.createEl('summary', {text: t('censorTextHeader') as string})
+		details.createEl('summary', { text: t('censorTextHeader') as string })
 		new Setting(details)
 			.setClass('obs-git-publisher-censor-desc')
 			.setDesc(censorTextDesc)
@@ -272,7 +273,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				})
 		}
 
-		containerEl.createEl('h5', {text: 'Tags'})
+		containerEl.createEl('h5', { text: 'Tags' })
 		new Setting(this.containerEl)
 			.setName(t('inlineTagsHeader') as string)
 			.setDesc(t('inlineTagsDesc') as string)
@@ -310,8 +311,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		containerEl.createEl('h5', {text: t('linkHeader') as string})
-		containerEl.createEl('p', {text: t('linkDesc') as string})
+		containerEl.createEl('h5', { text: t('linkHeader') as string })
+		containerEl.createEl('p', { text: t('linkDesc') as string })
 		const folderNoteSettings = new Setting(containerEl)
 			.setName(t('folderNote') as string)
 			.setClass('obs-git-publisher')
@@ -319,8 +320,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.folderNote)
-					.onChange(async (value)=>{
-						this.plugin.settings.folderNote=value;
+					.onChange(async (value) => {
+						this.plugin.settings.folderNote = value;
 						await this.plugin.saveSettings();
 					})
 			})
@@ -330,7 +331,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.convertForGithub)
-					.onChange(async(value)=>{
+					.onChange(async (value) => {
 						this.plugin.settings.convertForGithub = value;
 						await this.plugin.saveSettings();
 					})
@@ -342,7 +343,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.convertWikiLinks)
-					.onChange(async (value)=>{
+					.onChange(async (value) => {
 						this.plugin.settings.convertWikiLinks = value;
 						await this.plugin.saveSettings();
 					})
@@ -351,7 +352,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		/* ------------------------------ *
 		 * 				Embed			  *
 		 * ------------------------------ */
-		containerEl.createEl('h3', {text: t('embed') as string})
+		containerEl.createEl('h3', { text: t('embed') as string })
 
 
 		new Setting(containerEl)
@@ -384,10 +385,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(t('transferEmbeddedNotes') as string)
 			.setDesc(t('transferEmbeddedNotesDesc') as string)
-			.addToggle((toggle)=>{
+			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.embedNotes)
-					.onChange(async(value)=>{
+					.onChange(async (value) => {
 						this.plugin.settings.embedNotes = value;
 						await this.plugin.saveSettings();
 					})
@@ -396,42 +397,42 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		const settingsDefaultImage = new Setting(containerEl)
 			.setName(t('defaultImageFolder') as string)
 			.setDesc(t('defaultImageFolderDesc') as string)
-			.addText((text)=>{
+			.addText((text) => {
 				text
 					.setPlaceholder('docs/images')
 					.setValue(this.plugin.settings.defaultImageFolder)
-					.onChange(async(value) => {
+					.onChange(async (value) => {
 						this.plugin.settings.defaultImageFolder = value.replace(/\/$/, '');
 						await this.plugin.saveSettings();
 					});
 			});
 
-		containerEl.createEl('h3', {text: 'Github Workflow'})
+		containerEl.createEl('h3', { text: 'Github Workflow' })
 		new Setting(containerEl)
 			.setName(t('githubActionName') as string)
 			.setDesc(t('githubActionNameDesc') as string)
-			.addText((text)=>{
+			.addText((text) => {
 				text
 					.setPlaceholder('ci')
 					.setValue(this.plugin.settings.workflowName)
-					.onChange(async(value)=> {
-						value = value.length>0? value.trim().replace('.yml', '') + '.yml' : value;
+					.onChange(async (value) => {
+						value = value.length > 0 ? value.trim().replace('.yml', '') + '.yml' : value;
 						this.plugin.settings.workflowName = value;
 						await this.plugin.saveSettings();
 					});
 			});
 		const condition = (this.plugin.settings.downloadedFolder === folderSettings.yaml &&
-				(this.plugin.settings.rootFolder.length === 0) ||
-				(this.plugin.settings.folderDefaultName.length === 0));
+			(this.plugin.settings.rootFolder.length === 0) ||
+			(this.plugin.settings.folderDefaultName.length === 0));
 
 		const autoCleanSetting = new Setting(containerEl)
 			.setName(t('autoCleanUp') as string)
 			.setDesc(t('autoCleanUpDesc') as string)
 			.setDisabled(condition)
-			.addToggle((toggle)=>{
+			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.autoCleanUp)
-					.onChange(async(value)=>{
+					.onChange(async (value) => {
 						this.plugin.settings.autoCleanUp = value;
 						shortcutsHideShow(value, autoCleanExcludedSettings)
 						await this.plugin.saveSettings();
@@ -441,11 +442,11 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		const autoCleanExcludedSettings = new Setting(containerEl)
 			.setName(t('excludedFiles') as string)
 			.setDesc(t('excludedFilesDesc') as string)
-			.addTextArea((textArea)=>{
+			.addTextArea((textArea) => {
 				textArea
 					.setPlaceholder('docs/assets/js, docs/assets/logo')
 					.setValue(this.plugin.settings.autoCleanUpExcluded)
-					.onChange(async(value)=>{
+					.onChange(async (value) => {
 						this.plugin.settings.autoCleanUpExcluded = value;
 						await this.plugin.saveSettings();
 					});
@@ -455,7 +456,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		 * 		Plugin settings			  *
 		 * ------------------------------ */
 		containerEl.createEl('h1', { text: t('pluginSettings') as string })
-		
+
 		new Setting(containerEl)
 			.setName(t('shareKey') as string)
 			.setDesc(t('shareKeyDesc') as string)
@@ -508,7 +509,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.copyLink)
-					.onChange(async(value)=>{
+					.onChange(async (value) => {
 						this.plugin.settings.copyLink = value;
 						shortcutsHideShow(value, baseLinkSettings);
 						shortcutsHideShow(value, pathRemover);
@@ -519,24 +520,24 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setName(t('baselink') as string)
 			.setDesc(t("baselinkDesc") as string)
 			.setClass('obs-git-publisher')
-			.addText((text) =>{
+			.addText((text) => {
 				text
 					.setPlaceholder('my_blog.com')
 					.setValue(this.plugin.settings.mainLink)
-					.onChange(async(value)=>{
+					.onChange(async (value) => {
 						this.plugin.settings.mainLink = value;
 						await this.plugin.saveSettings();
 					});
 			});
-		const pathRemover=new Setting(containerEl)
+		const pathRemover = new Setting(containerEl)
 			.setName(t("linkpathremover") as string)
 			.setDesc(t("linkpathremoverDesc") as string)
 			.setClass('obs-git-publisher')
-			.addText((text)=>{
+			.addText((text) => {
 				text
 					.setPlaceholder('docs/')
 					.setValue(this.plugin.settings.linkRemover)
-					.onChange(async(value)=>{
+					.onChange(async (value) => {
 						this.plugin.settings.linkRemover = value;
 						await this.plugin.saveSettings();
 					})
@@ -552,10 +553,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			)
-		
+
 
 		autoCleanUpSettingsOnCondition(condition, autoCleanSetting, this.plugin);
-		this.plugin.settings.downloadedFolder === folderSettings.fixed ? hideSettings(folderNoteSettings):showSettings(folderNoteSettings)
+		this.plugin.settings.downloadedFolder === folderSettings.fixed ? hideSettings(folderNoteSettings) : showSettings(folderNoteSettings)
 		folderHideShowSettings(frontmatterKeySettings, rootFolderSettings, autoCleanSetting, this.plugin.settings.downloadedFolder, this.plugin, subFolderSettings).then();
 		shortcutsHideShow(this.plugin.settings.embedImage, settingsDefaultImage)
 		shortcutsHideShow(this.plugin.settings.autoCleanUp, autoCleanExcludedSettings)

@@ -1,4 +1,4 @@
-import {TFile} from "obsidian";
+import { TFile } from "obsidian";
 
 export interface GitHubPublisherSettings {
 	githubRepo: string;
@@ -28,7 +28,8 @@ export interface GitHubPublisherSettings {
 	hardBreak: boolean;
 	logNotice: boolean;
 	convertDataview: boolean;
-	useFrontmatterTitle: boolean;
+	useFrontmatterFileName: boolean;
+	useFileNameKey: string;
 	censorText: TextCleaner[];
 	inlineTags: boolean;
 	dataviewFields: string[];
@@ -68,17 +69,18 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	subFolder: '',
 	embedNotes: false,
 	copyLink: false,
-	mainLink:'',
+	mainLink: '',
 	linkRemover: '',
 	hardBreak: false,
 	logNotice: false,
 	convertDataview: true,
-	useFrontmatterTitle: false,
+	useFrontmatterFileName: false,
+	useFileNameKey: 'filename',
 	censorText: [],
 	inlineTags: false,
 	dataviewFields: [],
 	excludeDataviewValue: [],
-	metadataFileFields:[],
+	metadataFileFields: [],
 }
 
 export interface LinkedNotes {

@@ -8,12 +8,12 @@ export default {
 	uploadNewNotes: "Загрузить новые общие заметки",
 	uploadAllNewEditedNote: "Загрузить все ноые и отредактированные заметки с последней загрузки",
 	uploadAllEditedNote: "Загрузить все отредактированные заметки с последней загрузки",
-	shareViewFiles:(viewFile:string): string => `Поделиться "${viewFile}" с Github Publisher`,
+	shareViewFiles: (viewFile: string): string => `Поделиться "${viewFile}" с Github Publisher`,
 	/* ------ Delete string -----	*/
 	errorDeleteDefaultFolder: "Вы должны указать название папки по умолчанию в настройках, чтобы воспользоваться этой командой.",
 	errorDeleteRootFolder: 'Вы должны указать корневую папку в настройках, чтобы воспользоваться этой командой.',
-	successDeleting:(nb:string): string => `Успешно удалено ${nb} файлов.`,
-	failedDeleting:(nb:string): string => `Неудалось удалить ${nb} файлов.`,
+	successDeleting: (nb: string): string => `Успешно удалено ${nb} файлов.`,
+	failedDeleting: (nb: string): string => `Неудалось удалить ${nb} файлов.`,
 	noFileDeleted: 'Файлы не были удалены.',
 
 	/* ------------ *
@@ -65,8 +65,8 @@ export default {
 	hardBreakDesc: "Использовать видимый перенос строки (двойной перенос) в markdown после каждой строки.",
 	headerDataview: "Dataview",
 	headerDataviewDesc: "Преобразовать dataview в markdown.",
-	useFrontmatterTitle: "Использовать заголовок из frontmatter",
-	useFrontmatterTitleDesc: "Использовать свойство frontmatter \"title\" вместо названия файла.",
+	useFrontmatterFileName: "Использовать заголовок из frontmatter",
+	useFrontmatterFileNameDesc: "Использовать свойство frontmatter \"title\" вместо названия файла.",
 	censorTextHeader: "Text replacer",
 	censorTextDesc: "Replace text (or regex) in the file with the given value.",
 	censorTextInsensitive: "Case insensitive",
@@ -128,9 +128,9 @@ export default {
 	unablePublishMultiNotes: "Не получилось опубликовать несколько заметок, что-то пошло не так.",
 	startingClean: (repoInfo: string): string => `Начинаю очистку ${repoInfo}`,
 	scanningRepo: "Сканирую репозиторий, это может занять какое-то время...",
-	foundNoteToSend: (noteLength: string)=> `Найдено ${noteLength} заметок для отправки`,
+	foundNoteToSend: (noteLength: string) => `Найдено ${noteLength} заметок для отправки`,
 	noNewNote: "Отсутствуют новые заметки для публикации.",
-	successfullPublish:(noticeValue: string[])=>`Успешно опубликовано ${noticeValue[0]} в ${noticeValue[1]}.`,
+	successfullPublish: (noticeValue: string[]) => `Успешно опубликовано ${noticeValue[0]} в ${noticeValue[1]}.`,
 	waitingWorkflow: "Ожидаю завершения процесса обработки...",
-	sendMessage:(noticeValue: string[])=>`Отправляю ${noticeValue[0]} в ${noticeValue[1]}${noticeValue[2]}`
+	sendMessage: (noticeValue: string[]) => `Отправляю ${noticeValue[0]} в ${noticeValue[1]}${noticeValue[2]}`
 }

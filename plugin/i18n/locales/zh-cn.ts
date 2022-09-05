@@ -8,7 +8,7 @@ export default {
 	uploadNewNotes: "上传新分享的文件",
 	uploadAllNewEditedNote: "上传新建立文件的和更新已编辑的分享文件",
 	uploadAllEditedNote: "更新所有已编辑的文件",
-	shareViewFiles:(viewFile:string): string => `用Mkdocs Publisher共享"${viewFile}"。`,
+	shareViewFiles: (viewFile: string): string => `用Mkdocs Publisher共享"${viewFile}"。`,
 
 	/* ------------ *
 	 *	 Settings   *
@@ -59,8 +59,8 @@ export default {
 	hardBreakDesc: "在每一行之后添加一个标记性的硬断行（双倍空白）。",
 	headerDataview: "Dataview",
 	headerDataviewDesc: "Convert dataview to markdown.",
-	useFrontmatterTitle: "Use frontmatter title",
-	useFrontmatterTitleDesc: "Use frontmatter \"title\" field instead of the file name.",
+	useFrontmatterFileName: "Use frontmatter title",
+	useFrontmatterFileNameDesc: "Use frontmatter \"filename\" field instead of the file name.",
 	censorTextHeader: "Text replacer",
 	censorTextDesc: "Replace text (or regex) in the file with the given value.",
 	censorTextInsensitive: "Case insensitive",
@@ -122,9 +122,9 @@ export default {
 	unablePublishMultiNotes: "不能上传多个文件，出了点问题",
 	startingClean: (repoInfo: string): string => `开始清理 ${repoInfo}`,
 	scanningRepo: "扫描仓库中，稍等...",
-	foundNoteToSend: (noteLength: string)=> `发现 ${noteLength} 篇笔记需要上传`,
+	foundNoteToSend: (noteLength: string) => `发现 ${noteLength} 篇笔记需要上传`,
 	noNewNote: "没有新笔记需要上传.",
-	successfullPublish:(noticeValue: string[])=>`成功地将${noticeValue[0]}发布到${noticeValue[1]}。`,
+	successfullPublish: (noticeValue: string[]) => `成功地将${noticeValue[0]}发布到${noticeValue[1]}。`,
 	waitingWorkflow: "现在，等待工作流程的完成...",
-	sendMessage:(noticeValue: string[])=>`将${noticeValue[0]}发送到${noticeValue[1]}${noticeValue[2]}。`
+	sendMessage: (noticeValue: string[]) => `将${noticeValue[0]}发送到${noticeValue[1]}${noticeValue[2]}。`
 }

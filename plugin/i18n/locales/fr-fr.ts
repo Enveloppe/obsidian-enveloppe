@@ -8,12 +8,12 @@ export default {
 	uploadNewNotes: "Publier les nouvelles notes",
 	uploadAllNewEditedNote: "Publier toutes les notes nouvelles et modifiées depuis le dernier envoi.",
 	uploadAllEditedNote: "Publier toutes les notes éditées depuis le dernier envoie",
-	shareViewFiles:(viewFile:string): string => `Partager "${viewFile}" avec Github Publisher`,
+	shareViewFiles: (viewFile: string): string => `Partager "${viewFile}" avec Github Publisher`,
 	/* ------ Delete string -----	*/
 	errorDeleteDefaultFolder: "Vous avez besoin d'un dossier par défaut dans les paramètres pour utiliser cette commande.",
 	errorDeleteRootFolder: 'Vous devez configurer un dossier racine dans les paramètres pour utiliser cette commande.',
-	successDeleting:(nb:string): string => `Suppression réussie de ${nb} fichiers.`,
-	failedDeleting:(nb:string): string => `Échec de la suppression de ${nb} files.`,
+	successDeleting: (nb: string): string => `Suppression réussie de ${nb} fichiers.`,
+	failedDeleting: (nb: string): string => `Échec de la suppression de ${nb} files.`,
 	noFileDeleted: "Aucun fichier n'a été supprimé",
 	/* ------------ *
 	 *	 Settings   *
@@ -54,7 +54,7 @@ export default {
 	// ---
 	// # Text conversions # //
 	textConversion: "Conversion du contenu",
-	textConversionDesc:'Ces options ne changent pas le contenu du fichier dans votre coffre Obsidian, mais changeront le contenu du fichier publié sur GitHub.',
+	textConversionDesc: 'Ces options ne changent pas le contenu du fichier dans votre coffre Obsidian, mais changeront le contenu du fichier publié sur GitHub.',
 	textHeader: "Texte",
 	linkHeader: "Liens",
 	folderNote: "Folder Note",
@@ -68,8 +68,8 @@ export default {
 	hardBreakDesc: "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne. Ce paramètre peut être outrepassé par la clé de métadonnées \"hardbreak\".",
 	headerDataview: "Dataview",
 	headerDataviewDesc: "Convertir dataview en markdown. Ce paramètre peut être outrepassé par la clé de métadonnées \"dataview\".",
-	useFrontmatterTitle: "Utiliser la clé frontmatter \"title\"",
-	useFrontmatterTitleDesc: "Utilisez le champ \"title\" du frontmatter (à la place du nom du fichier) pour générer le chemin du fichier.",
+	useFrontmatterFileName: "Utiliser la clé frontmatter \"title\"",
+	useFrontmatterFileNameDesc: "Utilisez le champ \"title\" du frontmatter (à la place du nom du fichier) pour générer le chemin du fichier.",
 	censorTextHeader: "Replacement de texte",
 	censorTextDesc: "Replacement de texte (ou regex) par un autre texte.",
 	censorTextInsensitive: "Insensible à la casse.",
@@ -135,9 +135,9 @@ export default {
 	unablePublishMultiNotes: "Impossible de publier plusieurs notes, quelque chose s'est mal passé.",
 	startingClean: (repoInfo: string): string => `Début du nettoyage ${repoInfo}...`,
 	scanningRepo: "Scan du dépôt, cela peut prendre un moment...",
-	foundNoteToSend: (noteLength: string)=> `Trouvé ${noteLength} nouvelles notes à envoyer !`,
+	foundNoteToSend: (noteLength: string) => `Trouvé ${noteLength} nouvelles notes à envoyer !`,
 	noNewNote: "Aucune nouvelle note à partager.",
-	successfullPublish:(noticeValue: string[])=>`Publication réussie de ${noticeValue[0]} vers ${noticeValue[1]}.`,
+	successfullPublish: (noticeValue: string[]) => `Publication réussie de ${noticeValue[0]} vers ${noticeValue[1]}.`,
 	waitingWorkflow: "Maintenant, attente de la complétion du workflow...",
-	sendMessage:(noticeValue: string[])=>`Envoi de ${noticeValue[0]} à ${noticeValue[1]}${noticeValue[2]}.`
+	sendMessage: (noticeValue: string[]) => `Envoi de ${noticeValue[0]} à ${noticeValue[1]}${noticeValue[2]}.`
 }

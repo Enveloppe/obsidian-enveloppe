@@ -1,22 +1,22 @@
-import {MetadataCache, TFile, Vault, TFolder, FrontMatterCache} from "obsidian";
-import {folderSettings, LinkedNotes, GitHubPublisherSettings} from "../settings/interface";
+import { MetadataCache, TFile, Vault, TFolder, FrontMatterCache } from "obsidian";
+import { folderSettings, LinkedNotes, GitHubPublisherSettings } from "../settings/interface";
 
 function getDataviewPath(
 	markdown: string,
 	settings: GitHubPublisherSettings,
-	vault: Vault):LinkedNotes[] {
+	vault: Vault): LinkedNotes[] {
 	if (!settings.convertDataview) {
 		return [];
 	}
 	const wikiRegex = /\[\[(.*?)\]\]/gmi;
 	const wikiMatches = markdown.matchAll(wikiRegex);
-	const linkedFiles:LinkedNotes[] = [];
+	const linkedFiles: LinkedNotes[] = [];
 	if (!wikiMatches) return [];
 	if (wikiMatches) {
 		for (const wikiMatch of wikiMatches) {
 			const altText = wikiMatch[1].replace(/(.*)\|/i, '');
 			const linkFrom = wikiMatch[1].replace(/\|(.*)/, '');
-			const linked = vault.getAbstractFileByPath(linkFrom) instanceof TFile ? vault.getAbstractFileByPath(linkFrom) as TFile: null;
+			const linked = vault.getAbstractFileByPath(linkFrom) instanceof TFile ? vault.getAbstractFileByPath(linkFrom) as TFile : null;
 			if (linked) {
 				linkedFiles.push({
 					linked: linked,
@@ -34,7 +34,7 @@ function createRelativePath(
 	targetFile: LinkedNotes,
 	metadata: MetadataCache,
 	settings: GitHubPublisherSettings,
-	vault: Vault):string {
+	vault: Vault): string {
 	/**
 	 * Create relative path from a sourceFile to a targetPath. If the target file is a note, only share if the frontmatter sharekey is present and true
 	 * @param sourceFile: TFile, the shared file containing all links, embed etc
@@ -73,8 +73,7 @@ function createRelativePath(
 function folderNoteIndex(
 	file: TFile,
 	vault: Vault,
-	settings: GitHubPublisherSettings): string
-{
+	settings: GitHubPublisherSettings): string {
 	if (!settings.folderNote) return file.name;
 	const fileName = file.name.replace('.md', '');
 	const folderParent = file.parent.name;
@@ -86,7 +85,7 @@ function folderNoteIndex(
 
 function createObsidianPath(
 	file: TFile,
-	settings:GitHubPublisherSettings,
+	settings: GitHubPublisherSettings,
 	vault: Vault,
 	fileName: string): string {
 	/**
@@ -119,7 +118,7 @@ function createFrontmatterPath(
 	}
 	if (frontmatter && frontmatter[settings.yamlFolderKey]) {
 		const category = frontmatter[settings.yamlFolderKey]
-		const parentCatFolder = !category.endsWith('/') ? category.split('/').at(-1): category.split('/').at(-2);
+		const parentCatFolder = !category.endsWith('/') ? category.split('/').at(-1) : category.split('/').at(-2);
 		fileName = settings.folderNote && parentCatFolder === file.name.replace('.md', '') ? 'index.md' : fileName
 		path = folderRoot + frontmatter[settings.yamlFolderKey] + "/" + fileName;
 	}
@@ -127,17 +126,17 @@ function createFrontmatterPath(
 }
 
 function getTitleField(frontmatter: FrontMatterCache, file: TFile, settings: GitHubPublisherSettings): string {
-	if (!settings.useFrontmatterTitle || !frontmatter) {
+	if (!settings.useFrontmatterFileName || !frontmatter) {
 		return file.name;
-	} else if (frontmatter && frontmatter['title'] && frontmatter['title'] !== file.name) {
-		return frontmatter['title'] + '.md';
+	} else if (frontmatter && frontmatter['filename'] && frontmatter['filename'] !== file.name) {
+		return frontmatter['filename'] + '.md';
 	}
 	return file.name;
 }
 
 function getReceiptFolder(
 	file: TFile,
-	settings:GitHubPublisherSettings,
+	settings: GitHubPublisherSettings,
 	metadataCache: MetadataCache,
 	vault: Vault): string {
 	if (file.extension === 'md') {
@@ -149,7 +148,7 @@ function getReceiptFolder(
 		}
 
 		let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + fileName : fileName;
-		
+
 		if (settings.downloadedFolder === folderSettings.yaml) {
 			path = createFrontmatterPath(file, settings, frontmatter, fileName);
 		} else if (settings.downloadedFolder === folderSettings.obsidian) {
@@ -160,7 +159,7 @@ function getReceiptFolder(
 	}
 }
 
-function getImageLinkOptions(file: TFile, settings: GitHubPublisherSettings, sourceFrontmatter: FrontMatterCache | null):string {
+function getImageLinkOptions(file: TFile, settings: GitHubPublisherSettings, sourceFrontmatter: FrontMatterCache | null): string {
 	/**
 	 * Create link path based on settings and file path
 	 * @param file : TFile - Image TFile
