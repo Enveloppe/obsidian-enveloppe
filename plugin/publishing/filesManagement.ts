@@ -264,7 +264,7 @@ export class FilesManagement extends Publisher {
 		}
 		// @ts-ignore
 		const imageLink = this.metadataCache.getFirstLinkpathDest(field, path);
-		if (imageLink.name.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
+		if (imageLink.name.match(/(md|png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)$/i)) {
 			return imageLink;
 		}
 		return null
@@ -279,7 +279,7 @@ export class FilesManagement extends Publisher {
 					frontmatterSourceFile[field],
 					file.path
 				);
-				if (imageLink.name.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
+				if (imageLink.name.match(/(md|png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)$/i)) {
 					embedFiles.push(imageLink);
 				}
 			}
@@ -288,7 +288,6 @@ export class FilesManagement extends Publisher {
 		if (this.plugin.app.plugins.enabledPlugins.has('dataview')) {
 			const dvApi = getAPI();
 			const dataviewMetadata = await dvApi.page(file.path)
-			console.log(dataviewMetadata)
 			for (const field of this.settings.metadataFileFields) {
 				const fieldValue = dataviewMetadata[field];
 
