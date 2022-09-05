@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.2.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.2.0...4.2.1) (2022-09-05)
+
+
+### Bug Fixes
+
+* allowing to send every file supported by obsidian as attachments ([6353acf](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6353acf47815b1580f3affc5e58396b9dd286e7a))
+
 ## [4.2.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.2...4.2.0) (2022-09-05)
 
 
