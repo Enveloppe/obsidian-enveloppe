@@ -172,7 +172,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-		new Setting(this.containerEl)
+		const frontmatterTitleSet=new Setting(this.containerEl)
 			.setName(t('useFrontmatterTitle') as string)
 			.setDesc(t('useFrontmatterTitleDesc') as string)
 			.addToggle((toggle) => {
@@ -181,8 +181,23 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.useFrontmatterTitle = value;
 						await this.plugin.saveSettings();
+						this.display();
 					});
 			});
+		if (this.plugin.settings.useFrontmatterTitle) {
+			frontmatterTitleSet
+				.addText((text) => {
+					text
+						.setPlaceholder('title')
+						.setValue(this.plugin.settings.frontmatterTitleKey)
+						.onChange(async (value) => {
+							this.plugin.settings.frontmatterTitleKey = value.trim();
+							await this.plugin.saveSettings();
+						});
+				});
+		}
+
+
 		/* ------------------------------ *
 		 * 		  Text conversion		  *
 		 * ------------------------------ */

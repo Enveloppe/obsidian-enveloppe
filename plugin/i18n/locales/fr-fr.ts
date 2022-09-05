@@ -50,7 +50,8 @@ export default {
 	frontmatterKeyPlaceholder: "catégorie",
 	rootFolder: "Dossier racine",
 	rootFolderDesc: "Ajoutez ce chemin au dossier défini par la clé de métadonnées.",
-
+	useFrontmatterTitle: "Utiliser une clé de métadonnées pour le titre",
+	useFrontmatterTitleDesc: "Utilisez un champ du frontmatter pour générer le nom du fichier. Par défaut \"title\" est utilisé.",
 	// ---
 	// # Text conversions # //
 	textConversion: "Conversion du contenu",
@@ -68,8 +69,7 @@ export default {
 	hardBreakDesc: "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne. Ce paramètre peut être outrepassé par la clé de métadonnées \"hardbreak\".",
 	headerDataview: "Dataview",
 	headerDataviewDesc: "Convertir dataview en markdown. Ce paramètre peut être outrepassé par la clé de métadonnées \"dataview\".",
-	useFrontmatterTitle: "Utiliser la clé frontmatter \"title\"",
-	useFrontmatterTitleDesc: "Utilisez le champ \"title\" du frontmatter (à la place du nom du fichier) pour générer le chemin du fichier.",
+
 	censorTextHeader: "Replacement de texte",
 	censorTextDesc: "Replacement de texte (ou regex) par un autre texte.",
 	censorTextInsensitive: "Insensible à la casse.",

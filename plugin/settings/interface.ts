@@ -32,6 +32,7 @@ export interface GitHubPublisherSettings {
 	censorText: TextCleaner[];
 	inlineTags: boolean;
 	dataviewFields: string[];
+	frontmatterTitleKey: string;
 	excludeDataviewValue: string[];
 	metadataFileFields: string[];
 }
@@ -79,6 +80,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	dataviewFields: [],
 	excludeDataviewValue: [],
 	metadataFileFields:[],
+	frontmatterTitleKey: 'title',
 }
 
 export interface LinkedNotes {

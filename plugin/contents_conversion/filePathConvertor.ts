@@ -112,7 +112,7 @@ function createFrontmatterPath(
 	settings: GitHubPublisherSettings,
 	frontmatter: FrontMatterCache,
 	fileName: string): string {
-	let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + file.name : file.name;
+	let path = settings.folderDefaultName.length > 0 ? settings.folderDefaultName + "/" + fileName : fileName;
 	let folderRoot = settings.rootFolder;
 	if (folderRoot.length > 0) {
 		folderRoot = folderRoot + "/";
@@ -120,7 +120,7 @@ function createFrontmatterPath(
 	if (frontmatter && frontmatter[settings.yamlFolderKey]) {
 		const category = frontmatter[settings.yamlFolderKey]
 		const parentCatFolder = !category.endsWith('/') ? category.split('/').at(-1): category.split('/').at(-2);
-		fileName = settings.folderNote && parentCatFolder === file.name.replace('.md', '') ? 'index.md' : fileName
+		fileName = settings.folderNote && parentCatFolder === fileName.replace('.md', '') ? 'index.md' : fileName
 		path = folderRoot + frontmatter[settings.yamlFolderKey] + "/" + fileName;
 	}
 	return path
@@ -129,8 +129,8 @@ function createFrontmatterPath(
 function getTitleField(frontmatter: FrontMatterCache, file: TFile, settings: GitHubPublisherSettings): string {
 	if (!settings.useFrontmatterTitle || !frontmatter) {
 		return file.name;
-	} else if (frontmatter && frontmatter['title'] && frontmatter['title'] !== file.name) {
-		return frontmatter['title'] + '.md';
+	} else if (frontmatter && frontmatter[settings.frontmatterTitleKey] && frontmatter[settings.frontmatterTitleKey] !== file.name) {
+		return frontmatter[settings.frontmatterTitleKey] + '.md';
 	}
 	return file.name;
 }
@@ -155,7 +155,6 @@ function getReceiptFolder(
 		} else if (settings.downloadedFolder === folderSettings.obsidian) {
 			path = createObsidianPath(file, settings, vault, fileName);
 		}
-
 		return path
 	}
 }

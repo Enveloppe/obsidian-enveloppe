@@ -49,7 +49,8 @@ export default {
 	frontmatterKeyPlaceholder: "category",
 	rootFolder: "Root folder",
 	rootFolderDesc: "Append this path to the folder set by the frontmatter key.",
-
+	useFrontmatterTitle: "Set the title from the frontmatter",
+	useFrontmatterTitleDesc: "Use a frontmatter value to generate the filename. By default, \"title\" is used.",
 	// ---
 	// # Text conversion # //
 	textConversion: "Content's conversion",
@@ -67,8 +68,6 @@ export default {
 	hardBreakDesc: "Add a markdown hard line break (double whitespace) after each line. This settings can be overridden by the frontmatter key \"hardbreak\".",
 	headerDataview: "Dataview",
 	headerDataviewDesc: "Convert dataview to markdown. This settings can be overridden by the frontmatter key \"dataview\".",
-	useFrontmatterTitle: "Use frontmatter title",
-	useFrontmatterTitleDesc: "Use frontmatter \"title\" field instead of the file name.",
 	censorTextHeader: "Text replacer",
 	censorTextDesc: "Replace text (or regex) in the file with the given value.",
 	censorTextInsensitive: "Case insensitive",
