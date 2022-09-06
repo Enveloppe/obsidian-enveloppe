@@ -36,7 +36,7 @@ export function convertWikilinks(
 					if (frontmatter?.links === false && (linkedFile.linked.extension === 'md')) {
 						linkCreator = altText;
 					}
-					if (imageSettings && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg'))) {
+					if (!imageSettings && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg'))) {
 						linkCreator = '';
 					}
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
@@ -50,7 +50,7 @@ export function convertWikilinks(
 					if (frontmatter?.links === false && fileName.trim().match('md$')) {
 						linkCreator = altLink;
 					} if (
-						imageSettings
+						!imageSettings
 						&& fileName.trim().match('(png|jpg|jpeg|gif|svg)$')) {
 						linkCreator = '';
 					}
