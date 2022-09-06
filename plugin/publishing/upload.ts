@@ -12,9 +12,12 @@ import { Base64 } from "js-base64";
 import {deleteFromGithub} from "./delete"
 
 import {
-	convertDataviewQueries,
-	convertLinkCitation,
 	convertWikilinks,
+	convertLinkCitation
+} from "../contents_conversion/convertLinks";
+
+import {
+	convertDataviewQueries,
 	addHardLineBreak,
 	censorText, addInlineTags, convertInlineDataview
 } from "../contents_conversion/convertText";

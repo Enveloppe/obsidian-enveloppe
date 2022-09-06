@@ -14,8 +14,8 @@ function getDataviewPath(
 	if (!wikiMatches) return [];
 	if (wikiMatches) {
 		for (const wikiMatch of wikiMatches) {
-			const altText = wikiMatch[1].replace(/(.*)\|/i, '');
-			const linkFrom = wikiMatch[1].replace(/\|(.*)/, '');
+			const altText = wikiMatch[1].replace(/(.*)\\?\|/i, '');
+			const linkFrom = wikiMatch[1].replace(/\\?\|(.*)/, '');
 			const linked = vault.getAbstractFileByPath(linkFrom) instanceof TFile ? vault.getAbstractFileByPath(linkFrom) as TFile: null;
 			if (linked) {
 				linkedFiles.push({
