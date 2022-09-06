@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.2.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.2.1...4.2.2) (2022-09-06)
+
+
+### Bug Fixes
+
+* dataview tables not converted because of the `\|` for alt ([c2a92c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c2a92c65c724864f343ac2c3773902440121c348))
+* image links removed because I again missed up with boolean ([457d035](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/457d0354200888433cc1cd67219b30f356f9c693)), closes [#30](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/30)
+
 ### [4.2.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.2.0...4.2.1) (2022-09-05)
 
 
