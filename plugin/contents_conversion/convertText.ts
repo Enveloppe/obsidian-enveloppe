@@ -14,7 +14,7 @@ import {getAPI, Link} from "obsidian-dataview";
 import {noticeLog} from "../src/utils";
 import {convertLinkCitation, convertWikilinks} from "./convertLinks";
 
-function addHardLineBreak(text: string, settings: GitHubPublisherSettings, frontmatter: FrontMatterCache): string {
+export function addHardLineBreak(text: string, settings: GitHubPublisherSettings, frontmatter: FrontMatterCache): string {
 	/*
 	* Convert soft line breaks to hard line breaks, adding two space at the end of the line.
 	* This settings can be set for global or perfile using a frontmatter key 'hardbreak'
@@ -55,7 +55,7 @@ async function addToYAML(text: string, toAdd: string[]): Promise<string> {
 	return `---\n${returnToYaml}---\n${fileContentsOnly}`;
 }
 
-async function addInlineTags(
+export async function addInlineTags(
 	settings: GitHubPublisherSettings,
 	file:TFile,
 	metadataCache: MetadataCache,
@@ -83,7 +83,7 @@ async function addInlineTags(
 	return text;
 }
 
-function censorText(text: string, settings: GitHubPublisherSettings): string {
+export function censorText(text: string, settings: GitHubPublisherSettings): string {
 	/*
 	* Censor text using the settings
 	 */
@@ -114,7 +114,7 @@ function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings) {
 	return null;
 }
 
-async function convertInlineDataview(text: string, settings: GitHubPublisherSettings, sourceFile: TFile, app: App) {
+export async function convertInlineDataview(text: string, settings: GitHubPublisherSettings, sourceFile: TFile, app: App) {
 	/*
 	* Add inlines dataview or frontmatter keys to the tags key in the frontmatter
 	* Will be recursive for array
@@ -155,7 +155,7 @@ async function convertInlineDataview(text: string, settings: GitHubPublisherSett
 	return text;
 }
 
-async function convertDataviewQueries(
+export async function convertDataviewQueries(
 	text: string,
 	path: string,
 	settings: GitHubPublisherSettings,
@@ -199,12 +199,3 @@ async function convertDataviewQueries(
 	}
 	return replacedText;
 }
-
-
-
-export {
-	convertDataviewQueries,
-	convertInlineDataview,
-	addHardLineBreak,
-	censorText,
-	addInlineTags};

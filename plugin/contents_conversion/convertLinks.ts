@@ -1,6 +1,6 @@
 import {FrontMatterCache, MetadataCache, TFile, Vault} from "obsidian";
 import {GitHubPublisherSettings, LinkedNotes} from "../settings/interface";
-import {createRelativePath} from "./filePathConvertor";
+import {createRelativePath, getReceiptFolder} from "./filePathConvertor";
 
 export function convertWikilinks(
 	fileContent: string,
@@ -84,7 +84,10 @@ export function convertLinkCitation(
 		return fileContent;
 	}
 	for (const linkedFile of linkedFiles) {
-		const pathInGithub = createRelativePath(sourceFile, linkedFile, metadataCache, settings, vault).replace('.md', '');
+		let pathInGithub = createRelativePath(sourceFile, linkedFile, metadataCache, settings, vault).replace('.md', '');
+		if (pathInGithub.trim().length == 0) {
+			pathInGithub = getReceiptFolder(sourceFile, settings, metadataCache, vault)
+		}
 		const regexToReplace = new RegExp(`(\\[{2}${linkedFile.linkFrom}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\(${linkedFile.linkFrom}\\))`, 'g');
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {
