@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.2.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.2.2...4.2.3) (2022-09-06)
+
+
+### Bug Fixes
+
+* auto-reference empty ([cd9f49d](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/cd9f49daf9d8fe95b6eb79e2640d81b7ac1b5e5d))
+
 ### [4.2.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.2.1...4.2.2) (2022-09-06)
 
 
