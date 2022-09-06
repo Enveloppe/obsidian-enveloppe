@@ -1,8 +1,9 @@
 import {Octokit} from "@octokit/core";
 import {GitHubPublisherSettings} from "../settings/interface";
 import {FilesManagement} from "./filesManagement";
-import {MetadataCache, Vault} from "obsidian";
+import {MetadataCache, Notice, Vault} from "obsidian";
 import GithubPublisherPlugin from "../main";
+import t from "../i18n";
 
 export class GithubBranch extends FilesManagement {
 	settings: GitHubPublisherSettings;
@@ -124,6 +125,9 @@ export class GithubBranch extends FilesManagement {
 				merge_method: "squash",
 			}
 		);
+		if (branch.status === 405) {
+			new Notice(t('mergeconflic') as string)
+		}
 		return branch.status === 200;
 	}
 	async updateRepository(branchName: string) {

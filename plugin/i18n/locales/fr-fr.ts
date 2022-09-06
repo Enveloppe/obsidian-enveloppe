@@ -139,5 +139,6 @@ export default {
 	noNewNote: "Aucune nouvelle note à partager.",
 	successfullPublish:(noticeValue: string[])=>`Publication réussie de ${noticeValue[0]} vers ${noticeValue[1]}.`,
 	waitingWorkflow: "Maintenant, attente de la complétion du workflow...",
-	sendMessage:(noticeValue: string[])=>`Envoi de ${noticeValue[0]} à ${noticeValue[1]}${noticeValue[2]}.`
+	sendMessage:(noticeValue: string[])=>`Envoi de ${noticeValue[0]} à ${noticeValue[1]}${noticeValue[2]}.`,
+	mergeconflic: `La pull-request n'est pas fusionnable, vous avez besoin de le faire manuellement.`
 }

@@ -134,5 +134,6 @@ export default {
 	noNewNote: "No new notes to share.",
 	successfullPublish:(noticeValue: string[])=>`Successfully published ${noticeValue[0]} to ${noticeValue[1]}.`,
 	waitingWorkflow: "Now, waiting for the workflow to be completed...",
-	sendMessage:(noticeValue: string[])=>`Send ${noticeValue[0]} to ${noticeValue[1]}${noticeValue[2]}`
+	sendMessage:(noticeValue: string[])=>`Send ${noticeValue[0]} to ${noticeValue[1]}${noticeValue[2]}`,
+	mergeconflic: `Pull-request is not mergeable, you need to do it manually.`
 }
