@@ -158,6 +158,7 @@ export class FilesManagement extends Publisher {
 		const embedCaches = this.metadataCache.getCache(file.path).embeds;
 		const frontmatterSourceFile = this.metadataCache.getFileCache(file).frontmatter;
 		const imageList:TFile[] = [];
+
 		if (embedCaches != undefined) {
 			for (const embed of embedCaches) {
 				try {
@@ -165,6 +166,7 @@ export class FilesManagement extends Publisher {
 						embed.link,
 						file.path
 					);
+
 					imageList.push(this.imageSharedOrNote(imageLink, frontmatterSourceFile));
 				} catch (e) {
 					noticeLog(e, this.settings)
@@ -270,12 +272,15 @@ export class FilesManagement extends Publisher {
 
 	private imageSharedOrNote(file: TFile, frontmatterSourceFile: FrontMatterCache) {
 		const transferImage = frontmatterSourceFile.image !== undefined ? frontmatterSourceFile.image : this.settings.embedImage;
-		if (file.extension.match(/(png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)/i)
-			&& transferImage
+		const transferEmbeds = frontmatterSourceFile.embed !== undefined ? frontmatterSourceFile.embed : this.settings.embedNotes;
+		if (
+			(file.extension.match(/(png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)/i)
+			&& transferImage)
+			|| (transferEmbeds && file.extension === 'md')
 		) {
 			return file
 		}
-		return file
+		return null
 	}
 
 	async getMetadataLinks(file: TFile, embedFiles: TFile[]) {

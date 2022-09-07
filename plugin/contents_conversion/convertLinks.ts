@@ -14,7 +14,7 @@ export function convertWikilinks(
 	const convertWikilink: boolean = frontmatter.mdlinks !== undefined ? frontmatter?.mdlinks : settings.convertWikiLinks;
 	const imageSettings: boolean = frontmatter.image !== undefined ? frontmatter?.image : settings.embedImage;
 	const embedSettings: boolean = frontmatter.embed !== undefined ? frontmatter?.embed : settings.embedNotes;
-	if (!convertWikilink && frontmatter?.links && imageSettings) {
+	if (!convertWikilink && frontmatter?.links && imageSettings && embedSettings) {
 		return fileContent;
 	}
 	const wikiRegex = /!?\[\[.*?\]\]/g;
@@ -34,10 +34,11 @@ export function convertWikilinks(
 					if (convertWikilink) {
 						linkCreator = `${isEmbed}[${altText}](${encodeURI(linkedFile.linkFrom)})`;
 					}
-					else if (frontmatter?.links === false) {
+					else if (linkedFile.linked.extension === 'md' && (frontmatter?.links === false || (isEmbed === '!' && !embedSettings))) {
 						linkCreator = altText;
 					}
-					else if (!imageSettings && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg'))) {
+					else if (!imageSettings && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg')))
+					{
 						linkCreator = '';
 					}
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
@@ -45,18 +46,17 @@ export function convertWikilinks(
 					const altMatch = wikiMatch.match(/(\|).*(]])/);
 					const altCreator = fileName.split('/');
 
-					const altLink = creatorAltLink(altMatch, altCreator, fileName.split('.').at(-1));
+					const altLink = creatorAltLink(altMatch, altCreator, fileName.split('.').at(-1), fileName);
+
 					if (convertWikilink){
 						linkCreator = `${isEmbed}[${altLink}](${encodeURI(fileName.trim())})`;
 					}
-					if (!embedSettings &&  isEmbed === '!') {
-						linkCreator = '';
-					}
-					else if (frontmatter?.links === false && fileName.trim().match('md$')) {
+					else if (frontmatter?.links === false || (isEmbed == '!' && !embedSettings)) {
 						linkCreator = altLink;
 					} else if (
 						!imageSettings
-						&& fileName.trim().match('(png|jpg|jpeg|gif|svg)$')) {
+						&& fileName.trim().match('(png|jpg|jpeg|gif|svg)$'))
+					{
 						linkCreator = '';
 					}
 
@@ -109,7 +109,8 @@ export function convertLinkCitation(
 export function creatorAltLink(
 	altMatch: RegExpMatchArray,
 	altCreator: string[],
-	fileExtension: string):string {
+	fileExtension: string,
+	match: string):string {
 	/*
 	* Create the alt text for the link
 	* if no alt text is given, the alt text is the filename without the extension
@@ -120,5 +121,5 @@ export function creatorAltLink(
 	if (fileExtension === 'md') {
 		return altCreator.length > 1 ? altCreator[altCreator.length-1] : altCreator[0] //alt text based on filename for markdown files
 	}
-	return ''
+	return match.split('/').at(-1); //alt text based on filename for other files
 }
