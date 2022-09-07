@@ -67,7 +67,6 @@ function createRelativePath(
 		}
 		return relativePath;
 	};
-	console.log(diffTarget(diffSourcePath).concat(diffTargetPath).join('/'))
 	return diffTarget(diffSourcePath).concat(diffTargetPath).join('/')
 }
 

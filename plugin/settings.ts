@@ -14,7 +14,6 @@ import t from './i18n'
 function openDetails(groupName: string, detailsState: boolean) {
 	for (let i = 0; i < document.getElementsByTagName('details').length; i++) {
 		const details = document.getElementsByTagName('details')[i] as HTMLDetailsElement;
-		console.log(details.innerText)
 		if (details.innerText === groupName && detailsState) {
 			details.open = true;
 		}
