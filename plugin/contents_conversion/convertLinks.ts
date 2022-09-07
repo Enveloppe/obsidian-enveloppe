@@ -13,6 +13,7 @@ export function convertWikilinks(
 	 */
 	const convertWikilink: boolean = frontmatter.mdlinks !== undefined ? frontmatter?.mdlinks : settings.convertWikiLinks;
 	const imageSettings: boolean = frontmatter.image !== undefined ? frontmatter?.image : settings.embedImage;
+	const embedSettings: boolean = frontmatter.embed !== undefined ? frontmatter?.embed : settings.embedNotes;
 	if (!convertWikilink && frontmatter?.links && imageSettings) {
 		return fileContent;
 	}
@@ -33,23 +34,27 @@ export function convertWikilinks(
 					if (convertWikilink) {
 						linkCreator = `${isEmbed}[${altText}](${encodeURI(linkedFile.linkFrom)})`;
 					}
-					if (frontmatter?.links === false && (linkedFile.linked.extension === 'md')) {
+					else if (frontmatter?.links === false) {
 						linkCreator = altText;
 					}
-					if (!imageSettings && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg'))) {
+					else if (!imageSettings && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg'))) {
 						linkCreator = '';
 					}
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
 				} else if (!fileName.startsWith('http')) {
 					const altMatch = wikiMatch.match(/(\|).*(]])/);
 					const altCreator = fileName.split('/');
+
 					const altLink = creatorAltLink(altMatch, altCreator, fileName.split('.').at(-1));
 					if (convertWikilink){
 						linkCreator = `${isEmbed}[${altLink}](${encodeURI(fileName.trim())})`;
 					}
-					if (frontmatter?.links === false && fileName.trim().match('md$')) {
+					if (!embedSettings &&  isEmbed === '!') {
+						linkCreator = '';
+					}
+					else if (frontmatter?.links === false && fileName.trim().match('md$')) {
 						linkCreator = altLink;
-					} if (
+					} else if (
 						!imageSettings
 						&& fileName.trim().match('(png|jpg|jpeg|gif|svg)$')) {
 						linkCreator = '';
