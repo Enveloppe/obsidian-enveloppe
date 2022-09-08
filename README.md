@@ -257,7 +257,7 @@ Some settings can be overridden based on your frontmatter key (of the file send)
 4. `dataview` to overrides dataview settings.
 5. `hardbreak` for markdown hard break.
 
-See [here for a quick reference](Per%20files%20settings.md)
+See [here for a quick reference](https://obsidian-publisher.netlify.app/obsidian/per%20files%20settings/)
 
 ---
 # Developping
