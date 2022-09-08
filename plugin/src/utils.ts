@@ -199,6 +199,5 @@ export function getFrontmatterCondition(frontmatter: FrontMatterCache, settings:
 	if (frontmatter.dataview !== undefined) {
 		settingsConversion.dataview = frontmatter.dataview
 	}
-	console.log(settingsConversion)
 	return settingsConversion
 }
