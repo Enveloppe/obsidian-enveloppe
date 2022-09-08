@@ -5,34 +5,34 @@ title: Obsidian Github Publisher
 
 [FR 🇫🇷](https://github.com/obsidianPublisher/obsidian-github-publisher/blob/master/docs/README_FR.md)
 
-<!-- TOC -->
-- [What the plugin do](#what-the-plugin-do)
-  - [What the plugin doesn't do](#what-the-plugin-doesnt-do)
-- [Configuration](#configuration)
-  - [Configuration example](#configuration-example)
-  - [GitHub](#github)
-  - [Upload configuration](#upload-configuration)
-    - [Folder reception settings.](#folder-reception-settings)
-      - [Metadata frontmatter](#metadata-frontmatter)
-      - [Fixed folder](#fixed-folder)
-      - [Obsidian Path](#obsidian-path)
-    - [Frontmatter title](#frontmatter-title)
-    - [Content's conversion](#contents-conversion)
-      - [Text](#text)
-      - [Links](#links)
-        - [Index & folder note](#index--folder-note)
-        - [Internal links](#internal-links)
-        - [Wikilinks to markdown link](#wikilinks-to-markdown-link)
-    - [Embed](#embed)
-    - [Github Workflow](#github-workflow)
-      - [Auto clean-up](#auto-clean-up)
-  - [Plugin settings](#plugin-settings)
+- [What the plugin ...](#what-the-plugin-)
+	- [Do ?](#do-)
+	- [Doesn't do ?](#doesnt-do-)
+- [Global configuration](#global-configuration)
+	- [Configuration example](#configuration-example)
+	- [GitHub](#github)
+	- [Upload configuration](#upload-configuration)
+		- [Folder reception settings.](#folder-reception-settings)
+			- [Metadata frontmatter](#metadata-frontmatter)
+			- [Fixed folder](#fixed-folder)
+			- [Obsidian Path](#obsidian-path)
+		- [Frontmatter title](#frontmatter-title)
+		- [Content's conversion](#contents-conversion)
+			- [Text](#text)
+			- [Tags](#tags)
+			- [Links](#links)
+				- [Index & folder note](#index--folder-note)
+				- [Internal links](#internal-links)
+				- [Wikilinks to markdown link](#wikilinks-to-markdown-link)
+		- [Embed](#embed)
+		- [Github Workflow](#github-workflow)
+			- [Auto clean-up](#auto-clean-up)
+	- [Plugin settings](#plugin-settings)
+- [Per files configuration](#per-files-configuration)
 - [Developping](#developping)
-  - [General](#general)
-  - [Translation](#translation)
+	- [General](#general)
+	- [Translation](#translation)
 - [Useful links](#useful-links)
-<!-- /TOC -->
-
 
 GitHub Publisher is a plugin that help you to send file in a configured GitHub Repository, based on a frontmatter sharing key. 
 
@@ -45,7 +45,7 @@ Thus, you can easily revert commit, and create workflow based on PR, merged PR, 
 ## Do ?
 
 - Read the frontmatter to check the value of a configured `share` key.
-- Send the file (and their embedded image or notes if any) to a GitHub repository
+- Send the file (and their embedded attachments or notes if any) to a GitHub repository
 
 But the plugin can do a lot more !
 - Convert wikilinks to markdown links (without changing your file)
@@ -66,7 +66,7 @@ But the plugin can do a lot more !
 
 ---
 
-# Configuration
+# Global configuration
 
 To use the plugin, you need to fill the correct information to allow the workflow. 
 
@@ -181,7 +181,7 @@ Note : This option doesn't work for Obsidian Path + Same name strategies **outsi
 
 ##### Internal links
 
-This option will convert the internal links (including image links!) of the shared file to match the relative file in your repo. Only **existant** and **shared** file will be converted.
+This option will convert the internal links (including attachments links!) of the shared file to match the relative file in your repo. Only **existant** and **shared** file will be converted.
 > [!example] 
 > Cited file : `docs/XX/YY/my_file.md`
 > File to convert : `docs/XX/ZZ/new_file.md`
@@ -194,7 +194,7 @@ In case you use wikilinks as daily but your obsidian publish solution doesn't su
 ### Embed
 
 You can choose to send embeded files :
-- Images : The image will be copied in the repository in an optionnaly settled folder.
+- Attachments : The file will be copied in the repository in an optionnaly settled folder.
 - Notes : Only shared files will be copied in the repository, in their respected folder (following your settings).
 
 ### Github Workflow
@@ -239,6 +239,27 @@ You can configure :
 
 ---
 
+# Per files configuration
+
+Some settings can be overridden based on your frontmatter key (of the file send):
+1. For links conversion, using the `links` key, you can create an yaml object with:
+	- `mdlinks` : to force converting to markdown links.
+	- `convert` : to remove the links to just keeps the string (alt text or filename).
+	Note that you can use `links: false` and `mdlinks: true` outside the yaml object if you want to just use one option.
+2. Embed settings, using the `embed` key :
+	- `send:false` avoid the sending of the embedded files (not attachment!)
+	- `remove: true` to remove any mention of these file
+	As before, you can use one key settings using `embed` (for sending) and `removeEmbed` (for citation removing)
+3. `Attachment` : allow per file settings for attachment (image, pdf, sound, video... Any attachment supported by Obsidian)
+	- `send: false` to avoiding sending the files
+	- `folder` to change the default folder. Beware that changing this settings can have strange effect with autocleaning!
+	You can, again, use a one key settings using `attachmentLinks` for the folder and `attachment: false` to avoiding sending.
+4. `dataview` to overrides dataview settings.
+5. `hardbreak` for markdown hard break.
+
+See [here for a quick reference](https://obsidian-publisher.netlify.app/obsidian/per%20files%20settings/)
+
+---
 # Developping
 
 ## General

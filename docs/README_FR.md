@@ -42,7 +42,7 @@ Ainsi, vous pouvez facilement revenir sur un commit, et créer un workflow basé
 # Ce que fait le plugin
 
 - Lire le frontmatter pour vérifier la valeur d'une clé `share` configurée.
-- Envoyer le fichier (et son image intégrée ou ses notes s'il y en a) vers un dépôt GitHub.
+- Envoyer le fichier (et ses pièces-jointes ou ses notes s'il y en a) vers un dépôt GitHub.
 
 Mais le plugin peut faire beaucoup plus !
 - Convertir des wikilinks en liens markdown (sans modifier votre fichier)
@@ -171,7 +171,7 @@ Maintenant, le plugin va convertir ces fichiers en `index` si vous activez les p
 
 #### Lien internes
 
-Cette option convertira les liens internes (y compris les liens d'image !) du fichier partagé pour correspondre au fichier relatif dans votre dépôt. Seuls les chemins de fichier **existant** et **partagé** seront convertis.
+Cette option convertira les liens internes (y compris les liens des pièces-jointes !) du fichier partagé pour correspondre au fichier relatif dans votre dépôt. Seuls les chemins de fichier **existant** et **partagé** seront convertis.
 > [!exemple] 
 > Fichier cité : `docs/XX/YY/mon_fichier.md`.
 > Fichier à convertir : `docs/XX/ZZ/new_file.md`.
@@ -184,7 +184,7 @@ Si vous utilisez des wikilinks quotidiennement mais que votre alternative à Obs
 ### Transclusion (embed)
 
 Vous pouvez choisir d'envoyer des fichiers transcluent :
-- Des images : L'image sera copiée dans le dépôt dans un dossier défini en option ou dans le dossier par défaut.
+- Des pièces-jointes : Le fichier sera copiée dans le dépôt dans un dossier défini en option ou dans le dossier par défaut.
 - Notes : Seuls les fichiers partagés seront copiés dans le dépôt, dans leur dossier respectifs (suivant vos paramètres).
 
 ### Workflow 
@@ -227,6 +227,28 @@ Vous pouvez configurer :
 
 ---
 
+# Paramètres par fichier
+
+Certains paramètres peuvent être remplacés en fonction de clé écrit dans le frontmatter (du fichier envoyé) :
+1. Pour les conversion des liens, en utilisant la clé `links`, vous pouvez créé un objet Yaml avec :
+	- `mdlinks` : pour forcer la conversion en lien markdown.
+	- `convert` : Pour retirer les liens et en ne gardant que le nom du fichier ou son text alt.
+	Noter que vous pouvez utiliser `links: false` et `mdlinks: true` en dehors de l'objet si vous voulez n'utiliser qu'une seule option.
+2. Les paramètres des notes transcluent, en utilisant la clé `embed` :
+	- `send: false` empêche l'envoie de ses notes (mais pas des pièces-jointes)
+	- `remove: true` pour supprimer toute mention de ses notes.
+	Comme précédemment, il est possible d'utiliser une seule clé, avec `embed` (pour l'envoie) et `removeEmbed` (pour la suppression des citations)
+3. `attachment` pour gérer les pièces-jointes (image, pdf, son, video... Toutes les pièces-jointes supportés par Obsidian)
+	- `send: false` empêche l'envoie des pièces-jointes
+	- `folder` permet de changer le dossier par défaut. Attention, car ce paramètre peut avoir des effets indésirables si appliqués avec l'autocleaner.
+	De nouveau, il est possible d'utiliser un seul paramètre avec `attachmentLinks` pour le dossier et `attachment: false` pour empêcher l'envoie.
+4. `dataview` permet de forcer ou empêcher la conversion des queries dataview.
+5. `hardbreak` pour le paramètre des sauts de lignes en markdown.
+
+Voyez [ici pour une référence rapide](https://obsidian-publisher.netlify.app/fr/obsidian/per%20files%20settings/)
+
+---
+
 # Développement
 
 ## Général
@@ -265,7 +287,7 @@ Pour ajouter un nouveau langage :
 
 ---
 
-Si vous trouvez ce module et ce workflow utile, vous pouvez m'envoyer de quoi m'acheter du café en grande quantité :<br/>
+Si vous trouvez ce module et ce workflow utile, vous pouvez m'envoyer de quoi m'acheter du café en grande quantité :<br>
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 [^1]: Seuls les fichiers supportés par Obsidian seront supprimés. 
