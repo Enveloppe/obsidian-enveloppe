@@ -15,9 +15,8 @@ export function convertWikilinks(
 	const convertWikilink = conditionConvert.convertWiki
 	const imageSettings = conditionConvert.attachment
 	const embedSettings = conditionConvert.embed
-	let removeEmbed = conditionConvert.removeEmbed
 	const convertLinks = conditionConvert.links
-	if (!convertWikilink && convertLinks && imageSettings && embedSettings && !removeEmbed) {
+	if (!convertWikilink && convertLinks && imageSettings && embedSettings && !conditionConvert.removeEmbed) {
 		return fileContent;
 	}
 	const wikiRegex = /!?\[\[.*?\]\]/g;
@@ -27,8 +26,7 @@ export function convertWikilinks(
 		for (const wikiMatch of wikiMatches) {
 			const fileMatch = wikiMatch.match(fileRegex);
 			const isEmbed = wikiMatch.startsWith('!') ? '!' : '';
-			removeEmbed = removeEmbed && isEmbed === '!';
-			const isEmbedBool = isEmbed === '!';
+			const isEmbedBool = wikiMatch.startsWith('!');
 
 			if (fileMatch) {
 				// @ts-ignore
@@ -37,12 +35,12 @@ export function convertWikilinks(
 				const linkedFile=linkedFiles.find(item => item.linkFrom===fileName);
 				if (linkedFile) {
 					const altText = linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.extension === 'md' ? linkedFile.linked.basename : "";
-					removeEmbed = removeEmbed && linkedFile.linked.extension === 'md';
+					const removeEmbed =  conditionConvert.removeEmbed && isEmbedBool && linkedFile.linked.extension === 'md';
 					if (convertWikilink) {
 						linkCreator = `${isEmbed}[${altText}](${encodeURI(linkedFile.linkFrom)})`;
 					}
 
-					if (linkedFile.linked.extension === 'md' && ((!convertLinks && !isEmbedBool) || (isEmbedBool && !embedSettings && !removeEmbed))) {
+					if (linkedFile.linked.extension === 'md' && !convertLinks && !isEmbedBool) {
 						linkCreator = altText;
 					}
 					if ((!imageSettings && isAttachment(linkedFile.linked.extension)) || removeEmbed)
@@ -55,15 +53,14 @@ export function convertWikilinks(
 					const altCreator = fileName.split('/');
 
 					const altLink = creatorAltLink(altMatch, altCreator, fileName.split('.').at(-1), fileName);
-
+					const removeEmbed = !isAttachment(fileName.trim()) &&  conditionConvert.removeEmbed && isEmbedBool;
 					if (convertWikilink){
 						linkCreator = `${isEmbed}[${altLink}](${encodeURI(fileName.trim())})`;
 					}
-					if (!isAttachment(fileName.trim()) && (!convertLinks && isEmbedBool ) || (isEmbedBool && !embedSettings && !removeEmbed)) {
+					if (!isAttachment(fileName.trim()) && !convertLinks && !isEmbedBool)  {
 						linkCreator = altLink;
-					} if ((
-						!imageSettings
-						&& isAttachment(fileName.trim())) || removeEmbed)
+					} if ((!imageSettings && isAttachment(fileName.trim()))
+						|| removeEmbed)
 					{
 						linkCreator = '';
 					}
