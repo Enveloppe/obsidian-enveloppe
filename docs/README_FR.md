@@ -245,7 +245,7 @@ Certains paramètres peuvent être remplacés en fonction de clé écrit dans le
 4. `dataview` permet de forcer ou empêcher la conversion des queries dataview.
 5. `hardbreak` pour le paramètre des sauts de lignes en markdown.
 
-Voyez [ici pour une référence rapide](../../fr/Obsidian/Per%20files%20settings.md)
+Voyez [ici pour une référence rapide](https://obsidian-publisher.netlify.app/fr/obsidian/per%20files%20settings/)
 
 ---
 
