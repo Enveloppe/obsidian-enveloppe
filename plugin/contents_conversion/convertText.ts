@@ -74,8 +74,10 @@ export async function addInlineTags(
 		t => t.tag.replace('#', '')
 			.replaceAll('/', '_')) : [];
 	const frontmatterTags = parseFrontMatterTags(metadataCache.getFileCache(file)?.frontmatter);
-	const yamlTags = frontmatterTags ? frontmatterTags.map(t => t.replace('#', '')
-		.replaceAll("/", "_")) : [];
+
+	const yamlTags = frontmatterTags ? frontmatterTags.map(t =>
+		t.replace('#', '')
+			.replaceAll("/", "_")) : [];
 	const toAdd = [...new Set([...inlineTagsInText, ...yamlTags])]
 	if (toAdd.length > 0) {
 		return await addToYAML(text, toAdd);

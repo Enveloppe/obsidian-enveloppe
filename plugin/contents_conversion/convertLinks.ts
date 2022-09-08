@@ -24,6 +24,8 @@ export function convertWikilinks(
 		for (const wikiMatch of wikiMatches) {
 			const fileMatch = wikiMatch.match(fileRegex);
 			const isEmbed = wikiMatch.startsWith('!') ? '!' : '';
+			let removeEmbed = frontmatter?.removeEmbed && isEmbed === '!';
+
 			if (fileMatch) {
 				// @ts-ignore
 				let linkCreator = wikiMatch;
@@ -31,13 +33,15 @@ export function convertWikilinks(
 				const linkedFile=linkedFiles.find(item => item.linkFrom===fileName);
 				if (linkedFile) {
 					const altText = linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.extension === 'md' ? linkedFile.linked.basename : "";
+					removeEmbed = removeEmbed && linkedFile.linked.extension === 'md';
 					if (convertWikilink) {
 						linkCreator = `${isEmbed}[${altText}](${encodeURI(linkedFile.linkFrom)})`;
 					}
-					else if (linkedFile.linked.extension === 'md' && (frontmatter?.links === false || (isEmbed === '!' && !embedSettings))) {
+
+					if (linkedFile.linked.extension === 'md' && ((frontmatter?.links === false && isEmbed !== '!') || (isEmbed === '!' && !embedSettings && !removeEmbed))) {
 						linkCreator = altText;
 					}
-					else if (!imageSettings && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg')))
+					if ((!imageSettings && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg'))) || removeEmbed)
 					{
 						linkCreator = '';
 					}
@@ -51,11 +55,11 @@ export function convertWikilinks(
 					if (convertWikilink){
 						linkCreator = `${isEmbed}[${altLink}](${encodeURI(fileName.trim())})`;
 					}
-					else if (frontmatter?.links === false || (isEmbed == '!' && !embedSettings)) {
+					if ((frontmatter?.links === false && isEmbed !== '!' ) || (isEmbed === '!' && !embedSettings && !removeEmbed)) {
 						linkCreator = altLink;
-					} else if (
+					} if ((
 						!imageSettings
-						&& fileName.trim().match('(png|jpg|jpeg|gif|svg)$'))
+						&& fileName.trim().match('(png|jpg|jpeg|gif|svg)$')) || removeEmbed)
 					{
 						linkCreator = '';
 					}
