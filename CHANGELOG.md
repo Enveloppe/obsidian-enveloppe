@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.3.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.2.3...4.3.0-1) (2022-09-08)
+
+
+### Features
+
+* allow to remove embeds mentionning using removeEmbed frontmatter key ([7edee37](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7edee37a5eae91caf42f33e43f6ef415c7cd2a24))
+
+
+### Bug Fixes
+
+* double fileHistory prevent pushing embeds ([e2a30bb](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e2a30bb3b64bda00f38544c02a06d8f55f2e3732))
+* forgot hardbreak settings ([a5a89ac](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a5a89ac141068b5fe959268f35c9269393cf027c))
+* links creation with false & non existant files ([8fa583f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8fa583f27a28876485f124c4c9d46dab1aa6de0a))
+* remove embedding on embed: false ([7d42abd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7d42abd269eacdd18ac68d15d7b646b9f3e99762))
+
 ## [4.3.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.2.3...4.3.0-0) (2022-09-08)
 
 
