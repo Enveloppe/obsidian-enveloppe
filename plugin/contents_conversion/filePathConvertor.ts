@@ -1,5 +1,6 @@
 import {MetadataCache, TFile, Vault, TFolder, FrontMatterCache} from "obsidian";
-import {folderSettings, LinkedNotes, GitHubPublisherSettings} from "../settings/interface";
+import {folderSettings, LinkedNotes, GitHubPublisherSettings, frontmatterConvert} from "../settings/interface";
+import {getFrontmatterCondition} from "../src/utils";
 
 function getDataviewPath(
 	markdown: string,
@@ -34,7 +35,8 @@ function createRelativePath(
 	targetFile: LinkedNotes,
 	metadata: MetadataCache,
 	settings: GitHubPublisherSettings,
-	vault: Vault):string {
+	vault: Vault,
+	frontmatter: FrontMatterCache | null):string {
 	/**
 	 * Create relative path from a sourceFile to a targetPath. If the target file is a note, only share if the frontmatter sharekey is present and true
 	 * @param sourceFile: TFile, the shared file containing all links, embed etc
@@ -44,7 +46,6 @@ function createRelativePath(
 	 * @return string : relative created path
 	 */
 	const sourcePath = getReceiptFolder(sourceFile, settings, metadata, vault);
-	const frontmatter = metadata.getCache(targetFile.linked.path) ? metadata.getCache(targetFile.linked.path).frontmatter : null;
 	if (
 		targetFile.linked.extension === 'md'
 		&& (
@@ -53,7 +54,7 @@ function createRelativePath(
 			|| (frontmatter[settings.shareKey] === false))) {
 		return targetFile.altText;
 	}
-	const targetPath = targetFile.linked.extension === 'md' ? getReceiptFolder(targetFile.linked, settings, metadata, vault) : getImageLinkOptions(targetFile.linked, settings, frontmatter);
+	const targetPath = targetFile.linked.extension === 'md' ? getReceiptFolder(targetFile.linked, settings, metadata, vault) : getImageLinkOptions(targetFile.linked, settings, getFrontmatterCondition(frontmatter, settings));
 	const sourceList = sourcePath.split('/');
 	const targetList = targetPath.split('/');
 	const diffSourcePath = sourceList.filter(x => !targetList.includes(x));
@@ -159,7 +160,7 @@ function getReceiptFolder(
 	}
 }
 
-function getImageLinkOptions(file: TFile, settings: GitHubPublisherSettings, sourceFrontmatter: FrontMatterCache | null):string {
+function getImageLinkOptions(file: TFile, settings: GitHubPublisherSettings, sourceFrontmatter: frontmatterConvert | null):string {
 	/**
 	 * Create link path based on settings and file path
 	 * @param file : TFile - Image TFile
@@ -167,13 +168,8 @@ function getImageLinkOptions(file: TFile, settings: GitHubPublisherSettings, sou
 	 * @returns string - Link path
 	 */
 
-	if (sourceFrontmatter?.imageLink) {
-		return sourceFrontmatter.imageLink.toString().replace(/\/$/, '') + "/" + file.name;
-	}
-	else if (settings.defaultImageFolder.length > 0) {
-		return settings.defaultImageFolder + "/" + file.name;
-	} else if (settings.folderDefaultName.length > 0) {
-		return settings.folderDefaultName + "/" + file.name;
+	if (sourceFrontmatter.imageLinks !== null) {
+		return sourceFrontmatter.imageLinks + "/" + file.name;
 	}
 	return file.path;
 }

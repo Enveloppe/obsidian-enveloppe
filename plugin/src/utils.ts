@@ -1,11 +1,12 @@
-import {App, MetadataCache, Notice, TFile, Vault} from 'obsidian'
+import {App, FrontMatterCache, MetadataCache, Notice, TFile, Vault} from 'obsidian'
 import {GitHubPublisherSettings} from '../settings/interface'
 import Publisher from "../publishing/upload";
 import t from '../i18n'
 import type { StringFunc } from "../i18n";
 import {getReceiptFolder} from "../contents_conversion/filePathConvertor";
+import {frontmatterConvert} from "../settings/interface";
 
-function noticeLog(message: string, settings: GitHubPublisherSettings) {
+export function noticeLog(message: string, settings: GitHubPublisherSettings) {
 	/**
 	 * Create a notice message for the log
 	 * @param message: string
@@ -19,7 +20,7 @@ function noticeLog(message: string, settings: GitHubPublisherSettings) {
 	}
 }
 
-function disablePublish (app: App, settings: GitHubPublisherSettings, file:TFile) {
+export function disablePublish (app: App, settings: GitHubPublisherSettings, file:TFile) {
 	/**
 	 * Disable publishing if the file hasn't a valid frontmatter or if the file is in the folder list to ignore
 	 * @param app: App
@@ -58,7 +59,7 @@ function checkSlash(
 }
 
 
-async function createLink(file: TFile, settings: GitHubPublisherSettings, metadataCache: MetadataCache, vault: Vault) {
+export async function createLink(file: TFile, settings: GitHubPublisherSettings, metadataCache: MetadataCache, vault: Vault) {
 	/**
 	 * Create the link for the file and add it to the clipboard
 	 * The path is based with the receipt folder but part can be removed using settings.
@@ -92,7 +93,7 @@ async function createLink(file: TFile, settings: GitHubPublisherSettings, metada
 
 }
 
-async function noticeMessage(PublisherManager: Publisher, file: TFile | string, settings: GitHubPublisherSettings) {
+export async function noticeMessage(PublisherManager: Publisher, file: TFile | string, settings: GitHubPublisherSettings) {
 	/**
 	 * Create a notice message for the sharing ; the message can be delayed if a workflow is used. 
 	 * @param PublisherManager: Publisher
@@ -117,7 +118,7 @@ async function noticeMessage(PublisherManager: Publisher, file: TFile | string, 
 	}
 }
 
-function trimObject(obj: {[p: string]: string}){
+export function trimObject(obj: {[p: string]: string}){
 	/**
 	 * Trim the object values
 	 * @param obj: {[p: string]: string}
@@ -132,10 +133,72 @@ function trimObject(obj: {[p: string]: string}){
 	return JSON.parse(trimmed);
 }
 
-export {
-	disablePublish,
-	noticeMessage,
-	trimObject,
-	createLink,
-	noticeLog
+
+
+export function getFrontmatterCondition(frontmatter: FrontMatterCache, settings: GitHubPublisherSettings) {
+	let imageDefaultFolder = null;
+	if (settings.defaultImageFolder.length > 0) {
+		imageDefaultFolder = settings.defaultImageFolder;
+	} else if (settings.folderDefaultName.length > 0) {
+		imageDefaultFolder = settings.folderDefaultName;
+	}
+	const settingsConversion: frontmatterConvert = {
+		convertWiki: settings.convertWikiLinks,
+		image: settings.embedImage,
+		embed: settings.embedNotes,
+		imageLinks: imageDefaultFolder,
+		links: true,
+		removeEmbed: false,
+		dataview: settings.convertDataview,
+	}
+	if (frontmatter.links !== undefined) {
+		if (typeof frontmatter.links === 'object') {
+			if (frontmatter.links.convert !== undefined) {
+				settingsConversion.links = frontmatter.links.convert
+			}
+			if (frontmatter.links.mdlinks !== undefined) {
+				settingsConversion.convertWiki = frontmatter.links.mdlinks
+			}
+		} else {
+			settingsConversion.links = frontmatter.links
+		}
+	}
+	if (frontmatter.embed !== undefined) {
+		if (typeof frontmatter.embed === 'object') {
+			if (frontmatter.embed.send !== undefined) {
+				settingsConversion.embed = frontmatter.embed.send
+			}
+			if (frontmatter.embed.remove !== undefined) {
+				settingsConversion.removeEmbed = frontmatter.embed.remove
+			}
+		} else {
+			settingsConversion.embed = frontmatter.embed
+		}
+	}
+	if (frontmatter.image !== undefined) {
+		if (typeof frontmatter.image === 'object') {
+			if (frontmatter.image.send !== undefined) {
+				settingsConversion.image = frontmatter.image.send
+			}
+			if (frontmatter.image.folder !== undefined) {
+				settingsConversion.imageLinks = frontmatter.image.folder
+			}
+		} else {
+			settingsConversion.image = frontmatter.image
+		}
+	}
+	if (frontmatter.imageLink !== undefined) {
+		settingsConversion.imageLinks = frontmatter.imageLink.toString().replace(/\/$/, '')
+	}
+	if (frontmatter.mdlinks !== undefined) {
+		settingsConversion.convertWiki = frontmatter.mdlinks
+	}
+	if (frontmatter.removeEmbed !== undefined) {
+		settingsConversion.removeEmbed = frontmatter.removeEmbed
+	}
+	if (frontmatter.dataview !== undefined) {
+		settingsConversion.dataview = frontmatter.dataview
+	}
+	console.log(settingsConversion)
+	return settingsConversion
 }

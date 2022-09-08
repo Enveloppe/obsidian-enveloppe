@@ -1,20 +1,22 @@
 import {FrontMatterCache, MetadataCache, TFile, Vault} from "obsidian";
-import {GitHubPublisherSettings, LinkedNotes} from "../settings/interface";
+import {frontmatterConvert, GitHubPublisherSettings, LinkedNotes} from "../settings/interface";
 import {createRelativePath, getReceiptFolder} from "./filePathConvertor";
 
 export function convertWikilinks(
 	fileContent: string,
-	frontmatter: FrontMatterCache,
+	conditionConvert: frontmatterConvert,
 	settings: GitHubPublisherSettings,
 	linkedFiles: LinkedNotes[]):string
 {
 	/*
 	* Convert wikilinks to markdown
 	 */
-	const convertWikilink: boolean = frontmatter.mdlinks !== undefined ? frontmatter?.mdlinks : settings.convertWikiLinks;
-	const imageSettings: boolean = frontmatter.image !== undefined ? frontmatter?.image : settings.embedImage;
-	const embedSettings: boolean = frontmatter.embed !== undefined ? frontmatter?.embed : settings.embedNotes;
-	if (!convertWikilink && frontmatter?.links && imageSettings && embedSettings) {
+	const convertWikilink = conditionConvert.convertWiki
+	const imageSettings = conditionConvert.image
+	const embedSettings = conditionConvert.embed
+	let removeEmbed = conditionConvert.removeEmbed
+	const convertLinks = conditionConvert.links
+	if (!convertWikilink && convertLinks && imageSettings && embedSettings && !removeEmbed) {
 		return fileContent;
 	}
 	const wikiRegex = /!?\[\[.*?\]\]/g;
@@ -24,7 +26,8 @@ export function convertWikilinks(
 		for (const wikiMatch of wikiMatches) {
 			const fileMatch = wikiMatch.match(fileRegex);
 			const isEmbed = wikiMatch.startsWith('!') ? '!' : '';
-			let removeEmbed = frontmatter?.removeEmbed && isEmbed === '!';
+			removeEmbed = removeEmbed && isEmbed === '!';
+			const isEmbedBool = isEmbed === '!';
 
 			if (fileMatch) {
 				// @ts-ignore
@@ -38,7 +41,7 @@ export function convertWikilinks(
 						linkCreator = `${isEmbed}[${altText}](${encodeURI(linkedFile.linkFrom)})`;
 					}
 
-					if (linkedFile.linked.extension === 'md' && ((frontmatter?.links === false && isEmbed !== '!') || (isEmbed === '!' && !embedSettings && !removeEmbed))) {
+					if (linkedFile.linked.extension === 'md' && ((!convertLinks && !isEmbedBool) || (isEmbedBool && !embedSettings && !removeEmbed))) {
 						linkCreator = altText;
 					}
 					if ((!imageSettings && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg'))) || removeEmbed)
@@ -55,7 +58,7 @@ export function convertWikilinks(
 					if (convertWikilink){
 						linkCreator = `${isEmbed}[${altLink}](${encodeURI(fileName.trim())})`;
 					}
-					if ((frontmatter?.links === false && isEmbed !== '!' ) || (isEmbed === '!' && !embedSettings && !removeEmbed)) {
+					if ((!convertLinks && isEmbedBool ) || (isEmbedBool && !embedSettings && !removeEmbed)) {
 						linkCreator = altLink;
 					} if ((
 						!imageSettings
@@ -78,7 +81,8 @@ export function convertLinkCitation(
 	linkedFiles : LinkedNotes[],
 	metadataCache: MetadataCache,
 	sourceFile: TFile,
-	vault: Vault):string {
+	vault: Vault,
+	frontmatter: FrontMatterCache):string {
 	/**
 	* Convert internal links with changing the path to the relative path in the github repository
 	* @param fileContent: The file content
@@ -93,7 +97,7 @@ export function convertLinkCitation(
 		return fileContent;
 	}
 	for (const linkedFile of linkedFiles) {
-		let pathInGithub = createRelativePath(sourceFile, linkedFile, metadataCache, settings, vault).replace('.md', '');
+		let pathInGithub = createRelativePath(sourceFile, linkedFile, metadataCache, settings, vault, frontmatter).replace('.md', '');
 		if (pathInGithub.trim().length == 0) {
 			pathInGithub = getReceiptFolder(sourceFile, settings, metadataCache, vault)
 		}

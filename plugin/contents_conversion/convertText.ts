@@ -1,4 +1,4 @@
-import {GitHubPublisherSettings} from "../settings/interface";
+import {frontmatterConvert, GitHubPublisherSettings} from "../settings/interface";
 import {
 	App,
 	FrontMatterCache,
@@ -59,7 +59,8 @@ export async function addInlineTags(
 	settings: GitHubPublisherSettings,
 	file:TFile,
 	metadataCache: MetadataCache,
-	app: App): Promise<string> {
+	app: App,
+	frontmatter: FrontMatterCache): Promise<string> {
 	/*
 	* Add inlines tags to frontmatter tags keys.
 	* Duplicate tags will be removed.
@@ -73,7 +74,7 @@ export async function addInlineTags(
 	const inlineTagsInText= inlineTags ? inlineTags.map(
 		t => t.tag.replace('#', '')
 			.replaceAll('/', '_')) : [];
-	const frontmatterTags = parseFrontMatterTags(metadataCache.getFileCache(file)?.frontmatter);
+	const frontmatterTags = parseFrontMatterTags(frontmatter);
 
 	const yamlTags = frontmatterTags ? frontmatterTags.map(t =>
 		t.replace('#', '')
@@ -163,6 +164,7 @@ export async function convertDataviewQueries(
 	settings: GitHubPublisherSettings,
 	app: App,
 	metadataCache: MetadataCache,
+	frontmatterSettings: frontmatterConvert,
 	frontmatter: FrontMatterCache,
 	sourceFile: TFile): Promise<string>
 {
@@ -182,15 +184,15 @@ export async function convertDataviewQueries(
 	const dvApi = getAPI();
 	const matches = text.matchAll(dataviewRegex);
 	if (!matches) return;
-	const settingsDataview = frontmatter.dataview !== undefined ? frontmatter?.dataview : settings.convertDataview;
+	const settingsDataview = frontmatterSettings.dataview;
 	for (const queryBlock of matches){
 		try {
 			const block = queryBlock[0];
 			const query = queryBlock[1];
 			let md = settingsDataview ? await dvApi.tryQueryMarkdown(query, path) : "";
 			const dataviewPath = getDataviewPath(md, settings, vault);
-			md = convertLinkCitation(md, settings, dataviewPath, metadataCache, sourceFile, vault);
-			md = convertWikilinks(md, frontmatter, settings, dataviewPath);
+			md = convertLinkCitation(md, settings, dataviewPath, metadataCache, sourceFile, vault, frontmatter);
+			md = convertWikilinks(md, frontmatterSettings, settings, dataviewPath);
 			replacedText = replacedText.replace(block, md);
 
 		} catch (e) {

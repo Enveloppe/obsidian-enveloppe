@@ -1,11 +1,11 @@
 import {
-	arrayBufferToBase64, FrontMatterCache,
+	arrayBufferToBase64,
 	MetadataCache,
 	Notice,
 	TFile,
 	Vault,
 } from "obsidian";
-import { GitHubPublisherSettings } from "../settings/interface";
+import {frontmatterConvert, GitHubPublisherSettings} from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
 import { Octokit } from "@octokit/core";
 import { Base64 } from "js-base64";
@@ -27,7 +27,7 @@ import {
 } from "../contents_conversion/filePathConvertor";
 import {ShareStatusBar} from "../src/status_bar";
 import GithubPublisherPlugin from "../main";
-import { noticeLog } from "plugin/src/utils";
+import {getFrontmatterCondition, noticeLog} from "plugin/src/utils";
 
 export default class Publisher {
 	vault: Vault;
@@ -50,7 +50,7 @@ export default class Publisher {
 		this.plugin = plugin;
 	}
 
-	async statusBarForEmbed(linkedFiles: TFile[], fileHistory:TFile[], ref="main", deepScan:boolean, sourceFrontmatter: FrontMatterCache) {
+	async statusBarForEmbed(linkedFiles: TFile[], fileHistory:TFile[], ref="main", deepScan:boolean, sourceFrontmatter: frontmatterConvert) {
 		/**
 		 * Add a status bar + send embed to GitHub. Deep-scanning files.
 		 * @param linkedFiles File embedded
@@ -106,20 +106,21 @@ export default class Publisher {
 		}
 		try {
 			fileHistory.push(file)
-			let embedFiles = shareFiles.getSharedEmbed(file);
-			embedFiles = await shareFiles.getMetadataLinks(file, embedFiles);
+			const frontmatterSettings = getFrontmatterCondition(frontmatter, this.settings);
+			let embedFiles = shareFiles.getSharedEmbed(file, frontmatterSettings);
+			embedFiles = await shareFiles.getMetadataLinks(file, embedFiles, frontmatter, frontmatterSettings);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
-			let text = await addInlineTags(this.settings, file, this.metadataCache, this.plugin.app);
-			text = await convertDataviewQueries(text, file.path, this.settings, this.plugin.app, this.metadataCache, frontmatter, file);
+			let text = await addInlineTags(this.settings, file, this.metadataCache, this.plugin.app, frontmatter);
+			text = await convertDataviewQueries(text, file.path, this.settings, this.plugin.app, this.metadataCache, frontmatterSettings, frontmatter, file);
 			text = await convertInlineDataview(text, this.settings, file, this.plugin.app);
 			text = addHardLineBreak(text, this.settings, frontmatter);
-			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault);
-			text = convertWikilinks(text, frontmatter, this.settings, linkedFiles);
+			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault, frontmatter);
+			text = convertWikilinks(text, frontmatterSettings, this.settings, linkedFiles);
 			text = censorText(text, this.settings);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
 			noticeLog(`Upload ${file.name}:${path} on ${this.settings.githubName}/${this.settings.githubRepo}:${ref}`, this.settings);
 			await this.uploadText(file.path, text, path, file.name, ref);
-			await this.statusBarForEmbed(embedFiles, fileHistory, ref, deepScan, frontmatter);
+			await this.statusBarForEmbed(embedFiles, fileHistory, ref, deepScan, frontmatterSettings);
 			if (autoclean && this.settings.autoCleanUp) {
 				await deleteFromGithub(true, this.settings, this.octokit, ref, shareFiles);
 			}
@@ -194,7 +195,7 @@ export default class Publisher {
 		);
 	}
 
-	async uploadImage(imageFile: TFile, ref = "main", sourcefrontmatter: FrontMatterCache) {
+	async uploadImage(imageFile: TFile, ref = "main", sourcefrontmatter: frontmatterConvert) {
 		/**
 		 * Convert image in base64
 		 * @param imageFile the image

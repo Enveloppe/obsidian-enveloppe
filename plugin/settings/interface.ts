@@ -103,3 +103,13 @@ export interface TextCleaner {
 	entry: string
 	replace: string,
 }
+
+export interface frontmatterConvert {
+	links: boolean,
+	image: boolean,
+	embed: boolean,
+	imageLinks: string,
+	convertWiki: boolean,
+	removeEmbed: boolean,
+	dataview: boolean,
+}

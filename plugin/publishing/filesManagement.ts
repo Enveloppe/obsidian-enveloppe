@@ -1,12 +1,18 @@
 // Credit : https://github.com/oleeskild/obsidian-digital-garden @oleeskild
 
 import {FrontMatterCache, MetadataCache, TFile, Vault} from "obsidian";
-import {ConvertedLink, GithubRepo, LinkedNotes, GitHubPublisherSettings} from "../settings/interface";
+import {
+	ConvertedLink,
+	GithubRepo,
+	LinkedNotes,
+	GitHubPublisherSettings,
+	frontmatterConvert
+} from "../settings/interface";
 import {Octokit} from "@octokit/core";
 import {getImageLinkOptions, getReceiptFolder} from "../contents_conversion/filePathConvertor";
 import Publisher from "./upload";
 import GithubPublisher from "../main";
-import { noticeLog } from "plugin/src/utils";
+import {noticeLog} from "plugin/src/utils";
 import {getAPI, Link} from "obsidian-dataview";
 
 export class FilesManagement extends Publisher {
@@ -149,14 +155,13 @@ export class FilesManagement extends Publisher {
 	}
 
 	
-	getSharedEmbed(file: TFile):TFile[] {
+	getSharedEmbed(file: TFile, frontmatterSourceFile: frontmatterConvert):TFile[] {
 		/*
 		* Get all files embedded in the shared file
 		* If the settings are true, allowing to publish the files (for attachments)
 		* Markdown files attachments are always verified using the main publish function
 		 */
 		const embedCaches = this.metadataCache.getCache(file.path).embeds;
-		const frontmatterSourceFile = this.metadataCache.getFileCache(file).frontmatter;
 		const imageList:TFile[] = [];
 
 		if (embedCaches != undefined) {
@@ -253,7 +258,7 @@ export class FilesManagement extends Publisher {
 		return newFiles;
 	}
 
-	getImageByPath(path: Link | string, field: Link | string, frontmatterSourceFile: FrontMatterCache): TFile {
+	getImageByPath(path: Link | string, field: Link | string, frontmatterSourceFile: frontmatterConvert): TFile {
 		if (field.constructor.name === 'Link') {
 			// @ts-ignore
 			field = field.path
@@ -270,9 +275,9 @@ export class FilesManagement extends Publisher {
 		return null
 	}
 
-	private imageSharedOrNote(file: TFile, frontmatterSourceFile: FrontMatterCache) {
-		const transferImage = frontmatterSourceFile.image !== undefined ? frontmatterSourceFile.image : this.settings.embedImage;
-		const transferEmbeds = frontmatterSourceFile.embed !== undefined ? frontmatterSourceFile.embed : this.settings.embedNotes;
+	private imageSharedOrNote(file: TFile, settingsConversion: frontmatterConvert) {
+		const transferImage = settingsConversion.image;
+		const transferEmbeds = settingsConversion.embed;
 		if (
 			(file.extension.match(/(png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)/i)
 			&& transferImage)
@@ -283,8 +288,7 @@ export class FilesManagement extends Publisher {
 		return null
 	}
 
-	async getMetadataLinks(file: TFile, embedFiles: TFile[]) {
-		const frontmatterSourceFile = this.metadataCache.getFileCache(file).frontmatter;
+	async getMetadataLinks(file: TFile, embedFiles: TFile[], frontmatterSourceFile: FrontMatterCache, frontmatterSettings: frontmatterConvert) {
 		for (const field of this.settings.metadataFileFields) {
 			if (frontmatterSourceFile[field] != undefined) {
 				const imageLink = this.metadataCache.getFirstLinkpathDest(
@@ -292,7 +296,7 @@ export class FilesManagement extends Publisher {
 					file.path
 				);
 				if (imageLink !== null) {
-					embedFiles.push(this.imageSharedOrNote(file, frontmatterSourceFile));
+					embedFiles.push(this.imageSharedOrNote(file, frontmatterSettings));
 				}
 			}
 		}
@@ -306,11 +310,11 @@ export class FilesManagement extends Publisher {
 				if (fieldValue != undefined) {
 					if (fieldValue.constructor.name === 'Array') {
 						for (const value of fieldValue) {
-							embedFiles.push(this.getImageByPath(value, fieldValue, frontmatterSourceFile))
+							embedFiles.push(this.getImageByPath(value, fieldValue, frontmatterSettings))
 						}
 					}
 					else {
-						embedFiles.push(this.getImageByPath(fieldValue, fieldValue, frontmatterSourceFile))
+						embedFiles.push(this.getImageByPath(fieldValue, fieldValue, frontmatterSettings))
 					}
 				}
 			}
