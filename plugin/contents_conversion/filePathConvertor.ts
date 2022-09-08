@@ -167,8 +167,16 @@ function getImageLinkOptions(file: TFile, settings: GitHubPublisherSettings, sou
 	 * @param settings : GitHubPublisherSettings - Settings
 	 * @returns string - Link path
 	 */
-
-	if (sourceFrontmatter.attachmentLinks !== null) {
+	if (!sourceFrontmatter) {
+		if (settings.defaultImageFolder.length > 0) {
+			return settings.defaultImageFolder + "/" + file.name;
+		} else if (settings.folderDefaultName.length > 0) {
+			return settings.folderDefaultName + "/" + file.name;
+		} else {
+			return file.path;
+		}
+	}
+	else if (sourceFrontmatter && sourceFrontmatter.attachmentLinks !== undefined) {
 		return sourceFrontmatter.attachmentLinks + "/" + file.name;
 	}
 	return file.path;
