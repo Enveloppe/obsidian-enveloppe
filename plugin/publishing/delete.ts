@@ -3,7 +3,7 @@ import {Notice, parseYaml} from "obsidian";
 import {folderSettings, GitHubPublisherSettings, GithubRepo} from "../settings/interface";
 import {FilesManagement} from "./filesManagement";
 import {Base64} from "js-base64";
-import {noticeLog, trimObject} from "../src/utils";
+import {isAttachment, noticeLog, trimObject} from "../src/utils";
 import t, {StringFunc} from "../i18n"
 
 export async function deleteFromGithub(silent = false, settings: GitHubPublisherSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement) {
@@ -127,7 +127,7 @@ export async function filterGithubFile(fileInRepo: GithubRepo[], settings: GitHu
 				file.file.includes(settings.defaultImageFolder)))
 			&&
 			!excludedFileFromDelete(file.file, settings) &&
-			file.file.match(/(md|jpe?g|png|gif|bmp|svg|mp3|webm|wav|m4a|ogg|3gp|flac|mp4|ogv|pdf)$/)
+			(isAttachment(file.file) || file.file.match('md$'))
 		) {
 			sharedFilesInRepo.push(file);
 		}

@@ -133,6 +133,10 @@ export function trimObject(obj: {[p: string]: string}){
 	return JSON.parse(trimmed);
 }
 
+export function isAttachment(filename: string) {
+	return filename.match(/(png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)/i)
+}
+
 
 
 export function getFrontmatterCondition(frontmatter: FrontMatterCache, settings: GitHubPublisherSettings) {
@@ -144,9 +148,9 @@ export function getFrontmatterCondition(frontmatter: FrontMatterCache, settings:
 	}
 	const settingsConversion: frontmatterConvert = {
 		convertWiki: settings.convertWikiLinks,
-		image: settings.embedImage,
+		attachment: settings.embedImage,
 		embed: settings.embedNotes,
-		imageLinks: imageDefaultFolder,
+		attachmentLinks: imageDefaultFolder,
 		links: true,
 		removeEmbed: false,
 		dataview: settings.convertDataview,
@@ -175,20 +179,20 @@ export function getFrontmatterCondition(frontmatter: FrontMatterCache, settings:
 			settingsConversion.embed = frontmatter.embed
 		}
 	}
-	if (frontmatter.image !== undefined) {
-		if (typeof frontmatter.image === 'object') {
-			if (frontmatter.image.send !== undefined) {
-				settingsConversion.image = frontmatter.image.send
+	if (frontmatter.attachment !== undefined) {
+		if (typeof frontmatter.attachment === 'object') {
+			if (frontmatter.attachment.send !== undefined) {
+				settingsConversion.attachment = frontmatter.attachment.send
 			}
-			if (frontmatter.image.folder !== undefined) {
-				settingsConversion.imageLinks = frontmatter.image.folder
+			if (frontmatter.attachment.folder !== undefined) {
+				settingsConversion.attachmentLinks = frontmatter.attachment.folder
 			}
 		} else {
-			settingsConversion.image = frontmatter.image
+			settingsConversion.attachment = frontmatter.attachment
 		}
 	}
 	if (frontmatter.imageLink !== undefined) {
-		settingsConversion.imageLinks = frontmatter.imageLink.toString().replace(/\/$/, '')
+		settingsConversion.attachmentLinks = frontmatter.attachmentLinks.toString().replace(/\/$/, '')
 	}
 	if (frontmatter.mdlinks !== undefined) {
 		settingsConversion.convertWiki = frontmatter.mdlinks

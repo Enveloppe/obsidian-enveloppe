@@ -1,6 +1,7 @@
 import {FrontMatterCache, MetadataCache, TFile, Vault} from "obsidian";
 import {frontmatterConvert, GitHubPublisherSettings, LinkedNotes} from "../settings/interface";
 import {createRelativePath, getReceiptFolder} from "./filePathConvertor";
+import {isAttachment} from "../src/utils";
 
 export function convertWikilinks(
 	fileContent: string,
@@ -12,7 +13,7 @@ export function convertWikilinks(
 	* Convert wikilinks to markdown
 	 */
 	const convertWikilink = conditionConvert.convertWiki
-	const imageSettings = conditionConvert.image
+	const imageSettings = conditionConvert.attachment
 	const embedSettings = conditionConvert.embed
 	let removeEmbed = conditionConvert.removeEmbed
 	const convertLinks = conditionConvert.links
@@ -44,7 +45,7 @@ export function convertWikilinks(
 					if (linkedFile.linked.extension === 'md' && ((!convertLinks && !isEmbedBool) || (isEmbedBool && !embedSettings && !removeEmbed))) {
 						linkCreator = altText;
 					}
-					if ((!imageSettings && (linkedFile.linked.extension.match('png|jpg|jpeg|gif|svg'))) || removeEmbed)
+					if ((!imageSettings && isAttachment(linkedFile.linked.extension)) || removeEmbed)
 					{
 						linkCreator = '';
 					}
@@ -58,11 +59,11 @@ export function convertWikilinks(
 					if (convertWikilink){
 						linkCreator = `${isEmbed}[${altLink}](${encodeURI(fileName.trim())})`;
 					}
-					if ((!convertLinks && isEmbedBool ) || (isEmbedBool && !embedSettings && !removeEmbed)) {
+					if (!isAttachment(fileName.trim()) && (!convertLinks && isEmbedBool ) || (isEmbedBool && !embedSettings && !removeEmbed)) {
 						linkCreator = altLink;
 					} if ((
 						!imageSettings
-						&& fileName.trim().match('(png|jpg|jpeg|gif|svg)$')) || removeEmbed)
+						&& isAttachment(fileName.trim())) || removeEmbed)
 					{
 						linkCreator = '';
 					}

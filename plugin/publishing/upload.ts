@@ -27,7 +27,7 @@ import {
 } from "../contents_conversion/filePathConvertor";
 import {ShareStatusBar} from "../src/status_bar";
 import GithubPublisherPlugin from "../main";
-import {getFrontmatterCondition, noticeLog} from "plugin/src/utils";
+import {getFrontmatterCondition, isAttachment, noticeLog} from "plugin/src/utils";
 
 export default class Publisher {
 	vault: Vault;
@@ -154,7 +154,7 @@ export default class Publisher {
 		}
 		const octokit = this.octokit;
 		let msg = `PUSH NOTE : ${title}`;
-		if (path.match(/(png|jpe?g|svg|bmp|gif)$/i)) {
+		if (isAttachment(path)) {
 			title = path.split('/')[path.split('/').length - 1];
 			msg = `PUSH IMAGE : ${title}`;
 		}

@@ -12,7 +12,7 @@ import {Octokit} from "@octokit/core";
 import {getImageLinkOptions, getReceiptFolder} from "../contents_conversion/filePathConvertor";
 import Publisher from "./upload";
 import GithubPublisher from "../main";
-import {noticeLog} from "plugin/src/utils";
+import {isAttachment, noticeLog} from "plugin/src/utils";
 import {getAPI, Link} from "obsidian-dataview";
 
 export class FilesManagement extends Publisher {
@@ -59,8 +59,7 @@ export class FilesManagement extends Publisher {
 		const allFileWithPath:ConvertedLink[] = [];
 		const shareKey = this.settings.shareKey;
 		for (const file of files) {
-			const fileExtension = file.extension;
-			if (fileExtension.match(/(png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)$/i)) {
+			if (isAttachment(file.extension)) {
 				const filepath = getImageLinkOptions(file, this.settings, null);
 				allFileWithPath.push({
 					converted: filepath,
@@ -276,10 +275,10 @@ export class FilesManagement extends Publisher {
 	}
 
 	private imageSharedOrNote(file: TFile, settingsConversion: frontmatterConvert) {
-		const transferImage = settingsConversion.image;
+		const transferImage = settingsConversion.attachment;
 		const transferEmbeds = settingsConversion.embed;
 		if (
-			(file.extension.match(/(png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)/i)
+			(isAttachment(file.extension)
 			&& transferImage)
 			|| (transferEmbeds && file.extension === 'md')
 		) {

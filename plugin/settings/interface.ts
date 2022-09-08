@@ -106,9 +106,9 @@ export interface TextCleaner {
 
 export interface frontmatterConvert {
 	links: boolean,
-	image: boolean,
+	attachment: boolean,
 	embed: boolean,
-	imageLinks: string,
+	attachmentLinks: string,
 	convertWiki: boolean,
 	removeEmbed: boolean,
 	dataview: boolean,

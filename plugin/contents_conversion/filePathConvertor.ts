@@ -168,8 +168,8 @@ function getImageLinkOptions(file: TFile, settings: GitHubPublisherSettings, sou
 	 * @returns string - Link path
 	 */
 
-	if (sourceFrontmatter.imageLinks !== null) {
-		return sourceFrontmatter.imageLinks + "/" + file.name;
+	if (sourceFrontmatter.attachmentLinks !== null) {
+		return sourceFrontmatter.attachmentLinks + "/" + file.name;
 	}
 	return file.path;
 }
