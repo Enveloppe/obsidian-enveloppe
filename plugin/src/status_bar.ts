@@ -4,23 +4,37 @@ export class ShareStatusBar {
 	statusBarItem: HTMLElement;
 	counter: number;
 	numberOfNotesToPublish: number;
+	attachment = false;
 
 	status: HTMLElement;
-	constructor (statusBarItem: HTMLElement, numberOfNotesToPublish: number) {
+	constructor (statusBarItem: HTMLElement, numberOfNotesToPublish: number, attachment=false) {
 		this.statusBarItem = statusBarItem
 		this.counter = 0
 		this.numberOfNotesToPublish = numberOfNotesToPublish
+		this.attachment = attachment
 
 		this.statusBarItem.createEl('span', { text: '' })
-		this.status = this.statusBarItem.createEl('span', { text: `${this.numberOfNotesToPublish} files marked for sharing` })
+		let msg = `${this.numberOfNotesToPublish} files marked for sharing`
+		if (this.attachment) {
+			msg = `${this.numberOfNotesToPublish} attachments linked`
+		}
+		this.status = this.statusBarItem.createEl('span', { text: `${msg}` })
 	}
 
 	increment () {
-		this.status.setText(`⌛Sharing files: ${++this.counter}/${this.numberOfNotesToPublish}`)
+		let msg = `⌛Sharing files`
+		if (this.attachment) {
+			msg = `⌛Sharing attachments`
+		}
+		this.status.setText(`${msg}: ${++this.counter}/${this.numberOfNotesToPublish}`)
 	}
 
 	finish (displayDurationMillisec: number) {
-		this.status.setText(`✅ Published files: ${this.counter}/${this.numberOfNotesToPublish}`)
+		let msg = `✅ Published files`
+		if (this.attachment) {
+			msg = `✅ Shared attachments`
+		}
+		this.status.setText(`${msg}: ${this.counter}/${this.numberOfNotesToPublish}`)
 		setTimeout(() => {
 			this.statusBarItem.remove()
 		}, displayDurationMillisec)

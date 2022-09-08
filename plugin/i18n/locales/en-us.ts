@@ -85,11 +85,11 @@ export default {
 	// ---
 	// # Embed # //
 	embed: "Embed",
-	transferImage: "Transfer image",
-	transferImageDesc: "Send image embedded in a file to github. This option can be overridden by the frontmatter key \"image\".",
+	transferImage: "Transfer attachments",
+	transferImageDesc: "Send attachments embedded in a file to github. This option can be overridden by the frontmatter key \"attachment\".",
 	transferEmbeddedNotes: "Transfer embedded notes",
 	transferEmbeddedNotesDesc: "Send embedded notes in a shared file to github. Only shared files will be send! This option can be overridden by the frontmatter key \"embed\".",
-	defaultImageFolder: "Default image folder",
+	defaultImageFolder: "Default attachment folder",
 	defaultImageFolderDesc: "To use a folder different from default",
 	transferMetaFile: "Send files using a metadata field",
 	transferMetaFileDesc: 'Set the names of the metadata field you want to use to send files. Separate fields with a comma. Dataview inline field are supported.',

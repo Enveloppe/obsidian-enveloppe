@@ -59,24 +59,30 @@ export default class Publisher {
 		 * @param Deepscan starts the conversion+push of md file. If false, just sharing image
 		 */
 		if (linkedFiles.length > 0) {
-			if (linkedFiles.length > 1) {
+			if (linkedFiles.length> 1) {
 				const statusBarItems = this.plugin.addStatusBarItem();
-				const statusBar = new ShareStatusBar(statusBarItems, linkedFiles.length);
+				const statusBar = new ShareStatusBar(statusBarItems, linkedFiles.length, true);
 				for (const image of linkedFiles) {
-					if ((image.extension === 'md') && !(fileHistory.includes(image)) && deepScan) {
-						await this.publish(image, false, ref, fileHistory, true);
-					} else {
-						await this.uploadImage(image, ref, sourceFrontmatter)
+					if (!fileHistory.includes(image)) {
+						if ((image.extension === 'md') && deepScan) {
+							await this.publish(image, false, ref, fileHistory, true);
+						} else if (isAttachment(image.extension) && sourceFrontmatter.attachment) {
+							await this.uploadImage(image, ref, sourceFrontmatter)
+							fileHistory.push(image);
+						}
 					}
 					statusBar.increment();
 				}
 				statusBar.finish(8000);
 			} else { // 1 one item to send
 				const embed = linkedFiles[0];
-				if (embed.extension === 'md' && !(fileHistory.includes(embed)) && deepScan) {
-					await this.publish(embed, false, ref, fileHistory, true);
-				} else {
-					await this.uploadImage(embed, ref, sourceFrontmatter);
+				if (!fileHistory.includes(embed)) {
+					if (embed.extension === 'md' && deepScan) {
+						await this.publish(embed, false, ref, fileHistory, true);
+					} else if (isAttachment(embed.extension) && sourceFrontmatter.attachment) {
+						await this.uploadImage(embed, ref, sourceFrontmatter);
+						fileHistory.push(embed);
+					}
 				}
 			}
 		}
@@ -156,7 +162,7 @@ export default class Publisher {
 		let msg = `PUSH NOTE : ${title}`;
 		if (isAttachment(path)) {
 			title = path.split('/')[path.split('/').length - 1];
-			msg = `PUSH IMAGE : ${title}`;
+			msg = `PUSH ATTACHMENT : ${title}`;
 		}
 		const payload = {
 			owner: this.settings.githubName,

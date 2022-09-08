@@ -134,7 +134,7 @@ export function trimObject(obj: {[p: string]: string}){
 }
 
 export function isAttachment(filename: string) {
-	return filename.match(/(png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)/i)
+	return filename.match(/(png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)$/i)
 }
 
 
@@ -191,7 +191,7 @@ export function getFrontmatterCondition(frontmatter: FrontMatterCache, settings:
 			settingsConversion.attachment = frontmatter.attachment
 		}
 	}
-	if (frontmatter.imageLink !== undefined) {
+	if (frontmatter.attachmentLinks !== undefined) {
 		settingsConversion.attachmentLinks = frontmatter.attachmentLinks.toString().replace(/\/$/, '')
 	}
 	if (frontmatter.mdlinks !== undefined) {
