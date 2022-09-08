@@ -154,6 +154,7 @@ export function getFrontmatterCondition(frontmatter: FrontMatterCache, settings:
 		links: true,
 		removeEmbed: false,
 		dataview: settings.convertDataview,
+		hardbreak: settings.hardBreak,
 	}
 	if (frontmatter.links !== undefined) {
 		if (typeof frontmatter.links === 'object') {
@@ -202,6 +203,8 @@ export function getFrontmatterCondition(frontmatter: FrontMatterCache, settings:
 	}
 	if (frontmatter.dataview !== undefined) {
 		settingsConversion.dataview = frontmatter.dataview
+	} if (frontmatter.hardbreak !== undefined) {
+		settingsConversion.hardbreak = frontmatter.hardbreak
 	}
 	return settingsConversion
 }

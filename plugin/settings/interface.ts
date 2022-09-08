@@ -112,4 +112,5 @@ export interface frontmatterConvert {
 	convertWiki: boolean,
 	removeEmbed: boolean,
 	dataview: boolean,
+	hardbreak: boolean
 }

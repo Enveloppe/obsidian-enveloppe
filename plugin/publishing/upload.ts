@@ -119,7 +119,7 @@ export default class Publisher {
 			let text = await addInlineTags(this.settings, file, this.metadataCache, this.plugin.app, frontmatter);
 			text = await convertDataviewQueries(text, file.path, this.settings, this.plugin.app, this.metadataCache, frontmatterSettings, frontmatter, file);
 			text = await convertInlineDataview(text, this.settings, file, this.plugin.app);
-			text = addHardLineBreak(text, this.settings, frontmatter);
+			text = addHardLineBreak(text, this.settings, frontmatterSettings);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault, frontmatter);
 			text = convertWikilinks(text, frontmatterSettings, this.settings, linkedFiles);
 			text = censorText(text, this.settings);

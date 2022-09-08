@@ -14,7 +14,7 @@ import {getAPI, Link} from "obsidian-dataview";
 import {noticeLog} from "../src/utils";
 import {convertLinkCitation, convertWikilinks} from "./convertLinks";
 
-export function addHardLineBreak(text: string, settings: GitHubPublisherSettings, frontmatter: FrontMatterCache): string {
+export function addHardLineBreak(text: string, settings: GitHubPublisherSettings, frontmatter: frontmatterConvert): string {
 	/*
 	* Convert soft line breaks to hard line breaks, adding two space at the end of the line.
 	* This settings can be set for global or perfile using a frontmatter key 'hardbreak'
@@ -23,8 +23,7 @@ export function addHardLineBreak(text: string, settings: GitHubPublisherSettings
 	 */
 	try {
 		text = text.replace(/^\s*\\\s*$/gmi, '<br/>');
-		const hardBreak = frontmatter?.hardbreak !== undefined ? frontmatter?.hardbreak : settings.hardBreak;
-		if (hardBreak) {
+		if (frontmatter.hardbreak) {
 			text = text.replace(/\n/gm, '  \n');
 		}
 		return text;
