@@ -64,7 +64,6 @@ export default class Publisher {
 				const statusBar = new ShareStatusBar(statusBarItems, linkedFiles.length);
 				for (const image of linkedFiles) {
 					if ((image.extension === 'md') && !(fileHistory.includes(image)) && deepScan) {
-						fileHistory.push(image);
 						await this.publish(image, false, ref, fileHistory, true);
 					} else {
 						await this.uploadImage(image, ref, sourceFrontmatter)
@@ -75,7 +74,6 @@ export default class Publisher {
 			} else { // 1 one item to send
 				const embed = linkedFiles[0];
 				if (embed.extension === 'md' && !(fileHistory.includes(embed)) && deepScan) {
-					fileHistory.push(embed);
 					await this.publish(embed, false, ref, fileHistory, true);
 				} else {
 					await this.uploadImage(embed, ref, sourceFrontmatter);
@@ -109,7 +107,7 @@ export default class Publisher {
 		try {
 			fileHistory.push(file)
 			let embedFiles = shareFiles.getSharedEmbed(file);
-			embedFiles = await shareFiles.getMetadataLinks(file, embedFiles)
+			embedFiles = await shareFiles.getMetadataLinks(file, embedFiles);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
 			let text = await addInlineTags(this.settings, file, this.metadataCache, this.plugin.app);
 			text = await convertDataviewQueries(text, file.path, this.settings, this.plugin.app, this.metadataCache, frontmatter, file);
