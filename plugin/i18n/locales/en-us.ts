@@ -121,6 +121,8 @@ export default {
 	linkpathremoverDesc: "Remove this part from the created links. Separate by comma if multiple value must be removed.",
 	logNoticeHeader: 'Notice every error',
 	logNoticeDesc: 'On mobile, it can be hard to debug the plugin. Enable this option to log every error in a Notice.',
+	shareExternalModifiedTitle: "Share external modified file",
+	shareExternalModifiedDesc: "Send edited file if they are different from the active file. Useful when editing metadata using MetaEdit or Metadata Menu.",
 
 	/* ------------ *
 	 *	 Notice   *

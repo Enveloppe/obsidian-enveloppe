@@ -72,6 +72,18 @@ export default class GithubPublisher extends Plugin {
 			})
 		);
 
+		this.registerEvent(
+			this.app.vault.on('modify', async (file: TFile) => {
+				if (file !== this.app.workspace.getActiveFile() && this.settings.shareExternalModified) {
+					const isShared = this.app.metadataCache.getFileCache(file).frontmatter ? this.app.metadataCache.getFileCache(file).frontmatter[this.settings.shareKey] : false;
+					if (isShared) {
+						await shareOneNote(branchName, PublisherManager, this.settings, file, this.app.metadataCache, this.app.vault);
+					}
+				}
+			})
+		)
+
+
 		this.addCommand({
 			id: "publisher-one",
 			name: t('shareActiveFile') as string,

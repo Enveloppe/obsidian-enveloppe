@@ -125,7 +125,8 @@ export default {
 	linkpathremoverDesc: "Supprimer cette partie des liens créés. Séparer par une virgule si plusieurs valeurs doivent être supprimées.",
 	logNoticeHeader: 'Notifier toutes les erreurs',
 	logNoticeDesc: 'Sur mobile, il peut être difficile de debug le module. Activer cette option pour notifier toutes les erreurs via une notification Obsidian.',
-
+	shareExternalModifiedTitle: "Partager les fichiers modifiés externes",
+	shareExternalModifiedDesc: "Envoyer les fichiers modifiés s'ils sont différents du fichier actif. Utile si vous modifier les métadonnées à l'aide de Metadata Menu ou MetaEdit.",
 	/* ------------ *
 	 *	 Notice   *
 	 * ------------ */

@@ -35,6 +35,7 @@ export interface GitHubPublisherSettings {
 	frontmatterTitleKey: string;
 	excludeDataviewValue: string[];
 	metadataFileFields: string[];
+	shareExternalModified: boolean;
 }
 
 export enum folderSettings {
@@ -81,6 +82,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	excludeDataviewValue: [],
 	metadataFileFields:[],
 	frontmatterTitleKey: 'title',
+	shareExternalModified: false
 }
 
 export interface LinkedNotes {

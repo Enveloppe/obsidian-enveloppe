@@ -529,6 +529,18 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			)
+		new Setting(containerEl)
+			.setName(t("shareExternalModifiedTitle") as string)
+			.setDesc(t("shareExternalModifiedDesc") as string)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.shareExternalModified)
+					.onChange(async(value)=>{
+						this.plugin.settings.shareExternalModified = value;
+						await this.plugin.saveSettings();
+					})
+			);
+
 		const baseLinkSettings = new Setting(containerEl)
 			.setName(t('baselink') as string)
 			.setDesc(t("baselinkDesc") as string)
