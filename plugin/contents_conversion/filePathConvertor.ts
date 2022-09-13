@@ -73,7 +73,6 @@ function createRelativePath(
 	if (relativePath.length === 0) {
 		relativePath.push('.')
 	}
-	console.log(relativePath.concat(diffTargetPath).join('/'))
 	return relativePath.concat(diffTargetPath).join('/')
 }
 

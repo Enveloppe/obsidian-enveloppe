@@ -22,7 +22,7 @@ export class GithubBranch extends FilesManagement {
 		this.octokit = octokit;
 		this.plugin = plugin;
 	}
-	
+
 	async getMasterBranch() {
 		const allBranch = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/branches', {
 			owner: this.settings.githubName,
@@ -31,7 +31,7 @@ export class GithubBranch extends FilesManagement {
 		const mainBranch = allBranch.data.find((branch: { name: string; }) => branch.name === 'main' || branch.name === 'master');
 		return mainBranch.name;
 	}
-	
+
 	async newBranch(branchName: string) {
 		/**
 		 * Create a new branch on the repo named "Vault-date"
@@ -71,15 +71,25 @@ export class GithubBranch extends FilesManagement {
 		 * Create a pull request on main/master from the new branch
 		 * @param branchName
 		 */
-		return await this.octokit.request('POST' +
-			' /repos/{owner}/{repo}/pulls', {
-			owner: this.settings.githubName,
-			repo: this.settings.githubRepo,
-			title: `PullRequest ${branchName} from Obsidian`,
-			body: "",
-			head: branchName,
-			base: "main",
-		});
+		try {
+			const PR = await this.octokit.request('POST' +
+				' /repos/{owner}/{repo}/pulls', {
+				owner: this.settings.githubName,
+				repo: this.settings.githubRepo,
+				title: `PullRequest ${branchName} from Obsidian`,
+				body: "",
+				head: branchName,
+				base: "main",
+			});
+			return PR.data.number;
+		} catch (e) {
+			const PR = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/pulls', {
+				owner: this.settings.githubName,
+				repo: this.settings.githubRepo,
+				state: 'open',
+			});
+			return PR.data[0].number;
+		}
 	}
 
 	async deleteBranch(branchName: string) {
@@ -115,20 +125,23 @@ export class GithubBranch extends FilesManagement {
 		const octokit = new Octokit({
 			auth: this.settings.GhToken,
 		});
-		const branch = await octokit.request(
-			"PUT" + " /repos/{owner}/{repo}/pulls/{pull_number}/merge",
-			{
-				owner: this.settings.githubName,
-				repo: this.settings.githubRepo,
-				pull_number: pullRequestNumber,
-				commit_title: `[PUBLISHER] Merge #${pullRequestNumber}`,
-				merge_method: "squash",
-			}
-		);
-		if (branch.status === 405) {
-			new Notice(t('mergeconflic') as string)
+		try {
+			const branch = await octokit.request(
+				"PUT" + " /repos/{owner}/{repo}/pulls/{pull_number}/merge",
+				{
+					owner: this.settings.githubName,
+					repo: this.settings.githubRepo,
+					pull_number: pullRequestNumber,
+					commit_title: `[PUBLISHER] Merge #${pullRequestNumber}`,
+					merge_method: "squash",
+				}
+			);
+			return branch.status === 200;
+
+		} catch (e) {
+			new Notice(t('mergeconflic') as string);
+			return false;
 		}
-		return branch.status === 200;
 	}
 	async updateRepository(branchName: string) {
 		/**
@@ -136,9 +149,11 @@ export class GithubBranch extends FilesManagement {
 		 * @param branchName
 		 */
 		const pullRequest = await this.pullRequest(branchName);
-		// @ts-ignore
-		await this.mergePullRequest(branchName, true, pullRequest.data.number);
-		await this.deleteBranch(branchName);
-		return true
+		const PRSuccess = await this.mergePullRequest(branchName, true, pullRequest);
+		if (PRSuccess) {
+			await this.deleteBranch(branchName);
+			return true
+		}
+		return false
 	}
 }
