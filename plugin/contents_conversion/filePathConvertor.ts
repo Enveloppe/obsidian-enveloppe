@@ -66,9 +66,15 @@ function createRelativePath(
 				relativePath.push('..');
 			}
 		}
+
 		return relativePath;
 	};
-	return diffTarget(diffSourcePath).concat(diffTargetPath).join('/')
+	const relativePath = diffTarget(diffSourcePath);
+	if (relativePath.length === 0) {
+		relativePath.push('.')
+	}
+	console.log(relativePath.concat(diffTargetPath).join('/'))
+	return relativePath.concat(diffTargetPath).join('/')
 }
 
 function folderNoteIndexOBS(
