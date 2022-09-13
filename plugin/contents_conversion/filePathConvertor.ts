@@ -71,7 +71,7 @@ function createRelativePath(
 	return diffTarget(diffSourcePath).concat(diffTargetPath).join('/')
 }
 
-function folderNoteIndex(
+function folderNoteIndexOBS(
 	file: TFile,
 	vault: Vault,
 	settings: GitHubPublisherSettings): string
@@ -98,7 +98,7 @@ function createObsidianPath(
 	 */
 
 	const folderDefault = settings.folderDefaultName;
-	fileName = folderNoteIndex(file, vault, settings);
+	fileName = folderNoteIndexOBS(file, vault, settings);
 
 	const rootFolder = folderDefault.length > 0 ? folderDefault + "/" : ''
 	const path = rootFolder + file.path.replace(file.name, fileName);
@@ -106,6 +106,14 @@ function createObsidianPath(
 		return path.replace(settings.subFolder + '/', '');
 	}
 	return path;
+}
+
+function folderNoteIndexYAML(fileName: string, frontmatter: FrontMatterCache, settings: GitHubPublisherSettings):string {
+	const category = frontmatter[settings.yamlFolderKey]
+	const parentCatFolder = !category.endsWith('/') ? category.split('/').at(-1): category.split('/').at(-2);
+	if (!settings.folderNote) return fileName;
+	if (fileName.replace('.md', '').toLowerCase() === parentCatFolder.toLowerCase()) return 'index.md';
+	return fileName;
 }
 
 function createFrontmatterPath(
@@ -119,10 +127,7 @@ function createFrontmatterPath(
 		folderRoot = folderRoot + "/";
 	}
 	if (frontmatter && frontmatter[settings.yamlFolderKey]) {
-		const category = frontmatter[settings.yamlFolderKey]
-		const parentCatFolder = !category.endsWith('/') ? category.split('/').at(-1): category.split('/').at(-2);
-		fileName = settings.folderNote && parentCatFolder === fileName.replace('.md', '') ? 'index.md' : fileName
-		path = folderRoot + frontmatter[settings.yamlFolderKey] + "/" + fileName;
+		path = folderRoot + frontmatter[settings.yamlFolderKey] + "/" + folderNoteIndexYAML(fileName, frontmatter, settings);
 	}
 	return path
 }
