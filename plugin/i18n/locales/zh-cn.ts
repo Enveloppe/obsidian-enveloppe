@@ -10,6 +10,13 @@ export default {
 	uploadAllEditedNote: "更新所有已编辑的文件",
 	shareViewFiles:(viewFile:string): string => `用Mkdocs Publisher共享"${viewFile}"。`,
 
+	/* ------ Delete string -----	*/
+	errorDeleteDefaultFolder: "You need a default folder name in the settings to use this command.",
+	errorDeleteRootFolder: 'You need to configure a root folder in the settings to use this command.',
+	successDeleting:(nb:string): string => `Successfully deleted ${nb} files.`,
+	failedDeleting:(nb:string): string => `Failed to delete ${nb} files.`,
+	noFileDeleted: 'No files have been deleted.',
+
 	/* ------------ *
 	 *	 Settings   *
 	 * ------------ */
@@ -43,6 +50,8 @@ export default {
 	frontmatterKeyPlaceholder: "category",
 	rootFolder: "根文件夹",
 	rootFolderDesc: "将此路径追加到文件夹前",
+	useFrontmatterTitle: "Set the title from the frontmatter",
+	useFrontmatterTitleDesc: "Use a frontmatter value to generate the filename. By default, \"title\" is used.",
 
 	// ---
 	// # Text conversion # //
@@ -59,8 +68,6 @@ export default {
 	hardBreakDesc: "在每一行之后添加一个标记性的硬断行（双倍空白）。",
 	headerDataview: "Dataview",
 	headerDataviewDesc: "Convert dataview to markdown.",
-	useFrontmatterTitle: "Use frontmatter title",
-	useFrontmatterTitleDesc: "Use frontmatter \"title\" field instead of the file name.",
 	censorTextHeader: "Text replacer",
 	censorTextDesc: "Replace text (or regex) in the file with the given value.",
 	censorTextInsensitive: "Case insensitive",
@@ -75,6 +82,7 @@ export default {
 	dataviewFieldDesc: 'This will convert any frontmatter or dataview inline field into frontmatter tags. Separate fields with a comma.',
 	dataviewExcludeHeader: 'Exclude value from conversion',
 	dataviewExcludeDesc: 'This will exclude value from being converted. Separate fields with a comma.',
+
 	// ---
 	// # Embed # //
 	embed: "嵌入",
@@ -84,6 +92,8 @@ export default {
 	transferEmbeddedNotesDesc: "发布文件中嵌入的文件至github.该嵌入文件需要允许被发布",
 	defaultImageFolder: "默认图片文件夹",
 	defaultImageFolderDesc: "使用与默认文档夹不同的文档夹",
+	transferMetaFile: "Send files using a metadata field",
+	transferMetaFileDesc: 'Set the names of the metadata field you want to use to send files. Separate fields with a comma. Dataview inline field are supported.',
 
 	// ---
 	// # Github Workflow # //
@@ -113,6 +123,8 @@ export default {
 	linkpathremoverDesc: "从创建的链接中删除这部分。如果必须删除多个值，请用逗号分开。",
 	logNoticeHeader: '注意每一个错误',
 	logNoticeDesc: '在移动设备上，调试模块可能很困难。启用该选项可以通过Obsidian通知来通知所有错误。',
+	shareExternalModifiedTitle: "Share external modified file",
+	shareExternalModifiedDesc: "Send edited file if they are different from the active file. Useful when editing metadata using MetaEdit or Metadata Menu.",
 
 	/* ------------ *
 	 *	 Notice   *
@@ -126,5 +138,6 @@ export default {
 	noNewNote: "没有新笔记需要上传.",
 	successfullPublish:(noticeValue: string[])=>`成功地将${noticeValue[0]}发布到${noticeValue[1]}。`,
 	waitingWorkflow: "现在，等待工作流程的完成...",
-	sendMessage:(noticeValue: string[])=>`将${noticeValue[0]}发送到${noticeValue[1]}${noticeValue[2]}。`
+	sendMessage:(noticeValue: string[])=>`将${noticeValue[0]}发送到${noticeValue[1]}${noticeValue[2]}。`,
+	mergeconflic: `Pull-request is not mergeable, you need to do it manually.`
 }

@@ -49,7 +49,8 @@ export default {
 	frontmatterKeyPlaceholder: "category",
 	rootFolder: "Корневая папка",
 	rootFolderDesc: "Добавлять этут папку к путям заданным через свойство frontmatter.",
-
+	useFrontmatterTitle: "Set the title from the frontmatter",
+	useFrontmatterTitleDesc: "Use a frontmatter value to generate the filename. By default, \"title\" is used.",
 	// ---
 	// # Text conversion # //
 	textConversion: "Преобразования текста",
@@ -65,8 +66,6 @@ export default {
 	hardBreakDesc: "Использовать видимый перенос строки (двойной перенос) в markdown после каждой строки.",
 	headerDataview: "Dataview",
 	headerDataviewDesc: "Преобразовать dataview в markdown.",
-	useFrontmatterTitle: "Использовать заголовок из frontmatter",
-	useFrontmatterTitleDesc: "Использовать свойство frontmatter \"title\" вместо названия файла.",
 	censorTextHeader: "Text replacer",
 	censorTextDesc: "Replace text (or regex) in the file with the given value.",
 	censorTextInsensitive: "Case insensitive",
@@ -90,6 +89,8 @@ export default {
 	transferEmbeddedNotesDesc: "Отправлять вставленые заметки из общих файлов на github. Только общие файлы будут отправлены!",
 	defaultImageFolder: "Папка по умолчанию для изображений",
 	defaultImageFolderDesc: "Если вы хотите использовать папку отличную от папки по умолчанию",
+	transferMetaFile: "Send files using a metadata field",
+	transferMetaFileDesc: 'Set the names of the metadata field you want to use to send files. Separate fields with a comma. Dataview inline field are supported.',
 
 	// ---
 	// # Github Workflow # //
@@ -119,7 +120,8 @@ export default {
 	linkpathremoverDesc: "Удалять эту часть из созданных ссылок. Если нужно удалять множественные значения, используте запятую.",
 	logNoticeHeader: 'Уведомлять о каждой ошибке',
 	logNoticeDesc: 'На мобильных устройствах сложно отлаживать плагин. Включите эту опцию, чтобы логгировать каждую ошибку',
-
+	shareExternalModifiedTitle: "Share external modified file",
+	shareExternalModifiedDesc: "Send edited file if they are different from the active file. Useful when editing metadata using MetaEdit or Metadata Menu.",
 	/* ------------ *
 	 *	 Notice   *
 	 * ------------ */
@@ -132,5 +134,6 @@ export default {
 	noNewNote: "Отсутствуют новые заметки для публикации.",
 	successfullPublish:(noticeValue: string[])=>`Успешно опубликовано ${noticeValue[0]} в ${noticeValue[1]}.`,
 	waitingWorkflow: "Ожидаю завершения процесса обработки...",
-	sendMessage:(noticeValue: string[])=>`Отправляю ${noticeValue[0]} в ${noticeValue[1]}${noticeValue[2]}`
+	sendMessage:(noticeValue: string[])=>`Отправляю ${noticeValue[0]} в ${noticeValue[1]}${noticeValue[2]}`,
+	mergeconflic: `Pull-request is not mergeable, you need to do it manually.`
 }
