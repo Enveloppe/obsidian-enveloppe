@@ -12,7 +12,7 @@
 		"version": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json",
 		"bump": "node version-bump.mjs",
 		"bump:beta": "node version-beta.mjs",
-		"beta": "commit-and-tag-version  --prerelease --tag-build beta && node version-beta.mjs && git add manifest-beta.json && git commit --amend --no-edit",
+		"beta": "commit-and-tag-version  --prerelease --tag-build beta --skip.changelog && node version-beta.mjs && git add manifest-beta.json && git commit --amend --no-edit",
 		"publish": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json"
 	},
 	"commit-and-tag-version": {
