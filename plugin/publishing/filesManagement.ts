@@ -93,7 +93,7 @@ export class FilesManagement extends Publisher {
 		if (imageEmbedded != undefined) {
 			for (const image of imageEmbedded) {
 				try {
-					const imageLink = this.metadataCache.getFirstLinkpathDest(image.link, file.path)
+					const imageLink = this.metadataCache.getFirstLinkpathDest(image.link.replace(/#.*/, ''), file.path)
 					if (imageLink !== null) {
 						if (imageLink.extension === 'md') {
 							const checkFrontmatter = this.metadataCache.getCache(imageLink.path).frontmatter;
@@ -101,7 +101,7 @@ export class FilesManagement extends Publisher {
 								linkedFiles.push({
 									linked: imageLink, //TFile found
 									linkFrom: image.link, //path of the founded file
-									altText: image.displayText //alt text if exists, filename otherwise
+									altText: image.displayText, //alt text if exists, filename otherwise
 								})
 							}
 						} else {
@@ -167,7 +167,7 @@ export class FilesManagement extends Publisher {
 			for (const embed of embedCaches) {
 				try {
 					const imageLink = this.metadataCache.getFirstLinkpathDest(
-						embed.link,
+						embed.link.replace(/#(.*)/, ''),
 						file.path
 					);
 

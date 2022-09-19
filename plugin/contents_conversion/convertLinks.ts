@@ -104,6 +104,10 @@ export function convertLinkCitation(
 		if (matchedLink) {
 			for (const link of matchedLink) {
 				const regToReplace = new RegExp(`${linkedFile.linkFrom}`);
+				const block_link = linkedFile.linkFrom.match(/#.*/)
+				if (block_link) {
+					pathInGithub += block_link[0];
+				}
 				const newLink = link.replace(regToReplace, pathInGithub); //strict replacement of link
 				fileContent = fileContent.replace(link, newLink);
 			}
