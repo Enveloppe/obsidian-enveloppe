@@ -96,8 +96,10 @@ export function convertLinkCitation(
 	}
 	for (const linkedFile of linkedFiles) {
 		let pathInGithub = createRelativePath(sourceFile, linkedFile, metadataCache, settings, vault, frontmatter).replace('.md', '');
-		if (pathInGithub.trim().length == 0) {
-			pathInGithub = getReceiptFolder(sourceFile, settings, metadataCache, vault)
+		if (pathInGithub === '.') {
+			pathInGithub = linkedFile.linkFrom;
+		} else if (pathInGithub.trim().length == 0) {
+			pathInGithub = getReceiptFolder(sourceFile, settings, metadataCache, vault);
 		}
 		const regexToReplace = new RegExp(`(\\[{2}${linkedFile.linkFrom}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\(${linkedFile.linkFrom}\\))`, 'g');
 		const matchedLink = fileContent.match(regexToReplace);
