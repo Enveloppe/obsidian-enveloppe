@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.3.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.2...4.3.3) (2022-09-21)
+
+
+### Bug Fixes
+
+* duple in tags + remove tag key in generated keys ([8db3162](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8db31621672367e2e50b00d829529bca5fe03133))
+
 ### [4.3.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.1...4.3.2) (2022-09-20)
 
 
