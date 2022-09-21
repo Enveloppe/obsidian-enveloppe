@@ -34,21 +34,24 @@ export function addHardLineBreak(text: string, settings: GitHubPublisherSettings
 	}
 }
 
-async function addToYAML(text: string, toAdd: string[]): Promise<string> {
+async function addTagsToYAML(text: string, toAdd: string[]): Promise<string> {
 	/*
 	* Add the string list to the YAML frontmatter tags key
 	* If the tags key does not exist, it will be created
 	 */
 	const yaml = text.split("---")[1];
 	const yamlObject = parseYaml(yaml);
+	console.log(yamlObject);
 	if (yamlObject.tag) {
-		toAdd = [...new Set([...toAdd, ...yamlObject.tag])];
+		toAdd = [...new Set([...toAdd, ...yamlObject.tag.map((tag: string) => tag.replaceAll('/', '_'))])];
+		delete yamlObject.tag;
 	}
 	if (yamlObject.tags) {
-		yamlObject.tags = [...new Set([...yamlObject.tags, ...toAdd])];
+		yamlObject.tags = [...new Set([...yamlObject.tags.map((tag: string)  => tag.replaceAll('/', '_')), ...toAdd])];
 	} else {
 		yamlObject.tags = toAdd;
 	}
+	console.log(yamlObject);
 	const returnToYaml = stringifyYaml(yamlObject);
 	const fileContentsOnly= text.split("---").slice(2).join("---");
 	return `---\n${returnToYaml}---\n${fileContentsOnly}`;
@@ -80,7 +83,7 @@ export async function addInlineTags(
 			.replaceAll("/", "_")) : [];
 	const toAdd = [...new Set([...inlineTagsInText, ...yamlTags])]
 	if (toAdd.length > 0) {
-		return await addToYAML(text, toAdd);
+		return await addTagsToYAML(text, toAdd);
 	}
 	return text;
 }
@@ -152,7 +155,7 @@ export async function convertInlineDataview(text: string, settings: GitHubPublis
 		}
 	}
 	if (valueToAdd.length > 0) {
-		return await addToYAML(text, valueToAdd.filter(Boolean));
+		return await addTagsToYAML(text, valueToAdd.filter(Boolean));
 	}
 	return text;
 }
