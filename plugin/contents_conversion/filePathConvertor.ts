@@ -54,6 +54,10 @@ function createRelativePath(
 			|| (frontmatter[settings.shareKey] === false))) {
 		return targetFile.altText;
 	}
+	if (targetFile.linked.path === sourceFile.path) {
+		return getReceiptFolder(targetFile.linked, settings, metadata, vault).split('/').at(-1);
+	}
+
 	const targetPath = targetFile.linked.extension === 'md' ? getReceiptFolder(targetFile.linked, settings, metadata, vault) : getImageLinkOptions(targetFile.linked, settings, getFrontmatterCondition(frontmatter, settings));
 	const sourceList = sourcePath.split('/');
 	const targetList = targetPath.split('/');
@@ -73,7 +77,11 @@ function createRelativePath(
 	if (relativePath.length === 0) {
 		relativePath.push('.')
 	}
-	return relativePath.concat(diffTargetPath).join('/')
+	let relative = relativePath.concat(diffTargetPath).join('/')
+	if (relative.trim() === '.' || relative.trim() === '') { //in case of errors
+		relative = getReceiptFolder(targetFile.linked, settings, metadata, vault).split('/').at(-1);
+	}
+	return relative;
 }
 
 function folderNoteIndexOBS(
