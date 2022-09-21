@@ -1,6 +1,6 @@
 import {FrontMatterCache, MetadataCache, TFile, Vault} from "obsidian";
 import {frontmatterConvert, GitHubPublisherSettings, LinkedNotes} from "../settings/interface";
-import {createRelativePath, getReceiptFolder} from "./filePathConvertor";
+import {createRelativePath} from "./filePathConvertor";
 import {isAttachment} from "../src/utils";
 
 export function convertWikilinks(
@@ -73,6 +73,12 @@ export function convertWikilinks(
 	return fileContent;
 }
 
+function addAltText(link: string, linkedFile: LinkedNotes) {
+	if (!link.match(/(\|).*(]])/)) {
+		return link.replace('|', '').replace(']]', `|${linkedFile.altText}]]`);
+	} return link;
+}
+
 export function convertLinkCitation(
 	fileContent: string,
 	settings: GitHubPublisherSettings,
@@ -96,11 +102,6 @@ export function convertLinkCitation(
 	}
 	for (const linkedFile of linkedFiles) {
 		let pathInGithub = createRelativePath(sourceFile, linkedFile, metadataCache, settings, vault, frontmatter).replace('.md', '');
-		if (pathInGithub === '.') {
-			pathInGithub = linkedFile.linkFrom;
-		} else if (pathInGithub.trim().length == 0) {
-			pathInGithub = getReceiptFolder(sourceFile, settings, metadataCache, vault);
-		}
 		const regexToReplace = new RegExp(`(\\[{2}${linkedFile.linkFrom}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\(${linkedFile.linkFrom}\\))`, 'g');
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {
@@ -110,7 +111,8 @@ export function convertLinkCitation(
 				if (block_link) {
 					pathInGithub += block_link[0];
 				}
-				const newLink = link.replace(regToReplace, pathInGithub); //strict replacement of link
+				let newLink = link.replace(regToReplace, pathInGithub); //strict replacement of link
+				newLink = addAltText(newLink, linkedFile);
 				fileContent = fileContent.replace(link, newLink);
 			}
 		}
