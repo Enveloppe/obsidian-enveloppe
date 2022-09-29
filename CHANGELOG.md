@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.3.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.4...4.3.5) (2022-09-29)
+
+
+### Bug Fixes
+
+* forgot webp files in attachments ([db59358](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/db59358ccac06f90cc4a058fe60f39d729ce7d86))
+
 ### [4.3.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.3...4.3.4) (2022-09-21)
 
 
