@@ -134,7 +134,7 @@ export function trimObject(obj: {[p: string]: string}){
 }
 
 export function isAttachment(filename: string) {
-	return filename.match(/(png|jpe?g|gif|bmp|svg|mp[34]|webm|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)$/i)
+	return filename.match(/(png|jpe?g|gif|bmp|svg|mp[34]|web[mp]|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)$/i)
 }
 
 
