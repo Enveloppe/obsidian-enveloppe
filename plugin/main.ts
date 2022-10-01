@@ -24,7 +24,7 @@ export default class GithubPublisher extends Plugin {
 		await this.loadSettings();
 		this.addSettingTab(new GithubPublisherSettings(this.app, this));
 		const octokit = new Octokit({auth: this.settings.GhToken});
-		
+
 		const PublisherManager = new GithubBranch(this.settings, octokit, this.app.vault, this.app.metadataCache, this);
 		const branchName = app.vault.getName().replaceAll(' ', '-') + "-" + new Date().toLocaleDateString('en-US').replace(/\//g, '-');
 
@@ -64,25 +64,25 @@ export default class GithubPublisher extends Plugin {
 						)
 							.setIcon("share")
 							.onClick(async () => {
-								
+
 								await shareOneNote(branchName, PublisherManager, this.settings, view.file, this.app.metadataCache, this.app.vault);
 							});
 					});
 				}
 			})
 		);
-
-		this.registerEvent(
-			this.app.vault.on('modify', async (file: TFile) => {
-				if (file !== this.app.workspace.getActiveFile() && this.settings.shareExternalModified) {
-					const isShared = this.app.metadataCache.getFileCache(file).frontmatter ? this.app.metadataCache.getFileCache(file).frontmatter[this.settings.shareKey] : false;
-					if (isShared) {
-						await shareOneNote(branchName, PublisherManager, this.settings, file, this.app.metadataCache, this.app.vault);
+		if (this.settings.shareExternalModified) {
+			this.registerEvent(
+				this.app.vault.on('modify', async (file: TFile) => {
+					if (file !== this.app.workspace.getActiveFile()) {
+						const isShared = this.app.metadataCache.getFileCache(file).frontmatter ? this.app.metadataCache.getFileCache(file).frontmatter[this.settings.shareKey] : false;
+						if (isShared) {
+							await shareOneNote(branchName, PublisherManager, this.settings, file, this.app.metadataCache, this.app.vault);
+						}
 					}
-				}
-			})
-		)
-
+				})
+			)
+		}
 
 		this.addCommand({
 			id: "publisher-one",
