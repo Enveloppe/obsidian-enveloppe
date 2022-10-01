@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.3.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.5...4.3.6) (2022-10-01)
+
+
+### Bug Fixes
+
+* share external modified share file when disabled ([2216ba1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2216ba18e612f5d9ae6f171ac9002d319a0888ae))
+
 ### [4.3.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.4...4.3.5) (2022-09-29)
 
 
