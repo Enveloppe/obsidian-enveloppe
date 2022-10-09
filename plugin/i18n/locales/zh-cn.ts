@@ -29,7 +29,8 @@ export default {
 	ghTokenDesc: "github仓库的操作需要github token给予权限，你可以在",
 	here: "这里生成",
 	githubToken: "Github Token",
-
+	githubBranchHeading: "Main branch",
+	githubBranchDesc: 'If you use a different main branch than "main", you can specify it here.',
 	// ---
 	// # Upload configuration # //
 	uploadConfig: "上传设置",

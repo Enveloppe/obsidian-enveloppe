@@ -28,7 +28,8 @@ export default {
 	ghTokenDesc: "Github token с правами на доступ к репозиторию. Вы можете сгенерировать его ",
 	here: "здесь.",
 	githubToken: "Github Token",
-
+	githubBranchHeading: "Main branch",
+	githubBranchDesc: 'If you use a different main branch than "main", you can specify it here.',
 	// ---
 	// # Upload configuration # //
 	uploadConfig: "Настройки загрузки",

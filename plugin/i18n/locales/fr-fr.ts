@@ -28,7 +28,8 @@ export default {
 	ghTokenDesc: "Un token GitHub avec autorisation de dépôt. Vous pouvez le générer ",
 	here: "ici.",
 	githubToken: "Token GitHub",
-
+	githubBranchHeading: "Branche principale",
+	githubBranchDesc: "Si vous utilisez une branche principale différente de main, vous pouvez la spécifier ici.",
 	// ---
 	// # Upload configuration # //
 
