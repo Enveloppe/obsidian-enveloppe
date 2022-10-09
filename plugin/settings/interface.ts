@@ -4,6 +4,7 @@ export interface GitHubPublisherSettings {
 	githubRepo: string;
 	githubName: string;
 	GhToken: string;
+	githubBranch: string;
 	shareKey: string;
 	ExcludedFolder: string;
 	fileMenu: boolean;
@@ -48,6 +49,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	githubRepo: '',
 	githubName: '',
 	GhToken: '',
+	githubBranch: 'main',
 	shareKey: 'share',
 	ExcludedFolder: '',
 	fileMenu: false,

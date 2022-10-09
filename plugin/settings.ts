@@ -82,6 +82,19 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					})
 			)
 
+		new Setting(containerEl)
+			.setName(t('githubBranchHeading') as string)
+			.setDesc(t('githubBranchDesc') as string)
+			.addText((text) =>
+				text
+					.setPlaceholder('main')
+					.setValue(this.plugin.settings.githubBranch)
+					.onChange(async (value) => {
+						this.plugin.settings.githubBranch = value.trim()
+						await this.plugin.saveSettings()
+					})
+			)
+
 		/* ------------------------------ *
 		 * 			Upload config		  *
 		 * ------------------------------ */

@@ -125,7 +125,7 @@ export async function shareNewNote(PublisherManager: GithubBranch, octokit: Octo
 	 */
 	const settings = plugin.settings;
 	new Notice(t("scanningRepo") as string);
-	const branchMaster = await PublisherManager.getMasterBranch();
+	const branchMaster = settings.githubBranch;
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings);
 	const newlySharedNotes = PublisherManager.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
@@ -151,7 +151,7 @@ export async function shareAllEditedNotes(PublisherManager: GithubBranch, octoki
 	 */
 	const settings = plugin.settings;
 	new Notice(t("scanningRepo") as string);
-	const branchMaster = await PublisherManager.getMasterBranch();
+	const branchMaster = settings.githubBranch;
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings);
 	const newSharedFiles = PublisherManager.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
@@ -177,7 +177,7 @@ export async function shareOnlyEdited(PublisherManager: GithubBranch, octokit: O
 	 */
 	const settings = plugin.settings;
 	new Notice(t("scanningRepo") as string);
-	const branchMaster = await PublisherManager.getMasterBranch();
+	const branchMaster = settings.githubBranch;
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings);
 	const newSharedFiles:TFile[]=[]

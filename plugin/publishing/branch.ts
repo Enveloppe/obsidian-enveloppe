@@ -23,15 +23,6 @@ export class GithubBranch extends FilesManagement {
 		this.plugin = plugin;
 	}
 
-	async getMasterBranch() {
-		const allBranch = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/branches', {
-			owner: this.settings.githubName,
-			repo: this.settings.githubRepo,
-		});
-		const mainBranch = allBranch.data.find((branch: { name: string; }) => branch.name === 'main' || branch.name === 'master');
-		return mainBranch.name;
-	}
-
 	async newBranch(branchName: string) {
 		/**
 		 * Create a new branch on the repo named "Vault-date"
@@ -79,7 +70,7 @@ export class GithubBranch extends FilesManagement {
 				title: `PullRequest ${branchName} from Obsidian`,
 				body: "",
 				head: branchName,
-				base: "main",
+				base: this.settings.githubBranch,
 			});
 			return PR.data.number;
 		} catch (e) {
