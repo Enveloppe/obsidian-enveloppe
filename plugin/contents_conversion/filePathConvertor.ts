@@ -61,8 +61,17 @@ function createRelativePath(
 	const targetPath = targetFile.linked.extension === 'md' ? getReceiptFolder(targetFile.linked, settings, metadata, vault) : getImageLinkOptions(targetFile.linked, settings, getFrontmatterCondition(frontmatter, settings));
 	const sourceList = sourcePath.split('/');
 	const targetList = targetPath.split('/');
-	const diffSourcePath = sourceList.filter(x => !targetList.includes(x));
-	const diffTargetPath = targetList.filter(x => !sourceList.includes(x));
+
+	const excludeUtilDiff = (sourceList: string[], targetList: string[]): string[] => {
+		let i = 0;
+		while (sourceList[i] === targetList[i]) {
+			i++;
+		}
+		return sourceList.slice(i);
+	}
+
+	const diffSourcePath = excludeUtilDiff(sourceList, targetList);
+	const diffTargetPath = excludeUtilDiff(targetList, sourceList);
 	const diffTarget = function (folderPath: string[]) {
 		const relativePath = [];
 		for (const folder of folderPath) {
@@ -81,6 +90,7 @@ function createRelativePath(
 	if (relative.trim() === '.' || relative.trim() === '') { //in case of errors
 		relative = getReceiptFolder(targetFile.linked, settings, metadata, vault).split('/').at(-1);
 	}
+	console.log(sourceList, targetList, relativePath, diffSourcePath, diffTargetPath, relative);
 	return relative;
 }
 
