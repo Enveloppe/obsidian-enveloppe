@@ -5,9 +5,9 @@ title: Obsidian Github Publisher
 
 [FR 🇫🇷](https://github.com/obsidianPublisher/obsidian-github-publisher/blob/master/docs/README_FR.md)
 
-- [What the plugin ...](#what-the-plugin-)
-	- [Do ?](#do-)
-	- [Doesn't do ?](#doesnt-do-)
+- [Github Publisher](#github-publisher)
+	- [What the plugin can do:](#what-the-plugin-can-do)
+	- [What the plugin CANNOT do:](#what-the-plugin-cannot-do)
 - [Global configuration](#global-configuration)
 	- [Configuration example](#configuration-example)
 	- [GitHub](#github)
@@ -33,6 +33,8 @@ title: Obsidian Github Publisher
 	- [General](#general)
 	- [Translation](#translation)
 - [Useful links](#useful-links)
+
+# Github Publisher
 
 GitHub Publisher is a plugin that help you to send file in a configured GitHub Repository, based on a frontmatter sharing key. 
 
