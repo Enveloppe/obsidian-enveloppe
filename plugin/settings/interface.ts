@@ -91,6 +91,7 @@ export interface LinkedNotes {
 	linked: TFile,
 	linkFrom: string,
 	altText: string,
+	destinationFilePath?: string,
 }
 
 export interface ConvertedLink {
