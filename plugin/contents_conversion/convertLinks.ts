@@ -31,13 +31,38 @@ export function convertWikilinks(
 			if (fileMatch) {
 				// @ts-ignore
 				let linkCreator = wikiMatch;
-				const fileName = fileMatch[0].replaceAll('[', '').replaceAll('|', '').replaceAll(']', '').replaceAll('\\', '');
+
+				/**
+				 * In order to compare linked files with files that we have cached in
+				 * memory, we have sanitize their link name to matching.
+				 *
+				 * For example, if we have a [[./wikilink.md|My Incredible Link Title]],
+				 * we want to match `wikilink.md` with the cached files we have in
+				 * memory. In this case, we'd strip [[, | and ./ to have wikilink.md as
+				 * result.
+				 */
+				const fileName = fileMatch[0].replaceAll('[', '').replaceAll('|', '').replaceAll(']', '').replaceAll('\\', '').replaceAll('../', '').replaceAll('./', '');
+
 				const linkedFile=linkedFiles.find(item => item.linkFrom===fileName);
 				if (linkedFile) {
 					const altText = linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.extension === 'md' ? linkedFile.linked.basename : "";
 					const removeEmbed =  conditionConvert.removeEmbed && isEmbedBool && linkedFile.linked.extension === 'md';
 					if (convertWikilink) {
-						linkCreator = `${isEmbed}[${altText}](${encodeURI(linkedFile.linkFrom)})`;
+						let linkDestination = linkedFile.linkFrom;
+
+						/**
+						 * In case there's a frontmatter configuration, `filename`, its
+						 * value will set the destination path for the file. In the linked
+						 * file has that, it means we need to use that path for the links.
+						 *
+						 * This verification makes sure we're using it. If we don't have the
+						 * frontmatter set, then use the regular file path.
+						 */
+						if (linkedFile.destinationFilePath){
+							linkDestination = linkedFile.destinationFilePath;
+						}
+
+						linkCreator = `${isEmbed}[${altText}](${encodeURI(linkDestination)})`;
 					}
 
 					if (linkedFile.linked.extension === 'md' && !convertLinks && !isEmbedBool) {

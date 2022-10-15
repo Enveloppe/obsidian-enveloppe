@@ -137,10 +137,22 @@ export class FilesManagement extends Publisher {
 						file.path
 					);
 					if (linkedFile) {
+						const frontmatter = this.metadataCache.getCache(linkedFile.path).frontmatter;
+						let frontmatterDestinationFilePath;
+
+						/**
+						 * In case there's a frontmatter configuration, pass along
+						 * `filename` so we can later use that to convert wikilinks.
+						 */
+						if (frontmatter) {
+							frontmatterDestinationFilePath = frontmatter.filename;
+						}
+
 						embedList.push({
 							linked: linkedFile,
 							linkFrom: embedCache.link,
-							altText: embedCache.displayText
+							altText: embedCache.displayText,
+							destinationFilePath: frontmatterDestinationFilePath
 						})
 					}
 				} catch (e) {
