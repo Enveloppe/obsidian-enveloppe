@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.4.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.6...4.4.0) (2022-10-16)
+
+
+### Features
+
+* adding "moment" for text replacer ([f1dd05a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f1dd05a0b6b12422bd63d3b24828b686489658eb))
+* support frontmatter's filename when converting wikilinks ([c2dcde7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c2dcde7501d67dff3af9442f41ba2857d6d36f14))
+
+
+### Bug Fixes
+
+* failing silently when branch is master not main ([ccdd7a7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ccdd7a7ae761f10056f590eacdb27b6855a72222)), closes [#33](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/33)
+* **relativePath:** if two same folder name, the src generated is false ([06bd9be](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/06bd9beee6edf9d832b38c75b7f91ab0b9d7ff0f)), closes [#32](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/32)
+
 ### [4.3.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.5...4.3.6) (2022-10-01)
 
 
