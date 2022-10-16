@@ -78,6 +78,8 @@ export default {
 	censorToolTipRemove: 'Delete this text replacer',
 	censorPlaceHolder: 'Regex or text to replace',
 	censorValuePlaceHolder: 'Replacement value',
+	censorBefore: 'Run it before the other plugin conversion (link, dataview, etc.)',
+	censorAfter: 'Run it after the other plugin conversion (link, dataview, etc.)',
 	inlineTagsHeader: 'Inline tags',
 	inlineTagsDesc: 'Add your inline tags in your frontmatter tags field and converting nested tags with replacing "/" with "_"',
 	dataviewFieldHeader: 'Convert frontmatter/dataview field to tags',

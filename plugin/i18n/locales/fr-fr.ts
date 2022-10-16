@@ -79,6 +79,10 @@ export default {
 	censorToolTipRemove: 'Supprimer ce remplacement',
 	censorPlaceHolder: 'Regex ou text à remplacer',
 	censorValuePlaceHolder: 'Remplacement',
+	censorBefore: 'Exécuté avant les autres conversions (liens, dataview, etc.)',
+	censorAfter: 'Exécuté après les autres conversions (liens, dataview, etc.)',
+
+
 	inlineTagsHeader: 'Inlines tags',
 	inlineTagsDesc: 'Ajoute vos tags inline dans votre bloc de métadonnée et convertit les tags imbriqués en remplaçant "/" par "_".',
 	dataviewFieldHeader: 'Conversion des champs du frontmatter/dataview en tags',
