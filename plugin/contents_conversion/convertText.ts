@@ -55,17 +55,19 @@ async function addTagsToYAML(text: string, toAdd: string[]): Promise<string> {
 	return `---\n${returnToYaml}---\n${fileContentsOnly}`;
 }
 
+
 export async function addInlineTags(
 	settings: GitHubPublisherSettings,
 	file:TFile,
 	metadataCache: MetadataCache,
 	app: App,
-	frontmatter: FrontMatterCache): Promise<string> {
+	frontmatter: FrontMatterCache,
+	text: string): Promise<string> {
 	/*
 	* Add inlines tags to frontmatter tags keys.
 	* Duplicate tags will be removed.
 	*/
-	const text = await app.vault.cachedRead(file);
+
 
 	if (!settings.inlineTags) {
 		return text;

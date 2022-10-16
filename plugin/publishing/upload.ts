@@ -118,13 +118,15 @@ export default class Publisher {
 			let embedFiles = shareFiles.getSharedEmbed(file, frontmatterSettings);
 			embedFiles = await shareFiles.getMetadataLinks(file, embedFiles, frontmatter, frontmatterSettings);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
-			let text = await addInlineTags(this.settings, file, this.metadataCache, this.plugin.app, frontmatter);
+			let text = await app.vault.cachedRead(file);
+			text = findAndReplaceText(text, this.settings, false);
+			text = await addInlineTags(this.settings, file, this.metadataCache, this.plugin.app, frontmatter, text);
 			text = await convertDataviewQueries(text, file.path, this.settings, this.plugin.app, this.metadataCache, frontmatterSettings, frontmatter, file);
 			text = await convertInlineDataview(text, this.settings, file, this.plugin.app);
 			text = addHardLineBreak(text, this.settings, frontmatterSettings);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault, frontmatter);
 			text = convertWikilinks(text, frontmatterSettings, this.settings, linkedFiles);
-			text = findAndReplaceText(text, this.settings);
+			text = findAndReplaceText(text, this.settings, true);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
 			noticeLog(`Upload ${file.name}:${path} on ${this.settings.githubName}/${this.settings.githubRepo}:${ref}`, this.settings);
 			await this.uploadText(file.path, text, path, file.name, ref);
