@@ -257,15 +257,18 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						const censorText: TextCleaner = {
 							entry: '',
 							replace: '',
+							after: false
 						}
 						this.plugin.settings.censorText.push(censorText);
 						await this.plugin.saveSettings();
 						this.display();
-						openDetails('Replacement de texte', true)
+						openDetails(t('censorTextHeader') as string, true)
 					})
 			})
 
 		for (const censorText of this.plugin.settings.censorText) {
+			const afterIcon = censorText.after ? 'double-down-arrow-glyph' : 'double-up-arrow-glyph';
+			const afterDesc = censorText.after ? t('censorAfter') as string : t('censorBefore') as string;
 			new Setting(details)
 				.setClass('obs-git-publisher-censor-entry')
 				.addText((text) => {
@@ -294,9 +297,21 @@ export class GithubPublisherSettings extends PluginSettingTab {
 							this.plugin.settings.censorText.splice(this.plugin.settings.censorText.indexOf(censorText), 1);
 							await this.plugin.saveSettings();
 							this.display();
-							openDetails('Replacement de texte', true)
+							openDetails(t('censorTextHeader') as string, true)
 						})
 				})
+				.addExtraButton((btn) => {
+					btn
+						.setIcon(afterIcon)
+						.setTooltip(afterDesc)
+						.onClick(async () => {
+							censorText.after = !censorText.after;
+							await this.plugin.saveSettings();
+							this.display();
+							openDetails(t('censorTextHeader') as string, true)
+						})
+				})
+
 		}
 
 		containerEl.createEl('h5', {text: 'Tags'})

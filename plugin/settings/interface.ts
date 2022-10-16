@@ -107,6 +107,7 @@ export interface GithubRepo {
 export interface TextCleaner {
 	entry: string
 	replace: string,
+	after: boolean,
 }
 
 export interface frontmatterConvert {
