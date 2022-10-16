@@ -31,15 +31,18 @@ describe('findAndReplaceText standard behavior', () => {
 		settings["censorText"] = [
 			{
 				entry: "file v1",
-				replace: "file v2"
+				replace: "file v2",
+				after: false
 			},
 			{
 				entry: "file v2",
-				replace: "file v3"
+				replace: "file v3",
+				after: false
 			},
 			{
 				entry: "file v3",
-				replace: "file v4"
+				replace: "file v4",
+				after: false
 			},
 		]
 		const subject = findAndReplaceText(initialText, settings);
@@ -121,7 +124,8 @@ describe('findAndReplaceText with patterns for Jekyll', () => {
 				//                   |        |    |   |                                  |     |     |
 				//                   V        V    V   V                                  V     V     V
 				entry: String.raw `(?<!\`)\[(.*?)\]\((?!(http|\/*image|obsidian\/image))(\.\/)*(.+?)(\.md)*\)`,
-				replace: "[$1]({% link obsidian/$4.md %})"
+				replace: "[$1]({% link obsidian/$4.md %})",
+				after: false
 			}, {
 				// Converts [a](obsidian/images/b) into [a](/images/b)
 				//
@@ -141,7 +145,8 @@ describe('findAndReplaceText with patterns for Jekyll', () => {
 				//                   |        |     |   |                 |
 				//                   V        V     V   V                 V
 				entry: String.raw `(?<!\`)\[(.*?)\]\(((obsidian\/)?image)(.+)\)`,
-				replace: "[$1](/image$4)"
+				replace: "[$1](/image$4)",
+				after: false
 			}
 		]
 		const subject = findAndReplaceText(initialText, settings);
