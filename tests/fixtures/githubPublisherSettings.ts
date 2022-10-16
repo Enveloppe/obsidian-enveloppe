@@ -1,0 +1,42 @@
+import { GitHubPublisherSettings } from './../../plugin/settings/interface';
+
+const settings: GitHubPublisherSettings = {
+	githubRepo: "",
+	githubName: "",
+	GhToken: "",
+	githubBranch: "",
+	shareKey: "",
+	ExcludedFolder: "",
+	fileMenu: false,
+	editorMenu: false,
+	downloadedFolder: "",
+	folderDefaultName: "",
+	yamlFolderKey: "",
+	rootFolder: "",
+	workflowName: "",
+	embedImage: false,
+	defaultImageFolder: "",
+	autoCleanUp: false,
+	autoCleanUpExcluded: "",
+	folderNote: false,
+	convertWikiLinks: false,
+	convertForGithub: false,
+	subFolder: "",
+	embedNotes: false,
+	copyLink: false,
+	mainLink: "",
+	linkRemover: "",
+	hardBreak: false,
+	logNotice: false,
+	convertDataview: false,
+	useFrontmatterTitle: false,
+	censorText: [],
+	inlineTags: false,
+	dataviewFields: [""],
+	frontmatterTitleKey: "",
+	excludeDataviewValue: [""],
+	metadataFileFields: [""],
+	shareExternalModified: false
+}
+
+export default settings;
