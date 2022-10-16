@@ -19,8 +19,10 @@ import {
 import {
 	convertDataviewQueries,
 	addHardLineBreak,
-	censorText, addInlineTags, convertInlineDataview
+	addInlineTags, convertInlineDataview
 } from "../contents_conversion/convertText";
+
+import findAndReplaceText from "../contents_conversion/findAndReplaceText";
 
 import {
 	getReceiptFolder, getImageLinkOptions
@@ -122,7 +124,7 @@ export default class Publisher {
 			text = addHardLineBreak(text, this.settings, frontmatterSettings);
 			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault, frontmatter);
 			text = convertWikilinks(text, frontmatterSettings, this.settings, linkedFiles);
-			text = censorText(text, this.settings);
+			text = findAndReplaceText(text, this.settings);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
 			noticeLog(`Upload ${file.name}:${path} on ${this.settings.githubName}/${this.settings.githubRepo}:${ref}`, this.settings);
 			await this.uploadText(file.path, text, path, file.name, ref);

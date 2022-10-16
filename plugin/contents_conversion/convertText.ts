@@ -86,21 +86,6 @@ export async function addInlineTags(
 	return text;
 }
 
-export function censorText(text: string, settings: GitHubPublisherSettings): string {
-	/*
-	* Censor text using the settings
-	 */
-	if (!settings.censorText) {
-		return text;
-	}
-	for (const censor of settings.censorText) {
-		const regex = new RegExp(censor.entry, 'ig');
-		// @ts-ignore
-		text = text.replaceAll(regex, censor.replace);
-	}
-	return text;
-}
-
 function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings) {
 	/*
 	* stringify the dataview link by extracting the value from the link
