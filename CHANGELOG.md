@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.4.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.4.0...4.4.1) (2022-10-19)
+
+
+### Bug Fixes
+
+* TypeError: Cannot read properties of undefined (reading 'share') ([321bcf1](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/321bcf1a36034289b579d1a7997db9235981d61a))
+
 ## [4.4.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.6...4.4.0) (2022-10-16)
 
 

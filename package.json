@@ -1,11 +1,11 @@
 {
 	"name": "obsidian-mkdocs-publication",
-	"version": "4.4.0",
+	"version": "4.4.1",
 	"description": "Obsidian's Mkdocs Publication is an association between a github actions and a Material mkdocs template to get a personal wiki site based on your Obsidian Vault.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
-		"vault": "node esbuild.config.mjs production && copy main.js \"I:\\Seed\\.obsidian\\plugins\\obsidian-mkdocs-publisher\" && copy styles.css \"I:\\Seed\\.obsidian\\plugins\\obsidian-mkdocs-publisher\"",
+		"vault": "node esbuild.config.mjs production && copy main.js \"N:\\Nest\\.obsidian\\plugins\\obsidian-mkdocs-publisher\" && copy styles.css \"N:\\Nest\\.obsidian\\plugins\\obsidian-mkdocs-publisher\"",
 		"build": "node esbuild.config.mjs production",
 		"lint": "eslint --ext .ts plugin/",
 		"lint:fix": "eslint --fix --ext .ts  plugin/",
