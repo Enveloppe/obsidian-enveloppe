@@ -90,7 +90,6 @@ function createRelativePath(
 	if (relative.trim() === '.' || relative.trim() === '') { //in case of errors
 		relative = getReceiptFolder(targetFile.linked, settings, metadata, vault).split('/').at(-1);
 	}
-	console.log(sourceList, targetList, relativePath, diffSourcePath, diffTargetPath, relative);
 	return relative;
 }
 
@@ -173,7 +172,8 @@ function getReceiptFolder(
 		const frontmatter = metadataCache.getCache(file.path)?.frontmatter
 
 		const fileName = getTitleField(frontmatter, file, settings)
-		if (!frontmatter[settings.shareKey]) {
+
+		if (!frontmatter || frontmatter[settings.shareKey] === undefined || !frontmatter[settings.shareKey]) {
 			return fileName;
 		}
 
