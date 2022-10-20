@@ -27,7 +27,6 @@ export function convertWikilinks(
 			const fileMatch = wikiMatch.match(fileRegex);
 			const isEmbed = wikiMatch.startsWith('!') ? '!' : '';
 			const isEmbedBool = wikiMatch.startsWith('!');
-
 			if (fileMatch) {
 				// @ts-ignore
 				let linkCreator = wikiMatch;
@@ -41,9 +40,10 @@ export function convertWikilinks(
 				 * memory. In this case, we'd strip [[, | and ./ to have wikilink.md as
 				 * result.
 				 */
-				const fileName = fileMatch[0].replaceAll('[', '').replaceAll('|', '').replaceAll(']', '').replaceAll('\\', '').replaceAll('../', '').replaceAll('./', '');
-
-				const linkedFile=linkedFiles.find(item => item.linkFrom===fileName);
+				const fileName = fileMatch[0].replaceAll('[', '').replaceAll('|', '').replaceAll(']', '').replaceAll('\\', '');
+				const StrictFileName = fileMatch[0].replaceAll('[', '').replaceAll('|', '').replaceAll(']', '').replaceAll('\\', '').replaceAll('../', '').replaceAll('./', '');
+				//get last from path
+				const linkedFile=linkedFiles.find(item => item.linkFrom===StrictFileName);
 				if (linkedFile) {
 					const altText = linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.extension === 'md' ? linkedFile.linked.basename : "";
 					const removeEmbed =  conditionConvert.removeEmbed && isEmbedBool && linkedFile.linked.extension === 'md';
@@ -61,7 +61,6 @@ export function convertWikilinks(
 						if (linkedFile.destinationFilePath){
 							linkDestination = linkedFile.destinationFilePath;
 						}
-
 						linkCreator = `${isEmbed}[${altText}](${encodeURI(linkDestination)})`;
 					}
 
@@ -80,7 +79,7 @@ export function convertWikilinks(
 					const altLink = creatorAltLink(altMatch, altCreator, fileName.split('.').at(-1), fileName);
 					const removeEmbed = !isAttachment(fileName.trim()) &&  conditionConvert.removeEmbed && isEmbedBool;
 					if (convertWikilink){
-						linkCreator = `${isEmbed}[${altLink}](${encodeURI(fileName.trim())})`;
+						linkCreator = `${isEmbed}[${altLink}](${encodeURI(fileName.trim()) + '.md'})`;
 					}
 					if (!isAttachment(fileName.trim()) && !convertLinks && !isEmbedBool)  {
 						linkCreator = altLink;
