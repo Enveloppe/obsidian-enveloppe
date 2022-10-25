@@ -103,17 +103,17 @@ export async function noticeMessage(PublisherManager: Publisher, file: TFile | s
 	 */
 	const noticeValue = (file instanceof TFile) ? '"' + file.basename + '"' : file
 	if (settings.workflowName.length > 0) {
-		new Notice((t("sendMessage") as StringFunc)([noticeValue, settings.githubRepo, `.\n${t("waitingWorkflow")}`]));
+		new Notice((t("sendMessage") as StringFunc)([noticeValue, repo.owner+':'+repo.repo, `.\n${t("waitingWorkflow")}`]));
 		const successWorkflow = await PublisherManager.workflowGestion(repo);
 		if (successWorkflow) {
 			new Notice(
-				(t("successfullPublish") as StringFunc)([noticeValue, settings.githubRepo])
+				(t("successfullPublish") as StringFunc)([noticeValue, repo.owner+':'+repo.repo])
 			);
 		}
 	}
 	else {
 		new Notice(
-			(t("successfullPublish") as StringFunc)([noticeValue, settings.githubRepo])
+			(t("successfullPublish") as StringFunc)([noticeValue, repo.owner+':'+repo.repo])
 		);
 	}
 }
