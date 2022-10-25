@@ -1,20 +1,21 @@
-import {Plugin, TFile, Menu} from "obsidian";
+import { Plugin, TFile, Menu } from "obsidian";
+import { GithubPublisherSettings } from "./settings";
+import { disablePublish, getRepoFrontmatter } from "./src/utils";
 import {
-	GithubPublisherSettings,
-} from "./settings";
-import {disablePublish, getRepoFrontmatter} from "./src/utils";
-import {GitHubPublisherSettings, DEFAULT_SETTINGS} from './settings/interface'
-import {GithubBranch} from "./publishing/branch";
+	GitHubPublisherSettings,
+	DEFAULT_SETTINGS,
+} from "./settings/interface";
+import { GithubBranch } from "./publishing/branch";
 import { Octokit } from "@octokit/core";
 import {
 	deleteUnsharedDeletedNotes,
 	shareAllEditedNotes,
 	shareAllMarkedNotes,
 	shareNewNote,
-	shareOneNote, shareOnlyEdited
+	shareOneNote,
+	shareOnlyEdited,
 } from "./commands";
-import t, {StringFunc} from "./i18n"
-
+import t, { StringFunc } from "./i18n";
 
 export default class GithubPublisher extends Plugin {
 	settings: GitHubPublisherSettings;
@@ -23,12 +24,20 @@ export default class GithubPublisher extends Plugin {
 		console.log("Github Publisher loaded");
 		await this.loadSettings();
 		this.addSettingTab(new GithubPublisherSettings(this.app, this));
-		const octokit = new Octokit({auth: this.settings.GhToken});
+		const octokit = new Octokit({ auth: this.settings.GhToken });
 
-		const PublisherManager = new GithubBranch(this.settings, octokit, this.app.vault, this.app.metadataCache, this);
-		const branchName = app.vault.getName().replaceAll(' ', '-') + "-" + new Date().toLocaleDateString('en-US').replace(/\//g, '-');
-		const repo= getRepoFrontmatter(this.settings);
-
+		const PublisherManager = new GithubBranch(
+			this.settings,
+			octokit,
+			this.app.vault,
+			this.app.metadataCache,
+			this
+		);
+		const branchName =
+			app.vault.getName().replaceAll(" ", "-") +
+			"-" +
+			new Date().toLocaleDateString("en-US").replace(/\//g, "-");
+		const repo = getRepoFrontmatter(this.settings);
 
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
@@ -37,13 +46,20 @@ export default class GithubPublisher extends Plugin {
 					this.settings.fileMenu
 				) {
 					menu.addItem((item) => {
-						item.setSection('action');
+						item.setSection("action");
 						item.setTitle(
 							(t("shareViewFiles") as StringFunc)(file.basename)
 						)
 							.setIcon("share")
 							.onClick(async () => {
-								await shareOneNote(branchName, PublisherManager, this.settings, file, this.app.metadataCache, this.app.vault);
+								await shareOneNote(
+									branchName,
+									PublisherManager,
+									this.settings,
+									file,
+									this.app.metadataCache,
+									this.app.vault
+								);
 							});
 					});
 					menu.addSeparator();
@@ -59,14 +75,22 @@ export default class GithubPublisher extends Plugin {
 				) {
 					menu.addSeparator();
 					menu.addItem((item) => {
-						item.setSection('mkdocs-publisher');
+						item.setSection("mkdocs-publisher");
 						item.setTitle(
-							(t("shareViewFiles") as StringFunc)(view.file.basename)
+							(t("shareViewFiles") as StringFunc)(
+								view.file.basename
+							)
 						)
 							.setIcon("share")
 							.onClick(async () => {
-
-								await shareOneNote(branchName, PublisherManager, this.settings, view.file, this.app.metadataCache, this.app.vault);
+								await shareOneNote(
+									branchName,
+									PublisherManager,
+									this.settings,
+									view.file,
+									this.app.metadataCache,
+									this.app.vault
+								);
 							});
 					});
 				}
@@ -74,20 +98,31 @@ export default class GithubPublisher extends Plugin {
 		);
 		if (this.settings.shareExternalModified) {
 			this.registerEvent(
-				this.app.vault.on('modify', async (file: TFile) => {
+				this.app.vault.on("modify", async (file: TFile) => {
 					if (file !== this.app.workspace.getActiveFile()) {
-						const isShared = this.app.metadataCache.getFileCache(file).frontmatter ? this.app.metadataCache.getFileCache(file).frontmatter[this.settings.shareKey] : false;
+						const isShared = this.app.metadataCache.getFileCache(
+							file
+						).frontmatter
+							? this.app.metadataCache.getFileCache(file).frontmatter[this.settings.shareKey]
+							: false;
 						if (isShared) {
-							await shareOneNote(branchName, PublisherManager, this.settings, file, this.app.metadataCache, this.app.vault);
+							await shareOneNote(
+								branchName,
+								PublisherManager,
+								this.settings,
+								file,
+								this.app.metadataCache,
+								this.app.vault
+							);
 						}
 					}
 				})
-			)
+			);
 		}
 
 		this.addCommand({
 			id: "publisher-one",
-			name: t('shareActiveFile') as string,
+			name: t("shareActiveFile") as string,
 			hotkeys: [],
 			checkCallback: (checking) => {
 				if (
@@ -98,7 +133,14 @@ export default class GithubPublisher extends Plugin {
 					)
 				) {
 					if (!checking) {
-						shareOneNote(branchName, PublisherManager, this.settings, this.app.workspace.getActiveFile(), this.app.metadataCache, this.app.vault);
+						shareOneNote(
+							branchName,
+							PublisherManager,
+							this.settings,
+							this.app.workspace.getActiveFile(),
+							this.app.metadataCache,
+							this.app.vault
+						);
 					}
 					return true;
 				}
@@ -108,12 +150,18 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-delete-clean",
-			name: t('publisherDeleteClean') as string,
+			name: t("publisherDeleteClean") as string,
 			hotkeys: [],
 			checkCallback: (checking) => {
 				if (this.settings.autoCleanUp) {
 					if (!checking) {
-						deleteUnsharedDeletedNotes(PublisherManager, this.settings, octokit, branchName, repo);
+						deleteUnsharedDeletedNotes(
+							PublisherManager,
+							this.settings,
+							octokit,
+							branchName,
+							repo
+						);
 					}
 					return true;
 				}
@@ -123,37 +171,67 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-publish-all",
-			name: t('uploadAllNotes') as string,
+			name: t("uploadAllNotes") as string,
 			callback: async () => {
 				const sharedFiles = PublisherManager.getSharedFiles();
 				const statusBarItems = this.addStatusBarItem();
-				await shareAllMarkedNotes(PublisherManager, this.settings, octokit, statusBarItems, branchName, repo, sharedFiles, true);
-			}
+				await shareAllMarkedNotes(
+					PublisherManager,
+					this.settings,
+					octokit,
+					statusBarItems,
+					branchName,
+					repo,
+					sharedFiles,
+					true
+				);
+			},
 		});
-		
+
 		this.addCommand({
 			id: "publisher-upload-new",
-			name: t('uploadNewNotes') as string,
+			name: t("uploadNewNotes") as string,
 			callback: async () => {
-				await shareNewNote(PublisherManager, octokit, branchName, this.app.vault, this, repo);
-			}
+				await shareNewNote(
+					PublisherManager,
+					octokit,
+					branchName,
+					this.app.vault,
+					this,
+					repo
+				);
+			},
 		});
-		
+
 		this.addCommand({
 			id: "publisher-upload-all-edited-new",
-			name: t('uploadAllNewEditedNote') as string,
+			name: t("uploadAllNewEditedNote") as string,
 			callback: async () => {
-				await shareAllEditedNotes(PublisherManager, octokit, branchName, this.app.vault, this, repo);
-			}
+				await shareAllEditedNotes(
+					PublisherManager,
+					octokit,
+					branchName,
+					this.app.vault,
+					this,
+					repo
+				);
+			},
 		});
-		
+
 		this.addCommand({
-			id: 'publisher-upload-edited',
-			name: t('uploadAllEditedNote') as string,
+			id: "publisher-upload-edited",
+			name: t("uploadAllEditedNote") as string,
 			callback: async () => {
-				await shareOnlyEdited(PublisherManager, octokit, branchName, this.app.vault, this, repo);
-			}
-		})
+				await shareOnlyEdited(
+					PublisherManager,
+					octokit,
+					branchName,
+					this.app.vault,
+					this,
+					repo
+				);
+			},
+		});
 	}
 
 	onunload() {
