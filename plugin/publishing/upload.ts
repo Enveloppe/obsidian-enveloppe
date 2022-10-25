@@ -94,7 +94,6 @@ export default class Publisher {
 		const shareFiles = new FilesManagement(this.vault, this.metadataCache, this.settings, this.octokit, this.plugin);
 		const sharedKey = this.settings.shareKey;
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
-		console.log(repoFrontmatter, getRepoFrontmatter(this.settings, frontmatter) as RepoFrontmatter, JSON.stringify(repoFrontmatter) === JSON.stringify(getRepoFrontmatter(this.settings, frontmatter) as RepoFrontmatter))
 
 		if (
 			!frontmatter
