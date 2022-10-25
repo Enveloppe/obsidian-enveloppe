@@ -1,5 +1,5 @@
 import {App, FrontMatterCache, MetadataCache, Notice, TFile, Vault} from 'obsidian'
-import {GitHubPublisherSettings} from '../settings/interface'
+import {GitHubPublisherSettings, RepoFrontmatter} from '../settings/interface'
 import Publisher from "../publishing/upload";
 import t from '../i18n'
 import type { StringFunc } from "../i18n";
@@ -93,7 +93,7 @@ export async function createLink(file: TFile, settings: GitHubPublisherSettings,
 
 }
 
-export async function noticeMessage(PublisherManager: Publisher, file: TFile | string, settings: GitHubPublisherSettings) {
+export async function noticeMessage(PublisherManager: Publisher, file: TFile | string, settings: GitHubPublisherSettings, repo: RepoFrontmatter) {
 	/**
 	 * Create a notice message for the sharing ; the message can be delayed if a workflow is used. 
 	 * @param PublisherManager: Publisher
@@ -104,7 +104,7 @@ export async function noticeMessage(PublisherManager: Publisher, file: TFile | s
 	const noticeValue = (file instanceof TFile) ? '"' + file.basename + '"' : file
 	if (settings.workflowName.length > 0) {
 		new Notice((t("sendMessage") as StringFunc)([noticeValue, settings.githubRepo, `.\n${t("waitingWorkflow")}`]));
-		const successWorkflow = await PublisherManager.workflowGestion();
+		const successWorkflow = await PublisherManager.workflowGestion(repo);
 		if (successWorkflow) {
 			new Notice(
 				(t("successfullPublish") as StringFunc)([noticeValue, settings.githubRepo])
@@ -207,4 +207,50 @@ export function getFrontmatterCondition(frontmatter: FrontMatterCache, settings:
 		settingsConversion.hardbreak = frontmatter.hardbreak
 	}
 	return settingsConversion
+}
+
+export function getRepoFrontmatter(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache,) {
+	const repoFrontmatter : RepoFrontmatter = {
+		branch: settings.githubBranch,
+		repo: settings.githubRepo,
+		owner: settings.githubName,
+		autoclean: settings.autoCleanUp,
+	}
+	if (!frontmatter) {
+		return repoFrontmatter
+	}
+	if (frontmatter.repo !== undefined) {
+		if (typeof frontmatter.repo === 'object') {
+			if (frontmatter.repo.branch !== undefined) {
+				repoFrontmatter.branch = frontmatter.repo.branch
+			}
+			if (frontmatter.repo.repo !== undefined) {
+				repoFrontmatter.repo = frontmatter.repo.repo
+			}
+			if (frontmatter.repo.owner !== undefined) {
+				repoFrontmatter.owner = frontmatter.repo.owner
+			}
+		} else {
+			// If "owner/repo/branch" format :
+			// owner = 0
+			// repo = 1
+			// branch = 2
+			//if length = 0   => repo = 0
+			const repo = frontmatter.repo.split('/')
+			if (repo.length === 3) {
+				repoFrontmatter.branch = repo[2]
+				repoFrontmatter.repo = repo[1]
+				repoFrontmatter.owner = repo[0]
+			} else if (repo.length === 2) {
+				repoFrontmatter.repo = repo[1]
+				repoFrontmatter.owner = repo[0]
+			} else if (repo.length === 1) {
+				repoFrontmatter.repo = repo[0]
+			}
+		}
+	}
+	if (frontmatter.autoclean !== undefined) {
+		repoFrontmatter.autoclean = frontmatter.autoclean
+	}
+	return repoFrontmatter
 }

@@ -1,6 +1,6 @@
 import { ShareStatusBar } from "./src/status_bar";
-import {createLink, noticeMessage} from "./src/utils";
-import {GitHubPublisherSettings} from './settings/interface'
+import {createLink, noticeMessage, getRepoFrontmatter} from "./src/utils";
+import {GitHubPublisherSettings, RepoFrontmatter} from './settings/interface'
 import { deleteFromGithub } from './publishing/delete'
 import {GithubBranch} from "./publishing/branch";
 import { Octokit } from "@octokit/core";
@@ -10,7 +10,7 @@ import t from './i18n'
 import { StringFunc } from "./i18n";
 
 
-export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settings: GitHubPublisherSettings, octokit: Octokit, statusBarItems: HTMLElement, branchName: string, sharedFiles: TFile[], createGithubBranch=true) {
+export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settings: GitHubPublisherSettings, octokit: Octokit, statusBarItems: HTMLElement, branchName: string, repoFrontmatter: RepoFrontmatter, sharedFiles: TFile[], createGithubBranch=true) {
 	/**
 	 * Share all marked note (share: true) from Obsidian to GitHub
 	 * @class publisherManager : the main class with all function and parameters
@@ -30,7 +30,7 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 		if (sharedFiles.length > 0) {
 			const publishedFiles = sharedFiles.map(
 				(file) => file.name);
-			if (createGithubBranch) {await PublisherManager.newBranch(branchName);}
+			if (createGithubBranch) {await PublisherManager.newBranch(branchName, repoFrontmatter);}
 			for (
 				let files = 0;
 				files < sharedFiles.length;
@@ -39,7 +39,7 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 				try {
 					const file = sharedFiles[files];
 					statusBar.increment();
-					await PublisherManager.publish(file, false, branchName);
+					await PublisherManager.publish(file, false, branchName, repoFrontmatter);
 				} catch {
 					errorCount++;
 					new Notice(
@@ -49,10 +49,10 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 			}
 			statusBar.finish(8000);
 			const noticeValue = `${publishedFiles.length - errorCount} notes`
-			await deleteFromGithub(true, settings, octokit, branchName, PublisherManager);
-			const update = await PublisherManager.updateRepository(branchName);
+			await deleteFromGithub(true, settings, octokit, branchName, PublisherManager, repoFrontmatter);
+			const update = await PublisherManager.updateRepository(branchName, repoFrontmatter);
 			if (update) {
-				await noticeMessage(PublisherManager, noticeValue, settings);
+				await noticeMessage(PublisherManager, noticeValue, settings, repoFrontmatter);
 			} else {
 				new Notice((t("errorPublish") as StringFunc)(settings.githubRepo));
 				
@@ -66,7 +66,7 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 	}
 }
 
-export async function deleteUnsharedDeletedNotes(PublisherManager: GithubBranch, settings: GitHubPublisherSettings, octokit: Octokit, branchName: string) {
+export async function deleteUnsharedDeletedNotes(PublisherManager: GithubBranch, settings: GitHubPublisherSettings, octokit: Octokit, branchName: string, repoFrontmatter: RepoFrontmatter) {
 	/**
 	 * Delete unshared/deleted in the repo
 	 * @class publisherManager
@@ -76,9 +76,9 @@ export async function deleteUnsharedDeletedNotes(PublisherManager: GithubBranch,
 	 */
 	try {
 		new Notice((t("startingClean") as StringFunc)(settings.githubRepo))
-		await PublisherManager.newBranch(branchName);
-		await deleteFromGithub(false, settings,octokit, branchName, PublisherManager);
-		await PublisherManager.updateRepository(branchName);
+		await PublisherManager.newBranch(branchName, repoFrontmatter);
+		await deleteFromGithub(false, settings,octokit, branchName, PublisherManager, repoFrontmatter);
+		await PublisherManager.updateRepository(branchName, repoFrontmatter);
 	} catch (e) {
 		console.error(e);
 	}
@@ -93,13 +93,15 @@ export async function shareOneNote(branchName: string, PublisherManager: GithubB
 	 * @param file origin file
 	 */
 	try {
-		await PublisherManager.newBranch(branchName);
+		const frontmatter = metadataCache.getFileCache(file).frontmatter;
+		const repoFrontmatter = getRepoFrontmatter(settings, frontmatter);
+		await PublisherManager.newBranch(branchName, repoFrontmatter);
 		const publishSuccess =
-			await PublisherManager.publish(file, true, branchName, [], true);
+			await PublisherManager.publish(file, true, branchName, repoFrontmatter,[], true);
 		if (publishSuccess) {
-			const update = await PublisherManager.updateRepository(branchName);
+			const update = await PublisherManager.updateRepository(branchName, repoFrontmatter);
 			if (update) {
-				await noticeMessage(PublisherManager, file, settings)
+				await noticeMessage(PublisherManager, file, settings, repoFrontmatter);
 				await createLink(file, settings, metadataCache, vault);
 			} else {
 				new Notice((t("errorPublish") as StringFunc)(settings.githubRepo));
@@ -114,7 +116,7 @@ export async function shareOneNote(branchName: string, PublisherManager: GithubB
 	}
 }
 
-export async function shareNewNote(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: GithubPublisher) {
+export async function shareNewNote(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: GithubPublisher, repoFrontmatter: RepoFrontmatter) {
 	/**
 	 * Deepscanning of the repository and send only new notes (not exists on the repo yet)
 	 * @class PublisherManager
@@ -127,20 +129,20 @@ export async function shareNewNote(PublisherManager: GithubBranch, octokit: Octo
 	new Notice(t("scanningRepo") as string);
 	const branchMaster = settings.githubBranch;
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
-	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings);
+	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings, repoFrontmatter);
 	const newlySharedNotes = PublisherManager.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
 	if (newlySharedNotes.length > 0) {
 		new Notice((t("foundNoteToSend") as StringFunc)(`${newlySharedNotes.length}`));
 		const statusBarElement = plugin.addStatusBarItem();
-		await PublisherManager.newBranch(branchName);
-		await shareAllMarkedNotes(PublisherManager, plugin.settings, octokit, statusBarElement, branchName, newlySharedNotes);
+		await PublisherManager.newBranch(branchName, repoFrontmatter);
+		await shareAllMarkedNotes(PublisherManager, plugin.settings, octokit, statusBarElement, branchName, repoFrontmatter, newlySharedNotes);
 	} else {
 		new Notice(t("noNewNote") as string);
 	}
 
 }
 
-export async function shareAllEditedNotes(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: GithubPublisher) {
+export async function shareAllEditedNotes(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: GithubPublisher, repoFrontmatter: RepoFrontmatter) {
 	/**
 	 * Share edited notes : they exist on the repo, BUT the last edited time in Obsidian is after the last upload. Also share new notes.
 	 * @class PublisherManager
@@ -153,20 +155,20 @@ export async function shareAllEditedNotes(PublisherManager: GithubBranch, octoki
 	new Notice(t("scanningRepo") as string);
 	const branchMaster = settings.githubBranch;
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
-	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings);
+	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings, repoFrontmatter);
 	const newSharedFiles = PublisherManager.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
 	const newlySharedNotes = await PublisherManager.getEditedFiles(sharedFilesWithPaths, githubSharedNotes, vault, newSharedFiles);
 	if (newlySharedNotes.length > 0) {
 		new Notice((t("foundNoteToSend") as StringFunc)(`${newlySharedNotes.length}`));
 		const statusBarElement = plugin.addStatusBarItem();
-		await PublisherManager.newBranch(branchName);
-		await shareAllMarkedNotes(PublisherManager, settings, octokit, statusBarElement, branchName, newlySharedNotes);
+		await PublisherManager.newBranch(branchName, repoFrontmatter);
+		await shareAllMarkedNotes(PublisherManager, settings, octokit, statusBarElement, branchName, repoFrontmatter, newlySharedNotes);
 	} else {
 		new Notice(t("noNewNote") as string);
 	}
 }
 
-export async function shareOnlyEdited(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: GithubPublisher) {
+export async function shareOnlyEdited(PublisherManager: GithubBranch, octokit: Octokit, branchName: string, vault: Vault, plugin: GithubPublisher, repoFrontmatter: RepoFrontmatter) {
 	/**
 	 * share **only** edited notes : they exist on the repo, but the last edited time is after the last upload.
 	 * @class PublisherManager
@@ -179,14 +181,14 @@ export async function shareOnlyEdited(PublisherManager: GithubBranch, octokit: O
 	new Notice(t("scanningRepo") as string);
 	const branchMaster = settings.githubBranch;
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
-	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings);
+	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings, repoFrontmatter);
 	const newSharedFiles:TFile[]=[]
 	const newlySharedNotes = await PublisherManager.getEditedFiles(sharedFilesWithPaths, githubSharedNotes, vault, newSharedFiles);
 	if (newlySharedNotes.length > 0) {
 		new Notice((t("foundNoteToSend") as StringFunc)(`${newlySharedNotes.length}`));
 		const statusBarElement = plugin.addStatusBarItem();
-		await PublisherManager.newBranch(branchName);
-		await shareAllMarkedNotes(PublisherManager, settings, octokit, statusBarElement, branchName, newlySharedNotes);
+		await PublisherManager.newBranch(branchName, repoFrontmatter);
+		await shareAllMarkedNotes(PublisherManager, settings, octokit, statusBarElement, branchName, repoFrontmatter, newlySharedNotes);
 	} else {
 		new Notice(t("noNewNote") as string);
 	}

@@ -1,4 +1,4 @@
-import {frontmatterConvert, GitHubPublisherSettings} from "../settings/interface";
+import {frontmatterConvert, GitHubPublisherSettings, LinkedNotes} from "../settings/interface";
 import {
 	App,
 	FrontMatterCache,
@@ -7,12 +7,14 @@ import {
 	parseFrontMatterTags,
 	parseYaml,
 	stringifyYaml,
-	TFile,
+	TFile, Vault,
 } from "obsidian";
 import {getDataviewPath} from "./filePathConvertor";
 import {getAPI, Link} from "obsidian-dataview";
 import {noticeLog} from "../src/utils";
 import {convertLinkCitation, convertWikilinks} from "./convertLinks";
+import findAndReplaceText from "./findAndReplaceText";
+import GithubPublisher from "../main";
 
 export function addHardLineBreak(text: string, settings: GitHubPublisherSettings, frontmatter: frontmatterConvert): string {
 	/*
@@ -189,4 +191,17 @@ export async function convertDataviewQueries(
 		}
 	}
 	return replacedText;
+}
+
+
+export async function mainConverting(text: string, settings: GitHubPublisherSettings, frontmatterSettings: frontmatterConvert, file: TFile, app: App, metadataCache: MetadataCache, frontmatter: FrontMatterCache, linkedFiles: LinkedNotes[], plugin: GithubPublisher, vault: Vault) {
+	text = findAndReplaceText(text, settings, false);
+	text = await addInlineTags(settings, file, metadataCache, plugin.app, frontmatter, text);
+	text = await convertDataviewQueries(text, file.path, settings, plugin.app, metadataCache, frontmatterSettings, frontmatter, file);
+	text = await convertInlineDataview(text, settings, file, plugin.app);
+	text = addHardLineBreak(text, settings, frontmatterSettings);
+	text = convertLinkCitation(text, settings, linkedFiles, metadataCache, file, vault, frontmatter);
+	text = convertWikilinks(text, frontmatterSettings, settings, linkedFiles);
+	text = findAndReplaceText(text, settings, true);
+	return text
 }

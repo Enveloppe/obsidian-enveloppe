@@ -2,7 +2,7 @@ import {Plugin, TFile, Menu} from "obsidian";
 import {
 	GithubPublisherSettings,
 } from "./settings";
-import { disablePublish } from "./src/utils";
+import {disablePublish, getRepoFrontmatter} from "./src/utils";
 import {GitHubPublisherSettings, DEFAULT_SETTINGS} from './settings/interface'
 import {GithubBranch} from "./publishing/branch";
 import { Octokit } from "@octokit/core";
@@ -27,6 +27,7 @@ export default class GithubPublisher extends Plugin {
 
 		const PublisherManager = new GithubBranch(this.settings, octokit, this.app.vault, this.app.metadataCache, this);
 		const branchName = app.vault.getName().replaceAll(' ', '-') + "-" + new Date().toLocaleDateString('en-US').replace(/\//g, '-');
+		const repo= getRepoFrontmatter(this.settings);
 
 
 		this.registerEvent(
@@ -112,7 +113,7 @@ export default class GithubPublisher extends Plugin {
 			checkCallback: (checking) => {
 				if (this.settings.autoCleanUp) {
 					if (!checking) {
-						deleteUnsharedDeletedNotes(PublisherManager, this.settings, octokit, branchName);
+						deleteUnsharedDeletedNotes(PublisherManager, this.settings, octokit, branchName, repo);
 					}
 					return true;
 				}
@@ -126,7 +127,7 @@ export default class GithubPublisher extends Plugin {
 			callback: async () => {
 				const sharedFiles = PublisherManager.getSharedFiles();
 				const statusBarItems = this.addStatusBarItem();
-				await shareAllMarkedNotes(PublisherManager, this.settings, octokit, statusBarItems, branchName, sharedFiles, true);
+				await shareAllMarkedNotes(PublisherManager, this.settings, octokit, statusBarItems, branchName, repo, sharedFiles, true);
 			}
 		});
 		
@@ -134,7 +135,7 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-upload-new",
 			name: t('uploadNewNotes') as string,
 			callback: async () => {
-				await shareNewNote(PublisherManager, octokit, branchName, this.app.vault, this);
+				await shareNewNote(PublisherManager, octokit, branchName, this.app.vault, this, repo);
 			}
 		});
 		
@@ -142,7 +143,7 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-upload-all-edited-new",
 			name: t('uploadAllNewEditedNote') as string,
 			callback: async () => {
-				await shareAllEditedNotes(PublisherManager, octokit, branchName, this.app.vault, this);
+				await shareAllEditedNotes(PublisherManager, octokit, branchName, this.app.vault, this, repo);
 			}
 		});
 		
@@ -150,7 +151,7 @@ export default class GithubPublisher extends Plugin {
 			id: 'publisher-upload-edited',
 			name: t('uploadAllEditedNote') as string,
 			callback: async () => {
-				await shareOnlyEdited(PublisherManager, octokit, branchName, this.app.vault, this);
+				await shareOnlyEdited(PublisherManager, octokit, branchName, this.app.vault, this, repo);
 			}
 		})
 	}

@@ -1,5 +1,5 @@
 import {Octokit} from "@octokit/core";
-import {GitHubPublisherSettings} from "../settings/interface";
+import {GitHubPublisherSettings, RepoFrontmatter} from "../settings/interface";
 import {FilesManagement} from "./filesManagement";
 import {MetadataCache, Notice, Vault} from "obsidian";
 import GithubPublisherPlugin from "../main";
@@ -23,24 +23,26 @@ export class GithubBranch extends FilesManagement {
 		this.plugin = plugin;
 	}
 
-	async newBranch(branchName: string) {
+	async newBranch(branchName: string, repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Create a new branch on the repo named "Vault-date"
 		 * Pass if the branch already exists
 		 * @param branchName
 		 */
+
 		const allBranch = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/branches', {
-			owner: this.settings.githubName,
-			repo: this.settings.githubRepo,
+			owner: repoFrontmatter.owner,
+			repo: repoFrontmatter.repo,
 		});
-		const mainBranch = allBranch.data.find((branch: { name: string; }) => branch.name === 'main' || branch.name === 'master');
+		const mainBranch = allBranch.data.find((branch: { name: string; }) => branch.name === repoFrontmatter.branch);
 		const shaMainBranch = mainBranch.commit.sha;
+
 		try {
 			const branch = await this.octokit.request(
 				"POST" + " /repos/{owner}/{repo}/git/refs",
 				{
-					owner: this.settings.githubName,
-					repo: this.settings.githubRepo,
+					owner: repoFrontmatter.owner,
+					repo: repoFrontmatter.repo,
 					ref: "refs/heads/" + branchName,
 					sha: shaMainBranch,
 				}
@@ -49,54 +51,53 @@ export class GithubBranch extends FilesManagement {
 		} catch (e) {
 			// catch the old branch
 			const allBranch = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/branches', {
-				owner: this.settings.githubName,
-				repo: this.settings.githubRepo,
+				owner: repoFrontmatter.owner,
+				repo: repoFrontmatter.repo,
 			});
 			const mainBranch = allBranch.data.find((branch: { name: string; }) => branch.name === branchName);
 			return !!mainBranch;
 		}
 	}
 
-	async pullRequest(branchName: string) {
+	async pullRequest(branchName: string, repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Create a pull request on main/master from the new branch
 		 * @param branchName
 		 */
+
 		try {
 			const PR = await this.octokit.request('POST' +
 				' /repos/{owner}/{repo}/pulls', {
-				owner: this.settings.githubName,
-				repo: this.settings.githubRepo,
+				owner: repoFrontmatter.owner,
+				repo: repoFrontmatter.repo,
 				title: `PullRequest ${branchName} from Obsidian`,
 				body: "",
 				head: branchName,
-				base: this.settings.githubBranch,
+				base: repoFrontmatter.branch,
 			});
 			return PR.data.number;
 		} catch (e) {
 			const PR = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/pulls', {
-				owner: this.settings.githubName,
-				repo: this.settings.githubRepo,
+				owner: repoFrontmatter.owner,
+				repo: repoFrontmatter.repo,
 				state: 'open',
 			});
 			return PR.data[0].number;
 		}
 	}
 
-	async deleteBranch(branchName: string) {
+	async deleteBranch(branchName: string, repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * After the merge, delete the new branch
 		 * @param branchName
 		 */
-		const octokit = new Octokit({
-			auth: this.settings.GhToken,
-		});
+
 		try {
-			const branch = await octokit.request(
+			const branch = await this.octokit.request(
 				"DELETE" + " /repos/{owner}/{repo}/git/refs/heads/" + branchName,
 				{
-					owner: this.settings.githubName,
-					repo: this.settings.githubRepo,
+					owner: repoFrontmatter.owner,
+					repo: repoFrontmatter.repo,
 				}
 			);
 			return branch.status === 200;
@@ -106,22 +107,20 @@ export class GithubBranch extends FilesManagement {
 	}
 
 
-	async mergePullRequest (branchName: string, silent = false, pullRequestNumber: number) {
+	async mergePullRequest (branchName: string, silent = false, pullRequestNumber: number, repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Automatically merge pull request from the plugin
 		 * @param branchName
 		 * @param silent No logging message
 		 * @param pullRequestNumber number of the new pullrequest
 		 */
-		const octokit = new Octokit({
-			auth: this.settings.GhToken,
-		});
+
 		try {
-			const branch = await octokit.request(
+			const branch = await this.octokit.request(
 				"PUT" + " /repos/{owner}/{repo}/pulls/{pull_number}/merge",
 				{
-					owner: this.settings.githubName,
-					repo: this.settings.githubRepo,
+					owner: repoFrontmatter.owner,
+					repo: repoFrontmatter.repo,
 					pull_number: pullRequestNumber,
 					commit_title: `[PUBLISHER] Merge #${pullRequestNumber}`,
 					merge_method: "squash",
@@ -134,15 +133,16 @@ export class GithubBranch extends FilesManagement {
 			return false;
 		}
 	}
-	async updateRepository(branchName: string) {
+	async updateRepository(branchName: string, repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Run merging + deleting branch in once
 		 * @param branchName
 		 */
-		const pullRequest = await this.pullRequest(branchName);
-		const PRSuccess = await this.mergePullRequest(branchName, true, pullRequest);
+
+		const pullRequest = await this.pullRequest(branchName, repoFrontmatter);
+		const PRSuccess = await this.mergePullRequest(branchName, true, pullRequest, repoFrontmatter);
 		if (PRSuccess) {
-			await this.deleteBranch(branchName);
+			await this.deleteBranch(branchName, repoFrontmatter);
 			return true
 		}
 		return false

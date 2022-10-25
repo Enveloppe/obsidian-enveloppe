@@ -1,12 +1,12 @@
 import {Octokit} from "@octokit/core";
 import {Notice, parseYaml} from "obsidian";
-import {folderSettings, GitHubPublisherSettings, GithubRepo} from "../settings/interface";
+import {folderSettings, GitHubPublisherSettings, GithubRepo, RepoFrontmatter} from "../settings/interface";
 import {FilesManagement} from "./filesManagement";
 import {Base64} from "js-base64";
 import {isAttachment, noticeLog, trimObject} from "../src/utils";
 import t, {StringFunc} from "../i18n"
 
-export async function deleteFromGithub(silent = false, settings: GitHubPublisherSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement) {
+export async function deleteFromGithub(silent = false, settings: GitHubPublisherSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement, repo: RepoFrontmatter) {
 	/**
 	 * Delete file from github
 	 * @param silent no logging
@@ -15,7 +15,7 @@ export async function deleteFromGithub(silent = false, settings: GitHubPublisher
 	 * @param branchName
 	 * @class filesManagement
 	 */
-	const getAllFile = await filesManagement.getAllFileFromRepo(branchName, octokit, settings);
+	const getAllFile = await filesManagement.getAllFileFromRepo(branchName, octokit, settings, repo);
 	const filesInRepo = await filterGithubFile(getAllFile,
 		settings
 	);
@@ -37,20 +37,23 @@ export async function deleteFromGithub(silent = false, settings: GitHubPublisher
 		return false;
 	}
 	const allSharedFiles = filesManagement.getAllFileWithPath();
-	const allSharedConverted = allSharedFiles.map((file) => { return file.converted; });
+	const allSharedConverted = allSharedFiles.map((file) => { return {converted: file.converted, repo: file.repoFrontmatter}})
 	let deletedSuccess = 0;
 	let deletedFailed = 0;
 	for (const file of filesInRepo) {
-		if (!allSharedConverted.includes(file.file.trim())) {
-			const checkingIndex = file.file.contains('index') ? await checkIndexFiles(octokit, settings, file.file):false;
+		const isInObsidian = allSharedConverted.some((f) => f.converted === file.file);
+		const isMarkdownForAnotherRepo = file.file.trim().endsWith(".md") ? !allSharedConverted.some((f) => f.converted === file.file && JSON.stringify(f.repo) == JSON.stringify(repo)) : false;
+		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
+		if (isNeedToBeDeleted) {
+			const checkingIndex = file.file.contains('index') ? await checkIndexFiles(octokit, settings, file.file, repo):false;
 			try {
 				if (!checkingIndex) {
-					noticeLog('trying to delete file : ' + file.file, settings);
+					noticeLog(`trying to delete file : ${file.file} from ${repo.owner}/${repo.repo}`, settings);
 					const reponse = await octokit.request(
 						"DELETE" + " /repos/{owner}/{repo}/contents/{path}",
 						{
-							owner: settings.githubName,
-							repo: settings.githubRepo,
+							owner: repo.owner,
+							repo: repo.repo,
 							path: file.file,
 							message: "Delete file",
 							sha: file.sha,
@@ -148,7 +151,7 @@ function parseYamlFrontmatter(contents: string) {
 	return trimObject(yamlFrontmatterParsed);
 }
 
-async function checkIndexFiles(octokit: Octokit, settings: GitHubPublisherSettings, path:string) {
+async function checkIndexFiles(octokit: Octokit, settings: GitHubPublisherSettings, path:string, repoFrontmatter: RepoFrontmatter) {
 	/**
 	 * If folder note, check if the index must be excluded or included in deletion.
 	 * Always ignore file with :
@@ -161,8 +164,8 @@ async function checkIndexFiles(octokit: Octokit, settings: GitHubPublisherSettin
 	 */
 	try {
 		const fileRequest = await octokit.request('GET /repos/{owner}/{repo}/contents/{path}', {
-			owner: settings.githubName,
-			repo: settings.githubRepo,
+			owner: repoFrontmatter.owner,
+			repo: repoFrontmatter.repo,
 			path: path,
 		});
 		if (fileRequest.status === 200) {

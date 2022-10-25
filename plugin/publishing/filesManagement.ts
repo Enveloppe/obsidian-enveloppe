@@ -6,13 +6,13 @@ import {
 	GithubRepo,
 	LinkedNotes,
 	GitHubPublisherSettings,
-	frontmatterConvert
+	frontmatterConvert, RepoFrontmatter
 } from "../settings/interface";
 import {Octokit} from "@octokit/core";
 import {getImageLinkOptions, getReceiptFolder} from "../contents_conversion/filePathConvertor";
 import Publisher from "./upload";
 import GithubPublisher from "../main";
-import {isAttachment, noticeLog} from "plugin/src/utils";
+import {getRepoFrontmatter, isAttachment, noticeLog} from "plugin/src/utils";
 import {getAPI, Link} from "obsidian-dataview";
 
 export class FilesManagement extends Publisher {
@@ -21,7 +21,7 @@ export class FilesManagement extends Publisher {
 	settings: GitHubPublisherSettings;
 	octokit: Octokit;
 	plugin: GithubPublisher
-	
+
 	constructor(
 		vault: Vault,
 		metadataCache: MetadataCache,
@@ -36,7 +36,7 @@ export class FilesManagement extends Publisher {
 		this.octokit = octokit;
 		this.plugin = plugin;
 	}
-	
+
 	getSharedFiles(): TFile[] {
 		const files = this.vault.getMarkdownFiles();
 		const shared_File: TFile[] = [];
@@ -53,7 +53,7 @@ export class FilesManagement extends Publisher {
 		}
 		return shared_File;
 	}
-	
+
 	getAllFileWithPath(): ConvertedLink[] {
 		const files = this.vault.getFiles();
 		const allFileWithPath:ConvertedLink[] = [];
@@ -73,14 +73,15 @@ export class FilesManagement extends Publisher {
 					const filepath = getReceiptFolder(file, this.settings, this.metadataCache, this.vault);
 					allFileWithPath.push({
 						converted: filepath,
-						real: file.path
+						real: file.path,
+						repoFrontmatter: getRepoFrontmatter(this.settings, frontMatter)
 					});
 				}
 			}
 		}
 		return allFileWithPath;
 	}
-	
+
 	getLinkedByEmbedding(file: TFile):LinkedNotes[] {
 		/**
 		 * Create a database with every internal links and embeded image and files
@@ -119,7 +120,7 @@ export class FilesManagement extends Publisher {
 		}
 		return [...new Set(linkedFiles)];
 	}
-	
+
 	getLinkedFiles(file: TFile): LinkedNotes[] {
 		/**
 		 * Create an objet of all files embedded in the shared files
@@ -165,7 +166,7 @@ export class FilesManagement extends Publisher {
 		return [];
 	}
 
-	
+
 	getSharedEmbed(file: TFile, frontmatterSourceFile: frontmatterConvert):TFile[] {
 		/*
 		* Get all files embedded in the shared file
@@ -193,7 +194,7 @@ export class FilesManagement extends Publisher {
 		}
 		return [];
 	}
-	
+
 	checkExcludedFolder(file: TFile): boolean {
 		const excludedFolder = this.settings.ExcludedFolder.split(",").filter(
 			(x) => x != ""
@@ -207,7 +208,7 @@ export class FilesManagement extends Publisher {
 		}
 		return false;
 	}
-	
+
 	async getLastEditedTimeRepo(octokit: Octokit, githubRepo: GithubRepo, settings: GitHubPublisherSettings) {
 		const commits = await octokit.request('GET /repos/{owner}/{repo}/commits', {
 			owner: settings.githubName,
@@ -217,15 +218,15 @@ export class FilesManagement extends Publisher {
 		const lastCommittedFile = commits.data[0];
 		return new Date(lastCommittedFile.commit.committer.date);
 	}
-	
-	async getAllFileFromRepo(ref = "main", octokit: Octokit, settings: GitHubPublisherSettings):Promise<GithubRepo[]> {
+
+	async getAllFileFromRepo(ref = "main", octokit: Octokit, settings: GitHubPublisherSettings, repo: RepoFrontmatter):Promise<GithubRepo[]> {
 		const filesInRepo:GithubRepo[] = [];
 		try {
 			const repoContents = await octokit.request(
 				"GET" + " /repos/{owner}/{repo}/git/trees/{tree_sha}",
 				{
-					owner: settings.githubName,
-					repo: settings.githubRepo,
+					owner: repo.owner,
+					repo: repo.repo,
 					tree_sha: ref,
 					recursive: "true",
 				}
@@ -238,9 +239,7 @@ export class FilesManagement extends Publisher {
 						/([^/\\.]*)(\..*)?$/.exec(name)[1]; //don't delete file starting with .
 					if (
 						file.type === "blob" &&
-						basename(file.path).length > 0 &&
-						basename(file.path) != 'vault_published'
-					) {
+						basename(file.path).length > 0 ) {
 						filesInRepo.push({
 							file: file.path,
 							sha: file.sha,

@@ -96,7 +96,8 @@ export interface LinkedNotes {
 
 export interface ConvertedLink {
 	converted: string,
-	real: string
+	real: string,
+	repoFrontmatter?: RepoFrontmatter
 }
 
 export interface GithubRepo {
@@ -120,3 +121,11 @@ export interface frontmatterConvert {
 	dataview: boolean,
 	hardbreak: boolean
 }
+
+export interface RepoFrontmatter {
+	branch: string,
+	repo: string,
+	owner: string,
+	autoclean: boolean,
+}
+

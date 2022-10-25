@@ -5,31 +5,21 @@ import {
 	TFile,
 	Vault,
 } from "obsidian";
-import {frontmatterConvert, GitHubPublisherSettings} from "../settings/interface";
+import {frontmatterConvert, GitHubPublisherSettings, RepoFrontmatter} from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
 import { Octokit } from "@octokit/core";
 import { Base64 } from "js-base64";
 import {deleteFromGithub} from "./delete"
 
-import {
-	convertWikilinks,
-	convertLinkCitation
-} from "../contents_conversion/convertLinks";
 
-import {
-	convertDataviewQueries,
-	addHardLineBreak,
-	addInlineTags, convertInlineDataview
-} from "../contents_conversion/convertText";
-
-import findAndReplaceText from "../contents_conversion/findAndReplaceText";
 
 import {
 	getReceiptFolder, getImageLinkOptions
 } from "../contents_conversion/filePathConvertor";
 import {ShareStatusBar} from "../src/status_bar";
 import GithubPublisherPlugin from "../main";
-import {getFrontmatterCondition, isAttachment, noticeLog} from "plugin/src/utils";
+import {getFrontmatterCondition, getRepoFrontmatter, isAttachment, noticeLog} from "plugin/src/utils";
+import {mainConverting} from "../contents_conversion/convertText";
 
 export default class Publisher {
 	vault: Vault;
@@ -52,7 +42,7 @@ export default class Publisher {
 		this.plugin = plugin;
 	}
 
-	async statusBarForEmbed(linkedFiles: TFile[], fileHistory:TFile[], ref="main", deepScan:boolean, sourceFrontmatter: frontmatterConvert) {
+	async statusBarForEmbed(linkedFiles: TFile[], fileHistory:TFile[], ref="main", deepScan:boolean, sourceFrontmatter: frontmatterConvert, repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Add a status bar + send embed to GitHub. Deep-scanning files.
 		 * @param linkedFiles File embedded
@@ -67,9 +57,9 @@ export default class Publisher {
 				for (const image of linkedFiles) {
 					if (!fileHistory.includes(image)) {
 						if ((image.extension === 'md') && deepScan) {
-							await this.publish(image, false, ref, fileHistory, true);
+							await this.publish(image, false, ref, repoFrontmatter, fileHistory, true);
 						} else if (isAttachment(image.extension) && sourceFrontmatter.attachment) {
-							await this.uploadImage(image, ref, sourceFrontmatter)
+							await this.uploadImage(image, ref, sourceFrontmatter, repoFrontmatter);
 							fileHistory.push(image);
 						}
 					}
@@ -80,9 +70,9 @@ export default class Publisher {
 				const embed = linkedFiles[0];
 				if (!fileHistory.includes(embed)) {
 					if (embed.extension === 'md' && deepScan) {
-						await this.publish(embed, false, ref, fileHistory, true);
+						await this.publish(embed, false, ref, repoFrontmatter, fileHistory, true);
 					} else if (isAttachment(embed.extension) && sourceFrontmatter.attachment) {
-						await this.uploadImage(embed, ref, sourceFrontmatter);
+						await this.uploadImage(embed, ref, sourceFrontmatter, repoFrontmatter);
 						fileHistory.push(embed);
 					}
 				}
@@ -92,7 +82,7 @@ export default class Publisher {
 	}
 
 
-	async publish(file: TFile, autoclean = false, ref = "main", fileHistory:TFile[]=[], deepScan=false) {
+	async publish(file: TFile, autoclean = false, ref = "main", repoFrontmatter: RepoFrontmatter, fileHistory:TFile[]=[], deepScan=false) {
 		/**
 		 * Main prog to scan notes, their embed files and send it to GitHub.
 		 * @param file Origin file
@@ -104,11 +94,15 @@ export default class Publisher {
 		const shareFiles = new FilesManagement(this.vault, this.metadataCache, this.settings, this.octokit, this.plugin);
 		const sharedKey = this.settings.shareKey;
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
+		console.log(repoFrontmatter, getRepoFrontmatter(this.settings, frontmatter) as RepoFrontmatter, JSON.stringify(repoFrontmatter) === JSON.stringify(getRepoFrontmatter(this.settings, frontmatter) as RepoFrontmatter))
+
 		if (
-			!frontmatter ||
-			!frontmatter[sharedKey] ||
-			shareFiles.checkExcludedFolder(file) ||
-			file.extension !== "md" || fileHistory.includes(file)
+			!frontmatter
+			|| !frontmatter[sharedKey]
+			|| shareFiles.checkExcludedFolder(file)
+			|| file.extension !== "md"
+			|| fileHistory.includes(file)
+			|| JSON.stringify(getRepoFrontmatter(this.settings, frontmatter)) !== JSON.stringify(repoFrontmatter)
 		) {
 			return false;
 		}
@@ -119,20 +113,14 @@ export default class Publisher {
 			embedFiles = await shareFiles.getMetadataLinks(file, embedFiles, frontmatter, frontmatterSettings);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
 			let text = await app.vault.cachedRead(file);
-			text = findAndReplaceText(text, this.settings, false);
-			text = await addInlineTags(this.settings, file, this.metadataCache, this.plugin.app, frontmatter, text);
-			text = await convertDataviewQueries(text, file.path, this.settings, this.plugin.app, this.metadataCache, frontmatterSettings, frontmatter, file);
-			text = await convertInlineDataview(text, this.settings, file, this.plugin.app);
-			text = addHardLineBreak(text, this.settings, frontmatterSettings);
-			text = convertLinkCitation(text, this.settings, linkedFiles, this.metadataCache, file, this.vault, frontmatter);
-			text = convertWikilinks(text, frontmatterSettings, this.settings, linkedFiles);
-			text = findAndReplaceText(text, this.settings, true);
+			text = await mainConverting(text, this.settings,frontmatterSettings,file, app, this.metadataCache, frontmatter, linkedFiles, this.plugin,
+				this.vault);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
-			noticeLog(`Upload ${file.name}:${path} on ${this.settings.githubName}/${this.settings.githubRepo}:${ref}`, this.settings);
-			await this.uploadText(file.path, text, path, file.name, ref);
-			await this.statusBarForEmbed(embedFiles, fileHistory, ref, deepScan, frontmatterSettings);
-			if (autoclean && this.settings.autoCleanUp) {
-				await deleteFromGithub(true, this.settings, this.octokit, ref, shareFiles);
+			noticeLog(`Upload ${file.name}:${path} on ${repoFrontmatter.owner}/${repoFrontmatter.repo}:${ref}`, this.settings);
+			await this.uploadText(file.path, text, path, file.name, ref, repoFrontmatter);
+			await this.statusBarForEmbed(embedFiles, fileHistory, ref, deepScan, frontmatterSettings, repoFrontmatter);
+			if (autoclean && repoFrontmatter.autoclean) {
+				await deleteFromGithub(true, this.settings, this.octokit, ref, shareFiles, repoFrontmatter);
 			}
 			return true;
 		} catch (e) {
@@ -140,8 +128,8 @@ export default class Publisher {
 			return false;
 		}
 	}
-	
-	async upload(filePath: string, content: string, path: string, title = "", ref = "main") {
+
+	async upload(filePath: string, content: string, path: string, title = "", ref = "main", repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Upload file to GitHub
 		 * @param filePath filepath in obsidian (origin)
@@ -150,13 +138,13 @@ export default class Publisher {
 		 * @param ref branch name
 		 * @param path path in GitHub
 		 */
-		if (!this.settings.githubRepo) {
+		if (!repoFrontmatter.repo) {
 			new Notice(
 				"Config error : You need to define a github repo in the plugin settings"
 			);
 			throw {};
 		}
-		if (!this.settings.githubName) {
+		if (!repoFrontmatter.owner) {
 			new Notice(
 				"Config error : You need to define your github username in the plugin settings"
 			);
@@ -169,8 +157,8 @@ export default class Publisher {
 			msg = `PUSH ATTACHMENT : ${title}`;
 		}
 		const payload = {
-			owner: this.settings.githubName,
-			repo: this.settings.githubRepo,
+			owner: repoFrontmatter.owner,
+			repo: repoFrontmatter.repo,
 			path,
 			message: `Adding ${title}`,
 			content: content,
@@ -181,8 +169,8 @@ export default class Publisher {
 			const response = await octokit.request(
 				"GET /repos/{owner}/{repo}/contents/{path}",
 				{
-					owner: this.settings.githubName,
-					repo: this.settings.githubRepo,
+					owner: repoFrontmatter.owner,
+					repo: repoFrontmatter.repo,
 					path,
 					ref: ref,
 				}
@@ -205,7 +193,7 @@ export default class Publisher {
 		);
 	}
 
-	async uploadImage(imageFile: TFile, ref = "main", sourcefrontmatter: frontmatterConvert) {
+	async uploadImage(imageFile: TFile, ref = "main", sourcefrontmatter: frontmatterConvert, repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Convert image in base64
 		 * @param imageFile the image
@@ -214,10 +202,10 @@ export default class Publisher {
 		const imageBin = await this.vault.readBinary(imageFile);
 		const image64 = arrayBufferToBase64(imageBin);
 		const path = getImageLinkOptions(imageFile, this.settings, sourcefrontmatter);
-		await this.upload(imageFile.path, image64, path, "", ref);
+		await this.upload(imageFile.path, image64, path, "", ref, repoFrontmatter);
 	}
 
-	async uploadText(filePath: string, text: string, path: string, title = "", ref = "main") {
+	async uploadText(filePath: string, text: string, path: string, title = "", ref = "main", repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Convert text contents to base64
 		 * @param filePath Obsidian filepath (origin)
@@ -228,13 +216,13 @@ export default class Publisher {
 		 */
 		try {
 			const contentBase64 = Base64.encode(text).toString();
-			await this.upload(filePath, contentBase64, path, title, ref);
+			await this.upload(filePath, contentBase64, path, title, ref, repoFrontmatter);
 		} catch (e) {
 			console.error(e);
 		}
 	}
 	
-	async workflowGestion() {
+	async workflowGestion(repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Allow to activate a workflow dispatch GitHub action
 		 *
@@ -247,8 +235,8 @@ export default class Publisher {
 			await octokit.request(
 				"POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
 				{
-					owner: this.settings.githubName,
-					repo: this.settings.githubRepo,
+					owner: repoFrontmatter.owner,
+					repo: repoFrontmatter.repo,
 					workflow_id: this.settings.workflowName,
 					ref: "main",
 				}
@@ -258,8 +246,8 @@ export default class Publisher {
 				const workflowGet = await octokit.request(
 					"GET /repos/{owner}/{repo}/actions/runs",
 					{
-						owner: this.settings.githubName,
-						repo: this.settings.githubRepo,
+						owner: repoFrontmatter.owner,
+						repo: repoFrontmatter.repo,
 					}
 				);
 				if (workflowGet.data.workflow_runs.length > 0) {
