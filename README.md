@@ -6,8 +6,8 @@ title: Obsidian Github Publisher
 [FR 🇫🇷](https://github.com/obsidianPublisher/obsidian-github-publisher/blob/master/docs/README_FR.md)
 
 - [Github Publisher](#github-publisher)
-	- [What the plugin can do:](#what-the-plugin-can-do)
-	- [What the plugin CANNOT do:](#what-the-plugin-cannot-do)
+	- [What the plugin can do:](#what-the-plugin-can-do-)
+	- [What the plugin CANNOT do:](#what-the-plugin-cannot-do-)
 - [Global configuration](#global-configuration)
 	- [Configuration example](#configuration-example)
 	- [GitHub](#github)
@@ -83,6 +83,21 @@ You will find [here](https://obsidian-publisher.netlify.appObsidian%20Github%20P
 - Repo name: The repository where the files will be sent.
 - GitHub username: Your username.
 - GitHub Token: Get your [GitHub Token here](https://github.com/settings/tokens/new?scopes=repo)[^2]. The correct settings should already be applied. If you want to avoid generating this every few months, select the “No expiration” option. Click the “Generate token” button, and copy the token you are presented with on the next page.
+
+:sparkles: It is now possible to set a repository directly in the frontmatter with the `repo` key.
+
+> [!warning]
+> - Your GitHub token must work for this repository
+> - Global function (sharing all new note, all shared notes...) won't send file to this "per-file" repository : only the command `share one note` will work but the **cleaning** will be done too! (see [auto clean up for more information](#auto-clean-up)). You can disable the cleaning with the `clean: false` key in the frontmatter.
+> - The key works in this order : `username/repo/branch`, `username/repo` and `repo`. You can also use a yaml object like that :
+>  ```yaml
+>  repo:
+>    owner: username
+>    repo: repo
+>    branch: branch
+>  ```
+> Globally, if you share only one file, all function will be on the per-file repository instead of the global one. 
+> Also, the settings will be the **same** as the global one, except for repo : image, folder, etc...
 
 ## Upload configuration
 
@@ -228,6 +243,10 @@ Finally, to prevent deleting `index` created outside of obsidian, you could use 
 - `index: true`
 Or removing the `share` key.
 
+> [!warning] About per-file repository
+> - The cleanup commands only work for the repository set in the settings.
+> - **But** the auto-clean up will work on the per-file repository during `sharing one note`
+> - It's little tricky for attachment, because they don't have frontmatter metadata. In this case, they will be deleted in global repository or in the per-file repository if it's a one file sharing.
 
 ## Plugin settings
 

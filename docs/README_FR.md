@@ -22,7 +22,7 @@ title: Obsidian Github Publisher
         - [Index & folder note](#index--folder-note)
       - [Lien internes](#lien-internes)
       - [Lien Wikilinks vers lien markdown](#lien-wikilinks-vers-lien-markdown)
-    - [Transclusion (embed)](#transclusion-embed)
+    - [Transclusion (embed)](#transclusion--embed-)
     - [Workflow](#workflow)
       - [Auto-nettoyage](#auto-nettoyage)
   - [Paramètres du plugin](#paramètres-du-plugin)
@@ -80,6 +80,22 @@ Vous trouverez [ici](https://obsidian-publisher.netlify.appfr/Obsidian%20Github%
 - Nom du dépôt : Le dépôt dans lequel les fichiers seront envoyés
 - Pseudonyme GitHub: Votre pseudonyme.
 - Token GitHub :  Obtenez votre [Token GitHub ici](https://github.com/settings/tokens/new?scopes=repo)[^2]. Les paramètres corrects devraient déjà être appliqués. Si vous voulez éviter de générer ce jeton tous les quelques mois, sélectionnez l'option "No expiration". Cliquez sur le bouton "Generate token", et copiez le jeton qui vous est présenté sur la page suivante.
+
+:sparkles: Il est maintenant possible de configurer un dépôt à partir du frontmatter avec la clé `repo` !
+> [!warning] Attention
+> - Le token GitHub doit avoir les droits d'écriture sur le dépôt.
+> - Les fonctions globales (tel que `partager toutes les notes` ou encore `partager toutes les notes éditées`) ignorerons les fichiers envoyés dans un autre dépôt que celui configuré dans les paramètres du plugin.
+> - L'[auto-nettoyage](#auto-nettoyage) sur ce dépôt fonctionnera sur ce dépôt lors de l'envoie d'une note configurée avec la clé. Vous pouvez le désactiver en ajoutant la clé `autoclean: false` dans le frontmatter.
+> - La clé doit être écrite dans cet ordre : `repo: pseudo_github/nom_du_dépôt/branch`, `repo: pseudo_github/nom_du_dépôt` et enfin, `repo: nom_du_dépôt`.
+>  Il est cependant possible d'utiliser un objet YAML tel que : 
+>  ```yaml
+>  repo:
+>    owner: pseudo_github
+>    repo: nom_du_dépôt
+>    branch: branch
+>  ```
+> Globalement, si vous partagez uniquement un seul fichier, toutes les fonctions habituelles seront faites sur ce dépôt.
+> De plus, les paramètres de configuration (dossier, image) seront les mêmes que ceux du dépôt configuré dans les paramètres du plugin (sauf si vous les modifiez dans le frontmatter).
 
 ## Configuration de l'upload
 
@@ -207,14 +223,22 @@ Cette option ajoutera également une nouvelle commande pour nettoyer les fichier
 > Vous ne pouvez pas utiliser la commande delete si vous n'avez pas défini un dossier par défaut (et un dossier racine si vous utilisez la configuration YAML).
 > De plus, vous pouvez perdre certains fichiers en utilisant cette commande, alors faites attention ! N'oubliez pas que vous pouvez revenir en arrière au cas où le plugin supprimerait un fichier que vous ne souhaitez pas supprimer.
 
+> [!warning] Changer les options
+> Dans le cas où vous modifier la configuration, les fichiers précédents ne seront pas supprimé et il y aura une erreur dans cette partie du workflow.
+
+
+Vous pouvez définir le chemin d'accès des dossiers et fichier dont vous voulez éviter la suppression. Séparez les dossiers/fichiers par une virgule.[^1]
+> [!note] Les regex ne sont pas supportées ici!
+
 Il est aussi possible d'empêcher la suppression en utilisant, dans le frontmatter :
  - `share: false` sur un fichier **dans** le dépôt (uniquement) ou sans clé de partage.
  - `autoclean: false` dans le fichier de configuration
  - `index: true` 
 
-Vous pouvez définir le chemin d'accès des dossiers et fichier dont vous voulez éviter la suppression. Séparez les dossiers/fichiers par une virgule.[^1]
-> [!note] Les regex ne sont pas supportées ici!
-
+> [!warning] À propos de l'option `repo`
+> - La commande d'auto-nettoyage ne fonctionnera que pour le dépôt défini dans les paramètres.
+> - **Mais** l'auto-nettoyage fonctionnera pour le dépôt configuré (dans le fichier) lorsque vous utilisez la commande permettant de partager une seule note.
+> - Les pièces-jointes n'ayant pas de frontmatter, ses fichiers seront supprimés soit dans le dépôt défini dans les paramètres, soit dans le dépôt configuré (dans le fichier) si vous utilisez la fonction de partage unique.
 
 ## Paramètres du plugin
 
