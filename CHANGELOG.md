@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.5.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.4.2...4.5.0) (2022-10-31)
+
+
+### Features
+
+* Adding per-files option for repo & autoclean ([f06712d](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f06712d68fe26db4348fbd5f8026769e3d353026))
+
+
+### Bug Fixes
+
+* wrong message when successfully publishing on another repo ([2bf3234](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2bf3234c93330f9e26aa1f48dab2cfaf6596ae66))
+
 ### [4.4.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.4.1...4.4.2) (2022-10-20)
 
 
