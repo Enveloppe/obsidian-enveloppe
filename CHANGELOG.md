@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.5.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.5.0...4.5.1) (2022-11-12)
+
+
+### Bug Fixes
+
+* in some condition, .md is append on image ([98e6a5e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/98e6a5e901f27c002aa6f890759c735ee2c91120)), closes [#39](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/39)
+
 ## [4.5.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.4.2...4.5.0) (2022-10-31)
 
 
