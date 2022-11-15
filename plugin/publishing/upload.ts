@@ -82,7 +82,7 @@ export default class Publisher {
 	}
 
 
-	async publish(file: TFile, autoclean = false, ref = "main", repoFrontmatter: RepoFrontmatter, fileHistory:TFile[]=[], deepScan=false) {
+	async publish(file: TFile, autoclean = false, ref = "main", repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter, fileHistory:TFile[]=[], deepScan=false) {
 		/**
 		 * Main prog to scan notes, their embed files and send it to GitHub.
 		 * @param file Origin file
@@ -94,7 +94,6 @@ export default class Publisher {
 		const shareFiles = new FilesManagement(this.vault, this.metadataCache, this.settings, this.octokit, this.plugin);
 		const sharedKey = this.settings.shareKey;
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
-
 		if (
 			!frontmatter
 			|| !frontmatter[sharedKey]
@@ -106,26 +105,37 @@ export default class Publisher {
 			return false;
 		}
 		try {
+			console.log("Publishing file: " + file.path);
 			fileHistory.push(file)
 			const frontmatterSettings = getFrontmatterCondition(frontmatter, this.settings);
 			let embedFiles = shareFiles.getSharedEmbed(file, frontmatterSettings);
 			embedFiles = await shareFiles.getMetadataLinks(file, embedFiles, frontmatter, frontmatterSettings);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
 			let text = await app.vault.cachedRead(file);
-			text = await mainConverting(text, this.settings,frontmatterSettings,file, app, this.metadataCache, frontmatter, linkedFiles, this.plugin,
+			text = await mainConverting(text, this.settings, frontmatterSettings, file, app, this.metadataCache, frontmatter, linkedFiles, this.plugin,
 				this.vault);
 			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
-			noticeLog(`Upload ${file.name}:${path} on ${repoFrontmatter.owner}/${repoFrontmatter.repo}:${ref}`, this.settings);
-			await this.uploadText(file.path, text, path, file.name, ref, repoFrontmatter);
-			await this.statusBarForEmbed(embedFiles, fileHistory, ref, deepScan, frontmatterSettings, repoFrontmatter);
-			if (autoclean && repoFrontmatter.autoclean) {
-				await deleteFromGithub(true, this.settings, this.octokit, ref, shareFiles, repoFrontmatter);
+			//if repoFrontmatter is an array, it means that the file is in a multiple repo
+			if (repoFrontmatter instanceof Array) {
+				console.log("Multiple repo", repoFrontmatter)
+				for (const repo of repoFrontmatter) {
+					await this.uploadMultiple(file, text, ref, frontmatterSettings, path, repo, embedFiles, fileHistory, deepScan, shareFiles, autoclean);
+				}
 			}
-			return true;
 		} catch (e) {
 			noticeLog(e, this.settings);
 			return false;
 		}
+	}
+
+	async uploadMultiple(file: TFile, text: string, ref: string, frontmatterSettings: frontmatterConvert, path: string, repo: RepoFrontmatter, embedFiles: TFile[], fileHistory: TFile[], deepScan: boolean, shareFiles: FilesManagement, autoclean: boolean) {
+		noticeLog(`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${ref}`, this.settings);
+		await this.uploadText(file.path, text, path, file.name, ref, repo);
+		await this.statusBarForEmbed(embedFiles, fileHistory, ref, deepScan, frontmatterSettings, repo);
+		if (autoclean && repo.autoclean) {
+			await deleteFromGithub(true, this.settings, this.octokit, ref, shareFiles, repo);
+		}
+		return true;
 	}
 
 	async upload(filePath: string, content: string, path: string, title = "", ref = "main", repoFrontmatter: RepoFrontmatter) {

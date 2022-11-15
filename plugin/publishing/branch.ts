@@ -23,7 +23,18 @@ export class GithubBranch extends FilesManagement {
 		this.plugin = plugin;
 	}
 
-	async newBranch(branchName: string, repoFrontmatter: RepoFrontmatter) {
+	async newBranch(branchName: string, repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter) {
+		if (repoFrontmatter instanceof Array) {
+			for (const repo of repoFrontmatter) {
+				await this.newBranchOnRepo(branchName, repo);
+			}
+		}
+		else {
+			await this.newBranchOnRepo(branchName, repoFrontmatter);
+		}
+	}
+
+	async newBranchOnRepo(branchName: string, repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Create a new branch on the repo named "Vault-date"
 		 * Pass if the branch already exists
@@ -35,6 +46,7 @@ export class GithubBranch extends FilesManagement {
 			repo: repoFrontmatter.repo,
 		});
 		const mainBranch = allBranch.data.find((branch: { name: string; }) => branch.name === repoFrontmatter.branch);
+		console.log(mainBranch, repoFrontmatter.branch, allBranch.data);
 		const shaMainBranch = mainBranch.commit.sha;
 
 		try {
@@ -59,7 +71,18 @@ export class GithubBranch extends FilesManagement {
 		}
 	}
 
-	async pullRequest(branchName: string, repoFrontmatter: RepoFrontmatter) {
+	async pullRequest(branchName: string, repoFrontmatter: RepoFrontmatter|RepoFrontmatter[]) {
+		if (repoFrontmatter instanceof Array) {
+			for (const repo of repoFrontmatter) {
+				await this.pullRequestOnRepo(branchName, repo);
+			}
+		}
+		else {
+			await this.pullRequestOnRepo(branchName, repoFrontmatter);
+		}
+	}
+
+	async pullRequestOnRepo(branchName: string, repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Create a pull request on main/master from the new branch
 		 * @param branchName
@@ -86,7 +109,18 @@ export class GithubBranch extends FilesManagement {
 		}
 	}
 
-	async deleteBranch(branchName: string, repoFrontmatter: RepoFrontmatter) {
+	async deleteBranch(branchName: string, repoFrontmatter: RepoFrontmatter|RepoFrontmatter[]) {
+		if (repoFrontmatter instanceof Array) {
+			for (const repo of repoFrontmatter) {
+				await this.deleteBranchOnRepo(branchName, repo);
+			}
+		}
+		else {
+			await this.deleteBranchOnRepo(branchName, repoFrontmatter);
+		}
+	}
+
+	async deleteBranchOnRepo(branchName: string, repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * After the merge, delete the new branch
 		 * @param branchName
@@ -106,8 +140,18 @@ export class GithubBranch extends FilesManagement {
 		}
 	}
 
+	async mergePullRequest(PRNumber: number, repoFrontmatter: RepoFrontmatter|RepoFrontmatter[], silent = false, branchName: string) {
+		if (repoFrontmatter instanceof Array) {
+			for (const repo of repoFrontmatter) {
+				await this.mergePullRequestOnRepo(branchName, silent, PRNumber, repo);
+			}
+		}
+		else {
+			await this.mergePullRequestOnRepo(branchName, silent, PRNumber, repoFrontmatter);
+		}
+	}
 
-	async mergePullRequest (branchName: string, silent = false, pullRequestNumber: number, repoFrontmatter: RepoFrontmatter) {
+	async mergePullRequestOnRepo(branchName: string, silent = false, pullRequestNumber: number, repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Automatically merge pull request from the plugin
 		 * @param branchName
@@ -133,16 +177,28 @@ export class GithubBranch extends FilesManagement {
 			return false;
 		}
 	}
-	async updateRepository(branchName: string, repoFrontmatter: RepoFrontmatter) {
+
+	async updateRepository(branchName: string, repoFrontmatter: RepoFrontmatter|RepoFrontmatter[]) {
+		if (repoFrontmatter instanceof Array) {
+			for (const repo of repoFrontmatter) {
+				await this.updateRepositoryOnOne(branchName, repo);
+			}
+		}
+		else {
+			await this.updateRepositoryOnOne(branchName, repoFrontmatter);
+		}
+	}
+
+	async updateRepositoryOnOne(branchName: string, repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Run merging + deleting branch in once
 		 * @param branchName
 		 */
 
-		const pullRequest = await this.pullRequest(branchName, repoFrontmatter);
-		const PRSuccess = await this.mergePullRequest(branchName, true, pullRequest, repoFrontmatter);
+		const pullRequest = await this.pullRequestOnRepo(branchName, repoFrontmatter);
+		const PRSuccess = await this.mergePullRequestOnRepo(branchName, true, pullRequest, repoFrontmatter);
 		if (PRSuccess) {
-			await this.deleteBranch(branchName, repoFrontmatter);
+			await this.deleteBranchOnRepo(branchName, repoFrontmatter);
 			return true
 		}
 		return false

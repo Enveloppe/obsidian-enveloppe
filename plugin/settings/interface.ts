@@ -97,7 +97,7 @@ export interface LinkedNotes {
 export interface ConvertedLink {
 	converted: string,
 	real: string,
-	repoFrontmatter?: RepoFrontmatter
+	repoFrontmatter?: RepoFrontmatter | RepoFrontmatter[]
 }
 
 export interface GithubRepo {
@@ -128,4 +128,5 @@ export interface RepoFrontmatter {
 	owner: string,
 	autoclean: boolean,
 }
+
 

@@ -210,15 +210,18 @@ export function getFrontmatterCondition(frontmatter: FrontMatterCache, settings:
 }
 
 export function getRepoFrontmatter(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache,) {
-	const repoFrontmatter : RepoFrontmatter = {
+	let repoFrontmatter : RepoFrontmatter = {
 		branch: settings.githubBranch,
 		repo: settings.githubRepo,
 		owner: settings.githubName,
 		autoclean: settings.autoCleanUp,
 	}
+	const multipleRepo: RepoFrontmatter[] = []
+
 	if (!frontmatter) {
 		return repoFrontmatter
 	}
+
 	if (frontmatter.repo !== undefined) {
 		if (typeof frontmatter.repo === 'object') {
 			if (frontmatter.repo.branch !== undefined) {
@@ -230,27 +233,42 @@ export function getRepoFrontmatter(settings: GitHubPublisherSettings, frontmatte
 			if (frontmatter.repo.owner !== undefined) {
 				repoFrontmatter.owner = frontmatter.repo.owner
 			}
-		} else {
-			// If "owner/repo/branch" format :
-			// owner = 0
-			// repo = 1
-			// branch = 2
-			//if length = 0   => repo = 0
-			const repo = frontmatter.repo.split('/')
-			if (repo.length === 3) {
-				repoFrontmatter.branch = repo[2]
-				repoFrontmatter.repo = repo[1]
-				repoFrontmatter.owner = repo[0]
-			} else if (repo.length === 2) {
-				repoFrontmatter.repo = repo[1]
-				repoFrontmatter.owner = repo[0]
-			} else if (repo.length === 1) {
-				repoFrontmatter.repo = repo[0]
+			else {
+				//is a list of string repositories
+				for (const key of frontmatter.repo) {
+					console.log('key is : ', key)
+					multipleRepo.push(repositoryStringSlice(key.split('/'), repoFrontmatter))
+				}
+				if (frontmatter.autoclean !== undefined) {
+					multipleRepo.forEach((repo) => {
+						repo.autoclean = frontmatter.autoclean
+					})
+				}
+				return multipleRepo
 			}
+
+		} else {
+			const repo = frontmatter.repo.split('/')
+			repoFrontmatter = repositoryStringSlice(repo, repoFrontmatter)
 		}
 	}
 	if (frontmatter.autoclean !== undefined) {
 		repoFrontmatter.autoclean = frontmatter.autoclean
 	}
+	return repoFrontmatter
+}
+
+function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
+	if (repo.length === 3) {
+		repoFrontmatter.branch = repo[2]
+		repoFrontmatter.repo = repo[1]
+		repoFrontmatter.owner = repo[0]
+	} else if (repo.length === 2) {
+		repoFrontmatter.repo = repo[1]
+		repoFrontmatter.owner = repo[0]
+	} else if (repo.length === 1) {
+		repoFrontmatter.repo = repo[0]
+	}
+	console.log(repoFrontmatter.repo, repoFrontmatter.owner, repoFrontmatter.branch)
 	return repoFrontmatter
 }

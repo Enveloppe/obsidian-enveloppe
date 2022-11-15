@@ -6,7 +6,18 @@ import {Base64} from "js-base64";
 import {isAttachment, noticeLog, trimObject} from "../src/utils";
 import t, {StringFunc} from "../i18n"
 
-export async function deleteFromGithub(silent = false, settings: GitHubPublisherSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement, repo: RepoFrontmatter) {
+export async function deleteFromGithub(silent=false, settings: GitHubPublisherSettings, octokit: Octokit, branchName = "main", filesManagement: FilesManagement, repoFrontmatter: RepoFrontmatter[]|RepoFrontmatter) {
+	if (repoFrontmatter instanceof Array) {
+		for (const repo of repoFrontmatter) {
+			await deleteFromGithubOneRepo(silent, settings, octokit, branchName, filesManagement, repo)
+		}
+	} else {
+		await deleteFromGithubOneRepo(silent, settings, octokit, branchName, filesManagement, repoFrontmatter)
+	}
+}
+
+
+async function deleteFromGithubOneRepo(silent = false, settings: GitHubPublisherSettings, octokit: Octokit, branchName='main', filesManagement: FilesManagement, repo: RepoFrontmatter) {
 	/**
 	 * Delete file from github
 	 * @param silent no logging
@@ -150,6 +161,7 @@ function parseYamlFrontmatter(contents: string) {
 
 	return trimObject(yamlFrontmatterParsed);
 }
+
 
 async function checkIndexFiles(octokit: Octokit, settings: GitHubPublisherSettings, path:string, repoFrontmatter: RepoFrontmatter) {
 	/**
