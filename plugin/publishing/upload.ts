@@ -118,9 +118,13 @@ export default class Publisher {
 			//if repoFrontmatter is an array, it means that the file is in a multiple repo
 			if (repoFrontmatter instanceof Array) {
 				console.log("Multiple repo", repoFrontmatter)
+				const success: boolean[] = [];
 				for (const repo of repoFrontmatter) {
-					await this.uploadMultiple(file, text, ref, frontmatterSettings, path, repo, embedFiles, fileHistory, deepScan, shareFiles, autoclean);
+					success.push(await this.uploadMultiple(file, text, ref, frontmatterSettings, path, repo, embedFiles, fileHistory, deepScan, shareFiles, autoclean));
 				}
+				return !success.every((value) => value === false);
+			} else {
+				return await this.uploadMultiple(file, text, ref, frontmatterSettings, path, repoFrontmatter, embedFiles, fileHistory, deepScan, shareFiles, autoclean);
 			}
 		} catch (e) {
 			noticeLog(e, this.settings);

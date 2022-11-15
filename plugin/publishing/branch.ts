@@ -40,13 +40,11 @@ export class GithubBranch extends FilesManagement {
 		 * Pass if the branch already exists
 		 * @param branchName
 		 */
-
 		const allBranch = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/branches', {
 			owner: repoFrontmatter.owner,
 			repo: repoFrontmatter.repo,
 		});
 		const mainBranch = allBranch.data.find((branch: { name: string; }) => branch.name === repoFrontmatter.branch);
-		console.log(mainBranch, repoFrontmatter.branch, allBranch.data);
 		const shaMainBranch = mainBranch.commit.sha;
 
 		try {
@@ -59,9 +57,11 @@ export class GithubBranch extends FilesManagement {
 					sha: shaMainBranch,
 				}
 			);
+			console.log('branch successfully created', branch.status, ' for : ', repoFrontmatter.repo);
 			return branch.status === 201;
 		} catch (e) {
 			// catch the old branch
+			console.log(e)
 			const allBranch = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/branches', {
 				owner: repoFrontmatter.owner,
 				repo: repoFrontmatter.repo,
@@ -71,23 +71,12 @@ export class GithubBranch extends FilesManagement {
 		}
 	}
 
-	async pullRequest(branchName: string, repoFrontmatter: RepoFrontmatter|RepoFrontmatter[]) {
-		if (repoFrontmatter instanceof Array) {
-			for (const repo of repoFrontmatter) {
-				await this.pullRequestOnRepo(branchName, repo);
-			}
-		}
-		else {
-			await this.pullRequestOnRepo(branchName, repoFrontmatter);
-		}
-	}
 
 	async pullRequestOnRepo(branchName: string, repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Create a pull request on main/master from the new branch
 		 * @param branchName
 		 */
-
 		try {
 			const PR = await this.octokit.request('POST' +
 				' /repos/{owner}/{repo}/pulls', {
@@ -100,25 +89,21 @@ export class GithubBranch extends FilesManagement {
 			});
 			return PR.data.number;
 		} catch (e) {
-			const PR = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/pulls', {
-				owner: repoFrontmatter.owner,
-				repo: repoFrontmatter.repo,
-				state: 'open',
-			});
-			return PR.data[0].number;
+			console.log(e)
+			try {
+				const PR = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/pulls', {
+					owner: repoFrontmatter.owner,
+					repo: repoFrontmatter.repo,
+					state: 'open',
+				});
+				return PR.data[0].number;
+			} catch (e) {
+				console.log(e, 'error', repoFrontmatter);
+				return false
+			}
 		}
 	}
 
-	async deleteBranch(branchName: string, repoFrontmatter: RepoFrontmatter|RepoFrontmatter[]) {
-		if (repoFrontmatter instanceof Array) {
-			for (const repo of repoFrontmatter) {
-				await this.deleteBranchOnRepo(branchName, repo);
-			}
-		}
-		else {
-			await this.deleteBranchOnRepo(branchName, repoFrontmatter);
-		}
-	}
 
 	async deleteBranchOnRepo(branchName: string, repoFrontmatter: RepoFrontmatter) {
 		/**
@@ -137,17 +122,6 @@ export class GithubBranch extends FilesManagement {
 			return branch.status === 200;
 		} catch (e) {
 			return false;
-		}
-	}
-
-	async mergePullRequest(PRNumber: number, repoFrontmatter: RepoFrontmatter|RepoFrontmatter[], silent = false, branchName: string) {
-		if (repoFrontmatter instanceof Array) {
-			for (const repo of repoFrontmatter) {
-				await this.mergePullRequestOnRepo(branchName, silent, PRNumber, repo);
-			}
-		}
-		else {
-			await this.mergePullRequestOnRepo(branchName, silent, PRNumber, repoFrontmatter);
 		}
 	}
 
@@ -173,6 +147,7 @@ export class GithubBranch extends FilesManagement {
 			return branch.status === 200;
 
 		} catch (e) {
+			console.log(e)
 			new Notice(t('mergeconflic') as string);
 			return false;
 		}
@@ -180,12 +155,16 @@ export class GithubBranch extends FilesManagement {
 
 	async updateRepository(branchName: string, repoFrontmatter: RepoFrontmatter|RepoFrontmatter[]) {
 		if (repoFrontmatter instanceof Array) {
+			const success: boolean[]=[];
 			for (const repo of repoFrontmatter) {
-				await this.updateRepositoryOnOne(branchName, repo);
+				success.push(await this.updateRepositoryOnOne(branchName, repo));
 			}
+
+			return !success.every((value) => value === false);
 		}
 		else {
-			await this.updateRepositoryOnOne(branchName, repoFrontmatter);
+			console.log('updateRepository', repoFrontmatter);
+			return await this.updateRepositoryOnOne(branchName, repoFrontmatter);
 		}
 	}
 
@@ -194,7 +173,6 @@ export class GithubBranch extends FilesManagement {
 		 * Run merging + deleting branch in once
 		 * @param branchName
 		 */
-
 		const pullRequest = await this.pullRequestOnRepo(branchName, repoFrontmatter);
 		const PRSuccess = await this.mergePullRequestOnRepo(branchName, true, pullRequest, repoFrontmatter);
 		if (PRSuccess) {

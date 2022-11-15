@@ -93,7 +93,17 @@ export async function createLink(file: TFile, settings: GitHubPublisherSettings,
 
 }
 
-export async function noticeMessage(PublisherManager: Publisher, file: TFile | string, settings: GitHubPublisherSettings, repo: RepoFrontmatter) {
+export async function noticeMessage(PublisherManager: Publisher, file: TFile|string, settings: GitHubPublisherSettings, repo: RepoFrontmatter|RepoFrontmatter[]){
+	if (repo instanceof Array) {
+		for (const repository of repo) {
+			await noticeMessageOneRepo(PublisherManager, file, settings, repository)
+		}
+	} else {
+		noticeMessageOneRepo(PublisherManager, file, settings, repo)
+	}
+}
+
+async function noticeMessageOneRepo(PublisherManager: Publisher, file: TFile | string, settings: GitHubPublisherSettings, repo: RepoFrontmatter) {
 	/**
 	 * Create a notice message for the sharing ; the message can be delayed if a workflow is used. 
 	 * @param PublisherManager: Publisher
@@ -216,13 +226,17 @@ export function getRepoFrontmatter(settings: GitHubPublisherSettings, frontmatte
 		owner: settings.githubName,
 		autoclean: settings.autoCleanUp,
 	}
-	const multipleRepo: RepoFrontmatter[] = []
-
 	if (!frontmatter) {
 		return repoFrontmatter
 	}
-
-	if (frontmatter.repo !== undefined) {
+	if (frontmatter.multipleRepo !== undefined) {
+		const multipleRepo = parseMultipleRepo(frontmatter, repoFrontmatter)
+		if (multipleRepo.length === 1) {
+			return multipleRepo[0] as RepoFrontmatter
+		}
+		return multipleRepo
+	}
+	else if (frontmatter.repo !== undefined) {
 		if (typeof frontmatter.repo === 'object') {
 			if (frontmatter.repo.branch !== undefined) {
 				repoFrontmatter.branch = frontmatter.repo.branch
@@ -232,19 +246,6 @@ export function getRepoFrontmatter(settings: GitHubPublisherSettings, frontmatte
 			}
 			if (frontmatter.repo.owner !== undefined) {
 				repoFrontmatter.owner = frontmatter.repo.owner
-			}
-			else {
-				//is a list of string repositories
-				for (const key of frontmatter.repo) {
-					console.log('key is : ', key)
-					multipleRepo.push(repositoryStringSlice(key.split('/'), repoFrontmatter))
-				}
-				if (frontmatter.autoclean !== undefined) {
-					multipleRepo.forEach((repo) => {
-						repo.autoclean = frontmatter.autoclean
-					})
-				}
-				return multipleRepo
 			}
 
 		} else {
@@ -258,17 +259,80 @@ export function getRepoFrontmatter(settings: GitHubPublisherSettings, frontmatte
 	return repoFrontmatter
 }
 
-function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
-	if (repo.length === 3) {
-		repoFrontmatter.branch = repo[2]
-		repoFrontmatter.repo = repo[1]
-		repoFrontmatter.owner = repo[0]
-	} else if (repo.length === 2) {
-		repoFrontmatter.repo = repo[1]
-		repoFrontmatter.owner = repo[0]
-	} else if (repo.length === 1) {
-		repoFrontmatter.repo = repo[0]
+
+function parseMultipleRepo(frontmatter: FrontMatterCache, repoFrontmatter: RepoFrontmatter) {
+	const multipleRepo: RepoFrontmatter[] = []
+	// Yaml example :
+	// multipleRepo:
+	//   - repo: repo1
+	//     owner: owner1
+	//     branch: branch1
+	//     autoclean: true
+	//   - repo: repo2
+	//     owner: owner2
+	//     branch: branch2
+	//     autoclean: false
+	if (frontmatter.multipleRepo instanceof Array && frontmatter.multipleRepo.length > 0) {
+		for (const repo of frontmatter.multipleRepo) {
+			if (typeof repo === 'object') {
+				const repository: RepoFrontmatter = {
+					branch: repoFrontmatter.branch,
+					repo: repoFrontmatter.repo,
+					owner: repoFrontmatter.owner,
+					autoclean: false,
+				}
+				if (repo.branch !== undefined) {
+					repository.branch = repo.branch
+				}
+				if (repo.repo !== undefined) {
+					repository.repo = repo.repo
+				}
+				if (repo.owner !== undefined) {
+					repository.owner = repo.owner
+				} if (repo.autoclean !== undefined) {
+					repository.autoclean = repo.autoclean
+				}
+				multipleRepo.push(repository)
+			} else {
+				//is string
+				const repoString = repo.split('/')
+				const repository: RepoFrontmatter = {
+					branch: repoFrontmatter.branch,
+					repo: repoFrontmatter.repo,
+					owner: repoFrontmatter.owner,
+					autoclean: false,
+				}
+				multipleRepo.push(repositoryStringSlice(repoString, repository))
+			}
+		}
 	}
-	console.log(repoFrontmatter.repo, repoFrontmatter.owner, repoFrontmatter.branch)
-	return repoFrontmatter
+	return multipleRepo
+}
+
+
+
+function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
+	const newRepo: RepoFrontmatter = {
+		branch: repoFrontmatter.branch,
+		repo: repoFrontmatter.repo,
+		owner: repoFrontmatter.owner,
+		autoclean: false,
+	}
+	if (repo.length >=4) {
+		newRepo.branch = repo[2]
+		newRepo.repo = repo[1]
+		newRepo.owner = repo[0]
+		newRepo.autoclean = repo[3] === 'true'
+	}
+	if (repo.length === 3) {
+		newRepo.branch = repo[2]
+		newRepo.repo = repo[1]
+		newRepo.owner = repo[0]
+	} else if (repo.length === 2) {
+		newRepo.repo = repo[1]
+		newRepo.owner = repo[0]
+	} else if (repo.length === 1) {
+		newRepo.repo = repo[0]
+	}
+	return newRepo
 }
