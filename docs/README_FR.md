@@ -97,6 +97,23 @@ Vous trouverez [ici](https://obsidian-publisher.netlify.appfr/Obsidian%20Github%
 > Globalement, si vous partagez uniquement un seul fichier, toutes les fonctions habituelles seront faites sur ce dépôt.
 > De plus, les paramètres de configuration (dossier, image) seront les mêmes que ceux du dépôt configuré dans les paramètres du plugin (sauf si vous les modifiez dans le frontmatter).
 
+Vous pouvez aussi maintenant envoyer un fichier sur plusieurs dépôts en utilisant la clé `mulitpleRepo` dans le frontmatter. Vous pouvez utiliser un tableau YAML ou une chaîne de caractère séparée par des virgules.
+> [!example] Exemple
+> ```yaml
+> multipleRepo:
+>  - repo: nom_du_dépôt
+>    owner: pseudo_github
+>    branch: main
+>  - repo: nom_du_dépôt2
+>    owner: pseudo_github2
+>    branch: main
+> ```
+> Il est aussi possible d'utiliser une chaîne de caractère séparée par des virgules.
+
+> [!note] 
+> - Par défaut, l'auto-nettoyage est désactivé sur tous les dépôts. Vous pouvez l'activer en ajoutant la clé `autoclean: true` dans le frontmatter pour chaque dépôt individuellement.
+> - La clé `multipleRepo` peut être utilisé pour un seul dépôt.
+
 ## Configuration de l'upload
 
 ### Paramètre de chemin d'accès
