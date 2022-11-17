@@ -99,6 +99,23 @@ You will find [here](https://obsidian-publisher.netlify.appObsidian%20Github%20P
 > Globally, if you share only one file, all function will be on the per-file repository instead of the global one. 
 > Also, the settings will be the **same** as the global one, except for repo : image, folder, etc...
 
+:sparkles: You can also set multiple repositories in the frontmatter with the `multipleRepo` key. It works like the `repo` key, but you can set multiple repositories, in a list!
+> [!example] Example
+> ```yaml
+> multipleRepo:
+>  - owner: username
+>    repo: repo
+>    branch: branch
+>  - owner: username
+>    repo: repo
+>    branch: branch
+> ```
+> You can also use a list of string.
+
+> [!note] 
+> - By default, autoclean is set to `false`. You can add the `autoclean` key in the frontmatter to change this behavior : you can configure the autoclean per repos!
+> - You can also use this key with only one repo.
+
 ## Upload configuration
 
 ### Folder reception settings.
