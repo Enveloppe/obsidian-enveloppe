@@ -69,14 +69,18 @@ export async function createLink(file: TFile, repo: RepoFrontmatter | RepoFrontm
 	 * @param metadataCache: MetadataCache
 	 * @returns null
 	 */
-	if (!settings.copyLink || repo instanceof Array) {
+	if (!settings.copyLink) {
 		return;
 	}
 	let filepath = getReceiptFolder(file, settings, metadataCache, vault)
 
 	let baseLink = settings.mainLink;
 	if (baseLink.length === 0) {
-		baseLink = `https://${repo.owner}.github.io/${repo.repo}/`
+		if (repo instanceof Array) {
+			baseLink = `https://${settings.githubName}.github.io/${settings.githubRepo}/`
+		} else {
+			baseLink = `https://${repo.owner}.github.io/${repo.repo}/`
+		}
 	}
 	const keyRepo = metadataCache.getFileCache(file)?.frontmatter['baselink']
 	if (keyRepo !== undefined) {
