@@ -324,7 +324,7 @@ Pour ajouter un nouveau langage :
 - [La documentation](https://obsidian-publisher.netlify.app/)
 - [Le dépôt GitHub](https://github.com/ObsidianPublisher/obsidian-github-publisher)
 - [La template Material Mkdocs](https://github.com/ObsidianPublisher/obsidian-mkdocs-publisher-template)
-- [Le serveur discord](https://discord.gg/8FqxxjxGYx)
+- [Forum Github](https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions)
 
 ---
 

@@ -330,7 +330,8 @@ To add a new language :
 - [The documentation](https://obsidian-publisher.netlify.app/)
 - [The repository](https://github.com/ObsidianPublisher/obsidian-github-publisher)
 - [Mkdocs Template](https://github.com/ObsidianPublisher/obsidian-mkdocs-publisher-template)
-- [The discord server](https://discord.gg/8FqxxjxGYx)
+- [Github Discussion](https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions)
+
 
 ---
 If you find this plugin and workflow useful, you can give me some coffee money : <br/>
