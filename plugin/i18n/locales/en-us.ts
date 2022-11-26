@@ -141,5 +141,6 @@ export default {
 	successfullPublish:(noticeValue: string[])=>`Successfully published ${noticeValue[0]} to ${noticeValue[1]}.`,
 	waitingWorkflow: "Now, waiting for the workflow to be completed...",
 	sendMessage:(noticeValue: string[])=>`Send ${noticeValue[0]} to ${noticeValue[1]}${noticeValue[2]}`,
-	mergeconflic: `Pull-request is not mergeable, you need to do it manually.`
+	mergeconflic: `Pull-request is not mergeable, you need to do it manually.`,
+	errorConfig: (repoInfo: string): string => `Error configuring ${repoInfo}. Please check your settings.`,
 }

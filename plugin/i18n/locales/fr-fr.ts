@@ -146,5 +146,6 @@ export default {
 	successfullPublish:(noticeValue: string[])=>`Publication réussie de ${noticeValue[0]} vers ${noticeValue[1]}.`,
 	waitingWorkflow: "Maintenant, attente de la complétion du workflow...",
 	sendMessage:(noticeValue: string[])=>`Envoi de ${noticeValue[0]} à ${noticeValue[1]}${noticeValue[2]}.`,
-	mergeconflic: `La pull-request n'est pas fusionnable, vous avez besoin de le faire manuellement.`
+	mergeconflic: `La pull-request n'est pas fusionnable, vous avez besoin de le faire manuellement.`,
+	errorConfig: (repoInfo: string): string => `Erreur de configuration pour ${repoInfo}. Merci de vérifier vos paramètres.`,
 }
