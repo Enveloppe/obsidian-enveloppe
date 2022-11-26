@@ -332,7 +332,6 @@ To add a new language :
 - [Mkdocs Template](https://github.com/ObsidianPublisher/obsidian-mkdocs-publisher-template)
 - [Github Discussion](https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions)
 
-
 ---
 If you find this plugin and workflow useful, you can give me some coffee money : <br/>
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
