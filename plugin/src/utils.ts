@@ -59,7 +59,7 @@ function checkSlash(
 }
 
 
-export async function createLink(file: TFile, settings: GitHubPublisherSettings, metadataCache: MetadataCache, vault: Vault) {
+export async function createLink(file: TFile, repo: RepoFrontmatter | RepoFrontmatter[], metadataCache: MetadataCache, vault: Vault, settings: GitHubPublisherSettings) {
 	/**
 	 * Create the link for the file and add it to the clipboard
 	 * The path is based with the receipt folder but part can be removed using settings.
@@ -69,15 +69,20 @@ export async function createLink(file: TFile, settings: GitHubPublisherSettings,
 	 * @param metadataCache: MetadataCache
 	 * @returns null
 	 */
-	if (!settings.copyLink){
+	if (!settings.copyLink || repo instanceof Array) {
 		return;
 	}
 	let filepath = getReceiptFolder(file, settings, metadataCache, vault)
 
 	let baseLink = settings.mainLink;
 	if (baseLink.length === 0) {
-		baseLink = `https://${settings.githubName}.github.io/${settings.githubRepo}/`
+		baseLink = `https://${repo.owner}.github.io/${repo.repo}/`
 	}
+	const keyRepo = metadataCache.getFileCache(file)?.frontmatter['baselink']
+	if (keyRepo !== undefined) {
+		baseLink = keyRepo
+	}
+
 	baseLink = checkSlash(baseLink);
 	if (settings.linkRemover.length > 0){
 		const tobeRemoved = settings.linkRemover.split(',')
