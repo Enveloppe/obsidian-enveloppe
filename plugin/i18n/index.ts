@@ -63,6 +63,15 @@ export function settings(type:string, msg: string): string | StringFunc{
 	return (locale && locale.settings[type][msg]) || en.settings[type][msg];
 }
 
+function nestedProp(obj: object, path: string): unknown {
+	return path.split(".").reduce((o, k) => o ? (o as never)[k] : undefined, obj);
+}
+
+export function subSettings(multipleKey:string): string | StringFunc {
+	// @ts-ignore
+	return nestedProp(locale.settings, multipleKey) || nestedProp(en.settings, multipleKey);
+}
+
 export function informations(key: string): string | StringFunc{
 	// @ts-ignore
 	return (locale && locale.informations[key]) || en.informations[key];
