@@ -33,7 +33,7 @@ export default class GithubPublisher extends Plugin {
 			this
 		);
 		const branchName =
-			app.vault.getName().replaceAll(" ", "-") +
+			app.vault.getName().replaceAll(" ", "-").replaceAll('.', '-') +
 			"-" +
 			new Date().toLocaleDateString("en-US").replace(/\//g, "-");
 		const repo = getRepoFrontmatter(this.settings) as RepoFrontmatter;
