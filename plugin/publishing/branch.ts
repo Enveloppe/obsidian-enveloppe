@@ -3,7 +3,7 @@ import {GitHubPublisherSettings, RepoFrontmatter} from "../settings/interface";
 import {FilesManagement} from "./filesManagement";
 import {MetadataCache, Notice, Vault} from "obsidian";
 import GithubPublisherPlugin from "../main";
-import t, {StringFunc} from "../i18n";
+import {StringFunc, error} from "../i18n";
 
 export class GithubBranch extends FilesManagement {
 	settings: GitHubPublisherSettings;
@@ -148,7 +148,7 @@ export class GithubBranch extends FilesManagement {
 
 		} catch (e) {
 			console.log(e)
-			new Notice(t('mergeconflic') as string);
+			new Notice(error('mergeconflic') as string);
 			return false;
 		}
 	}
@@ -186,7 +186,7 @@ export class GithubBranch extends FilesManagement {
 		}
 		catch (e) {
 			console.log(e);
-			new Notice((t("errorConfig") as StringFunc)(`${repoFrontmatter.owner}/${repoFrontmatter.repo}`));
+			new Notice((error("errorConfig") as StringFunc)(`${repoFrontmatter.owner}/${repoFrontmatter.repo}`));
 			return false
 		}
 	}

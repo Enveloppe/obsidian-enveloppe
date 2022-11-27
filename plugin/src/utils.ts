@@ -1,7 +1,7 @@
 import {App, FrontMatterCache, MetadataCache, Notice, TFile, Vault} from 'obsidian'
 import {GitHubPublisherSettings, RepoFrontmatter} from '../settings/interface'
 import Publisher from "../publishing/upload";
-import t from '../i18n'
+import {informations} from '../i18n'
 import type { StringFunc } from "../i18n";
 import {getReceiptFolder} from "../contents_conversion/filePathConvertor";
 import {frontmatterConvert} from "../settings/interface";
@@ -122,17 +122,17 @@ async function noticeMessageOneRepo(PublisherManager: Publisher, file: TFile | s
 	 */
 	const noticeValue = (file instanceof TFile) ? '"' + file.basename + '"' : file
 	if (settings.workflowName.length > 0) {
-		new Notice((t("sendMessage") as StringFunc)([noticeValue, repo.owner+':'+repo.repo, `.\n${t("waitingWorkflow")}`]));
+		new Notice((informations("sendMessage") as StringFunc)([noticeValue, repo.owner+':'+repo.repo, `.\n${informations("waitingWorkflow")}`]));
 		const successWorkflow = await PublisherManager.workflowGestion(repo);
 		if (successWorkflow) {
 			new Notice(
-				(t("successfullPublish") as StringFunc)([noticeValue, repo.owner+':'+repo.repo])
+				(informations("successfullPublish") as StringFunc)([noticeValue, repo.owner+':'+repo.repo])
 			);
 		}
 	}
 	else {
 		new Notice(
-			(t("successfullPublish") as StringFunc)([noticeValue, repo.owner+':'+repo.repo])
+			(informations("successfullPublish") as StringFunc)([noticeValue, repo.owner+':'+repo.repo])
 		);
 	}
 }

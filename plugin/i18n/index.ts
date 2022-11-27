@@ -24,16 +24,16 @@
 */
 
 import { moment } from 'obsidian';
-import enUS from './locales/en-us';
-import zhCN from './locales/zh-cn';
-import frFR from "./locales/fr-fr";
-import ruRU from "./locales/ru";
+import en from './locales/en';
+import fr from './locales/fr';
+import ru from './locales/ru';
+import cn from './locales/zh-cn';
 
-const localeMap: { [k: string]: Partial<typeof enUS> } = {
-	enUS,
-	'zh-cn': zhCN,
-	'fr': frFR,
-	'ru': ruRU									
+const localeMap: { [k: string]: Partial<typeof en> } = {
+	en: en,
+	fr: fr,
+	ru: ru,
+	'zh-cn': cn,
 };
 
 const locale = localeMap[moment.locale()];
@@ -42,6 +42,29 @@ export interface StringFunc {
   (params: string|string[]): string;
 }
 
-export default function t(str: keyof typeof enUS): string | StringFunc {
-	return (locale && locale[str]) || enUS[str];
+// export value from en locale into string map
+export function error(str: string): string | StringFunc{
+	// @ts-ignore
+	return (locale && locale.error[str]) || en.error[str];
 }
+
+export function commands(key: string): string | StringFunc{
+	// @ts-ignore
+	return (locale && locale.commands[key]) || en.commands[key];
+}
+
+export function deletion(key: string): string | StringFunc{
+	// @ts-ignore
+	return (locale && locale.deletion[key]) || en.deletion[key];
+}
+
+export function settings(type:string, msg: string): string | StringFunc{
+	// @ts-ignore
+	return (locale && locale.settings[type][msg]) || en.settings[type][msg];
+}
+
+export function informations(key: string): string | StringFunc{
+	// @ts-ignore
+	return (locale && locale.informations[key]) || en.informations[key];
+}
+

@@ -6,7 +6,7 @@ import {GithubBranch} from "./publishing/branch";
 import { Octokit } from "@octokit/core";
 import {MetadataCache, Notice, TFile, Vault} from "obsidian";
 import GithubPublisher from "./main";
-import t from './i18n'
+import {error, informations} from './i18n'
 import { StringFunc } from "./i18n";
 
 
@@ -43,7 +43,7 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 				} catch {
 					errorCount++;
 					new Notice(
-						(t("unablePublishNote") as StringFunc)(sharedFiles[files].name)
+						(error("unablePublishNote") as StringFunc)(sharedFiles[files].name)
 					);
 				}
 			}
@@ -54,13 +54,13 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 			if (update) {
 				await noticeMessage(PublisherManager, noticeValue, settings, repoFrontmatter);
 			} else {
-				new Notice((t("errorPublish") as StringFunc)(settings.githubRepo));
+				new Notice((error("errorPublish") as StringFunc)(settings.githubRepo));
 			}
 		}
 	} catch (error) {
 		console.error(error);
 		new Notice(
-			t("unablePublishMultiNotes") as string
+			error("unablePublishMultiNotes") as string
 		);
 		statusBar.error();
 	}
@@ -75,7 +75,7 @@ export async function deleteUnsharedDeletedNotes(PublisherManager: GithubBranch,
 	 * @param branchName
 	 */
 	try {
-		new Notice((t("startingClean") as StringFunc)(settings.githubRepo))
+		new Notice((informations("startingClean") as StringFunc)(settings.githubRepo))
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
 		await deleteFromGithub(false, settings,octokit, branchName, PublisherManager, repoFrontmatter);
 		await PublisherManager.updateRepository(branchName, repoFrontmatter);
@@ -104,14 +104,14 @@ export async function shareOneNote(branchName: string, PublisherManager: GithubB
 				await noticeMessage(PublisherManager, file, settings, repoFrontmatter);
 				await createLink(file, repoFrontmatter, metadataCache, vault, settings);
 			} else {
-				new Notice((t("errorPublish") as StringFunc)(settings.githubRepo));
+				new Notice((error("errorPublish") as StringFunc)(settings.githubRepo));
 			}
 		}
 	}
 	catch (error) {
 		if (!(error instanceof DOMException)) {
 			console.error(error);
-			new Notice((t("errorPublish") as StringFunc)(settings.githubRepo));
+			new Notice((error("errorPublish") as StringFunc)(settings.githubRepo));
 		}
 	}
 }
@@ -126,18 +126,18 @@ export async function shareNewNote(PublisherManager: GithubBranch, octokit: Octo
 	 * @class plugin
 	 */
 	const settings = plugin.settings;
-	new Notice(t("scanningRepo") as string);
+	new Notice(informations("scanningRepo") as string);
 	const branchMaster = settings.githubBranch;
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings, repoFrontmatter);
 	const newlySharedNotes = PublisherManager.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
 	if (newlySharedNotes.length > 0) {
-		new Notice((t("foundNoteToSend") as StringFunc)(`${newlySharedNotes.length}`));
+		new Notice((informations("foundNoteToSend") as StringFunc)(`${newlySharedNotes.length}`));
 		const statusBarElement = plugin.addStatusBarItem();
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
 		await shareAllMarkedNotes(PublisherManager, plugin.settings, octokit, statusBarElement, branchName, repoFrontmatter, newlySharedNotes);
 	} else {
-		new Notice(t("noNewNote") as string);
+		new Notice(informations("noNewNote") as string);
 	}
 
 }
@@ -152,19 +152,19 @@ export async function shareAllEditedNotes(PublisherManager: GithubBranch, octoki
 	 * @class plugin
 	 */
 	const settings = plugin.settings;
-	new Notice(t("scanningRepo") as string);
+	new Notice(informations("scanningRepo") as string);
 	const branchMaster = settings.githubBranch;
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings, repoFrontmatter);
 	const newSharedFiles = PublisherManager.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
 	const newlySharedNotes = await PublisherManager.getEditedFiles(sharedFilesWithPaths, githubSharedNotes, vault, newSharedFiles);
 	if (newlySharedNotes.length > 0) {
-		new Notice((t("foundNoteToSend") as StringFunc)(`${newlySharedNotes.length}`));
+		new Notice((informations("foundNoteToSend") as StringFunc)(`${newlySharedNotes.length}`));
 		const statusBarElement = plugin.addStatusBarItem();
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
 		await shareAllMarkedNotes(PublisherManager, settings, octokit, statusBarElement, branchName, repoFrontmatter, newlySharedNotes);
 	} else {
-		new Notice(t("noNewNote") as string);
+		new Notice(informations("noNewNote") as string);
 	}
 }
 
@@ -178,18 +178,18 @@ export async function shareOnlyEdited(PublisherManager: GithubBranch, octokit: O
 	 * @class plugin
 	 */
 	const settings = plugin.settings;
-	new Notice(t("scanningRepo") as string);
+	new Notice(informations("scanningRepo") as string);
 	const branchMaster = settings.githubBranch;
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings, repoFrontmatter);
 	const newSharedFiles:TFile[]=[]
 	const newlySharedNotes = await PublisherManager.getEditedFiles(sharedFilesWithPaths, githubSharedNotes, vault, newSharedFiles);
 	if (newlySharedNotes.length > 0) {
-		new Notice((t("foundNoteToSend") as StringFunc)(`${newlySharedNotes.length}`));
+		new Notice((informations("foundNoteToSend") as StringFunc)(`${newlySharedNotes.length}`));
 		const statusBarElement = plugin.addStatusBarItem();
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
 		await shareAllMarkedNotes(PublisherManager, settings, octokit, statusBarElement, branchName, repoFrontmatter, newlySharedNotes);
 	} else {
-		new Notice(t("noNewNote") as string);
+		new Notice(informations("noNewNote") as string);
 	}
 }

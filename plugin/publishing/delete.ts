@@ -4,7 +4,7 @@ import {folderSettings, GitHubPublisherSettings, GithubRepo, RepoFrontmatter} fr
 import {FilesManagement} from "./filesManagement";
 import {Base64} from "js-base64";
 import {isAttachment, noticeLog, trimObject} from "../src/utils";
-import t, {StringFunc} from "../i18n"
+import {StringFunc, deletion} from "../i18n"
 
 export async function deleteFromGithub(silent=false, settings: GitHubPublisherSettings, octokit: Octokit, branchName = "main", filesManagement: FilesManagement, repoFrontmatter: RepoFrontmatter[]|RepoFrontmatter) {
 	if (repoFrontmatter instanceof Array) {
@@ -34,12 +34,12 @@ async function deleteFromGithubOneRepo(silent = false, settings: GitHubPublisher
 		let errorMsg = "";
 		if (settings.folderDefaultName.length > 0) {
 			if (settings.folderDefaultName.length > 0) {
-				errorMsg = (t("errorDeleteDefaultFolder") as string)
+				errorMsg = (deletion("errorDeleteDefaultFolder") as string)
 			} else if (
 				settings.downloadedFolder === folderSettings.yaml &&
 					settings.rootFolder.length === 0
 			) {
-				errorMsg = (t("errorDeleteRootFolder") as string)
+				errorMsg = (deletion("errorDeleteRootFolder") as string)
 			}
 			if (!silent) {
 				new Notice("Error : " + errorMsg);
@@ -82,13 +82,13 @@ async function deleteFromGithubOneRepo(silent = false, settings: GitHubPublisher
 			}
 		}
 	}
-	let successMsg = t('noFileDeleted') as string;
+	let successMsg = deletion('noFileDeleted') as string;
 	let failedMsg = '';
 	if (deletedSuccess > 0) {
-		successMsg = (t("successDeleting") as StringFunc)(deletedSuccess.toString());
+		successMsg = (deletion("successDeleting") as StringFunc)(deletedSuccess.toString());
 	}
 	if (deletedFailed > 0) {
-		failedMsg = (t('failedDeleting') as StringFunc)(deletedFailed.toString());
+		failedMsg = (deletion('failedDeleting') as StringFunc)(deletedFailed.toString());
 	}
 	if (!silent) {
 		new Notice(successMsg + failedMsg)

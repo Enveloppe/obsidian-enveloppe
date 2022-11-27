@@ -10,7 +10,7 @@ import { FilesManagement } from "./filesManagement";
 import { Octokit } from "@octokit/core";
 import { Base64 } from "js-base64";
 import {deleteFromGithub} from "./delete"
-import t, {StringFunc} from "../i18n";
+import {StringFunc, error} from "../i18n";
 
 
 import {
@@ -67,14 +67,14 @@ export default class Publisher {
 							}
 							statusBar.increment();
 						} catch (e) {
-							new Notice((t("unablePublishNote") as StringFunc)(image.name));
+							new Notice((error("unablePublishNote") as StringFunc)(image.name));
 							console.error(e);
 						}
 					}
 					statusBar.finish(8000);
 				} catch (e) {
 					noticeLog(e, this.settings);
-					new Notice((t('errorPublish') as StringFunc)(repoFrontmatter.repo));
+					new Notice((error('errorPublish') as StringFunc)(repoFrontmatter.repo));
 					statusBar.error();
 				}
 			} else { // 1 one item to send
