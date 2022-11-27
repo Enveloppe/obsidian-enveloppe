@@ -3,7 +3,7 @@ import { GithubPublisherSettings } from "./settings";
 import { disablePublish, getRepoFrontmatter } from "./src/utils";
 import {
 	GitHubPublisherSettings,
-	DEFAULT_SETTINGS,
+	DEFAULT_SETTINGS, RepoFrontmatter,
 } from "./settings/interface";
 import { GithubBranch } from "./publishing/branch";
 import { Octokit } from "@octokit/core";
@@ -36,7 +36,7 @@ export default class GithubPublisher extends Plugin {
 			app.vault.getName().replaceAll(" ", "-") +
 			"-" +
 			new Date().toLocaleDateString("en-US").replace(/\//g, "-");
-		const repo = getRepoFrontmatter(this.settings);
+		const repo = getRepoFrontmatter(this.settings) as RepoFrontmatter;
 
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
@@ -154,25 +154,13 @@ export default class GithubPublisher extends Plugin {
 			checkCallback: (checking) => {
 				if (this.settings.autoCleanUp) {
 					if (!checking) {
-						if (repo instanceof Array) {
-							for (const r of repo) {
-								deleteUnsharedDeletedNotes(
-									PublisherManager,
-									this.settings,
-									octokit,
-									branchName,
-									r
-								);
-							}
-						} else {
-							deleteUnsharedDeletedNotes(
-								PublisherManager,
-								this.settings,
-								octokit,
-								branchName,
-								repo
-							);
-						}
+						deleteUnsharedDeletedNotes(
+							PublisherManager,
+							this.settings,
+							octokit,
+							branchName,
+							repo
+						);
 					}
 					return true;
 				}
@@ -186,31 +174,17 @@ export default class GithubPublisher extends Plugin {
 			callback: async () => {
 				const sharedFiles = PublisherManager.getSharedFiles();
 				const statusBarItems = this.addStatusBarItem();
-				if (repo instanceof Array) {
-					for (const r of repo) {
-						await shareAllMarkedNotes(
-							PublisherManager,
-							this.settings,
-							octokit,
-							statusBarItems,
-							branchName,
-							r,
-							sharedFiles,
-							true
-						);
-					}
-				} else {
-					await shareAllMarkedNotes(
-						PublisherManager,
-						this.settings,
-						octokit,
-						statusBarItems,
-						branchName,
-						repo,
-						sharedFiles,
-						true
-					);
-				}
+				await shareAllMarkedNotes(
+					PublisherManager,
+					this.settings,
+					octokit,
+					statusBarItems,
+					branchName,
+					repo,
+					sharedFiles,
+					true
+				);
+				
 				
 			},
 		});
@@ -219,27 +193,15 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-upload-new",
 			name: commands("uploadNewNotes") as string,
 			callback: async () => {
-				if (repo instanceof Array) {
-					for (const r of repo) {
-						await shareNewNote(
-							PublisherManager,
-							octokit,
-							branchName,
-							this.app.vault,
-							this,
-							r
-						);
-					}
-				} else {
-					await shareNewNote(
-						PublisherManager,
-						octokit,
-						branchName,
-						this.app.vault,
-						this,
-						repo
-					);
-				}
+				await shareNewNote(
+					PublisherManager,
+					octokit,
+					branchName,
+					this.app.vault,
+					this,
+					repo
+				);
+				
 			},
 		});
 
@@ -247,28 +209,14 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-upload-all-edited-new",
 			name: commands("uploadAllNewEditedNote") as string,
 			callback: async () => {
-				if (repo instanceof Array) {
-					for (const r of repo) {
-						await shareAllEditedNotes(
-							PublisherManager,
-							octokit,
-							branchName,
-							this.app.vault,
-							this,
-							r
-						);
-					}
-				} else {
-					await shareAllEditedNotes(
-						PublisherManager,
-						octokit,
-						branchName,
-						this.app.vault,
-						this,
-						repo
-					);
-				}
-
+				await shareAllEditedNotes(
+					PublisherManager,
+					octokit,
+					branchName,
+					this.app.vault,
+					this,
+					repo
+				);
 			},
 		});
 
@@ -276,28 +224,15 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-upload-edited",
 			name: commands("uploadAllEditedNote") as string,
 			callback: async () => {
-				if (repo instanceof Array) {
-					for (const r of repo) {
-						await shareOnlyEdited(
-							PublisherManager,
-							octokit,
-							branchName,
-							this.app.vault,
-							this,
-							r
-						);
-					}
-				} else {
-					await shareOnlyEdited(
-						PublisherManager,
-						octokit,
-						branchName,
-						this.app.vault,
-						this,
-						repo
-					);
-				}
-
+				
+				await shareOnlyEdited(
+					PublisherManager,
+					octokit,
+					branchName,
+					this.app.vault,
+					this,
+					repo
+				);
 			},
 		});
 	}
