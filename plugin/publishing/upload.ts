@@ -10,7 +10,7 @@ import { FilesManagement } from "./filesManagement";
 import { Octokit } from "@octokit/core";
 import { Base64 } from "js-base64";
 import {deleteFromGithub} from "./delete"
-
+import t, {StringFunc} from "../i18n";
 
 
 import {
@@ -54,18 +54,29 @@ export default class Publisher {
 			if (linkedFiles.length> 1) {
 				const statusBarItems = this.plugin.addStatusBarItem();
 				const statusBar = new ShareStatusBar(statusBarItems, linkedFiles.length, true);
-				for (const image of linkedFiles) {
-					if (!fileHistory.includes(image)) {
-						if ((image.extension === 'md') && deepScan) {
-							await this.publish(image, false, ref, repoFrontmatter, fileHistory, true);
-						} else if (isAttachment(image.extension) && sourceFrontmatter.attachment) {
-							await this.uploadImage(image, ref, sourceFrontmatter, repoFrontmatter);
-							fileHistory.push(image);
+				try {
+					for (const image of linkedFiles) {
+						try {
+							if (!fileHistory.includes(image)) {
+								if ((image.extension === 'md') && deepScan) {
+									await this.publish(image, false, ref, repoFrontmatter, fileHistory, true);
+								} else if (isAttachment(image.extension) && sourceFrontmatter.attachment) {
+									await this.uploadImage(image, ref, sourceFrontmatter, repoFrontmatter);
+									fileHistory.push(image);
+								}
+							}
+							statusBar.increment();
+						} catch (e) {
+							new Notice((t("unablePublishNote") as StringFunc)(image.name));
+							console.error(e);
 						}
 					}
-					statusBar.increment();
+					statusBar.finish(8000);
+				} catch (e) {
+					noticeLog(e, this.settings);
+					new Notice((t('errorPublish') as StringFunc)(repoFrontmatter.repo));
+					statusBar.error();
 				}
-				statusBar.finish(8000);
 			} else { // 1 one item to send
 				const embed = linkedFiles[0];
 				if (!fileHistory.includes(embed)) {
@@ -105,7 +116,7 @@ export default class Publisher {
 			return false;
 		}
 		try {
-			console.log("Publishing file: " + file.path);
+			noticeLog("Publishing file: " + file.path, this.settings);
 			fileHistory.push(file)
 			const frontmatterSettings = getFrontmatterCondition(frontmatter, this.settings);
 			let embedFiles = shareFiles.getSharedEmbed(file, frontmatterSettings);
@@ -117,7 +128,7 @@ export default class Publisher {
 			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
 			//if repoFrontmatter is an array, it means that the file is in a multiple repo
 			if (repoFrontmatter instanceof Array) {
-				console.log("Multiple repo", repoFrontmatter)
+				noticeLog("Multiple repo" + repoFrontmatter, this.settings)
 				const success: boolean[] = [];
 				for (const repo of repoFrontmatter) {
 					success.push(await this.uploadMultiple(file, text, ref, frontmatterSettings, path, repo, embedFiles, fileHistory, deepScan, shareFiles, autoclean));

@@ -21,11 +21,11 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 	 * @param sharedFiles File marked to true
 	 * @param createGitHubBranch prevent to multiple creation of branch if already exists
 	 */
+	const statusBar = new ShareStatusBar(
+		statusBarItems,
+		sharedFiles.length
+	);
 	try {
-		const statusBar = new ShareStatusBar(
-			statusBarItems,
-			sharedFiles.length
-		);
 		let errorCount = 0;
 		if (sharedFiles.length > 0) {
 			const publishedFiles = sharedFiles.map(
@@ -55,7 +55,6 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 				await noticeMessage(PublisherManager, noticeValue, settings, repoFrontmatter);
 			} else {
 				new Notice((t("errorPublish") as StringFunc)(settings.githubRepo));
-				
 			}
 		}
 	} catch (error) {
@@ -63,6 +62,7 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 		new Notice(
 			t("unablePublishMultiNotes") as string
 		);
+		statusBar.error();
 	}
 }
 
