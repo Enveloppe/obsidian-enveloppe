@@ -37,6 +37,7 @@ export interface GitHubPublisherSettings {
 	excludeDataviewValue: string[];
 	metadataFileFields: string[];
 	shareExternalModified: boolean;
+	automaticallyMergePR: boolean;
 }
 
 export enum folderSettings {
@@ -84,7 +85,8 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	excludeDataviewValue: [],
 	metadataFileFields:[],
 	frontmatterTitleKey: 'title',
-	shareExternalModified: false
+	shareExternalModified: false,
+	automaticallyMergePR: true
 }
 
 export interface LinkedNotes {

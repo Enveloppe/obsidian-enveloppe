@@ -30,6 +30,8 @@ export default {
 	githubToken: "Github Token",
 	githubBranchHeading: "Main branch",
 	githubBranchDesc: 'If you use a different main branch than "main", you can specify it here.',
+	automaticallyMergePR: "Automatically merge pull requests",
+
 	// ---
 	// # Upload configuration # //
 	uploadConfig: "Upload configuration",

@@ -163,7 +163,6 @@ export class GithubBranch extends FilesManagement {
 			return !success.every((value) => value === false);
 		}
 		else {
-			console.log('updateRepository', repoFrontmatter);
 			return await this.updateRepositoryOnOne(branchName, repoFrontmatter);
 		}
 	}
@@ -175,12 +174,15 @@ export class GithubBranch extends FilesManagement {
 		 */
 		try {
 			const pullRequest = await this.pullRequestOnRepo(branchName, repoFrontmatter);
-			const PRSuccess = await this.mergePullRequestOnRepo(branchName, true, pullRequest, repoFrontmatter);
-			if (PRSuccess) {
-				await this.deleteBranchOnRepo(branchName, repoFrontmatter);
-				return true
+			if (this.settings.automaticallyMergePR) {
+				const PRSuccess = await this.mergePullRequestOnRepo(branchName, true, pullRequest, repoFrontmatter);
+				if (PRSuccess) {
+					await this.deleteBranchOnRepo(branchName, repoFrontmatter);
+					return true
+				}
+				return false
 			}
-			return false
+			return true
 		}
 		catch (e) {
 			console.log(e);

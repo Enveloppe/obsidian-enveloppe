@@ -30,6 +30,7 @@ export default {
 	githubToken: "Token GitHub",
 	githubBranchHeading: "Branche principale",
 	githubBranchDesc: "Si vous utilisez une branche principale différente de main, vous pouvez la spécifier ici.",
+	automaticallyMergePR: "Fusionner automatiquement les pull requests",
 	// ---
 	// # Upload configuration # //
 

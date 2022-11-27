@@ -95,6 +95,17 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					})
 			)
 
+		new Setting(containerEl)
+			.setName(t('automaticallyMergePR') as string)
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.automaticallyMergePR)
+					.onChange(async (value) => {
+						this.plugin.settings.automaticallyMergePR = value
+						await this.plugin.saveSettings()
+					})
+			)
+
 		/* ------------------------------ *
 		 * 			Upload config		  *
 		 * ------------------------------ */

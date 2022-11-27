@@ -30,6 +30,7 @@ export default {
 	githubToken: "Github Token",
 	githubBranchHeading: "Main branch",
 	githubBranchDesc: 'If you use a different main branch than "main", you can specify it here.',
+	automaticallyMergePR: "Automatically merge PR",
 	// ---
 	// # Upload configuration # //
 	uploadConfig: "Настройки загрузки",
@@ -52,6 +53,7 @@ export default {
 	rootFolderDesc: "Добавлять этут папку к путям заданным через свойство frontmatter.",
 	useFrontmatterTitle: "Set the title from the frontmatter",
 	useFrontmatterTitleDesc: "Use a frontmatter value to generate the filename. By default, \"title\" is used.",
+
 	// ---
 	// # Text conversion # //
 	textConversion: "Преобразования текста",
