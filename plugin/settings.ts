@@ -331,7 +331,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 							entry: "",
 							replace: "",
 							after: false,
-							flags: ''
+							flags: 'gi'
 						};
 						this.plugin.settings.censorText.push(censorText);
 						await this.plugin.saveSettings();
