@@ -65,7 +65,6 @@ export default {
 				folderNoteDesc: "Переименовывать файл в \"index.md\" в случае если он называется также как родительская папка (работает и в том случае если файл вне папки).",
 				internals: "Внутренние ссылки",
 				internalsDesc: "Преобразовывать внутренние ссылки в общих файла в соответствие с настройками папки",
-
 				wikilinks: "[[Wiki-ссылки]]",
 				wikilinksDesc: "Преобразовывать Wiki-ссылки в MarkDown ссылки, не трогая содержимое",
 			},
@@ -84,6 +83,7 @@ export default {
 					dotAll: "s : DotAll, where dot matches newlines.",
 					unicode: "u : Unicode, treat a pattern as a sequence of unicode code points.",
 					sticky: "y : Sticky, searches only from the index indicated by the lastIndex property of this regular expression in the target string.",
+					error:(flag:string): string => `The flag "${flag}" is not valid.`,
 				},
 				TextEmpty: 'Replacement can be empty to remove the whole string.',
 				ToolTipAdd: 'Add a new text replacer',

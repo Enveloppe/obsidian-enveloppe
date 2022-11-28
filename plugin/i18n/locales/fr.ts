@@ -80,6 +80,8 @@ export default {
 					dotAll: "s : Dotall, où . matche n'importe quel caractère, y compris les sauts de ligne.",
 					unicode: "u : Unicode, traite un motif comme une séquence de code unicode.",
 					sticky: "y : Sticky, recherche uniquement à partir de l'index indiqué par la propriété lastIndex de cette expression régulière dans la chaîne cible.",
+					error:(flag:string): string => `Le flag "${flag}" est invalide.`,
+
 				},
 				TextEmpty: 'Le remplacement de texte peut être vide afin de supprimer le texte.',
 				ToolTipAdd: 'Ajouter un nouveau remplacement',

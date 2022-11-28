@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import {App, Notice, PluginSettingTab, Setting} from "obsidian";
 import GithubPublisherPlugin from "./main";
 import {
 	hideSettings,
@@ -9,7 +9,7 @@ import {
 	shortcutsHideShow,
 } from "./settings/style";
 import { folderSettings, TextCleaner } from "./settings/interface";
-import { settings, subSettings } from "./i18n";
+import {settings, StringFunc, subSettings} from "./i18n";
 
 function openDetails(groupName: string, detailsState: boolean) {
 	for (let i = 0; i < document.getElementsByTagName("details").length; i++) {
@@ -398,8 +398,16 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					text.setPlaceholder('flags')
 						.setValue(censorText.flags)
 						.onChange(async (value) => {
-							censorText.flags = value;
-							await this.plugin.saveSettings();
+							if (value.match(/^[gimsuy\s]+$/) || value === '') {
+								censorText.flags = value;
+								await this.plugin.saveSettings();
+							} else {
+								new Notice(
+									(subSettings(
+										"textConversion.censor.flags.error"
+									)as StringFunc)(value)
+								)
+							}
 						})
 				})
 				.addExtraButton((btn) => {

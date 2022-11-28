@@ -16,8 +16,8 @@ export default function findAndReplaceText(text: string, settings: GitHubPublish
 		censoring = settings.censorText.filter(censor => censor.after);
 	}
 	for (const censor of censoring) {
-		if (!censor.flags) {
-			censor.flags = 'gi';
+		if ((!censor.flags) || (!censor.flags.match(/^[gimsuy\s]+$/))) {
+			censor.flags = '';
 		}
 		const regex = new RegExp(censor.entry, censor.flags);
 		// @ts-ignore

@@ -80,6 +80,8 @@ export default {
 					dotAll: "s : DotAll, where dot matches newlines.",
 					unicode: "u : Unicode, treat a pattern as a sequence of unicode code points.",
 					sticky: "y : Sticky, searches only from the index indicated by the lastIndex property of this regular expression in the target string.",
+					error:(flag:string): string => `The flag "${flag}" is not valid.`,
+
 				},
 				TextEmpty: 'Replacement can be empty to remove the whole string.',
 				ToolTipAdd: 'Add a new text replacer',
