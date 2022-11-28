@@ -35,5 +35,19 @@ hr.obs-git-publisher-hr {
 	width: 300px;
 }
 .setting-item.obs-git-publisher-censor-entry > .setting-item-control> input[type="text"]:nth-child(2) {
-	width: 300px;
+	width: 250px;
+}
+
+button.obs-git-publisher-censor-flags{
+	box-shadow: none;
+	background-color: transparent;
+	border: 0;
+	padding: 0 0 0 5px;
+	margin: 0;
+}
+
+button.obs-git-publisher-censor-flags:hover {
+	background-color: transparent;
+	box-shadow: none;
+	border: 0;
 }
