@@ -111,6 +111,7 @@ export interface TextCleaner {
 	entry: string
 	replace: string,
 	after: boolean,
+	flags: string,
 }
 
 export interface frontmatterConvert {

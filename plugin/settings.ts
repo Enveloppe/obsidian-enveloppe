@@ -298,17 +298,36 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		const censorTextDesc = document.createDocumentFragment();
-		censorTextDesc.createEl("p", {
-			text: subSettings("textConversion.censor.TextHeader") as string,
+		censorTextDesc
+			.createEl("p", {
+				text: subSettings("textConversion.censor.TextDesc") as string,
+			})
+			.createEl("p", {
+				text: subSettings("textConversion.censor.TextEmpty") as string,
+			});
+		censorTextDesc.createEl("u", {
+			text: subSettings("textConversion.censor.TextFlags") as string,
 		});
-		censorTextDesc.createEl("li", {
-			text: subSettings(
-				"textConversion.censor.TextInsensitive"
-			) as string,
-		});
-		censorTextDesc.createEl("li", {
-			text: subSettings("textConversion.censor.TextEmpty") as string,
-		});
+		censorTextDesc
+			.createEl("li", {
+				text: subSettings("textConversion.censor.flags.insensitive") as string,
+			})
+			.createEl("li", {
+				text: subSettings("textConversion.censor.flags.global") as string,
+			})
+			.createEl("li", {
+				text: subSettings("textConversion.censor.flags.multiline") as string,
+			})
+			.createEl("li", {
+				text: subSettings("textConversion.censor.flags.dotAll") as string,
+			})
+			.createEl("li", {
+				text: subSettings("textConversion.censor.flags.unicode") as string,
+			})
+			.createEl("li", {
+				text: subSettings("textConversion.censor.flags.sticky") as string,
+			});
+		
 		const details = containerEl.createEl("details");
 		details.createEl("summary", {
 			text: subSettings("textConversion.censor.TextHeader") as string,
@@ -328,6 +347,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 							entry: "",
 							replace: "",
 							after: false,
+							flags: ''
 						};
 						this.plugin.settings.censorText.push(censorText);
 						await this.plugin.saveSettings();
@@ -373,6 +393,14 @@ export class GithubPublisherSettings extends PluginSettingTab {
 							censorText.replace = value;
 							await this.plugin.saveSettings();
 						});
+				})
+				.addText((text) => {
+					text.setPlaceholder('flags')
+						.setValue(censorText.flags)
+						.onChange(async (value) => {
+							censorText.flags = value;
+							await this.plugin.saveSettings();
+						})
 				})
 				.addExtraButton((btn) => {
 					btn.setIcon("trash")

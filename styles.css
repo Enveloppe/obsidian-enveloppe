@@ -18,3 +18,22 @@ hr.obs-git-publisher-hr {
 	margin: 1px !important;
 	padding-bottom: 1px;
 }
+
+.setting-item.obs-git-publisher-censor-entry input[placeholder='flags'] {
+	width: 50px;
+}
+
+.setting-item.obs-git-publisher-censor-entry .setting-item-info {
+	display: none;
+}
+
+.setting-item.obs-git-publisher-censor-entry .setting-item-control {
+	width: auto;
+}
+
+.setting-item.obs-git-publisher-censor-entry > .setting-item-control> input[type="text"]:first-child {
+	width: 300px;
+}
+.setting-item.obs-git-publisher-censor-entry > .setting-item-control> input[type="text"]:nth-child(2) {
+	width: 300px;
+}

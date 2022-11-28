@@ -72,7 +72,15 @@ export default {
 			censor: {
 				TextHeader: "Replacement de texte", 
 				TextDesc: "Replacement de texte (ou regex) par un autre texte.", 
-				TextInsensitive: "Insensible à la casse.",
+				TextFlags: "Flags (basé sur les regex JS et pouvant être combiné) :",
+				flags : {
+					insensitive: "i : Insensible à la casse.",
+					global: "g : Global (remplace toutes les occurrences).",
+					multiline: "m : multi-ligne, ^ et $ matche le début et la fin de chaque ligne.",
+					dotAll: "s : Dotall, où . matche n'importe quel caractère, y compris les sauts de ligne.",
+					unicode: "u : Unicode, traite un motif comme une séquence de code unicode.",
+					sticky: "y : Sticky, recherche uniquement à partir de l'index indiqué par la propriété lastIndex de cette expression régulière dans la chaîne cible.",
+				},
 				TextEmpty: 'Le remplacement de texte peut être vide afin de supprimer le texte.',
 				ToolTipAdd: 'Ajouter un nouveau remplacement',
 				ToolTipRemove: 'Supprimer ce remplacement',

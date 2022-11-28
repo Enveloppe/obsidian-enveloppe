@@ -16,7 +16,10 @@ export default function findAndReplaceText(text: string, settings: GitHubPublish
 		censoring = settings.censorText.filter(censor => censor.after);
 	}
 	for (const censor of censoring) {
-		const regex = new RegExp(censor.entry, 'ig');
+		if (!censor.flags) {
+			censor.flags = 'gi';
+		}
+		const regex = new RegExp(censor.entry, censor.flags);
 		// @ts-ignore
 		text = text.replaceAll(regex, censor.replace);
 	}
