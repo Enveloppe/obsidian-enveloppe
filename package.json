@@ -1,12 +1,16 @@
 {
-	"name": "obsidian-github-publisher",
+	"name": "obsidian-mkdocs-publication",
 	"version": "4.6.0-7",
 	"description": "Github Publisher is a plugin that help you to send file in a configured Github Repository, based on a frontmatter entry state.",
 	"main": "main.js",
 	"scripts": {
 		"vault": "node esbuild.config.mjs production && copy main.js \"N:\\Nest\\.obsidian\\plugins\\obsidian-mkdocs-publisher\" && copy styles.css \"N:\\Nest\\.obsidian\\plugins\\obsidian-mkdocs-publisher\"",
+		"build": "node esbuild.config.mjs production",
 		"lint": "eslint --ext .ts plugin/",
 		"lint:fix": "eslint --fix --ext .ts  plugin/",
+		"version": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json",
+		"bump": "node version-bump.mjs",
+		"bump:beta": "node version-beta.mjs",
 		"beta": "commit-and-tag-version  --prerelease --tag-build beta --infile CHANGELOG-beta.md && node version-beta.mjs && git add manifest-beta.json && git commit --amend --no-edit",
 		"publish": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json",
 		"test": "jest"
