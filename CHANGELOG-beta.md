@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
-## [4.7.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.5.1...4.7.0-0) (2022-11-29)
+## [4.7.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.5.1...4.7.0-1) (2022-11-29)
 
 
 ### Features
