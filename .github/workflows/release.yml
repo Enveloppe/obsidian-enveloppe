@@ -29,7 +29,11 @@ jobs:
                   zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
                   ls
                   echo "::set-output name=tag_name::$(git tag --sort version:refname | tail -n 1)"
-                  npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > CHANGELOG-LATEST.md
+                  if [[ ${{ github.ref }} == *"-"* ]]; then
+                      npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG-beta.md" > CHANGELOG-LATEST.md
+                  else
+                    npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > CHANGELOG-LATEST.md
+                  fi
             - name: Create Release
               id: create_release
               uses: actions/create-release@v1
