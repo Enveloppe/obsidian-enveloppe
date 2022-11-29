@@ -460,6 +460,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		new Setting(this.containerEl)
 			.setName(subSettings("textConversion.tags.header") as string)
 			.setDesc(subSettings("textConversion.tags.desc") as string)
+			.setClass("obs-git-publisher-textarea")
 			.addTextArea((text) => {
 				text.setPlaceholder("field_name")
 					.setValue(this.plugin.settings.dataviewFields.join(","))
@@ -473,6 +474,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		new Setting(this.containerEl)
 			.setName(subSettings("textConversion.tags.ExcludeHeader") as string)
 			.setDesc(subSettings("textConversion.tags.ExcludeDesc") as string)
+			.setClass("obs-git-publisher-textarea")
 			.addTextArea((text) => {
 				text.setPlaceholder("field value")
 					.setValue(
@@ -557,6 +559,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(settings("embed", "transferMetaFile") as string)
 			.setDesc(settings("embed", "transferMetaFileDesc") as string)
+			.setClass("obs-git-publisher-textarea")
 			.addTextArea((text) => {
 				text.setPlaceholder("banner")
 					.setValue(this.plugin.settings.metadataFileFields.join(","))
@@ -635,6 +638,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		const autoCleanExcludedSettings = new Setting(containerEl)
 			.setName(settings("githubWorkflow", "excludedFiles") as string)
 			.setDesc(settings("githubWorkflow", "excludedFilesDesc") as string)
+			.setClass("obs-git-publisher-textarea")
 			.addTextArea((textArea) => {
 				textArea
 					.setPlaceholder("docs/assets/js, docs/assets/logo")
@@ -667,6 +671,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(settings("plugin", "excludedFolder") as string)
 			.setDesc(settings("plugin", "excludedFolderDesc") as string)
+			.setClass("obs-git-publisher-textarea")
 			.addTextArea((textArea) =>
 				textArea
 					.setPlaceholder("_assets, Archive")

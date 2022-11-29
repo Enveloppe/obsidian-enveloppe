@@ -51,3 +51,8 @@ button.obs-git-publisher-censor-flags:hover {
 	box-shadow: none;
 	border: 0;
 }
+
+.obs-git-publisher-textarea textarea {
+	width: 250px;
+	height: 100px;
+}
