@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.6.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.5.1...4.6.0) (2022-11-29)
+
+
+### Features
+
+* add flags option for regex replacing ([a80d682](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a80d6824192d8b13eea8d3958f3348f6c58eba96)), closes [#51](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/51) [#52](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/52)
+* Adding baselink frontmatter key ([504fdd5](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/504fdd597d33f2eef20508bd5552857a5a934386))
+* Allow sending file to multiple repo using the key "repo" ([5c74244](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5c742444a7e2e1260a521091b9c987b6f7bf7f27))
+* Option for not automatically merging PR ([13abc47](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/13abc4728a3b4ed0f87c075669dbc8bd772a888a)), closes [#47](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/47)
+* **regex:** better UI for regex flags ([338a070](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/338a070ec474e9f6707d594bdf6a542afc3dd4cf))
+* **UI:** Better textArea (bigger) for settings ([261a11f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/261a11fb70fc3ab4254811abca47bc798351bf93))
+
+
+### Bug Fixes
+
+* adding error code if merging / branch error ([21a7ded](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/21a7ded7960c84474b6bdc9fa11b1aa55bc992e1))
+* adding repoFrontmatter as value ([1bb72fa](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1bb72fad45566a554de8c5dcec8897fa49745419))
+* attemp to fix multiple added status bar ([0e322fd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0e322fd955493a2424764a11370de23bac35027e)), closes [#45](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/45)
+* prevent array not copyLink if multiple repo are found (use default settings if multiple repo and not baselink) ([e39af6e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e39af6e4ce1ae1b8af3c2988750ae5eb729898f4))
+* prevent error in branchName if `.` in it ([16cf0b8](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16cf0b81ac7218f61ced989b38e2dbcce28e615c))
+* **regex:** add 'gi' as default flags for regex ([c30c571](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c30c571ce7b3ea0926b80cf0af1a61a817e9919b))
+* **regex:** Prevent flags errors ([ab6717f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ab6717f697970717e6f5a8e0f0b3d4de663e2316))
+* remove useless check repo as repo is never an Array ([ca80e08](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ca80e0805d81340466c1a3a5966688538de5264c))
+* rework translation ([927bcb3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/927bcb33353d7a84662836b9955874365909a339))
+
 ### [4.5.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.5.0...4.5.1) (2022-11-12)
 
 
