@@ -709,9 +709,6 @@ export class GithubPublisherSettings extends PluginSettingTab {
 
 	}
 
-	/* ------------------------------ *
-	 * 		Plugin settings			  *
-	 * ------------------------------ */
 	renderPluginSettings() {
 		new Setting(this.settingsPage)
 			.setName(settings("plugin", "shareKey") as string)
@@ -829,16 +826,22 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	}
 	renderHelp() {
 		this.settingsPage.createEl('a', {text: 'If you have any questions, please visit the plugin documentation on GitHub', href: '\'https://obsidian-publisher.netlify.app/'})
-		this.settingsPage.createEl('p', {text: 'Moreover, there are some frontmatter YAML keys that can be usefull for your workflow'})
-		const yamlKeysUsefullBasedOnYourSettings = `${this.plugin.settings.shareKey}: true\n`
+		this.settingsPage.createEl('p', {text: 'Moreover, there are some frontmatter YAML keys that can be usefull for your workflow. The YAML code below show the default settings, but feel free to change it to your needs in each notes!'})
+		const yamlKeysUsefullBasedOnYourSettings = 
+		`${this.plugin.settings.shareKey}: true\n`
 			+ `links:\n  mdlinks: ${this.plugin.settings.convertWikiLinks} #boolean\n  convert: true \n`
-			+ `embed:\n  send: #boolean\n  remove: #boolean\n`
-			+ `attachment:\n  send: #boolean\n  folder: #string\n`
-			+ `dataview: #boolean\n`
-			+ `hardBreak: #boolean\n`
+			+ `embed:\n  send: ${this.plugin.settings.embedNotes}\n  remove: false#boolean\n`
+			+ `attachment:\n  send: ${this.plugin.settings.embedImage} #boolean\n  folder: ${this.plugin.settings.defaultImageFolder} #string\n`
+			+ `dataview: ${this.plugin.settings.convertDataview} #boolean\n`
+			+ `hardBreak: ${this.plugin.settings.hardBreak} #boolean\n`
 			+ `repo:\n  owner: ${this.plugin.settings.githubName}\n  repo: ${this.plugin.settings.githubRepo}\n  branch: ${this.plugin.settings.githubBranch}\n`
 			+ `autoclean: ${this.plugin.settings.autoCleanUp}\n`
 			+ `baseLink: ${this.plugin.settings.mainLink}`
 		this.settingsPage.createEl('pre', {text: yamlKeysUsefullBasedOnYourSettings}).addClass('language-yaml')
-	}
+		const explanation = document.createDocumentFragment()
+		const linkExplanation = explanation.createEl('li', {text: 'links : For internals links'})
+		linkExplanation.createEl('ul').createEl('li', {text: 'mdlinks : Convert internal links to markdown links'})
+			.createEl('ul').createEl('li', {text: 'convert : Remove the internal links form (![[]] or []())'})
+
+		}
 }
