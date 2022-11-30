@@ -179,6 +179,8 @@ export function getFrontmatterCondition(frontmatter: FrontMatterCache, settings:
 		if (typeof frontmatter.links === 'object') {
 			if (frontmatter.links.convert !== undefined) {
 				settingsConversion.links = frontmatter.links.convert
+			} if (frontmatter.links.internals !== undefined) {
+				settingsConversion.links = frontmatter.links.internals
 			}
 			if (frontmatter.links.mdlinks !== undefined) {
 				settingsConversion.convertWiki = frontmatter.links.mdlinks

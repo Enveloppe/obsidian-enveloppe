@@ -6,6 +6,7 @@
 	"scripts": {
 		"vault": "node esbuild.config.mjs production && copy main.js \"N:\\Nest\\.obsidian\\plugins\\obsidian-mkdocs-publisher\" && copy styles.css \"N:\\Nest\\.obsidian\\plugins\\obsidian-mkdocs-publisher\"",
 		"build": "node esbuild.config.mjs production",
+		"dev": "node esbuild.config.mjs development",
 		"lint": "eslint --ext .ts plugin/",
 		"lint:fix": "eslint --fix --ext .ts  plugin/",
 		"version": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json",

@@ -1,4 +1,5 @@
 import {TFile} from "obsidian";
+import {settings, subSettings} from "../i18n";
 
 export interface GitHubPublisherSettings {
 	githubRepo: string;
@@ -112,6 +113,35 @@ export interface TextCleaner {
 	replace: string,
 	after: boolean,
 	flags: string,
+}
+
+export const PUBLISHER_TABS = {
+	'github-configuration':
+			{
+				name: settings("github", "githubConfiguration") as string,
+				icon: "cloud",
+			},
+	'upload-configuration':
+			{
+				name: 'Upload Configuration',
+				icon: "upload",
+			},
+	'text-conversion':{
+		name: settings("textConversion", "textConversion") as string,
+		icon: "file-text",
+	},
+	'embed-configuration': {
+		name: settings("embed", "embed") as string,
+		icon: 'link',
+	},
+	'plugin-settings':{
+		name: settings("plugin", "pluginSettings") as string,
+		icon: "gear",
+	},
+	'help':{
+		name: subSettings('help.help') as string,
+		icon: "info",
+	}
 }
 
 export interface frontmatterConvert {

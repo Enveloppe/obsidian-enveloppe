@@ -2,6 +2,12 @@
 	border-top: transparent;
 	padding: 0 0 3px 0;
 }
+
+summary.obs-git-publisher-summary {
+	border-top: 1px solid var(--background-modifier-border);
+	padding-top: 10px;
+}
+
 .obs-git-publisher-censor-desc p {
 	margin: 0 !important;
 }
@@ -55,4 +61,39 @@ button.obs-git-publisher-censor-flags:hover {
 .obs-git-publisher-textarea textarea {
 	width: 250px;
 	height: 100px;
+}
+
+.settings-tab-bar {
+	display: flex;
+	flex-direction: row;
+}
+
+.settings-tab {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: var(--size-4-2);
+	padding: 10px;
+	border: 1px solid var(--background-modifier-border)
+}
+
+.settings-tab-active {
+	background-color: var(--color-accent);
+	color: var(--text-on-accent);
+}
+
+.settings-tab-name {
+	font-weight: bold;
+}
+
+.settings-tab-icon {
+	display: flex;
+}
+
+.settings-tab-page > .setting-item:first-child {
+	margin-top: 15px;
+}
+
+.settings-tab-page h5 {
+	margin-bottom: 10px !important;
 }

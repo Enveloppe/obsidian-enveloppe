@@ -1,4 +1,4 @@
-import {App, Notice, PluginSettingTab, Setting} from "obsidian";
+import {App, Notice, PluginSettingTab, setIcon, Setting} from "obsidian";
 import GithubPublisherPlugin from "./main";
 import {
 	hideSettings,
@@ -8,7 +8,7 @@ import {
 	autoCleanUpSettingsOnCondition,
 	shortcutsHideShow,
 } from "./settings/style";
-import { folderSettings, TextCleaner } from "./settings/interface";
+import { folderSettings, TextCleaner, PUBLISHER_TABS } from "./settings/interface";
 import {settings, StringFunc, subSettings} from "./i18n";
 
 function openDetails(groupName: string, detailsState: boolean) {
@@ -24,6 +24,8 @@ function openDetails(groupName: string, detailsState: boolean) {
 
 export class GithubPublisherSettings extends PluginSettingTab {
 	plugin: GithubPublisherPlugin;
+	settingsPage: HTMLElement;
+
 
 	constructor(app: App, plugin: GithubPublisherPlugin) {
 		super(app, plugin);
@@ -31,17 +33,55 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	}
 
 	display(): void {
-		const { containerEl } = this;
+		const {containerEl} = this;
 		containerEl.empty();
+		const tabBar = containerEl.createEl('nav', {cls: 'settings-tab-bar'});
+		for (const [tabID, tabInfo] of Object.entries(PUBLISHER_TABS)) {
+			const tabEl = tabBar.createEl('div', {cls: 'settings-tab'});
+			const tabIcon = tabEl.createEl('div', {cls: 'settings-tab-icon'});
+			setIcon(tabIcon, tabInfo.icon);
+			const tabName = tabEl.createEl('div', {cls: 'settings-tab-name', text: tabInfo.name});
+			tabEl.addEventListener('click', () => {
+				// @ts-ignore
+				for (const tabEl of tabBar.children)
+					tabEl.removeClass('settings-tab-active');
 
-		/* ------------------------------ *
-		 * 			Github Config		  *
-		 * ------------------------------ */
+				tabEl.addClass('settings-tab-active');
+				this.renderSettingsPage(tabID);
+			});
+		}
+		this.settingsPage = containerEl.createEl('div', {cls: 'settings-tab-page'});
+		this.renderSettingsPage('github-configuration');
 
-		containerEl.createEl("h1", {
-			text: settings("github", "githubConfiguration") as string,
-		});
-		new Setting(containerEl)
+	}
+
+	renderSettingsPage(tabId: string) {
+		this.settingsPage.empty();
+		switch (tabId) {
+		case 'github-configuration':
+			this.renderGithubConfiguration();
+			break;
+		case 'upload-configuration':
+			this.renderUploadConfiguration();
+			break;
+		case 'text-conversion':
+			this.renderTextConversion();
+			break;
+		case 'embed-configuration':
+			this.renderEmbedConfiguration();
+			break;
+		case 'plugin-settings':
+			this.renderPluginSettings();
+			break;
+		case 'help':
+			this.renderHelp();
+			break;
+		}
+	}
+
+
+	renderGithubConfiguration() {
+		new Setting(this.settingsPage)
 			.setName(settings("github", "repoName") as string)
 			.setDesc(settings("github", "repoNameDesc") as string)
 			.addText((text) =>
@@ -53,7 +93,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
-		new Setting(containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("github", "githubUsername") as string)
 			.setDesc(settings("github", "githubUsernameDesc") as string)
 			.addText((text) =>
@@ -76,7 +116,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					"https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
 		});
-		new Setting(containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("github", "githubToken") as string)
 			.setDesc(desc_ghToken)
 			.addText((text) =>
@@ -89,7 +129,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					})
 			);
 
-		new Setting(containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("github", "githubBranchHeading") as string)
 			.setDesc(settings("github", "githubBranchDesc") as string)
 			.addText((text) =>
@@ -102,7 +142,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					})
 			);
 
-		new Setting(containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("github", "automaticallyMergePR") as string)
 			.addToggle((toggle) =>
 				toggle
@@ -113,18 +153,15 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					})
 			);
 
-		/* ------------------------------ *
-		 * 			Upload config		  *
-		 * ------------------------------ */
-		containerEl.createEl("h2", {
-			text: settings("uploadConfig", "uploadConfig") as string,
-		});
+	}
 
-		containerEl.createEl("h3", {
+	renderUploadConfiguration() {
+
+		this.settingsPage.createEl("h3", {
 			text: settings("uploadConfig", "pathSetting") as string,
 		});
 
-		new Setting(this.containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("uploadConfig", "folderBehavior") as string)
 			.setDesc(settings("uploadConfig", "folderBehaviorDesc") as string)
 			.addDropdown((dropDown) => {
@@ -143,7 +180,6 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.setValue(this.plugin.settings.downloadedFolder)
 					.onChange(async (value: string) => {
 						this.plugin.settings.downloadedFolder = value;
-
 						await folderHideShowSettings(
 							frontmatterKeySettings,
 							rootFolderSettings,
@@ -152,19 +188,13 @@ export class GithubPublisherSettings extends PluginSettingTab {
 							this.plugin,
 							subFolderSettings
 						);
-						if (value === folderSettings.fixed) {
-							hideSettings(folderNoteSettings);
-						} else {
-							showSettings(folderNoteSettings);
-							if (value === folderSettings.obsidian) {
-								showSettings(subFolderSettings);
-							}
-						}
+						this.settingsPage.empty();
+						this.renderUploadConfiguration();
 						await this.plugin.saveSettings();
 					});
 			});
 
-		new Setting(this.containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("uploadConfig", "defaultFolder") as string)
 			.setDesc(settings("uploadConfig", "defaultFolderDesc") as string)
 			.addText((text) => {
@@ -184,14 +214,14 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		const subFolderSettings = new Setting(this.containerEl)
+		const subFolderSettings = new Setting(this.settingsPage)
 			.setName(settings("uploadConfig", "pathRemoving") as string)
 			.setClass("obs-git-publisher")
 			.setDesc(settings("uploadConfig", "pathRemovingDesc") as string)
 			.addText((text) => {
 				text.setPlaceholder(
 					settings(
-						"textConversion",
+						"uploadConfig",
 						"pathRemovingPlaceholder"
 					) as string
 				)
@@ -204,7 +234,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		const frontmatterKeySettings = new Setting(this.containerEl)
+		const frontmatterKeySettings = new Setting(this.settingsPage)
 			.setName(settings("uploadConfig", "frontmatterKey") as string)
 			.setClass("obs-git-publisher")
 			.setDesc(settings("uploadConfig", "frontmatterKeyDesc") as string)
@@ -216,7 +246,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-		const rootFolderSettings = new Setting(this.containerEl)
+		const rootFolderSettings = new Setting(this.settingsPage)
 			.setName(settings("uploadConfig", "rootFolder") as string)
 			.setClass("obs-git-publisher")
 			.setDesc(settings("uploadConfig", "rootFolderDesc") as string)
@@ -236,7 +266,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-		const frontmatterTitleSet = new Setting(this.containerEl)
+		const frontmatterTitleSet = new Setting(this.settingsPage)
 			.setName(settings("uploadConfig", "useFrontmatterTitle") as string)
 			.setDesc(
 				settings("uploadConfig", "useFrontmatterTitleDesc") as string
@@ -247,7 +277,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.useFrontmatterTitle = value;
 						await this.plugin.saveSettings();
-						this.display();
+						this.settingsPage.empty();
+						this.renderUploadConfiguration();
 					});
 			});
 		if (this.plugin.settings.useFrontmatterTitle) {
@@ -260,21 +291,97 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 		}
+		if (this.plugin.settings.downloadedFolder === folderSettings.yaml){
+			showSettings(frontmatterKeySettings);
+			showSettings(rootFolderSettings);
+			hideSettings(subFolderSettings);
+		} else {
+			hideSettings(frontmatterKeySettings);
+			hideSettings(rootFolderSettings);
+			if (this.plugin.settings.downloadedFolder === folderSettings.obsidian){
+				showSettings(subFolderSettings);
+			} else {
+				hideSettings(subFolderSettings)
+			}
+		}
+		this.settingsPage.createEl("h3", {text: "Github Workflow"});
+		new Setting(this.settingsPage)
+			.setName(settings("githubWorkflow", "githubActionName") as string)
+			.setDesc(
+				settings("githubWorkflow", "githubActionNameDesc") as string
+			)
+			.addText((text) => {
+				text.setPlaceholder("ci")
+					.setValue(this.plugin.settings.workflowName)
+					.onChange(async (value) => {
+						value =
+							value.length > 0
+								? value.trim().replace(".yml", "") + ".yml"
+								: value;
+						this.plugin.settings.workflowName = value;
+						await this.plugin.saveSettings();
+					});
+			});
+		const condition =
+			(this.plugin.settings.downloadedFolder === folderSettings.yaml &&
+				this.plugin.settings.rootFolder.length === 0) ||
+			this.plugin.settings.folderDefaultName.length === 0;
 
-		/* ------------------------------ *
-		 * 		  Text conversion		  *
-		 * ------------------------------ */
+		const autoCleanSetting = new Setting(this.settingsPage)
+			.setName(settings("githubWorkflow", "autoCleanUp") as string)
+			.setDesc(settings("githubWorkflow", "autoCleanUpDesc") as string)
+			.setDisabled(condition)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.autoCleanUp)
+					.onChange(async (value) => {
+						this.plugin.settings.autoCleanUp = value;
+						shortcutsHideShow(value, autoCleanExcludedSettings);
+						await this.plugin.saveSettings();
+					});
+			});
 
-		containerEl.createEl("h3", {
-			text: settings("textConversion", "textConversion") as string,
-		});
-		containerEl.createEl("span", {
+		const autoCleanExcludedSettings = new Setting(this.settingsPage)
+			.setName(settings("githubWorkflow", "excludedFiles") as string)
+			.setDesc(settings("githubWorkflow", "excludedFilesDesc") as string)
+			.setClass("obs-git-publisher-textarea")
+			.addTextArea((textArea) => {
+				textArea
+					.setPlaceholder("docs/assets/js, docs/assets/logo")
+					.setValue(this.plugin.settings.autoCleanUpExcluded)
+					.onChange(async (value) => {
+						this.plugin.settings.autoCleanUpExcluded = value;
+						await this.plugin.saveSettings();
+					});
+			});
+		autoCleanUpSettingsOnCondition(
+			condition,
+			autoCleanSetting,
+			this.plugin
+		);
+		shortcutsHideShow(
+			this.plugin.settings.autoCleanUp,
+			autoCleanExcludedSettings
+		);
+		folderHideShowSettings(
+			frontmatterKeySettings,
+			rootFolderSettings,
+			autoCleanSetting,
+			this.plugin.settings.downloadedFolder,
+			this.plugin,
+			subFolderSettings
+		).then();
+
+	}
+
+	renderTextConversion() {
+		this.settingsPage.createEl("p", {
 			text: settings("textConversion", "textConversionDesc") as string,
 		});
-		containerEl.createEl("h5", {
+		this.settingsPage.createEl("h5", {
 			text: settings("textConversion", "textHeader") as string,
 		});
-		new Setting(this.containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("textConversion", "hardBreakTitle") as string)
 			.setDesc(settings("textConversion", "hardBreakDesc") as string)
 			.addToggle((toggle) => {
@@ -285,7 +392,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-		new Setting(this.containerEl)
+		new Setting(this.settingsPage)
 			.setName(subSettings('textConversion.dataview.header') as string)
 			.setDesc(subSettings("textConversion.dataview.desc") as string)
 			.addToggle((toggle) => {
@@ -312,10 +419,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		+ "\n" + subSettings("textConversion.censor.flags.dotAll") as string
 		+ "\n" + subSettings("textConversion.censor.flags.unicode") as string
 		+ "\n" + subSettings("textConversion.censor.flags.sticky") as string;
-		const details = containerEl.createEl("details");
+		const details = this.settingsPage.createEl("details");
 		details.createEl("summary", {
 			text: subSettings("textConversion.censor.TextHeader") as string,
-		});
+		}).addClass("obs-git-publisher-summary");
 		new Setting(details)
 			.setClass("obs-git-publisher-censor-desc")
 			.setDesc(censorTextDesc)
@@ -335,7 +442,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						};
 						this.plugin.settings.censorText.push(censorText);
 						await this.plugin.saveSettings();
-						this.display();
+						this.settingsPage.empty();
+						this.renderTextConversion();
 						openDetails(
 							subSettings(
 								"textConversion.censor.TextHeader"
@@ -394,7 +502,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 								new Notice(
 									(subSettings(
 										"textConversion.censor.flags.error"
-									)as StringFunc)(value)
+									) as StringFunc)(value)
 								)
 							}
 						})
@@ -414,7 +522,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 								1
 							);
 							await this.plugin.saveSettings();
-							this.display();
+							this.settingsPage.empty();
+							this.renderTextConversion();
 							openDetails(
 								subSettings(
 									"textConversion.censor.TextHeader"
@@ -429,7 +538,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						.onClick(async () => {
 							censorText.after = !censorText.after;
 							await this.plugin.saveSettings();
-							this.display();
+							this.settingsPage.empty();
+							this.renderTextConversion();
 							openDetails(
 								subSettings(
 									"textConversion.censor.TextHeader"
@@ -440,8 +550,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				});
 		}
 
-		containerEl.createEl("h5", { text: "Tags" });
-		new Setting(this.containerEl)
+		this.settingsPage.createEl("h5", {text: "Tags"});
+		new Setting(this.settingsPage)
 			.setName(
 				subSettings("textConversion.tags.inlineTagsHeader") as string
 			)
@@ -457,7 +567,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		new Setting(this.containerEl)
+		new Setting(this.settingsPage)
 			.setName(subSettings("textConversion.tags.header") as string)
 			.setDesc(subSettings("textConversion.tags.desc") as string)
 			.setClass("obs-git-publisher-textarea")
@@ -471,7 +581,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-		new Setting(this.containerEl)
+		new Setting(this.settingsPage)
 			.setName(subSettings("textConversion.tags.ExcludeHeader") as string)
 			.setDesc(subSettings("textConversion.tags.ExcludeDesc") as string)
 			.setClass("obs-git-publisher-textarea")
@@ -488,13 +598,13 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		containerEl.createEl("h5", {
+		this.settingsPage.createEl("h5", {
 			text: subSettings("textConversion.links.header") as string,
 		});
-		containerEl.createEl("p", {
+		this.settingsPage.createEl("p", {
 			text: subSettings("textConversion.links.desc") as string,
 		});
-		const folderNoteSettings = new Setting(containerEl)
+		const folderNoteSettings = new Setting(this.settingsPage)
 			.setName(subSettings("textConversion.links.folderNote") as string)
 			.setClass("obs-git-publisher")
 			.setDesc(
@@ -508,7 +618,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-		new Setting(containerEl)
+		this.plugin.settings.downloadedFolder === folderSettings.fixed
+			? hideSettings(folderNoteSettings)
+			: showSettings(folderNoteSettings);
+		new Setting(this.settingsPage)
 			.setName(subSettings("textConversion.links.internals") as string)
 			.setDesc(
 				subSettings("textConversion.links.internalsDesc") as string
@@ -522,7 +635,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		new Setting(containerEl)
+		new Setting(this.settingsPage)
 			.setName(subSettings("textConversion.links.wikilinks") as string)
 			.setDesc(
 				subSettings("textConversion.links.wikilinksDesc") as string
@@ -535,15 +648,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
+	}
 
-		/* ------------------------------ *
-		 * 				Embed			  *
-		 * ------------------------------ */
-		containerEl.createEl("h3", {
-			text: settings("embed", "embed") as string,
-		});
-
-		new Setting(containerEl)
+	renderEmbedConfiguration() {
+		new Setting(this.settingsPage)
 			.setName(settings("embed", "transferImage") as string)
 			.setDesc(settings("embed", "transferImageDesc") as string)
 			.addToggle((toggle) => {
@@ -556,7 +664,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		new Setting(containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("embed", "transferMetaFile") as string)
 			.setDesc(settings("embed", "transferMetaFileDesc") as string)
 			.setClass("obs-git-publisher-textarea")
@@ -571,7 +679,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		new Setting(containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("embed", "transferEmbeddedNotes") as string)
 			.setDesc(settings("embed", "transferEmbeddedNotesDesc") as string)
 			.addToggle((toggle) => {
@@ -583,7 +691,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		const settingsDefaultImage = new Setting(containerEl)
+		const settingsDefaultImage = new Setting(this.settingsPage)
 			.setName(settings("embed", "defaultImageFolder") as string)
 			.setDesc(settings("embed", "defaultImageFolderDesc") as string)
 			.addText((text) => {
@@ -598,65 +706,14 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		containerEl.createEl("h3", { text: "Github Workflow" });
-		new Setting(containerEl)
-			.setName(settings("githubWorkflow", "githubActionName") as string)
-			.setDesc(
-				settings("githubWorkflow", "githubActionNameDesc") as string
-			)
-			.addText((text) => {
-				text.setPlaceholder("ci")
-					.setValue(this.plugin.settings.workflowName)
-					.onChange(async (value) => {
-						value =
-							value.length > 0
-								? value.trim().replace(".yml", "") + ".yml"
-								: value;
-						this.plugin.settings.workflowName = value;
-						await this.plugin.saveSettings();
-					});
-			});
-		const condition =
-			(this.plugin.settings.downloadedFolder === folderSettings.yaml &&
-				this.plugin.settings.rootFolder.length === 0) ||
-			this.plugin.settings.folderDefaultName.length === 0;
 
-		const autoCleanSetting = new Setting(containerEl)
-			.setName(settings("githubWorkflow", "autoCleanUp") as string)
-			.setDesc(settings("githubWorkflow", "autoCleanUpDesc") as string)
-			.setDisabled(condition)
-			.addToggle((toggle) => {
-				toggle
-					.setValue(this.plugin.settings.autoCleanUp)
-					.onChange(async (value) => {
-						this.plugin.settings.autoCleanUp = value;
-						shortcutsHideShow(value, autoCleanExcludedSettings);
-						await this.plugin.saveSettings();
-					});
-			});
+	}
 
-		const autoCleanExcludedSettings = new Setting(containerEl)
-			.setName(settings("githubWorkflow", "excludedFiles") as string)
-			.setDesc(settings("githubWorkflow", "excludedFilesDesc") as string)
-			.setClass("obs-git-publisher-textarea")
-			.addTextArea((textArea) => {
-				textArea
-					.setPlaceholder("docs/assets/js, docs/assets/logo")
-					.setValue(this.plugin.settings.autoCleanUpExcluded)
-					.onChange(async (value) => {
-						this.plugin.settings.autoCleanUpExcluded = value;
-						await this.plugin.saveSettings();
-					});
-			});
-
-		/* ------------------------------ *
-		 * 		Plugin settings			  *
-		 * ------------------------------ */
-		containerEl.createEl("h1", {
-			text: settings("plugin", "pluginSettings") as string,
-		});
-
-		new Setting(containerEl)
+	/* ------------------------------ *
+	 * 		Plugin settings			  *
+	 * ------------------------------ */
+	renderPluginSettings() {
+		new Setting(this.settingsPage)
 			.setName(settings("plugin", "shareKey") as string)
 			.setDesc(settings("plugin", "shareKeyDesc") as string)
 			.addText((text) =>
@@ -668,7 +725,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
-		new Setting(containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("plugin", "excludedFolder") as string)
 			.setDesc(settings("plugin", "excludedFolderDesc") as string)
 			.setClass("obs-git-publisher-textarea")
@@ -681,7 +738,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
-		new Setting(containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("plugin", "fileMenu") as string)
 			.setDesc(settings("plugin", "fileMenuDesc") as string)
 			.addToggle((toggle) =>
@@ -692,7 +749,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
-		new Setting(containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("plugin", "editorMenu") as string)
 			.setDesc(settings("plugin", "editorMenuDesc") as string)
 			.addToggle((toggle) =>
@@ -703,7 +760,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
-		new Setting(containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("plugin", "shareExternalModifiedTitle") as string)
 			.setDesc(settings("plugin", "shareExternalModifiedDesc") as string)
 			.addToggle((toggle) =>
@@ -715,7 +772,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					})
 			);
 
-		new Setting(containerEl)
+		new Setting(this.settingsPage)
 			.setName(subSettings("plugin.copyLink.copylinkSetting") as string)
 			.setDesc(subSettings("plugin.copyLink.copylinkDesc") as string)
 			.addToggle((toggle) =>
@@ -729,7 +786,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					})
 			);
 
-		const baseLinkSettings = new Setting(containerEl)
+		const baseLinkSettings = new Setting(this.settingsPage)
 			.setName(subSettings("plugin.copyLink.baselink") as string)
 			.setDesc(subSettings("plugin.copyLink.baselinkDesc") as string)
 			.setClass("obs-git-publisher")
@@ -741,21 +798,22 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-		const pathRemover = new Setting(containerEl)
+		const pathRemover = new Setting(this.settingsPage)
 			.setName(subSettings("plugin.copyLink.linkpathremover") as string)
 			.setDesc(
 				subSettings("plugin.copyLink.linkpathremoverDesc") as string
 			)
 			.setClass("obs-git-publisher")
 			.addText((text) => {
-				text.setPlaceholder("docs/")
+				text
+					.setPlaceholder("docs")
 					.setValue(this.plugin.settings.linkRemover)
 					.onChange(async (value) => {
 						this.plugin.settings.linkRemover = value;
 						await this.plugin.saveSettings();
 					});
 			});
-		new Setting(containerEl)
+		new Setting(this.settingsPage)
 			.setName(settings("plugin", "logNoticeHeader") as string)
 			.setDesc(settings("plugin", "logNoticeDesc") as string)
 			.addToggle((toggle) =>
@@ -766,32 +824,21 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
-
-		autoCleanUpSettingsOnCondition(
-			condition,
-			autoCleanSetting,
-			this.plugin
-		);
-		this.plugin.settings.downloadedFolder === folderSettings.fixed
-			? hideSettings(folderNoteSettings)
-			: showSettings(folderNoteSettings);
-		folderHideShowSettings(
-			frontmatterKeySettings,
-			rootFolderSettings,
-			autoCleanSetting,
-			this.plugin.settings.downloadedFolder,
-			this.plugin,
-			subFolderSettings
-		).then();
-		shortcutsHideShow(
-			this.plugin.settings.embedImage,
-			settingsDefaultImage
-		);
-		shortcutsHideShow(
-			this.plugin.settings.autoCleanUp,
-			autoCleanExcludedSettings
-		);
 		shortcutsHideShow(this.plugin.settings.copyLink, baseLinkSettings);
 		shortcutsHideShow(this.plugin.settings.copyLink, pathRemover);
+	}
+	renderHelp() {
+		this.settingsPage.createEl('a', {text: 'If you have any questions, please visit the plugin documentation on GitHub', href: '\'https://obsidian-publisher.netlify.app/'})
+		this.settingsPage.createEl('p', {text: 'Moreover, there are some frontmatter YAML keys that can be usefull for your workflow'})
+		const yamlKeysUsefullBasedOnYourSettings = `${this.plugin.settings.shareKey}: true\n`
+			+ `links:\n  mdlinks: ${this.plugin.settings.convertWikiLinks} #boolean\n  convert: true \n`
+			+ `embed:\n  send: #boolean\n  remove: #boolean\n`
+			+ `attachment:\n  send: #boolean\n  folder: #string\n`
+			+ `dataview: #boolean\n`
+			+ `hardBreak: #boolean\n`
+			+ `repo:\n  owner: ${this.plugin.settings.githubName}\n  repo: ${this.plugin.settings.githubRepo}\n  branch: ${this.plugin.settings.githubBranch}\n`
+			+ `autoclean: ${this.plugin.settings.autoCleanUp}\n`
+			+ `baseLink: ${this.plugin.settings.mainLink}`
+		this.settingsPage.createEl('pre', {text: yamlKeysUsefullBasedOnYourSettings}).addClass('language-yaml')
 	}
 }
