@@ -841,7 +841,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		const explanation = document.createDocumentFragment()
 		const linkExplanation = explanation.createEl('li', {text: 'links : For internals links'})
 		linkExplanation.createEl('ul').createEl('li', {text: 'mdlinks : Convert internal links to markdown links'})
-			.createEl('ul').createEl('li', {text: 'convert : Remove the internal links form (![[]] or []())'})
+			.createEl('ul').createEl('li', {text: 'convert : Remove the internal links form («![[]]»  or «[]()»))'})
 
 		}
 }
