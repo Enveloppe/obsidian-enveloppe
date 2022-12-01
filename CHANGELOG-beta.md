@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.6.1-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.6.0...4.6.1-0) (2022-12-01)
+
+
+### Bug Fixes
+
+* add new string in test settings ([621cef3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/621cef3bc2f459b6f8157596bb5311f4933b3dbc))
+* **autoCleanUpExcluded:** string to list conversion of settings ([cbf7810](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/cbf7810b244751bfa251521d8132421c21f0b7aa))
+
 ## [4.6.0-10](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.5.1...4.6.0-10) (2022-12-01)
 
 
