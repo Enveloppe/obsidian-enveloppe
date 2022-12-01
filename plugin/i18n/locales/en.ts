@@ -153,7 +153,7 @@ export default {
 				repository: "Repository",
 				issue: "Issue",
 				discussion: "Discussion",
-				documentationLinks: "https://obsidian-publisher.netlify.app/"
+				links: "https://obsidian-publisher.netlify.app/"
 			},
 			frontmatter:{
 				title: "Frontmatter keys cheatsheet",

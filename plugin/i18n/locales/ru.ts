@@ -144,6 +144,53 @@ export default {
 			shareExternalModifiedTitle: "Share external modified file",
 			shareExternalModifiedDesc: "Send edited file if they are different from the active file. Useful when editing metadata using MetaEdit or Metadata Menu.",
 		},
+		help: {
+			help: "Help",
+			usefulLinks: {
+				title: "Useful links",
+				documentation: "Documentation",
+				repository: "Repository",
+				issue: "Issue",
+				discussion: "Discussion",
+				links: "https://obsidian-publisher.netlify.app/"
+			},
+			frontmatter:{
+				title: "Frontmatter keys cheatsheet",
+				desc: 'Moreover, there are some frontmatter YAML keys that can be usefull for your workflow. The YAML code below show the default settings, but feel free to change it to your needs in each notes!',
+				share: "This key is used to share a note with the plugin.",
+				mdlinks: "convert all wikilinks to markdown links",
+				convert:{
+					enableOrDisable: "enable or disable the conversion of links. Disabling this will remove the",
+					or: "or",
+					syntax: "syntax, while keeping the file name or the alias.",
+				},
+				embed: {
+					send: "send embedded note to GitHub",
+					remove: "remove the embed from the note, leaving empty line.",
+				},
+				attachment:{
+					send: "send all attachments to github",
+					folder: "change the default folder for the attachments",
+				},
+				dataview: "convert dataview queries to markdown.",
+				hardBreak: "convert all linebreaks to markdown «hard break».",
+				repo: {
+					desc: "change the default repo for the note.",
+					owner: "owner of the repo",
+					repo: "name of the repo",
+					branch: "branch of the repo",
+				},
+				titleKey: "change the title of the note.",
+				autoclean: "disable or enable autocleaning",
+				baselink: "change the base link for the copy link command",
+			},
+			multiRepoHelp: {
+				title: "Send to multiple repository",
+				desc: "If you want to send your notes to multiple repository, you can use the ",
+				desc2:"key in your frontmatter. The value of this key must be a list of repository. Each repository must have the following keys ",
+				exampleDesc: "The YAML code below show an example based on your settings."
+			}
+		}
 	},
 	informations: {
 		startingClean: (repoInfo: string): string => `Начинаю очистку ${repoInfo}`,
