@@ -27,7 +27,7 @@ export default class GithubPublisher extends Plugin {
 		const convertOldSettings = async () => {
 			const oldExcludedSettings = this.settings.autoCleanUpExcluded as unknown as string;
 			if (typeof oldExcludedSettings === "string") {
-				this.settings.autoCleanUpExcluded = oldExcludedSettings.split(/[,\n]\W*/);
+				this.settings.autoCleanUpExcluded = oldExcludedSettings === "" ? [] : oldExcludedSettings.split(/[,\n]\W*/)
 				await this.saveSettings();
 			}
 		};
