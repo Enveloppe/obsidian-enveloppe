@@ -10,6 +10,7 @@ import {
 } from "./settings/style";
 import { folderSettings, TextCleaner, PUBLISHER_TABS } from "./settings/interface";
 import {settings, StringFunc, subSettings} from "./i18n";
+import {help, multipleRepoExplained, supportMe, usefullLinks} from "./settings/help";
 
 function openDetails(groupName: string, detailsState: boolean) {
 	for (let i = 0; i < document.getElementsByTagName("details").length; i++) {
@@ -35,12 +36,15 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	display(): void {
 		const {containerEl} = this;
 		containerEl.empty();
-		const tabBar = containerEl.createEl('nav', {cls: 'settings-tab-bar'});
+		const tabBar = containerEl.createEl('nav', {cls: 'settings-tab-bar obs-git-publisher'});
 		for (const [tabID, tabInfo] of Object.entries(PUBLISHER_TABS)) {
-			const tabEl = tabBar.createEl('div', {cls: 'settings-tab'});
-			const tabIcon = tabEl.createEl('div', {cls: 'settings-tab-icon'});
+			const tabEl = tabBar.createEl('div', {cls: 'settings-tab obs-git-publisher'});
+			const tabIcon = tabEl.createEl('div', {cls: 'settings-tab-icon obs-git-publisher'});
 			setIcon(tabIcon, tabInfo.icon);
-			const tabName = tabEl.createEl('div', {cls: 'settings-tab-name', text: tabInfo.name});
+			tabEl.createEl('div', {cls: 'settings-tab-name obs-git-publisher', text: tabInfo.name});
+			if (tabID === 'github-configuration')
+				tabEl.addClass('settings-tab-active');
+
 			tabEl.addEventListener('click', () => {
 				// @ts-ignore
 				for (const tabEl of tabBar.children)
@@ -50,7 +54,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				this.renderSettingsPage(tabID);
 			});
 		}
-		this.settingsPage = containerEl.createEl('div', {cls: 'settings-tab-page'});
+		this.settingsPage = containerEl.createEl('div', {cls: 'settings-tab-page obs-git-publisher'});
 		this.renderSettingsPage('github-configuration');
 
 	}
@@ -825,23 +829,38 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		shortcutsHideShow(this.plugin.settings.copyLink, pathRemover);
 	}
 	renderHelp() {
-		this.settingsPage.createEl('a', {text: 'If you have any questions, please visit the plugin documentation on GitHub', href: '\'https://obsidian-publisher.netlify.app/'})
-		this.settingsPage.createEl('p', {text: 'Moreover, there are some frontmatter YAML keys that can be usefull for your workflow. The YAML code below show the default settings, but feel free to change it to your needs in each notes!'})
-		const yamlKeysUsefullBasedOnYourSettings = 
-		`${this.plugin.settings.shareKey}: true\n`
-			+ `links:\n  mdlinks: ${this.plugin.settings.convertWikiLinks} #boolean\n  convert: true \n`
-			+ `embed:\n  send: ${this.plugin.settings.embedNotes}\n  remove: false#boolean\n`
-			+ `attachment:\n  send: ${this.plugin.settings.embedImage} #boolean\n  folder: ${this.plugin.settings.defaultImageFolder} #string\n`
-			+ `dataview: ${this.plugin.settings.convertDataview} #boolean\n`
-			+ `hardBreak: ${this.plugin.settings.hardBreak} #boolean\n`
-			+ `repo:\n  owner: ${this.plugin.settings.githubName}\n  repo: ${this.plugin.settings.githubRepo}\n  branch: ${this.plugin.settings.githubBranch}\n`
+		this.settingsPage.createEl("h2", {text: subSettings("help.usefulLinks.title") as string});
+		console.log(subSettings("help.usefulLinks.title"));
+		this.settingsPage.appendChild(usefullLinks());
+		this.settingsPage.createEl('hr')
+		this.settingsPage.createEl("h2", {text: subSettings("help.frontmatter.title") as string});
+		this.settingsPage.createEl('p', {text: subSettings("help.frontmatter.desc") as string});
+		const yamlKeysUsefullBasedOnYourSettings =
+			`${this.plugin.settings.shareKey}: true\n`
+			+ `links:\n`+
+			`  mdlinks: ${this.plugin.settings.convertWikiLinks}\n`+
+			`  convert: true\n`
+			+ `embed:\n`+
+			`  send: ${this.plugin.settings.embedNotes}\n`+
+			`  remove: false\n`
+			+ `attachment:\n`+
+			`  send: ${this.plugin.settings.embedImage}\n`+
+			`  folder: ${this.plugin.settings.defaultImageFolder}\n`
+			+ `dataview: ${this.plugin.settings.convertDataview}\n`
+			+ `hardBreak: ${this.plugin.settings.hardBreak}\n`
+			+ `repo:\n` +
+			`  owner: ${this.plugin.settings.githubName}\n`+
+			`  repo: ${this.plugin.settings.githubRepo}\n`+
+			`  branch: ${this.plugin.settings.githubBranch}\n`
 			+ `autoclean: ${this.plugin.settings.autoCleanUp}\n`
 			+ `baseLink: ${this.plugin.settings.mainLink}`
-		this.settingsPage.createEl('pre', {text: yamlKeysUsefullBasedOnYourSettings}).addClass('language-yaml')
-		const explanation = document.createDocumentFragment()
-		const linkExplanation = explanation.createEl('li', {text: 'links : For internals links'})
-		linkExplanation.createEl('ul').createEl('li', {text: 'mdlinks : Convert internal links to markdown links'})
-			.createEl('ul').createEl('li', {text: 'convert : Remove the internal links form («![[]]»  or «[]()»))'})
-
-		}
+		this.settingsPage.createEl('pre', {cls: 'language-yaml'})
+			.createEl('code', {text: yamlKeysUsefullBasedOnYourSettings, cls: 'language-yaml'})
+		this.settingsPage.appendChild(help(this.plugin.settings));
+		this.settingsPage.createEl('h2', {text: subSettings("help.multiRepoHelp.title") as string});
+		this.settingsPage.appendChild(multipleRepoExplained(this.plugin.settings));
+		this.settingsPage.appendChild(supportMe());
+	}
 }
+
+

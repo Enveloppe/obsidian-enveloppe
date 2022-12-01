@@ -63,37 +63,82 @@ button.obs-git-publisher-censor-flags:hover {
 	height: 100px;
 }
 
-.settings-tab-bar {
+.settings-tab-bar.obs-git-publisher {
 	display: flex;
 	flex-direction: row;
+	gap: 4px;
+	overflow: hidden;
+	padding: 0;
 }
 
-.settings-tab {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	gap: var(--size-4-2);
+.settings-tab.obs-git-publisher {
 	padding: 10px;
-	border: 1px solid var(--background-modifier-border)
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 5px;
 }
 
-.settings-tab-active {
+.settings-tab.obs-git-publisher:hover {
+	background-color: var(--background-modifier-hover);
+}
+
+@media screen and (max-width: 800px) {
+	.settings-tab-bar.obs-git-publisher {
+		flex-direction: column;
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	.settings-tab-bar.obs-git-publisher {
+		flex-wrap: wrap;
+	}
+	.settings-tab.obs-git-publisher {
+		border-bottom: 1px solid var(--background-modifier-border);
+	}
+	.settings-tab-bar.obs-git-publisher {
+		border-bottom: 0;
+	}
+
+}
+
+.settings-tab-active.obs-git-publisher {
 	background-color: var(--color-accent);
 	color: var(--text-on-accent);
+	border: 0;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
 }
 
-.settings-tab-name {
+.settings-tab-name.obs-git-publisher {
 	font-weight: bold;
+	text-align: center;
 }
 
-.settings-tab-icon {
-	display: flex;
+.settings-tab-icon.obs-git-publisher {
+	text-align: center;
 }
 
-.settings-tab-page > .setting-item:first-child {
+.settings-tab-page.obs-git-publisher > .setting-item:first-child {
 	margin-top: 15px;
 }
 
-.settings-tab-page h5 {
+.settings-tab-page.obs-git-publisher h5 {
 	margin-bottom: 10px !important;
 }
+
+.settings-tab-page.obs-git-publisher code,
+.code{
+	color: var(--code-normal);
+	font-family: var(--font-monospace);
+	background-color: var(--color-background);
+	border-radius:var(--radius-s);
+	font-size: var(--code-size);
+}
+.settings-tab-page.obs-git-publisher code.code-title,
+.code.code-title{
+	font-size: calc(var(--code-size) * 12px);
+	font-weight: bolder;
+	text-decoration: underline;
+}
+
+

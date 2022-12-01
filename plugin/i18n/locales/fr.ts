@@ -145,6 +145,53 @@ export default {
 			logNoticeDesc: 'Sur mobile, il peut être difficile de debug le module. Activer cette option pour notifier toutes les erreurs via une notification Obsidian.',
 			shareExternalModifiedTitle: "Partager les fichiers modifiés externes",
 			shareExternalModifiedDesc: "Envoyer les fichiers modifiés s'ils sont différents du fichier actif. Utile si vous modifier les métadonnées à l'aide de Metadata Menu ou MetaEdit.",
+		},
+		help: {
+			help: "Aide",
+			usefulLinks: {
+				title: "Liens utiles",
+				documentation: "Documentation",
+				repository: "Dépôt",
+				issue: "Issue",
+				discussion: "Discussion",
+				links: "https://obsidian-publisher.netlify.app/fr"
+			},
+			frontmatter:{
+				title: "Aide mémoire frontmatter",
+				desc: 'Il existe quelque clés YAML qui peuvent vous être utile. Le code ci-dessous montre les paramètres par défaut, mais n\'hésitez pas à le modifier selon vos besoins pour chaque note !',
+				share: "Permet de partager une note.",
+				mdlinks: "Convertit tous les wikilinks en liens markdowns",
+				convert:{
+					enableOrDisable: "active ou désactive la conversion des liens. En désactivant cette option, vous supprimez la",
+					or: "ou",
+					syntax: "syntaxe, tout en gardant le nom du fichier ou son alias.",
+				},
+				embed: {
+					send: "envoie les notes transclues dans un fichier partagé dans le dépôt. Seuls les fichiers partagés seront envoyés !",
+					remove: "Supprime les notes transclues du fichier partagé, en ne laissant qu'une ligne vide.",
+				},
+				attachment:{
+					send: "envoie toutes les pièces jointes dans le dépôt Git.",
+					folder: "change le dossier par défaut pour les pièces jointes.",
+				},
+				dataview: "convertit les queries dataview en markdown.",
+				hardBreak: "convertit tous les sauts de ligne en «hard break» markdown.",
+				repo: {
+					desc: "changer le dépôt GitHub pour cette note.",
+					owner: "pseudo du propriétaire du dépôt",
+					repo: "nom du dépôt",
+					branch: "nom de la branche",
+				},
+				titleKey: "change le titre de la note.",
+				autoclean: "désactive ou active le nettoyage automatique.",
+				baselink: "change le lien de base pour la commande de copie de lien.",
+			},
+			multiRepoHelp: {
+				title: "Envoie dans plusieurs dépôts",
+				desc: "Si vous souhaitez envoyer vos notes à plusieurs référentiels, vous pouvez utiliser la fonction ",
+				desc2:"dans votre frontmatter. La valeur de cette clé doit être une liste. Chaque dépôt doit avoir les clés suivantes ",
+				exampleDesc: "Le code YAML ci-dessous montre un exemple basé sur vos paramètres."
+			}
 		}
 	},
 	informations: {
