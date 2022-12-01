@@ -43,7 +43,7 @@ export function help(settings: GitHubPublisherSettings) {
 		});
 		span.createEl("li",{ text: "attachment:", cls: "code code-title" });
 		span.createEl("ul", null, (l) => {
-			l.createEl("span", null, (span) => {
+			l.createEl("li", null, (span) => {
 				span.createEl("code", {text: 'send'})
 				span.createEl("span", {text: `: ${subSettings('help.frontmatter.attachment.send') as string}`})
 			});

@@ -162,12 +162,12 @@ export default {
 				share: "Permet de partager une note.",
 				mdlinks: "Convertit tous les wikilinks en liens markdowns",
 				convert:{
-					enableOrDisable: "active ou désactive la conversion des liens. En désactivant cette option, vous supprimez la",
+					enableOrDisable: "active ou désactive la conversion des liens. En désactivant cette option, vous supprimez les",
 					or: "ou",
-					syntax: "syntaxe, tout en gardant le nom du fichier ou son alias.",
+					syntax: "syntaxes, tout en gardant le nom du fichier ou son alias.",
 				},
 				embed: {
-					send: "envoie les notes transclues dans un fichier partagé dans le dépôt. Seuls les fichiers partagés seront envoyés !",
+					send: "envoie les notes transclues du fichier partagé dans le dépôt. Seuls les fichiers partagés seront envoyés !",
 					remove: "Supprime les notes transclues du fichier partagé, en ne laissant qu'une ligne vide.",
 				},
 				attachment:{
@@ -188,7 +188,7 @@ export default {
 			},
 			multiRepoHelp: {
 				title: "Envoie dans plusieurs dépôts",
-				desc: "Si vous souhaitez envoyer vos notes à plusieurs référentiels, vous pouvez utiliser la fonction ",
+				desc: "Si vous souhaitez envoyer vos notes dans plusieurs dépôt en même temps, vous pouvez utiliser la clé ",
 				desc2:"dans votre frontmatter. La valeur de cette clé doit être une liste. Chaque dépôt doit avoir les clés suivantes ",
 				exampleDesc: "Le code YAML ci-dessous montre un exemple basé sur vos paramètres."
 			}
