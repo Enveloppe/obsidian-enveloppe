@@ -30,6 +30,8 @@ export default class GithubPublisher extends Plugin {
 				this.settings.autoCleanUpExcluded = oldExcludedSettings === "" ? [] : oldExcludedSettings.split(/[,\n]\W*/)
 				await this.saveSettings();
 			}
+			this.settings.autoCleanUpExcluded = this.settings.autoCleanUpExcluded.filter((e: string) => e !== "")
+			await this.saveSettings();
 		};
 		convertOldSettings().then();
 		const octokit = new Octokit({ auth: this.settings.GhToken });
