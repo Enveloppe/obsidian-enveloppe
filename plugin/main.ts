@@ -24,6 +24,14 @@ export default class GithubPublisher extends Plugin {
 		console.log("Github Publisher loaded");
 		await this.loadSettings();
 		this.addSettingTab(new GithubPublisherSettings(this.app, this));
+		const convertOldSettings = async () => {
+			const oldExcludedSettings = this.settings.autoCleanUpExcluded as unknown as string;
+			if (typeof oldExcludedSettings === "string") {
+				this.settings.autoCleanUpExcluded = oldExcludedSettings.split(/[,\n]\W*/);
+				await this.saveSettings();
+			}
+		};
+		convertOldSettings().then();
 		const octokit = new Octokit({ auth: this.settings.GhToken });
 		const PublisherManager = new GithubBranch(
 			this.settings,

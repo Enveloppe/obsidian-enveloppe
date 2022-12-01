@@ -4,7 +4,7 @@
 	"description": "Github Publisher is a plugin that help you to send file in a configured Github Repository, based on a frontmatter entry state.",
 	"main": "main.js",
 	"scripts": {
-		"vault": "node esbuild.config.mjs production && copy main.js \"N:\\Nest\\.obsidian\\plugins\\obsidian-mkdocs-publisher\" && copy styles.css \"N:\\Nest\\.obsidian\\plugins\\obsidian-mkdocs-publisher\"",
+		"vault": "node esbuild.config.mjs production && copy main.js \"K:\\Constellation\\.obsidian\\plugins\\obsidian-mkdocs-publisher\" && copy styles.css \"K:\\Constellation\\.obsidian\\plugins\\obsidian-mkdocs-publisher\"",
 		"build": "node esbuild.config.mjs production",
 		"dev": "node esbuild.config.mjs development",
 		"lint": "eslint --ext .ts plugin/",

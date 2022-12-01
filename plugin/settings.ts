@@ -345,6 +345,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
+
+
+
 		const autoCleanExcludedSettings = new Setting(this.settingsPage)
 			.setName(settings("githubWorkflow", "excludedFiles") as string)
 			.setDesc(settings("githubWorkflow", "excludedFilesDesc") as string)
