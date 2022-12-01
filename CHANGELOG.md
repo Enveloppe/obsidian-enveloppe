@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.6.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.6.1...4.6.2) (2022-12-01)
+
+
+### Bug Fixes
+
+* **autoCleanUpExcluded:** convert to empty array if emptry string (aka `""`) ([e28f4d2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e28f4d2b134b2ea0f4655f1e9ef953b7d38c1cd6))
+
 ### [4.6.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.6.0...4.6.1) (2022-12-01)
 
 
