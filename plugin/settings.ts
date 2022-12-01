@@ -352,9 +352,11 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.addTextArea((textArea) => {
 				textArea
 					.setPlaceholder("docs/assets/js, docs/assets/logo")
-					.setValue(this.plugin.settings.autoCleanUpExcluded)
+					.setValue(this.plugin.settings.autoCleanUpExcluded.join(", "))
 					.onChange(async (value) => {
-						this.plugin.settings.autoCleanUpExcluded = value;
+						this.plugin.settings.autoCleanUpExcluded = value
+							.split(/[,\n]\W*/)
+							.map((item) => item.trim())
 						await this.plugin.saveSettings();
 					});
 			});
@@ -580,7 +582,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.setValue(this.plugin.settings.dataviewFields.join(","))
 					.onChange(async (value) => {
 						this.plugin.settings.dataviewFields = value
-							.split(",")
+							.split(/[,\n]\W*/)
 							.map((field) => field.trim());
 						await this.plugin.saveSettings();
 					});
@@ -596,7 +598,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					)
 					.onChange(async (value) => {
 						this.plugin.settings.excludeDataviewValue = value
-							.split(",")
+							.split(/[,\n]\W*/)
 							.map((field) => field.trim());
 						await this.plugin.saveSettings();
 					});
@@ -674,10 +676,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setClass("obs-git-publisher-textarea")
 			.addTextArea((text) => {
 				text.setPlaceholder("banner")
-					.setValue(this.plugin.settings.metadataFileFields.join(","))
+					.setValue(this.plugin.settings.metadataFileFields.join(", "))
 					.onChange(async (value) => {
 						this.plugin.settings.metadataFileFields = value
-							.split(",")
+							.split(/[,\n]\W*/)
 							.map((field) => field.trim());
 						await this.plugin.saveSettings();
 					});
