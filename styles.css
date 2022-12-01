@@ -81,7 +81,7 @@ button.obs-git-publisher-censor-flags:hover {
 	background-color: var(--background-modifier-hover);
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 900px) {
 	.settings-tab-bar.obs-git-publisher {
 		flex-direction: column;
 		width: 100%;
