@@ -1,4 +1,4 @@
-import { GitHubPublisherSettings } from './../../plugin/settings/interface';
+import { GitHubPublisherSettings } from '../../plugin/settings/interface';
 
 const settings: GitHubPublisherSettings = {
 	githubRepo: "",
@@ -17,7 +17,7 @@ const settings: GitHubPublisherSettings = {
 	embedImage: false,
 	defaultImageFolder: "",
 	autoCleanUp: false,
-	autoCleanUpExcluded: "",
+	autoCleanUpExcluded: [],
 	folderNote: false,
 	convertWikiLinks: false,
 	convertForGithub: false,
@@ -36,7 +36,8 @@ const settings: GitHubPublisherSettings = {
 	frontmatterTitleKey: "",
 	excludeDataviewValue: [""],
 	metadataFileFields: [""],
-	shareExternalModified: false
+	shareExternalModified: false,
+	automaticallyMergePR: false,
 }
 
 export default settings;

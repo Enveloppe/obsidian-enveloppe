@@ -102,7 +102,7 @@ function excludedFileFromDelete(file: string, settings: GitHubPublisherSettings)
 	 * @param file file to eventually delete
 	 * @class settings
 	 */
-	const autoCleanExcluded = settings.autoCleanUpExcluded.split(',')
+	const autoCleanExcluded = settings.autoCleanUpExcluded;
 	if (autoCleanExcluded.length > 0) {
 		for (const excludedFile of autoCleanExcluded) {
 			if (file.trim().includes(excludedFile.trim()) && excludedFile.length > 0) {

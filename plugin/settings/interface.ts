@@ -18,7 +18,7 @@ export interface GitHubPublisherSettings {
 	embedImage: boolean;
 	defaultImageFolder: string;
 	autoCleanUp: boolean;
-	autoCleanUpExcluded: string;
+	autoCleanUpExcluded: string[];
 	folderNote: boolean;
 	convertWikiLinks: boolean;
 	convertForGithub: boolean;
@@ -67,7 +67,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	embedImage: true,
 	defaultImageFolder: '',
 	autoCleanUp: false,
-	autoCleanUpExcluded: '',
+	autoCleanUpExcluded: [],
 	folderNote: false,
 	convertWikiLinks: false,
 	convertForGithub: false,
