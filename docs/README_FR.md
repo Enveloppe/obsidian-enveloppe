@@ -1,45 +1,14 @@
----
-share: true
-title: Obsidian Github Publisher
----
-
-[EN 🇬🇧](https://github.com/obsidianPublisher/obsidian-github-publisher#readme)
-
-<!-- TOC -->
-- [Ce que fait le plugin](#ce-que-fait-le-plugin)
-  - [Ce que ne fait pas le plugin](#ce-que-ne-fait-pas-le-plugin)
-- [Configuration](#configuration)
-  - [Example de configuration](#example-de-configuration)
-  - [GitHub](#github)
-  - [Configuration de l'upload](#configuration-de-lupload)
-    - [Paramètre de chemin d'accès](#paramètre-de-chemin-daccès)
-      - [Bloc de métadonnées](#bloc-de-métadonnées)
-      - [Dossier fixé](#dossier-fixé)
-      - [Chemin Obsidian](#chemin-obsidian)
-    - [Conversion du contenu](#conversion-du-contenu)
-      - [Textes](#textes)
-      - [Liens](#liens)
-        - [Index & folder note](#index--folder-note)
-      - [Lien internes](#lien-internes)
-      - [Lien Wikilinks vers lien markdown](#lien-wikilinks-vers-lien-markdown)
-    - [Transclusion (embed)](#transclusion--embed-)
-    - [Workflow](#workflow)
-      - [Auto-nettoyage](#auto-nettoyage)
-  - [Paramètres du plugin](#paramètres-du-plugin)
-- [Développement](#développement)
-  - [Général](#général)
-  - [Traduction](#traduction)
-- [Liens utiles](#liens-utiles)
-<!-- /TOC -->
+# Github Publisher
 
 GitHub Publisher est un module qui vous aide à envoyer des fichiers dans un dépôt GitHub en fonction de l'état d'une clé de métadonnée situé dans votre frontmatter.
 
 Vous pouvez l'utiliser pour envoyer n'importe quel fichier markdown sur GitHub, permettant la compatibilité avec de nombreuses alternatives d'Obsidian Publish (tel que Jekyll, Mkdocs, Hugo ou toute solution s'appuyant sur des fichiers Markdown). 
 
-Lorsqu'un fichier partagé est trouvé, il sera envoyé dans une nouvelle branche nommée par `votre_nom_du_coffre-mois-jour-année`. Une pull request suivie d'une fusion sera faite, et si tout est correct, la branche sera supprimée après la fusion. 
+Lorsqu'un fichier partagé est trouvé, il sera envoyé dans une nouvelle branche nommée par `votre_nom_du_coffre-mois-jour-année`. Une pull request, suivie d'une fusion sera faite, et si tout est correct, la branche sera supprimée après la fusion.
+
 Ainsi, vous pouvez facilement revenir sur un commit, et créer un workflow basé sur un PR, un PR fusionné, un push spécifique... 
 
-# Ce que fait le plugin
+## Ce que fait le plugin
 
 - Lire le frontmatter pour vérifier la valeur d'une clé `share` configurée.
 - Envoyer le fichier (et ses pièces-jointes ou ses notes s'il y en a) vers un dépôt GitHub.
@@ -65,102 +34,94 @@ Mais le plugin peut faire beaucoup plus !
 
 ---
 
-# Configuration
+## Configuration
 
 Pour utiliser le plugin, vous devez remplir les informations correctes afin de pouvoir envoyer des fichiers dans un dépôt GitHub.
 
-## Example de configuration
+### Example de configuration
 
 Vous trouverez [ici](https://obsidian-publisher.netlify.appfr/Obsidian%20Github%20Publisher/configuration%20example/) quelque exemple de configuration possible pour le plugin, comme par exemple Mkdocs Publisher ou [@TuanManhCao Digital Garden](https://github.com/TuanManhCao/digital-garden).
 
 > [!Note] Ajouter des exemples
 > Il est tout à fait possible de m'envoyer ou de pull-request de nouvelles configurations pour d'autres alternatives **gratuites** à Obsidian Publish. 
 
-## GitHub 
+### GitHub 
 - Nom du dépôt : Le dépôt dans lequel les fichiers seront envoyés
 - Pseudonyme GitHub: Votre pseudonyme.
 - Token GitHub :  Obtenez votre [Token GitHub ici](https://github.com/settings/tokens/new?scopes=repo)[^2]. Les paramètres corrects devraient déjà être appliqués. Si vous voulez éviter de générer ce jeton tous les quelques mois, sélectionnez l'option "No expiration". Cliquez sur le bouton "Generate token", et copiez le jeton qui vous est présenté sur la page suivante.
+- Nom de la branche : La branche dans laquelle les fichiers seront envoyés. Par défaut, c'est `main`, mais vous pouvez le changer pour ce que vous voulez, tant que la branche existe.
+- Vous pouvez désactiver le merging automatique de la pull-request.
 
-:sparkles: Il est maintenant possible de configurer un dépôt à partir du frontmatter avec la clé `repo` !
-> [!warning] Attention
-> - Le token GitHub doit avoir les droits d'écriture sur le dépôt.
-> - Les fonctions globales (tel que `partager toutes les notes` ou encore `partager toutes les notes éditées`) ignorerons les fichiers envoyés dans un autre dépôt que celui configuré dans les paramètres du plugin.
-> - L'[auto-nettoyage](#auto-nettoyage) sur ce dépôt fonctionnera sur ce dépôt lors de l'envoie d'une note configurée avec la clé. Vous pouvez le désactiver en ajoutant la clé `autoclean: false` dans le frontmatter.
-> - La clé doit être écrite dans cet ordre : `repo: pseudo_github/nom_du_dépôt/branch`, `repo: pseudo_github/nom_du_dépôt` et enfin, `repo: nom_du_dépôt`.
->  Il est cependant possible d'utiliser un objet YAML tel que : 
->  ```yaml
->  repo:
->    owner: pseudo_github
->    repo: nom_du_dépôt
->    branch: branch
->  ```
-> Globalement, si vous partagez uniquement un seul fichier, toutes les fonctions habituelles seront faites sur ce dépôt.
-> De plus, les paramètres de configuration (dossier, image) seront les mêmes que ceux du dépôt configuré dans les paramètres du plugin (sauf si vous les modifiez dans le frontmatter).
+Il est possible d'utiliser une configuration par fichier pour changer le nom du dépôt, de l'utilisateur et/ou de la branche. Vous pouvez trouver plus d'information à ce propos [ici](https://obsidian-publisher.netlify.app/obsidian/fr/per%20files%20settings/#changing-repository)
 
-Vous pouvez aussi maintenant envoyer un fichier sur plusieurs dépôts en utilisant la clé `mulitpleRepo` dans le frontmatter. Vous pouvez utiliser un tableau YAML ou une chaîne de caractère séparée par des virgules.
-> [!example] Exemple
-> ```yaml
-> multipleRepo:
->  - repo: nom_du_dépôt
->    owner: pseudo_github
->    branch: main
->  - repo: nom_du_dépôt2
->    owner: pseudo_github2
->    branch: main
-> ```
-> Il est aussi possible d'utiliser une chaîne de caractère séparée par des virgules.
+### Configuration de l'upload
 
-> [!note] 
-> - Par défaut, l'auto-nettoyage est désactivé sur tous les dépôts. Vous pouvez l'activer en ajoutant la clé `autoclean: true` dans le frontmatter pour chaque dépôt individuellement.
-> - La clé `multipleRepo` peut être utilisé pour un seul dépôt.
+Vous pouvez trouver des exemples de chemin de fichier liés à votre configuration dans la section [ici](https://obsidian-publisher.netlify.app/fr/obsidian/filepath_example).
 
-## Configuration de l'upload
-
-### Paramètre de chemin d'accès
+#### Paramètre de chemin d'accès
 Vous avez trois possibilités : 
 - Utiliser un dossier "fixe" : Chaque fichier sera envoyé dans ce dossier. 
 - Utiliser un dossier créé à partir d'une clé `category`.
 - Utiliser le chemin relatif depuis obsidian. Vous pouvez préfixer un dossier en utilisant le dossier par défaut. 
 
-Vous devez, dans tous les cas, configurer le **dossier par défaut** :  Le fichier sera envoyé ici.
+Vous devez, dans tous les cas, configurer le **dossier par défaut** : Le fichier sera envoyé ici.
 > Si vous utilisez l'option pour frontmatter, ce dossier sera le dossier par défaut : le fichier sera envoyé ici si la clé de catégorie n'existe pas. 
 
-#### Bloc de métadonnées
+##### Bloc de métadonnées
 
 L'utilisation de la deuxième option activera deux autres options : 
 - La clé de catégorie : La clé que vous souhaitez utiliser pour votre dossier.
 - Dossier racine : Pour ajouter un chemin d'accès **avant** la clé de catégorie trouvée (si une clé est trouvée !).
 
-> [!EXAMPLE] Par exemple
-> - Vous utilisez `category` dans un fichier avec `category : JDR/Personnages/DND`
-> - Vous définissez un dossier racine avec `_docs/pages`.  
-> - Vous définissez un dossier par défaut sur `_docs/draft`  
->	  
-> Le chemin final (dans GitHub !) sera : `_docs/pages/JDR/Personnages/DND`  
->	  
-> Mais, si vous ne mettez pas `category`, le chemin sera `_docs/draft`.  
-
-#### Dossier fixé
+##### Dossier fixé
 Chaque fichier sera envoyé dans le dossier par défaut. Si vous laissez le dossier par défaut vide, il sera envoyé à la racine du dépôt. 
 
-> [!example] Par exemple
-> - Si vous définissez `source` pour le dossier par défaut, tout fichier sera envoyé dans `votre_repo/source`, quelque soit sa clé frontmatter ou son chemin relatif.
-> - Si vous le laissez vide, il sera envoyé directement dans `votre_repo`.
-
-#### Chemin Obsidian
+##### Chemin Obsidian
 Il utilise le chemin relatif dans votre coffre-fort Obsidian. Le dossier par défaut sera ajouté avant le chemin relatif d'Obsidian. Vous pouvez le laisser vide pour utiliser la racine de votre dépôt.
 
-> [!example] Par exemple
-> Pour un fichier dans `20. Compendium/DND/Créature`
-> - Si vous définissez `source` : le chemin final sera `source/20. Compendium/DND/Créature`.
-> - Si vous laissez le dossier par défaut vide, le chemin final sera `20. Compendium/DND/Créature`
+La `suppression de chemin` vous permet de supprimer une partie du chemin créé, vers, par exemple, un sous-dossier de synchronisation. Si le chemin supprimé n'est pas trouvé, le comportement normal s'applique.
 
-La `suppression de chemin` vous permet de supprimer une partie du chemin créé, vers, par exemple, un sous-dossier de synchronisation. Si le chemin supprimé n'est pas trouvé, le comportement normal s'applique. 
+#### Paramètres de nom de fichier
 
-> [!example] Synchroniser un sous-dossier
-> Vous pouvez utiliser cette option pour désigner un sous-dossier comme "coffre-fort" pour la synchronisation du dépôt.
-> Vous pourrez utiliser `vault/sub` comme le chemin retiré. L'envoie passera par `vault/sub` comme racine dans le dépôt. 
-> Un fichier dans `vault/sub/dossierA` sera envoyé dans `repo/dossierA`.
+Vous pouvez choisir de renommer le fichier avant de l'envoyer en utilisant une clé configurée.
+
+#### Github Workflow 
+
+Si votre workflow doit activer une action GitHub, définissez le nom ici. 
+
+Laissez-le vide pour désactiver l'activation des actions GitHub. 
+
+> [!note] L'action à activer doit être activé sur un évènement `workflow_dispatche`
+
+##### Auto-nettoyage
+
+Vous pouvez également configurer une "suppression automatique" lorsque vous utilisez les commandes pour supprimer des fichiers :
+- Supprimés de votre coffre-fort
+- Que vous avez cessé de partager
+
+Cette option ajoutera également une nouvelle commande pour nettoyer les fichiers uniquement.
+
+> [!warning] Attention
+> Vous ne pouvez pas utiliser la commande delete si vous n'avez pas défini un dossier par défaut (et un dossier racine si vous utilisez la configuration YAML).
+> De plus, vous pouvez perdre certains fichiers en utilisant cette commande, alors faites attention ! N'oubliez pas que vous pouvez revenir en arrière au cas où le plugin supprimerait un fichier que vous ne souhaitez pas supprimer.
+
+> [!warning] Changer les options
+> Dans le cas où vous modifier la configuration, les fichiers précédents ne seront pas supprimés et il y aura une erreur dans cette partie du workflow.
+
+
+Vous pouvez définir le chemin d'accès des dossiers et fichier dont vous voulez éviter la suppression. Séparez les dossiers/fichiers par une virgule.[^1]
+
+> [!info] Les regex sont supportées, mais vous devez les échapper avec des `\` (par exemple, `^regex$` devient `^\regex\$`).
+
+Il est aussi possible d'empêcher la suppression en utilisant, dans le frontmatter :
+ - `share: false` sur un fichier **dans** le dépôt (uniquement) ou sans clé de partage.
+ - `autoclean: false` dans le fichier de configuration
+ - `index: true` 
+
+> [!warning] À propos de l'option `repo`
+> - La commande d'auto-nettoyage ne fonctionnera que pour le dépôt défini dans les paramètres.
+> - **Mais** l'auto-nettoyage fonctionnera pour le dépôt configuré (dans le fichier) lorsque vous utilisez la commande permettant de partager une seule note.
+> - Les pièces-jointes n'ayant pas de frontmatter, ses fichiers seront supprimés soit dans le dépôt défini dans les paramètres, soit dans le dépôt configuré (dans le fichier) si vous utilisez la fonction de partage unique.
 
 ### Conversion du contenu
 
@@ -188,27 +149,12 @@ Certaines solutions de publication prennent en charge les notes de dossier, mais
 
 Maintenant, le plugin va convertir ces fichiers en `index` si vous activez les paramètres. Voici quelques exemples de renommage, en utilisant les différents paramètres du dossier par défaut.
 
-> [!exemple] Exemple de frontmatter avec un fichier nommé `folder2`
-> - Avec une valeur de catégorie : `dossier1/dossier2` 
-> - Avec une valeur racine nommée `docs` ⇒ `docs/folder1/folder2/index.md`
-> - Sans valeur racine : `folder1/folder2/index.md` 
-> - Sans valeur de catégorie, avec un dossier par défaut nommé `drafts` : `draft/folder2.md` (le nom ne sera pas converti !)
-
-> [!exemple] Exemple avec le chemin Obsidian et un dossier nommé `folder2`
-> Avec un chemin comme : `dossier1/dossier2` le nouveau chemin sera :
-> - Si vous utilisez un dossier par défaut nommé `docs` : `docs/folder1/folder2/index.md`
-> - Sans : `folder1/folder2/index.md`
-
 > [!warning] Cette option ne fonctionne pas avec un dossier fixe.
 
 
 #### Lien internes
 
 Cette option convertira les liens internes (y compris les liens des pièces-jointes !) du fichier partagé pour correspondre au fichier relatif dans votre dépôt. Seuls les chemins de fichier **existant** et **partagé** seront convertis.
-> [!exemple] 
-> Fichier cité : `docs/XX/YY/mon_fichier.md`.
-> Fichier à convertir : `docs/XX/ZZ/new_file.md`.
-> Chemin créé : `../YY/mon_fichier.md`.
 
 #### Lien Wikilinks vers lien markdown
 
@@ -220,91 +166,37 @@ Vous pouvez choisir d'envoyer des fichiers transcluent :
 - Des pièces-jointes : Le fichier sera copiée dans le dépôt dans un dossier défini en option ou dans le dossier par défaut.
 - Notes : Seuls les fichiers partagés seront copiés dans le dépôt, dans leur dossier respectifs (suivant vos paramètres).
 
-### Workflow 
-
-Si votre workflow doit activer une action GitHub, définissez le nom ici. 
-
-Laissez-le vide pour désactiver l'activation des actions GitHub. 
-
-> [!note] L'action à activer doit être activé sur un évènement `workflow_dispatche`
-
-#### Auto-nettoyage
-
-Vous pouvez également configurer une "suppression automatique" lorsque vous utilisez les commandes pour supprimer des fichiers :
-- Supprimés de votre coffre-fort
-- Que vous avez cessé de partager
-
-Cette option ajoutera également une nouvelle commande pour nettoyer les fichiers uniquement.
-
-> [!warning] Attention
-> Vous ne pouvez pas utiliser la commande delete si vous n'avez pas défini un dossier par défaut (et un dossier racine si vous utilisez la configuration YAML).
-> De plus, vous pouvez perdre certains fichiers en utilisant cette commande, alors faites attention ! N'oubliez pas que vous pouvez revenir en arrière au cas où le plugin supprimerait un fichier que vous ne souhaitez pas supprimer.
-
-> [!warning] Changer les options
-> Dans le cas où vous modifier la configuration, les fichiers précédents ne seront pas supprimé et il y aura une erreur dans cette partie du workflow.
-
-
-Vous pouvez définir le chemin d'accès des dossiers et fichier dont vous voulez éviter la suppression. Séparez les dossiers/fichiers par une virgule.[^1]
-> [!note] Les regex ne sont pas supportées ici!
-
-Il est aussi possible d'empêcher la suppression en utilisant, dans le frontmatter :
- - `share: false` sur un fichier **dans** le dépôt (uniquement) ou sans clé de partage.
- - `autoclean: false` dans le fichier de configuration
- - `index: true` 
-
-> [!warning] À propos de l'option `repo`
-> - La commande d'auto-nettoyage ne fonctionnera que pour le dépôt défini dans les paramètres.
-> - **Mais** l'auto-nettoyage fonctionnera pour le dépôt configuré (dans le fichier) lorsque vous utilisez la commande permettant de partager une seule note.
-> - Les pièces-jointes n'ayant pas de frontmatter, ses fichiers seront supprimés soit dans le dépôt défini dans les paramètres, soit dans le dépôt configuré (dans le fichier) si vous utilisez la fonction de partage unique.
-
-## Paramètres du plugin
+### Paramètres du plugin
 
 Vous pouvez configurer :
 - La clé de partage utilisée par le plugin. Par défaut, c'est `share`.
 - Les dossiers exclus. La clé de partage ne peut pas fonctionner ici. Utile si vous oubliez de supprimer le `share` (ou de le mettre à `false`) et que vous déplacez un fichier dans votre archive...
+  Les regex sont supportées, mais vous devez les échapper avec des `\`.
 - Ajoutez la commande pour partager le fichier dans le menu fichier (clic droit sur un fichier dans l'explorateur ou en utilisant les trois points) et dans le menu éditeur (clic droit sur une note éditée ouverte)
 - Ajout de la note de partage du lien dans votre presse-papiers après le partage. Vous pouvez configurer le chemin créé ici, en supprimant certaines parties. Comme il supporte plusieurs parties, vous pouvez séparer les parties en utilisant des virgules. Par exemple, vous pouvez supprimer un dossier `docs/` et l'extension markdown en utilisant : `docs/, .md`.
 > [!note] La commande du menu de clic droit peut aussi envoyer le fichier sous votre curseur si c'est un lien ! 
 
 ---
 
-# Paramètres par fichier
+> [!info] Il existe de nombreuses options qui peuvent être configurées dans le fichier de configuration YAML. Vous pouvez trouver la liste complète ici : [Per files settings](https://obsidian-publisher.netlify.app/fr/obsidian/per%20files%20settings/#Frontmatter-keys-explanation)
 
-Certains paramètres peuvent être remplacés en fonction de clé écrit dans le frontmatter (du fichier envoyé) :
-1. Pour les conversion des liens, en utilisant la clé `links`, vous pouvez créé un objet Yaml avec :
-	- `mdlinks` : pour forcer la conversion en lien markdown.
-	- `convert` : Pour retirer les liens et en ne gardant que le nom du fichier ou son text alt.
-	Noter que vous pouvez utiliser `links: false` et `mdlinks: true` en dehors de l'objet si vous voulez n'utiliser qu'une seule option.
-2. Les paramètres des notes transcluent, en utilisant la clé `embed` :
-	- `send: false` empêche l'envoie de ses notes (mais pas des pièces-jointes)
-	- `remove: true` pour supprimer toute mention de ses notes.
-	Comme précédemment, il est possible d'utiliser une seule clé, avec `embed` (pour l'envoie) et `removeEmbed` (pour la suppression des citations)
-3. `attachment` pour gérer les pièces-jointes (image, pdf, son, video... Toutes les pièces-jointes supportés par Obsidian)
-	- `send: false` empêche l'envoie des pièces-jointes
-	- `folder` permet de changer le dossier par défaut. Attention, car ce paramètre peut avoir des effets indésirables si appliqués avec l'autocleaner.
-	De nouveau, il est possible d'utiliser un seul paramètre avec `attachmentLinks` pour le dossier et `attachment: false` pour empêcher l'envoie.
-4. `dataview` permet de forcer ou empêcher la conversion des queries dataview.
-5. `hardbreak` pour le paramètre des sauts de lignes en markdown.
-
-Voyez [ici pour une référence rapide](https://obsidian-publisher.netlify.app/fr/obsidian/per%20files%20settings/)
 
 ---
 
-# Développement
+## Développement
 
-## Général
+### Général
 
 Vous pouvez m'aider à développer le plugin en utilisant `npm` !
 1. Tout d'abord, clonez le projet sur votre ordinateur avec `git clone git@github.com:obsidianPublisher/obsidian-github-publisher.git`.
 2. `cd obsidian-github-publisher`.
 3. `npm install`
 
-
 Quelque notes :
 - J'utilise les [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/) pour générer le changelog, donc merci de respectez les spécifications !
 - De documenter les fonctions que vous créez. 
 
-## Traduction
+### Traduction
 
 En utilisant [i18n](https://www.i18next.com/), vous pouvez traduire le plugin. 
 
@@ -319,7 +211,8 @@ Pour ajouter un nouveau langage :
 - Créez un PR pour ajouter votre traduction !
 
 ---
-# Liens utiles
+
+## Liens utiles
 
 - [La documentation](https://obsidian-publisher.netlify.app/)
 - [Le dépôt GitHub](https://github.com/ObsidianPublisher/obsidian-github-publisher)
