@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.6.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.6.3...4.6.4) (2022-12-02)
+
+
+### Bug Fixes
+
+* **i18n:** forgot to check if locale translation exists; ([65606d4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/65606d46a3dd49ed2f20655e3c1e68d7f3f476e7)), closes [#53](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/53)
+
 ### [4.6.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.6.2...4.6.3) (2022-12-01)
 
 
