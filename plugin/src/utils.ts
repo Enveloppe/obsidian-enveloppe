@@ -5,6 +5,22 @@ import {informations} from '../i18n'
 import type { StringFunc } from "../i18n";
 import {getReceiptFolder} from "../contents_conversion/filePathConvertor";
 import {frontmatterConvert} from "../settings/interface";
+import GithubPublisher from "../main";
+
+
+export async function convertOldSettings(settingsToConvert: string, plugin: GithubPublisher) {
+	const settings = plugin.settings
+	// @ts-ignore
+	const oldSettings = settings[settingsToConvert] as unknown as string
+	if (typeof oldSettings === "string") {
+		// @ts-ignore
+		settings[settingsToConvert] = oldSettings === "" ? [] : oldSettings.split(/[,\n]\W*/)
+		await plugin.saveSettings();
+	}
+	// @ts-ignore
+	settings[settingsToConvert] = settings[settingsToConvert].filter((e: string) => e !== "")
+	await plugin.saveSettings();
+}
 
 export function noticeLog(message: string, settings: GitHubPublisherSettings) {
 	/**
@@ -30,12 +46,16 @@ export function disablePublish (app: App, settings: GitHubPublisherSettings, fil
 	 */
 	const fileCache = app.metadataCache.getFileCache(file)
 	const meta = fileCache?.frontmatter
-	const folderList = settings.ExcludedFolder.split(',').filter(x => x!=='')
+	const folderList = settings.excludedFolder
 	if (meta === undefined) {
 		return false
 	} else if (folderList.length > 0) {
 		for (let i = 0; i < folderList.length; i++) {
-			if (file.path.contains(folderList[i].trim())) {
+			const isRegex = folderList[i].match(/^\/(.*)\/[igmsuy]*$/);
+			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
+			if (regex && regex.test(file.path)) {
+				return false;
+			} else if (file.path.contains(folderList[i].trim())) {
 				return false
 			}
 		}

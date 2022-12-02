@@ -351,12 +351,13 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setClass("obs-git-publisher-textarea")
 			.addTextArea((textArea) => {
 				textArea
-					.setPlaceholder("docs/assets/js, docs/assets/logo")
+					.setPlaceholder("docs/assets/js, docs/assets/logo, /\\.js$/")
 					.setValue(this.plugin.settings.autoCleanUpExcluded.join(", "))
 					.onChange(async (value) => {
 						this.plugin.settings.autoCleanUpExcluded = value
 							.split(/[,\n]\W*/)
 							.map((item) => item.trim())
+							.filter((item) => item.length > 0);
 						await this.plugin.saveSettings();
 					});
 			});
@@ -583,7 +584,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.dataviewFields = value
 							.split(/[,\n]\W*/)
-							.map((field) => field.trim());
+							.map((item) => item.trim())
+							.filter((item) => item.length > 0);
 						await this.plugin.saveSettings();
 					});
 			});
@@ -599,7 +601,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.excludeDataviewValue = value
 							.split(/[,\n]\W*/)
-							.map((field) => field.trim());
+							.map((item) => item.trim())
+							.filter((item) => item.length > 0);
 						await this.plugin.saveSettings();
 					});
 			});
@@ -680,7 +683,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.metadataFileFields = value
 							.split(/[,\n]\W*/)
-							.map((field) => field.trim());
+							.map((item) => item.trim())
+							.filter((item) => item.length > 0);
 						await this.plugin.saveSettings();
 					});
 			});
@@ -734,10 +738,13 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setClass("obs-git-publisher-textarea")
 			.addTextArea((textArea) =>
 				textArea
-					.setPlaceholder("_assets, Archive")
-					.setValue(this.plugin.settings.ExcludedFolder)
+					.setPlaceholder("_assets, Archive, /^_(.*)/gi")
+					.setValue(this.plugin.settings.excludedFolder.join(", "))
 					.onChange(async (value) => {
-						this.plugin.settings.ExcludedFolder = value;
+						this.plugin.settings.excludedFolder = value
+							.split(/[,\n]\W*/)
+							.map((item) => item.trim())
+							.filter((item) => item.length > 0);
 						await this.plugin.saveSettings();
 					})
 			);
@@ -832,7 +839,6 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	}
 	renderHelp() {
 		this.settingsPage.createEl("h2", {text: subSettings("help.usefulLinks.title") as string});
-		console.log(subSettings("help.usefulLinks.title"));
 		this.settingsPage.appendChild(usefullLinks());
 		this.settingsPage.createEl('hr')
 		this.settingsPage.createEl("h2", {text: subSettings("help.frontmatter.title") as string});

@@ -42,6 +42,9 @@ export default class GithubPublisher extends Plugin {
 			this.app.metadataCache,
 			this
 		);
+		await convertOldSettings('ExcludedFolder', this)
+		await convertOldSettings('autoCleanUpExcluded', this)
+
 		const branchName =
 			app.vault.getName().replaceAll(" ", "-").replaceAll('.', '-') +
 			"-" +
