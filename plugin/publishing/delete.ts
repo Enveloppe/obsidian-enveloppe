@@ -105,7 +105,11 @@ function excludedFileFromDelete(file: string, settings: GitHubPublisherSettings)
 	const autoCleanExcluded = settings.autoCleanUpExcluded;
 	if (autoCleanExcluded.length > 0) {
 		for (const excludedFile of autoCleanExcluded) {
-			if (file.trim().includes(excludedFile.trim()) && excludedFile.length > 0) {
+			const isRegex = excludedFile.match(/^\/(.*)\/[igmsuy]*$/);
+			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
+			if (regex && regex.test(file)) {
+				return true;
+			} else if (file.trim().includes(excludedFile.trim()) && excludedFile.length > 0) {
 				return true;
 			}
 		}

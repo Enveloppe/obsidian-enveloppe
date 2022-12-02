@@ -196,12 +196,14 @@ export class FilesManagement extends Publisher {
 	}
 
 	checkExcludedFolder(file: TFile): boolean {
-		const excludedFolder = this.settings.ExcludedFolder.split(",").filter(
-			(x) => x != ""
-		);
+		const excludedFolder = this.settings.excludedFolder;
 		if (excludedFolder.length > 0) {
 			for (let i = 0; i < excludedFolder.length; i++) {
-				if (file.path.contains(excludedFolder[i].trim())) {
+				const isRegex = excludedFolder[i].match(/^\/(.*)\/[igmsuy]*$/);
+				const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
+				if (regex && regex.test(file.path)) {
+					return true;
+				} else if (file.path.contains(excludedFolder[i].trim())) {
 					return true;
 				}
 			}
