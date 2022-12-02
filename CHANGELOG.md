@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.7.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.6.4...4.7.0) (2022-12-02)
+
+
+### Features
+
+* introduce regex for folder excluded & autocleanup ([53a81ba](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/53a81ba553800d8bcb4ca41c0bf9c47b5463e2bc))
+
 ### [4.6.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.6.3...4.6.4) (2022-12-02)
 
 
