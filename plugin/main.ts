@@ -1,6 +1,6 @@
 import { Plugin, TFile, Menu } from "obsidian";
 import { GithubPublisherSettings } from "./settings";
-import { disablePublish, getRepoFrontmatter } from "./src/utils";
+import {convertOldSettings, disablePublish, getRepoFrontmatter} from "./src/utils";
 import {
 	GitHubPublisherSettings,
 	DEFAULT_SETTINGS, RepoFrontmatter,
@@ -15,25 +15,15 @@ import {
 	shareOneNote,
 	shareOnlyEdited,
 } from "./commands";
-import {StringFunc, commands} from "./i18n";
+import {StringFunc, commands, translationLanguage} from "./i18n";
 
 export default class GithubPublisher extends Plugin {
 	settings: GitHubPublisherSettings;
 
 	async onload() {
-		console.log("Github Publisher loaded");
+		console.log(`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`);
 		await this.loadSettings();
 		this.addSettingTab(new GithubPublisherSettings(this.app, this));
-		const convertOldSettings = async () => {
-			const oldExcludedSettings = this.settings.autoCleanUpExcluded as unknown as string;
-			if (typeof oldExcludedSettings === "string") {
-				this.settings.autoCleanUpExcluded = oldExcludedSettings === "" ? [] : oldExcludedSettings.split(/[,\n]\W*/)
-				await this.saveSettings();
-			}
-			this.settings.autoCleanUpExcluded = this.settings.autoCleanUpExcluded.filter((e: string) => e !== "")
-			await this.saveSettings();
-		};
-		convertOldSettings().then();
 		const octokit = new Octokit({ auth: this.settings.GhToken });
 		const PublisherManager = new GithubBranch(
 			this.settings,
