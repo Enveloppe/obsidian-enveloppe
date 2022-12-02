@@ -1,5 +1,5 @@
 import { ShareStatusBar } from "./src/status_bar";
-import {createLink, noticeMessage, getRepoFrontmatter} from "./src/utils";
+import {createLink, noticeMessage, getRepoFrontmatter, noticeLog} from "./src/utils";
 import {GitHubPublisherSettings, RepoFrontmatter} from './settings/interface'
 import { deleteFromGithub } from './publishing/delete'
 import {GithubBranch} from "./publishing/branch";
@@ -110,7 +110,7 @@ export async function shareOneNote(branchName: string, PublisherManager: GithubB
 	}
 	catch (error) {
 		if (!(error instanceof DOMException)) {
-			console.error(error);
+			noticeLog(error, settings);
 			new Notice((error("errorPublish") as StringFunc)(settings.githubRepo));
 		}
 	}

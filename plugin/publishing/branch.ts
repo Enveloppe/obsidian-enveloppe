@@ -4,6 +4,7 @@ import {FilesManagement} from "./filesManagement";
 import {MetadataCache, Notice, Vault} from "obsidian";
 import GithubPublisherPlugin from "../main";
 import {StringFunc, error} from "../i18n";
+import {noticeLog} from "../src/utils";
 
 export class GithubBranch extends FilesManagement {
 	settings: GitHubPublisherSettings;
@@ -57,11 +58,11 @@ export class GithubBranch extends FilesManagement {
 					sha: shaMainBranch,
 				}
 			);
-			console.log('branch successfully created', branch.status, ' for : ', repoFrontmatter.repo);
+			noticeLog(`branch successfully created : ${branch.status} for :  ${repoFrontmatter.repo}`, this.settings);
 			return branch.status === 201;
 		} catch (e) {
 			// catch the old branch
-			console.log(e)
+			noticeLog(e, this.settings);
 			const allBranch = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/branches', {
 				owner: repoFrontmatter.owner,
 				repo: repoFrontmatter.repo,
@@ -89,7 +90,7 @@ export class GithubBranch extends FilesManagement {
 			});
 			return PR.data.number;
 		} catch (e) {
-			console.log(e)
+			noticeLog(e, this.settings);
 			try {
 				const PR = await this.octokit.request('GET' + ' /repos/{owner}/{repo}/pulls', {
 					owner: repoFrontmatter.owner,
@@ -98,7 +99,7 @@ export class GithubBranch extends FilesManagement {
 				});
 				return PR.data[0].number;
 			} catch (e) {
-				console.log(e, 'error', repoFrontmatter);
+				noticeLog(`${e} : ERROR with ${repoFrontmatter}`, this.settings);
 				return false
 			}
 		}
@@ -147,7 +148,7 @@ export class GithubBranch extends FilesManagement {
 			return branch.status === 200;
 
 		} catch (e) {
-			console.log(e)
+			noticeLog(e, this.settings);
 			new Notice(error('mergeconflic') as string);
 			return false;
 		}
@@ -185,7 +186,7 @@ export class GithubBranch extends FilesManagement {
 			return true
 		}
 		catch (e) {
-			console.log(e);
+			noticeLog(e, this.settings);
 			new Notice((error("errorConfig") as StringFunc)(`${repoFrontmatter.owner}/${repoFrontmatter.repo}`));
 			return false
 		}
