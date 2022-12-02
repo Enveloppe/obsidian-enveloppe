@@ -69,7 +69,7 @@ function nestedProp(obj: object, path: string): unknown {
 
 export function subSettings(multipleKey:string): string | StringFunc {
 	// @ts-ignore
-	return nestedProp(locale.settings, multipleKey) || nestedProp(en.settings, multipleKey);
+	return (locale && nestedProp(locale.settings, multipleKey))|| nestedProp(en.settings, multipleKey);
 }
 
 export function informations(key: string): string | StringFunc{
