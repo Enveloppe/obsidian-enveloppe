@@ -85,13 +85,24 @@ La `suppression de chemin` vous permet de supprimer une partie du chemin créé,
 
 Vous pouvez choisir de renommer le fichier avant de l'envoyer en utilisant une clé configurée.
 
-#### Github Workflow 
+#### Workflow
+
+##### Github Actions
 
 Si votre workflow doit activer une action GitHub, définissez le nom ici. 
 
 Laissez-le vide pour désactiver l'activation des actions GitHub. 
 
 > [!note] L'action à activer doit être activé sur un évènement `workflow_dispatche`
+
+##### Metadata Extractor
+
+Il est aussi possible d'envoyer les fichiers générés par le plugin [Metadata Extractor](https://github.com/kometenstaub/metadata-extractor). Si vous le souhaitez, vous devez mettre le chemin du dossier où les fichiers doivent être envoyés. 
+
+> [!warning] Informations
+> 1. L'option n'apparaît que si le plugin est installé et activé.
+> 2. Cette fonction fonctionne uniquement sur la version bureau d'obsidian (puisque Metadata-Extractor n'est pas disponible sur mobile).
+> 3. Seulement les fichiers générés dans `.obsidian/plugins` seront envoyés : le plugin ne supporte pas les fichiers externes. 
 
 ##### Auto-nettoyage
 
