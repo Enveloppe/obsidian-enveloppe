@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.8.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.7.0...4.8.0-0) (2022-12-06)
+
+
+### Features
+
+* send metadata-extractor file ([5524e07](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5524e077b27e8b9a230dcea09304e77698f43d69))
+
 ### [4.6.1-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.6.0...4.6.1-0) (2022-12-01)
 
 
