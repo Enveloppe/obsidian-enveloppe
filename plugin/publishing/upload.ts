@@ -5,21 +5,35 @@ import {
 	TFile,
 	Vault,
 } from "obsidian";
-import {frontmatterConvert, GitHubPublisherSettings, MetadataExtractor, RepoFrontmatter} from "../settings/interface";
+import {
+	FrontmatterConvert,
+	GitHubPublisherSettings,
+	MetadataExtractor,
+	RepoFrontmatter,
+} from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
 import { Octokit } from "@octokit/core";
 import { Base64 } from "js-base64";
-import {deleteFromGithub} from "./delete"
-import {StringFunc, error} from "../i18n";
-
+import { deleteFromGithub } from "./delete";
+import { StringFunc, error } from "../i18n";
 
 import {
-	getReceiptFolder, getImageLinkOptions
+	getReceiptFolder,
+	getImageLinkOptions,
 } from "../contents_conversion/filePathConvertor";
-import {ShareStatusBar} from "../src/status_bar";
+import { ShareStatusBar } from "../src/status_bar";
 import GithubPublisherPlugin from "../main";
-import {getFrontmatterCondition, getRepoFrontmatter, isAttachment, noticeLog} from "plugin/src/utils";
-import {mainConverting} from "../contents_conversion/convertText";
+import {
+	getFrontmatterCondition,
+	getRepoFrontmatter,
+	isAttachment,
+	noticeLog,
+} from "plugin/src/utils";
+import { mainConverting } from "../contents_conversion/convertText";
+
+/** Class to manage the branch
+ * @extends FilesManagement
+ */
 
 export default class Publisher {
 	vault: Vault;
@@ -28,12 +42,21 @@ export default class Publisher {
 	octokit: Octokit;
 	plugin: GithubPublisherPlugin;
 
+	/**
+	 * Class to manage the branch
+	 * @param {Vault} vault Obsidian vault
+	 * @param {MetadataCache} metadataCache Obsidian metadataCache
+	 * @param {GitHubPublisherSettings} settings Settings of the plugin
+	 * @param {Octokit} octokit Octokit instance
+	 * @param {GithubPublisher} plugin GithubPublisher instance
+	 */
+
 	constructor(
 		vault: Vault,
 		metadataCache: MetadataCache,
 		settings: GitHubPublisherSettings,
 		octokit: Octokit,
-		plugin: GithubPublisherPlugin,
+		plugin: GithubPublisherPlugin
 	) {
 		this.vault = vault;
 		this.metadataCache = metadataCache;
@@ -42,48 +65,101 @@ export default class Publisher {
 		this.plugin = plugin;
 	}
 
-	async statusBarForEmbed(linkedFiles: TFile[], fileHistory:TFile[], ref="main", deepScan:boolean, sourceFrontmatter: frontmatterConvert, repoFrontmatter: RepoFrontmatter) {
-		/**
-		 * Add a status bar + send embed to GitHub. Deep-scanning files.
-		 * @param linkedFiles File embedded
-		 * @param fileHistory already sent files
-		 * @param ref branch name
-		 * @param Deepscan starts the conversion+push of md file. If false, just sharing image
-		 */
+	/**
+	 * Add a status bar + send embed to GitHub. Deep-scanning files.
+	 * @param {TFile[]} linkedFiles File embedded
+	 * @param {TFile[]} fileHistory already sent files
+	 * @param {string} branchName The name of the branch created by the plugin
+	 * @param {boolean} deepScan starts the conversion+push of md file. If false, just sharing image
+	 * @param {FrontmatterConvert} sourceFrontmatter frontmatter settings
+	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 * @returns {Promise<TFile[]>}
+	 */
+	async statusBarForEmbed(
+		linkedFiles: TFile[],
+		fileHistory: TFile[],
+		branchName: string,
+		deepScan: boolean,
+		sourceFrontmatter: FrontmatterConvert,
+		repoFrontmatter: RepoFrontmatter
+	) {
 		if (linkedFiles.length > 0) {
-			if (linkedFiles.length> 1) {
+			if (linkedFiles.length > 1) {
 				const statusBarItems = this.plugin.addStatusBarItem();
-				const statusBar = new ShareStatusBar(statusBarItems, linkedFiles.length, true);
+				const statusBar = new ShareStatusBar(
+					statusBarItems,
+					linkedFiles.length,
+					true
+				);
 				try {
 					for (const image of linkedFiles) {
 						try {
 							if (!fileHistory.includes(image)) {
-								if ((image.extension === 'md') && deepScan) {
-									await this.publish(image, false, ref, repoFrontmatter, fileHistory, true);
-								} else if (isAttachment(image.extension) && sourceFrontmatter.attachment) {
-									await this.uploadImage(image, ref, sourceFrontmatter, repoFrontmatter);
+								if (image.extension === "md" && deepScan) {
+									await this.publish(
+										image,
+										false,
+										branchName,
+										repoFrontmatter,
+										fileHistory,
+										true
+									);
+								} else if (
+									isAttachment(image.extension) &&
+									sourceFrontmatter.attachment
+								) {
+									await this.uploadImage(
+										image,
+										branchName,
+										sourceFrontmatter,
+										repoFrontmatter
+									);
 									fileHistory.push(image);
 								}
 							}
 							statusBar.increment();
 						} catch (e) {
-							new Notice((error("unablePublishNote") as StringFunc)(image.name));
+							new Notice(
+								(error("unablePublishNote") as StringFunc)(
+									image.name
+								)
+							);
 							console.error(e);
 						}
 					}
 					statusBar.finish(8000);
 				} catch (e) {
 					noticeLog(e, this.settings);
-					new Notice((error('errorPublish') as StringFunc)(repoFrontmatter.repo));
+					new Notice(
+						(error("errorPublish") as StringFunc)(
+							repoFrontmatter.repo
+						)
+					);
 					statusBar.error();
 				}
-			} else { // 1 one item to send
+			} else {
+				// 1 one item to send
 				const embed = linkedFiles[0];
 				if (!fileHistory.includes(embed)) {
-					if (embed.extension === 'md' && deepScan) {
-						await this.publish(embed, false, ref, repoFrontmatter, fileHistory, true);
-					} else if (isAttachment(embed.extension) && sourceFrontmatter.attachment) {
-						await this.uploadImage(embed, ref, sourceFrontmatter, repoFrontmatter);
+					if (embed.extension === "md" && deepScan) {
+						await this.publish(
+							embed,
+							false,
+							branchName,
+							repoFrontmatter,
+							fileHistory,
+							true
+						);
+					} else if (
+						isAttachment(embed.extension) &&
+						sourceFrontmatter.attachment
+					) {
+						await this.uploadImage(
+							embed,
+							branchName,
+							sourceFrontmatter,
+							repoFrontmatter
+						);
 						fileHistory.push(embed);
 					}
 				}
@@ -92,50 +168,116 @@ export default class Publisher {
 		return fileHistory;
 	}
 
-
-	async publish(file: TFile, autoclean = false, ref = "main", repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter, fileHistory:TFile[]=[], deepScan=false) {
-		/**
-		 * Main prog to scan notes, their embed files and send it to GitHub.
-		 * @param file Origin file
-		 * @param autoclean If the autoclean must be done right after the file
-		 * @param ref branch name
-		 * @param fileHistory File already sent during DeepScan
-		 * @param DeepScan if the plugin must check the embed notes too.
-		 */
-		const shareFiles = new FilesManagement(this.vault, this.metadataCache, this.settings, this.octokit, this.plugin);
+	/**
+	 * Main prog to scan notes, their embed files and send it to GitHub.
+	 * @param {TFile} file Origin file
+	 * @param {boolean} autoclean If the autoclean must be done right after the file
+	 * @param {string} branchName The name of the branch created
+	 * @param {TFile[]} fileHistory File already sent during DeepScan
+	 * @param {boolean} deepScan if the plugin must check the embed notes too.
+	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 */
+	async publish(
+		file: TFile,
+		autoclean = false,
+		branchName: string,
+		repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter,
+		fileHistory: TFile[] = [],
+		deepScan = false
+	) {
+		const shareFiles = new FilesManagement(
+			this.vault,
+			this.metadataCache,
+			this.settings,
+			this.octokit,
+			this.plugin
+		);
 		const sharedKey = this.settings.shareKey;
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
 		if (
-			!frontmatter
-			|| !frontmatter[sharedKey]
-			|| shareFiles.checkExcludedFolder(file)
-			|| file.extension !== "md"
-			|| fileHistory.includes(file)
-			|| JSON.stringify(getRepoFrontmatter(this.settings, frontmatter)) !== JSON.stringify(repoFrontmatter)
+			!frontmatter ||
+			!frontmatter[sharedKey] ||
+			shareFiles.checkExcludedFolder(file) ||
+			file.extension !== "md" ||
+			fileHistory.includes(file) ||
+			JSON.stringify(getRepoFrontmatter(this.settings, frontmatter)) !==
+				JSON.stringify(repoFrontmatter)
 		) {
 			return false;
 		}
 		try {
 			noticeLog("Publishing file: " + file.path, this.settings);
-			fileHistory.push(file)
-			const frontmatterSettings = getFrontmatterCondition(frontmatter, this.settings);
-			let embedFiles = shareFiles.getSharedEmbed(file, frontmatterSettings);
-			embedFiles = await shareFiles.getMetadataLinks(file, embedFiles, frontmatter, frontmatterSettings);
+			fileHistory.push(file);
+			const frontmatterSettings = getFrontmatterCondition(
+				frontmatter,
+				this.settings
+			);
+			let embedFiles = shareFiles.getSharedEmbed(
+				file,
+				frontmatterSettings
+			);
+			embedFiles = await shareFiles.getMetadataLinks(
+				file,
+				embedFiles,
+				frontmatter,
+				frontmatterSettings
+			);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
 			let text = await app.vault.cachedRead(file);
-			text = await mainConverting(text, this.settings, frontmatterSettings, file, app, this.metadataCache, frontmatter, linkedFiles, this.plugin,
-				this.vault);
-			const path = getReceiptFolder(file, this.settings, this.metadataCache, this.vault)
+			text = await mainConverting(
+				text,
+				this.settings,
+				frontmatterSettings,
+				file,
+				app,
+				this.metadataCache,
+				frontmatter,
+				linkedFiles,
+				this.plugin,
+				this.vault
+			);
+			const path = getReceiptFolder(
+				file,
+				this.settings,
+				this.metadataCache,
+				this.vault
+			);
 			//if repoFrontmatter is an array, it means that the file is in a multiple repo
 			if (repoFrontmatter instanceof Array) {
-				noticeLog("Multiple repo" + repoFrontmatter, this.settings)
+				noticeLog("Multiple repo" + repoFrontmatter, this.settings);
 				const success: boolean[] = [];
 				for (const repo of repoFrontmatter) {
-					success.push(await this.uploadMultiple(file, text, ref, frontmatterSettings, path, repo, embedFiles, fileHistory, deepScan, shareFiles, autoclean));
+					success.push(
+						await this.uploadMultiple(
+							file,
+							text,
+							branchName,
+							frontmatterSettings,
+							path,
+							repo,
+							embedFiles,
+							fileHistory,
+							deepScan,
+							shareFiles,
+							autoclean
+						)
+					);
 				}
 				return !success.every((value) => value === false);
 			} else {
-				return await this.uploadMultiple(file, text, ref, frontmatterSettings, path, repoFrontmatter, embedFiles, fileHistory, deepScan, shareFiles, autoclean);
+				return await this.uploadMultiple(
+					file,
+					text,
+					branchName,
+					frontmatterSettings,
+					path,
+					repoFrontmatter,
+					embedFiles,
+					fileHistory,
+					deepScan,
+					shareFiles,
+					autoclean
+				);
 			}
 		} catch (e) {
 			noticeLog(e, this.settings);
@@ -143,24 +285,77 @@ export default class Publisher {
 		}
 	}
 
-	async uploadMultiple(file: TFile, text: string, ref: string, frontmatterSettings: frontmatterConvert, path: string, repo: RepoFrontmatter, embedFiles: TFile[], fileHistory: TFile[], deepScan: boolean, shareFiles: FilesManagement, autoclean: boolean) {
-		noticeLog(`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${ref}`, this.settings);
-		await this.uploadText(text, path, file.name, ref, repo);
-		await this.statusBarForEmbed(embedFiles, fileHistory, ref, deepScan, frontmatterSettings, repo);
+	/**
+	 * Upload the file to GitHub
+	 * @param {TFile} file sourceFile
+	 * @param {string} text text to send
+	 * @param {string} branchName the branch name created by the plugin
+	 * @param {FrontmatterConvert} frontmatterSettings frontmatter settings
+	 * @param {string} path path to the file in the github repo
+	 * @param {RepoFrontmatter} repo frontmatter settings
+	 * @param {TFile[]} embedFiles File embedded in the note
+	 * @param {TFile[]} fileHistory File already sent during DeepScan
+	 * @param {boolean} deepScan if the plugin must check the embed notes too.
+	 * @param {FilesManagement} shareFiles FilesManagement class
+	 * @param {boolean} autoclean If the autoclean must be done right after the file upload
+	 * @return {Promise<boolean>}
+	 */
+
+	async uploadMultiple(
+		file: TFile,
+		text: string,
+		branchName: string,
+		frontmatterSettings: FrontmatterConvert,
+		path: string,
+		repo: RepoFrontmatter,
+		embedFiles: TFile[],
+		fileHistory: TFile[],
+		deepScan: boolean,
+		shareFiles: FilesManagement,
+		autoclean: boolean
+	) {
+		noticeLog(
+			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${branchName}`,
+			this.settings
+		);
+		await this.uploadText(text, path, file.name, branchName, repo);
+		await this.statusBarForEmbed(
+			embedFiles,
+			fileHistory,
+			branchName,
+			deepScan,
+			frontmatterSettings,
+			repo
+		);
 		if (autoclean && repo.autoclean) {
-			await deleteFromGithub(true, this.settings, this.octokit, ref, shareFiles, repo);
+			await deleteFromGithub(
+				true,
+				this.settings,
+				this.octokit,
+				branchName,
+				shareFiles,
+				repo
+			);
 		}
 		return true;
 	}
 
-	async upload(content: string, path: string, title = "", ref = "main", repoFrontmatter: RepoFrontmatter) {
-		/**
-		 * Upload file to GitHub
-		 * @param content Contents of the file sent
-		 * @param title for commit message, name of the file
-		 * @param ref branch name
-		 * @param path path in GitHub
-		 */
+	/**
+	 * Upload file to GitHub
+	 * @param {string} content Contents of the file sent
+	 * @param {string} title for commit message, name of the file
+	 * @param {string} branchName the branch name created by the plugin
+	 * @param {string} path path in GitHub
+	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 */
+
+	async upload(
+		content: string,
+		path: string,
+		title = "",
+		branchName: string,
+		repoFrontmatter: RepoFrontmatter
+	) {
 		if (!repoFrontmatter.repo) {
 			new Notice(
 				"Config error : You need to define a github repo in the plugin settings"
@@ -176,7 +371,7 @@ export default class Publisher {
 		const octokit = this.octokit;
 		let msg = `PUSH NOTE : ${title}`;
 		if (isAttachment(path)) {
-			title = path.split('/')[path.split('/').length - 1];
+			title = path.split("/")[path.split("/").length - 1];
 			msg = `PUSH ATTACHMENT : ${title}`;
 		}
 		const payload = {
@@ -186,7 +381,7 @@ export default class Publisher {
 			message: `Adding ${title}`,
 			content: content,
 			sha: "",
-			branch: ref,
+			branch: branchName,
 		};
 		try {
 			const response = await octokit.request(
@@ -195,7 +390,7 @@ export default class Publisher {
 					owner: repoFrontmatter.owner,
 					repo: repoFrontmatter.repo,
 					path,
-					ref: ref,
+					ref: branchName,
 				}
 			);
 			// @ts-ignore
@@ -205,7 +400,8 @@ export default class Publisher {
 			}
 		} catch {
 			noticeLog(
-				"The 404 error is normal ! It means that the file does not exist yet. Don't worry ❤️.", this.settings
+				"The 404 error is normal ! It means that the file does not exist yet. Don't worry ❤️.",
+				this.settings
 			);
 		}
 
@@ -216,58 +412,113 @@ export default class Publisher {
 		);
 	}
 
-	async uploadImage(imageFile: TFile, ref = "main", sourcefrontmatter: frontmatterConvert, repoFrontmatter: RepoFrontmatter) {
-		/**
-		 * Convert image in base64
-		 * @param imageFile the image
-		 * @param ref branch name
-		 */
+	/**
+	 * Convert image in base64 and upload it to GitHub
+	 * @param {TFile} imageFile the image
+	 * @param {string} branchName branch name
+	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 * @param {FrontmatterConvert} sourceFrontmatter frontmatter settings
+	 */
+
+	async uploadImage(
+		imageFile: TFile,
+		branchName: string,
+		sourceFrontmatter: FrontmatterConvert,
+		repoFrontmatter: RepoFrontmatter
+	) {
 		const imageBin = await this.vault.readBinary(imageFile);
 		const image64 = arrayBufferToBase64(imageBin);
-		const path = getImageLinkOptions(imageFile, this.settings, sourcefrontmatter);
-		await this.upload(image64, path, "", ref, repoFrontmatter);
+		const path = getImageLinkOptions(
+			imageFile,
+			this.settings,
+			sourceFrontmatter
+		);
+		await this.upload(image64, path, "", branchName, repoFrontmatter);
 	}
 
-	async uploadText(text: string, path: string, title = "", ref = "main", repoFrontmatter: RepoFrontmatter) {
-		/**
-		 * Convert text contents to base64
-		 * @param text contents of the note
-		 * @param path new Path in GitHub
-		 * @param title name note for message commit
-		 * @param ref branch name
-		 */
+	/**
+	 * Convert text contents to base64
+	 * @param {string} text contents of the note
+	 * @param {string} path new Path in GitHub
+	 * @param {string} title name note for message commit
+	 * @param {string} branchName The branch created by the plugin
+	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 * @return {Promise<void>}
+	 */
+
+	async uploadText(
+		text: string,
+		path: string,
+		title = "",
+		branchName: string,
+		repoFrontmatter: RepoFrontmatter
+	) {
 		try {
 			const contentBase64 = Base64.encode(text).toString();
-			await this.upload(contentBase64, path, title, ref, repoFrontmatter);
+			await this.upload(
+				contentBase64,
+				path,
+				title,
+				branchName,
+				repoFrontmatter
+			);
 		} catch (e) {
 			console.error(e);
 		}
 	}
 
-	async uploadMetadataExtractorFiles(metadataExtractor: MetadataExtractor, branchName: string, repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]) {
+	/**
+	 * Upload the metadataExtractor json file
+	 * @param {MetadataExtractor} metadataExtractor metadataExtractor
+	 * @param {string} branchName The branch name created by the plugin
+	 * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter frontmatter settings
+	 * @return {Promise<void>}
+	 */
+
+	async uploadMetadataExtractorFiles(
+		metadataExtractor: MetadataExtractor,
+		branchName: string,
+		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]
+	) {
 		if (metadataExtractor) {
 			for (const file of Object.values(metadataExtractor)) {
 				if (file) {
 					const contents = await app.vault.adapter.read(file);
-					const path = this.settings.metadataExtractorPath + '/' + file.split('/').pop();
+					const path =
+						this.settings.metadataExtractorPath +
+						"/" +
+						file.split("/").pop();
 					if (Array.isArray(repoFrontmatter)) {
 						for (const repo of repoFrontmatter) {
-							await this.uploadText(contents, path, file.split('/').pop(), branchName, repo);
+							await this.uploadText(
+								contents,
+								path,
+								file.split("/").pop(),
+								branchName,
+								repo
+							);
 						}
 					} else {
-						await this.uploadText(contents, path, file.split('/').pop(), branchName, repoFrontmatter);
+						await this.uploadText(
+							contents,
+							path,
+							file.split("/").pop(),
+							branchName,
+							repoFrontmatter
+						);
 					}
 				}
 			}
-
 		}
 	}
-	
-	async workflowGestion(repoFrontmatter: RepoFrontmatter) {
-		/**
-		 * Allow to activate a workflow dispatch GitHub action
-		 *
-		 */
+
+	/**
+	 * Allow to activate a workflow dispatch github actions
+	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 * @return {Promise<boolean>}
+	 */
+
+	async workflowGestion(repoFrontmatter: RepoFrontmatter): Promise<boolean> {
 		let finished = false;
 		if (this.settings.workflowName.length === 0) {
 			return false;
@@ -279,7 +530,7 @@ export default class Publisher {
 					owner: repoFrontmatter.owner,
 					repo: repoFrontmatter.repo,
 					workflow_id: this.settings.workflowName,
-					ref: "main",
+					ref: repoFrontmatter.branch,
 				}
 			);
 			while (!finished) {
@@ -306,4 +557,3 @@ export default class Publisher {
 		}
 	}
 }
-

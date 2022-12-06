@@ -1,9 +1,14 @@
 import { Plugin, TFile, Menu } from "obsidian";
 import { GithubPublisherSettings } from "./settings";
-import {convertOldSettings, disablePublish, getRepoFrontmatter} from "./src/utils";
+import {
+	convertOldSettings,
+	disablePublish,
+	getRepoFrontmatter,
+} from "./src/utils";
 import {
 	GitHubPublisherSettings,
-	DEFAULT_SETTINGS, RepoFrontmatter,
+	DEFAULT_SETTINGS,
+	RepoFrontmatter,
 } from "./settings/interface";
 import { GithubBranch } from "./publishing/branch";
 import { Octokit } from "@octokit/core";
@@ -15,13 +20,24 @@ import {
 	shareOneNote,
 	shareOnlyEdited,
 } from "./commands";
-import {StringFunc, commands, translationLanguage} from "./i18n";
+import { StringFunc, commands, translationLanguage } from "./i18n";
+
+/**
+ * Main class of the plugin
+ * @extends Plugin
+ */
 
 export default class GithubPublisher extends Plugin {
 	settings: GitHubPublisherSettings;
 
+	/**
+	 * Function called when the plugin is loaded
+	 * @return {Promise<void>}
+	 */
 	async onload() {
-		console.log(`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`);
+		console.log(
+			`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`
+		);
 		await this.loadSettings();
 		this.addSettingTab(new GithubPublisherSettings(this.app, this));
 		const octokit = new Octokit({ auth: this.settings.GhToken });
@@ -32,11 +48,11 @@ export default class GithubPublisher extends Plugin {
 			this.app.metadataCache,
 			this
 		);
-		await convertOldSettings('ExcludedFolder', this)
-		await convertOldSettings('autoCleanUpExcluded', this)
+		await convertOldSettings("ExcludedFolder", this);
+		await convertOldSettings("autoCleanUpExcluded", this);
 
 		const branchName =
-			app.vault.getName().replaceAll(" ", "-").replaceAll('.', '-') +
+			app.vault.getName().replaceAll(" ", "-").replaceAll(".", "-") +
 			"-" +
 			new Date().toLocaleDateString("en-US").replace(/\//g, "-");
 		const repo = getRepoFrontmatter(this.settings) as RepoFrontmatter;
@@ -50,7 +66,9 @@ export default class GithubPublisher extends Plugin {
 					menu.addItem((item) => {
 						item.setSection("action");
 						item.setTitle(
-							(commands("shareViewFiles") as StringFunc)(file.basename)
+							(commands("shareViewFiles") as StringFunc)(
+								file.basename
+							)
 						)
 							.setIcon("share")
 							.onClick(async () => {
@@ -105,7 +123,9 @@ export default class GithubPublisher extends Plugin {
 						const isShared = this.app.metadataCache.getFileCache(
 							file
 						).frontmatter
-							? this.app.metadataCache.getFileCache(file).frontmatter[this.settings.shareKey]
+							? this.app.metadataCache
+								.getFileCache(file)
+								.frontmatter[this.settings.shareKey]
 							: false;
 						if (isShared) {
 							await shareOneNote(
@@ -187,8 +207,6 @@ export default class GithubPublisher extends Plugin {
 					sharedFiles,
 					true
 				);
-				
-				
 			},
 		});
 
@@ -204,7 +222,6 @@ export default class GithubPublisher extends Plugin {
 					this,
 					repo
 				);
-				
 			},
 		});
 
@@ -227,7 +244,6 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-upload-edited",
 			name: commands("uploadAllEditedNote") as string,
 			callback: async () => {
-				
 				await shareOnlyEdited(
 					PublisherManager,
 					octokit,
@@ -240,10 +256,17 @@ export default class GithubPublisher extends Plugin {
 		});
 	}
 
+	/**
+	 * Called when the plugin is disabled
+	 */
 	onunload() {
 		console.log("Github Publisher unloaded");
 	}
 
+	/**
+	 * Get the settings of the plugin
+	 * @return {Promise<void>}
+	 */
 	async loadSettings() {
 		this.settings = Object.assign(
 			{},
@@ -252,6 +275,10 @@ export default class GithubPublisher extends Plugin {
 		);
 	}
 
+	/**
+	 * Save the settings of the plugin
+	 * @return {Promise<void>}
+	 */
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}

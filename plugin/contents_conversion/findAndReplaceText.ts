@@ -1,23 +1,28 @@
-import {GitHubPublisherSettings} from "../settings/interface";
+import { GitHubPublisherSettings } from "../settings/interface";
 
 /**
  * Given a series of `censor` entries in Settings, this will loop through each
  * then find and replace.
+ * @param {string} text The text to be censored.
+ * @param {GitHubPublisherSettings} settings Settings
+ * @param {boolean} after Whether to censor all or just the first match.
+ * @returns {string} The censored text.
  */
-export default function findAndReplaceText(text: string, settings: GitHubPublisherSettings, after?: boolean): string {
-	/*
-	* Censor text using the settings
-	 */
+export default function findAndReplaceText(
+	text: string,
+	settings: GitHubPublisherSettings,
+	after?: boolean
+): string {
 	if (!settings.censorText) {
 		return text;
 	}
-	let censoring = settings.censorText.filter(censor => !censor.after);
+	let censoring = settings.censorText.filter((censor) => !censor.after);
 	if (after) {
-		censoring = settings.censorText.filter(censor => censor.after);
+		censoring = settings.censorText.filter((censor) => censor.after);
 	}
 	for (const censor of censoring) {
-		if ((!censor.flags) || (!censor.flags.match(/^[gimsuy\s]+$/))) {
-			censor.flags = 'gi';
+		if (!censor.flags || !censor.flags.match(/^[gimsuy\s]+$/)) {
+			censor.flags = "gi";
 		}
 		const regex = new RegExp(censor.entry, censor.flags);
 		// @ts-ignore
@@ -25,4 +30,3 @@ export default function findAndReplaceText(text: string, settings: GitHubPublish
 	}
 	return text;
 }
-

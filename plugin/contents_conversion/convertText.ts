@@ -1,4 +1,8 @@
-import {frontmatterConvert, GitHubPublisherSettings, LinkedNotes} from "../settings/interface";
+import {
+	FrontmatterConvert,
+	GitHubPublisherSettings,
+	LinkedNotes,
+} from "../settings/interface";
 import {
 	App,
 	FrontMatterCache,
@@ -7,136 +11,195 @@ import {
 	parseFrontMatterTags,
 	parseYaml,
 	stringifyYaml,
-	TFile, Vault,
+	TFile,
+	Vault,
 } from "obsidian";
-import {getDataviewPath} from "./filePathConvertor";
-import {getAPI, Link} from "obsidian-dataview";
-import {noticeLog} from "../src/utils";
-import {convertLinkCitation, convertWikilinks} from "./convertLinks";
+import { getDataviewPath } from "./filePathConvertor";
+import { getAPI, Link } from "obsidian-dataview";
+import { noticeLog } from "../src/utils";
+import { convertLinkCitation, convertWikilinks } from "./convertLinks";
 import findAndReplaceText from "./findAndReplaceText";
 import GithubPublisher from "../main";
 
-export function addHardLineBreak(text: string, settings: GitHubPublisherSettings, frontmatter: frontmatterConvert): string {
-	/*
-	* Convert soft line breaks to hard line breaks, adding two space at the end of the line.
-	* This settings can be set for global or perfile using a frontmatter key 'hardbreak'
-	* If both are set, the perfile setting will override the global setting.
-	* If neither are set, the default is false.
-	 */
+/**
+ * Convert soft line breaks to hard line breaks, adding two space at the end of the line.
+ * This settings can be set for global or perfile using a frontmatter key 'hardbreak'
+ * If both are set, the perfile setting will override the global setting.
+ * If neither are set, the default is false.
+ * @param {string} text the text to convert
+ * @param {GitHubPublisherSettings} settings the global settings
+ * @param {frontmatter} frontmatter the perfile frontmatter settings
+ * @returns {string} the converted text
+ */
+
+export function addHardLineBreak(
+	text: string,
+	settings: GitHubPublisherSettings,
+	frontmatter: FrontmatterConvert
+): string {
 	try {
-		text = text.replace(/^\s*\\\s*$/gmi, '<br/>');
+		text = text.replace(/^\s*\\\s*$/gim, "<br/>");
 		if (frontmatter.hardbreak) {
-			text = text.replace(/\n/gm, '  \n');
+			text = text.replace(/\n/gm, "  \n");
 		}
 		return text;
-	}
-	catch (e) {
+	} catch (e) {
 		noticeLog(e, settings);
 		return text;
 	}
 }
 
+/**
+ * Add the string list to the YAML frontmatter tags key
+ * If the tags key does not exist, it will be created
+ * @param {string} text the text to convert
+ * @param {string[]} toAdd the list of tags to add
+ * @returns {Promise<string>} the converted text
+ */
+
 async function addTagsToYAML(text: string, toAdd: string[]): Promise<string> {
-	/*
-	* Add the string list to the YAML frontmatter tags key
-	* If the tags key does not exist, it will be created
-	 */
 	const yaml = text.split("---")[1];
 	const yamlObject = parseYaml(yaml);
 	if (yamlObject.tag) {
-		toAdd = [...new Set([...toAdd, ...yamlObject.tag.map((tag: string) => tag.replaceAll('/', '_'))])];
+		toAdd = [
+			...new Set([
+				...toAdd,
+				...yamlObject.tag.map((tag: string) =>
+					tag.replaceAll("/", "_")
+				),
+			]),
+		];
 		delete yamlObject.tag;
 	}
 	if (yamlObject.tags) {
-		yamlObject.tags = [...new Set([...yamlObject.tags.map((tag: string)  => tag.replaceAll('/', '_')), ...toAdd])];
+		yamlObject.tags = [
+			...new Set([
+				...yamlObject.tags.map((tag: string) =>
+					tag.replaceAll("/", "_")
+				),
+				...toAdd,
+			]),
+		];
 	} else {
 		yamlObject.tags = toAdd;
 	}
 	const returnToYaml = stringifyYaml(yamlObject);
-	const fileContentsOnly= text.split("---").slice(2).join("---");
+	const fileContentsOnly = text.split("---").slice(2).join("---");
 	return `---\n${returnToYaml}---\n${fileContentsOnly}`;
 }
 
-
+/**
+ * Add inlines tags to frontmatter tags keys.
+ * Duplicate tags will be removed.
+ * @param {GitHubPublisherSettings} settings the global settings
+ * @param {TFile} file the file to process
+ * @param {MetadataCache} metadataCache the metadataCache
+ * @param {App} app obsidian app
+ * @param {FrontMatterCache} frontmatter the frontmatter cache
+ * @param {string} text the text to convert
+ * @return {Promise<string>} the converted text
+ */
 export async function addInlineTags(
 	settings: GitHubPublisherSettings,
-	file:TFile,
+	file: TFile,
 	metadataCache: MetadataCache,
 	app: App,
 	frontmatter: FrontMatterCache,
-	text: string): Promise<string> {
-	/*
-	* Add inlines tags to frontmatter tags keys.
-	* Duplicate tags will be removed.
-	*/
-
-
+	text: string
+): Promise<string> {
 	if (!settings.inlineTags) {
 		return text;
 	}
 	const inlineTags = metadataCache.getFileCache(file)?.tags;
-	const inlineTagsInText= inlineTags ? inlineTags.map(
-		t => t.tag.replace('#', '')
-			.replaceAll('/', '_')) : [];
+	const inlineTagsInText = inlineTags
+		? inlineTags.map((t) => t.tag.replace("#", "").replaceAll("/", "_"))
+		: [];
 	const frontmatterTags = parseFrontMatterTags(frontmatter);
 
-	const yamlTags = frontmatterTags ? frontmatterTags.map(t =>
-		t.replace('#', '')
-			.replaceAll("/", "_")) : [];
-	const toAdd = [...new Set([...inlineTagsInText, ...yamlTags])]
+	const yamlTags = frontmatterTags
+		? frontmatterTags.map((t) => t.replace("#", "").replaceAll("/", "_"))
+		: [];
+	const toAdd = [...new Set([...inlineTagsInText, ...yamlTags])];
 	if (toAdd.length > 0) {
 		return await addTagsToYAML(text, toAdd);
 	}
 	return text;
 }
 
+/**
+ * stringify the dataview link by extracting the value from the link
+ * extract the alt text if it exists, otherwise extract the filename
+ * return null if the alt text or the filename is excluded
+ * @param {Link} fieldValue the dataview link
+ * @param {GitHubPublisherSettings} settings the global settings
+ * @return {string | null} the display text by dataview
+ */
 function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings) {
-	/*
-	* stringify the dataview link by extracting the value from the link
-	* extract the alt text if it exists, otherwise extract the filename
-	* return null if the alt text or the filename is excluded
-	 */
-	const basename = (name: string) =>
-		/([^/\\.]*)(\..*)?$/.exec(name)[1];
+	const basename = (name: string) => /([^/\\.]*)(\..*)?$/.exec(name)[1];
 	const filename = basename(fieldValue.path).toString();
-	const display = fieldValue.display ? fieldValue.display.toString() : filename;
-	if (!settings.excludeDataviewValue.includes(display) && !settings.excludeDataviewValue.includes(filename)) {
+	const display = fieldValue.display
+		? fieldValue.display.toString()
+		: filename;
+	if (
+		!settings.excludeDataviewValue.includes(display) &&
+		!settings.excludeDataviewValue.includes(filename)
+	) {
 		return display;
 	}
 	return null;
 }
 
-export async function convertInlineDataview(text: string, settings: GitHubPublisherSettings, sourceFile: TFile, app: App) {
-	/*
-	* Add inlines dataview or frontmatter keys to the tags key in the frontmatter
-	* Will be recursive for array
-	* stringify with extract alt text for links
-	 */
+/**
+ * Add inlines dataview or frontmatter keys to the tags key in the frontmatter
+ * Will be recursive for array
+ * stringify with extract alt text for links
+ * @param {string} text the text to convert
+ * @param {GitHubPublisherSettings} settings the global settings
+ * @param {TFile} sourceFile the file to process
+ * @param {App} app obsidian app
+ * @return {Promise<string>} the converted text
+ */
+
+export async function convertInlineDataview(
+	text: string,
+	settings: GitHubPublisherSettings,
+	sourceFile: TFile,
+	app: App
+) {
 	// @ts-ignore
-	if (settings.dataviewFields.length === 0 || !app.plugins.enabledPlugins.has('dataview')) {
+	if (
+		settings.dataviewFields.length === 0 ||
+		// @ts-ignore
+		!app.plugins.enabledPlugins.has("dataview")
+	) {
 		return text;
 	}
 	const dvApi = getAPI();
 	const dataviewLinks = await dvApi.page(sourceFile.path);
-	const valueToAdd:string[] = [];
+	const valueToAdd: string[] = [];
 	for (const field of settings.dataviewFields) {
 		const fieldValue = dataviewLinks[field];
 		if (fieldValue) {
-			if (fieldValue.constructor.name === 'Link') {
+			if (fieldValue.constructor.name === "Link") {
 				const stringifyField = dataviewExtract(fieldValue, settings);
 				valueToAdd.push(stringifyField);
-			} else if (fieldValue.constructor.name === 'Array') {
+			} else if (fieldValue.constructor.name === "Array") {
 				for (const item of fieldValue) {
 					let stringifyField = item;
-					if (item.constructor.name === 'Link') {
+					if (item.constructor.name === "Link") {
 						stringifyField = dataviewExtract(item, settings);
 						valueToAdd.push(stringifyField);
-					}
-					else if (!settings.excludeDataviewValue.includes(stringifyField.toString())) {
+					} else if (
+						!settings.excludeDataviewValue.includes(
+							stringifyField.toString()
+						)
+					) {
 						valueToAdd.push(stringifyField.toString());
 					}
 				}
-			} else if (!settings.excludeDataviewValue.includes(fieldValue.toString())) {
+			} else if (
+				!settings.excludeDataviewValue.includes(fieldValue.toString())
+			) {
 				valueToAdd.push(fieldValue.toString());
 			}
 		}
@@ -147,61 +210,136 @@ export async function convertInlineDataview(text: string, settings: GitHubPublis
 	return text;
 }
 
+/**
+ * Convert dataview queries to markdown
+ * Empty the block if settings.convertDataview is false or if the frontmatter key dataview is false
+ * The global settings can be overrides by the frontmatter key dataview
+ * @param {string} text the text to convert
+ * @param {string} path the path of the file to convert
+ * @param {GitHubPublisherSettings} settings the global settings
+ * @param {App} app obsidian app
+ * @param {MetadataCache} metadataCache the metadataCache
+ * @param {FrontmatterConvert} frontmatterSettings the frontmatter settings
+ * @param {FrontMatterCache} frontmatter the frontmatter cache
+ * @param {TFile} sourceFile the file to process
+ * @return {Promise<string>} the converted text
+ * @credits Ole Eskid Steensen
+ */
+
 export async function convertDataviewQueries(
 	text: string,
 	path: string,
 	settings: GitHubPublisherSettings,
 	app: App,
 	metadataCache: MetadataCache,
-	frontmatterSettings: frontmatterConvert,
+	frontmatterSettings: FrontmatterConvert,
 	frontmatter: FrontMatterCache,
-	sourceFile: TFile): Promise<string>
-{
-	/*
-	* Convert dataview queries to markdown
-	* Empty the block if settings.convertDataview is false or if the frontmatter key dataview is false
-	* The global settings can be overrides by the frontmatter key dataview
-	 */
-	/* Credit : Ole Eskild Steensen from Obsidian Digital Garden */
+	sourceFile: TFile
+): Promise<string> {
 	// @ts-ignore
-	if (!app.plugins.enabledPlugins.has('dataview')) {
+	if (!app.plugins.enabledPlugins.has("dataview")) {
 		return text;
 	}
 	const vault = app.vault;
 	let replacedText = text;
-	const dataviewRegex = /```dataview(.+?)```/gsm;
+	const dataviewRegex = /```dataview(.+?)```/gms;
 	const dvApi = getAPI();
 	const matches = text.matchAll(dataviewRegex);
 	if (!matches) return;
 	const settingsDataview = frontmatterSettings.dataview;
-	for (const queryBlock of matches){
+	for (const queryBlock of matches) {
 		try {
 			const block = queryBlock[0];
 			const query = queryBlock[1];
-			let md = settingsDataview ? await dvApi.tryQueryMarkdown(query, path) : "";
+			let md = settingsDataview
+				? await dvApi.tryQueryMarkdown(query, path)
+				: "";
 			const dataviewPath = getDataviewPath(md, settings, vault);
-			md = convertLinkCitation(md, settings, dataviewPath, metadataCache, sourceFile, vault, frontmatter);
-			md = convertWikilinks(md, frontmatterSettings, settings, dataviewPath);
+			md = convertLinkCitation(
+				md,
+				settings,
+				dataviewPath,
+				metadataCache,
+				sourceFile,
+				vault,
+				frontmatter
+			);
+			md = convertWikilinks(
+				md,
+				frontmatterSettings,
+				settings,
+				dataviewPath
+			);
 			replacedText = replacedText.replace(block, md);
-
 		} catch (e) {
 			noticeLog(e, settings);
-			new Notice('Unable to render dataview query. Please update the dataview plugin to the last version.')
+			new Notice(
+				"Unable to render dataview query. Please update the dataview plugin to the last version."
+			);
 			return queryBlock[0];
 		}
 	}
 	return replacedText;
 }
 
+/**
+ * Main function to convert the text
+ * @param {string} text the text to convert
+ * @param {GitHubPublisherSettings} settings the global settings
+ * @param {FrontmatterConvert} frontmatterSettings the frontmatter settings
+ * @param {TFile} file the file to convert
+ * @param {App} app obsidian app
+ * @param {MetadataCache} metadataCache the metadataCache
+ * @param {FrontMatterCache} frontmatter the frontmatter cache
+ * @param {LinkedNotes[]} linkedFiles the linked files
+ * @param {GitHubPublisherSettings} plugin GithubPublisher plugin
+ * @param {Vault} vault app.vault
+ * @return {Promise<string>} the converted text
+ */
 
-export async function mainConverting(text: string, settings: GitHubPublisherSettings, frontmatterSettings: frontmatterConvert, file: TFile, app: App, metadataCache: MetadataCache, frontmatter: FrontMatterCache, linkedFiles: LinkedNotes[], plugin: GithubPublisher, vault: Vault) {
+export async function mainConverting(
+	text: string,
+	settings: GitHubPublisherSettings,
+	frontmatterSettings: FrontmatterConvert,
+	file: TFile,
+	app: App,
+	metadataCache: MetadataCache,
+	frontmatter: FrontMatterCache,
+	linkedFiles: LinkedNotes[],
+	plugin: GithubPublisher,
+	vault: Vault
+): Promise<string> {
 	text = findAndReplaceText(text, settings, false);
-	text = await addInlineTags(settings, file, metadataCache, plugin.app, frontmatter, text);
-	text = await convertDataviewQueries(text, file.path, settings, plugin.app, metadataCache, frontmatterSettings, frontmatter, file);
+	text = await addInlineTags(
+		settings,
+		file,
+		metadataCache,
+		plugin.app,
+		frontmatter,
+		text
+	);
+	text = await convertDataviewQueries(
+		text,
+		file.path,
+		settings,
+		plugin.app,
+		metadataCache,
+		frontmatterSettings,
+		frontmatter,
+		file
+	);
 	text = await convertInlineDataview(text, settings, file, plugin.app);
 	text = addHardLineBreak(text, settings, frontmatterSettings);
-	text = convertLinkCitation(text, settings, linkedFiles, metadataCache, file, vault, frontmatter);
+	text = convertLinkCitation(
+		text,
+		settings,
+		linkedFiles,
+		metadataCache,
+		file,
+		vault,
+		frontmatter
+	);
 	text = convertWikilinks(text, frontmatterSettings, settings, linkedFiles);
 	text = findAndReplaceText(text, settings, true);
-	return text
+	return text;
 }

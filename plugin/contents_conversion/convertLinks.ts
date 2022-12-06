@@ -1,22 +1,38 @@
-import {FrontMatterCache, MetadataCache, TFile, Vault} from "obsidian";
-import {frontmatterConvert, GitHubPublisherSettings, LinkedNotes} from "../settings/interface";
-import {createRelativePath} from "./filePathConvertor";
-import {isAttachment} from "../src/utils";
+import { FrontMatterCache, MetadataCache, TFile, Vault } from "obsidian";
+import {
+	FrontmatterConvert,
+	GitHubPublisherSettings,
+	LinkedNotes,
+} from "../settings/interface";
+import { createRelativePath } from "./filePathConvertor";
+import { isAttachment } from "../src/utils";
+
+/**
+ * Convert wikilinks to markdown
+ * @param {string} fileContent the text to convert
+ * @param {FrontmatterConvert} conditionConvert  the frontmatter settings
+ * @param {GitHubPublisherSettings} settings  global settings
+ * @param {LinkedNotes[]} linkedFiles the list of linked files
+ * @return {string} the converted text
+ */
 
 export function convertWikilinks(
 	fileContent: string,
-	conditionConvert: frontmatterConvert,
+	conditionConvert: FrontmatterConvert,
 	settings: GitHubPublisherSettings,
-	linkedFiles: LinkedNotes[]):string
-{
-	/*
-	* Convert wikilinks to markdown
-	 */
-	const convertWikilink = conditionConvert.convertWiki
-	const imageSettings = conditionConvert.attachment
-	const embedSettings = conditionConvert.embed
-	const convertLinks = conditionConvert.links
-	if (!convertWikilink && convertLinks && imageSettings && embedSettings && !conditionConvert.removeEmbed) {
+	linkedFiles: LinkedNotes[]
+): string {
+	const convertWikilink = conditionConvert.convertWiki;
+	const imageSettings = conditionConvert.attachment;
+	const embedSettings = conditionConvert.embed;
+	const convertLinks = conditionConvert.links;
+	if (
+		!convertWikilink &&
+		convertLinks &&
+		imageSettings &&
+		embedSettings &&
+		!conditionConvert.removeEmbed
+	) {
 		return fileContent;
 	}
 	const wikiRegex = /!?\[\[.*?\]\]/g;
@@ -25,8 +41,8 @@ export function convertWikilinks(
 		const fileRegex = /(\[\[).*?([\]|])/;
 		for (const wikiMatch of wikiMatches) {
 			const fileMatch = wikiMatch.match(fileRegex);
-			const isEmbed = wikiMatch.startsWith('!') ? '!' : '';
-			const isEmbedBool = wikiMatch.startsWith('!');
+			const isEmbed = wikiMatch.startsWith("!") ? "!" : "";
+			const isEmbedBool = wikiMatch.startsWith("!");
 			if (fileMatch) {
 				// @ts-ignore
 				let linkCreator = wikiMatch;
@@ -40,13 +56,39 @@ export function convertWikilinks(
 				 * memory. In this case, we'd strip [[, | and ./ to have wikilink.md as
 				 * result.
 				 */
-				const fileName = fileMatch[0].replaceAll('[', '').replaceAll('|', '').replaceAll(']', '').replaceAll('\\', '');
-				const StrictFileName = fileMatch[0].replaceAll('[', '').replaceAll('|', '').replaceAll(']', '').replaceAll('\\', '').replaceAll('../', '').replaceAll('./', '');
+				const fileName = fileMatch[0]
+					.replaceAll("[", "")
+					.replaceAll("|", "")
+					.replaceAll("]", "")
+					.replaceAll("\\", "");
+				const StrictFileName = fileMatch[0]
+					.replaceAll("[", "")
+					.replaceAll("|", "")
+					.replaceAll("]", "")
+					.replaceAll("\\", "")
+					.replaceAll("../", "")
+					.replaceAll("./", "");
 				//get last from path
-				const linkedFile=linkedFiles.find(item => item.linkFrom===StrictFileName);
+				const linkedFile = linkedFiles.find(
+					(item) => item.linkFrom === StrictFileName
+				);
 				if (linkedFile) {
-					const altText = linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.extension === 'md' ? linkedFile.linked.basename : "";
-					const removeEmbed =  conditionConvert.removeEmbed && isEmbedBool && linkedFile.linked.extension === 'md';
+					let altText: string;
+					if (linkedFile.linked.extension !== "md") {
+						altText =
+							linkedFile.altText.length > 0
+								? linkedFile.altText
+								: "";
+					} else {
+						altText =
+							linkedFile.altText.length > 0
+								? linkedFile.altText
+								: linkedFile.linked.basename;
+					}
+					const removeEmbed =
+						conditionConvert.removeEmbed &&
+						isEmbedBool &&
+						linkedFile.linked.extension === "md";
 					if (convertWikilink) {
 						let linkDestination = linkedFile.linkFrom;
 
@@ -58,37 +100,63 @@ export function convertWikilinks(
 						 * This verification makes sure we're using it. If we don't have the
 						 * frontmatter set, then use the regular file path.
 						 */
-						if (linkedFile.destinationFilePath){
+						if (linkedFile.destinationFilePath) {
 							linkDestination = linkedFile.destinationFilePath;
 						}
-						linkCreator = `${isEmbed}[${altText}](${encodeURI(linkDestination)})`;
+						linkCreator = `${isEmbed}[${altText}](${encodeURI(
+							linkDestination
+						)})`;
 					}
 
-					if (linkedFile.linked.extension === 'md' && !convertLinks && !isEmbedBool) {
+					if (
+						linkedFile.linked.extension === "md" &&
+						!convertLinks &&
+						!isEmbedBool
+					) {
 						linkCreator = altText;
 					}
-					if ((!imageSettings && isAttachment(linkedFile.linked.extension)) || removeEmbed)
-					{
-						linkCreator = '';
+					if (
+						(!imageSettings &&
+							isAttachment(linkedFile.linked.extension)) ||
+						removeEmbed
+					) {
+						linkCreator = "";
 					}
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
-				} else if (!fileName.startsWith('http')) {
-
+				} else if (!fileName.startsWith("http")) {
 					const altMatch = wikiMatch.match(/(\|).*(]])/);
-					const altCreator = fileName.split('/');
+					const altCreator = fileName.split("/");
 
-					const altLink = creatorAltLink(altMatch, altCreator, fileName.split('.').at(-1), fileName);
-					const removeEmbed = !isAttachment(fileName.trim()) &&  conditionConvert.removeEmbed && isEmbedBool;
-					if (convertWikilink){
-						const markdownName = !isAttachment(fileName.trim()) ? fileName.trim() + '.md' : fileName.trim();
-						linkCreator = `${isEmbed}[${altLink}](${encodeURI(markdownName)})`;
+					const altLink = creatorAltLink(
+						altMatch,
+						altCreator,
+						fileName.split(".").at(-1),
+						fileName
+					);
+					const removeEmbed =
+						!isAttachment(fileName.trim()) &&
+						conditionConvert.removeEmbed &&
+						isEmbedBool;
+					if (convertWikilink) {
+						const markdownName = !isAttachment(fileName.trim())
+							? fileName.trim() + ".md"
+							: fileName.trim();
+						linkCreator = `${isEmbed}[${altLink}](${encodeURI(
+							markdownName
+						)})`;
 					}
-					if (!isAttachment(fileName.trim()) && !convertLinks && !isEmbedBool)  {
+					if (
+						!isAttachment(fileName.trim()) &&
+						!convertLinks &&
+						!isEmbedBool
+					) {
 						linkCreator = altLink;
-					} if ((!imageSettings && isAttachment(fileName.trim()))
-						|| removeEmbed)
-					{
-						linkCreator = '';
+					}
+					if (
+						(!imageSettings && isAttachment(fileName.trim())) ||
+						removeEmbed
+					) {
+						linkCreator = "";
 					}
 
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
@@ -99,41 +167,62 @@ export function convertWikilinks(
 	return fileContent;
 }
 
-function addAltText(link: string, linkedFile: LinkedNotes) {
+/**
+ * Add alt text to links
+ * @param {string} link the link to add alt text to
+ * @param {LinkedNotes} linkedFile the linked file
+ * @returns {string} the link with alt text
+ */
+
+function addAltText(link: string, linkedFile: LinkedNotes): string {
 	if (!link.match(/(\|).*(]])/)) {
-		return link.replace('|', '').replace(']]', `|${linkedFile.altText}]]`);
-	} return link;
+		return link.replace("|", "").replace("]]", `|${linkedFile.altText}]]`);
+	}
+	return link;
 }
+
+/**
+ * Convert internal links with changing the path to the relative path in the github repository
+ * @param {string} fileContent The file content
+ * @param {GitHubPublisherSettings} settings Settings of the plugins
+ * @param {LinkedNotes[]} linkedFiles A list of linked files including the linked file in TFile format and the linked file (string) including the alt text
+ * @param {MetadataCache} metadataCache The metadata cache of the vault
+ * @param {TFile} sourceFile The source file
+ * @param {Vault} vault The vault
+ * @param {FrontMatterCache} frontmatter The frontmatter cache
+ * @return {string} the file contents with converted internal links
+ */
 
 export function convertLinkCitation(
 	fileContent: string,
 	settings: GitHubPublisherSettings,
-	linkedFiles : LinkedNotes[],
+	linkedFiles: LinkedNotes[],
 	metadataCache: MetadataCache,
 	sourceFile: TFile,
 	vault: Vault,
-	frontmatter: FrontMatterCache):string {
-	/**
-	* Convert internal links with changing the path to the relative path in the github repository
-	* @param fileContent: The file content
-	* @param settings: Settings of the plugins
-	* @param linkedFiles: A list of linked files including the linked file in TFile format and the linked file (string) including the alt text
-	* @param metadataCache: Metadata cache
-	* @param sourceFile: The original file
-	* @return the file contents with converted internal links
-
-	*/
+	frontmatter: FrontMatterCache
+): string {
 	if (!settings.convertForGithub) {
 		return fileContent;
 	}
 	for (const linkedFile of linkedFiles) {
-		let pathInGithub = createRelativePath(sourceFile, linkedFile, metadataCache, settings, vault, frontmatter).replace('.md', '');
-		const regexToReplace = new RegExp(`(\\[{2}${linkedFile.linkFrom}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\(${linkedFile.linkFrom}\\))`, 'g');
+		let pathInGithub = createRelativePath(
+			sourceFile,
+			linkedFile,
+			metadataCache,
+			settings,
+			vault,
+			frontmatter
+		).replace(".md", "");
+		const regexToReplace = new RegExp(
+			`(\\[{2}${linkedFile.linkFrom}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\(${linkedFile.linkFrom}\\))`,
+			"g"
+		);
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {
 			for (const link of matchedLink) {
 				const regToReplace = new RegExp(`${linkedFile.linkFrom}`);
-				const block_link = linkedFile.linkFrom.match(/#.*/)
+				const block_link = linkedFile.linkFrom.match(/#.*/);
 				if (block_link) {
 					pathInGithub += block_link[0];
 				}
@@ -146,20 +235,29 @@ export function convertLinkCitation(
 	return fileContent;
 }
 
+/**
+ * Create the alt text for the link
+ * if no alt text is given, the alt text is the filename without the extension
+ * @param {RegExpMatchArray} altMatch the alt matched by the regex
+ * @param {string[]} altCreator The filename split by /
+ * @param {string} fileExtension the file extension
+ * @param {string} match the filename matched
+ * @return {string} the alt text
+ */
+
 export function creatorAltLink(
 	altMatch: RegExpMatchArray,
 	altCreator: string[],
 	fileExtension: string,
-	match: string):string {
-	/*
-	* Create the alt text for the link
-	* if no alt text is given, the alt text is the filename without the extension
-	 */
+	match: string
+): string {
 	if (altMatch) {
-		return altMatch[0].replace(']]', '').replace('|', '');
+		return altMatch[0].replace("]]", "").replace("|", "");
 	}
-	if (fileExtension === 'md') {
-		return altCreator.length > 1 ? altCreator[altCreator.length-1] : altCreator[0] //alt text based on filename for markdown files
+	if (fileExtension === "md") {
+		return altCreator.length > 1
+			? altCreator[altCreator.length - 1]
+			: altCreator[0]; //alt text based on filename for markdown files
 	}
-	return match.split('/').at(-1); //alt text based on filename for other files
+	return match.split("/").at(-1); //alt text based on filename for other files
 }

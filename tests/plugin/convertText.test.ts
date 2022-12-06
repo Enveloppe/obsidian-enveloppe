@@ -1,30 +1,30 @@
-import { beforeEach, describe, expect, test } from '@jest/globals';
+import { beforeEach, describe, expect, test } from "@jest/globals";
 import settingsFixture from "../fixtures/githubPublisherSettings";
 import { GitHubPublisherSettings } from "../../plugin/settings/interface";
-import findAndReplaceText from './../../plugin/contents_conversion/findAndReplaceText';
+import findAndReplaceText from "./../../plugin/contents_conversion/findAndReplaceText";
 
 let settings: GitHubPublisherSettings;
 
 const resetFixtures = () => {
-	settings = settingsFixture
-}
+	settings = settingsFixture;
+};
 
 beforeEach(() => {
-	resetFixtures()
+	resetFixtures();
 });
 
-describe('findAndReplaceText standard behavior', () => {
-	test('skips if settings.censorText is empty', () => {
+describe("findAndReplaceText standard behavior", () => {
+	test("skips if settings.censorText is empty", () => {
 		const initialText = `file v1`;
 		const expectedText = `file v1`;
 
-		settings["censorText"] = []
+		settings["censorText"] = [];
 		const subject = findAndReplaceText(initialText, settings);
 
 		expect(subject).toBe(expectedText);
 	});
 
-	test('replaces patterns in a string in sequence', () => {
+	test("replaces patterns in a string in sequence", () => {
 		const initialText = `file v1`;
 		const expectedText = `file v4`;
 
@@ -32,27 +32,30 @@ describe('findAndReplaceText standard behavior', () => {
 			{
 				entry: "file v1",
 				replace: "file v2",
-				after: false
+				after: false,
+				flags: "gi",
 			},
 			{
 				entry: "file v2",
 				replace: "file v3",
-				after: false
+				after: false,
+				flags: "gi",
 			},
 			{
 				entry: "file v3",
 				replace: "file v4",
-				after: false
+				after: false,
+				flags: "gi",
 			},
-		]
+		];
 		const subject = findAndReplaceText(initialText, settings);
 
 		expect(subject).toBe(expectedText);
 	});
 });
 
-describe('findAndReplaceText with patterns for Jekyll', () => {
-	test('replaces strings', () => {
+describe("findAndReplaceText with patterns for Jekyll", () => {
+	test("replaces strings", () => {
 		const initialText = `
 			[Alt Text](http://do-not-touch-websites.com)
 			[Alt Text](pure-file)
@@ -123,10 +126,12 @@ describe('findAndReplaceText with patterns for Jekyll', () => {
 				// bracket. --------\         |    |   |                                  |     |     |
 				//                   |        |    |   |                                  |     |     |
 				//                   V        V    V   V                                  V     V     V
-				entry: String.raw `(?<!\`)\[(.*?)\]\((?!(http|\/*image|obsidian\/image))(\.\/)*(.+?)(\.md)*\)`,
+				entry: String.raw`(?<!\`)\[(.*?)\]\((?!(http|\/*image|obsidian\/image))(\.\/)*(.+?)(\.md)*\)`,
 				replace: "[$1]({% link obsidian/$4.md %})",
-				after: false
-			}, {
+				after: false,
+				flags: "gi",
+			},
+			{
 				// Converts [a](obsidian/images/b) into [a](/images/b)
 				//
 				// Everything else. -------------------------------------\
@@ -144,11 +149,12 @@ describe('findAndReplaceText with patterns for Jekyll', () => {
 				// bracket. --------\         |     |   |                 |
 				//                   |        |     |   |                 |
 				//                   V        V     V   V                 V
-				entry: String.raw `(?<!\`)\[(.*?)\]\(((obsidian\/)?image)(.+)\)`,
+				entry: String.raw`(?<!\`)\[(.*?)\]\(((obsidian\/)?image)(.+)\)`,
 				replace: "[$1](/image$4)",
-				after: false
-			}
-		]
+				after: false,
+				flags: "gi"
+			},
+		];
 		const subject = findAndReplaceText(initialText, settings);
 
 		expect(subject).toBe(expectedText);

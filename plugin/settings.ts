@@ -327,7 +327,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 		//@ts-ignore
-		if (Array.from(app.plugins.enabledPlugins).includes("metadata-extractor")) {
+		if (app.plugins.enabledPlugins.has("metadata-extractor")) {
 			new Setting(this.settingsPage)
 				.setName(settings("githubWorkflow", "useMetadataExtractor") as string)
 				.setDesc(settings("githubWorkflow", "useMetadataExtractorDesc") as string)
