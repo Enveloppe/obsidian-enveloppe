@@ -122,6 +122,9 @@ export default {
 			autoCleanUpDesc: "Si le plugin doit retirer de votre dépôt les fichiers supprimés (arrêt de partage ou supprimé).",
 			excludedFiles: "Fichier exclus",
 			excludedFilesDesc: "Si vous voulez exclure certains dossiers du nettoyage automatique, définissez leur chemin.",
+			useMetadataExtractor: "Fichier de metadata-extractor",
+			useMetadataExtractorDesc: "Envoyer les fichiers générés par metadata-extractor dans ce dossier.",
+
 		},
 		plugin: {
 			pluginSettings: "Paramètres du plugin",

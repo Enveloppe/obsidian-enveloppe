@@ -5,7 +5,7 @@ import {
 	TFile,
 	Vault,
 } from "obsidian";
-import {frontmatterConvert, GitHubPublisherSettings, RepoFrontmatter} from "../settings/interface";
+import {frontmatterConvert, GitHubPublisherSettings, MetadataExtractor, RepoFrontmatter} from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
 import { Octokit } from "@octokit/core";
 import { Base64 } from "js-base64";
@@ -145,7 +145,7 @@ export default class Publisher {
 
 	async uploadMultiple(file: TFile, text: string, ref: string, frontmatterSettings: frontmatterConvert, path: string, repo: RepoFrontmatter, embedFiles: TFile[], fileHistory: TFile[], deepScan: boolean, shareFiles: FilesManagement, autoclean: boolean) {
 		noticeLog(`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${ref}`, this.settings);
-		await this.uploadText(file.path, text, path, file.name, ref, repo);
+		await this.uploadText(text, path, file.name, ref, repo);
 		await this.statusBarForEmbed(embedFiles, fileHistory, ref, deepScan, frontmatterSettings, repo);
 		if (autoclean && repo.autoclean) {
 			await deleteFromGithub(true, this.settings, this.octokit, ref, shareFiles, repo);
@@ -153,10 +153,9 @@ export default class Publisher {
 		return true;
 	}
 
-	async upload(filePath: string, content: string, path: string, title = "", ref = "main", repoFrontmatter: RepoFrontmatter) {
+	async upload(content: string, path: string, title = "", ref = "main", repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Upload file to GitHub
-		 * @param filePath filepath in obsidian (origin)
 		 * @param content Contents of the file sent
 		 * @param title for commit message, name of the file
 		 * @param ref branch name
@@ -226,13 +225,12 @@ export default class Publisher {
 		const imageBin = await this.vault.readBinary(imageFile);
 		const image64 = arrayBufferToBase64(imageBin);
 		const path = getImageLinkOptions(imageFile, this.settings, sourcefrontmatter);
-		await this.upload(imageFile.path, image64, path, "", ref, repoFrontmatter);
+		await this.upload(image64, path, "", ref, repoFrontmatter);
 	}
 
-	async uploadText(filePath: string, text: string, path: string, title = "", ref = "main", repoFrontmatter: RepoFrontmatter) {
+	async uploadText(text: string, path: string, title = "", ref = "main", repoFrontmatter: RepoFrontmatter) {
 		/**
 		 * Convert text contents to base64
-		 * @param filePath Obsidian filepath (origin)
 		 * @param text contents of the note
 		 * @param path new Path in GitHub
 		 * @param title name note for message commit
@@ -240,9 +238,28 @@ export default class Publisher {
 		 */
 		try {
 			const contentBase64 = Base64.encode(text).toString();
-			await this.upload(filePath, contentBase64, path, title, ref, repoFrontmatter);
+			await this.upload(contentBase64, path, title, ref, repoFrontmatter);
 		} catch (e) {
 			console.error(e);
+		}
+	}
+
+	async uploadMetadataExtractorFiles(metadataExtractor: MetadataExtractor, branchName: string, repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]) {
+		if (metadataExtractor) {
+			for (const file of Object.values(metadataExtractor)) {
+				if (file) {
+					const contents = await app.vault.adapter.read(file);
+					const path = this.settings.metadataExtractorPath + '/' + file.split('/').pop();
+					if (Array.isArray(repoFrontmatter)) {
+						for (const repo of repoFrontmatter) {
+							await this.uploadText(contents, path, file.split('/').pop(), branchName, repo);
+						}
+					} else {
+						await this.uploadText(contents, path, file.split('/').pop(), branchName, repoFrontmatter);
+					}
+				}
+			}
+
 		}
 	}
 	

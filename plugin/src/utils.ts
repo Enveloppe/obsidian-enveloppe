@@ -47,7 +47,7 @@ export async function getSettingsOfMetadataExtractor(app: App, settings: GitHubP
 	if (Platform.isMobile || !Array.from(app.plugins.enabledPlugins).includes("metadata-extractor") || (settings.metadataExtractorPath.length === 0)) return null;
 
 	const metadataExtractor: MetadataExtractor = {
-		allExceptMdPath: null,
+		allExceptMdFile: null,
 		metadataFile: null,
 		tagsFile: null,
 	}
@@ -56,14 +56,14 @@ export async function getSettingsOfMetadataExtractor(app: App, settings: GitHubP
 	// @ts-ignore
 	const plugin = app.plugins.plugins['metadata-extractor']
 	if (plugin && plugin.settings) {
-		if (plugin.settings['allExceptMdFile']) {
+		if (plugin.settings['allExceptMdFile'].length > 0) {
 			//get file from plugins folder in .obsidian folder
-			metadataExtractor.metadataFile = path + '/' + plugin.settings['allExceptMdFile'];
+			metadataExtractor.allExceptMdFile = path + '/' + plugin.settings['allExceptMdFile'];
 		}
-		if (plugin.settings['metadataFile']) {
+		if (plugin.settings['metadataFile'].length > 0) {
 			metadataExtractor.metadataFile= path + '/' + plugin.settings['metadataFile'];
 		}
-		if (plugin.settings['tagPath']) {
+		if (plugin.settings['tagFile'].length > 0) {
 			metadataExtractor.tagsFile = path + '/' + plugin.settings['tagFile'];
 		}
 		return metadataExtractor

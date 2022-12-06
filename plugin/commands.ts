@@ -17,7 +17,7 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 	 * @class settings
 	 * @class octokit
 	 * @param statusBarItem Allowing statusbar (only PC)
-	 * @param branchName
+	 * @param branchName: the name of the branch created by the plugin
 	 * @param sharedFiles File marked to true
 	 * @param createGitHubBranch prevent to multiple creation of branch if already exists
 	 */
@@ -47,16 +47,15 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 					);
 				}
 			}
-			if (settings.metadataExtractorPath && Platform.isDesktop) {
-				const metadataExtractor = await getSettingsOfMetadataExtractor(app, settings);
-				if (metadataExtractor) {
-					if (metadataExtractor.metadataFile) { }
-				}
-
-			}
 			statusBar.finish(8000);
 			const noticeValue = `${publishedFiles.length - errorCount} notes`
 			await deleteFromGithub(true, settings, octokit, branchName, PublisherManager, repoFrontmatter);
+			if (settings.metadataExtractorPath.length >0 && Platform.isDesktop) {
+				const metadataExtractor = await getSettingsOfMetadataExtractor(app, settings);
+				if (metadataExtractor) {
+					await PublisherManager.uploadMetadataExtractorFiles(metadataExtractor, branchName, repoFrontmatter);
+				}
+			}
 			const update = await PublisherManager.updateRepository(branchName, repoFrontmatter);
 			if (update) {
 				await noticeMessage(PublisherManager, noticeValue, settings, repoFrontmatter);
@@ -106,6 +105,12 @@ export async function shareOneNote(branchName: string, PublisherManager: GithubB
 		const publishSuccess =
 			await PublisherManager.publish(file, true, branchName, repoFrontmatter,[], true);
 		if (publishSuccess) {
+			if (settings.metadataExtractorPath.length >0 && Platform.isDesktop) {
+				const metadataExtractor = await getSettingsOfMetadataExtractor(app, settings);
+				if (metadataExtractor) {
+					await PublisherManager.uploadMetadataExtractorFiles(metadataExtractor, branchName, repoFrontmatter);
+				}
+			}
 			const update = await PublisherManager.updateRepository(branchName, repoFrontmatter);
 			if (update) {
 				await noticeMessage(PublisherManager, file, settings, repoFrontmatter);
@@ -134,9 +139,8 @@ export async function shareNewNote(PublisherManager: GithubBranch, octokit: Octo
 	 */
 	const settings = plugin.settings;
 	new Notice(informations("scanningRepo") as string);
-	const branchMaster = settings.githubBranch;
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
-	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings, repoFrontmatter);
+	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(repoFrontmatter.branch, octokit, settings, repoFrontmatter);
 	const newlySharedNotes = PublisherManager.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
 	if (newlySharedNotes.length > 0) {
 		new Notice((informations("foundNoteToSend") as StringFunc)(`${newlySharedNotes.length}`));
@@ -160,7 +164,7 @@ export async function shareAllEditedNotes(PublisherManager: GithubBranch, octoki
 	 */
 	const settings = plugin.settings;
 	new Notice(informations("scanningRepo") as string);
-	const branchMaster = settings.githubBranch;
+	const branchMaster = repoFrontmatter.branch;
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings, repoFrontmatter);
 	const newSharedFiles = PublisherManager.getNewFiles(sharedFilesWithPaths, githubSharedNotes, vault);
@@ -186,7 +190,7 @@ export async function shareOnlyEdited(PublisherManager: GithubBranch, octokit: O
 	 */
 	const settings = plugin.settings;
 	new Notice(informations("scanningRepo") as string);
-	const branchMaster = settings.githubBranch;
+	const branchMaster = repoFrontmatter.branch;
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(branchMaster, octokit, settings, repoFrontmatter);
 	const newSharedFiles:TFile[]=[]

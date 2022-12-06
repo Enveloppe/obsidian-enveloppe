@@ -326,6 +326,21 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
+		//@ts-ignore
+		if (Array.from(app.plugins.enabledPlugins).includes("metadata-extractor")) {
+			new Setting(this.settingsPage)
+				.setName(settings("githubWorkflow", "useMetadataExtractor") as string)
+				.setDesc(settings("githubWorkflow", "useMetadataExtractorDesc") as string)
+				.addText((text) => {
+					text.setPlaceholder('docs/_assets/metadata')
+						.setValue(this.plugin.settings.metadataExtractorPath)
+						.onChange(async (value) => {
+							this.plugin.settings.metadataExtractorPath = value.trim();
+							await this.plugin.saveSettings();
+						})
+				})
+		}
+
 		const condition =
 			(this.plugin.settings.downloadedFolder === folderSettings.yaml &&
 				this.plugin.settings.rootFolder.length === 0) ||

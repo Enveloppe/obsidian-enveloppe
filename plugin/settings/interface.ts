@@ -93,7 +93,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 }
 
 export interface MetadataExtractor {
-	allExceptMdPath: string | null;
+	allExceptMdFile: string | null;
 	metadataFile: string | null,
 	tagsFile: string | null,
 }
