@@ -1,10 +1,10 @@
 import { ShareStatusBar } from "./src/status_bar";
-import {createLink, noticeMessage, getRepoFrontmatter, noticeLog} from "./src/utils";
+import {createLink, noticeMessage, getRepoFrontmatter, noticeLog, getSettingsOfMetadataExtractor} from "./src/utils";
 import {GitHubPublisherSettings, RepoFrontmatter} from './settings/interface'
 import { deleteFromGithub } from './publishing/delete'
 import {GithubBranch} from "./publishing/branch";
 import { Octokit } from "@octokit/core";
-import {MetadataCache, Notice, TFile, Vault} from "obsidian";
+import {MetadataCache, Notice, Platform, TFile, Vault} from "obsidian";
 import GithubPublisher from "./main";
 import {error, informations} from './i18n'
 import { StringFunc } from "./i18n";
@@ -46,6 +46,13 @@ export async function shareAllMarkedNotes(PublisherManager: GithubBranch, settin
 						(error("unablePublishNote") as StringFunc)(sharedFiles[files].name)
 					);
 				}
+			}
+			if (settings.metadataExtractorPath && Platform.isDesktop) {
+				const metadataExtractor = await getSettingsOfMetadataExtractor(app, settings);
+				if (metadataExtractor) {
+					if (metadataExtractor.metadataFile) { }
+				}
+
 			}
 			statusBar.finish(8000);
 			const noticeValue = `${publishedFiles.length - errorCount} notes`

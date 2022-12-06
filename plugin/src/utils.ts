@@ -1,5 +1,5 @@
-import {App, FrontMatterCache, MetadataCache, Notice, TFile, Vault} from 'obsidian'
-import {GitHubPublisherSettings, RepoFrontmatter} from '../settings/interface'
+import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, Vault} from 'obsidian'
+import {GitHubPublisherSettings, MetadataExtractor, RepoFrontmatter} from '../settings/interface'
 import Publisher from "../publishing/upload";
 import {informations} from '../i18n'
 import type { StringFunc } from "../i18n";
@@ -35,6 +35,43 @@ export function noticeLog(message: string, settings: GitHubPublisherSettings) {
 		console.log(message);
 	}
 }
+
+export async function getSettingsOfMetadataExtractor(app: App, settings: GitHubPublisherSettings) {
+	/**
+	 * Get the settings of the metadata extractor plugin
+	 * @param app: App
+	 * @param settings: GitHubPublisherSettings
+	 * @returns settings of the metadata extractor plugin
+	 */
+	// @ts-ignore
+	if (Platform.isMobile || !Array.from(app.plugins.enabledPlugins).includes("metadata-extractor") || (settings.metadataExtractorPath.length === 0)) return null;
+
+	const metadataExtractor: MetadataExtractor = {
+		allExceptMdPath: null,
+		metadataFile: null,
+		tagsFile: null,
+	}
+
+	const path = `${app.vault.configDir}/plugins/metadata-extractor`;
+	// @ts-ignore
+	const plugin = app.plugins.plugins['metadata-extractor']
+	if (plugin && plugin.settings) {
+		if (plugin.settings['allExceptMdFile']) {
+			//get file from plugins folder in .obsidian folder
+			metadataExtractor.metadataFile = path + '/' + plugin.settings['allExceptMdFile'];
+		}
+		if (plugin.settings['metadataFile']) {
+			metadataExtractor.metadataFile= path + '/' + plugin.settings['metadataFile'];
+		}
+		if (plugin.settings['tagPath']) {
+			metadataExtractor.tagsFile = path + '/' + plugin.settings['tagFile'];
+		}
+		return metadataExtractor
+	}
+	return null;
+}
+
+
 
 export function disablePublish (app: App, settings: GitHubPublisherSettings, file:TFile) {
 	/**

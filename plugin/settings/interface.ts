@@ -39,6 +39,7 @@ export interface GitHubPublisherSettings {
 	metadataFileFields: string[];
 	shareExternalModified: boolean;
 	automaticallyMergePR: boolean;
+	metadataExtractorPath: string;
 }
 
 export enum folderSettings {
@@ -87,7 +88,14 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	metadataFileFields:[],
 	frontmatterTitleKey: 'title',
 	shareExternalModified: false,
-	automaticallyMergePR: true
+	automaticallyMergePR: true,
+	metadataExtractorPath: '',
+}
+
+export interface MetadataExtractor {
+	allExceptMdPath: string | null;
+	metadataFile: string | null,
+	tagsFile: string | null,
 }
 
 export interface LinkedNotes {
