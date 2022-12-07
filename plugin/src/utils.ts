@@ -423,13 +423,13 @@ export function getFrontmatterCondition(
  * Get the frontmatter from the frontmatter
  * @param {GitHubPublisherSettings} settings
  * @param {FrontMatterCache} frontmatter
- * @return {RepoFrontmatter[] | RepoFrontmatter}
+ * @return {RepoFrontmatter[]}
  */
 
 export function getRepoFrontmatter(
 	settings: GitHubPublisherSettings,
 	frontmatter?: FrontMatterCache
-) {
+):RepoFrontmatter[] {
 	let repoFrontmatter: RepoFrontmatter = {
 		branch: settings.githubBranch,
 		repo: settings.githubRepo,
@@ -437,14 +437,10 @@ export function getRepoFrontmatter(
 		autoclean: settings.autoCleanUp,
 	};
 	if (!frontmatter) {
-		return repoFrontmatter;
+		return [repoFrontmatter];
 	}
 	if (frontmatter.multipleRepo !== undefined) {
-		const multipleRepo = parseMultipleRepo(frontmatter, repoFrontmatter);
-		if (multipleRepo.length === 1) {
-			return multipleRepo[0] as RepoFrontmatter;
-		}
-		return multipleRepo;
+		return parseMultipleRepo(frontmatter, repoFrontmatter);
 	} else if (frontmatter.repo !== undefined) {
 		if (typeof frontmatter.repo === "object") {
 			if (frontmatter.repo.branch !== undefined) {
@@ -464,7 +460,7 @@ export function getRepoFrontmatter(
 	if (frontmatter.autoclean !== undefined) {
 		repoFrontmatter.autoclean = frontmatter.autoclean;
 	}
-	return repoFrontmatter;
+	return [repoFrontmatter];
 }
 
 /**
@@ -571,4 +567,23 @@ function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
 		newRepo.repo = repo[0];
 	}
 	return newRepo;
+}
+
+export function checkIfElementInRepoFrontmatter(
+	source: RepoFrontmatter[] | RepoFrontmatter, 
+	target: RepoFrontmatter[] | RepoFrontmatter):boolean {
+	if (!Array.isArray(source)) {
+		source = [source];
+	}
+	if (!Array.isArray(target)) {
+		target = [target];
+	}
+	for (const sourceRepo of source) {
+		for (const targetRepo of target) {
+			if (sourceRepo.repo === targetRepo.repo && sourceRepo.owner === targetRepo.owner) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
