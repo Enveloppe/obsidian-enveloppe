@@ -1,20 +1,20 @@
-import { GitHubPublisherSettings } from '../../plugin/settings/interface';
+import {folderSettings, GitHubPublisherSettings} from '../../plugin/settings/interface';
 
 const settings: GitHubPublisherSettings = {
 	githubRepo: "",
 	githubName: "",
 	GhToken: "",
-	githubBranch: "",
-	shareKey: "",
+	githubBranch: "main",
+	shareKey: "share",
 	excludedFolder: [],
 	fileMenu: false,
 	editorMenu: false,
-	downloadedFolder: "",
+	downloadedFolder: folderSettings.fixed,
 	folderDefaultName: "",
 	yamlFolderKey: "",
 	rootFolder: "",
 	workflowName: "",
-	embedImage: false,
+	embedImage: true,
 	defaultImageFolder: "",
 	autoCleanUp: false,
 	autoCleanUpExcluded: [],
@@ -28,16 +28,17 @@ const settings: GitHubPublisherSettings = {
 	linkRemover: "",
 	hardBreak: false,
 	logNotice: false,
-	convertDataview: false,
+	convertDataview: true,
 	useFrontmatterTitle: false,
 	censorText: [],
 	inlineTags: false,
 	dataviewFields: [],
-	frontmatterTitleKey: "",
 	excludeDataviewValue: [],
 	metadataFileFields: [],
+	frontmatterTitleKey: "title",
 	shareExternalModified: false,
-	automaticallyMergePR: false,
+	automaticallyMergePR: true,
+	metadataExtractorPath: "",
 }
 
 export default settings;

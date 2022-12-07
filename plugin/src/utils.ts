@@ -577,13 +577,13 @@ export function checkIfRepoIsInAnother(
 ) {
 	source = source instanceof Array ? source : [source];
 	target = target instanceof Array ? target : [target];
-	console.log(source, target);
-	for (const sourceRepo of target) {
-		for (const targetRepo of source) {
+
+	for (const repoTarget of target) {
+		for (const repoSource of source) {
 			if (
-				sourceRepo.repo === targetRepo.repo &&
-				sourceRepo.owner === targetRepo.owner &&
-				sourceRepo.branch === targetRepo.branch
+				repoTarget.repo === repoSource.repo &&
+				repoTarget.owner === repoSource.owner &&
+				repoTarget.branch === repoSource.branch
 			) {
 				return true;
 			}
