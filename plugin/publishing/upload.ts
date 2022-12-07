@@ -243,43 +243,32 @@ export default class Publisher {
 				this.metadataCache,
 				this.vault
 			);
-			//if repoFrontmatter is an array, it means that the file is in a multiple repo
-			if (repoFrontmatter instanceof Array) {
-				noticeLog("Multiple repo" + repoFrontmatter, this.settings);
-				const success: boolean[] = [];
-				for (const repo of repoFrontmatter) {
-					success.push(
-						await this.uploadMultiple(
-							file,
-							text,
-							branchName,
-							frontmatterSettings,
-							path,
-							repo,
-							embedFiles,
-							fileHistory,
-							deepScan,
-							shareFiles,
-							autoclean
-						)
-					);
-				}
-				return !success.every((value) => value === false);
-			} else {
-				return await this.uploadMultiple(
-					file,
-					text,
-					branchName,
-					frontmatterSettings,
-					path,
-					repoFrontmatter,
-					embedFiles,
-					fileHistory,
-					deepScan,
-					shareFiles,
-					autoclean
+			repoFrontmatter = Array.isArray(repoFrontmatter) ? repoFrontmatter : [repoFrontmatter];
+			let multiRepMsg = "";
+			for (const repo of repoFrontmatter) {
+				multiRepMsg += `[${repo.owner}/${repo.repo}/${repo.branch}] `;
+			}
+			const msg = `Publishing ${file.name} to ${multiRepMsg}`;
+			noticeLog(msg, this.settings);
+			const success: boolean[] = [];
+			for (const repo of repoFrontmatter) {
+				success.push(
+					await this.uploadMultiple(
+						file,
+						text,
+						branchName,
+						frontmatterSettings,
+						path,
+						repo,
+						embedFiles,
+						fileHistory,
+						deepScan,
+						shareFiles,
+						autoclean
+					)
 				);
 			}
+			return !success.every((value) => value === false);
 		} catch (e) {
 			noticeLog(e, this.settings);
 			return false;
@@ -489,23 +478,14 @@ export default class Publisher {
 						this.settings.metadataExtractorPath +
 						"/" +
 						file.split("/").pop();
-					if (Array.isArray(repoFrontmatter)) {
-						for (const repo of repoFrontmatter) {
-							await this.uploadText(
-								contents,
-								path,
-								file.split("/").pop(),
-								branchName,
-								repo
-							);
-						}
-					} else {
+					repoFrontmatter = Array.isArray(repoFrontmatter) ? repoFrontmatter : [repoFrontmatter];
+					for (const repo of repoFrontmatter) {
 						await this.uploadText(
 							contents,
 							path,
 							file.split("/").pop(),
 							branchName,
-							repoFrontmatter
+							repo
 						);
 					}
 				}

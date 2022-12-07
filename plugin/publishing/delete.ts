@@ -29,25 +29,15 @@ export async function deleteFromGithub(
 	filesManagement: FilesManagement,
 	repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter
 ) {
-	if (repoFrontmatter instanceof Array) {
-		for (const repo of repoFrontmatter) {
-			await deleteFromGithubOneRepo(
-				silent,
-				settings,
-				octokit,
-				branchName,
-				filesManagement,
-				repo
-			);
-		}
-	} else {
+	repoFrontmatter = Array.isArray(repoFrontmatter) ? repoFrontmatter : [repoFrontmatter];
+	for (const repo of repoFrontmatter) {
 		await deleteFromGithubOneRepo(
 			silent,
 			settings,
 			octokit,
 			branchName,
 			filesManagement,
-			repoFrontmatter
+			repo
 		);
 	}
 }

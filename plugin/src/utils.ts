@@ -222,18 +222,16 @@ export async function noticeMessage(
 	settings: GitHubPublisherSettings,
 	repo: RepoFrontmatter | RepoFrontmatter[]
 ) {
-	if (repo instanceof Array) {
-		for (const repository of repo) {
-			await noticeMessageOneRepo(
-				PublisherManager,
-				file,
-				settings,
-				repository
-			);
-		}
-	} else {
-		await noticeMessageOneRepo(PublisherManager, file, settings, repo);
+	repo = Array.isArray(repo) ? repo : [repo];
+	for (const repository of repo) {
+		await noticeMessageOneRepo(
+			PublisherManager,
+			file,
+			settings,
+			repository
+		);
 	}
+
 }
 
 /**
