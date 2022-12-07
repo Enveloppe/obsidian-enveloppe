@@ -9,9 +9,9 @@ import {
 	folderSettings,
 	LinkedNotes,
 	GitHubPublisherSettings,
-	FrontmatterConvert,
+	FrontmatterConvert, RepoFrontmatter,
 } from "../settings/interface";
-import { getFrontmatterCondition } from "../src/utils";
+import {checkIfRepoIsInAnother, getFrontmatterCondition, getRepoFrontmatter} from "../src/utils";
 
 /**
  * Get the dataview path from a markdown file
@@ -61,23 +61,29 @@ function getDataviewPath(
  * @param {MetadataCache} metadata metadataCache
  * @param {Vault} vault Vault
  * @param {FrontMatterCache | null} frontmatter FrontmatterCache or null
+ * @param {RepoFrontmatter[] | RepoFrontmatter} sourceRepo The repoFrontmatter from the original file
  * @return {string} relative path
  */
 
-function createRelativePath(
+async function createRelativePath(
 	sourceFile: TFile,
 	targetFile: LinkedNotes,
 	metadata: MetadataCache,
 	settings: GitHubPublisherSettings,
 	vault: Vault,
-	frontmatter: FrontMatterCache | null
-): string {
+	frontmatter: FrontMatterCache | null,
+	sourceRepo: RepoFrontmatter[] | RepoFrontmatter
+): Promise<string> {
 	const sourcePath = getReceiptFolder(sourceFile, settings, metadata, vault);
+	const frontmatterTarget = await metadata.getFileCache(targetFile.linked).frontmatter;
+	const targetRepo = await getRepoFrontmatter(settings, frontmatterTarget);
+	const isFromAnotherRepo = checkIfRepoIsInAnother(sourceRepo, targetRepo);
+
 	if (
 		targetFile.linked.extension === "md" &&
 		(!frontmatter ||
 			!frontmatter[settings.shareKey] ||
-			frontmatter[settings.shareKey] === false)
+			frontmatter[settings.shareKey] === false || !isFromAnotherRepo)
 	) {
 		return targetFile.altText;
 	}

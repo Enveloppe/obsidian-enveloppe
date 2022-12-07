@@ -1,7 +1,7 @@
 import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
-	LinkedNotes,
+	LinkedNotes, RepoFrontmatter,
 } from "../settings/interface";
 import {
 	App,
@@ -222,6 +222,7 @@ export async function convertInlineDataview(
  * @param {FrontmatterConvert} frontmatterSettings the frontmatter settings
  * @param {FrontMatterCache} frontmatter the frontmatter cache
  * @param {TFile} sourceFile the file to process
+ * @param {RepoFrontmatter|RepoFrontmatter[]} sourceFrontmatter the frontmatter of the repo
  * @return {Promise<string>} the converted text
  * @credits Ole Eskid Steensen
  */
@@ -234,7 +235,8 @@ export async function convertDataviewQueries(
 	metadataCache: MetadataCache,
 	frontmatterSettings: FrontmatterConvert,
 	frontmatter: FrontMatterCache,
-	sourceFile: TFile
+	sourceFile: TFile,
+	sourceFrontmatter: RepoFrontmatter | RepoFrontmatter[]
 ): Promise<string> {
 	// @ts-ignore
 	if (!app.plugins.enabledPlugins.has("dataview")) {
@@ -255,14 +257,15 @@ export async function convertDataviewQueries(
 				? await dvApi.tryQueryMarkdown(query, path)
 				: "";
 			const dataviewPath = getDataviewPath(md, settings, vault);
-			md = convertLinkCitation(
+			md = await convertLinkCitation(
 				md,
 				settings,
 				dataviewPath,
 				metadataCache,
 				sourceFile,
 				vault,
-				frontmatter
+				frontmatter,
+				sourceFrontmatter
 			);
 			md = convertWikilinks(
 				md,
@@ -293,6 +296,7 @@ export async function convertDataviewQueries(
  * @param {FrontMatterCache} frontmatter the frontmatter cache
  * @param {LinkedNotes[]} linkedFiles the linked files
  * @param {GitHubPublisherSettings} plugin GithubPublisher plugin
+ * @param {RepoFrontmatter|RepoFrontmatter[]} sourceRepo the frontmatter of the repo
  * @param {Vault} vault app.vault
  * @return {Promise<string>} the converted text
  */
@@ -307,7 +311,8 @@ export async function mainConverting(
 	frontmatter: FrontMatterCache,
 	linkedFiles: LinkedNotes[],
 	plugin: GithubPublisher,
-	vault: Vault
+	vault: Vault,
+	sourceRepo: RepoFrontmatter | RepoFrontmatter[]
 ): Promise<string> {
 	text = findAndReplaceText(text, settings, false);
 	text = await addInlineTags(
@@ -326,18 +331,20 @@ export async function mainConverting(
 		metadataCache,
 		frontmatterSettings,
 		frontmatter,
-		file
+		file,
+		sourceRepo
 	);
 	text = await convertInlineDataview(text, settings, file, plugin.app);
 	text = addHardLineBreak(text, settings, frontmatterSettings);
-	text = convertLinkCitation(
+	text = await convertLinkCitation(
 		text,
 		settings,
 		linkedFiles,
 		metadataCache,
 		file,
 		vault,
-		frontmatter
+		frontmatter,
+		sourceRepo
 	);
 	text = convertWikilinks(text, frontmatterSettings, settings, linkedFiles);
 	text = findAndReplaceText(text, settings, true);

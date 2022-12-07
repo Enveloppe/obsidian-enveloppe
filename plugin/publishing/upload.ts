@@ -24,6 +24,7 @@ import {
 import { ShareStatusBar } from "../src/status_bar";
 import GithubPublisherPlugin from "../main";
 import {
+	checkIfRepoIsInAnother,
 	getFrontmatterCondition,
 	getRepoFrontmatter,
 	isAttachment,
@@ -200,8 +201,7 @@ export default class Publisher {
 			shareFiles.checkExcludedFolder(file) ||
 			file.extension !== "md" ||
 			fileHistory.includes(file) ||
-			JSON.stringify(getRepoFrontmatter(this.settings, frontmatter)) !==
-				JSON.stringify(repoFrontmatter)
+			!checkIfRepoIsInAnother(getRepoFrontmatter(this.settings, frontmatter), repoFrontmatter)
 		) {
 			return false;
 		}
@@ -234,7 +234,8 @@ export default class Publisher {
 				frontmatter,
 				linkedFiles,
 				this.plugin,
-				this.vault
+				this.vault,
+				repoFrontmatter
 			);
 			const path = getReceiptFolder(
 				file,

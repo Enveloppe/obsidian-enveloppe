@@ -572,3 +572,36 @@ function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
 	}
 	return newRepo;
 }
+
+export function checkIfRepoIsInAnother(
+	source: RepoFrontmatter | RepoFrontmatter[],
+	target: RepoFrontmatter | RepoFrontmatter[],
+) {
+	source = source instanceof Array ? source : [source];
+	target = target instanceof Array ? target : [target];
+	console.log(source, target);
+	for (const sourceRepo of target) {
+		for (const targetRepo of source) {
+			if (
+				sourceRepo.repo === targetRepo.repo &&
+				sourceRepo.owner === targetRepo.owner &&
+				sourceRepo.branch === targetRepo.branch
+			) {
+				return true;
+			}
+		}
+	}
+	for (const sourceRepo of source) {
+		for (const targetRepo of target) {
+			if (
+				sourceRepo.repo === targetRepo.repo &&
+				sourceRepo.owner === targetRepo.owner &&
+				sourceRepo.branch === targetRepo.branch
+			) {
+				return true;
+			}
+		}
+	}
+
+	return false
+}
