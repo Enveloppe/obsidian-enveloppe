@@ -52,19 +52,15 @@ export class GithubBranch extends FilesManagement {
 	/**
 	 * Check if RepoFrontmatter is an array or not and run the newBranchOnRepo function on each repo
 	 * @param {string} branchName The name of the branch to create
-	 * @param {RepoFrontmatter[] | RepoFrontmatter} repoFrontmatter The repo to use
+	 * @param {RepoFrontmatter[]} repoFrontmatter The repo to use
 	 */
 
 	async newBranch(
 		branchName: string,
-		repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter
+		repoFrontmatter: RepoFrontmatter[]
 	) {
-		if (repoFrontmatter instanceof Array) {
-			for (const repo of repoFrontmatter) {
-				await this.newBranchOnRepo(branchName, repo);
-			}
-		} else {
-			await this.newBranchOnRepo(branchName, repoFrontmatter);
+		for (const repo of repoFrontmatter) {
+			await this.newBranchOnRepo(branchName, repo);
 		}
 	}
 
@@ -236,27 +232,20 @@ export class GithubBranch extends FilesManagement {
 	/**
 	 * Update the repository with the new branch : PR, merging and deleting the branch if allowed by the global settings
 	 * @param {string} branchName The name of the branch to merge
-	 * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter The repo to use
+	 * @param {RepoFrontmatter[]} repoFrontmatter The repo to use
 	 * @returns {Promise<boolean>} True if the update is successful
 	 */
 	async updateRepository(
 		branchName: string,
-		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]
+		repoFrontmatter: RepoFrontmatter[]
 	): Promise<boolean> {
-		if (repoFrontmatter instanceof Array) {
-			const success: boolean[] = [];
-			for (const repo of repoFrontmatter) {
-				success.push(
-					await this.updateRepositoryOnOne(branchName, repo)
-				);
-			}
-			return !success.every((value) => value === false);
-		} else {
-			return await this.updateRepositoryOnOne(
-				branchName,
-				repoFrontmatter
+		const success: boolean[] = [];
+		for (const repo of repoFrontmatter) {
+			success.push(
+				await this.updateRepositoryOnOne(branchName, repo)
 			);
 		}
+		return !success.every((value) => value === false);
 	}
 
 	/**

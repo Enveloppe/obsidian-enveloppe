@@ -18,7 +18,7 @@ import { StringFunc, deletion } from "../i18n";
  * @param {Octokit} octokit
  * @param {string} branchName The name of the branch created by the plugin
  * @param {FilesManagement} filesManagement
- * @param {RepoFrontmatter[] | RepoFrontmatter} repoFrontmatter
+ * @param {RepoFrontmatter[]} repoFrontmatter
  * @return {Promise<void>}
  */
 export async function deleteFromGithub(
@@ -27,30 +27,20 @@ export async function deleteFromGithub(
 	octokit: Octokit,
 	branchName: string,
 	filesManagement: FilesManagement,
-	repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter
+	repoFrontmatter: RepoFrontmatter[]
 ) {
-	if (repoFrontmatter instanceof Array) {
-		for (const repo of repoFrontmatter) {
-			await deleteFromGithubOneRepo(
-				silent,
-				settings,
-				octokit,
-				branchName,
-				filesManagement,
-				repo
-			);
-		}
-	} else {
+	for (const repo of repoFrontmatter) {
 		await deleteFromGithubOneRepo(
 			silent,
 			settings,
 			octokit,
 			branchName,
 			filesManagement,
-			repoFrontmatter
+			repo
 		);
 	}
 }
+
 
 /**
  * Delete file from github

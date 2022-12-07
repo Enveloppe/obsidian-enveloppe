@@ -175,13 +175,13 @@ export default class Publisher {
 	 * @param {string} branchName The name of the branch created
 	 * @param {TFile[]} fileHistory File already sent during DeepScan
 	 * @param {boolean} deepScan if the plugin must check the embed notes too.
-	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 * @param {RepoFrontmatter[]} repoFrontmatter frontmatter settings
 	 */
 	async publish(
 		file: TFile,
 		autoclean = false,
 		branchName: string,
-		repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter,
+		repoFrontmatter: RepoFrontmatter[],
 		fileHistory: TFile[] = [],
 		deepScan = false
 	) {
@@ -243,42 +243,27 @@ export default class Publisher {
 				this.vault
 			);
 			//if repoFrontmatter is an array, it means that the file is in a multiple repo
-			if (repoFrontmatter instanceof Array) {
-				noticeLog("Multiple repo" + repoFrontmatter, this.settings);
-				const success: boolean[] = [];
-				for (const repo of repoFrontmatter) {
-					success.push(
-						await this.uploadMultiple(
-							file,
-							text,
-							branchName,
-							frontmatterSettings,
-							path,
-							repo,
-							embedFiles,
-							fileHistory,
-							deepScan,
-							shareFiles,
-							autoclean
-						)
-					);
-				}
-				return !success.every((value) => value === false);
-			} else {
-				return await this.uploadMultiple(
-					file,
-					text,
-					branchName,
-					frontmatterSettings,
-					path,
-					repoFrontmatter,
-					embedFiles,
-					fileHistory,
-					deepScan,
-					shareFiles,
-					autoclean
+			
+			noticeLog("Multiple repo" + repoFrontmatter, this.settings);
+			const success: boolean[] = [];
+			for (const repo of repoFrontmatter) {
+				success.push(
+					await this.uploadMultiple(
+						file,
+						text,
+						branchName,
+						frontmatterSettings,
+						path,
+						repo,
+						embedFiles,
+						fileHistory,
+						deepScan,
+						shareFiles,
+						autoclean
+					)
 				);
 			}
+			return !success.every((value) => value === false);
 		} catch (e) {
 			noticeLog(e, this.settings);
 			return false;
