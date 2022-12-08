@@ -211,6 +211,8 @@ export interface FrontmatterConvert {
 	removeEmbed: boolean;
 	dataview: boolean;
 	hardbreak: boolean;
+	convertInternalNonShared: boolean;
+	convertInternalLinks: boolean;
 }
 
 export interface RepoFrontmatter {

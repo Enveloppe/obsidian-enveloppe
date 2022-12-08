@@ -9,9 +9,14 @@ import {
 	folderSettings,
 	LinkedNotes,
 	GitHubPublisherSettings,
-	FrontmatterConvert, RepoFrontmatter,
+	FrontmatterConvert,
+	RepoFrontmatter,
 } from "../settings/interface";
-import {checkIfRepoIsInAnother, getFrontmatterCondition, getRepoFrontmatter} from "../src/utils";
+import {
+	checkIfRepoIsInAnother,
+	getFrontmatterCondition,
+	getRepoFrontmatter,
+} from "../src/utils";
 
 /**
  * Get the dataview path from a markdown file
@@ -55,14 +60,22 @@ function getDataviewPath(
 
 /**
  * Vérifie qu'un fichier est partagé et permet la conversion du lien pointant vers lui s'il ne l'est pas
- * @param {GitHubPublisherSettings} settings
+ * @param {string} sharekey
  * @param {FrontMatterCache} frontmatter
+ * @param {FrontmatterConvert} frontmatterSettings
  * @return {boolean}
  */
-function isShared(settings: GitHubPublisherSettings, frontmatter: FrontMatterCache): boolean {
-	const shared = frontmatter && frontmatter[settings.shareKey] ? frontmatter[settings.shareKey] : false;
-	return !!(shared || (!shared && settings.convertInternalNonShared));
-
+function isShared(
+	sharekey: string,
+	frontmatter: FrontMatterCache,
+	frontmatterSettings: FrontmatterConvert
+): boolean {
+	const shared =
+		frontmatter && frontmatter[sharekey] ? frontmatter[sharekey] : false;
+	return !!(
+		shared ||
+		(!shared && frontmatterSettings.convertInternalNonShared)
+	);
 }
 
 /**
@@ -74,6 +87,7 @@ function isShared(settings: GitHubPublisherSettings, frontmatter: FrontMatterCac
  * @param {Vault} vault Vault
  * @param {FrontMatterCache | null} frontmatter FrontmatterCache or null
  * @param {RepoFrontmatter[] | RepoFrontmatter} sourceRepo The repoFrontmatter from the original file
+ * @param {FrontmatterConvert} frontmatterSettings FrontmatterConvert
  * @return {string} relative path
  */
 
@@ -84,20 +98,26 @@ async function createRelativePath(
 	settings: GitHubPublisherSettings,
 	vault: Vault,
 	frontmatter: FrontMatterCache | null,
-	sourceRepo: RepoFrontmatter[] | RepoFrontmatter
+	sourceRepo: RepoFrontmatter[] | RepoFrontmatter,
+	frontmatterSettings: FrontmatterConvert
 ): Promise<string> {
 	const sourcePath = getReceiptFolder(sourceFile, settings, metadata, vault);
-	const frontmatterTarget = await metadata.getFileCache(targetFile.linked).frontmatter;
+	const frontmatterTarget = await metadata.getFileCache(targetFile.linked)
+		.frontmatter;
 	const targetRepo = await getRepoFrontmatter(settings, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(sourceRepo, targetRepo);
-	const shared = isShared(settings, frontmatterTarget);
+	const shared = isShared(
+		settings.shareKey,
+		frontmatter,
+		frontmatterSettings
+	);
 	if (
-		targetFile.linked.extension === "md"
-		&&
-		isFromAnotherRepo === false
-		|| shared === false
+		(targetFile.linked.extension === "md" && isFromAnotherRepo === false) ||
+		shared === false
 	) {
-		console.log(`${targetFile.linked.name} is not shared/not to be converted`);
+		console.log(
+			`${targetFile.linked.name} is not shared/not to be converted`
+		);
 		return targetFile.altText;
 	}
 	if (targetFile.linked.path === sourceFile.path) {

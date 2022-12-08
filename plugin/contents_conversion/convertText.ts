@@ -1,7 +1,8 @@
 import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
-	LinkedNotes, RepoFrontmatter,
+	LinkedNotes,
+	RepoFrontmatter,
 } from "../settings/interface";
 import {
 	App,
@@ -265,7 +266,8 @@ export async function convertDataviewQueries(
 				sourceFile,
 				vault,
 				frontmatter,
-				sourceFrontmatter
+				sourceFrontmatter,
+				frontmatterSettings
 			);
 			md = convertWikilinks(
 				md,
@@ -344,7 +346,8 @@ export async function mainConverting(
 		file,
 		vault,
 		frontmatter,
-		sourceRepo
+		sourceRepo,
+		frontmatterSettings
 	);
 	text = convertWikilinks(text, frontmatterSettings, settings, linkedFiles);
 	text = findAndReplaceText(text, settings, true);

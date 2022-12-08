@@ -231,7 +231,6 @@ export async function noticeMessage(
 			repository
 		);
 	}
-
 }
 
 /**
@@ -356,6 +355,8 @@ export function getFrontmatterCondition(
 		removeEmbed: false,
 		dataview: settings.convertDataview,
 		hardbreak: settings.hardBreak,
+		convertInternalNonShared: settings.convertInternalNonShared,
+		convertInternalLinks: settings.convertForGithub,
 	};
 	if (frontmatter.links !== undefined) {
 		if (typeof frontmatter.links === "object") {
@@ -363,10 +364,15 @@ export function getFrontmatterCondition(
 				settingsConversion.links = frontmatter.links.convert;
 			}
 			if (frontmatter.links.internals !== undefined) {
-				settingsConversion.links = frontmatter.links.internals;
+				settingsConversion.convertInternalLinks =
+					frontmatter.links.internals;
 			}
 			if (frontmatter.links.mdlinks !== undefined) {
 				settingsConversion.convertWiki = frontmatter.links.mdlinks;
+			}
+			if (frontmatter.links.nonShared !== undefined) {
+				settingsConversion.convertInternalNonShared =
+					frontmatter.links.nonShared;
 			}
 		} else {
 			settingsConversion.links = frontmatter.links;
@@ -413,6 +419,12 @@ export function getFrontmatterCondition(
 	}
 	if (frontmatter.hardbreak !== undefined) {
 		settingsConversion.hardbreak = frontmatter.hardbreak;
+	}
+	if (frontmatter.internals !== undefined) {
+		settingsConversion.convertInternalLinks = frontmatter.internals;
+	}
+	if (frontmatter.nonShared !== undefined) {
+		settingsConversion.convertInternalNonShared = frontmatter.nonShared;
 	}
 	return settingsConversion;
 }
@@ -573,7 +585,7 @@ function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
 
 export function checkIfRepoIsInAnother(
 	source: RepoFrontmatter | RepoFrontmatter[],
-	target: RepoFrontmatter | RepoFrontmatter[],
+	target: RepoFrontmatter | RepoFrontmatter[]
 ) {
 	source = source instanceof Array ? source : [source];
 	target = target instanceof Array ? target : [target];
@@ -584,33 +596,33 @@ export function checkIfRepoIsInAnother(
 	 * @param {RepoFrontmatter} target
 	 * @return {boolean}
 	 */
-	const isSame= (source: RepoFrontmatter, target: RepoFrontmatter) => {
-		console.log(source.owner === target.owner, source.repo === target.repo, source.branch === target.branch);
+	const isSame = (source: RepoFrontmatter, target: RepoFrontmatter) => {
+		console.log(
+			source.owner === target.owner,
+			source.repo === target.repo,
+			source.branch === target.branch
+		);
 		return (
 			source.owner === target.owner &&
 			source.repo === target.repo &&
 			source.branch === target.branch
 		);
-	}
+	};
 
 	for (const repoTarget of target) {
 		for (const repoSource of source) {
-			if (
-				isSame(repoTarget, repoSource)
-			) {
+			if (isSame(repoTarget, repoSource)) {
 				return true;
 			}
 		}
 	}
 	for (const sourceRepo of source) {
 		for (const targetRepo of target) {
-			if (
-				isSame(sourceRepo, targetRepo)
-			) {
+			if (isSame(sourceRepo, targetRepo)) {
 				return true;
 			}
 		}
 	}
 
-	return false
+	return false;
 }

@@ -2,7 +2,8 @@ import { FrontMatterCache, MetadataCache, TFile, Vault } from "obsidian";
 import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
-	LinkedNotes, RepoFrontmatter,
+	LinkedNotes,
+	RepoFrontmatter,
 } from "../settings/interface";
 import { createRelativePath } from "./filePathConvertor";
 import { isAttachment } from "../src/utils";
@@ -191,6 +192,7 @@ function addAltText(link: string, linkedFile: LinkedNotes): string {
  * @param {Vault} vault The vault
  * @param {FrontMatterCache} frontmatter The frontmatter cache
  * @param {RepoFrontmatter} sourceRepoFrontmatter The frontmatter of the source file
+ * @param {FrontmatterConvert} frontmatterSettings The frontmatter settings
  * @return {string} the file contents with converted internal links
  */
 
@@ -202,9 +204,10 @@ export async function convertLinkCitation(
 	sourceFile: TFile,
 	vault: Vault,
 	frontmatter: FrontMatterCache,
-	sourceRepoFrontmatter: RepoFrontmatter | RepoFrontmatter[]
+	sourceRepoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
+	frontmatterSettings: FrontmatterConvert
 ): Promise<string> {
-	if (!settings.convertForGithub) {
+	if (!frontmatterSettings.convertInternalLinks) {
 		return fileContent;
 	}
 	for (const linkedFile of linkedFiles) {
@@ -215,8 +218,9 @@ export async function convertLinkCitation(
 			settings,
 			vault,
 			frontmatter,
-			sourceRepoFrontmatter
-		)
+			sourceRepoFrontmatter,
+			frontmatterSettings
+		);
 		pathInGithub = pathInGithub.replace(".md", "");
 		const regexToReplace = new RegExp(
 			`(\\[{2}${linkedFile.linkFrom}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\(${linkedFile.linkFrom}\\))`,
