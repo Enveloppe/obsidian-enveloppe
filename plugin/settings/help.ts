@@ -54,6 +54,16 @@ export function help(settings: GitHubPublisherSettings) {
 					});
 				});
 			});
+			l.createEl("li", null, (p) => {
+				p.createEl("code", {text: 'internals'})
+				p.createEl("span", {
+					text: `: ${subSettings("help.frontmatter.internals") as string}`
+				})
+			})
+			l.createEl("li", null, (p) => {
+				p.createEl("code", { text: "nonShared" });
+				p.createEl("span", { text: `: ${subSettings("help.frontmatter.nonShared") as string}` });
+			});
 		});
 		span.createEl("li", { text: "embed:", cls: "code code-title" });
 		span.createEl("ul", null, (l) => {
@@ -155,7 +165,7 @@ export function help(settings: GitHubPublisherSettings) {
 			});
 		});
 		span.createEl("li", null, (span) => {
-			span.createEl("code", { text: "baseLink", cls: "code-title" });
+			span.createEl("code", { text: `baseLink:`, cls: "code-title" });
 			span.createEl("span", {
 				text: `: ${subSettings("help.frontmatter.baselink")}`,
 			});

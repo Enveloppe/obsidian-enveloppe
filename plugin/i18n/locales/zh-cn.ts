@@ -171,6 +171,8 @@ export default {
 					or: "or",
 					syntax: "syntax, while keeping the file name or the alias.",
 				},
+				internals: 'Convert internal links to relative path, if set to false, keep the links as they are.',
+				nonShared: 'Convert internals links pointing to non shared files to relative path, if set to false, keep the filename or the alternative text.',
 				embed: {
 					send: "send embedded note to GitHub",
 					remove: "remove the embed from the note, leaving empty line.",
