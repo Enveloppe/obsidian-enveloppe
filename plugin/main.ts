@@ -123,9 +123,8 @@ export default class GithubPublisher extends Plugin {
 						const isShared = this.app.metadataCache.getFileCache(
 							file
 						).frontmatter
-							? this.app.metadataCache
-								.getFileCache(file)
-								.frontmatter[this.settings.shareKey]
+							? this.app.metadataCache.getFileCache(file)
+									.frontmatter[this.settings.shareKey]
 							: false;
 						if (isShared) {
 							await shareOneNote(

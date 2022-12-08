@@ -201,7 +201,10 @@ export default class Publisher {
 			shareFiles.checkExcludedFolder(file) ||
 			file.extension !== "md" ||
 			fileHistory.includes(file) ||
-			!checkIfRepoIsInAnother(getRepoFrontmatter(this.settings, frontmatter), repoFrontmatter)
+			!checkIfRepoIsInAnother(
+				getRepoFrontmatter(this.settings, frontmatter),
+				repoFrontmatter
+			)
 		) {
 			return false;
 		}
@@ -243,7 +246,9 @@ export default class Publisher {
 				this.metadataCache,
 				this.vault
 			);
-			repoFrontmatter = Array.isArray(repoFrontmatter) ? repoFrontmatter : [repoFrontmatter];
+			repoFrontmatter = Array.isArray(repoFrontmatter)
+				? repoFrontmatter
+				: [repoFrontmatter];
 			let multiRepMsg = "";
 			for (const repo of repoFrontmatter) {
 				multiRepMsg += `[${repo.owner}/${repo.repo}/${repo.branch}] `;
@@ -478,7 +483,9 @@ export default class Publisher {
 						this.settings.metadataExtractorPath +
 						"/" +
 						file.split("/").pop();
-					repoFrontmatter = Array.isArray(repoFrontmatter) ? repoFrontmatter : [repoFrontmatter];
+					repoFrontmatter = Array.isArray(repoFrontmatter)
+						? repoFrontmatter
+						: [repoFrontmatter];
 					for (const repo of repoFrontmatter) {
 						await this.uploadText(
 							contents,

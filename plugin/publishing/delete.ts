@@ -29,7 +29,9 @@ export async function deleteFromGithub(
 	filesManagement: FilesManagement,
 	repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter
 ) {
-	repoFrontmatter = Array.isArray(repoFrontmatter) ? repoFrontmatter : [repoFrontmatter];
+	repoFrontmatter = Array.isArray(repoFrontmatter)
+		? repoFrontmatter
+		: [repoFrontmatter];
 	for (const repo of repoFrontmatter) {
 		await deleteFromGithubOneRepo(
 			silent,
@@ -97,10 +99,10 @@ async function deleteFromGithubOneRepo(
 		);
 		const isMarkdownForAnotherRepo = file.file.trim().endsWith(".md")
 			? !allSharedConverted.some(
-				(f) =>
-					f.converted === file.file &&
+					(f) =>
+						f.converted === file.file &&
 						JSON.stringify(f.repo) == JSON.stringify(repo)
-			)
+			  )
 			: false;
 		const isNeedToBeDeleted = isInObsidian
 			? isMarkdownForAnotherRepo

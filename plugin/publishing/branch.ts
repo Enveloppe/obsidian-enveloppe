@@ -59,7 +59,9 @@ export class GithubBranch extends FilesManagement {
 		branchName: string,
 		repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter
 	) {
-		repoFrontmatter = Array.isArray(repoFrontmatter) ? repoFrontmatter : [repoFrontmatter];
+		repoFrontmatter = Array.isArray(repoFrontmatter)
+			? repoFrontmatter
+			: [repoFrontmatter];
 		for (const repo of repoFrontmatter) {
 			await this.newBranchOnRepo(branchName, repo);
 		}
@@ -240,15 +242,14 @@ export class GithubBranch extends FilesManagement {
 		branchName: string,
 		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]
 	): Promise<boolean> {
-		repoFrontmatter = Array.isArray(repoFrontmatter) ? repoFrontmatter : [repoFrontmatter];
+		repoFrontmatter = Array.isArray(repoFrontmatter)
+			? repoFrontmatter
+			: [repoFrontmatter];
 		const success: boolean[] = [];
 		for (const repo of repoFrontmatter) {
-			success.push(
-				await this.updateRepositoryOnOne(branchName, repo)
-			);
+			success.push(await this.updateRepositoryOnOne(branchName, repo));
 		}
 		return !success.every((value) => value === false);
-
 	}
 
 	/**
