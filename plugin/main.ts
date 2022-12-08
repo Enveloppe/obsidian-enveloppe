@@ -120,12 +120,9 @@ export default class GithubPublisher extends Plugin {
 			this.registerEvent(
 				this.app.vault.on("modify", async (file: TFile) => {
 					if (file !== this.app.workspace.getActiveFile()) {
-						const isShared = this.app.metadataCache.getFileCache(
-							file
-						).frontmatter
-							? this.app.metadataCache.getFileCache(file)
-									.frontmatter[this.settings.shareKey]
-							: false;
+						const frontmatter = this.app.metadataCache.getFileCache(
+							file).frontmatter;
+						const isShared = frontmatter ? frontmatter[this.settings.shareKey] : false;
 						if (isShared) {
 							await shareOneNote(
 								branchName,
