@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.8.0-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.7.0...4.8.0-5) (2022-12-08)
+
+
+### Features
+
+* add 2 new frontmatter key for converting internal links ([a8d4a89](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8d4a89c8f3ad2da297b7495316ea20fef6caa28))
+* option to convert internal links pointing to non shared file ([60ba072](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/60ba072eff30eaef5730c6725ace68443b146e58))
+* send metadata-extractor file ([5524e07](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5524e077b27e8b9a230dcea09304e77698f43d69))
+
+
+### Bug Fixes
+
+* alt text using the path in obsidian ([c9424c7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c9424c75f3950bdebd82e30702cb47d6e107fbd5))
+* if frontmatter title is used, use this as altText ([3ab3215](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3ab32150198018d16f53a8d7fb156ff4d36a296c))
+* if frontmatter title is used, use this as filename for internal links that is not shared ([b717719](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b7177196fd541ff0674b448023b56a3ac8dac8f2))
+* internal links converted ([5451acf](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5451acfbb3764e63252ae698b9e9ec6f471e086d))
+* keep basename instead of alt text ([92e89d5](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/92e89d55029fa4e63c9aa1dc1b3905bd5af6c9db))
+* optimize multipleRepo & monoRepo perfile ([92fa34c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/92fa34c2620a2d274a3465820c69ba5917500f05))
+* prevent convert links when file is not on the same repo ([cedb1ae](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/cedb1aec841e61f35333d1a68565b54ef0498284))
+* relative path created for no shared file / file from another repo ([aac1031](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/aac1031d7b4571ef5fedc471f12232d3ea14c054))
+
 ## [4.8.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.7.0...4.8.0-4) (2022-12-08)
 
 
