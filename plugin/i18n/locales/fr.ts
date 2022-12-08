@@ -69,7 +69,7 @@ export default {
 				folderNote: "Folder Note",
 				folderNoteDesc: "Renommer les fichiers en \"index.md\" s'il porte le même nom que leur dossier/catégorie parent (fonctionne aussi si la note est à l'extérieur du dossier).",
 				nonShared: 'Convertir les liens internes pointant vers des notes non partagées',
-				nonSharedDesc: 'Cette option permet de convertir les liens internes pointant vers des fichiers non partagés en liens relatifs. Utile si vous souhaitez envoyer un fichier à l\'avenir sans rompre les liens.',
+				nonSharedDesc: 'Convertit les liens internes pointant vers un fichier non partagé vers leur homologue dans le site web, avec un chemin relatif. Désactivé, le plugin conservera le nom du fichier.',
 			},
 			censor: {
 				TextHeader: "Replacement de texte", 
@@ -171,8 +171,8 @@ export default {
 					or: "ou",
 					syntax: "syntaxes, tout en gardant le nom du fichier ou son texte alternatif.",
 				},
-				internals: 'Convertit les liens internes en chemin d\'accès relatif. Désactivé, les liens seront conservés tels quels.',
-				nonShared: 'Convertit les liens internes pointant vers des fichiers non partagés en chemin relatif, s\'il est désactivé, garde le nom du fichier ou le texte alternatif.',
+				internals: 'Convertit les liens internes vers leur homologue dans le site web, sous forme de chemin relatif. Désactivé, les liens seront conservés tels quels.',
+				nonShared: 'Convertit les liens internes pointant vers un fichier non partagé vers leur homologue dans le site web, avec un chemin relatif. Désactivé, le plugin conservera le nom du fichier.',
 				embed: {
 					send: "Envoie les notes transclues du fichier partagé dans le dépôt. Seuls les fichiers partagés seront envoyés !",
 					remove: "Supprime les notes transclues du fichier partagé, en ne laissant qu'une ligne vide.",

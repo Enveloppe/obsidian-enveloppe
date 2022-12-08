@@ -69,8 +69,7 @@ export default {
 				folderNote: "Folder note", 
 				folderNoteDesc: "重命名文件为其父文件夹名(或category名) \"index.md\"",
 				nonShared: 'Convert internal links pointing to unshared files',
-				nonSharedDesc: 'This option will convert internal links pointing to unshared files to relative links. Useful if you want to send a file in future without breaking the links.',
-			},
+				nonSharedDesc: 'Convert internal links pointing to a non shared file to their counterpart in the website, with relative path. Disabled, the plugin will keep the filename.',			},
 			censor: {
 				TextHeader: "Text replacer", 
 				TextDesc: "Replace text (or regex) in the file with the given value.", 
@@ -171,8 +170,8 @@ export default {
 					or: "or",
 					syntax: "syntax, while keeping the file name or the alias.",
 				},
-				internals: 'Convert internal links to relative path, if set to false, keep the links as they are.',
-				nonShared: 'Convert internals links pointing to non shared files to relative path, if set to false, keep the filename or the alternative text.',
+				internals: 'Convert internals links to their counterpart in the website, with relative path. Disabled, the plugin will keep the internal link as is.',
+				nonShared: 'Convert internal links pointing to a non shared file to their counterpart in the website, with relative path. Disabled, the plugin will keep the filename.',
 				embed: {
 					send: "send embedded note to GitHub",
 					remove: "remove the embed from the note, leaving empty line.",
