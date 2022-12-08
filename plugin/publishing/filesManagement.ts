@@ -144,12 +144,31 @@ export class FilesManagement extends Publisher {
 						file.path
 					);
 					if (imageLink !== null) {
+						let altText = image.displayText !== imageLink.path.replace('.md', '') ? image.displayText : imageLink.basename;
+						let frontmatterDestinationFilePath;
+
+						if (this.settings.useFrontmatterTitle) {
+							const frontmatter = this.metadataCache.getCache(
+								imageLink.path
+							).frontmatter;
+
+							/**
+							 * In case there's a frontmatter configuration, pass along
+							 * `filename` so we can later use that to convert wikilinks.
+							 */
+							if (frontmatter && frontmatter[this.settings.frontmatterTitleKey]) {
+								frontmatterDestinationFilePath = frontmatter[this.settings.frontmatterTitleKey];
+								if (altText === imageLink.basename) {
+									altText = frontmatter[this.settings.frontmatterTitleKey];
+								}
+							}
+						}
 						linkedFiles.push({
 							linked: imageLink, //TFile found
 							linkFrom: image.link, //path of the founded file
-							altText: image.displayText !== imageLink.path.replace('.md', '') ? image.displayText : imageLink.basename, //alt text if exists, filename otherwise
+							altText: altText, //alt text if exists, filename otherwise
+							destinationFilePath: frontmatterDestinationFilePath,
 						});
-
 					}
 				} catch (e) {
 					// ignore error
@@ -176,24 +195,29 @@ export class FilesManagement extends Publisher {
 						file.path
 					);
 					if (linkedFile) {
-						const frontmatter = this.metadataCache.getCache(
-							linkedFile.path
-						).frontmatter;
+						let altText = embedCache.displayText !== linkedFile.path.replace('.md', '') ? embedCache.displayText : linkedFile.basename;
 						let frontmatterDestinationFilePath;
 
-						/**
-						 * In case there's a frontmatter configuration, pass along
-						 * `filename` so we can later use that to convert wikilinks.
-						 */
-						if (frontmatter) {
-							frontmatterDestinationFilePath =
-								frontmatter.filename;
+						if (this.settings.useFrontmatterTitle) {
+							const frontmatter = this.metadataCache.getCache(
+								linkedFile.path
+							).frontmatter;
+
+							/**
+							 * In case there's a frontmatter configuration, pass along
+							 * `filename` so we can later use that to convert wikilinks.
+							 */
+							if (frontmatter && frontmatter[this.settings.frontmatterTitleKey]) {
+								frontmatterDestinationFilePath = frontmatter[this.settings.frontmatterTitleKey];
+								if (altText === linkedFile.basename) {
+									altText = frontmatter[this.settings.frontmatterTitleKey];
+								}
+							}
 						}
-						console.log(embedCache.displayText, linkedFile.path);
 						embedList.push({
 							linked: linkedFile,
 							linkFrom: embedCache.link,
-							altText: embedCache.displayText !== linkedFile.path ? embedCache.displayText : linkedFile.basename,
+							altText: altText,
 							destinationFilePath: frontmatterDestinationFilePath,
 						});
 					}
