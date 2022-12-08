@@ -175,7 +175,9 @@ Note : This option doesn't work for Obsidian Path + Same name strategies **outsi
 
 ##### Internal links
 
-This option will convert the internal links (including attachments links!) of the shared file to match the relative file in your repo. Only **existant** and **shared** file will be converted.
+This option will convert the internal links (including attachments links!) of the shared file to match the relative file in your repo. Only **existant**, **shared** and from the **same repo** file will be converted.
+
+The next option allows you to convert links to files that are not shared. Useful if you already plan to share a file, but haven't done so yet, without having to go over every mention!
 
 ##### Wikilinks to markdown link
 
