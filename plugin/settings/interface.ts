@@ -82,6 +82,7 @@ export interface GitHubPublisherSettings {
 	shareExternalModified: boolean;
 	automaticallyMergePR: boolean;
 	metadataExtractorPath: string;
+	convertInternalNonShared: boolean;
 }
 
 /**
@@ -140,6 +141,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	shareExternalModified: false,
 	automaticallyMergePR: true,
 	metadataExtractorPath: "",
+	convertInternalNonShared: false,
 };
 
 export interface MetadataExtractor {

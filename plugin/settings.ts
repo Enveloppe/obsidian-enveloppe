@@ -656,8 +656,25 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.convertForGithub = value;
 						await this.plugin.saveSettings();
+						this.settingsPage.empty();
+						this.renderTextConversion();
 					});
 			});
+		console.log(this.plugin.settings.convertForGithub);
+		if (this.plugin.settings.convertForGithub) {
+			new Setting(this.settingsPage)
+				.setName(subSettings('textConversion.links.nonShared') as string)
+				.setDesc(subSettings('textConversion.links.nonSharedDesc') as string)
+				.addToggle((toggle) => {
+					toggle
+						.setValue(this.plugin.settings.convertInternalNonShared)
+						.onChange(async (value) => {
+							this.plugin.settings.convertInternalNonShared = value;
+							await this.plugin.saveSettings();
+						});
+				})
+		}
+
 
 		new Setting(this.settingsPage)
 			.setName(subSettings("textConversion.links.wikilinks") as string)

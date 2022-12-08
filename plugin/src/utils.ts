@@ -585,6 +585,7 @@ export function checkIfRepoIsInAnother(
 	 * @return {boolean}
 	 */
 	const isSame= (source: RepoFrontmatter, target: RepoFrontmatter) => {
+		console.log(source.owner === target.owner, source.repo === target.repo, source.branch === target.branch);
 		return (
 			source.owner === target.owner &&
 			source.repo === target.repo &&

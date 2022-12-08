@@ -145,21 +145,11 @@ export class FilesManagement extends Publisher {
 					);
 					if (imageLink !== null) {
 						if (imageLink.extension === "md") {
-							const checkFrontmatter =
-								this.metadataCache.getCache(
-									imageLink.path
-								).frontmatter;
-							if (
-								checkFrontmatter &&
-								checkFrontmatter[this.settings.shareKey] ===
-									true
-							) {
-								linkedFiles.push({
-									linked: imageLink, //TFile found
-									linkFrom: image.link, //path of the founded file
-									altText: image.displayText, //alt text if exists, filename otherwise
-								});
-							}
+							linkedFiles.push({
+								linked: imageLink, //TFile found
+								linkFrom: image.link, //path of the founded file
+								altText: image.displayText, //alt text if exists, filename otherwise
+							});
 						} else {
 							linkedFiles.push({
 								linked: imageLink, //TFile found

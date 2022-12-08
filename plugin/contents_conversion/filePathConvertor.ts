@@ -54,6 +54,18 @@ function getDataviewPath(
 }
 
 /**
+ * Vérifie qu'un fichier est partagé et permet la conversion du lien pointant vers lui s'il ne l'est pas
+ * @param {GitHubPublisherSettings} settings
+ * @param {FrontMatterCache} frontmatter
+ * @return {boolean}
+ */
+function isShared(settings: GitHubPublisherSettings, frontmatter: FrontMatterCache): boolean {
+	const shared = frontmatter && frontmatter[settings.shareKey] ? frontmatter[settings.shareKey] : false;
+	return !!(shared || (!shared && settings.convertInternalNonShared));
+
+}
+
+/**
  * Create relative path from a sourceFile to a targetPath. If the target file is a note, only share if the frontmatter sharekey is present and true
  * @param {TFile} sourceFile the shared file containing all links, embed etc
  * @param {LinkedNotes} targetFile The target file
@@ -78,13 +90,14 @@ async function createRelativePath(
 	const frontmatterTarget = await metadata.getFileCache(targetFile.linked).frontmatter;
 	const targetRepo = await getRepoFrontmatter(settings, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(sourceRepo, targetRepo);
-	const shared = frontmatterTarget && frontmatterTarget[settings.shareKey] ? frontmatterTarget[settings.shareKey] : false;
-
+	const shared = isShared(settings, frontmatterTarget);
 	if (
 		targetFile.linked.extension === "md"
 		&&
-		(isFromAnotherRepo === false || shared === false)
+		isFromAnotherRepo === false
+		|| shared === false
 	) {
+		console.log(`${targetFile.linked.name} is not shared/not to be converted`);
 		return targetFile.altText;
 	}
 	if (targetFile.linked.path === sourceFile.path) {
