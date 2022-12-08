@@ -701,7 +701,6 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						this.renderTextConversion();
 					});
 			});
-		console.log(this.plugin.settings.convertForGithub);
 		if (this.plugin.settings.convertForGithub) {
 			new Setting(this.settingsPage)
 				.setName(
