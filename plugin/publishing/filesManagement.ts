@@ -144,19 +144,12 @@ export class FilesManagement extends Publisher {
 						file.path
 					);
 					if (imageLink !== null) {
-						if (imageLink.extension === "md") {
-							linkedFiles.push({
-								linked: imageLink, //TFile found
-								linkFrom: image.link, //path of the founded file
-								altText: image.displayText, //alt text if exists, filename otherwise
-							});
-						} else {
-							linkedFiles.push({
-								linked: imageLink, //TFile found
-								linkFrom: image.link, //path of the founded file
-								altText: image.displayText, //alt text if exists, filename otherwise
-							});
-						}
+						linkedFiles.push({
+							linked: imageLink, //TFile found
+							linkFrom: image.link, //path of the founded file
+							altText: image.displayText !== imageLink.path.replace('.md', '') ? image.displayText : imageLink.basename, //alt text if exists, filename otherwise
+						});
+
 					}
 				} catch (e) {
 					// ignore error
@@ -196,11 +189,11 @@ export class FilesManagement extends Publisher {
 							frontmatterDestinationFilePath =
 								frontmatter.filename;
 						}
-
+						console.log(embedCache.displayText, linkedFile.path);
 						embedList.push({
 							linked: linkedFile,
 							linkFrom: embedCache.link,
-							altText: embedCache.displayText,
+							altText: embedCache.displayText !== linkedFile.path ? embedCache.displayText : linkedFile.basename,
 							destinationFilePath: frontmatterDestinationFilePath,
 						});
 					}
