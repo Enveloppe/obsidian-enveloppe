@@ -578,12 +578,24 @@ export function checkIfRepoIsInAnother(
 	source = source instanceof Array ? source : [source];
 	target = target instanceof Array ? target : [target];
 
+	/**
+	 * A function to compare two repoFrontmatter
+	 * @param {RepoFrontmatter} source
+	 * @param {RepoFrontmatter} target
+	 * @return {boolean}
+	 */
+	const isSame= (source: RepoFrontmatter, target: RepoFrontmatter) => {
+		return (
+			source.owner === target.owner &&
+			source.repo === target.repo &&
+			source.branch === target.branch
+		);
+	}
+
 	for (const repoTarget of target) {
 		for (const repoSource of source) {
 			if (
-				repoTarget.repo === repoSource.repo &&
-				repoTarget.owner === repoSource.owner &&
-				repoTarget.branch === repoSource.branch
+				isSame(repoTarget, repoSource)
 			) {
 				return true;
 			}
@@ -592,9 +604,7 @@ export function checkIfRepoIsInAnother(
 	for (const sourceRepo of source) {
 		for (const targetRepo of target) {
 			if (
-				sourceRepo.repo === targetRepo.repo &&
-				sourceRepo.owner === targetRepo.owner &&
-				sourceRepo.branch === targetRepo.branch
+				isSame(sourceRepo, targetRepo)
 			) {
 				return true;
 			}

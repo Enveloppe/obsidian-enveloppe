@@ -78,7 +78,7 @@ async function createRelativePath(
 	const frontmatterTarget = await metadata.getFileCache(targetFile.linked).frontmatter;
 	const targetRepo = await getRepoFrontmatter(settings, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(sourceRepo, targetRepo);
-	const shared = frontmatterTarget ? frontmatterTarget[settings.shareKey] : false;
+	const shared = frontmatterTarget && frontmatterTarget[settings.shareKey] ? frontmatterTarget[settings.shareKey] : false;
 
 	if (
 		targetFile.linked.extension === "md"
