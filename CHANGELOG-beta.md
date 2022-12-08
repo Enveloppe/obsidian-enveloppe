@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.8.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.7.0...4.8.0-2) (2022-12-08)
+
+
+### Features
+
+* send metadata-extractor file ([5524e07](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5524e077b27e8b9a230dcea09304e77698f43d69))
+
+
+### Bug Fixes
+
+* optimize multipleRepo & monoRepo perfile ([92fa34c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/92fa34c2620a2d274a3465820c69ba5917500f05))
+* prevent convert links when file is not on the same repo ([cedb1ae](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/cedb1aec841e61f35333d1a68565b54ef0498284))
+* relative path created for no shared file / file from another repo ([aac1031](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/aac1031d7b4571ef5fedc471f12232d3ea14c054))
+
 ## [4.8.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.7.0...4.8.0-1) (2022-12-06)
 
 
