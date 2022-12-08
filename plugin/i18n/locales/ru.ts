@@ -67,6 +67,8 @@ export default {
 				internalsDesc: "Преобразовывать внутренние ссылки в общих файла в соответствие с настройками папки",
 				wikilinks: "[[Wiki-ссылки]]",
 				wikilinksDesc: "Преобразовывать Wiki-ссылки в MarkDown ссылки, не трогая содержимое",
+				nonShared: 'Convert internal links pointing to unshared files',
+				nonSharedDesc: 'This option will convert internal links pointing to unshared files to relative links. Useful if you want to send a file in future without breaking the links.',
 			},
 			dataview: {
 				header: "Dataview",

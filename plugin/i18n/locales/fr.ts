@@ -68,6 +68,8 @@ export default {
 				wikilinksDesc: "Convertir les liens Wikilinks en liens markdown, sans en modifier le contenu. Ce paramètre peut être outrepassé par la clé de métadonnées \"mdlinks\".",
 				folderNote: "Folder Note",
 				folderNoteDesc: "Renommer les fichiers en \"index.md\" s'il porte le même nom que leur dossier/catégorie parent (fonctionne aussi si la note est à l'extérieur du dossier).",
+				nonShared: 'Convertir les liens internes pointant vers des notes non partagées',
+				nonSharedDesc: 'Cette option permet de convertir les liens internes pointant vers des fichiers non partagés en liens relatifs. Utile si vous souhaitez envoyer un fichier à l\'avenir sans rompre les liens.',
 			},
 			censor: {
 				TextHeader: "Replacement de texte", 

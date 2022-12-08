@@ -68,6 +68,8 @@ export default {
 				wikilinksDesc: "转换wiki link为md link，不改变文件内容",
 				folderNote: "Folder note", 
 				folderNoteDesc: "重命名文件为其父文件夹名(或category名) \"index.md\"",
+				nonShared: 'Convert internal links pointing to unshared files',
+				nonSharedDesc: 'This option will convert internal links pointing to unshared files to relative links. Useful if you want to send a file in future without breaking the links.',
 			},
 			censor: {
 				TextHeader: "Text replacer", 

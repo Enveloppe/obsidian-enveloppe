@@ -67,6 +67,8 @@ export default {
 				wikilinksDesc: "Convert Wikilinks to MDlinks, without changing the contents. This option can be overridden by the frontmatter key \"mdlinks\".",
 				folderNote: "Folder note",
 				folderNoteDesc: "Rename files to \"index.md\" if it has the same name as their parent folder/category (also works if the note is out of the folder).",
+				nonShared: 'Convert internal links pointing to unshared files',
+				nonSharedDesc: 'This option will convert internal links pointing to unshared files to relative links. Useful if you want to send a file in future without breaking the links.',
 			},
 			censor: {
 				TextHeader: "Text replacer",
