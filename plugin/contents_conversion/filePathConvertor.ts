@@ -114,7 +114,7 @@ async function createRelativePath(
 		(targetFile.linked.extension === "md" && isFromAnotherRepo === false) ||
 		shared === false
 	) {
-		return targetFile.linked.basename;
+		return targetFile.destinationFilePath ? targetFile.destinationFilePath: targetFile.linked.basename;
 	}
 	if (targetFile.linked.path === sourceFile.path) {
 		return getReceiptFolder(targetFile.linked, settings, metadata, vault)
