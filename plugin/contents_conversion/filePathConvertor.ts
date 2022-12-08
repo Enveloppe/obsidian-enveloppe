@@ -72,10 +72,9 @@ function isShared(
 ): boolean {
 	const shared =
 		frontmatter && frontmatter[sharekey] ? frontmatter[sharekey] : false;
-	return !!(
-		shared ||
-		(!shared && frontmatterSettings.convertInternalNonShared)
-	);
+	if (shared) return true;
+	return !shared && frontmatterSettings.convertInternalNonShared === true;
+
 }
 
 /**
@@ -108,17 +107,14 @@ async function createRelativePath(
 	const isFromAnotherRepo = checkIfRepoIsInAnother(sourceRepo, targetRepo);
 	const shared = isShared(
 		settings.shareKey,
-		frontmatter,
+		frontmatterTarget,
 		frontmatterSettings
 	);
 	if (
 		(targetFile.linked.extension === "md" && isFromAnotherRepo === false) ||
 		shared === false
 	) {
-		console.log(
-			`${targetFile.linked.name} is not shared/not to be converted`
-		);
-		return targetFile.altText;
+		return targetFile.linked.basename;
 	}
 	if (targetFile.linked.path === sourceFile.path) {
 		return getReceiptFolder(targetFile.linked, settings, metadata, vault)
