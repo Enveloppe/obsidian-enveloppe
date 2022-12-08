@@ -163,11 +163,13 @@ Maintenant, le plugin va convertir ces fichiers en `index` si vous activez les p
 > [!warning] Cette option ne fonctionne pas avec un dossier fixe.
 
 
-#### Lien internes
+##### Lien internes
 
-Cette option convertira les liens internes (y compris les liens des pièces-jointes !) du fichier partagé pour correspondre au fichier relatif dans votre dépôt. Seuls les chemins de fichier **existant** et **partagé** seront convertis.
+Cette option convertira les liens internes (y compris les liens des pièces-jointes !) du fichier partagé pour correspondre au fichier relatif dans votre dépôt. Seuls les chemins de fichier **existant** et **partagé**, et du même **repo** seront convertis.
 
-#### Lien Wikilinks vers lien markdown
+L'option suivante permet de justement convertir les liens vers des fichiers qui ne sont pas partagés. Pratique si vous prévoyez déjà de partager un fichier, mais que vous ne l'avez pas encore fait, sans avoir à repasser sur chaque mention.
+
+##### Lien Wikilinks vers lien markdown
 
 Si vous utilisez des wikilinks quotidiennement mais que votre alternative à Obsidian Publish ne le supporte pas, vous pouvez utiliser ces paramètres pour convertir les wikilink en lien markdown. 
 
