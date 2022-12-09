@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-github-publisher",
-	"version": "4.8.0-5",
+	"version": "4.8.0-6",
 	"description": "Github Publisher is a plugin that help you to send file in a configured Github Repository, based on a frontmatter entry state.",
 	"main": "main.js",
 	"scripts": {
