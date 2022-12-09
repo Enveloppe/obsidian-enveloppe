@@ -99,10 +99,10 @@ async function deleteFromGithubOneRepo(
 		);
 		const isMarkdownForAnotherRepo = file.file.trim().endsWith(".md")
 			? !allSharedConverted.some(
-					(f) =>
-						f.converted === file.file &&
+				(f) =>
+					f.converted === file.file &&
 						JSON.stringify(f.repo) == JSON.stringify(repo)
-			  )
+			)
 			: false;
 		const isNeedToBeDeleted = isInObsidian
 			? isMarkdownForAnotherRepo
@@ -123,7 +123,7 @@ async function deleteFromGithubOneRepo(
 							owner: repo.owner,
 							repo: repo.repo,
 							path: file.file,
-							message: "Delete file",
+							message: `DELETE FILE : ${file.file}`,
 							sha: file.sha,
 							branch: branchName,
 						}
