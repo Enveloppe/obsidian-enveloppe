@@ -111,8 +111,7 @@ async function createRelativePath(
 		frontmatterSettings
 	);
 	if (
-		(targetFile.linked.extension === "md" && isFromAnotherRepo === false) ||
-		shared === false
+		targetFile.linked.extension === "md" && (isFromAnotherRepo === false || shared === false)
 	) {
 		return targetFile.destinationFilePath ? targetFile.destinationFilePath: targetFile.linked.basename;
 	}
