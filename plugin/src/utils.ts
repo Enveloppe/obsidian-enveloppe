@@ -40,11 +40,18 @@ export async function convertOldSettings(
 			oldSettings === "" ? [] : oldSettings.split(/[,\n]\W*/);
 		await plugin.saveSettings();
 	}
-	// @ts-ignore
-	settings[settingsToConvert] = settings[settingsToConvert].filter(
-		(e: string) => e !== ""
-	);
-	await plugin.saveSettings();
+	try {
+		// @ts-ignore
+		settings[settingsToConvert] = settings[settingsToConvert].filter(
+			(e: string) => e !== ""
+		);
+		await plugin.saveSettings();
+	} catch (e) {
+		//if the error is settings[settingsToConvert] is undefined meaning the settings doesn't exist yet
+		// @ts-ignore
+		settings[settingsToConvert] = [];
+		await plugin.saveSettings();
+	}
 }
 
 /**
