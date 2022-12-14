@@ -90,9 +90,8 @@ export class GithubBranch extends FilesManagement {
 		const mainBranch = allBranch.data.find(
 			(branch: { name: string }) => branch.name === repoFrontmatter.branch
 		);
-		const shaMainBranch = mainBranch.commit.sha;
-
 		try {
+			const shaMainBranch = mainBranch.commit.sha;
 			const branch = await this.octokit.request(
 				"POST" + " /repos/{owner}/{repo}/git/refs",
 				{
