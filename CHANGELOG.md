@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.8.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.8.0...4.8.1) (2022-12-20)
+
+
+### Bug Fixes
+
+* Uncaught TypeError: Cannot read properties of null (reading 'path') ([3dc9eaf](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3dc9eaf0b7cce12031830ab86947013570f60a9f))
+
 ## [4.8.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.7.0...4.8.0) (2022-12-14)
 
 
