@@ -10,6 +10,8 @@ if you want to view the source, please visit the github repository of this plugi
 `;
 
 const prod = (process.argv[2] === 'production');
+console.log(`Building in ${prod ? 'production' : 'development'} mode`);
+console.log('Process arguments: ', process.argv);
 
 esbuild.build({
 	banner: {
@@ -22,7 +24,6 @@ esbuild.build({
 	watch: !prod,
 	target: 'es2016',
 	logLevel: "info",
-	sourcemap: prod ? false : 'inline',
 	treeShaking: true,
 	minify: prod,
 	outfile: 'main.js',
