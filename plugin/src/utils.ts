@@ -129,6 +129,9 @@ export function disablePublish(
 	settings: GitHubPublisherSettings,
 	file: TFile
 ): boolean {
+	if (!file) {
+		return false;
+	}
 	const fileCache = app.metadataCache.getFileCache(file);
 	const meta = fileCache?.frontmatter;
 	const folderList = settings.excludedFolder;
