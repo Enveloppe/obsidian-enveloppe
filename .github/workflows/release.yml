@@ -47,10 +47,10 @@ jobs:
         run: npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > CHANGELOG-LATEST.md
       - name: Create Release
         id: create_release
-        uses: actions/create-release@latest
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref }}
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
@@ -60,7 +60,7 @@ jobs:
 
       - name: Upload zip file
         id: upload-zip
-        uses: actions/upload-release-asset@latest
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -71,7 +71,7 @@ jobs:
 
       - name: Upload main.js
         id: upload-main
-        uses: actions/upload-release-asset@latest
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -82,7 +82,7 @@ jobs:
 
       - name: Upload manifest.json
         id: upload-manifest
-        uses: actions/upload-release-asset@latest
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -93,7 +93,7 @@ jobs:
 
       - name: Upload styles.css
         id: upload-css
-        uses: actions/upload-release-asset@latest
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
