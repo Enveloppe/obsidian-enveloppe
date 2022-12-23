@@ -1,15 +1,15 @@
 import { Plugin, TFile, Menu } from "obsidian";
 import { GithubPublisherSettings } from "./settings";
+import { GitHubPublisherSettings } from './settings/interface'
+import {
+	DEFAULT_SETTINGS,
+	RepoFrontmatter,
+} from "./settings/interface";
 import {
 	convertOldSettings,
 	disablePublish,
 	getRepoFrontmatter,
 } from "./src/utils";
-import {
-	GitHubPublisherSettings,
-	DEFAULT_SETTINGS,
-	RepoFrontmatter,
-} from "./settings/interface";
 import { GithubBranch } from "./publishing/branch";
 import { Octokit } from "@octokit/core";
 import {
