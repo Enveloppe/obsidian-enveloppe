@@ -31,7 +31,7 @@ jobs:
           cp main.js manifest-beta.json ${{ env.PLUGIN_NAME }}
           mv manifest-beta.json manifest.json
       - name: Copy files if not beta
-        if: !contains(github.ref, "-")
+        if: ${{ !contains(github.ref, "-") }}
         run: cp main.js manifest.json ${{ env.PLUGIN_NAME }}
       - name: Create zip
         run: |
@@ -43,14 +43,14 @@ jobs:
         if: contains(github.ref, "-")
         run: npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG-beta.md" > CHANGELOG-LATEST.md
       - name: Create changelog (not beta)
-        if: !contains(github.ref, "-")
+        if: ${{ !contains(github.ref, "-") }}
         run: npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > CHANGELOG-LATEST.md
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref }}
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
