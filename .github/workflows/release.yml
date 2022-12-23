@@ -25,23 +25,29 @@ jobs:
                   npm install
                   npm run build
                   mkdir ${{ env.PLUGIN_NAME }}
-                  if [[ ${{ github.ref }} == *"-"* ]]; then
+            - name: Copy files (beta)
+              if: contains(github.ref, "-")
+              run: |
                     cp main.js manifest-beta.json plugin/settings/styles.css ${{ env.PLUGIN_NAME }}
                     mv manifest-beta.json manifest.json
-                  else
+            - name: Copy files if not beta
+              if: !contains(github.ref, "-")
+              run: |
                     cp main.js manifest.json styles.css ${{ env.PLUGIN_NAME }}
-                  fi
+            - name: Create zip
+              run: |
                   zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
                   ls
-                  echo "::set-output name=tag_name::$(git tag --sort version:refname | tail -n 1)"
-                  if [[ ${{ github.ref }} == *"-"* ]]; then
-                      npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG-beta.md" > CHANGELOG-LATEST.md
-                  else
-                    npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > CHANGELOG-LATEST.md
-                  fi
+                  echo "tag_name=$(git tag --sort version:refname | tail -n 1)" >> $GITHUB_OUTPUT
+            - name: Create changelog (beta)
+              if: contains(github.ref, "-")
+              run: npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG-beta.md" > CHANGELOG-LATEST.md
+            - name: Create changelog (not beta)
+              if: !contains(github.ref, "-")
+              run: npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > CHANGELOG-LATEST.md
             - name: Create Release
               id: create_release
-              uses: actions/create-release@v1
+              uses: actions/create-release@latest
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   VERSION: ${{ github.ref }}
@@ -54,7 +60,7 @@ jobs:
 
             - name: Upload zip file
               id: upload-zip
-              uses: actions/upload-release-asset@v1
+              uses: actions/upload-release-asset@latest
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
@@ -65,7 +71,7 @@ jobs:
 
             - name: Upload main.js
               id: upload-main
-              uses: actions/upload-release-asset@v1
+              uses: actions/upload-release-asset@latest
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
@@ -76,7 +82,7 @@ jobs:
 
             - name: Upload manifest.json
               id: upload-manifest
-              uses: actions/upload-release-asset@v1
+              uses: actions/upload-release-asset@latest
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
@@ -87,7 +93,7 @@ jobs:
 
             - name: Upload styles.css
               id: upload-css
-              uses: actions/upload-release-asset@v1
+              uses: actions/upload-release-asset@latest
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
