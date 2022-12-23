@@ -1,104 +1,104 @@
 name: Release Obsidian plugin
 
 on:
-    workflow_dispatch:
-    push:
-        tags:
-            - "*"
+  workflow_dispatch:
+  push:
+    tags:
+      - "*"
 env:
-    PLUGIN_NAME: obsidian-mkdocs-publisher # Change this to match the id of your plugin.
+  PLUGIN_NAME: obsidian-mkdocs-publisher # Change this to match the id of your plugin.
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        steps:
-            - uses: actions/checkout@v3
-            - name: Use Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 18
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-            - name: Build
-              id: build
-              run: |
-                  npm install
-                  npm run build
-                  mkdir ${{ env.PLUGIN_NAME }}
-            - name: Copy files (beta)
-              if: contains(github.ref, "-")
-              run: |
-                    cp main.js manifest-beta.json plugin/settings/styles.css ${{ env.PLUGIN_NAME }}
-                    mv manifest-beta.json manifest.json
-            - name: Copy files if not beta
-              if: !contains(github.ref, "-")
-              run: |
-                    cp main.js manifest.json styles.css ${{ env.PLUGIN_NAME }}
-            - name: Create zip
-              run: |
-                  zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
-                  ls
-                  echo "tag_name=$(git tag --sort version:refname | tail -n 1)" >> $GITHUB_OUTPUT
-            - name: Create changelog (beta)
-              if: contains(github.ref, "-")
-              run: npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG-beta.md" > CHANGELOG-LATEST.md
-            - name: Create changelog (not beta)
-              if: !contains(github.ref, "-")
-              run: npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > CHANGELOG-LATEST.md
-            - name: Create Release
-              id: create_release
-              uses: actions/create-release@latest
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  VERSION: ${{ github.ref }}
-              with:
-                  tag_name: ${{ github.ref }}
-                  release_name: ${{ github.ref }}
-                  body_path: CHANGELOG-LATEST.md
-                  draft: false
-                  prerelease: false
+      - name: Build
+        id: build
+        run: |
+          npm install
+          npm run build
+          mkdir ${{ env.PLUGIN_NAME }}
+      - name: Copy files (beta)
+        if: contains(github.ref, "-")
+        run: |
+        cp main.js manifest-beta.json ${{ env.PLUGIN_NAME }}
+        mv manifest-beta.json manifest.json
+      - name: Copy files if not beta
+        if: !contains(github.ref, "-")
+        run: cp main.js manifest.json ${{ env.PLUGIN_NAME }}
+      - name: Create zip
+        run: |
+        cp plugin/settings/styles.css ${{env.PLUGIN_NAME}}
+        zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
+        ls
+        echo "tag_name=$(git tag --sort version:refname | tail -n 1)" >> $GITHUB_OUTPUT
+      - name: Create changelog (beta)
+        if: contains(github.ref, "-")
+        run: npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG-beta.md" > CHANGELOG-LATEST.md
+      - name: Create changelog (not beta)
+        if: !contains(github.ref, "-")
+        run: npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > CHANGELOG-LATEST.md
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VERSION: ${{ github.ref }}
+        with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        body_path: CHANGELOG-LATEST.md
+        draft: false
+        prerelease: false
 
-            - name: Upload zip file
-              id: upload-zip
-              uses: actions/upload-release-asset@latest
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./${{ env.PLUGIN_NAME }}.zip
-                  asset_name: ${{ env.PLUGIN_NAME }}-${{ steps.build.outputs.tag_name }}.zip
-                  asset_content_type: application/zip
+      - name: Upload zip file
+        id: upload-zip
+        uses: actions/upload-release-asset@latest
+        env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./${{ env.PLUGIN_NAME }}.zip
+        asset_name: ${{ env.PLUGIN_NAME }}-${{ steps.build.outputs.tag_name }}.zip
+        asset_content_type: application/zip
 
-            - name: Upload main.js
-              id: upload-main
-              uses: actions/upload-release-asset@latest
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./main.js
-                  asset_name: main.js
-                  asset_content_type: text/javascript
+      - name: Upload main.js
+        id: upload-main
+        uses: actions/upload-release-asset@latest
+        env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./main.js
+        asset_name: main.js
+        asset_content_type: text/javascript
 
-            - name: Upload manifest.json
-              id: upload-manifest
-              uses: actions/upload-release-asset@latest
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./manifest.json
-                  asset_name: manifest.json
-                  asset_content_type: application/json
+      - name: Upload manifest.json
+        id: upload-manifest
+        uses: actions/upload-release-asset@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./manifest.json
+          asset_name: manifest.json
+          asset_content_type: application/json
 
-            - name: Upload styles.css
-              id: upload-css
-              uses: actions/upload-release-asset@latest
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./plugin/settings/styles.css
-                  asset_name: styles.css
-                  asset_content_type: text/css
-        
+      - name: Upload styles.css
+        id: upload-css
+        uses: actions/upload-release-asset@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./plugin/settings/styles.css
+          asset_name: styles.css
+          asset_content_type: text/css
+
