@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.9.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.8.1...4.9.0) (2022-12-24)
+
+
+### Features
+
+* apply a regex on the filename directly ([4afaaba](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4afaaba16bac701d90ebef05e0e48ddd645e673b)), closes [#60](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/60)
+
 ### [4.8.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.8.0...4.8.1) (2022-12-20)
 
 
