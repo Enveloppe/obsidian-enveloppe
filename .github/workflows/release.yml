@@ -25,22 +25,23 @@ jobs:
           npm install
           npm run build
           mkdir ${{ env.PLUGIN_NAME }}
+      - name: Copy main files
+        run : cp main.js styles.css ${{ env.PLUGIN_NAME }}
       - name: Copy files (beta)
-        if: contains(github.ref, "-")
+        if: ${{ contains(github.ref, "-") }}
         run: |
-          cp main.js manifest-beta.json ${{ env.PLUGIN_NAME }}
+          cp manifest-beta.json ${{ env.PLUGIN_NAME }}
           mv manifest-beta.json manifest.json
       - name: Copy files if not beta
         if: ${{ !contains(github.ref, "-") }}
-        run: cp main.js manifest.json ${{ env.PLUGIN_NAME }}
+        run: cp manifest.json ${{ env.PLUGIN_NAME }}
       - name: Create zip
         run: |
-          cp plugin/settings/styles.css ${{env.PLUGIN_NAME}}
           zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
           ls
           echo "tag_name=$(git tag --sort version:refname | tail -n 1)" >> $GITHUB_OUTPUT
       - name: Create changelog (beta)
-        if: contains(github.ref, "-")
+        if: ${{ contains(github.ref, "-") }}
         run: npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG-beta.md" > CHANGELOG-LATEST.md
       - name: Create changelog (not beta)
         if: ${{ !contains(github.ref, "-") }}
@@ -98,7 +99,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./plugin/settings/styles.css
+          asset_path: ./plugin/styles.css
           asset_name: styles.css
           asset_content_type: text/css
 

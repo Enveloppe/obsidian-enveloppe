@@ -1,4 +1,4 @@
-/* plugin/settings/styles.css */
+/* styles.css */
 .obs-git-publisher {
   border-top: transparent;
   padding: 0 0 3px 0;
@@ -119,3 +119,6 @@ button.obs-git-publisher-censor-flags:hover {
   text-decoration: underline;
 }
 
+.setting-item.obs-git-publisher-title input[type="text"][placeholder="title"] {
+  width: 100%;
+}

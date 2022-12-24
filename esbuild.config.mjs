@@ -13,7 +13,7 @@ const moveStyles = {
 	name: 'move-styles',
 	setup(build) {
 		build.onEnd(() => {
-			fs.copyFileSync('plugin/settings/styles.css', './styles.css');
+			fs.copyFileSync('plugin/styles.css', './styles.css');
 		});
 	}
 }
@@ -25,7 +25,7 @@ esbuild.build({
 	banner: {
 		js: banner,
 	},
-	entryPoints: ['plugin/main.ts', "plugin/settings/styles.css"],
+	entryPoints: ['plugin/main.ts', 'plugin/styles.css'],
 	bundle: true,
 	external: ['obsidian', 'electron', ...builtins],
 	format: 'cjs',
