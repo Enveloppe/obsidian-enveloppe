@@ -25,10 +25,9 @@ jobs:
           npm install
           npm run build
           mkdir ${{ env.PLUGIN_NAME }}
-      - name: Copy main files
-        run : cp main.js styles.css ${{ env.PLUGIN_NAME }}
+          cp main.js styles.css ${{ env.PLUGIN_NAME }}
       - name: Copy files (beta)
-        if: ${{ contains(github.ref, "-") }}
+        if: contains(github.ref, "-")
         run: |
           cp manifest-beta.json ${{ env.PLUGIN_NAME }}
           mv manifest-beta.json manifest.json
@@ -41,7 +40,7 @@ jobs:
           ls
           echo "tag_name=$(git tag --sort version:refname | tail -n 1)" >> $GITHUB_OUTPUT
       - name: Create changelog (beta)
-        if: ${{ contains(github.ref, "-") }}
+        if: contains(github.ref, "-")
         run: npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG-beta.md" > CHANGELOG-LATEST.md
       - name: Create changelog (not beta)
         if: ${{ !contains(github.ref, "-") }}
