@@ -286,10 +286,11 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 		const frontmatterTitleSet = new Setting(this.settingsPage)
-			.setName(settings("uploadConfig", "useFrontmatterTitle") as string)
+			.setName(subSettings("uploadConfig.useFrontmatterTitle.title") as string)
 			.setDesc(
-				settings("uploadConfig", "useFrontmatterTitleDesc") as string
+				(subSettings("uploadConfig.useFrontmatterTitle.desc") as string)
 			)
+			.setClass("obs-git-publisher-title")
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.useFrontmatterTitle)
@@ -301,15 +302,40 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 		if (this.plugin.settings.useFrontmatterTitle) {
-			frontmatterTitleSet.addText((text) => {
-				text.setPlaceholder("title")
-					.setValue(this.plugin.settings.frontmatterTitleKey)
-					.onChange(async (value) => {
-						this.plugin.settings.frontmatterTitleKey = value.trim();
-						await this.plugin.saveSettings();
-					});
-			});
+			frontmatterTitleSet
+				.addText((text) => {
+					text
+						.setPlaceholder("title")
+						.setValue(this.plugin.settings.frontmatterTitleKey)
+						.onChange(async (value) => {
+							this.plugin.settings.frontmatterTitleKey = value.trim();
+							await this.plugin.saveSettings();
+						});
+				});
+
+			new Setting(this.settingsPage)
+				.setName(subSettings("uploadConfig.useFrontmatterTitle.regexPlaceholder") as string)
+				.setDesc(subSettings("uploadConfig.useFrontmatterTitle.regexDesc") as string)
+				.addText((text) => {
+					text
+						.setPlaceholder('regex')
+						.setValue(this.plugin.settings.frontmatterTitleRegex)
+						.onChange(async (value) => {
+							this.plugin.settings.frontmatterTitleRegex = value;
+							await this.plugin.saveSettings();
+						});
+				})
+				.addText((text) => {
+					text
+						.setPlaceholder('replacement')
+						.setValue(this.plugin.settings.frontmatterTitleReplacement)
+						.onChange(async (value) => {
+							this.plugin.settings.frontmatterTitleReplacement = value;
+							await this.plugin.saveSettings();
+						});
+				});
 		}
+		
 		if (this.plugin.settings.downloadedFolder === folderSettings.yaml) {
 			showSettings(frontmatterKeySettings);
 			showSettings(rootFolderSettings);

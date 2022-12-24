@@ -83,6 +83,8 @@ export interface GitHubPublisherSettings {
 	automaticallyMergePR: boolean;
 	metadataExtractorPath: string;
 	convertInternalNonShared: boolean;
+	frontmatterTitleRegex: string;
+	frontmatterTitleReplacement: string;
 }
 
 /**
@@ -142,6 +144,8 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	automaticallyMergePR: true,
 	metadataExtractorPath: "",
 	convertInternalNonShared: false,
+	frontmatterTitleRegex: "",
+	frontmatterTitleReplacement: "",
 };
 
 export interface MetadataExtractor {

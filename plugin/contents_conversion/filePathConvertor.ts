@@ -310,7 +310,26 @@ function getTitleField(
 		frontmatter[settings.frontmatterTitleKey] &&
 		frontmatter[settings.frontmatterTitleKey] !== file.name
 	) {
+		if (settings.frontmatterTitleRegex.length > 0) {
+			const toReplace = settings.frontmatterTitleRegex;
+			const replaceWith = settings.frontmatterTitleReplacement;
+			if (toReplace.match(/\/.+\//)) {
+				const flagsRegex = toReplace.match(/\/([gimy]+)$/);
+				const flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join('') : "";
+				const regex = new RegExp(toReplace.replace(/\/(.+)\/.*/, "$1"), flags);
+				return frontmatter[settings.frontmatterTitleKey].replace(
+					regex,
+					replaceWith
+				) + ".md";
+			} else {
+				return frontmatter[settings.frontmatterTitleKey].replaceAll(
+					toReplace,
+					replaceWith
+				) + ".md";
+			}
+		}
 		return frontmatter[settings.frontmatterTitleKey] + ".md";
+
 	}
 	return file.name;
 }

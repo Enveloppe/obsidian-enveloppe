@@ -49,8 +49,13 @@ export default {
 			frontmatterKeyPlaceholder: "category",
 			rootFolder: "Root folder",
 			rootFolderDesc: "Append this path to the folder set by the frontmatter key.",
-			useFrontmatterTitle: "Set the title from the frontmatter",
-			useFrontmatterTitleDesc: "Use a frontmatter value to generate the filename. By default, \"title\" is used.",
+			useFrontmatterTitle :
+				{
+					title : "Set the key where to get the value of the filename",
+					desc: "Use a frontmatter value to generate the filename. By default, \"title\" is used. ",
+					regexPlaceholder: "Apply a replacement to the filename",
+					regexDesc: "If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string.",
+				},
 		},
 		textConversion:{
 			textConversion: "Content's conversion",

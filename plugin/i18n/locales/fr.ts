@@ -49,8 +49,14 @@ export default {
 			frontmatterKeyPlaceholder: "catégorie",
 			rootFolder: "Dossier racine",
 			rootFolderDesc: "Ajoutez ce chemin au dossier défini par la clé de métadonnées.",
-			useFrontmatterTitle: "Utiliser une clé de métadonnées pour le titre",
-			useFrontmatterTitleDesc: "Utilisez un champ du frontmatter pour générer le nom du fichier. Par défaut \"title\" est utilisé.",
+
+			useFrontmatterTitle: {
+				title: "Utiliser une clé de métadonnées pour le titre",
+				desc: "Utilisez un champ du frontmatter pour générer le nom du fichier. Par défaut, \"title\" est utilisé.",
+				regexPlaceholder: "Appliquer un remplacement au titre",
+				regexDesc: "Si le texte est entre \"//\", il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut.",
+
+			},
 		},
 		textConversion:{
 			textConversion: "Conversion du contenu",
