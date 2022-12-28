@@ -21,6 +21,7 @@ import {
 	shareOnlyEdited,
 } from "./commands";
 import { StringFunc, commands, translationLanguage } from "./i18n";
+import {getTitleField} from "./contents_conversion/filePathConvertor";
 
 /**
  * Main class of the plugin
@@ -63,11 +64,12 @@ export default class GithubPublisher extends Plugin {
 					disablePublish(this.app, this.settings, file) &&
 					this.settings.fileMenu
 				) {
+					const fileName = getTitleField(this.app.metadataCache.getFileCache(file).frontmatter, file, this.settings).replace('.md', '');
 					menu.addItem((item) => {
 						item.setSection("action");
 						item.setTitle(
 							(commands("shareViewFiles") as StringFunc)(
-								file.basename
+								fileName
 							)
 						)
 							.setIcon("share")
@@ -93,12 +95,13 @@ export default class GithubPublisher extends Plugin {
 					disablePublish(this.app, this.settings, view.file) &&
 					this.settings.editorMenu
 				) {
+					const fileName = getTitleField(this.app.metadataCache.getFileCache(view.file).frontmatter, view.file, this.settings).replace('.md', '');
 					menu.addSeparator();
 					menu.addItem((item) => {
 						item.setSection("mkdocs-publisher");
 						item.setTitle(
 							(commands("shareViewFiles") as StringFunc)(
-								view.file.basename
+								fileName
 							)
 						)
 							.setIcon("share")

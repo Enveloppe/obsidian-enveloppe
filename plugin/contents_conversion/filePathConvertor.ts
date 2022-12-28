@@ -298,7 +298,7 @@ function createFrontmatterPath(
  * @returns {string} title
  */
 
-function getTitleField(
+export function getTitleField(
 	frontmatter: FrontMatterCache,
 	file: TFile,
 	settings: GitHubPublisherSettings
