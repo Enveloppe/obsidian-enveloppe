@@ -291,6 +291,34 @@ function createFrontmatterPath(
 }
 
 /**
+ * Apply a regex edition on the title. It can be used to remove special characters or to add a prefix or suffix
+ * @param {string} fileName file name
+ * @param {GitHubPublisherSettings} settings Settings
+ * @return {string} edited file name
+ */
+function regexOnFileName(fileName: string, settings: GitHubPublisherSettings): string {
+	fileName = fileName.replace(".md", "");
+	if (settings.frontmatterTitleRegex.length > 0) {
+		const toReplace = settings.frontmatterTitleRegex;
+		const replaceWith = settings.frontmatterTitleReplacement;
+		if (toReplace.match(/\/.+\//)) {
+			const flagsRegex = toReplace.match(/\/([gimy]+)$/);
+			const flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join('') : "";
+			const regex = new RegExp(toReplace.replace(/\/(.+)\/.*/, "$1"), flags);
+			return fileName.replace(
+				regex,
+				replaceWith
+			);
+		} else {
+			return fileName.replaceAll(
+				toReplace,
+				replaceWith
+			);
+		}
+	}
+}
+
+/**
  * Get the title field from frontmatter or file name
  * @param {FrontMatterCache} frontmatter frontmatter
  * @param {TFile} file file
@@ -303,35 +331,16 @@ export function getTitleField(
 	file: TFile,
 	settings: GitHubPublisherSettings
 ): string {
-	if (!settings.useFrontmatterTitle || !frontmatter) {
-		return file.name;
-	} else if (
+	let fileName = file.name;
+	if (
 		frontmatter &&
 		frontmatter[settings.frontmatterTitleKey] &&
 		frontmatter[settings.frontmatterTitleKey] !== file.name
 	) {
-		if (settings.frontmatterTitleRegex.length > 0) {
-			const toReplace = settings.frontmatterTitleRegex;
-			const replaceWith = settings.frontmatterTitleReplacement;
-			if (toReplace.match(/\/.+\//)) {
-				const flagsRegex = toReplace.match(/\/([gimy]+)$/);
-				const flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join('') : "";
-				const regex = new RegExp(toReplace.replace(/\/(.+)\/.*/, "$1"), flags);
-				return frontmatter[settings.frontmatterTitleKey].replace(
-					regex,
-					replaceWith
-				) + ".md";
-			} else {
-				return frontmatter[settings.frontmatterTitleKey].replaceAll(
-					toReplace,
-					replaceWith
-				) + ".md";
-			}
-		}
-		return frontmatter[settings.frontmatterTitleKey] + ".md";
-
+		
+		fileName= frontmatter[settings.frontmatterTitleKey];
 	}
-	return file.name;
+	return regexOnFileName(fileName, settings) + ".md";
 }
 
 /**
