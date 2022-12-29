@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.9.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.9.0...4.9.2) (2022-12-29)
+
+
+### Bug Fixes
+
+* remove the regex edition of title from the title key settings ([8020eed](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8020eedf05e0d8c76173e7d249d0708d3d5410d8))
+* use the filetitle instead of basename for commands menu ([3f3ddee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3f3ddee553e5183f50ad4e36299f9a62204b9d5d))
+
 ### [4.9.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.9.0...4.9.1) (2022-12-28)
 
 
