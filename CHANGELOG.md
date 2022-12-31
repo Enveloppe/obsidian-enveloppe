@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.10.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.9.0...4.10.1) (2022-12-31)
+
+
+### Features
+
+* adding a new option that allow to change the name of folder note file ([a21ac4a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a21ac4a6112d4561f309f6f287e0151ec8bf93a4))
+
+
+### Bug Fixes
+
+* index note not recognized using regex ([295d2bc](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/295d2bcb7a87039d8bb690d2e39ad214ffef724b))
+* **obsidianPath:** if folder note outside, wrong filepath created ([da4592e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/da4592e8694781a9bc77eb1cf0c4de299c5e9710))
+* remove the regex edition of title from the title key settings ([8020eed](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8020eedf05e0d8c76173e7d249d0708d3d5410d8))
+* use the filetitle instead of basename for commands menu ([3f3ddee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3f3ddee553e5183f50ad4e36299f9a62204b9d5d))
+
 ## [4.10.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.9.0...4.10.0) (2022-12-31)
 
 
