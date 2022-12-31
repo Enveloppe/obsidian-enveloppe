@@ -62,6 +62,7 @@ export interface GitHubPublisherSettings {
 	autoCleanUp: boolean;
 	autoCleanUpExcluded: string[];
 	folderNote: boolean;
+	folderNoteRename: string;
 	convertWikiLinks: boolean;
 	convertForGithub: boolean;
 	subFolder: string;
@@ -123,6 +124,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	autoCleanUp: false,
 	autoCleanUpExcluded: [],
 	folderNote: false,
+	folderNoteRename: "index.md",
 	convertWikiLinks: false,
 	convertForGithub: false,
 	subFolder: "",

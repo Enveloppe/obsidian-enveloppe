@@ -340,10 +340,40 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
+		const folderNoteSettings = new Setting(this.settingsPage)
+			.setName(subSettings("textConversion.links.folderNote") as string)
+			.setClass("obs-git-publisher")
+			.setDesc(
+				subSettings("textConversion.links.folderNoteDesc") as string
+			)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.folderNote)
+					.onChange(async (value) => {
+						this.plugin.settings.folderNote = value;
+						await this.plugin.saveSettings();
+						this.settingsPage.empty();
+						await this.renderUploadConfiguration();
+					});
+			});
+
+		if (this.plugin.settings.folderNote) {
+			folderNoteSettings.addText((text) => {
+				text.setPlaceholder("folderNote")
+					.setValue(this.plugin.settings.folderNoteRename)
+					.onChange(async (value) => {
+						this.plugin.settings.folderNoteRename = value;
+						await this.plugin.saveSettings();
+
+					});
+			});
+		}
+
 		if (this.plugin.settings.downloadedFolder === folderSettings.yaml) {
 			showSettings(frontmatterKeySettings);
 			showSettings(rootFolderSettings);
 			hideSettings(subFolderSettings);
+			showSettings(folderNoteSettings);
 		} else {
 			hideSettings(frontmatterKeySettings);
 			hideSettings(rootFolderSettings);
@@ -352,8 +382,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				folderSettings.obsidian
 			) {
 				showSettings(subFolderSettings);
+				showSettings(folderNoteSettings);
 			} else {
 				hideSettings(subFolderSettings);
+				hideSettings(folderNoteSettings);
 			}
 		}
 		this.settingsPage.createEl("h3", { text: "Github Workflow" });
@@ -699,23 +731,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		this.settingsPage.createEl("p", {
 			text: subSettings("textConversion.links.desc") as string,
 		});
-		const folderNoteSettings = new Setting(this.settingsPage)
-			.setName(subSettings("textConversion.links.folderNote") as string)
-			.setClass("obs-git-publisher")
-			.setDesc(
-				subSettings("textConversion.links.folderNoteDesc") as string
-			)
-			.addToggle((toggle) => {
-				toggle
-					.setValue(this.plugin.settings.folderNote)
-					.onChange(async (value) => {
-						this.plugin.settings.folderNote = value;
-						await this.plugin.saveSettings();
-					});
-			});
-		this.plugin.settings.downloadedFolder === folderSettings.fixed
-			? hideSettings(folderNoteSettings)
-			: showSettings(folderNoteSettings);
+
 		new Setting(this.settingsPage)
 			.setName(subSettings("textConversion.links.internals") as string)
 			.setDesc(
