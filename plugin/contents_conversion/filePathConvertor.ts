@@ -186,24 +186,27 @@ async function createRelativePath(
  * @param {TFile} file Source file
  * @param {Vault} vault
  * @param {GitHubPublisherSettings} settings Global Settings
+ * @param {string} fileName the filename after reading the frontmatter
  * @return {string} original file name or index.md
  */
 
 function folderNoteIndexOBS(
 	file: TFile,
 	vault: Vault,
-	settings: GitHubPublisherSettings
+	settings: GitHubPublisherSettings,
+	fileName: string
 ): string {
 	const index = settings.folderNoteRename;
-	if (!settings.folderNote) return regexOnFileName(file.name, settings);
-	const fileName = file.name.replace(".md", "");
-	const folderParent = file.parent.name;
-	if (fileName === folderParent) return index;
+	const folderParent = file.parent.path !== "/" ? `/${file.parent.path}/` : "/" ;
+	const defaultPath = `${folderParent}${regexOnFileName(fileName, settings)}`;
+	if (!settings.folderNote) return defaultPath;
+	const parentFolderName = file.parent.name;
+	if (fileName.replace(".md", "") === parentFolderName) return `/${file.parent.path}/${index}`;
 	const outsideFolder = vault.getAbstractFileByPath(
 		file.path.replace(".md", "")
 	);
-	if (outsideFolder && outsideFolder instanceof TFolder) return index;
-	return regexOnFileName(file.name, settings);
+	if (outsideFolder && outsideFolder instanceof TFolder) return `/${outsideFolder.path}/${index}`;
+	return defaultPath;
 }
 
 /**
@@ -222,10 +225,10 @@ function createObsidianPath(
 	fileName: string
 ): string {
 	const folderDefault = settings.folderDefaultName;
-	fileName = folderNoteIndexOBS(file, vault, settings);
+	fileName = folderNoteIndexOBS(file, vault, settings, fileName);
 
-	const rootFolder = folderDefault.length > 0 ? folderDefault + "/" : "";
-	const path = rootFolder + file.path.replace(file.name, fileName);
+	const rootFolder = folderDefault.length > 0 ? folderDefault : "";
+	const path = rootFolder + fileName;
 	if (settings.subFolder.length > 0) {
 		return path.replace(settings.subFolder + "/", "");
 	}
@@ -319,6 +322,7 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 			);
 		}
 	}
+	return fileName;
 }
 
 /**
@@ -328,7 +332,6 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
  * @param {GitHubPublisherSettings} settings Settings
  * @returns {string} title
  */
-
 export function getTitleField(
 	frontmatter: FrontMatterCache,
 	file: TFile,
@@ -340,11 +343,12 @@ export function getTitleField(
 		frontmatter[settings.frontmatterTitleKey] &&
 		frontmatter[settings.frontmatterTitleKey] !== file.name
 	) {
-		
+
 		fileName= frontmatter[settings.frontmatterTitleKey] + ".md";
 	}
 	return fileName;
 }
+
 
 
 /**
@@ -377,8 +381,8 @@ function getReceiptFolder(
 
 		let path =
 			settings.folderDefaultName.length > 0
-				? settings.folderDefaultName + "/" + fileName
-				: fileName;
+				? settings.folderDefaultName + "/" + regexOnFileName(fileName, settings)
+				: regexOnFileName(fileName, settings);
 
 		if (settings.downloadedFolder === folderSettings.yaml) {
 			path = createFrontmatterPath(file, settings, frontmatter, fileName);
