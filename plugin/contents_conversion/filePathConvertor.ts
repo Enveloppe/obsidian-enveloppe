@@ -194,15 +194,16 @@ function folderNoteIndexOBS(
 	vault: Vault,
 	settings: GitHubPublisherSettings
 ): string {
-	if (!settings.folderNote) return file.name;
+	const index = settings.folderNoteRename;
+	if (!settings.folderNote) return regexOnFileName(file.name, settings);
 	const fileName = file.name.replace(".md", "");
 	const folderParent = file.parent.name;
-	if (fileName === folderParent) return "index.md";
+	if (fileName === folderParent) return index;
 	const outsideFolder = vault.getAbstractFileByPath(
 		file.path.replace(".md", "")
 	);
-	if (outsideFolder && outsideFolder instanceof TFolder) return "index.md";
-	return file.name;
+	if (outsideFolder && outsideFolder instanceof TFolder) return index;
+	return regexOnFileName(file.name, settings);
 }
 
 /**
@@ -248,13 +249,13 @@ function folderNoteIndexYAML(
 	const parentCatFolder = !category.endsWith("/")
 		? category.split("/").at(-1)
 		: category.split("/").at(-2);
-	if (!settings.folderNote) return fileName;
+	if (!settings.folderNote) return regexOnFileName(fileName, settings);
 	if (
 		fileName.replace(".md", "").toLowerCase() ===
 		parentCatFolder.toLowerCase()
 	)
-		return "index.md";
-	return fileName;
+		return settings.folderNoteRename;
+	return regexOnFileName(fileName, settings);
 }
 
 /**
@@ -292,11 +293,13 @@ function createFrontmatterPath(
 
 /**
  * Apply a regex edition on the title. It can be used to remove special characters or to add a prefix or suffix
+ * ! Not applied on the index.md file (folder note)
  * @param {string} fileName file name
  * @param {GitHubPublisherSettings} settings Settings
  * @return {string} edited file name
  */
-function regexOnFileName(fileName: string, settings: GitHubPublisherSettings): string {
+export function regexOnFileName(fileName: string, settings: GitHubPublisherSettings): string {
+	if (fileName === settings.folderNoteRename && settings.folderNote) return fileName;
 	fileName = fileName.replace(".md", "");
 	if (settings.frontmatterTitleRegex.length > 0) {
 		const toReplace = settings.frontmatterTitleRegex;
@@ -338,10 +341,11 @@ export function getTitleField(
 		frontmatter[settings.frontmatterTitleKey] !== file.name
 	) {
 		
-		fileName= frontmatter[settings.frontmatterTitleKey];
+		fileName= frontmatter[settings.frontmatterTitleKey] + ".md";
 	}
-	return regexOnFileName(fileName, settings) + ".md";
+	return fileName;
 }
+
 
 /**
  * Get the path where the file will be saved in the github repository

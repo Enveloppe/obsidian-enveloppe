@@ -1,4 +1,4 @@
-import { Plugin, TFile, Menu } from "obsidian";
+import { Plugin, TFile, Menu, FrontMatterCache } from "obsidian";
 import { GithubPublisherSettings } from "./settings";
 import { GitHubPublisherSettings } from './settings/interface'
 import {
@@ -21,7 +21,7 @@ import {
 	shareOnlyEdited,
 } from "./commands";
 import { StringFunc, commands, translationLanguage } from "./i18n";
-import {getTitleField} from "./contents_conversion/filePathConvertor";
+import {getTitleField, regexOnFileName} from "./contents_conversion/filePathConvertor";
 
 /**
  * Main class of the plugin
@@ -30,6 +30,10 @@ import {getTitleField} from "./contents_conversion/filePathConvertor";
 
 export default class GithubPublisher extends Plugin {
 	settings: GitHubPublisherSettings;
+
+	getTitleFieldForCommand(file:TFile, frontmatter: FrontMatterCache): string {
+		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
+	}
 
 	/**
 	 * Function called when the plugin is loaded
@@ -64,7 +68,7 @@ export default class GithubPublisher extends Plugin {
 					disablePublish(this.app, this.settings, file) &&
 					this.settings.fileMenu
 				) {
-					const fileName = getTitleField(this.app.metadataCache.getFileCache(file).frontmatter, file, this.settings).replace('.md', '');
+					const fileName = this.getTitleFieldForCommand(file,this.app.metadataCache.getFileCache(file).frontmatter).replace('.md', '');
 					menu.addItem((item) => {
 						item.setSection("action");
 						item.setTitle(
@@ -95,7 +99,7 @@ export default class GithubPublisher extends Plugin {
 					disablePublish(this.app, this.settings, view.file) &&
 					this.settings.editorMenu
 				) {
-					const fileName = getTitleField(this.app.metadataCache.getFileCache(view.file).frontmatter, view.file, this.settings).replace('.md', '');
+					const fileName = this.getTitleFieldForCommand(view.file,this.app.metadataCache.getFileCache(view.file).frontmatter).replace('.md', '');
 					menu.addSeparator();
 					menu.addItem((item) => {
 						item.setSection("mkdocs-publisher");
