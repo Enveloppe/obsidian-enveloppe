@@ -10,6 +10,9 @@ const settings: GitHubPublisherSettings = {
 	fileMenu: false,
 	editorMenu: false,
 	downloadedFolder: folderSettings.fixed,
+	//fixedFolder
+	//yamlFrontmatter
+	//obsidianPath
 	folderDefaultName: "",
 	yamlFolderKey: "",
 	rootFolder: "",
@@ -19,6 +22,7 @@ const settings: GitHubPublisherSettings = {
 	autoCleanUp: false,
 	autoCleanUpExcluded: [],
 	folderNote: false,
+	folderNoteRename: "index.md",
 	convertWikiLinks: false,
 	convertForGithub: false,
 	subFolder: "",
@@ -39,6 +43,10 @@ const settings: GitHubPublisherSettings = {
 	shareExternalModified: false,
 	automaticallyMergePR: true,
 	metadataExtractorPath: "",
+	convertInternalNonShared: false,
+	frontmatterTitleRegex: "",
+	frontmatterTitleReplacement: "",
+
 }
 
 export default settings;
