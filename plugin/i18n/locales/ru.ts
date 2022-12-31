@@ -87,7 +87,7 @@ export default {
 				desc: 'You can prevent links to be converted and keep the alt text (or filename) by using the frontmatter key "links" with the value "false".',
 				folderNote: "Индексный файл в папке",
 				folderNoteDesc:
-					'Переименовывать файл в "index.md" в случае если он называется также как родительская папка (работает и в том случае если файл вне папки).',
+					'Переименовывать файл в "index.md" (default) в случае если он называется также как родительская папка (работает и в том случае если файл вне папки).',
 				internals: "Внутренние ссылки",
 				internalsDesc:
 					"Преобразовывать внутренние ссылки в общих файла в соответствие с настройками папки",

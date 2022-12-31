@@ -95,7 +95,7 @@ export default {
 					'Convertir les liens Wikilinks en liens markdown, sans en modifier le contenu. Ce paramètre peut être outrepassé par la clé de métadonnées "mdlinks".',
 				folderNote: "Folder Note",
 				folderNoteDesc:
-					"Renommer les fichiers en \"index.md\" s'il porte le même nom que leur dossier/catégorie parent (fonctionne aussi si la note est à l'extérieur du dossier).",
+					"Renommer les fichiers en un nom spécifique (défaut : \"index.md\") s'il porte le même nom que leur dossier/catégorie parent (fonctionne aussi si la note est à l'extérieur du dossier).",
 				nonShared:
 					"Convertir les liens internes pointant vers des notes non partagées",
 				nonSharedDesc:

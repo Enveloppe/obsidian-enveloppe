@@ -81,7 +81,7 @@ export default {
 				wikilinksDesc: "转换wiki link为md link，不改变文件内容",
 				folderNote: "Folder note",
 				folderNoteDesc:
-					'重命名文件为其父文件夹名(或category名) "index.md"',
+					'重命名文件为其父文件夹名(或category名) "index.md" (by default, can be edited)',
 				nonShared: "Convert internal links pointing to unshared files",
 				nonSharedDesc:
 					"Convert internal links pointing to a non shared file to their counterpart in the website, with relative path. Disabled, the plugin will keep the filename.",

@@ -90,7 +90,7 @@ export default {
 					'Convert Wikilinks to MDlinks, without changing the contents. This option can be overridden by the frontmatter key "mdlinks".',
 				folderNote: "Folder note",
 				folderNoteDesc:
-					'Rename files to "index.md" if it has the same name as their parent folder/category (also works if the note is out of the folder).',
+					'Rename files to a specified name (default: index.md) if it has the same name as their parent folder/category (also works if the note is outside of the folder).',
 				nonShared: "Convert internal links pointing to unshared files",
 				nonSharedDesc:
 					"Convert internal links pointing to a non shared file to their counterpart in the website, with relative path. Disabled, the plugin will keep the filename.",
