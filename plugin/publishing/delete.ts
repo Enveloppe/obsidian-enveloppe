@@ -108,7 +108,7 @@ async function deleteFromGithubOneRepo(
 			? isMarkdownForAnotherRepo
 			: true;
 		if (isNeedToBeDeleted) {
-			const checkingIndex = file.file.contains("index")
+			const checkingIndex = file.file.contains(settings.folderNoteRename)
 				? await checkIndexFiles(octokit, settings, file.file, repo)
 				: false;
 			try {

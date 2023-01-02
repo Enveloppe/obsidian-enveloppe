@@ -314,15 +314,15 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 			return fileName.replace(
 				regex,
 				replaceWith
-			);
+			) + ".md";
 		} else {
 			return fileName.replaceAll(
 				toReplace,
 				replaceWith
-			);
+			) + ".md";
 		}
 	}
-	return fileName;
+	return fileName + ".md";
 }
 
 /**
