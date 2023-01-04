@@ -297,10 +297,12 @@ export class GithubBranch extends FilesManagement {
 	 * Send a notice if the repo doesn't exist or if the main branch doesn't exist
 	 * Note: If one of the repo defined in the list doesn't exist, the rest of the list will not be checked because the octokit request throws an error
 	 * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter
+	 * @param silent Send a notice if the repo is valid
 	 * @return {Promise<void>}
 	 */
 	async checkRepository(
-		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]): Promise<void>
+		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
+		silent= true): Promise<void>
 	{
 		repoFrontmatter = Array.isArray(repoFrontmatter)
 			? repoFrontmatter
@@ -347,7 +349,7 @@ export class GithubBranch extends FilesManagement {
 						}
 					});
 					//@ts-ignore
-					if (branchExist.status === 200) {
+					if (branchExist.status === 200 && !silent) {
 						new Notice(
 							(t("commands.checkValidity.success") as StringFunc)(`${repo.owner}/${repo.repo}/${repo.branch}`)
 						);

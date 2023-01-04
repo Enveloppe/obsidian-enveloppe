@@ -4,7 +4,7 @@ import {
 	noticeMessage,
 	getRepoFrontmatter,
 	noticeLog,
-	getSettingsOfMetadataExtractor,
+	getSettingsOfMetadataExtractor, checkEmptyConfiguration,
 } from "./src/utils";
 import { GitHubPublisherSettings, RepoFrontmatter } from "./settings/interface";
 import { deleteFromGithub } from "./publishing/delete";
@@ -43,6 +43,8 @@ export async function shareAllMarkedNotes(
 		if (sharedFiles.length > 0) {
 			const publishedFiles = sharedFiles.map((file) => file.name);
 			if (createGithubBranch) {
+				const isValid = checkRepositoryValidityWithRepoFrontmatter(branchName, PublisherManager, settings, repoFrontmatter);
+				if (!isValid) return false;
 				await PublisherManager.newBranch(branchName, repoFrontmatter);
 			}
 			for (let files = 0; files < sharedFiles.length; files++) {
@@ -134,6 +136,8 @@ export async function deleteUnsharedDeletedNotes(
 		new Notice(
 			(informations("startingClean") as StringFunc)(settings.githubRepo)
 		);
+		const isValid = checkRepositoryValidityWithRepoFrontmatter(branchName, PublisherManager, settings, repoFrontmatter);
+		if (!isValid) return false;
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
 		await deleteFromGithub(
 			false,
@@ -170,6 +174,8 @@ export async function shareOneNote(
 	try {
 		const frontmatter = metadataCache.getFileCache(file).frontmatter;
 		const repoFrontmatter = getRepoFrontmatter(settings, frontmatter);
+		const isValid = checkRepositoryValidityWithRepoFrontmatter(branchName, PublisherManager, settings, repoFrontmatter);
+		if (!isValid) return false;
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
 		const publishSuccess = await PublisherManager.publish(
 			file,
@@ -269,7 +275,10 @@ export async function shareNewNote(
 				`${newlySharedNotes.length}`
 			)
 		);
+
 		const statusBarElement = plugin.addStatusBarItem();
+		const isValid = checkRepositoryValidityWithRepoFrontmatter(branchName, PublisherManager, settings, repoFrontmatter);
+		if (!isValid) return false;
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
 		await shareAllMarkedNotes(
 			PublisherManager,
@@ -278,7 +287,8 @@ export async function shareNewNote(
 			statusBarElement,
 			branchName,
 			repoFrontmatter,
-			newlySharedNotes
+			newlySharedNotes,
+			false
 		);
 	} else {
 		new Notice(informations("noNewNote") as string);
@@ -329,7 +339,10 @@ export async function shareAllEditedNotes(
 				`${newlySharedNotes.length}`
 			)
 		);
+
 		const statusBarElement = plugin.addStatusBarItem();
+		const isValid = checkRepositoryValidityWithRepoFrontmatter(branchName, PublisherManager, settings, repoFrontmatter);
+		if (!isValid) return false;
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
 		await shareAllMarkedNotes(
 			PublisherManager,
@@ -338,7 +351,8 @@ export async function shareAllEditedNotes(
 			statusBarElement,
 			branchName,
 			repoFrontmatter,
-			newlySharedNotes
+			newlySharedNotes,
+			false
 		);
 	} else {
 		new Notice(informations("noNewNote") as string);
@@ -386,6 +400,8 @@ export async function shareOnlyEdited(
 			)
 		);
 		const statusBarElement = plugin.addStatusBarItem();
+		const isValid = checkRepositoryValidityWithRepoFrontmatter(branchName, PublisherManager, settings, repoFrontmatter);
+		if (!isValid) return false;
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
 		await shareAllMarkedNotes(
 			PublisherManager,
@@ -394,7 +410,8 @@ export async function shareOnlyEdited(
 			statusBarElement,
 			branchName,
 			repoFrontmatter,
-			newlySharedNotes
+			newlySharedNotes,
+			false
 		);
 	} else {
 		new Notice(informations("noNewNote") as string);
@@ -420,9 +437,31 @@ export async function checkRepositoryValidity(
 	try {
 		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : null;
 		const repoFrontmatter = getRepoFrontmatter(settings, frontmatter);
-		await PublisherManager.checkRepository(repoFrontmatter);
+		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, settings);
+		if (isNotEmpty) {
+			await PublisherManager.checkRepository(repoFrontmatter, false);
+		}
 	}
 	catch (e) {
 		noticeLog(e, settings);
+	}
+}
+
+async function checkRepositoryValidityWithRepoFrontmatter(
+	branchName: string,
+	PublisherManager: GithubBranch,
+	settings: GitHubPublisherSettings,
+	repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]
+): Promise<boolean> {
+	try {
+		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, settings);
+		if (isNotEmpty) {
+			await PublisherManager.checkRepository(repoFrontmatter, true);
+			return true;
+		}
+	}
+	catch (e) {
+		noticeLog(e, settings);
+		return false;
 	}
 }

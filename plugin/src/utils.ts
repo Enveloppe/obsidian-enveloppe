@@ -13,7 +13,7 @@ import {
 	RepoFrontmatter,
 } from "../settings/interface";
 import Publisher from "../publishing/upload";
-import { informations } from "../i18n";
+import {error, informations, t} from "../i18n";
 import type { StringFunc } from "../i18n";
 import { getReceiptFolder } from "../contents_conversion/filePathConvertor";
 import { FrontmatterConvert } from "../settings/interface";
@@ -639,4 +639,39 @@ export function checkIfRepoIsInAnother(
 	}
 
 	return false;
+}
+
+
+export function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoFrontmatter[], settings: GitHubPublisherSettings) {
+	repoFrontmatter = Array.isArray(repoFrontmatter)
+		? repoFrontmatter
+		: [repoFrontmatter];
+	const isEmpty: boolean[]	= [];
+	if (settings.GhToken.length === 0) {
+		isEmpty.push(true);
+		const whatIsEmpty = t("error.whatEmpty.ghToken") as string;
+		new Notice((error("isEmpty") as StringFunc)(whatIsEmpty));
+	}
+	if (settings.GhToken.length != 0) {
+		for (const repo of repoFrontmatter) {
+			if (repo.repo.length === 0) {
+				isEmpty.push(true);
+				const whatIsEmpty = t("error.whatEmpty.repo") as string;
+				new Notice((error("isEmpty") as StringFunc)(whatIsEmpty));
+			} else if (repo.owner.length === 0) {
+				isEmpty.push(true);
+				const whatIsEmpty = t("error.whatEmpty.owner") as string;
+				new Notice((error("isEmpty") as StringFunc)(whatIsEmpty));
+			} else if (repo.branch.length === 0) {
+				isEmpty.push(true);
+				const whatIsEmpty = t("error.whatEmpty.branch") as string;
+				new Notice((error("isEmpty") as StringFunc)(whatIsEmpty));
+			} else {
+				isEmpty.push(false);
+			}
+		}
+	}
+	const allInvalid = isEmpty.every((value) => value === true);
+	return !allInvalid;
+
 }

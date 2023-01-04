@@ -296,5 +296,12 @@ export default {
 		mergeconflic: "La pull-request n'est pas fusionnable, vous avez besoin de le faire manuellement.",
 		errorConfig: (repoInfo: string): string =>
 			`Erreur de configuration pour ${repoInfo}. Merci de vérifier vos paramètres.`,
+		isEmpty: (repoInfo: string): string => `${repoInfo} est vide.`,
+		whatEmpty: {
+			owner: "Le nom du propriétaire",
+			repo: "Le nom du dépôt",
+			branch: "Le nom de la branche",
+			ghToken: "Le token GitHub",
+		},
 	},
 };

@@ -69,7 +69,7 @@ export default class GithubPublisher extends Plugin {
 					disablePublish(this.app, this.settings, file) &&
 					this.settings.fileMenu
 				) {
-					const fileName = this.getTitleFieldForCommand(file,this.app.metadataCache.getFileCache(file).frontmatter).replace(".md", "");
+					const fileName = this.getTitleFieldForCommand(file, this.app.metadataCache.getFileCache(file).frontmatter).replace(".md", "");
 					menu.addItem((item) => {
 						item.setSection("action");
 						item.setTitle(
@@ -91,6 +91,7 @@ export default class GithubPublisher extends Plugin {
 					});
 					menu.addSeparator();
 				}
+				
 			})
 		);
 

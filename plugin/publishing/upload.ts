@@ -24,6 +24,7 @@ import {
 import { ShareStatusBar } from "../src/status_bar";
 import GithubPublisherPlugin from "../main";
 import {
+	checkEmptyConfiguration,
 	checkIfRepoIsInAnother,
 	getFrontmatterCondition,
 	getRepoFrontmatter,
@@ -195,6 +196,7 @@ export default class Publisher {
 		);
 		const sharedKey = this.settings.shareKey;
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
+		const isNotEmpty = checkEmptyConfiguration(getRepoFrontmatter(this.settings, frontmatter), this.settings);
 		if (
 			!frontmatter ||
 			!frontmatter[sharedKey] ||
@@ -204,7 +206,7 @@ export default class Publisher {
 			!checkIfRepoIsInAnother(
 				getRepoFrontmatter(this.settings, frontmatter),
 				repoFrontmatter
-			)
+			) || !isNotEmpty
 		) {
 			return false;
 		}

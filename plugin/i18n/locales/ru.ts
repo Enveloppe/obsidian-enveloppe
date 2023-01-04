@@ -289,5 +289,12 @@ export default {
 		mergeconflic: "Pull-request is not mergeable, you need to do it manually.",
 		errorConfig: (repoInfo: string): string =>
 			`Error configuring ${repoInfo}. Please check your settings.`,
+		isEmpty: (repoInfo: string): string => `${repoInfo} is empty.`,
+		whatEmpty: {
+			owner: "Owner",
+			repo: "Repository",
+			branch: "Branch",
+			ghToken: "GitHub Token",
+		},
 	},
 };
