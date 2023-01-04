@@ -6,7 +6,7 @@ import {
 import { FilesManagement } from "./filesManagement";
 import { MetadataCache, Notice, Vault } from "obsidian";
 import GithubPublisherPlugin from "../main";
-import { StringFunc, error } from "../i18n";
+import {StringFunc, error, t} from "../i18n";
 import { noticeLog } from "../src/utils";
 
 /**
@@ -290,6 +290,66 @@ export class GithubBranch extends FilesManagement {
 				)
 			);
 			return false;
+		}
+	}
+
+	async checkRepository(
+		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]): Promise<void>
+	{
+		repoFrontmatter = Array.isArray(repoFrontmatter)
+			? repoFrontmatter
+			: [repoFrontmatter];
+		for (const repo of repoFrontmatter) {
+			try {
+				const repoExist = await this.octokit.request('GET /repos/{owner}/{repo}', {
+					owner: repo.owner,
+					repo: repo.repo,
+				}).catch((e) => {
+					//check the error code
+					if (e.status === 404) {
+						new Notice(
+							(t("commands.checkValidity.inRepo.error404") as StringFunc)(`${repo.owner}/${repo.repo}`)
+						);
+					} else if (e.status === 403) {
+						new Notice(
+							(t("commands.checkValidity.inRepo.error403") as StringFunc)(`${repo.owner}/${repo.repo}`)
+						);
+					} else if (e.status === 301) {
+						new Notice(
+							(t("commands.checkValidity.inRepo.error301") as StringFunc)(`${repo.owner}/${repo.repo}`)
+						);
+					}
+				});
+				//@ts-ignore
+				if (repoExist.status === 200) {
+					noticeLog(`Repository ${repo.owner}/${repo.repo} exists ; Now testing the main branch`, this.settings);
+
+					const branchExist = await this.octokit.request('GET /repos/{owner}/{repo}/branches/{branch}', {
+						owner: repo.owner,
+						repo: repo.repo,
+						branch: repo.branch,
+					}).catch((e) => {
+						//check the error code
+						if (e.status === 404) {
+							new Notice(
+								(t("commands.checkValidity.inBranch.error404") as StringFunc)([`${repo.owner}/${repo.repo}`,repo.branch])
+							);
+						} else if (e.status === 403) {
+							new Notice(
+								(t("commands.checkValidity.inRepo.error403") as StringFunc)([`${repo.owner}/${repo.repo}`,repo.branch])
+							);
+						}
+					});
+					//@ts-ignore
+					if (branchExist.status === 200) {
+						new Notice(
+							(t("commands.checkValidity.success") as StringFunc)(`${repo.owner}/${repo.repo}/${repo.branch}`)
+						)
+					}
+				}
+			} catch (e) {
+				break;
+			}
 		}
 	}
 }

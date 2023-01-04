@@ -122,3 +122,12 @@ button.obs-git-publisher-censor-flags:hover {
 .setting-item.obs-git-publisher-title input[type="text"][placeholder="title"] {
   width: 100%;
 }
+
+button.obs-git-publisher-connect-button {
+  /* center */
+  margin: 0 50%;
+}
+
+.setting-item.obs-git-publisher-no-display > .setting-item-info {
+    display: none;
+}

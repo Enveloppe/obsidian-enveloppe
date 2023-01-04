@@ -11,6 +11,19 @@ export default {
 			"Publier toutes les notes éditées depuis le dernier envoie",
 		shareViewFiles: (viewFile: string): string =>
 			`Partager "${viewFile}" avec Github Publisher`,
+		checkValidity: {
+			name: "Vérifier la validité du dépôt",
+			inRepo: {
+				error301: (repoInfo: string): string => `Error 301 : ${repoInfo} a été déplacé de manière permanente.`,
+				error404: (repoInfo: string): string => `Error 404 : ${repoInfo}: est introuvable.`,
+				error403: (repoInfo: string): string => `Error 403 : Cette action est interdite pour ${repoInfo}.`,
+			},
+			inBranch: {
+				error404: (branchInfo: string[]): string => `Error 404 : La branche ${branchInfo[1]} est introuvable dans ${branchInfo[0]}.`,
+				error403: (branchInfo: string[]): string => `Error 301:  ${branchInfo[1]} a été déplacé de manière permanente (depuis ${branchInfo[0]}.`,
+			},
+			success: (repoInfo: string): string => `${repoInfo} semble valide !`,
+		},
 	},
 	deletion: {
 		errorDeleteDefaultFolder:
@@ -40,6 +53,7 @@ export default {
 			githubBranchDesc:
 				"Si vous utilisez une branche principale différente de main, vous pouvez la spécifier ici.",
 			automaticallyMergePR: "Fusionner automatiquement les pull requests",
+			testConnection: "Tester la connexion",
 		},
 		uploadConfig: {
 			uploadConfig: "Configuration d'upload", //désolée du franglais ici mais je trouve pas de traduction propre

@@ -21,6 +21,9 @@ import {
 	usefullLinks,
 } from "./settings/help";
 
+import {checkRepositoryValidity} from "./commands";
+import {GithubBranch} from "./publishing/branch";
+
 function openDetails(groupName: string, detailsState: boolean) {
 	for (let i = 0; i < document.getElementsByTagName("details").length; i++) {
 		const details = document.getElementsByTagName("details")[
@@ -35,10 +38,14 @@ function openDetails(groupName: string, detailsState: boolean) {
 export class GithubPublisherSettings extends PluginSettingTab {
 	plugin: GithubPublisherPlugin;
 	settingsPage: HTMLElement;
+	branchName: string;
+	PublisherManager: GithubBranch;
 
-	constructor(app: App, plugin: GithubPublisherPlugin) {
+	constructor(app: App, plugin: GithubPublisherPlugin, branchName: string, PublisherManager: GithubBranch) {
 		super(app, plugin);
 		this.plugin = plugin;
+		this.branchName = branchName
+		this.PublisherManager = PublisherManager
 	}
 
 	display(): void {
@@ -171,6 +178,17 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.automaticallyMergePR = value;
 						await this.plugin.saveSettings();
+					})
+			);
+
+		new Setting(this.settingsPage)
+			.setClass('obs-git-publisher-no-display')
+			.addButton((button) =>
+				button
+					.setButtonText(settings("github", "testConnection") as string)
+					.setClass("obs-git-publisher-connect-button")
+					.onClick(async () => {
+						await checkRepositoryValidity(this.branchName, this.PublisherManager, this.plugin.settings, null, this.app.metadataCache)
 					})
 			);
 	}

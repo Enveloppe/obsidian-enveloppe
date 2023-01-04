@@ -11,6 +11,19 @@ export default {
 			"Загрузить все отредактированные заметки с последней загрузки",
 		shareViewFiles: (viewFile: string): string =>
 			`Поделиться "${viewFile}" с Github Publisher`,
+		checkValidity: {
+			name: "Check validity of this repository",
+			inRepo: {
+				error301: (repoInfo: string): string => `Error 301: ${repoInfo}  was moved permanently.`,
+				error404: (repoInfo: string): string => `Error 404: ${repoInfo}: is not found.`,
+				error403: (repoInfo: string): string => `Error 403: this action is forbidden for ${repoInfo}.`,
+			},
+			inBranch: {
+				error404: (branchInfo: string[]): string => `Error 404: The branch ${branchInfo[1]} was not found in ${branchInfo[0]}.`,
+				error403: (branchInfo: string[]): string => `Error 301:  ${branchInfo[1]} was moved permanently (from ${branchInfo[0]}.`,
+			},
+			success: (repoInfo: string): string => `${repoInfo} seems to be valid!`,
+		},
 	},
 	deletion: {
 		errorDeleteDefaultFolder:
@@ -40,6 +53,8 @@ export default {
 			githubBranchDesc:
 				'If you use a different main branch than "main", you can specify it here.',
 			automaticallyMergePR: "Automatically merge PR",
+			testConnection: "Test connection",
+
 		},
 		uploadConfig: {
 			uploadConfig: "Настройки загрузки",

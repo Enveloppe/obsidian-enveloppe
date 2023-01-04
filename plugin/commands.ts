@@ -400,3 +400,19 @@ export async function shareOnlyEdited(
 		new Notice(informations("noNewNote") as string);
 	}
 }
+
+export async function checkRepositoryValidity(
+	branchName: string,
+	PublisherManager: GithubBranch,
+	settings: GitHubPublisherSettings,
+	file: TFile | null,
+	metadataCache: MetadataCache) {
+	try {
+		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : null;
+		const repoFrontmatter = getRepoFrontmatter(settings, frontmatter);
+		await PublisherManager.checkRepository(repoFrontmatter);
+	}
+	catch (e) {
+		noticeLog(e, settings);
+	}
+}

@@ -549,7 +549,16 @@ function parseMultipleRepo(
 			}
 		}
 	}
-	return multipleRepo;
+	//remove duplicates
+	return multipleRepo.filter(
+		(v, i, a) =>
+			a.findIndex(
+				(t) =>
+					t.repo === v.repo &&
+					t.owner === v.owner &&
+					t.branch === v.branch
+			) === i
+	);
 }
 
 /**

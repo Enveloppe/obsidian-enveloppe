@@ -78,3 +78,7 @@ export function informations(key: string): string | StringFunc{
 	return (locale && locale.informations[key]) || en.informations[key];
 }
 
+export function t(multipleKey:string): string | StringFunc {
+	// @ts-ignore
+	return (locale && nestedProp(locale, multipleKey))|| nestedProp(en, multipleKey);
+}

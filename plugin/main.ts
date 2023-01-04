@@ -19,8 +19,9 @@ import {
 	shareNewNote,
 	shareOneNote,
 	shareOnlyEdited,
+	checkRepositoryValidity
 } from "./commands";
-import { StringFunc, commands, translationLanguage } from "./i18n";
+import {StringFunc, commands, translationLanguage, t} from "./i18n";
 import {getTitleField, regexOnFileName} from "./contents_conversion/filePathConvertor";
 
 /**
@@ -44,7 +45,6 @@ export default class GithubPublisher extends Plugin {
 			`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`
 		);
 		await this.loadSettings();
-		this.addSettingTab(new GithubPublisherSettings(this.app, this));
 		const octokit = new Octokit({ auth: this.settings.GhToken });
 		const PublisherManager = new GithubBranch(
 			this.settings,
@@ -61,6 +61,7 @@ export default class GithubPublisher extends Plugin {
 			"-" +
 			new Date().toLocaleDateString("en-US").replace(/\//g, "-");
 		const repo = getRepoFrontmatter(this.settings) as RepoFrontmatter;
+		this.addSettingTab(new GithubPublisherSettings(this.app, this, branchName, PublisherManager));
 
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
@@ -255,6 +256,26 @@ export default class GithubPublisher extends Plugin {
 					this,
 					repo
 				);
+			},
+		});
+
+		this.addCommand({
+			id: "check-this-repo-validy",
+			name: t("commands.checkValidity.name") as string,
+			checkCallback: (checking) => {
+				if (this.app.workspace.getActiveFile())
+				{
+					if (!checking) {
+						checkRepositoryValidity(
+							branchName,
+							PublisherManager,
+							this.settings,
+							this.app.workspace.getActiveFile(),
+							this.app.metadataCache);
+					}
+					return true;
+				}
+				return false;
 			},
 		});
 	}
