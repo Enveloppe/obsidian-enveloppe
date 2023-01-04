@@ -290,6 +290,15 @@ export class GithubBranch extends FilesManagement {
 		}
 	}
 
+	/**
+	 * Use octokit to check if:
+	 * - the repo exists
+	 * - the main branch exists
+	 * Send a notice if the repo doesn't exist or if the main branch doesn't exist
+	 * Note: If one of the repo defined in the list doesn't exist, the rest of the list will not be checked because the octokit request throws an error
+	 * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter
+	 * @return {Promise<void>}
+	 */
 	async checkRepository(
 		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]): Promise<void>
 	{

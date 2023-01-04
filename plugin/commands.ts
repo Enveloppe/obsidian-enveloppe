@@ -401,12 +401,22 @@ export async function shareOnlyEdited(
 	}
 }
 
+/**
+ * Check the validity of the repository settings, from the frontmatter of the file or from the settings of the plugin
+ * It doesn't check if the repository allow to creating and merging branch, only if the repository and the main branch exists
+ * @param {string} branchName The branch name created by the plugin
+ * @param {GithubBranch} PublisherManager The class that manage the branch
+ * @param {GitHubPublisherSettings} settings The settings of the plugin
+ * @param { TFile | null} file The file to check if any
+ * @param {MetadataCache} metadataCache The metadata cache of Obsidian
+ * @return {Promise<void>}
+ */
 export async function checkRepositoryValidity(
 	branchName: string,
 	PublisherManager: GithubBranch,
 	settings: GitHubPublisherSettings,
 	file: TFile | null,
-	metadataCache: MetadataCache) {
+	metadataCache: MetadataCache): Promise<void> {
 	try {
 		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : null;
 		const repoFrontmatter = getRepoFrontmatter(settings, frontmatter);
