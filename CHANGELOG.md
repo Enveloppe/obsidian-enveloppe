@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.11.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.0...4.11.1) (2023-01-04)
+
+
+### Bug Fixes
+
+* adding checking repository in all commands to check the validity & perform the programm ([b94af7d](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b94af7df9a468ec38c057080560e5f15bf8af178))
+
 ## [4.11.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.10.1...4.11.0) (2023-01-04)
 
 
