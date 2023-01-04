@@ -11,7 +11,7 @@
 		"lint:fix": "eslint --fix --ext .ts  plugin/",
 		"version": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json",
 		"bump": "node version-bump.mjs",
-		"bump:beta": "node version-beta.mjs && git commit --amend --no-edit",
+		"bump:beta": "node version-beta.mjs && git commit -am \"chore: Bump beta version\" && git push",
 		"beta": "commit-and-tag-version  --prerelease --tag-build beta --infile CHANGELOG-beta.md",
 		"publish": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json package-lock.json",
 		"test": "jest"
