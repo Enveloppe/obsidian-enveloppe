@@ -42,9 +42,9 @@ export class ShareStatusBar {
 	 */
 
 	increment() {
-		let msg = `⌛Sharing files`;
+		let msg = "⌛Sharing files";
 		if (this.attachment) {
-			msg = `⌛Sharing attachments`;
+			msg = "⌛Sharing attachments";
 		}
 		this.status.setText(
 			`${msg}: ${++this.counter}/${this.numberOfNotesToPublish}`
@@ -57,9 +57,9 @@ export class ShareStatusBar {
 	 */
 
 	finish(displayDurationMillisec: number) {
-		let msg = `✅ Published files`;
+		let msg = "✅ Published files";
 		if (this.attachment) {
-			msg = `✅ Shared attachments`;
+			msg = "✅ Shared attachments";
 		}
 		this.status.setText(
 			`${msg}: ${this.counter}/${this.numberOfNotesToPublish}`

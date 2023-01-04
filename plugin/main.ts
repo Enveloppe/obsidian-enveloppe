@@ -1,6 +1,6 @@
 import { Plugin, TFile, Menu, FrontMatterCache } from "obsidian";
 import { GithubPublisherSettings } from "./settings";
-import { GitHubPublisherSettings } from './settings/interface'
+import { GitHubPublisherSettings } from "./settings/interface";
 import {
 	DEFAULT_SETTINGS,
 	RepoFrontmatter,
@@ -69,7 +69,7 @@ export default class GithubPublisher extends Plugin {
 					disablePublish(this.app, this.settings, file) &&
 					this.settings.fileMenu
 				) {
-					const fileName = this.getTitleFieldForCommand(file,this.app.metadataCache.getFileCache(file).frontmatter).replace('.md', '');
+					const fileName = this.getTitleFieldForCommand(file,this.app.metadataCache.getFileCache(file).frontmatter).replace(".md", "");
 					menu.addItem((item) => {
 						item.setSection("action");
 						item.setTitle(
@@ -100,7 +100,7 @@ export default class GithubPublisher extends Plugin {
 					disablePublish(this.app, this.settings, view.file) &&
 					this.settings.editorMenu
 				) {
-					const fileName = this.getTitleFieldForCommand(view.file,this.app.metadataCache.getFileCache(view.file).frontmatter).replace('.md', '');
+					const fileName = this.getTitleFieldForCommand(view.file,this.app.metadataCache.getFileCache(view.file).frontmatter).replace(".md", "");
 					menu.addSeparator();
 					menu.addItem((item) => {
 						item.setSection("mkdocs-publisher");

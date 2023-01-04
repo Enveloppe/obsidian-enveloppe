@@ -309,7 +309,7 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 		const replaceWith = settings.frontmatterTitleReplacement;
 		if (toReplace.match(/\/.+\//)) {
 			const flagsRegex = toReplace.match(/\/([gimy]+)$/);
-			const flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join('') : "";
+			const flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join("") : "";
 			const regex = new RegExp(toReplace.replace(/\/(.+)\/.*/, "$1"), flags);
 			return fileName.replace(
 				regex,

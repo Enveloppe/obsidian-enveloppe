@@ -51,7 +51,7 @@ export default {
 			githubToken: "Github Token",
 			githubBranchHeading: "Main branch",
 			githubBranchDesc:
-				'If you use a different main branch than "main", you can specify it here.',
+				"If you use a different main branch than \"main\", you can specify it here.",
 			automaticallyMergePR: "Automatically merge PR",
 			testConnection: "Test connection",
 
@@ -81,12 +81,12 @@ export default {
 				"Добавлять этут папку к путям заданным через свойство frontmatter.",
 			useFrontmatterTitle: {
 				title: "Set the key where to get the value of the filename",
-				desc: 'Use a frontmatter value to generate the filename. By default, "title" is used. ',
+				desc: "Use a frontmatter value to generate the filename. By default, \"title\" is used. ",
 			},
 			frontmatterRegex: {
 				placeholder: "Apply a replacement to the filename",
 				desc:
-					'If the text is between "//", it will be used as a regex. Otherwise, it will be used as a string.',
+					"If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string.",
 			},
 		},
 		textConversion: {
@@ -99,10 +99,10 @@ export default {
 				"Использовать видимый перенос строки (двойной перенос) в markdown после каждой строки.",
 			links: {
 				header: "Ссылки",
-				desc: 'You can prevent links to be converted and keep the alt text (or filename) by using the frontmatter key "links" with the value "false".',
+				desc: "You can prevent links to be converted and keep the alt text (or filename) by using the frontmatter key \"links\" with the value \"false\".",
 				folderNote: "Индексный файл в папке",
 				folderNoteDesc:
-					'Переименовывать файл в "index.md" (default) в случае если он называется также как родительская папка (работает и в том случае если файл вне папки).',
+					"Переименовывать файл в \"index.md\" (default) в случае если он называется также как родительская папка (работает и в том случае если файл вне папки).",
 				internals: "Внутренние ссылки",
 				internalsDesc:
 					"Преобразовывать внутренние ссылки в общих файла в соответствие с настройками папки",
@@ -144,7 +144,7 @@ export default {
 			tags: {
 				inlineTagsHeader: "Inline tags",
 				inlineTagsDesc:
-					'Add your inline tags in your frontmatter tags field and converting nested tags with replacing "/" with "_"',
+					"Add your inline tags in your frontmatter tags field and converting nested tags with replacing \"/\" with \"_\"",
 				header: "Convert frontmatter/dataview field to tags",
 				desc: "This will convert any frontmatter or dataview inline field into frontmatter tags. Separate fields with a comma.",
 				ExcludeHeader: "Exclude value from conversion",
@@ -286,7 +286,7 @@ export default {
 			`Ошибка публикации в ${repoInfo}.`,
 		unablePublishMultiNotes:
 			"Не получилось опубликовать несколько заметок, что-то пошло не так.",
-		mergeconflic: `Pull-request is not mergeable, you need to do it manually.`,
+		mergeconflic: "Pull-request is not mergeable, you need to do it manually.",
 		errorConfig: (repoInfo: string): string =>
 			`Error configuring ${repoInfo}. Please check your settings.`,
 	},

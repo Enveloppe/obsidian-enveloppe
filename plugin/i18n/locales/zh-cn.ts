@@ -45,7 +45,7 @@ export default {
 			githubToken: "Github Token",
 			githubBranchHeading: "Main branch",
 			githubBranchDesc:
-				'If you use a different main branch than "main", you can specify it here.',
+				"If you use a different main branch than \"main\", you can specify it here.",
 			automaticallyMergePR: "Automatically merge PR",
 			testConnection: "Test connection",
 
@@ -72,12 +72,12 @@ export default {
 			rootFolderDesc: "将此路径追加到文件夹前",
 			useFrontmatterTitle: {
 				title: "Set the key where to get the value of the filename",
-				desc: 'Use a frontmatter value to generate the filename. By default, "title" is used. ',
+				desc: "Use a frontmatter value to generate the filename. By default, \"title\" is used. ",
 			},
 			frontmatterRegex: {
 				placeholder: "Apply a replacement to the filename",
 				desc:
-					'If the text is between "//", it will be used as a regex. Otherwise, it will be used as a string.',
+					"If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string.",
 			},
 		},
 		textConversion: {
@@ -91,12 +91,12 @@ export default {
 				header: "链接",
 				internals: "内部链接",
 				internalsDesc: "转换发布文件中的内部链接",
-				desc: 'You can prevent links to be converted and keep the alt text (or filename) by using the frontmatter key "links" with the value "false".',
+				desc: "You can prevent links to be converted and keep the alt text (or filename) by using the frontmatter key \"links\" with the value \"false\".",
 				wikilinks: "[[Wikilinks]]",
 				wikilinksDesc: "转换wiki link为md link，不改变文件内容",
 				folderNote: "Folder note",
 				folderNoteDesc:
-					'重命名文件为其父文件夹名(或category名) "index.md" (by default, can be edited)',
+					"重命名文件为其父文件夹名(或category名) \"index.md\" (by default, can be edited)",
 				nonShared: "Convert internal links pointing to unshared files",
 				nonSharedDesc:
 					"Convert internal links pointing to a non shared file to their counterpart in the website, with relative path. Disabled, the plugin will keep the filename.",
@@ -132,7 +132,7 @@ export default {
 			tags: {
 				inlineTagsHeader: "Inline tags",
 				inlineTagsDesc:
-					'Add your inline tags in your frontmatter tags field and converting nested tags with replacing "/" with "_"',
+					"Add your inline tags in your frontmatter tags field and converting nested tags with replacing \"/\" with \"_\"",
 				header: "Convert frontmatter/dataview field to tags",
 				desc: "This will convert any frontmatter or dataview inline field into frontmatter tags. Separate fields with a comma.",
 				ExcludeHeader: "Exclude value from conversion",
@@ -267,7 +267,7 @@ export default {
 		},
 		errorPublish: (repoInfo: string): string => `上传至${repoInfo}错误！`,
 		unablePublishMultiNotes: "不能上传多个文件，出了点问题",
-		mergeconflic: `Pull-request is not mergeable, you need to do it manually.`,
+		mergeconflic: "Pull-request is not mergeable, you need to do it manually.",
 		errorConfig: (repoInfo: string): string =>
 			`Error configuring ${repoInfo}. Please check your settings.`,
 	},

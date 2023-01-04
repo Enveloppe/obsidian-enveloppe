@@ -44,8 +44,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	constructor(app: App, plugin: GithubPublisherPlugin, branchName: string, PublisherManager: GithubBranch) {
 		super(app, plugin);
 		this.plugin = plugin;
-		this.branchName = branchName
-		this.PublisherManager = PublisherManager
+		this.branchName = branchName;
+		this.PublisherManager = PublisherManager;
 	}
 
 	display(): void {
@@ -182,13 +182,13 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			);
 
 		new Setting(this.settingsPage)
-			.setClass('obs-git-publisher-no-display')
+			.setClass("obs-git-publisher-no-display")
 			.addButton((button) =>
 				button
 					.setButtonText(settings("github", "testConnection") as string)
 					.setClass("obs-git-publisher-connect-button")
 					.onClick(async () => {
-						await checkRepositoryValidity(this.branchName, this.PublisherManager, this.plugin.settings, null, this.app.metadataCache)
+						await checkRepositoryValidity(this.branchName, this.PublisherManager, this.plugin.settings, null, this.app.metadataCache);
 					})
 			);
 	}
@@ -990,20 +990,20 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		});
 		const yamlKeysUsefullBasedOnYourSettings =
 			`${this.plugin.settings.shareKey}: true\n` +
-			`links:\n` +
+			"links:\n" +
 			`  mdlinks: ${this.plugin.settings.convertWikiLinks}\n` +
-			`  convert: true\n` +
+			"  convert: true\n" +
 			`  internals: ${this.plugin.settings.convertForGithub}\n` +
 			`  nonShared: ${this.plugin.settings.convertInternalNonShared}\n` +
-			`embed:\n` +
+			"embed:\n" +
 			`  send: ${this.plugin.settings.embedNotes}\n` +
-			`  remove: false\n` +
-			`attachment:\n` +
+			"  remove: false\n" +
+			"attachment:\n" +
 			`  send: ${this.plugin.settings.embedImage}\n` +
 			`  folder: ${this.plugin.settings.defaultImageFolder}\n` +
 			`dataview: ${this.plugin.settings.convertDataview}\n` +
 			`hardBreak: ${this.plugin.settings.hardBreak}\n` +
-			`repo:\n` +
+			"repo:\n" +
 			`  owner: ${this.plugin.settings.githubName}\n` +
 			`  repo: ${this.plugin.settings.githubRepo}\n` +
 			`  branch: ${this.plugin.settings.githubBranch}\n` +

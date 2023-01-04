@@ -23,21 +23,21 @@
 * SOFTWARE.
 */
 
-import { moment } from 'obsidian';
-import en from './locales/en';
-import fr from './locales/fr';
-import ru from './locales/ru';
-import cn from './locales/zh-cn';
+import { moment } from "obsidian";
+import en from "./locales/en";
+import fr from "./locales/fr";
+import ru from "./locales/ru";
+import cn from "./locales/zh-cn";
 
 const localeMap: { [k: string]: Partial<typeof en> } = {
 	en: en,
 	fr: fr,
 	ru: ru,
-	'zh-cn': cn,
+	"zh-cn": cn,
 };
 
 const locale = localeMap[moment.locale()];
-export const translationLanguage = locale ? moment.locale() : 'en';
+export const translationLanguage = locale ? moment.locale() : "en";
 
 export interface StringFunc {
   (params: string|string[]): string;

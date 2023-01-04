@@ -259,7 +259,7 @@ async function noticeMessageOneRepo(
 	repo: RepoFrontmatter
 ): Promise<void> {
 	const noticeValue =
-		file instanceof TFile ? '"' + file.basename + '"' : file;
+		file instanceof TFile ? "\"" + file.basename + "\"" : file;
 	if (settings.workflowName.length > 0) {
 		new Notice(
 			(informations("sendMessage") as StringFunc)([

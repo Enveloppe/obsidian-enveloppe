@@ -144,7 +144,7 @@ export class FilesManagement extends Publisher {
 						file.path
 					);
 					if (imageLink !== null) {
-						let altText = image.displayText !== imageLink.path.replace('.md', '') ? image.displayText : imageLink.basename;
+						let altText = image.displayText !== imageLink.path.replace(".md", "") ? image.displayText : imageLink.basename;
 						let frontmatterDestinationFilePath;
 
 						if (this.settings.useFrontmatterTitle) {
@@ -195,7 +195,7 @@ export class FilesManagement extends Publisher {
 						file.path
 					);
 					if (linkedFile) {
-						let altText = embedCache.displayText !== linkedFile.path.replace('.md', '') ? embedCache.displayText : linkedFile.basename;
+						let altText = embedCache.displayText !== linkedFile.path.replace(".md", "") ? embedCache.displayText : linkedFile.basename;
 						let frontmatterDestinationFilePath;
 
 						if (this.settings.useFrontmatterTitle) {

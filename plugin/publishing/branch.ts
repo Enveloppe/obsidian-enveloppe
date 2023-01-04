@@ -202,14 +202,12 @@ export class GithubBranch extends FilesManagement {
 	 * Automatically merge pull request from the plugin (only if the settings allow it)
 	 * Run in a loop in the updateRepository function if RepoFrontmatter[] is passed
 	 * @param {string} branchName The name of the branch to create
-	 * @param {boolean} silent No logging message
 	 * @param {number} pullRequestNumber  number of the new pullrequest
 	 * @param {RepoFrontmatter} repoFrontmatter The repo to use
 	 */
 
 	async mergePullRequestOnRepo(
 		branchName: string,
-		silent = false,
 		pullRequestNumber: number,
 		repoFrontmatter: RepoFrontmatter
 	) {
@@ -271,7 +269,6 @@ export class GithubBranch extends FilesManagement {
 			if (this.settings.automaticallyMergePR && pullRequest !== 0) {
 				const PRSuccess = await this.mergePullRequestOnRepo(
 					branchName,
-					true,
 					pullRequest,
 					repoFrontmatter
 				);
@@ -301,7 +298,7 @@ export class GithubBranch extends FilesManagement {
 			: [repoFrontmatter];
 		for (const repo of repoFrontmatter) {
 			try {
-				const repoExist = await this.octokit.request('GET /repos/{owner}/{repo}', {
+				const repoExist = await this.octokit.request("GET /repos/{owner}/{repo}", {
 					owner: repo.owner,
 					repo: repo.repo,
 				}).catch((e) => {
@@ -324,7 +321,7 @@ export class GithubBranch extends FilesManagement {
 				if (repoExist.status === 200) {
 					noticeLog(`Repository ${repo.owner}/${repo.repo} exists ; Now testing the main branch`, this.settings);
 
-					const branchExist = await this.octokit.request('GET /repos/{owner}/{repo}/branches/{branch}', {
+					const branchExist = await this.octokit.request("GET /repos/{owner}/{repo}/branches/{branch}", {
 						owner: repo.owner,
 						repo: repo.repo,
 						branch: repo.branch,
@@ -344,7 +341,7 @@ export class GithubBranch extends FilesManagement {
 					if (branchExist.status === 200) {
 						new Notice(
 							(t("commands.checkValidity.success") as StringFunc)(`${repo.owner}/${repo.repo}/${repo.branch}`)
-						)
+						);
 					}
 				}
 			} catch (e) {

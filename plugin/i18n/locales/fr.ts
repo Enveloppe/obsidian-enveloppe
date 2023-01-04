@@ -81,12 +81,12 @@ export default {
 
 			useFrontmatterTitle: {
 				title: "Utiliser une clé de métadonnées pour le titre",
-				desc: 'Utilisez un champ du frontmatter pour générer le nom du fichier. Par défaut, "title" est utilisé.',
+				desc: "Utilisez un champ du frontmatter pour générer le nom du fichier. Par défaut, \"title\" est utilisé.",
 			},
 			frontmatterRegex: {
 				placeholder: "Appliquer un remplacement au titre",
 				desc:
-					'Si le texte est entre "//", il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut.',
+					"Si le texte est entre \"//\", il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut.",
 			},
 		},
 		textConversion: {
@@ -96,17 +96,17 @@ export default {
 			textHeader: "Texte",
 			hardBreakTitle: "Saut de ligne strict",
 			hardBreakDesc:
-				'Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne. Ce paramètre peut être outrepassé par la clé de métadonnées "hardbreak".',
+				"Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne. Ce paramètre peut être outrepassé par la clé de métadonnées \"hardbreak\".",
 
 			links: {
 				header: "Liens",
-				desc: 'Vous pouvez empêcher la conversion des liens et conserver le texte alt (ou le nom du fichier) en utilisant la clé frontmatter "links" avec la valeur "false".',
+				desc: "Vous pouvez empêcher la conversion des liens et conserver le texte alt (ou le nom du fichier) en utilisant la clé frontmatter \"links\" avec la valeur \"false\".",
 				internals: "Liens internes",
 				internalsDesc:
 					"Convertir le lien interne dans le fichier partagé pour qu'il corresponde aux paramètres du dossier.",
 				wikilinks: "Wikilinks",
 				wikilinksDesc:
-					'Convertir les liens Wikilinks en liens markdown, sans en modifier le contenu. Ce paramètre peut être outrepassé par la clé de métadonnées "mdlinks".',
+					"Convertir les liens Wikilinks en liens markdown, sans en modifier le contenu. Ce paramètre peut être outrepassé par la clé de métadonnées \"mdlinks\".",
 				folderNote: "Folder Note",
 				folderNoteDesc:
 					"Renommer les fichiers en un nom spécifique (défaut : \"index.md\") s'il porte le même nom que leur dossier/catégorie parent (fonctionne aussi si la note est à l'extérieur du dossier).",
@@ -141,12 +141,12 @@ export default {
 			},
 			dataview: {
 				header: "Dataview",
-				desc: 'Convertir dataview en markdown. Ce paramètre peut être outrepassé par la clé de métadonnées "dataview".',
+				desc: "Convertir dataview en markdown. Ce paramètre peut être outrepassé par la clé de métadonnées \"dataview\".",
 			},
 			tags: {
 				inlineTagsHeader: "Inlines tags",
 				inlineTagsDesc:
-					'Ajoute vos tags inline dans votre bloc de métadonnée et convertit les tags imbriqués en remplaçant "/" par "_".',
+					"Ajoute vos tags inline dans votre bloc de métadonnée et convertit les tags imbriqués en remplaçant \"/\" par \"_\".",
 				header: "Conversion des champs du frontmatter/dataview en tags",
 				desc: "Ceci convertira tous les champs du frontmatter/dataview en tags. Séparez les champs par une virgule.",
 				ExcludeHeader: "Exclure des valeurs de la conversion",
@@ -158,10 +158,10 @@ export default {
 			embed: "Transclusion",
 			transferImage: "Transférer les pièces jointes",
 			transferImageDesc:
-				'Envoyer les pièces-jointes intégrées dans un fichier dans le dépôt. Ce paramètre peut être outrepassé par la clé de métadonnées "attachment".',
+				"Envoyer les pièces-jointes intégrées dans un fichier dans le dépôt. Ce paramètre peut être outrepassé par la clé de métadonnées \"attachment\".",
 			transferEmbeddedNotes: "Transférer les notes transclues",
 			transferEmbeddedNotesDesc:
-				'Envoyez des notes transcluent dans un fichier partagé dans le dépôt. Seuls les fichiers partagés seront envoyés ! Ce paramètre peut être outrepassé par la clé de métadonnées "embed".',
+				"Envoyez des notes transcluent dans un fichier partagé dans le dépôt. Seuls les fichiers partagés seront envoyés ! Ce paramètre peut être outrepassé par la clé de métadonnées \"embed\".",
 			defaultImageFolder: "Dossier de pièces-jointes par défaut",
 			defaultImageFolderDesc:
 				"Pour utiliser un dossier différent de celui par défaut pour les pièces-jointes.",
@@ -173,7 +173,7 @@ export default {
 		githubWorkflow: {
 			githubActionName: "Nom de l'action GitHub",
 			githubActionNameDesc:
-				'Si vous souhaitez activer une action github lorsque le plugin push le fichier, indiquez le nom du fichier (dans votre dossier ".github/worfklows").',
+				"Si vous souhaitez activer une action github lorsque le plugin push le fichier, indiquez le nom du fichier (dans votre dossier \".github/worfklows\").",
 			autoCleanUp: "Auto-nettoyage",
 			autoCleanUpDesc:
 				"Si le plugin doit retirer de votre dépôt les fichiers supprimés (arrêt de partage ou supprimé).",
@@ -192,10 +192,10 @@ export default {
 			excludedFolder: "Dossier exclus",
 			excludedFolderDesc:
 				"Les fichiers dans ses dossiers ne seront jamais publiés, quelle que soit l'état de la clé de partage. Séparez les noms de dossier par une virgule.",
-			fileMenu: 'Menu "Fichier"',
+			fileMenu: "Menu \"Fichier\"",
 			fileMenuDesc:
-				'Ajouter une commande de partage dans le menu "Fichier"',
-			editorMenu: 'Menu "Edition"',
+				"Ajouter une commande de partage dans le menu \"Fichier\"",
+			editorMenu: "Menu \"Edition\"",
 			editorMenuDesc:
 				"Ajouter une commande de partage dans le menu du clic droit.",
 			copyLink: {
@@ -293,7 +293,7 @@ export default {
 			`Erreur lors de la publication sur ${repoInfo}.`,
 		unablePublishMultiNotes:
 			"Impossible de publier plusieurs notes, quelque chose s'est mal passé.",
-		mergeconflic: `La pull-request n'est pas fusionnable, vous avez besoin de le faire manuellement.`,
+		mergeconflic: "La pull-request n'est pas fusionnable, vous avez besoin de le faire manuellement.",
 		errorConfig: (repoInfo: string): string =>
 			`Erreur de configuration pour ${repoInfo}. Merci de vérifier vos paramètres.`,
 	},

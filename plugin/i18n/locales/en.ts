@@ -48,7 +48,7 @@ export default {
 			githubToken: "Github Token",
 			githubBranchHeading: "Main branch",
 			githubBranchDesc:
-				'If you use a different main branch than "main", you can specify it here.',
+				"If you use a different main branch than \"main\", you can specify it here.",
 			automaticallyMergePR: "Automatically merge pull requests",
 			testConnection: "Test connection",
 		},
@@ -77,12 +77,12 @@ export default {
 				"Append this path to the folder set by the frontmatter key.",
 			useFrontmatterTitle: {
 				title: "Set the key where to get the value of the filename",
-				desc: 'Use a frontmatter value to generate the filename. By default, "title" is used. ',
+				desc: "Use a frontmatter value to generate the filename. By default, \"title\" is used. ",
 			},
 			frontmatterRegex: {
 				placeholder: "Apply a replacement to the filename",
 				desc:
-					'If the text is between "//", it will be used as a regex. Otherwise, it will be used as a string.',
+					"If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string.",
 			},
 		},
 		textConversion: {
@@ -92,19 +92,19 @@ export default {
 			textHeader: "Text",
 			hardBreakTitle: "Markdown hard line break",
 			hardBreakDesc:
-				'Add a markdown hard line break (double whitespace) after each line. This settings can be overridden by the frontmatter key "hardbreak".',
+				"Add a markdown hard line break (double whitespace) after each line. This settings can be overridden by the frontmatter key \"hardbreak\".",
 			links: {
 				header: "Links",
-				desc: 'You can prevent links to be converted and keep the alt text (or filename) by using the frontmatter key "links" with the value "false".',
+				desc: "You can prevent links to be converted and keep the alt text (or filename) by using the frontmatter key \"links\" with the value \"false\".",
 				internals: "Internals Links",
 				internalsDesc:
 					"Convert the internal link in shared file to match the folder settings",
 				wikilinks: "[[Wikilinks]]",
 				wikilinksDesc:
-					'Convert Wikilinks to MDlinks, without changing the contents. This option can be overridden by the frontmatter key "mdlinks".',
+					"Convert Wikilinks to MDlinks, without changing the contents. This option can be overridden by the frontmatter key \"mdlinks\".",
 				folderNote: "Folder note",
 				folderNoteDesc:
-					'Rename files to a specified name (default: index.md) if it has the same name as their parent folder/category (also works if the note is outside of the folder).',
+					"Rename files to a specified name (default: index.md) if it has the same name as their parent folder/category (also works if the note is outside of the folder).",
 				nonShared: "Convert internal links pointing to unshared files",
 				nonSharedDesc:
 					"Convert internal links pointing to a non shared file to their counterpart in the website, with relative path. Disabled, the plugin will keep the filename.",
@@ -135,7 +135,7 @@ export default {
 			},
 			dataview: {
 				header: "Dataview",
-				desc: 'Convert dataview to markdown. This settings can be overridden by the frontmatter key "dataview".',
+				desc: "Convert dataview to markdown. This settings can be overridden by the frontmatter key \"dataview\".",
 			},
 			tags: {
 				header: "Convert frontmatter/dataview field into tags",
@@ -145,17 +145,17 @@ export default {
 					"This will exclude value from being converted. Separate fields with a comma.",
 				inlineTagsHeader: "Inline tags",
 				inlineTagsDesc:
-					'Add your inline tags in your frontmatter tags field and converting nested tags with replacing "/" with "_"',
+					"Add your inline tags in your frontmatter tags field and converting nested tags with replacing \"/\" with \"_\"",
 			},
 		},
 		embed: {
 			embed: "Embed",
 			transferImage: "Transfer attachments",
 			transferImageDesc:
-				'Send attachments embedded in a file to github. This option can be overridden by the frontmatter key "attachment".',
+				"Send attachments embedded in a file to github. This option can be overridden by the frontmatter key \"attachment\".",
 			transferEmbeddedNotes: "Transfer embedded notes",
 			transferEmbeddedNotesDesc:
-				'Send embedded notes in a shared file to github. Only shared files will be send! This option can be overridden by the frontmatter key "embed".',
+				"Send embedded notes in a shared file to github. Only shared files will be send! This option can be overridden by the frontmatter key \"embed\".",
 			defaultImageFolder: "Default attachment folder",
 			defaultImageFolderDesc: "To use a folder different from default",
 			transferMetaFile: "Send files using a metadata field",
@@ -279,7 +279,7 @@ export default {
 			`Error publishing to ${repoInfo}.`,
 		unablePublishMultiNotes:
 			"Unable to publish multiple notes, something went wrong.",
-		mergeconflic: `Pull-request is not mergeable, you need to do it manually.`,
+		mergeconflic: "Pull-request is not mergeable, you need to do it manually.",
 		errorConfig: (repoInfo: string): string =>
 			`Error configuring ${repoInfo}. Please check your settings.`,
 	},
