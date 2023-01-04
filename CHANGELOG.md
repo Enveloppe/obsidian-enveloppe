@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.11.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.10.1...4.11.0) (2023-01-04)
+
+
+### Features
+
+* add a button to test the repository validity ([bfcf32e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/bfcf32e8828af9157cd7342f28b6d2b595597df7))
+
+
+### Bug Fixes
+
+* **ambulance:** urgent fix because forgot to add .md for filename. ([063f508](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/063f508349d857999aff95faffc6ab413da23f6a))
+
 ### [4.10.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.10.1...4.10.2) (2023-01-02)
 
 
