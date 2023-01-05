@@ -108,18 +108,24 @@ export class GithubBranch extends FilesManagement {
 			return branch.status === 201;
 		} catch (e) {
 			// catch the old branch
-			noticeLog(e, this.settings);
-			const allBranch = await this.octokit.request(
-				"GET" + " /repos/{owner}/{repo}/branches",
-				{
-					owner: repoFrontmatter.owner,
-					repo: repoFrontmatter.repo,
-				}
-			);
-			const mainBranch = allBranch.data.find(
-				(branch: { name: string }) => branch.name === branchName
-			);
-			return !!mainBranch;
+			try {
+				noticeLog(e, this.settings);
+				const allBranch = await this.octokit.request(
+					"GET" + " /repos/{owner}/{repo}/branches",
+					{
+						owner: repoFrontmatter.owner,
+						repo: repoFrontmatter.repo,
+					}
+				);
+				const mainBranch = allBranch.data.find(
+					(branch: { name: string }) => branch.name === branchName
+				);
+				noticeLog(`branch already exists : ${mainBranch.name} — using it`, this.settings);
+				return !!mainBranch;
+			} catch (e) {
+				noticeLog(e, this.settings);
+				return false;
+			}
 		}
 	}
 
