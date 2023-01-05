@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.11.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.1...4.11.2) (2023-01-05)
+
+
+### Bug Fixes
+
+* the plugin try to continue same if no branch are found /created ([b418984](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b4189847c88b161669697fabc7dfdb8723f26961))
+
 ### [4.11.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.0...4.11.1) (2023-01-04)
 
 
