@@ -222,14 +222,15 @@ export async function convertLinkCitation(
 			frontmatterSettings
 		);
 		pathInGithub = pathInGithub.replace(".md", "");
+
 		const regexToReplace = new RegExp(
-			`(\\[{2}${linkedFile.linkFrom}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\(${linkedFile.linkFrom}\\))`,
+			`(\\[{2}${linkedFile.linkFrom}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\((${linkedFile.linkFrom}|${encodeURI(linkedFile.linkFrom)})\\))`,
 			"g"
 		);
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {
 			for (const link of matchedLink) {
-				const regToReplace = new RegExp(`${linkedFile.linkFrom}`);
+				const regToReplace = new RegExp(`(${linkedFile.linkFrom}|${encodeURI(linkedFile.linkFrom.replace(".md", ""))})`);
 				const block_link = linkedFile.linkFrom.match(/#.*/);
 				if (block_link) {
 					pathInGithub += block_link[0];
