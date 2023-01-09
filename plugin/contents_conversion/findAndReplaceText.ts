@@ -25,7 +25,6 @@ export default function findAndReplaceText(
 			censor.flags = "gi";
 		}
 		const regex = new RegExp(censor.entry, censor.flags);
-		// @ts-ignore
 		text = text.replaceAll(regex, censor.replace);
 	}
 	return text;

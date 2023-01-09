@@ -186,12 +186,13 @@ export class FilesManagement extends Publisher {
 	 */
 	getLinkedFiles(file: TFile): LinkedNotes[] {
 		const embedCaches = this.metadataCache.getCache(file.path).links;
+		console.log(embedCaches);
 		const embedList: LinkedNotes[] = [];
 		if (embedCaches != undefined) {
 			for (const embedCache of embedCaches) {
 				try {
 					const linkedFile = this.metadataCache.getFirstLinkpathDest(
-						embedCache.link,
+						embedCache.link.replace(/#.*/, ""),
 						file.path
 					);
 					if (linkedFile) {

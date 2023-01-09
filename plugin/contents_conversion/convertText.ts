@@ -351,5 +351,6 @@ export async function mainConverting(
 	);
 	text = convertWikilinks(text, frontmatterSettings, settings, linkedFiles);
 	text = findAndReplaceText(text, settings, true);
+
 	return text;
 }

@@ -230,12 +230,21 @@ export async function convertLinkCitation(
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {
 			for (const link of matchedLink) {
-				const regToReplace = new RegExp(`(${linkedFile.linkFrom}|${encodeURI(linkedFile.linkFrom.replace(".md", ""))})`);
+				const regToReplace = new RegExp(`((${linkedFile.linkFrom})|(${encodeURI(linkedFile.linkFrom.replace(".md", ""))}))`);
 				const block_link = linkedFile.linkFrom.match(/#.*/);
 				if (block_link) {
+					pathInGithub = pathInGithub.replace(/#.*/, "");
 					pathInGithub += block_link[0];
 				}
+
 				let newLink = link.replace(regToReplace, pathInGithub); //strict replacement of link
+				if (link.match(/\[.*\]\(.*\)/)) {
+					//only replace in ()
+					pathInGithub = linkedFile.linked.extension === "md" ?
+						pathInGithub.replace(/(\.md)?#(\w+)/, ".md#$2") 
+						: pathInGithub;
+					newLink = `[${linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.basename}](${encodeURI(pathInGithub)})`;
+				}
 				newLink = addAltText(newLink, linkedFile);
 				fileContent = fileContent.replace(link, newLink);
 			}
