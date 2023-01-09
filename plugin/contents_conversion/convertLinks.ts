@@ -241,7 +241,12 @@ export async function convertLinkCitation(
 				if (link.match(/\[.*\]\(.*\)/)) {
 					//only replace in ()
 					pathInGithub = linkedFile.linked.extension === "md" ?
-						pathInGithub.replace(/(\.md)?#(\w+)/, ".md#$2") 
+						pathInGithub.replace(/(\.md)?(#\w+)/, ".md$2")
+						: pathInGithub;
+					pathInGithub = linkedFile.linked.extension === "md"
+					&& !pathInGithub.match(/#\w+/)
+					&& !pathInGithub.endsWith(".md") ?
+						pathInGithub + ".md"
 						: pathInGithub;
 					newLink = `[${linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.basename}](${encodeURI(pathInGithub)})`;
 				}
