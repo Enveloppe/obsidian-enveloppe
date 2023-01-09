@@ -240,14 +240,12 @@ export async function convertLinkCitation(
 				let newLink = link.replace(regToReplace, pathInGithub); //strict replacement of link
 				if (link.match(/\[.*\]\(.*\)/)) {
 					//only replace in ()
-					pathInGithub = linkedFile.linked.extension === "md" ?
-						pathInGithub.replace(/(\.md)?(#\w+)/, ".md$2")
-						: pathInGithub;
-					pathInGithub = linkedFile.linked.extension === "md"
-					&& !pathInGithub.match(/#\w+/)
-					&& !pathInGithub.endsWith(".md") ?
-						pathInGithub + ".md"
-						: pathInGithub;
+					if (linkedFile.linked.extension === "md") {
+						pathInGithub = pathInGithub.replace(/(\.md)?(#\w+)/, ".md$2");
+						pathInGithub = !pathInGithub.match(/#\w+/) && !pathInGithub.endsWith(".md") ?
+							pathInGithub + ".md"
+							: pathInGithub;
+					}
 					newLink = `[${linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.basename}](${encodeURI(pathInGithub)})`;
 				}
 				newLink = addAltText(newLink, linkedFile);
