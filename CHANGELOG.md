@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.11.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.4...4.11.5) (2023-01-09)
+
+
+### Bug Fixes
+
+* .md not appended on file without heading ([545dc2e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/545dc2e6f8a71972c1cb0178f4b6d100bfaa05ee))
+
 ### [4.11.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.3...4.11.4) (2023-01-09)
 
 
