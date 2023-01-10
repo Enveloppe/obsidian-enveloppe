@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.11.9](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.8...4.11.9) (2023-01-10)
+
+
+### Bug Fixes
+
+* convert to wikilinks revert convert to github path ([6334dae](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6334dae735c8418f6f6ab2242a88ec36886366a5))
+
 ### [4.11.8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.7...4.11.8) (2023-01-10)
 
 
