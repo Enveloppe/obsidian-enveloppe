@@ -200,6 +200,9 @@ export class FilesManagement extends Publisher {
 					);
 					if (linkedFile) {
 						let altText = embedCache.displayText !== linkedFile.path.replace(".md", "") ? embedCache.displayText : linkedFile.basename;
+						if (embedCache.original.match(/\[.*\]\(.*\)/)) {
+							altText = embedCache.original.match(/\[(.*)\]/)[1];
+						}
 						let frontmatterDestinationFilePath;
 
 						if (this.settings.useFrontmatterTitle) {

@@ -249,7 +249,8 @@ export async function convertLinkCitation(
 							pathInGithub + ".md"
 							: pathInGithub;
 					}
-					newLink = `[${linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.basename}](${pathInGithub})`;
+					const altText = link.match(/\[(.*)\]/)[1];
+					newLink = `[${altText}](${pathInGithub})`;
 				}
 				newLink = addAltText(newLink, linkedFile);
 				fileContent = fileContent.replace(link, newLink);
