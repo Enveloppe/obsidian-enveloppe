@@ -340,10 +340,10 @@ export function getTitleField(
 	let fileName = file.name;
 	if (
 		frontmatter &&
+		settings.useFrontmatterTitle &&
 		frontmatter[settings.frontmatterTitleKey] &&
 		frontmatter[settings.frontmatterTitleKey] !== file.name
 	) {
-
 		fileName= frontmatter[settings.frontmatterTitleKey] + ".md";
 	}
 	return fileName;
