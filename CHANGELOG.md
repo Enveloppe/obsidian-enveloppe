@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.11.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.5...4.11.6) (2023-01-10)
+
+
+### Bug Fixes
+
+* anchor links bug ([efca311](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/efca311821a971e2fbc7c73425d296a29ff4cfcb))
+
 ### [4.11.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.4...4.11.5) (2023-01-09)
 
 
