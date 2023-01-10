@@ -244,8 +244,8 @@ export async function convertLinkCitation(
 				if (link.match(/\[.*\]\(.*\)/)) {
 					if (linkedFile.linked.extension === "md") {
 						pathInGithub = pathInGithub.replaceAll(" ", "%20") + anchor;
-						pathInGithub = pathInGithub.replace(/(\.md)?(#\w+)/, ".md$2");
-						pathInGithub = !pathInGithub.match(/#\w+/) && !pathInGithub.endsWith(".md") ?
+						pathInGithub = pathInGithub.replace(/(\.md)?(#.*)/, ".md$2");
+						pathInGithub = !pathInGithub.match(/(#.*)/) && !pathInGithub.endsWith(".md") ?
 							pathInGithub + ".md"
 							: pathInGithub;
 					}
