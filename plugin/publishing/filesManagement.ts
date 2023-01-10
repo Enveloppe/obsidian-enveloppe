@@ -163,12 +163,16 @@ export class FilesManagement extends Publisher {
 								}
 							}
 						}
-						linkedFiles.push({
+						const thisLinkedFile: LinkedNotes = {
 							linked: imageLink, //TFile found
 							linkFrom: image.link, //path of the founded file
 							altText: altText, //alt text if exists, filename otherwise
 							destinationFilePath: frontmatterDestinationFilePath,
-						});
+						};
+						if (image.link.includes("#")) {
+							thisLinkedFile.anchor = "#" + image.link.split("#")[1];
+						}
+						linkedFiles.push(thisLinkedFile);
 					}
 				} catch (e) {
 					// ignore error
@@ -214,12 +218,16 @@ export class FilesManagement extends Publisher {
 								}
 							}
 						}
-						embedList.push({
+						const thisEmbed: LinkedNotes = {
 							linked: linkedFile,
 							linkFrom: embedCache.link,
 							altText: altText,
 							destinationFilePath: frontmatterDestinationFilePath,
-						});
+						};
+						if (embedCache.link.includes("#")) {
+							thisEmbed.anchor = "#" + embedCache.link.split("#")[1];
+						}
+						embedList.push(thisEmbed);
 					}
 				} catch (e) {
 					noticeLog(e, this.settings);

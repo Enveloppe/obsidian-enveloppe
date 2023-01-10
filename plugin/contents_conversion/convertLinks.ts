@@ -222,31 +222,34 @@ export async function convertLinkCitation(
 			frontmatterSettings
 		);
 		pathInGithub = pathInGithub.replace(".md", "");
+		const anchor = linkedFile.anchor ? linkedFile.anchor : "";
+		const linkInMarkdown = linkedFile.linkFrom.replace(linkedFile.anchor, "").replaceAll(" ", "%20") + anchor.replace("^", "\\^");
+
 
 		const regexToReplace = new RegExp(
-			`(\\[{2}${linkedFile.linkFrom}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\((${linkedFile.linkFrom}|${encodeURI(linkedFile.linkFrom)})\\))`,
+			`(\\[{2}${linkedFile.linkFrom.replace("^", "\\^")}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\((${linkedFile.linkFrom}|${linkInMarkdown})\\))`,
 			"g"
 		);
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {
 			for (const link of matchedLink) {
-				const regToReplace = new RegExp(`((${linkedFile.linkFrom})|(${encodeURI(linkedFile.linkFrom.replace(".md", ""))}))`);
-				const block_link = linkedFile.linkFrom.match(/#.*/);
-				if (block_link) {
+				const regToReplace = new RegExp(`((${linkedFile.linkFrom})|(${linkInMarkdown}))`);
+				let pathInGithubWithAnchor = pathInGithub;
+				if (linkedFile.anchor) {
 					pathInGithub = pathInGithub.replace(/#.*/, "");
-					pathInGithub += block_link[0];
+					pathInGithubWithAnchor += linkedFile.anchor;
 				}
 
-				let newLink = link.replace(regToReplace, pathInGithub); //strict replacement of link
+				let newLink = link.replace(regToReplace, pathInGithubWithAnchor); //strict replacement of link
 				if (link.match(/\[.*\]\(.*\)/)) {
-					//only replace in ()
 					if (linkedFile.linked.extension === "md") {
+						pathInGithub = pathInGithub.replaceAll(" ", "%20") + anchor;
 						pathInGithub = pathInGithub.replace(/(\.md)?(#\w+)/, ".md$2");
 						pathInGithub = !pathInGithub.match(/#\w+/) && !pathInGithub.endsWith(".md") ?
 							pathInGithub + ".md"
 							: pathInGithub;
 					}
-					newLink = `[${linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.basename}](${encodeURI(pathInGithub)})`;
+					newLink = `[${linkedFile.altText.length > 0 ? linkedFile.altText : linkedFile.linked.basename}](${pathInGithub})`;
 				}
 				newLink = addAltText(newLink, linkedFile);
 				fileContent = fileContent.replace(link, newLink);

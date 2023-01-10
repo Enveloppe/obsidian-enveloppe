@@ -161,6 +161,7 @@ export interface LinkedNotes {
 	linkFrom: string;
 	altText: string;
 	destinationFilePath?: string;
+	anchor?: string;
 }
 
 export interface ConvertedLink {
