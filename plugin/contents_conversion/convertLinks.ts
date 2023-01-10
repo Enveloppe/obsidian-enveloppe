@@ -68,10 +68,11 @@ export function convertWikilinks(
 					.replaceAll("]", "")
 					.replaceAll("\\", "")
 					.replaceAll("../", "")
-					.replaceAll("./", "");
+					.replaceAll("./", "")
+					.replace(/#.*/, "");
 				//get last from path
 				const linkedFile = linkedFiles.find(
-					(item) => item.linkFrom === StrictFileName
+					(item) => item.linkFrom.replace(/#.*/, "") === StrictFileName
 				);
 				if (linkedFile) {
 					let altText: string;
@@ -104,9 +105,17 @@ export function convertWikilinks(
 						if (linkedFile.destinationFilePath) {
 							linkDestination = linkedFile.destinationFilePath;
 						}
-						linkCreator = `${isEmbed}[${altText}](${encodeURI(
-							linkDestination
-						)})`;
+						const encodedURI = encodeURI(linkedFile.linkFrom.replace(/#.*/, ""));
+						const anchor = linkedFile.anchor ? linkedFile.anchor.replaceAll(" ", "%20") : "";
+						linkDestination = encodedURI + anchor;
+						linkDestination = linkDestination.replace(/(\.md)?(#.*)/, ".md$2");
+						linkDestination = !linkDestination.match(/(#.*)/) && !linkDestination.endsWith(".md") ?
+							linkDestination + ".md"
+							: linkDestination;
+
+						linkDestination =
+						linkCreator = `${isEmbed}[${altText}](${linkDestination})`;
+						console.log(`CONVERT WIKILINKS ${linkCreator}`);
 					}
 
 					if (
@@ -140,11 +149,11 @@ export function convertWikilinks(
 						isEmbedBool;
 					if (convertWikilink) {
 						const markdownName = !isAttachment(fileName.trim())
-							? fileName.trim() + ".md"
+							? fileName.replace(/#.*/, "").trim() + ".md"
 							: fileName.trim();
-						linkCreator = `${isEmbed}[${altLink}](${encodeURI(
-							markdownName
-						)})`;
+						const anchor = fileName.match(/(#.*)/) ? fileName.match(/(#.*)/)[0].replaceAll(" ", "%20") : "";
+						const encodedURI = encodeURI(markdownName);
+						linkCreator = `${isEmbed}[${altLink}](${encodedURI}${anchor})`;
 					}
 					if (
 						!isAttachment(fileName.trim()) &&
