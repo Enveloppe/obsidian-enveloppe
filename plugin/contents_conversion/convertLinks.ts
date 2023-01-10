@@ -92,30 +92,15 @@ export function convertWikilinks(
 						isEmbedBool &&
 						linkedFile.linked.extension === "md";
 					if (convertWikilink) {
-						let linkDestination = linkedFile.linkFrom;
-
-						/**
-						 * In case there's a frontmatter configuration, `filename`, its
-						 * value will set the destination path for the file. In the linked
-						 * file has that, it means we need to use that path for the links.
-						 *
-						 * This verification makes sure we're using it. If we don't have the
-						 * frontmatter set, then use the regular file path.
-						 */
-						if (linkedFile.destinationFilePath) {
-							linkDestination = linkedFile.destinationFilePath;
-						}
-						const encodedURI = encodeURI(linkedFile.linkFrom.replace(/#.*/, ""));
-						const anchor = linkedFile.anchor ? linkedFile.anchor.replaceAll(" ", "%20") : "";
-						linkDestination = encodedURI + anchor;
-						linkDestination = linkDestination.replace(/(\.md)?(#.*)/, ".md$2");
-						linkDestination = !linkDestination.match(/(#.*)/) && !linkDestination.endsWith(".md") ?
-							linkDestination + ".md"
-							: linkDestination;
-
-						linkDestination =
-						linkCreator = `${isEmbed}[${altText}](${linkDestination})`;
-						console.log(`CONVERT WIKILINKS ${linkCreator}`);
+						const altMatch = wikiMatch.match(/(\|).*(]])/);
+						const altCreator = fileName.split("/");
+						const altLink = creatorAltLink(
+							altMatch,
+							altCreator,
+							fileName.split(".").at(-1),
+							fileName
+						);
+						linkCreator = createWikiLinks(fileName, isEmbed, altLink);
 					}
 
 					if (
@@ -148,12 +133,7 @@ export function convertWikilinks(
 						conditionConvert.removeEmbed &&
 						isEmbedBool;
 					if (convertWikilink) {
-						const markdownName = !isAttachment(fileName.trim())
-							? fileName.replace(/#.*/, "").trim() + ".md"
-							: fileName.trim();
-						const anchor = fileName.match(/(#.*)/) ? fileName.match(/(#.*)/)[0].replaceAll(" ", "%20") : "";
-						const encodedURI = encodeURI(markdownName);
-						linkCreator = `${isEmbed}[${altLink}](${encodedURI}${anchor})`;
+						linkCreator = createWikiLinks(fileName, isEmbed, altLink);
 					}
 					if (
 						!isAttachment(fileName.trim()) &&
@@ -175,6 +155,16 @@ export function convertWikilinks(
 		}
 	}
 	return fileContent;
+}
+
+
+function createWikiLinks(fileName: string, isEmbed: string, altLink: string) {
+	const markdownName = !isAttachment(fileName.trim())
+		? fileName.replace(/#.*/, "").trim() + ".md"
+		: fileName.trim();
+	const anchor = fileName.match(/(#.*)/) ? fileName.match(/(#.*)/)[0].replaceAll(" ", "%20") : "";
+	const encodedURI = encodeURI(markdownName);
+	return `${isEmbed}[${altLink}](${encodedURI}${anchor})`;
 }
 
 /**
@@ -250,7 +240,9 @@ export async function convertLinkCitation(
 				}
 
 				let newLink = link.replace(regToReplace, pathInGithubWithAnchor); //strict replacement of link
+				console.log(`newLink: ${newLink}`);
 				if (link.match(/\[.*\]\(.*\)/)) {
+					console.log("link is in brackets");
 					if (linkedFile.linked.extension === "md") {
 						pathInGithub = pathInGithub.replaceAll(" ", "%20") + anchor;
 						pathInGithub = pathInGithub.replace(/(\.md)?(#.*)/, ".md$2");
@@ -261,7 +253,9 @@ export async function convertLinkCitation(
 					const altText = link.match(/\[(.*)\]/)[1];
 					newLink = `[${altText}](${pathInGithub})`;
 				}
+				console.log(`newLink: ${newLink}`);
 				newLink = addAltText(newLink, linkedFile);
+				console.log(`ALT: ${newLink}`);
 				fileContent = fileContent.replace(link, newLink);
 			}
 		}
