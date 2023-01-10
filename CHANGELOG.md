@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.11.8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.7...4.11.8) (2023-01-10)
+
+
+### Bug Fixes
+
+* Frontmatter title value is used for filename ([568a239](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/568a239158e6709e239991157bb74e8de7c01e9b)), closes [#69](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/69)
+
 ### [4.11.7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.6...4.11.7) (2023-01-10)
 
 
