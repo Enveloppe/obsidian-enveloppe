@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.11.7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.6...4.11.7) (2023-01-10)
+
+
+### Bug Fixes
+
+* alt-text in markdown-links not saved ([96830a4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/96830a428cdf0a2963ca898b1bdfd241b65261a1))
+* convert wikilinks broken when anchor ([6495379](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/64953797c611e7d8d00f900de0681a099fd4f626))
+* misplaced extension on markdown links with anchor to paragraph ([a209ca5](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a209ca52bb9db9bde4cb33baad5e5049c4383172))
+
 ### [4.11.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.5...4.11.6) (2023-01-10)
 
 
