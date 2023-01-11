@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.11.10](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.9...4.11.10) (2023-01-11)
+
+
+### Bug Fixes
+
+* internal links alias mis-replaced ([ba45f54](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ba45f54b3b7bc24b24a303eaac5a7bb06d166ffa)), closes [#72](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/72)
+
 ### [4.11.9](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.8...4.11.9) (2023-01-10)
 
 
