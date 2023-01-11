@@ -175,7 +175,7 @@ function createWikiLinks(fileName: string, isEmbed: string, altLink: string) {
  */
 
 function addAltText(link: string, linkedFile: LinkedNotes): string {
-	if (!link.match(/(\|).*(]])/)) {
+	if (link.match(/\[{2}.*\]{2}/) && !link.match(/(\|).*(]])/)) {
 		return link.replace("|", "").replace("]]", `|${linkedFile.altText}]]`);
 	}
 	return link;
@@ -238,11 +238,8 @@ export async function convertLinkCitation(
 					pathInGithub = pathInGithub.replace(/#.*/, "");
 					pathInGithubWithAnchor += linkedFile.anchor;
 				}
-
 				let newLink = link.replace(regToReplace, pathInGithubWithAnchor); //strict replacement of link
-				console.log(`newLink: ${newLink}`);
 				if (link.match(/\[.*\]\(.*\)/)) {
-					console.log("link is in brackets");
 					if (linkedFile.linked.extension === "md") {
 						pathInGithub = pathInGithub.replaceAll(" ", "%20") + anchor;
 						pathInGithub = pathInGithub.replace(/(\.md)?(#.*)/, ".md$2");
@@ -253,9 +250,7 @@ export async function convertLinkCitation(
 					const altText = link.match(/\[(.*)\]/)[1];
 					newLink = `[${altText}](${pathInGithub})`;
 				}
-				console.log(`newLink: ${newLink}`);
 				newLink = addAltText(newLink, linkedFile);
-				console.log(`ALT: ${newLink}`);
 				fileContent = fileContent.replace(link, newLink);
 			}
 		}
