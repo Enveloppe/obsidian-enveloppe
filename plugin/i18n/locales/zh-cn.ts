@@ -9,7 +9,7 @@ export default {
 		shareViewFiles: (viewFile: string): string =>
 			`用Mkdocs Publisher共享"${viewFile}"。`,
 		checkValidity: {
-			name: "Check validity of this repository",
+			name: "Test the connection to the configured repository",
 			inRepo: {
 				error301: (repoInfo: string): string => `Error 301: ${repoInfo}  was moved permanently.`,
 				error404: (repoInfo: string): string => `Error 404: ${repoInfo}: is not found.`,

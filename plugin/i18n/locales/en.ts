@@ -1,16 +1,16 @@
 export default {
 	commands: {
-		shareActiveFile: "Share active file",
-		publisherDeleteClean: "Remove unshared and deleted file in repository",
-		uploadAllNotes: "Upload all shared notes",
-		uploadNewNotes: "Upload new shared notes",
+		shareActiveFile: "Upload single current active note",
+		publisherDeleteClean: "Purge unshared and deleted files",
+		uploadAllNotes: "Upload all notes",
+		uploadNewNotes: "Upload unpublished notes",
 		uploadAllNewEditedNote:
-			"Upload all new and edited note since last upload",
-		uploadAllEditedNote: "Upload all edited note since last upload",
+			"Refresh published and upload new notes",
+		uploadAllEditedNote: "Refresh all published notes",
 		shareViewFiles: (viewFile: string): string =>
-			`Share "${viewFile}" with Github Publisher`,
+			`Upload "${viewFile}" with Github Publisher`,
 		checkValidity: {
-			name: "Check validity of this repository",
+			name: "Test the connection to the configured repository",
 			inRepo: {
 				error301: (repoInfo: string): string => `Error 301: ${repoInfo}  was moved permanently.`,
 				error404: (repoInfo: string): string => `Error 404: ${repoInfo}: is not found.`,
@@ -274,11 +274,11 @@ export default {
 	},
 	error: {
 		unablePublishNote: (fileInfo: string): string =>
-			`Unable to publish note ${fileInfo}，skipping it`,
+			`Unable to upload note ${fileInfo}，skipping it`,
 		errorPublish: (repoInfo: string): string =>
-			`Error publishing to ${repoInfo}.`,
+			`Error during upload to ${repoInfo}.`,
 		unablePublishMultiNotes:
-			"Unable to publish multiple notes, something went wrong.",
+			"Unable to upload multiple notes, something went wrong.",
 		mergeconflic: "Pull-request is not mergeable, you need to do it manually.",
 		errorConfig: (repoInfo: string): string =>
 			`Error configuring ${repoInfo}. Please check your settings.`,

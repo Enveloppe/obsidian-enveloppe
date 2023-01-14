@@ -12,7 +12,7 @@ export default {
 		shareViewFiles: (viewFile: string): string =>
 			`Поделиться "${viewFile}" с Github Publisher`,
 		checkValidity: {
-			name: "Check validity of this repository",
+			name: "Test the connection to the configured repository",
 			inRepo: {
 				error301: (repoInfo: string): string => `Error 301: ${repoInfo}  was moved permanently.`,
 				error404: (repoInfo: string): string => `Error 404: ${repoInfo}: is not found.`,

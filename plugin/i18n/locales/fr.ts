@@ -1,18 +1,18 @@
 export default {
 	commands: {
-		shareActiveFile: "Partager le fichier actif",
+		shareActiveFile: "Transférer la note active",
 		publisherDeleteClean:
-			"Suppression des fichiers non partagés et/ou supprimé du dépôt ",
-		uploadAllNotes: "Publier toutes les notes partagées",
-		uploadNewNotes: "Publier les nouvelles notes",
+			"Purger les fichiers non partagés et supprimés",
+		uploadAllNotes: "Transférer toutes les notes",
+		uploadNewNotes: "Transférer les notes non publiées",
 		uploadAllNewEditedNote:
-			"Publier toutes les notes nouvelles et modifiées depuis le dernier envoi.",
+			"Rafraîchir les notes publiées et télécharger les nouvelles notes",
 		uploadAllEditedNote:
-			"Publier toutes les notes éditées depuis le dernier envoie",
+			"Rafraîchir les notes publiées et télécharger les nouvelles notes",
 		shareViewFiles: (viewFile: string): string =>
-			`Partager "${viewFile}" avec Github Publisher`,
+			`Transférer "${viewFile}" avec Github Publisher`,
 		checkValidity: {
-			name: "Vérifier la validité du dépôt",
+			name: "Tester la connexion au dépôt configuré",
 			inRepo: {
 				error301: (repoInfo: string): string => `Error 301 : ${repoInfo} a été déplacé de manière permanente.`,
 				error404: (repoInfo: string): string => `Error 404 : ${repoInfo}: est introuvable.`,
