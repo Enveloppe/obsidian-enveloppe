@@ -1,7 +1,7 @@
 export default {
 	commands: {
 		shareActiveFile: "Upload single current active note",
-		publisherDeleteClean: "Purge unshared and deleted files",
+		publisherDeleteClean: "Purge depublished and deleted files",
 		uploadAllNotes: "Upload all notes",
 		uploadNewNotes: "Upload unpublished notes",
 		uploadAllNewEditedNote:

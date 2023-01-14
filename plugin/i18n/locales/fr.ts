@@ -2,9 +2,9 @@ export default {
 	commands: {
 		shareActiveFile: "Transférer la note active",
 		publisherDeleteClean:
-			"Purger les fichiers non partagés et supprimés",
+			"Purger les fichiers dépubliés et supprimés",
 		uploadAllNotes: "Transférer toutes les notes",
-		uploadNewNotes: "Transférer les notes non publiées",
+		uploadNewNotes: "Transférer les nouvelles notes",
 		uploadAllNewEditedNote:
 			"Rafraîchir les notes publiées et télécharger les nouvelles notes",
 		uploadAllEditedNote:
