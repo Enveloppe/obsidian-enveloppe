@@ -2,7 +2,7 @@
 title: Commandes
 ---
 
-Le module ajoute six commandes, dont l'une est aussi appliquée sur le menu du clic droit.
+Le module ajoute sept commandes, dont l'une est aussi appliquée sur le menu du clic droit.
 
 Il y a quatre type de commandes : 
 - `Transfert`
