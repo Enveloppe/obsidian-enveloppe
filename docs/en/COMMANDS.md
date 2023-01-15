@@ -2,7 +2,7 @@
 title: Commands
 ---
 
-The plugin adds six commands, with one also applied on the right-click menu.
+The plugin adds seven commands, with one also applied on the right-click menu.
 
 There are four types of commands : 
 - `Upload`
