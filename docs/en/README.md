@@ -1,33 +1,32 @@
 
 # Github Publisher
 
-GitHub Publisher is a plugin that help you to send file in a configured GitHub Repository, based on a frontmatter sharing key.
+GitHub Publisher is a plugin that helps you send files to a configured GitHub repository, based on a frontmatter sharing key.
 
-You can use it to send any markdown file, allowing compatibility thought a lot of Obsidian Publish alternative (like Mkdocs, Jekyll, Hugo or any solution that use Markdown files).
+You can use it to send any markdown file, allowing compatibility with many Obsidian Publish alternatives (like Mkdocs, Jekyll, Hugo, or any solution that uses Markdown files).
 
-When a shared file is found, it will be sent in a new branch named by `your_vault_name-month-day-year`. A pull request followed by a merge will be done, and if everything is okay, the branch will be deleted after the merge.
-Thus, you can easily revert commit, and create workflow based on PR, merged PR, specific push...
+When a shared file is found, it will be sent in a new branch named `your_vault_name-month-day-year`. A pull request will be created, followed by a merge. If everything is okay, the branch will be deleted after the merge. This allows you to easily revert commits and create workflows based on PRs, merged PRs, and specific pushes.
 
 ## What the plugin can do:
 
 - Read the frontmatter to check the value of a configured `share` key.
-- Send the file (and their embedded attachments or notes if any) to a GitHub repository.
+- Send the file (and any embedded attachments or notes) to a GitHub repository.
 
-But the plugin can do a lot more!
+But the plugin can do even more:
 
-- Convert wiki-links to Markdown links (without changing your file)
-- Activate a GitHub action that have a `workflow_dispatche` event.
-- Convert internal's links to match the configuration
-- Clean your repo with removing deleted and unshared files
-- Rename folder note with same name strategies with `index.md` (+ respecting the folder settings)
+- onvert wiki-links to Markdown links (without changing your file)
+- Activate a GitHub action that has a `workflow_dispatch` event.
+- Convert internal links to match the configuration
+- Clean your repo by removing deleted and unshared files
+- Rename folder notes with the same name strategies with `index.md` (+ respecting the folder settings)
 - Send a link's note in your clipboard after sharing.
-- Convert simple dataview query in markdown!
-- ✨ Replace text using regex expression (or a simple string...)!
-- ✨ Send your inlines tags to your frontmatter (in the `tags` key) **and** convert some field value to tags
+- Convert simple dataview queries to markdown!
+- ✨ Replace text using regex expressions (or a simple string...)!
+- ✨ Send your inline tags to your frontmatter (in the `tags` key) **and** convert some field values to tags
 
 ## What the plugin CANNOT do:
 
-- [ ] Support use of a local folder instead of a GitHub Repository (see [local folder](https://obsidian-publisher.netlify.app/obsidian/local%20folder/))
+- [ ] Support the use of a local folder instead of a GitHub repository (see [local folder](https://obsidian-publisher.netlify.app/obsidian/local%20folder/))
 - [ ] Synchronize a GitHub repository with your vault (see [Obsidian Git](https://github.com/denolehov/obsidian-git) / [Obsidian Git Mobile](https://github.com/Vinzent03/obsidian-git-mobile))
 - [ ] Revive the dead (see [Cardiopulmonary resuscitation](https://en.wikipedia.org/wiki/Cardiopulmonary_resuscitation))
 
@@ -35,22 +34,21 @@ But the plugin can do a lot more!
 
 ## Settings
 
-To use the plugin, you need to fill the correct information to allow the workflow.
+To use the plugin, you need to fill in the correct information to allow the workflow.
 
 ### Configuration example
 
-You will find [here](https://obsidian-publisher.netlify.appObsidian%20Github%20Publisher/Configuration%20example/) configuration example for some Obsidian Publish alternative, as Obsidian Mkdocs Publisher and [@TuanManhCao Digital Garden](https://github.com/TuanManhCao/digital-garden).
+You will find [here](https://obsidian-publisher.netlify.appObsidian%20Github%20Publisher/Configuration%20example/) configuration examples for some Obsidian Publish alternatives, such as Obsidian Mkdocs Publisher and [@TuanManhCao Digital Garden](https://github.com/TuanManhCao/digital-garden).
 
-> [!note] Adding configuration
-> You can send me or do a pullrequest to add new configuration for any Obsidian **free** publish alternative.
+> [!note] Adding configuration You can send me or do a pull request to add new configurations for any Obsidian **free** publish alternative.
 
 ### GitHub
 
 - **Repo name**: The repository where the files will be sent.
 - **GitHub username**: Your username.
 - **GitHub Token**: Get your [GitHub Token here](https://github.com/settings/tokens/new?scopes=repo)[^2]. The correct settings should already be applied. If you want to avoid generating this every few months, select the “No expiration” option. Click the “Generate token” button, and copy the token you are presented with on the next page.
-- Branch name: The branch where the files will be sent. If you want to use a specific branch. By default, it is `main`, but you can change for whatever you want, but the branch must exist.
-- You can disable the automatic branch merging.
+- **Branch name**: The branch where the files will be sent. If you want to use a specific branch. By default, it is `main`, but you can change it to whatever you want, but the branch must exist.
+- You can disable automatic branch merging.
 
 It is possible to use per-file configuration to change the repository name, username, and branch. You can find more information about it [here](https://obsidian-publisher.netlify.app/obsidian/per%20files%20settings/#changing-repository).
 
@@ -58,34 +56,34 @@ It is possible to use per-file configuration to change the repository name, user
 
 You can find an example of the edited part of the frontmatter [here](https://obsidian-publisher.netlify.app/obsidian/filepath_example).
 
-#### Folder reception settings.
+#### Folder reception settings
 
-You have tree options :
+You have three options:
 
-- Use a “fixed” folder : Every file will be sent in this folder.
+- Use a "fixed" folder: Every file will be sent to this folder.
 - Use a folder created based on a `category` key.
-- Use the relative path from obsidian. You can prepend a folder using the default folder.
+- Use the relative path from Obsidian. You can prepend a folder using the default folder.
 
-You need, in all case, to configure the **default folder** : The file will be sent here.
+You need, in all cases, to configure the **default folder**: The file will be sent here.
 
-> If you use the option for frontmatter, this folder will be the default folder : the file will be sent here if the key doesn't exist.
+> If you use the option for frontmatter, this folder will be the default folder: the file will be sent here if the key doesn't exist.
 
 ##### Metadata frontmatter
 
-Using the second option will activate two more options :
+Using the second option will activate two more options:
 
 - Front matter key: The key you want to use in your file.
-- Root folder : To prepend a path **before** the category key found (if any key are found!)
+- Root folder: To prepend a path **before** the category key found (if any key is found!)
 
 ##### Fixed folder
 
-Every file will be sent in the default folder. If you leave the default folder blank, it will be sent in the root of the repository.
+Every file will be sent to the default folder. If you leave the default folder blank, it will be sent to the root of the repository.
 
 ##### Obsidian Path
 
-It uses the relative path in your Obsidian vault. The default folder will be prepended before the relative obsidian path. You can leave it blank to use the root repository.
+It uses the relative path in your Obsidian vault. The default folder will be prepended before the relative Obsidian path. You can leave it blank to use the root repository.
 
-The `path removing` allow you to remove part of the path created, to, for example, sync subfolder. If the removed path is not found, the normal behavior apply.
+The `path removing` option allows you to remove part of the path created, to, for example, sync subfolders. If the removed path is not found, the normal behavior applies.
 
 #### Frontmatter title
 
@@ -111,10 +109,10 @@ It is also possible to send file generated by [metadata extractor](https://githu
 
 ##### Auto clean-up
 
-You can also set up an “uto-delete”when you use the commands to delete files:
+You can also set up an “auto-delete” when you use the commands to delete files:
 
 - Deleted from your vault
-- Which you have stopped sharing
+- Which you have stopped sharing ("depublished")
 
 This option will also add a new command to delete file (without sharing the new file).
 
