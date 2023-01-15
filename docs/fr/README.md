@@ -209,11 +209,11 @@ Le module ajoute sept commandes, dont une est appliquée au menu du clic droit.
 - `Purger les fichiers dépubliés et supprimés`
 - `Tester la connexion au dépôt configuré`
 
-Toutes les commandes sont décrites [ici](https://obsidian-publisher.netlify.app/fr/Obsidian/Commands).
+Toutes les commandes sont décrites [ici](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/fr/COMMANDS.md).
 
 # Developpement
 
-Regardez [ici](https://obsidian-publisher.netlify.app/fr/Obsidian/developping) si vous voulez aider au développement du plugin.
+Regardez [ici](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/fr/DEVELOPPING.md) si vous voulez aider au développement du plugin.
 
 ---
 
