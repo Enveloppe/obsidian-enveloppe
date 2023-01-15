@@ -6,9 +6,9 @@ export default {
 		uploadAllNotes: "Transférer toutes les notes",
 		uploadNewNotes: "Transférer les nouvelles notes",
 		uploadAllNewEditedNote:
-			"Rafraîchir les notes publiées et télécharger les nouvelles notes",
+			"Rafraîchir les notes publiées et transférer les nouvelles notes",
 		uploadAllEditedNote:
-			"Rafraîchir les notes publiées et télécharger les nouvelles notes",
+			"Rafraîchir toutes les notes publiées",
 		shareViewFiles: (viewFile: string): string =>
 			`Transférer "${viewFile}" avec Github Publisher`,
 		checkValidity: {
