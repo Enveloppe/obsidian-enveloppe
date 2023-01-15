@@ -221,11 +221,11 @@ The plugin adds seven commands, with one also applied on the right-click menu.
 - `Purge depublished and deleted files`
 - `Test the connection to the configured repository`
 
-Each command are explained [here](https://obsidian-publisher.netlify.app/en/Obsidian/Commands).
+Each command is explained [here](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/en/COMMANDS.md).
 
 # Developing
 
-Check [here](https://obsidian-publisher.netlify.app/en/obsidian/developping/) if you want to help the plugin development. 
+Check [here](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/en/DEVELOPPING.md) if you want to help the plugin development. 
 
 ---
 
