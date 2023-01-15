@@ -187,41 +187,33 @@ Vous pouvez configurer :
   Les regex sont supportées, mais vous devez les échapper avec des `\`.
 - Ajoutez la commande pour partager le fichier dans le menu fichier (clic droit sur un fichier dans l'explorateur ou en utilisant les trois points) et dans le menu éditeur (clic droit sur une note éditée ouverte)
 - Ajout de la note de partage du lien dans votre presse-papiers après le partage. Vous pouvez configurer le chemin créé ici, en supprimant certaines parties. Comme il supporte plusieurs parties, vous pouvez séparer les parties en utilisant des virgules. Par exemple, vous pouvez supprimer un dossier `docs/` et l'extension markdown en utilisant : `docs/, .md`.
+
 > [!note] La commande du menu de clic droit peut aussi envoyer le fichier sous votre curseur si c'est un lien ! 
 
 ---
 
-> [!info] Il existe de nombreuses options qui peuvent être configurées dans le fichier de configuration YAML. Vous pouvez trouver la liste complète ici : [Per files settings](https://obsidian-publisher.netlify.app/fr/obsidian/per%20files%20settings/#Frontmatter-keys-explanation)
+> [!info] Il existe de nombreuses options qui peuvent être configurées dans le fichier de configuration YAML. Vous pouvez trouver la liste complète [ici](https://obsidian-publisher.netlify.app/fr/obsidian/per%20files%20settings/#Frontmatter-keys-explanation)
 
 
 ---
 
-## Développement
+# Usage
 
-### Général
+Le module ajoute sept commandes, dont une est appliquée au menu du clic droit.
 
-Vous pouvez m'aider à développer le plugin en utilisant `npm` !
-1. Tout d'abord, clonez le projet sur votre ordinateur avec `git clone git@github.com:obsidianPublisher/obsidian-github-publisher.git`.
-2. `cd obsidian-github-publisher`.
-3. `npm install`
+- `Transférer la note active`
+- `Transférer toutes les notes`
+- `Transférer les nouvelles notes`
+- `Rafraîchir les notes publiées et transférer les nouvelles notes`
+- `Rafraîchir toutes les notes publiées`
+- `Purger les fichiers dépubliés et supprimés`
+- `Tester la connexion au dépôt configuré`
 
-Quelque notes :
-- J'utilise les [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/) pour générer le changelog, donc merci de respectez les spécifications !
-- De documenter les fonctions que vous créez. 
+Toutes les commandes sont décrites [ici](https://obsidian-publisher.netlify.app/fr/Obsidian/Commands).
 
-### Traduction
+# Developpement
 
-En utilisant [i18n](https://www.i18next.com/), vous pouvez traduire le plugin. 
-
-Pour ajouter un nouveau langage :
-- Clonez le fichier `i18n/locales/en-us.ts` et renommez-le dans votre langue.
-- Obtenez votre langue locale depuis Obsidian en utilisant [obsidian translation](https://github.com/obsidianmd/obsidian-translations) ou en utilisant les commandes (dans templater par exemple) : `<% tp.obsidian.moment.locale() %>` 
-- Traduisez le fichier et enregistrez-le.
-- Dans `i18n/index.ts` :
-  - Importez le nouveau fichier comme `import language from '.locales/language'`.
-  - ajoutez la nouvelle langue dans l'objet json `localeMap` : `{ "language" : language }`
-- De plus, vous pouvez tester si votre traduction est correcte.
-- Créez un PR pour ajouter votre traduction !
+Regardez [ici](https://obsidian-publisher.netlify.app/fr/Obsidian/developping) si vous voulez aider au développement du plugin.
 
 ---
 
