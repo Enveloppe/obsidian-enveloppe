@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.11.13](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.12...4.11.13) (2023-01-15)
+
+
+### Bug Fixes
+
+* **fr:** major typo in commands name ([1046a27](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1046a277b3c8fa53b46aefb70bbbbe76137dc3ad))
+
 ### [4.11.12](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.11...4.11.12) (2023-01-14)
 
 ### [4.11.11](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.10...4.11.11) (2023-01-14)
