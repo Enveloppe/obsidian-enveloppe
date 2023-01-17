@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.11.14](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.13...4.11.14) (2023-01-17)
+
+
+### Bug Fixes
+
+* private repo error / first loading settings error ([b8eb4dc](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b8eb4dcc42eac7dfcde68994299b3a064f33f59e)), closes [#80](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/80)
+
 ### [4.11.13](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.12...4.11.13) (2023-01-15)
 
 
