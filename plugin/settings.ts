@@ -1,4 +1,5 @@
 import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
+import { Octokit } from "@octokit/core";
 import GithubPublisherPlugin from "./main";
 import {
 	hideSettings,
@@ -35,17 +36,16 @@ function openDetails(groupName: string, detailsState: boolean) {
 	}
 }
 
+
 export class GithubPublisherSettings extends PluginSettingTab {
 	plugin: GithubPublisherPlugin;
 	settingsPage: HTMLElement;
 	branchName: string;
-	PublisherManager: GithubBranch;
 
-	constructor(app: App, plugin: GithubPublisherPlugin, branchName: string, PublisherManager: GithubBranch) {
+	constructor(app: App, plugin: GithubPublisherPlugin, branchName: string) {
 		super(app, plugin);
 		this.plugin = plugin;
 		this.branchName = branchName;
-		this.PublisherManager = PublisherManager;
 	}
 
 	display(): void {
@@ -188,7 +188,16 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.setButtonText(settings("github", "testConnection") as string)
 					.setClass("obs-git-publisher-connect-button")
 					.onClick(async () => {
-						await checkRepositoryValidity(this.branchName, this.PublisherManager, this.plugin.settings, null, this.app.metadataCache);
+						const octokit = new Octokit({auth: this.plugin.settings.GhToken});
+						console.log(octokit);
+						const publisher = new GithubBranch(
+							this.plugin.settings,
+							octokit,
+							this.app.vault,
+							this.app.metadataCache,
+							this.plugin,
+						);
+						await checkRepositoryValidity(this.branchName, publisher, this.plugin.settings, null, this.app.metadataCache);
 					})
 			);
 	}

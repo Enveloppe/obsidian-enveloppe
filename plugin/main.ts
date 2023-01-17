@@ -1,27 +1,19 @@
-import { Plugin, TFile, Menu, FrontMatterCache } from "obsidian";
-import { GithubPublisherSettings } from "./settings";
-import { GitHubPublisherSettings } from "./settings/interface";
+import {FrontMatterCache, Menu, Plugin, TFile} from "obsidian";
+import {GithubPublisherSettings} from "./settings";
+import {DEFAULT_SETTINGS, GitHubPublisherSettings, RepoFrontmatter} from "./settings/interface";
+import {convertOldSettings, disablePublish, getRepoFrontmatter,} from "./src/utils";
+import {GithubBranch} from "./publishing/branch";
+import {Octokit} from "@octokit/core";
 import {
-	DEFAULT_SETTINGS,
-	RepoFrontmatter,
-} from "./settings/interface";
-import {
-	convertOldSettings,
-	disablePublish,
-	getRepoFrontmatter,
-} from "./src/utils";
-import { GithubBranch } from "./publishing/branch";
-import { Octokit } from "@octokit/core";
-import {
+	checkRepositoryValidity,
 	deleteUnsharedDeletedNotes,
 	shareAllEditedNotes,
 	shareAllMarkedNotes,
 	shareNewNote,
 	shareOneNote,
-	shareOnlyEdited,
-	checkRepositoryValidity
+	shareOnlyEdited
 } from "./commands";
-import {StringFunc, commands, translationLanguage, t} from "./i18n";
+import {commands, StringFunc, t, translationLanguage} from "./i18n";
 import {getTitleField, regexOnFileName} from "./contents_conversion/filePathConvertor";
 
 /**
@@ -36,6 +28,17 @@ export default class GithubPublisher extends Plugin {
 		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
 	}
 
+	reloadOctokit() {
+		const octokit = new Octokit({ auth: this.settings.GhToken });
+		return new GithubBranch(
+			this.settings,
+			octokit,
+			this.app.vault,
+			this.app.metadataCache,
+			this
+		);
+	}
+
 	/**
 	 * Function called when the plugin is loaded
 	 * @return {Promise<void>}
@@ -45,23 +48,16 @@ export default class GithubPublisher extends Plugin {
 			`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`
 		);
 		await this.loadSettings();
-		const octokit = new Octokit({ auth: this.settings.GhToken });
-		const PublisherManager = new GithubBranch(
-			this.settings,
-			octokit,
-			this.app.vault,
-			this.app.metadataCache,
-			this
-		);
-		await convertOldSettings("ExcludedFolder", this);
-		await convertOldSettings("autoCleanUpExcluded", this);
-
 		const branchName =
 			app.vault.getName().replaceAll(" ", "-").replaceAll(".", "-") +
 			"-" +
 			new Date().toLocaleDateString("en-US").replace(/\//g, "-");
+		this.addSettingTab(new GithubPublisherSettings(this.app, this, branchName));
+		await convertOldSettings("ExcludedFolder", this);
+		await convertOldSettings("autoCleanUpExcluded", this);
+
+
 		const repo = getRepoFrontmatter(this.settings) as RepoFrontmatter;
-		this.addSettingTab(new GithubPublisherSettings(this.app, this, branchName, PublisherManager));
 
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
@@ -81,7 +77,7 @@ export default class GithubPublisher extends Plugin {
 							.onClick(async () => {
 								await shareOneNote(
 									branchName,
-									PublisherManager,
+									this.reloadOctokit(),
 									this.settings,
 									file,
 									this.app.metadataCache,
@@ -112,9 +108,10 @@ export default class GithubPublisher extends Plugin {
 						)
 							.setIcon("share")
 							.onClick(async () => {
+
 								await shareOneNote(
 									branchName,
-									PublisherManager,
+									this.reloadOctokit(),
 									this.settings,
 									view.file,
 									this.app.metadataCache,
@@ -135,7 +132,7 @@ export default class GithubPublisher extends Plugin {
 						if (isShared) {
 							await shareOneNote(
 								branchName,
-								PublisherManager,
+								this.reloadOctokit(),
 								this.settings,
 								file,
 								this.app.metadataCache,
@@ -162,7 +159,7 @@ export default class GithubPublisher extends Plugin {
 					if (!checking) {
 						shareOneNote(
 							branchName,
-							PublisherManager,
+							this.reloadOctokit(),
 							this.settings,
 							this.app.workspace.getActiveFile(),
 							this.app.metadataCache,
@@ -183,9 +180,9 @@ export default class GithubPublisher extends Plugin {
 				if (this.settings.autoCleanUp) {
 					if (!checking) {
 						deleteUnsharedDeletedNotes(
-							PublisherManager,
+							this.reloadOctokit(),
 							this.settings,
-							octokit,
+							new Octokit({auth: this.settings.GhToken}),
 							branchName,
 							repo
 						);
@@ -200,12 +197,12 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-publish-all",
 			name: commands("uploadAllNotes") as string,
 			callback: async () => {
-				const sharedFiles = PublisherManager.getSharedFiles();
+				const sharedFiles = this.reloadOctokit().getSharedFiles();
 				const statusBarItems = this.addStatusBarItem();
 				await shareAllMarkedNotes(
-					PublisherManager,
+					this.reloadOctokit(),
 					this.settings,
-					octokit,
+					new Octokit({auth: this.settings.GhToken}),
 					statusBarItems,
 					branchName,
 					repo,
@@ -220,8 +217,8 @@ export default class GithubPublisher extends Plugin {
 			name: commands("uploadNewNotes") as string,
 			callback: async () => {
 				await shareNewNote(
-					PublisherManager,
-					octokit,
+					this.reloadOctokit(),
+					new Octokit({auth: this.settings.GhToken}),
 					branchName,
 					this.app.vault,
 					this,
@@ -235,8 +232,8 @@ export default class GithubPublisher extends Plugin {
 			name: commands("uploadAllNewEditedNote") as string,
 			callback: async () => {
 				await shareAllEditedNotes(
-					PublisherManager,
-					octokit,
+					this.reloadOctokit(),
+					new Octokit({auth: this.settings.GhToken}),
 					branchName,
 					this.app.vault,
 					this,
@@ -250,8 +247,8 @@ export default class GithubPublisher extends Plugin {
 			name: commands("uploadAllEditedNote") as string,
 			callback: async () => {
 				await shareOnlyEdited(
-					PublisherManager,
-					octokit,
+					this.reloadOctokit(),
+					new Octokit({auth: this.settings.GhToken}),
 					branchName,
 					this.app.vault,
 					this,
@@ -269,7 +266,7 @@ export default class GithubPublisher extends Plugin {
 					if (!checking) {
 						checkRepositoryValidity(
 							branchName,
-							PublisherManager,
+							this.reloadOctokit(),
 							this.settings,
 							this.app.workspace.getActiveFile(),
 							this.app.metadataCache);
@@ -279,6 +276,8 @@ export default class GithubPublisher extends Plugin {
 				return false;
 			},
 		});
+		
+		// get the trigger github:token-changed
 	}
 
 	/**
