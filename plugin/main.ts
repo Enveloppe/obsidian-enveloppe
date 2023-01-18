@@ -108,7 +108,6 @@ export default class GithubPublisher extends Plugin {
 						)
 							.setIcon("share")
 							.onClick(async () => {
-
 								await shareOneNote(
 									branchName,
 									this.reloadOctokit(),
@@ -179,10 +178,11 @@ export default class GithubPublisher extends Plugin {
 			checkCallback: (checking) => {
 				if (this.settings.autoCleanUp) {
 					if (!checking) {
+						const publisher = this.reloadOctokit();
 						deleteUnsharedDeletedNotes(
-							this.reloadOctokit(),
+							publisher,
 							this.settings,
-							new Octokit({auth: this.settings.GhToken}),
+							publisher.octokit,
 							branchName,
 							repo
 						);
@@ -199,10 +199,11 @@ export default class GithubPublisher extends Plugin {
 			callback: async () => {
 				const sharedFiles = this.reloadOctokit().getSharedFiles();
 				const statusBarItems = this.addStatusBarItem();
+				const publisher = this.reloadOctokit();
 				await shareAllMarkedNotes(
-					this.reloadOctokit(),
+					publisher,
 					this.settings,
-					new Octokit({auth: this.settings.GhToken}),
+					publisher.octokit,
 					statusBarItems,
 					branchName,
 					repo,
@@ -216,9 +217,10 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-upload-new",
 			name: commands("uploadNewNotes") as string,
 			callback: async () => {
+				const publisher = this.reloadOctokit();
 				await shareNewNote(
-					this.reloadOctokit(),
-					new Octokit({auth: this.settings.GhToken}),
+					publisher,
+					publisher.octokit,
 					branchName,
 					this.app.vault,
 					this,
@@ -231,9 +233,10 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-upload-all-edited-new",
 			name: commands("uploadAllNewEditedNote") as string,
 			callback: async () => {
+				const publisher = this.reloadOctokit();
 				await shareAllEditedNotes(
-					this.reloadOctokit(),
-					new Octokit({auth: this.settings.GhToken}),
+					publisher,
+					publisher.octokit,
 					branchName,
 					this.app.vault,
 					this,
@@ -246,9 +249,10 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-upload-edited",
 			name: commands("uploadAllEditedNote") as string,
 			callback: async () => {
+				const publisher = this.reloadOctokit();
 				await shareOnlyEdited(
-					this.reloadOctokit(),
-					new Octokit({auth: this.settings.GhToken}),
+					publisher,
+					publisher.octokit,
 					branchName,
 					this.app.vault,
 					this,
