@@ -1,1428 +1,2992 @@
-# Changelog
 
-All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+<a name="v4.11.15rc"></a>
+## [v4.11.15rc](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15-0...v4.11.15rc) (2023-01-18)
 
-### [4.11.14](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.13...4.11.14) (2023-01-17)
 
+<a name="4.11.15-0"></a>
+## [4.11.15-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.14...4.11.15-0) (2023-01-18)
 
-### Bug Fixes
+### Chore
 
-* private repo error / first loading settings error ([b8eb4dc](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b8eb4dcc42eac7dfcde68994299b3a064f33f59e)), closes [#80](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/80)
+* Bump beta version
+* **release:** 4.11.15-0
 
-### [4.11.13](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.12...4.11.13) (2023-01-15)
+### Refactor
 
+* optimize octokit
 
-### Bug Fixes
 
-* **fr:** major typo in commands name ([1046a27](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1046a277b3c8fa53b46aefb70bbbbe76137dc3ad))
+<a name="4.11.14"></a>
+## [4.11.14](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.13...4.11.14) (2023-01-17)
 
-### [4.11.12](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.11...4.11.12) (2023-01-14)
+### Chore
 
-### [4.11.11](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.10...4.11.11) (2023-01-14)
+* Bump beta version
+* **release:** 4.11.14
 
-### [4.11.10](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.9...4.11.10) (2023-01-11)
+### Fix
 
+* private repo error / first loading settings error close [#80](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/80)
 
-### Bug Fixes
 
-* internal links alias mis-replaced ([ba45f54](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ba45f54b3b7bc24b24a303eaac5a7bb06d166ffa)), closes [#72](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/72)
+<a name="4.11.13"></a>
+## [4.11.13](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.12...4.11.13) (2023-01-15)
 
-### [4.11.9](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.8...4.11.9) (2023-01-10)
+### Chore
 
+* Bump beta version
+* **release:** 4.11.13
 
-### Bug Fixes
+### Ci
 
-* convert to wikilinks revert convert to github path ([6334dae](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6334dae735c8418f6f6ab2242a88ec36886366a5))
+* **package.json:** remove useless cmds
 
-### [4.11.8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.7...4.11.8) (2023-01-10)
+### Fix
 
+* **fr:** major typo in commands name
 
-### Bug Fixes
 
-* Frontmatter title value is used for filename ([568a239](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/568a239158e6709e239991157bb74e8de7c01e9b)), closes [#69](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/69)
+<a name="4.11.12"></a>
+## [4.11.12](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.11...4.11.12) (2023-01-14)
 
-### [4.11.7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.6...4.11.7) (2023-01-10)
+### Chore
 
+* Bump beta version
+* **release:** 4.11.12
 
-### Bug Fixes
+### Refactor
 
-* alt-text in markdown-links not saved ([96830a4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/96830a428cdf0a2963ca898b1bdfd241b65261a1))
-* convert wikilinks broken when anchor ([6495379](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/64953797c611e7d8d00f900de0681a099fd4f626))
-* misplaced extension on markdown links with anchor to paragraph ([a209ca5](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a209ca52bb9db9bde4cb33baad5e5049c4383172))
+* Rename "unshared" to "depublished" for more accurate commands description
 
-### [4.11.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.5...4.11.6) (2023-01-10)
 
+<a name="4.11.11"></a>
+## [4.11.11](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.10...4.11.11) (2023-01-14)
 
-### Bug Fixes
+### Chore
 
-* anchor links bug ([efca311](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/efca311821a971e2fbc7c73425d296a29ff4cfcb))
+* Bump beta version
+* **release:** 4.11.11
 
-### [4.11.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.4...4.11.5) (2023-01-09)
+### Refactor
 
+* change commands name
 
-### Bug Fixes
 
-* .md not appended on file without heading ([545dc2e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/545dc2e6f8a71972c1cb0178f4b6d100bfaa05ee))
+<a name="4.11.10"></a>
+## [4.11.10](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.9...4.11.10) (2023-01-11)
 
-### [4.11.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.3...4.11.4) (2023-01-09)
+### Chore
 
+* Bump beta version
+* **release:** 4.11.10
 
-### Bug Fixes
+### Fix
 
-* fix links not converted properly ([99e46d8](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/99e46d8345dcef63b8049a433007e596ccb46d7c)), closes [#67](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/67)
+* internal links alias mis-replaced fix [#72](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/72)
 
-### [4.11.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.2...4.11.3) (2023-01-08)
 
+<a name="4.11.9"></a>
+## [4.11.9](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.8...4.11.9) (2023-01-10)
 
-### Bug Fixes
+### Chore
 
-* internal links are not converted in MDlinks ([40e091f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/40e091f6960dc81b743f776c124c751b36a10bdd)), closes [#68](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/68)
+* Bump beta version
+* **release:** 4.11.9
 
-### [4.11.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.1...4.11.2) (2023-01-05)
+### Fix
 
+* convert to wikilinks revert convert to github path
 
-### Bug Fixes
 
-* the plugin try to continue same if no branch are found /created ([b418984](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b4189847c88b161669697fabc7dfdb8723f26961))
+<a name="4.11.8"></a>
+## [4.11.8](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.7...4.11.8) (2023-01-10)
 
-### [4.11.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.0...4.11.1) (2023-01-04)
+### Chore
 
+* Bump beta version
+* **release:** 4.11.8
 
-### Bug Fixes
+### Fix
 
-* adding checking repository in all commands to check the validity & perform the programm ([b94af7d](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b94af7df9a468ec38c057080560e5f15bf8af178))
+* Frontmatter title value is used for filename Reason: Forgot to check the settings before taking the filename see [#69](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/69) (nice)
 
-## [4.11.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.10.1...4.11.0) (2023-01-04)
 
+<a name="4.11.7"></a>
+## [4.11.7](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.6...4.11.7) (2023-01-10)
 
-### Features
+### Chore
 
-* add a button to test the repository validity ([bfcf32e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/bfcf32e8828af9157cd7342f28b6d2b595597df7))
+* **release:** 4.11.7
 
+### Fix
 
-### Bug Fixes
+* convert wikilinks broken when anchor
+* misplaced extension on markdown links with anchor to paragraph
+* alt-text in markdown-links not saved
 
-* **ambulance:** urgent fix because forgot to add .md for filename. ([063f508](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/063f508349d857999aff95faffc6ab413da23f6a))
 
-### [4.10.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.10.1...4.10.2) (2023-01-02)
+<a name="4.11.6"></a>
+## [4.11.6](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.5...4.11.6) (2023-01-10)
 
+### Chore
 
-### Bug Fixes
+* Bump beta version
+* **release:** 4.11.6
 
-* **ambulance:** urgent fix because forgot to add .md for filename. ([063f508](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/063f508349d857999aff95faffc6ab413da23f6a))
+### Fix
 
-### [4.10.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.9.0...4.10.1) (2022-12-31)
+* anchor links bug It's probably the worst code of my life but I'm too bored to check it out.
 
+### Refactor
 
-### Features
+* optimise markdown links replacer
 
-* adding a new option that allow to change the name of folder note file ([a21ac4a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a21ac4a6112d4561f309f6f287e0151ec8bf93a4))
 
+<a name="4.11.5"></a>
+## [4.11.5](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.4...4.11.5) (2023-01-09)
 
-### Bug Fixes
+### Chore
 
-* index note not recognized using regex ([295d2bc](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/295d2bcb7a87039d8bb690d2e39ad214ffef724b))
-* **obsidianPath:** if folder note outside, wrong filepath created ([da4592e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/da4592e8694781a9bc77eb1cf0c4de299c5e9710))
-* remove the regex edition of title from the title key settings ([8020eed](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8020eedf05e0d8c76173e7d249d0708d3d5410d8))
-* use the filetitle instead of basename for commands menu ([3f3ddee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3f3ddee553e5183f50ad4e36299f9a62204b9d5d))
+* Bump beta version
+* **release:** 4.11.5
 
-## [4.10.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.9.0...4.10.0) (2022-12-31)
+### Fix
 
+* .md not appended on file without heading
 
-### Features
+### Refactor
 
-* adding a new option that allow to change the name of folder note file ([a21ac4a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a21ac4a6112d4561f309f6f287e0151ec8bf93a4))
+* **log:** remove useless logs
 
 
-### Bug Fixes
+<a name="4.11.4"></a>
+## [4.11.4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.3...4.11.4) (2023-01-09)
 
-* index note not recognized using regex ([295d2bc](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/295d2bcb7a87039d8bb690d2e39ad214ffef724b))
-* remove the regex edition of title from the title key settings ([8020eed](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8020eedf05e0d8c76173e7d249d0708d3d5410d8))
-* use the filetitle instead of basename for commands menu ([3f3ddee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3f3ddee553e5183f50ad4e36299f9a62204b9d5d))
+### Chore
 
-### [4.9.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.9.0...4.9.2) (2022-12-29)
+* Bump beta version
+* **release:** 4.11.4
 
+### Fix
 
-### Bug Fixes
+* fix links not converted properly Because of a lot of little error See [#67](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/67)
 
-* remove the regex edition of title from the title key settings ([8020eed](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8020eedf05e0d8c76173e7d249d0708d3d5410d8))
-* use the filetitle instead of basename for commands menu ([3f3ddee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3f3ddee553e5183f50ad4e36299f9a62204b9d5d))
 
-### [4.9.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.9.0...4.9.1) (2022-12-28)
+<a name="4.11.3"></a>
+## [4.11.3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.2...4.11.3) (2023-01-08)
 
+### Chore
 
-### Bug Fixes
+* Bump beta version
+* **release:** 4.11.3
 
-* use the filetitle instead of basename for commands menu ([3f3ddee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3f3ddee553e5183f50ad4e36299f9a62204b9d5d))
+### Fix
 
-## [4.9.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.8.1...4.9.0) (2022-12-24)
+* internal links are not converted in MDlinks see [#68](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/68)
 
 
-### Features
+<a name="4.11.2"></a>
+## [4.11.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.1...4.11.2) (2023-01-05)
 
-* apply a regex on the filename directly ([4afaaba](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4afaaba16bac701d90ebef05e0e48ddd645e673b)), closes [#60](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/60)
+### Chore
 
-### [4.8.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.8.0...4.8.1) (2022-12-20)
+* **release:** 4.11.2
+* **release:** 4.11.1
 
+### Ci
 
-### Bug Fixes
+* fix github tag broken when using commit --amend
 
-* Uncaught TypeError: Cannot read properties of null (reading 'path') ([3dc9eaf](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3dc9eaf0b7cce12031830ab86947013570f60a9f))
+### Fix
 
-## [4.8.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.7.0...4.8.0) (2022-12-14)
+* the plugin try to continue same if no branch are found /created
 
 
-### Features
+<a name="4.11.1"></a>
+## [4.11.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.0...4.11.1) (2023-01-04)
 
-* add 2 new frontmatter key for converting internal links ([a8d4a89](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8d4a89c8f3ad2da297b7495316ea20fef6caa28))
-* option to convert internal links pointing to non shared file ([60ba072](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/60ba072eff30eaef5730c6725ace68443b146e58))
-* send metadata-extractor file ([5524e07](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5524e077b27e8b9a230dcea09304e77698f43d69))
+### Chore
 
+* **release:** 4.11.1
+* **release:** 4.11.0
 
-### Bug Fixes
+### Ci
 
-* a typo broke every image links ([1f203eb](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1f203eb904b2dd1d3e0ce96d3889c161d81f167b))
-* adding more info about error ([3309edf](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3309edf8b5df8a7a08d10462e6eb7c78840b6802))
-* alt text using the path in obsidian ([c9424c7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c9424c75f3950bdebd82e30702cb47d6e107fbd5))
-* better delete message note in commit message ([623bdf6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/623bdf6effa6f358beaf15dd86fdd357fedd6785))
-* Cannot read properties of undefined (reading 'filter') ([3cb5760](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3cb57606097f30751259ad09ac939afef7e645db)), closes [#58](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/58)
-* if frontmatter title is used, use this as altText ([3ab3215](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3ab32150198018d16f53a8d7fb156ff4d36a296c))
-* if frontmatter title is used, use this as filename for internal links that is not shared ([b717719](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b7177196fd541ff0674b448023b56a3ac8dac8f2))
-* internal links converted ([5451acf](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5451acfbb3764e63252ae698b9e9ec6f471e086d))
-* keep basename instead of alt text ([92e89d5](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/92e89d55029fa4e63c9aa1dc1b3905bd5af6c9db))
-* optimize multipleRepo & monoRepo perfile ([92fa34c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/92fa34c2620a2d274a3465820c69ba5917500f05))
-* prevent convert links when file is not on the same repo ([cedb1ae](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/cedb1aec841e61f35333d1a68565b54ef0498284))
-* relative path created for no shared file / file from another repo ([aac1031](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/aac1031d7b4571ef5fedc471f12232d3ea14c054))
+* update commands
 
-## [4.7.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.6.4...4.7.0) (2022-12-02)
+### Fix
 
+* adding checking repository in all commands to check the validity & perform the programm
 
-### Features
 
-* introduce regex for folder excluded & autocleanup ([53a81ba](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/53a81ba553800d8bcb4ca41c0bf9c47b5463e2bc))
+<a name="4.11.0"></a>
+## [4.11.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.10.2...4.11.0) (2023-01-04)
 
-### [4.6.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.6.3...4.6.4) (2022-12-02)
+### Chore
 
+* **release:** 4.11.0
+* **release:** 4.10.2
+* **release:** 4.10.2
 
-### Bug Fixes
+### Docs
 
-* **i18n:** forgot to check if locale translation exists; ([65606d4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/65606d46a3dd49ed2f20655e3c1e68d7f3f476e7)), closes [#53](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/53)
+* **JSdoc:** add docs for new function to check validity repo
 
-### [4.6.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.6.2...4.6.3) (2022-12-01)
+### Feat
 
+* add a button to test the repository validity
 
-### Bug Fixes
+### Style
 
-* setting is empty string in an array ⇒ convert to empty array ([802be97](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/802be978884b2aa805871bc6246c8b45c5ad4602))
+* **eslint:** run eslint with new configuration
+* **prettier:** reformat with prettier
 
-### [4.6.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.6.1...4.6.2) (2022-12-01)
 
+<a name="4.10.2"></a>
+## [4.10.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.10.1...4.10.2) (2023-01-02)
 
-### Bug Fixes
+### Chore
 
-* **autoCleanUpExcluded:** convert to empty array if emptry string (aka `""`) ([e28f4d2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e28f4d2b134b2ea0f4655f1e9ef953b7d38c1cd6))
+* **release:** 4.10.2
 
-### [4.6.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.6.0...4.6.1) (2022-12-01)
+### Ci
 
+* adding update to package-lock
 
-### Bug Fixes
+### Fix
 
-* add new string in test settings ([621cef3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/621cef3bc2f459b6f8157596bb5311f4933b3dbc))
-* **autoCleanUpExcluded:** string to list conversion of settings ([cbf7810](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/cbf7810b244751bfa251521d8132421c21f0b7aa))
+* **ambulance:** urgent fix because forgot to add .md for filename.
 
-## [4.6.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.5.1...4.6.0) (2022-12-01)
 
+<a name="4.10.1"></a>
+## [4.10.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.10.0...4.10.1) (2022-12-31)
 
-### Features
+### Chore
 
-* add flags option for regex replacing ([a80d682](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a80d6824192d8b13eea8d3958f3348f6c58eba96)), closes [#51](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/51) [#52](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/52)
-* Adding baselink frontmatter key ([504fdd5](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/504fdd597d33f2eef20508bd5552857a5a934386))
-* Allow sending file to multiple repo using the key "repo" ([5c74244](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5c742444a7e2e1260a521091b9c987b6f7bf7f27))
-* Option for not automatically merging PR ([13abc47](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/13abc4728a3b4ed0f87c075669dbc8bd772a888a)), closes [#47](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/47)
-* **regex:** better UI for regex flags ([338a070](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/338a070ec474e9f6707d594bdf6a542afc3dd4cf))
-* **UI:** Better textArea (bigger) for settings ([261a11f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/261a11fb70fc3ab4254811abca47bc798351bf93))
-* **UI:** Rework settings UI to use tab! ([c18aad7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c18aad7002a97cf179b726ad7f99df2439a938de))
+* **release:** 4.10.1
 
+### Ci
 
-### Bug Fixes
+* fix name in release
 
-* adding error code if merging / branch error ([21a7ded](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/21a7ded7960c84474b6bdc9fa11b1aa55bc992e1))
-* adding repoFrontmatter as value ([1bb72fa](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1bb72fad45566a554de8c5dcec8897fa49745419))
-* attemp to fix multiple added status bar ([0e322fd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0e322fd955493a2424764a11370de23bac35027e)), closes [#45](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/45)
-* fix package.json missing build run ([4d243e6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4d243e64eaed6a68e5361c210d079562dc093047))
-* prevent array not copyLink if multiple repo are found (use default settings if multiple repo and not baselink) ([e39af6e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e39af6e4ce1ae1b8af3c2988750ae5eb729898f4))
-* prevent error in branchName if `.` in it ([16cf0b8](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16cf0b81ac7218f61ced989b38e2dbcce28e615c))
-* **regex:** add 'gi' as default flags for regex ([c30c571](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c30c571ce7b3ea0926b80cf0af1a61a817e9919b))
-* **regex:** Prevent flags errors ([ab6717f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ab6717f697970717e6f5a8e0f0b3d4de663e2316))
-* remove useless check repo as repo is never an Array ([ca80e08](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ca80e0805d81340466c1a3a5966688538de5264c))
-* rework translation ([927bcb3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/927bcb33353d7a84662836b9955874365909a339))
-* typo ([d51e988](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d51e98896069ce2491a7a3ecd7419f071bca0657))
-* **UI:** increase the size for  UI in column ([da975fb](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/da975fb8e4381abb6bc60dc40fb4e0dd0aecc63b))
+### Fix
 
-### [4.5.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.5.0...4.5.1) (2022-11-12)
+* **obsidianPath:** if folder note outside, wrong filepath created
 
 
-### Bug Fixes
+<a name="4.10.0"></a>
+## [4.10.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.9.2...4.10.0) (2022-12-31)
 
-* in some condition, .md is append on image ([98e6a5e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/98e6a5e901f27c002aa6f890759c735ee2c91120)), closes [#39](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/39)
+### Chore
 
-## [4.5.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.4.2...4.5.0) (2022-10-31)
+* **release:** 4.10.0
+* **release:** 4.9.2
 
+### Feat
 
-### Features
+* adding a new option that allow to change the name of folder note file
 
-* Adding per-files option for repo & autoclean ([f06712d](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f06712d68fe26db4348fbd5f8026769e3d353026))
+### Fix
 
+* index note not recognized using regex
 
-### Bug Fixes
+### Refactor
 
-* wrong message when successfully publishing on another repo ([2bf3234](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2bf3234c93330f9e26aa1f48dab2cfaf6596ae66))
+* **i18n:** improve translation
 
-### [4.4.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.4.1...4.4.2) (2022-10-20)
+### Test
 
+* **fixture:** update
 
-### Bug Fixes
 
-* Relative broken links after converting with markdown links ([6981724](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/6981724ba2d47c9ab90679597da0cf76e056534f)), closes [#37](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/37)
+<a name="4.9.2"></a>
+## [4.9.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.9.1...4.9.2) (2022-12-29)
 
-### [4.4.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.4.0...4.4.1) (2022-10-19)
+### Chore
 
+* **release:** 4.9.2
+* **release:** 4.9.1
 
-### Bug Fixes
+### Fix
 
-* TypeError: Cannot read properties of undefined (reading 'share') ([321bcf1](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/321bcf1a36034289b579d1a7997db9235981d61a))
+* remove the regex edition of title from the title key settings
 
-## [4.4.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.6...4.4.0) (2022-10-16)
 
+<a name="4.9.1"></a>
+## [4.9.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.9.0...4.9.1) (2022-12-28)
 
-### Features
+### Chore
 
-* adding "moment" for text replacer ([f1dd05a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f1dd05a0b6b12422bd63d3b24828b686489658eb))
-* support frontmatter's filename when converting wikilinks ([c2dcde7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c2dcde7501d67dff3af9442f41ba2857d6d36f14))
+* trying to fix this
+* **actions:** Use gh-release instead of actions
+* **actions:** trying to fix this fucking things
+* **bump:** update manifest-beta
+* **release:** 4.9.1
 
+### Fix
 
-### Bug Fixes
+* use the filetitle instead of basename for commands menu
 
-* failing silently when branch is master not main ([ccdd7a7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ccdd7a7ae761f10056f590eacdb27b6855a72222)), closes [#33](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/33)
-* **relativePath:** if two same folder name, the src generated is false ([06bd9be](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/06bd9beee6edf9d832b38c75b7f91ab0b9d7ff0f)), closes [#32](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/32)
 
-### [4.3.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.5...4.3.6) (2022-10-01)
+<a name="4.9.0"></a>
+## [4.9.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.8.1...4.9.0) (2022-12-24)
 
+### Chore
 
-### Bug Fixes
+* forgot entry points
+* fix styles.css created in duplicate when building
+* fix release latest not found
+* fix conditions
+* move style.css to plugin/settings folder
+* fix indent on release.yml
+* update release.yml file
+* update manifest beta
+* **actions:** indent again
+* **release:** 4.9.0
 
-* share external modified share file when disabled ([2216ba1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2216ba18e612f5d9ae6f171ac9002d319a0888ae))
+### Feat
 
-### [4.3.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.4...4.3.5) (2022-09-29)
+* apply a regex on the filename directly close [#60](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/60)
 
+### Refactor
 
-### Bug Fixes
+* move style.css to plugin/settings folder
 
-* forgot webp files in attachments ([db59358](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/db59358ccac06f90cc4a058fe60f39d729ce7d86))
 
-### [4.3.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.3...4.3.4) (2022-09-21)
+<a name="4.8.1"></a>
+## [4.8.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.8.0...4.8.1) (2022-12-20)
 
+### Chore
 
-### Bug Fixes
+* update minify/source map building for easier debug
+* **release:** 4.8.1
 
-* add alt text to get a better name ([fff8280](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/fff8280e5fd4066b536676e2a6b3fc57de352f82))
+### Fix
 
-### [4.3.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.2...4.3.3) (2022-09-21)
+* Uncaught TypeError: Cannot read properties of null (reading 'path')
 
 
-### Bug Fixes
+<a name="4.8.0"></a>
+## [4.8.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.8.0-8...4.8.0) (2022-12-14)
 
-* duple in tags + remove tag key in generated keys ([8db3162](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8db31621672367e2e50b00d829529bca5fe03133))
+### Chore
 
-### [4.3.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.1...4.3.2) (2022-09-20)
+* **release:** 4.8.0
+* **release:** 4.8.0-8
 
+### Fix
 
-### Bug Fixes
+* adding more info about error
 
-* reference at same file return only a point ([457cd8b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/457cd8bf95894bac026e3dc40cfccd04e6e2478a))
 
-### [4.3.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.3.0...4.3.1) (2022-09-19)
+<a name="4.8.0-8"></a>
+## [4.8.0-8](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.8.0-7...4.8.0-8) (2022-12-13)
 
+### Chore
 
-### Bug Fixes
+* **release:** 4.8.0-8
+* **release:** 4.8.0-7
 
-* Link generation when # block ([5cadc8f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5cadc8f32ea2d109f394c2f0da6da551d28a7526))
+### Fix
 
-## [4.3.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.2.3...4.3.0) (2022-09-19)
+* Cannot read properties of undefined (reading 'filter') see [#58](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/58)
 
 
-### Features
+<a name="4.8.0-7"></a>
+## [4.8.0-7](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.8.0-6...4.8.0-7) (2022-12-10)
 
-* allow to remove embeds mentionning using removeEmbed frontmatter key ([7edee37](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7edee37a5eae91caf42f33e43f6ef415c7cd2a24))
-* share a file if they are externally modified ([cae032c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/cae032c600ffab13ddfbf291ec127c41ed5baf85))
+### Chore
 
+* **release:** 4.8.0-7
+* **release:** 4.8.0-6
 
-### Bug Fixes
+### Fix
 
-* better handling error during merge! ([7870553](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/787055351670bcdc8ae4651fb01a9e5cc12ae5d7))
-* boolean around conversion with embed and the rest ([02becaa](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/02becaabd966f01a5fc4e5c40d4718e79598a32d))
-* double fileHistory prevent pushing embeds ([e2a30bb](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e2a30bb3b64bda00f38544c02a06d8f55f2e3732))
-* forgot hardbreak settings ([a5a89ac](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a5a89ac141068b5fe959268f35c9269393cf027c))
-* links creation with false & non existant files ([8fa583f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8fa583f27a28876485f124c4c9d46dab1aa6de0a))
-* relative path for the same folder ([3a4f232](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3a4f232f6ebf8c3d5e58095cbd4140f7ae9bc5ab))
-* remove embedding on embed: false ([7d42abd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7d42abd269eacdd18ac68d15d7b646b9f3e99762))
-* sourceFrontmatter.attachmentLinks is null ([4e8387e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4e8387edccbd7aa84ebb4339f3ec6c9c1c320e49))
-* title not found for renaming ([d202df1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d202df1b815c05aaa5342000ebafe55c1ed308c6))
+* a typo broke every image links It's 3am and I need to sleep for the god sake
 
-### [4.2.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.2.2...4.2.3) (2022-09-06)
 
+<a name="4.8.0-6"></a>
+## [4.8.0-6](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.8.0-5...4.8.0-6) (2022-12-09)
 
-### Bug Fixes
+### Chore
 
-* auto-reference empty ([cd9f49d](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/cd9f49daf9d8fe95b6eb79e2640d81b7ac1b5e5d))
+* **release:** 4.8.0-6
+* **release:** 4.8.0-5
 
-### [4.2.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.2.1...4.2.2) (2022-09-06)
+### Fix
 
+* better delete message note in commit message
 
-### Bug Fixes
+### Refactor
 
-* dataview tables not converted because of the `\|` for alt ([c2a92c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c2a92c65c724864f343ac2c3773902440121c348))
-* image links removed because I again missed up with boolean ([457d035](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/457d0354200888433cc1cd67219b30f356f9c693)), closes [#30](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/30)
+* optimization
 
-### [4.2.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.2.0...4.2.1) (2022-09-05)
 
+<a name="4.8.0-5"></a>
+## [4.8.0-5](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.8.0-4...4.8.0-5) (2022-12-08)
 
-### Bug Fixes
+### Chore
 
-* allowing to send every file supported by obsidian as attachments ([6353acf](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6353acf47815b1580f3affc5e58396b9dd286e7a))
+* **release:** 4.8.0-5
+* **release:** 4.8.0-4
 
-## [4.2.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.2...4.2.0) (2022-09-05)
+### Fix
 
+* if frontmatter title is used, use this as filename for internal links that is not shared
+* if frontmatter title is used, use this as altText
 
-### Features
 
-* add image & embed frontmatter perfile settings ([708b04a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/708b04a83e897855c7aac6028b481a6756bcfafe))
-* add imageLink options ([e087cca](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e087ccad8fd5f7362e6218015bc4fdd1cac55b34))
-* frontmatter key for per file settings ([a49bc98](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a49bc98fe2bdd335df86f292c1be907c54da5c13))
-* send image using metadata value ([f43f16b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f43f16bfc2470412d3ba21b06412e61b0a918890)), closes [#28](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/28)
-* use another value than title to generate the filename ([c08a49b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c08a49b7f698f59ca7bc67678ae59e4ba2c7b657)), closes [PR#29](https://github.com/obsidianMkdocs/PR/issues/29)
+<a name="4.8.0-4"></a>
+## [4.8.0-4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.8.0-3...4.8.0-4) (2022-12-08)
 
+### Chore
 
-### Bug Fixes
+* **release:** 4.8.0-4
+* **release:** 4.8.0-3
 
-* add support for all files found by obsidian using getFirstLinkpathDest ([42ef09b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/42ef09bdbf9d8d4070669debc2ce71f402b45170))
-* add support for any file supported by obsidian ([d22bc61](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d22bc61042e3a3b27ff1816d8f0b11cf6f085701))
-* crash if dataview not installed ([f7de231](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f7de231791fb53749238186753752669063cc9c1))
-* crash if dataview not installed ([887ed5b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/887ed5b56c7518c86e5caf7e19c49d6540d5ff09))
-* forgot to replaceALL space. Not the first ([198da5a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/198da5ae2053cc5bac3ccacead36f48c158eb3fd))
-* image not shared/embeded also send ([2fcae41](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2fcae4124f595ab416bf2cf59bd42dc881fc332a))
-* in dataview, filename not recognize because of the last `\` ([97b262b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/97b262b696eef1c0c32e1d5bfe44b51ae516458a))
-* overriding dataview in better condition ([97c719b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/97c719ba1337ca0d500a2fab3795fcfa153de068))
-* overriding of hardbreak ([0d2a0e7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0d2a0e7fbb38de485e7e92e622e20e49f158bda9))
-* space in vault name broke the plugin ([d940069](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d94006945bc181591e3de34ec4a19843cf1e1086))
-* true/false between mdlinks parameters and links ([71dad6f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/71dad6f149ee179b404f7993eab11086f5fd9b15))
+### Fix
 
+* alt text using the path in obsidian
 
-### [4.1.3-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.2...4.1.3-1) (2022-08-29)
+### Refactor
 
-### [4.1.3-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.2...4.1.3-0) (2022-08-29)
+* remove useless logg
 
-### [4.1.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.1...4.1.2) (2022-08-29)
 
+<a name="4.8.0-3"></a>
+## [4.8.0-3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.8.0-2...4.8.0-3) (2022-12-08)
 
-### Bug Fixes
+### Chore
 
-* **tags:** exclude either filename AND display links ([17c8da9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/17c8da95d87d7cc31537cf9c0826594ae3cdf4b6))
+* **release:** 4.8.0-3
+* **release:** 4.8.0-2
 
-### [4.1.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.0.2...4.1.1) (2022-08-28)
+### Docs
 
+* **help:** add info about new frontmatter key for internals links & non shared internal links
+* **i18n:** more info about new options
+* **i18n:** add string for new settings
 
-### Features
+### Feat
 
-* field to tags conversion ([f8af7af](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f8af7afb58e1d5423b89665fd21d313159ae23fa)), closes [#26](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/26)
+* add 2 new frontmatter key for converting internal links
+* option to convert internal links pointing to non shared file
 
+### Fix
 
-### Bug Fixes
+* keep basename instead of alt text
+* internal links converted in some condition, internal links was converted same if the file is not shared TODO: Add an option to control that behavior
 
-* better naming for tags ([91c1930](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/91c193064c1613ef603319ce556d0673a27b9537))
-* inlines / previous tags removed if dataview inline field ([d040239](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d0402392574edabb076c996f34c50419ee7746ac)), closes [#26](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/26)
+### Merge
 
-## [4.2.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.0.2...4.2.0) (2022-08-28)
+* fix
 
+### Refactor
 
-### Features
+* create a function to allow comparative repoFrontmatter[]
+* convert repoFrontmatter to repoFrontmatter[] optimization of the plugin
 
-* field to tags conversion ([f8af7af](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f8af7afb58e1d5423b89665fd21d313159ae23fa)), closes [#26](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/26)
+### Style
 
+* prettier
 
-### Bug Fixes
 
-* better naming for tags ([91c1930](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/91c193064c1613ef603319ce556d0673a27b9537))
-* inlines / previous tags removed if dataview inline field ([d040239](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d0402392574edabb076c996f34c50419ee7746ac)), closes [#26](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/26)
+<a name="4.8.0-2"></a>
+## [4.8.0-2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.8.0-1...4.8.0-2) (2022-12-08)
 
-## [4.1.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.0.2...4.1.0) (2022-08-28)
+### Chore
 
+* update manifest with funding url
+* **release:** 4.8.0-2
+* **release:** 4.8.0-1
 
-### Features
+### Fix
 
-* field to tags conversion ([f8af7af](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f8af7afb58e1d5423b89665fd21d313159ae23fa)), closes [#26](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/26)
+* relative path created for no shared file / file from another repo
+* optimize multipleRepo & monoRepo perfile
+* prevent convert links when file is not on the same repo
 
 
-### Bug Fixes
+<a name="4.8.0-1"></a>
+## [4.8.0-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.8.0-0...4.8.0-1) (2022-12-06)
 
-* inlines / previous tags removed if dataview inline field ([d040239](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d0402392574edabb076c996f34c50419ee7746ac)), closes [#26](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/26)
+### Chore
 
-## [4.1.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.0.2...4.1.0-1) (2022-08-28)
+* minify main.js
+* **bump:** v4.7.0
+* **release:** 4.8.0-1
+* **release:** 4.8.0-0
 
+### Docs
 
-### Features
+* document everything for a better dev workflow
 
-* field to tags conversion ([f8af7af](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f8af7afb58e1d5423b89665fd21d313159ae23fa)), closes [#26](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/26)
 
+<a name="4.8.0-0"></a>
+## [4.8.0-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.7.0...4.8.0-0) (2022-12-06)
 
-### Bug Fixes
+### Chore
 
-* inlines / previous tags removed if dataview inline field ([d040239](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d0402392574edabb076c996f34c50419ee7746ac)), closes [#26](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/26)
+* **dep:** update api
+* **i18n:** Add translation string for metadataExtractor
+* **release:** 4.8.0-0
 
-## [4.1.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.0.2...4.1.0-0) (2022-08-28)
+### Dev
 
+* allow exporting json from MetadataExtractor
 
-### Features
+### Feat
 
-* field to tags conversion ([f8af7af](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f8af7afb58e1d5423b89665fd21d313159ae23fa)), closes [#26](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/26)
+* send metadata-extractor file
 
-### [4.0.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.0.1...4.0.2) (2022-08-26)
 
+<a name="4.7.0"></a>
+## [4.7.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.4...4.7.0) (2022-12-02)
 
-### Bug Fixes
+### Chore
 
-* **inlineTags:** handle the case where is no frontmatter tags in a note ([b75e914](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b75e9148379601f68c81e95dd01152a7bf742105)), closes [#24](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/24)
+* bump beta version
+* **dep:** update dataview api
+* **release:** 4.7.0
 
-### [4.0.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.0.0...4.0.1) (2022-08-26)
+### Feat
 
+* introduce regex for folder excluded & autocleanup
 
-### Bug Fixes
+### Refactor
 
-* addinlinetags removes part of note containing --- (keeping only the first) ([b196bbf](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b196bbf3288116184b68e751d5841a82b10beae0)), closes [#25](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/25)
-* handle the case where is no inline tags in a note ([99e87be](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/99e87be5e940fc9d847ff8e007bc5160b1076e4e)), closes [#24](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/24)
+* adding more info during load logging
+* convert string to list & convert old settings to prevent future errors
+* use noticeLog for error message
 
-## [4.0.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.17.1...4.0.0) (2022-08-26)
 
-### [3.17.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.17.0...3.17.1) (2022-08-25)
+<a name="4.6.4"></a>
+## [4.6.4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.3...4.6.4) (2022-12-02)
 
+### Chore
 
-### Bug Fixes
+* **release:** 4.6.4
 
-* forgot language string ([f575cab](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f575cab712c086ad5f7729e62d3494298a74837e))
+### Fix
 
-## [3.17.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.16.2...3.17.0) (2022-08-25)
+* **i18n:** forgot to check if locale translation exists; fix [#53](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/53)
 
 
-### Features
+<a name="4.6.3"></a>
+## [4.6.3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.2...4.6.3) (2022-12-01)
 
-* add inline tags in tags frontmatter ([54de5ad](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/54de5ad8ab03ee005e9610729c4102ba6780f24d)), closes [#23](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/23)
+### Chore
 
-### [3.16.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.16.1...3.16.2) (2022-08-23)
+* **release:** 4.6.3
 
+### Fix
 
-### Bug Fixes
+* setting is empty string in an array ⇒ convert to empty array Maybe fix error
 
-* add some docs directly in settings ([0ca53f2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0ca53f2b33e86c98f466712a3149b2f8aa7f78db))
 
-### [3.16.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.16.0...3.16.1) (2022-08-23)
+<a name="4.6.2"></a>
+## [4.6.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.1...4.6.2) (2022-12-01)
 
-## [3.16.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.15.0...3.16.0) (2022-08-23)
+### Chore
 
+* **release:** 4.6.2
 
-### Features
+### Fix
 
-* allow to regex replace some text ([649be97](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/649be978a3466d95b20f4ba2986efcadf695339e))
+* **autoCleanUpExcluded:** convert to empty array if emptry string (aka `""`)
 
 
-### Bug Fixes
+<a name="4.6.1"></a>
+## [4.6.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.1-0...4.6.1) (2022-12-01)
 
-* in some condition, autoclean can be activated same if the parameters is false ([4e46e02](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4e46e026fa70625b054257a1efe7f0f7734d88e2))
+### Chore
 
-## [3.15.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.7...3.15.0) (2022-08-12)
+* **release:** 4.6.1
+* **release:** 4.6.1-0
 
 
-### Features
+<a name="4.6.1-0"></a>
+## [4.6.1-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.0...4.6.1-0) (2022-12-01)
 
-* **i18n:** integrate ru translation ([ff1bfe7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ff1bfe71fda50e0cd8e18171a79a2464f18e0450))
-* **i18n:** ru translation ([218de5b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/218de5ba369b0827ab1ed4259efbd4cb423e533b))
+### Chore
 
-### [3.14.7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.6...3.14.7) (2022-08-11)
+* **release:** 4.6.1-0
 
+### Fix
 
-### Bug Fixes
+* add new string in test settings
+* **autoCleanUpExcluded:** string to list conversion of settings
 
-* character not removed when wikilinks are created ([6a175db](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6a175db4bedb5fd50cae84ad544682d07c6276bd)), closes [#19](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/19)
+### Refactor
 
-### [3.14.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.5...3.14.6) (2022-08-07)
+* quality of life for list
 
+### Style
 
-### Bug Fixes
+* **settings:** remove empty line
 
-* remove error when DOMException : document is not focused ([6a99c02](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6a99c02b86cb8e1220de1471062341cac878d327))
 
-### [3.14.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.4...3.14.5) (2022-08-07)
+<a name="4.6.0"></a>
+## [4.6.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.0-10...4.6.0) (2022-12-01)
 
+### Chore
 
-### Bug Fixes
+* **release:** 4.6.0
+* **release:** 4.6.0-10
 
-* deleted translation forgotten ([a2835c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a2835c1ddb3229338d9ef8671c6fa7421bb478c8))
-* file deleted because fileName != file.name in converted object ([9d77627](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/9d77627a6329546b570d428c2d45ec062ddaa0f5))
 
-### [3.14.5-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.4...3.14.5-0) (2022-08-06)
+<a name="4.6.0-10"></a>
+## [4.6.0-10](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.0-9...4.6.0-10) (2022-12-01)
 
+### Chore
 
-### Bug Fixes
+* **i18n:** Adding new strings for help
+* **release:** 4.6.0-10
+* **release:** 4.6.0-9
 
-* deleted translation forgotten ([a2835c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a2835c1ddb3229338d9ef8671c6fa7421bb478c8))
+### Fix
 
-### [3.14.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.3...3.14.4) (2022-08-06)
+* typo
+* **UI:** increase the size for  UI in column
 
 
-### Bug Fixes
+<a name="4.6.0-9"></a>
+## [4.6.0-9](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.0-8...4.6.0-9) (2022-12-01)
 
-* adding more check for changing filename to frontmatter title ([3944e88](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3944e88ade09ede7fd15a9342a7990b1f73fd6ff))
+### Chore
 
-### [3.14.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.2...3.14.3) (2022-08-06)
+* github action with CHANGELOG-beta.md if beta found
+* update package.json name
+* **release:** 4.6.0-9
+* **release:** 4.6.0-8
 
+### Feat
 
-### Bug Fixes
+* **UI:** Rework settings UI to use tab!
 
-* hotfix for title file generation ([b86cc34](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b86cc345043992e897213d8aad5d31723981d1cd))
 
-### [3.14.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.14.1...3.14.2) (2022-08-06)
+<a name="4.6.0-8"></a>
+## [4.6.0-8](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.0-7...4.6.0-8) (2022-11-29)
 
+### Chore
 
-### Features
+* update github action
+* **release:** 4.6.0-8
+* **release:** 4.6.0-7
 
-* Add using frontmatter title field for generate filename ([b1bad43](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b1bad4392e5ecb0a99e999cd1343385d7eee9ca8))
+### Fix
 
+* fix package.json missing build run
 
-### Bug Fixes
 
-* title wasn't used with frontmatter/fixed folder settings ([1489024](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1489024efffa0e8cc47221c27941a4215ceaae01))
+<a name="4.6.0-7"></a>
+## [4.6.0-7](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.0-6...4.6.0-7) (2022-11-29)
 
-### [3.14.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.11.0-0...3.14.1) (2022-08-05)
+### Chore
 
+* **release:** 4.6.0-7
+* **release:** 4.7.0-2
+* **release:** 4.7.0-1
+* **release:** 4.7.0-0
+* **release:** 4.6.0
+* **release:** 4.6.0-7
+* **release:** 4.6.0-6
 
-### Features
+### Feat
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* dataview queries will now follow path and links parameters ([bf6c181](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/bf6c181b3e33ddb9872ddeb981c43c9b1ce2ed7d))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* notice log in option to help debugging ([6ec514e](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/6ec514ef561e34a2f851e3e59cf0929886202a30))
-* prevent dataview conversion ([6125340](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/61253407daa118a88a0c417f9d2efec7f9752579))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
-* **text:** Hard line break conversion ([398f02c](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/398f02c5bd1d0bd8675af0337c67c245119b1a6a))
-* **translation:** add new variable ([de4b7c1](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+* **UI:** Better textArea (bigger) for settings
 
 
-### Bug Fixes
+<a name="4.6.0-6"></a>
+## [4.6.0-6](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.0-5...4.6.0-6) (2022-11-28)
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* typo broke the plugins ([a977cf9](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/a977cf960f0f5d730050e1eb16184e2f06e7b2f7))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+### Chore
 
-## [3.15.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.11.0-0...3.15.0) (2022-08-05)
+* **release:** 4.6.0-6
+* **release:** 4.6.0-5
 
+### Feat
 
-### Features
+* **regex:** better UI for regex flags
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* dataview queries will now follow path and links parameters ([bf6c181](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/bf6c181b3e33ddb9872ddeb981c43c9b1ce2ed7d))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* notice log in option to help debugging ([6ec514e](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/6ec514ef561e34a2f851e3e59cf0929886202a30))
-* prevent dataview conversion ([6125340](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/61253407daa118a88a0c417f9d2efec7f9752579))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
-* **text:** Hard line break conversion ([398f02c](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/398f02c5bd1d0bd8675af0337c67c245119b1a6a))
-* **translation:** add new variable ([de4b7c1](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+### Fix
 
+* **regex:** add 'gi' as default flags for regex
+* **regex:** Prevent flags errors
 
-### Bug Fixes
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* typo broke the plugins ([a977cf9](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/a977cf960f0f5d730050e1eb16184e2f06e7b2f7))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+<a name="4.6.0-5"></a>
+## [4.6.0-5](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.0-4...4.6.0-5) (2022-11-28)
 
-## [3.14.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.14.0) (2022-08-05)
+### Chore
 
+* **release:** 4.6.0-5
+* **release:** 4.6.0-4
 
-### Features
+### Feat
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* dataview queries will now follow path and links parameters ([bf6c181](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/bf6c181b3e33ddb9872ddeb981c43c9b1ce2ed7d))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* notice log in option to help debugging ([6ec514e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6ec514ef561e34a2f851e3e59cf0929886202a30))
-* prevent dataview conversion ([6125340](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/61253407daa118a88a0c417f9d2efec7f9752579))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
-* **text:** Hard line break conversion ([398f02c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/398f02c5bd1d0bd8675af0337c67c245119b1a6a))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+* add flags option for regex replacing close [#51](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/51), [#52](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/52)
 
 
-### Bug Fixes
+<a name="4.6.0-4"></a>
+## [4.6.0-4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.0-3...4.6.0-4) (2022-11-27)
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* typo broke the plugins ([a977cf9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a977cf960f0f5d730050e1eb16184e2f06e7b2f7))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+### Chore
 
-## [3.15.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.15.0) (2022-08-05)
+* **release:** 4.6.0-4
+* **release:** 4.6.0-3
 
+### Fix
 
-### Features
+* prevent error in branchName if `.` in it
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* dataview queries will now follow path and links parameters ([bf6c181](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/bf6c181b3e33ddb9872ddeb981c43c9b1ce2ed7d))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* notice log in option to help debugging ([6ec514e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6ec514ef561e34a2f851e3e59cf0929886202a30))
-* prevent dataview conversion ([6125340](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/61253407daa118a88a0c417f9d2efec7f9752579))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
-* **text:** Hard line break conversion ([398f02c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/398f02c5bd1d0bd8675af0337c67c245119b1a6a))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+### Refactor
 
+* refactor translation file
 
-### Bug Fixes
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* typo broke the plugins ([a977cf9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a977cf960f0f5d730050e1eb16184e2f06e7b2f7))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+<a name="4.6.0-3"></a>
+## [4.6.0-3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.0-2...4.6.0-3) (2022-11-27)
 
-## [3.14.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.14.0) (2022-08-05)
+### Chore
 
+* **release:** 4.6.0-3
+* **release:** 4.6.0-2
 
-### Features
+### Feat
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* dataview queries will now follow path and links parameters ([bf6c181](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/bf6c181b3e33ddb9872ddeb981c43c9b1ce2ed7d))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* notice log in option to help debugging ([6ec514e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6ec514ef561e34a2f851e3e59cf0929886202a30))
-* prevent dataview conversion ([6125340](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/61253407daa118a88a0c417f9d2efec7f9752579))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
-* **text:** Hard line break conversion ([398f02c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/398f02c5bd1d0bd8675af0337c67c245119b1a6a))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+* Option for not automatically merging PR Close [#47](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/47)
 
+### Fix
 
-### Bug Fixes
+* remove useless check repo as repo is never an Array
+* rework translation
+* attemp to fix multiple added status bar fix [#45](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/45)
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* typo broke the plugins ([a977cf9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a977cf960f0f5d730050e1eb16184e2f06e7b2f7))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
 
-## [3.14.0-8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.14.0-8) (2022-07-30)
+<a name="4.6.0-2"></a>
+## [4.6.0-2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.0-1...4.6.0-2) (2022-11-26)
 
+### Chore
 
-### Features
+* **release:** 4.6.0-2
+* **release:** 4.6.0-1
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* dataview queries will now follow path and links parameters ([bf6c181](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/bf6c181b3e33ddb9872ddeb981c43c9b1ce2ed7d))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* notice log in option to help debugging ([6ec514e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6ec514ef561e34a2f851e3e59cf0929886202a30))
-* prevent dataview conversion ([6125340](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/61253407daa118a88a0c417f9d2efec7f9752579))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
-* **text:** Hard line break conversion ([398f02c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/398f02c5bd1d0bd8675af0337c67c245119b1a6a))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+### Fix
 
+* prevent array not copyLink if multiple repo are found (use default settings if multiple repo and not baselink)
+* adding repoFrontmatter as value
+* adding error code if merging / branch error
 
-### Bug Fixes
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* typo broke the plugins ([a977cf9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a977cf960f0f5d730050e1eb16184e2f06e7b2f7))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+<a name="4.6.0-1"></a>
+## [4.6.0-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.6.0-0...4.6.0-1) (2022-11-26)
 
-## [3.14.0-7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.14.0-7) (2022-07-29)
+### Chore
 
+* **release:** 4.6.0-1
+* **release:** 4.6.0-0
 
-### Features
+### Feat
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* notice log in option to help debugging ([6ec514e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6ec514ef561e34a2f851e3e59cf0929886202a30))
-* prevent dataview conversion ([6125340](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/61253407daa118a88a0c417f9d2efec7f9752579))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
-* **text:** Hard line break conversion ([398f02c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/398f02c5bd1d0bd8675af0337c67c245119b1a6a))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+* Adding baselink frontmatter key Allowing to change the baselink for each documents
 
 
-### Bug Fixes
+<a name="4.6.0-0"></a>
+## [4.6.0-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.5.1...4.6.0-0) (2022-11-17)
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* typo broke the plugins ([a977cf9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a977cf960f0f5d730050e1eb16184e2f06e7b2f7))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+### Chore
 
-## [3.14.0-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.14.0-6) (2022-07-29)
+* **release:** 4.6.0-0
 
+### Feat
 
-### Features
+* Allow sending file to multiple repo using the key "repo"
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* notice log in option to help debugging ([6ec514e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6ec514ef561e34a2f851e3e59cf0929886202a30))
-* prevent dataview conversion ([6125340](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/61253407daa118a88a0c417f9d2efec7f9752579))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
-* **text:** Hard line break conversion ([398f02c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/398f02c5bd1d0bd8675af0337c67c245119b1a6a))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
 
+<a name="4.5.1"></a>
+## [4.5.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.5.0...4.5.1) (2022-11-12)
 
-### Bug Fixes
+### Chore
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* typo broke the plugins ([a977cf9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a977cf960f0f5d730050e1eb16184e2f06e7b2f7))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+* **release:** 4.5.1
 
-## [3.14.0-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.14.0-5) (2022-07-25)
+### Fix
 
+* in some condition, .md is append on image fix [#39](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/39)
 
-### Features
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* notice log in option to help debugging ([6ec514e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6ec514ef561e34a2f851e3e59cf0929886202a30))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
-* **text:** Hard line break conversion ([398f02c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/398f02c5bd1d0bd8675af0337c67c245119b1a6a))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+<a name="4.5.0"></a>
+## [4.5.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.5.0-2...4.5.0) (2022-10-31)
 
+### Chore
 
-### Bug Fixes
+* **release:** 4.5.0
+* **release:** 4.5.0-2
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* typo broke the plugins ([a977cf9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a977cf960f0f5d730050e1eb16184e2f06e7b2f7))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
 
-## [3.14.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.14.0-4) (2022-07-24)
+<a name="4.5.0-2"></a>
+## [4.5.0-2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.5.0-1...4.5.0-2) (2022-10-25)
 
+### Chore
 
-### Features
+* **release:** 4.5.0-2
+* **release:** 4.5.0-1
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* notice log in option to help debugging ([6ec514e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6ec514ef561e34a2f851e3e59cf0929886202a30))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
-* **text:** Hard line break conversion ([398f02c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/398f02c5bd1d0bd8675af0337c67c245119b1a6a))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+### Style
 
+* remove useless log
 
-### Bug Fixes
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* typo broke the plugins ([a977cf9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a977cf960f0f5d730050e1eb16184e2f06e7b2f7))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+<a name="4.5.0-1"></a>
+## [4.5.0-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.5.0-0...4.5.0-1) (2022-10-25)
 
-## [3.14.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.14.0-3) (2022-07-24)
+### Chore
 
+* **release:** 4.5.0-1
+* **release:** 4.5.0-0
 
-### Features
+### Fix
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* notice log in option to help debugging ([6ec514e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6ec514ef561e34a2f851e3e59cf0929886202a30))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
-* **text:** Hard line break conversion ([398f02c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/398f02c5bd1d0bd8675af0337c67c245119b1a6a))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+* wrong message when successfully publishing on another repo
 
 
-### Bug Fixes
+<a name="4.5.0-0"></a>
+## [4.5.0-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.4.2...4.5.0-0) (2022-10-25)
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+### Chore
 
-## [3.14.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.14.0-2) (2022-07-24)
+* **release:** 4.5.0-0
 
+### Feat
 
-### Features
+* Adding per-files option for repo & autoclean
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
-* **text:** Hard line break conversion ([398f02c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/398f02c5bd1d0bd8675af0337c67c245119b1a6a))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+### Style
 
+* reformat with prettier
 
-### Bug Fixes
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+<a name="4.4.2"></a>
+## [4.4.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.4.1...4.4.2) (2022-10-20)
 
-## [3.14.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.14.0-1) (2022-07-20)
+### Chore
 
+* **release:** 4.4.2
 
-### Features
+### Fix
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+* Relative broken links after converting with markdown links fix [#37](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/37)
 
 
-### Bug Fixes
+<a name="4.4.1"></a>
+## [4.4.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.4.0...4.4.1) (2022-10-20)
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+### Chore
 
-## [3.14.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.14.0-0) (2022-07-17)
+* **release:** 4.4.1
 
+### Fix
 
-### Features
+* TypeError: Cannot read properties of undefined (reading 'share') forgot to return filename if frontmatter doesn't exists
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* Dataview simple query are now correctly rendered! ([0b7b3c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
 
+<a name="4.4.0"></a>
+## [4.4.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.4.0-0...4.4.0) (2022-10-17)
 
-### Bug Fixes
+### Chore
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+* **release:** 4.4.0
+* **release:** 4.4.0-0
 
-## [3.13.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.13.0) (2022-07-14)
+### Feat
 
+* adding "moment" for text replacer allow to replace before the other replacement and after them
 
-### Features
+### Pull Requests
 
-* adding multiple possibility to remove part links ([6e922ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+* Merge pull request [#36](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/36) from kurko/add-first-tests
 
 
-### Bug Fixes
+<a name="4.4.0-0"></a>
+## [4.4.0-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.7-0...4.4.0-0) (2022-10-16)
 
-* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **translation:** Add deepl minimal translation ([35b7733](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+### Chore
 
-## [3.12.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.12.0) (2022-07-13)
+* **release:** 4.4.0-0
+* **release:** 4.3.7-0
 
+### Feat
 
-### Features
+* support frontmatter's filename when converting wikilinks
 
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+### Pull Requests
 
+* Merge pull request [#35](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/35) from kurko/support-frontmatter-filename
+* Merge pull request [#34](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/34) from AJAr/codespace-c739
 
-### Bug Fixes
 
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
-* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+<a name="4.3.7-0"></a>
+## [4.3.7-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.6...4.3.7-0) (2022-10-09)
 
-## [3.11.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.11.0) (2022-07-13)
+### Chore
 
+* **i18n:** Update translation for branch
+* **release:** 4.3.7-0
 
-### Features
+### Fix
 
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
-* **translation:** add new variable ([de4b7c1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+* failing silently when branch is master not main fix [#33](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/33)
+* **relativePath:** if two same folder name, the src generated is false fix [#32](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/32)
 
 
-### Bug Fixes
+<a name="4.3.6"></a>
+## [4.3.6](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.5...4.3.6) (2022-10-01)
 
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
+### Chore
 
-## [3.11.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.11.0-2) (2022-07-11)
+* **release:** 4.3.6
 
+### Fix
 
-### Features
+* share external modified share file when disabled
 
-* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
 
+<a name="4.3.5"></a>
+## [4.3.5](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.4...4.3.5) (2022-09-29)
 
-### Bug Fixes
+### Chore
 
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
+* **release:** 4.3.5
 
-## [3.11.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.11.0-0...3.11.0-1) (2022-07-10)
+### Fix
 
+* forgot webp files in attachments
 
-### Bug Fixes
 
-* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
+<a name="4.3.4"></a>
+## [4.3.4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.3...4.3.4) (2022-09-21)
 
-## [3.11.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.3-0...3.11.0-0) (2022-07-10)
+### Chore
 
+* **release:** 4.3.4
 
-### Features
+### Fix
 
-* **embed:** Adding specific settings to share embedded notes ([7396d6b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7396d6bbdab944a5ce5b1465e5676a4463a674f2))
-* **embed:** share embed files too! ([558cc74](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/558cc7474079a7529b1cb5d9ef7d5b919596e194))
-* **image:** adding statusbar for shared image ([4c3c57a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4c3c57a3194ec13664a9a2603cc3ed6a1426c521))
+* add alt text to get a better name (only for wikilinks)
 
-### [3.10.3-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2...3.10.3-0) (2022-07-10)
+### Perf
 
-### [3.10.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-7...3.10.2) (2022-07-07)
+* remove uncessary logging
+* remove uncessary logging
 
 
-### Bug Fixes
+<a name="4.3.3"></a>
+## [4.3.3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.2...4.3.3) (2022-09-21)
 
-* image path not converted correctly ([627172c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/627172ccb402191327c6d0321b7a852bee9b953e))
+### Chore
 
-### [3.10.2-7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-6...3.10.2-7) (2022-07-07)
+* **release:** 4.3.3
 
-### [3.10.2-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-5...3.10.2-6) (2022-07-07)
+### Fix
 
-### [3.10.2-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-4...3.10.2-5) (2022-07-07)
+* duple in tags + remove tag key in generated keys
 
-### [3.10.2-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-3...3.10.2-4) (2022-07-07)
 
-### [3.10.2-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-2...3.10.2-3) (2022-07-07)
+<a name="4.3.2"></a>
+## [4.3.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.1...4.3.2) (2022-09-20)
 
+### Chore
 
-### Bug Fixes
+* **release:** 4.3.2
 
-* attemps to fix image relative creator ([68a00b8](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/68a00b8a3ee7163ec2a1245f26d0d104d59659a6))
-* use alt text for linked files ([1b800cd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1b800cd3edf79ed14d33772292a61de1ff763aeb))
+### Fix
 
-### [3.10.2-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-1...3.10.2-2) (2022-07-07)
+* reference at same file return only a point
 
-### [3.10.2-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-0...3.10.2-1) (2022-07-07)
 
-### [3.10.2-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0...3.10.2-0) (2022-07-07)
+<a name="4.3.1"></a>
+## [4.3.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.0...4.3.1) (2022-09-19)
 
-### [3.10.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0...3.10.1) (2022-07-07)
+### Chore
 
-## [3.10.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0-5...3.10.0) (2022-07-07)
+* vault link
+* **release:** 4.3.1
 
-## [3.10.0-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0-4...3.10.0-5) (2022-07-05)
+### Fix
 
+* Link generation when # block
 
-### Features
 
-* prevent change links if file not shared ([79b930e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/79b930e3a6eb59ae90bf0d9f11a197c3424f8ba2))
+<a name="4.3.0"></a>
+## [4.3.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.0-5...4.3.0) (2022-09-19)
 
-## [3.10.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0-3...3.10.0-4) (2022-07-05)
+### Chore
 
+* remove beta changelog
+* **release:** 4.3.0
+* **release:** 4.3.0-5
 
-### Bug Fixes
 
-* Finally of finally of fixing the trim and length error in yaml. ([96c5dfb](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/96c5dfb135c6f9541425b4eccbfed916e94575b8))
+<a name="4.3.0-5"></a>
+## [4.3.0-5](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.0-4...4.3.0-5) (2022-09-13)
 
-## [3.10.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0-2...3.10.0-3) (2022-07-05)
+### Chore
 
+* **release:** 4.3.0-5
+* **release:** 4.3.0-4
 
-### Bug Fixes
+### Fix
 
-* finally fix this fucking trim & length error ([16a0763](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/16a07636fb677885cf2dd8ea6f4b012e8b3e346b))
+* better handling error during merge!
+* relative path for the same folder
 
-## [3.10.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0-1...3.10.0-2) (2022-07-05)
 
+<a name="4.3.0-4"></a>
+## [4.3.0-4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.0-3...4.3.0-4) (2022-09-13)
 
-### Bug Fixes
+### Chore
 
-* Fix trim reading of undefined ([610022c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/610022c591195b6cb3839684be8303a86e2f0c6b))
+* **release:** 4.3.0-4
+* **release:** 4.3.0-3
 
-## [3.10.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0-0...3.10.0-1) (2022-07-05)
+### Fix
 
-## [3.10.0-0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.3-1...3.10.0-0) (2022-06-28)
+* title not found for renaming send to lowercase to check index folder note
 
 
-### Features
+<a name="4.3.0-3"></a>
+## [4.3.0-3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.0-2...4.3.0-3) (2022-09-13)
 
-* support of setSection for items ([af6fca3](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/af6fca3be4ddc79f1034f26ff71319e6b53f7ad3))
+### Chore
 
-### [3.9.3-1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.3-0...3.9.3-1) (2022-06-23)
+* **release:** 4.3.0-3
+* **release:** 4.3.0-2
 
-### [3.9.3-0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.2...3.9.3-0) (2022-06-23)
+### Docs
 
+* **i18n:** Add string from last version
 
-### Bug Fixes
+### Feat
 
-* use a strict replacement of link ([ac5ae73](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/ac5ae734658b86cfa89f35d9be5e1e68bace98d3))
+* share a file if they are externally modified
 
-### [3.9.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.1...3.9.2) (2022-06-23)
 
+<a name="4.3.0-2"></a>
+## [4.3.0-2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.0-1...4.3.0-2) (2022-09-08)
 
-### Bug Fixes
+### Chore
 
-* embed files not converted ([19590d6](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/19590d6c0b64a3b7080a89742da5201c5c4a7704))
+* **release:** 4.3.0-2
+* **release:** 4.3.0-1
 
-### [3.9.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.0...3.9.1) (2022-06-19)
+### Fix
 
+* boolean around conversion with embed and the rest
+* sourceFrontmatter.attachmentLinks is null
 
-### Bug Fixes
 
-* crash if branch already exists and plugin take some times to scanning (adding notice) ([0dc7366](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/0dc73664049faf0df4ac005af68c623ec7ae23b7))
+<a name="4.3.0-1"></a>
+## [4.3.0-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.3.0-0...4.3.0-1) (2022-09-08)
 
-## [3.9.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.3-1...3.9.0) (2022-06-18)
+### Chore
 
+* **release:** 4.3.0-1
+* **release:** 4.3.0-0
 
-### Features
+### Docs
 
-* adding subfolder sync ([117c200](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/117c200977392da117649bb0f02fe1002e817763)), closes [#9](https://github.com/Mara-Li/obsidian-mkdocs-publisher/issues/9)
+* replace "image" to "attachment" because the plugin support every attachments
 
+### Fix
 
-### Bug Fixes
+* forgot hardbreak settings
+* double fileHistory prevent pushing embeds
 
-* crash on empty default path ([89815c2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/89815c2878721718812023afc0229833253eb75c)), closes [#10](https://github.com/Mara-Li/obsidian-mkdocs-publisher/issues/10)
+### Perf
 
-### [3.8.3-1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.2...3.8.3-1) (2022-06-18)
+* replace every attachment check by a function
+* remove uncessary logging
+* sanity management of frontmatter per files settings
 
-### [3.8.3-0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.2...3.8.3-0) (2022-06-18)
 
-### [3.8.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.2-0...3.8.2) (2022-06-18)
+<a name="4.3.0-0"></a>
+## [4.3.0-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.3...4.3.0-0) (2022-09-08)
 
-### [3.8.2-0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.1...3.8.2-0) (2022-06-18)
+### Chore
 
+* **release:** 4.3.0-0
+* **release:** 4.2.3
 
-### Bug Fixes
+### Feat
 
-* crash with multiple send ([45989ce](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/45989ce278669d0024c35c4ac4813f766efe539f))
+* allow to remove embeds mentionning using removeEmbed frontmatter key
 
-### [3.8.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.0...3.8.1) (2022-06-17)
+### Fix
 
+* links creation with false & non existant files
+* remove embedding on embed: false
 
-### Bug Fixes
+### Perf
 
-* **foldernote:** fix not renaming using frontmatter ([bb54447](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/bb54447abf1801c1623e444ea651e49ef0e5a49c))
+* remove uncessary logging
 
-## [3.8.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.7.0...3.8.0) (2022-06-17)
 
+<a name="4.2.3"></a>
+## [4.2.3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.2...4.2.3) (2022-09-06)
 
-### Features
+### Chore
 
-* Add a command for only edited notes ([a08c157](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/a08c157ee4a17fd88ec01b613f9ef4c529f0dac3))
-* share new and edited notes ([629296e](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/629296ef8fb5ec4f3b1cfb7a865416d20999c953))
+* **release:** 4.2.3
+* **release:** 4.2.2
 
+### Fix
 
-### Bug Fixes
+* auto-reference empty
 
-* error with checkcallback ([98f8b30](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/98f8b3045b287a4170617e851bc122a422a5d026))
 
-## [3.7.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.8...3.7.0) (2022-06-17)
+<a name="4.2.2"></a>
+## [4.2.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.1...4.2.2) (2022-09-06)
 
+### Chore
 
-### Features
+* **release:** 4.2.2
 
-* Adding a command to share only new shared notes ([176f586](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/176f586afed36d9b567f42bade9ade4883cfda60))
+### Fix
 
-### [3.6.8](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.7...3.6.8) (2022-06-17)
+* image links removed because I again missed up with boolean fix [#30](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/30)
+* dataview tables not converted because of the `\|` for alt
 
+### Perf
 
-### Bug Fixes
+* add merge conflic specific notice
 
-* index deleted by error using frontmatter settings ([dbcfe2b](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/dbcfe2bc3230dbd8b9d53f087cb7e66c11191767))
 
-### [3.6.7](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.6...3.6.7) (2022-06-17)
+<a name="4.2.1"></a>
+## [4.2.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0...4.2.1) (2022-09-05)
 
-### [3.6.6](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.5...3.6.6) (2022-06-15)
+### Chore
 
+* **release:** 4.2.1
+* **release:** 4.2.0
+* **release:** 4.2.0
 
-### Bug Fixes
+### Fix
 
-* fix regex convertor ([ca0e8ff](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/ca0e8ff9ae154c3892c6ee05d052b2865dc61293))
+* allowing to send every file supported by obsidian as attachments
 
-### [3.6.5](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.4...3.6.5) (2022-06-15)
 
+<a name="4.2.0"></a>
+## [4.2.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-14...4.2.0) (2022-09-05)
 
-### Bug Fixes
+### Chore
 
-* trim whitespace excluding autoclean ([f45ba1b](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/f45ba1bd8cfb4c1d7c479e779a683af4f6e0734c))
+* **release:** 4.2.0
+* **release:** 4.2.0-14
 
-### [3.6.4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.3...3.6.4) (2022-06-14)
 
+<a name="4.2.0-14"></a>
+## [4.2.0-14](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-13...4.2.0-14) (2022-09-05)
 
-### Bug Fixes
+### Chore
 
-* relative links and image not converted with wiki to md ([0755d37](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/0755d375e672ceeab1a0216e0c9f4bf63ec762f7)), closes [#8](https://github.com/Mara-Li/obsidian-mkdocs-publisher/issues/8)
+* **release:** 4.2.0-14
+* **release:** 4.2.0-13
 
-### [3.6.3](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.2...3.6.3) (2022-06-14)
+### Feat
 
+* use another value than title to generate the filename See PR[#29](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/29)
 
-### Bug Fixes
 
-* **img:** fix image path error ([c51f7b3](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/c51f7b3a6df4f586098543fd740434a44edf3267)), closes [#7](https://github.com/Mara-Li/obsidian-mkdocs-publisher/issues/7)
+<a name="4.2.0-13"></a>
+## [4.2.0-13](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-12...4.2.0-13) (2022-09-05)
 
-### [3.6.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.1...3.6.2) (2022-06-12)
+### Chore
 
+* **release:** 4.2.0-13
+* **release:** 4.2.0-12
 
-### Bug Fixes
+### Fix
 
-* error using category frontmatter because of metadataCache ([79c2dbe](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/79c2dbebbb0c7e00f5d1a2e57144fbcdfaace353))
+* in dataview, filename not recognize because of the last `\`
 
-### [3.6.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.0...3.6.1) (2022-06-05)
+### Perf
 
+* remove uncessary log
 
-### Bug Fixes
 
-* Alt text for wikilinks if index.md ([811592b](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/811592b18256d3e591e746f280a4e978c4756ef8))
+<a name="4.2.0-12"></a>
+## [4.2.0-12](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-11...4.2.0-12) (2022-09-05)
 
-## [3.6.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.5.0...3.6.0) (2022-06-05)
+### Chore
 
+* **release:** 4.2.0-12
+* **release:** 4.2.0-11
 
-### Features
+### Docs
 
-* Adding internal links converter and wikilinks to mdlinks ([742077a](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/742077a61112234aa05234ab7cf888a93a43e0e3))
+* **i18n:** update translation / docs follow [#28](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/28)
 
-## [3.5.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.4.0...3.5.0) (2022-06-01)
 
+<a name="4.2.0-11"></a>
+## [4.2.0-11](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-10...4.2.0-11) (2022-09-05)
 
-### Features
+### Chore
 
-* Adding support for folder note ! ([cde9603](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/cde96039d7537aa508f0a13967b465a06e3374b1))
+* **release:** 4.2.0-11
+* **release:** 4.2.0-10
 
-## [3.4.0](https://github.com/Mara-Li/obsidian-github-publisher/compare/3.3.1...3.4.0) (2022-05-28)
+### Fix
 
+* add support for all files found by obsidian using getFirstLinkpathDest
+* add support for any file supported by obsidian
 
-### Features
 
-* you can now exclude folder path from be deleted ! ([32a9737](https://github.com/Mara-Li/obsidian-github-publisher/commit/32a973728a3eb9d15b3fe195fe186d44597504a5))
+<a name="4.2.0-10"></a>
+## [4.2.0-10](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-9...4.2.0-10) (2022-09-05)
 
-### [3.3.1](https://github.com/Mara-Li/obsidian-github-publisher/compare/3.3.0...3.3.1) (2022-05-28)
+### Chore
 
-## [3.3.0](https://github.com/Mara-Li/obsidian-github-publisher/compare/3.2.0...3.3.0) (2022-05-27)
+* **release:** 4.2.0-10
+* **release:** 4.2.0-9
 
+### Feat
 
-### Features
+* send image using metadata value FR from [#28](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/28)
 
-* use PR + merge + delete branch instead of force push files ([ec8a367](https://github.com/Mara-Li/obsidian-github-publisher/commit/ec8a367f79a322deb9e3494890a1779d1fa5217a))
+### Fix
 
+* crash if dataview not installed
+* crash if dataview not installed
 
-### Bug Fixes
 
-* fix error with pullrequest & workflow ([af3e25b](https://github.com/Mara-Li/obsidian-github-publisher/commit/af3e25b70cef2f4e779d7cf61bcf1efb17be85f3))
+<a name="4.2.0-9"></a>
+## [4.2.0-9](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-8...4.2.0-9) (2022-09-05)
 
-## [3.2.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/compare/3.1.0...3.2.0) (2022-05-24)
+### Chore
 
+* **release:** 4.2.0-9
+* **release:** 4.2.0-8
 
-### Features
+### Fix
 
-* add cleanning command ([a91e0e4](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/commit/a91e0e4088ccba505fe6a1b4de0d4e5e7c02ad32))
+* forgot to replaceALL space. Not the first
 
+### Perf
 
-### Bug Fixes
+* rename class with new plugin name
 
-* add cleanning command ([a5a0c87](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/commit/a5a0c874db4046407b8f75d829a61e204003422e))
 
-## [3.1.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.0.1...3.1.0) (2022-05-23)
+<a name="4.2.0-8"></a>
+## [4.2.0-8](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-7...4.2.0-8) (2022-09-05)
 
+### Chore
 
-### Features
+* **release:** 4.2.0-8
+* **release:** 4.2.0-7
 
-* adding obsidian path option ([7714ae4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/7714ae42f6f7b8df9800e593987139de1c95a9d1))
+### Docs
 
-### [3.0.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.0.0...3.0.1) (2022-05-23)
+* adding comments for each function
 
+### Fix
 
-### Bug Fixes
+* space in vault name broke the plugin
 
-* double .yml if .yml in workflow name ([2d8dabc](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/2d8dabc7004ff9774986ce9199a8519f2b4e00ad))
 
-## [3.0.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.4.0...3.0.0) (2022-05-23)
+<a name="4.2.0-7"></a>
+## [4.2.0-7](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-6...4.2.0-7) (2022-09-04)
 
+### Chore
 
-### ⚠ BREAKING CHANGES
+* **release:** 4.2.0-7
+* **release:** 4.2.0-6
 
-* Remove the workflow update
+### Fix
 
-### Features
+* overriding of hardbreak
 
-* Universalize the plugin ([837ef71](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/837ef710663a2e2eb80613ac4076ffc5d2bb7de8))
 
-## [3.0.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.4.0...3.0.0) (2022-05-23)
+<a name="4.2.0-6"></a>
+## [4.2.0-6](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-5...4.2.0-6) (2022-09-04)
 
+### Chore
 
-### ⚠ BREAKING CHANGES
+* **release:** 4.2.0-6
+* **release:** 4.2.0-5
 
-* Remove the workflow update
+### Revert
 
-### Features
+* image not shared/embeded also send
 
-* Universalize the plugin ([837ef71](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/837ef710663a2e2eb80613ac4076ffc5d2bb7de8))
 
-## [2.4.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.3.4...2.4.0) (2022-05-18)
+<a name="4.2.0-5"></a>
+## [4.2.0-5](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-4...4.2.0-5) (2022-09-04)
 
+### Chore
 
-### Features
+* **release:** 4.2.0-5
+* **release:** 4.2.0-4
 
-* send a notification when the build workflow is completed ([1808766](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/180876642a195e55b7af21fcd28316b7c8ca45dd))
+### Fix
 
-### [2.3.4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.3.3...2.3.4) (2022-05-14)
+* image not shared/embeded also send
 
-### [2.3.3](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/compare/2.3.2...2.3.3) (2022-05-13)
 
+<a name="4.2.0-4"></a>
+## [4.2.0-4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-3...4.2.0-4) (2022-09-04)
 
-### Bug Fixes
+### Chore
 
-* **github:** github action delete filename with coma ([b89f153](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/commit/b89f15318638120f6402a9b18b8f5f444071c9e8))
+* **release:** 4.2.0-4
+* **release:** 4.2.0-3
 
-### [2.3.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.3.1...2.3.2) (2022-05-01)
+### Fix
 
+* overriding dataview in better condition
 
-### Bug Fixes
 
-* Trim settings whitespace ([4738991](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/4738991823aee63ad1f76834c0ac28204e525e7f)), closes [#4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/issues/4)
+<a name="4.2.0-3"></a>
+## [4.2.0-3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-2...4.2.0-3) (2022-09-04)
 
-### [2.3.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.3.1...2.3.2) (2022-05-01)
+### Chore
 
+* **release:** 4.2.0-3
+* **release:** 4.2.0-2
 
-### Bug Fixes
+### Feat
 
-* Trim settings whitespace ([4738991](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/4738991823aee63ad1f76834c0ac28204e525e7f)), closes [#4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/issues/4)
+* add imageLink options
 
-### [2.3.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.3.0...2.3.1) (2022-04-26)
 
+<a name="4.2.0-2"></a>
+## [4.2.0-2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-1...4.2.0-2) (2022-09-04)
 
-### Bug Fixes
+### Chore
 
-* **image:** Add catching error + log when reading metadataCache for image ([9250e23](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/9250e232e85d7ce413cff2bbab124ba3d0936aae))
-* **publish:** Checking file extension during publish ([c44c268](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/c44c268bbfb2f38e28f8a196f82ffea1d3d70000))
+* **release:** 4.2.0-2
+* **release:** 4.2.0-1
 
-## [2.3.0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.4...2.3.0) (2022-04-18)
+### Feat
 
+* add image & embed frontmatter perfile settings
 
-### Features
 
-* Update notice with repo name ([88ce078](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/88ce078766d9de24eb5a7ef3adb46eb2dae7c816))
+<a name="4.2.0-1"></a>
+## [4.2.0-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.2.0-0...4.2.0-1) (2022-09-04)
 
-### [2.2.4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.3...2.2.4) (2022-04-18)
+### Chore
 
-### [2.2.3](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.2...2.2.3) (2022-04-16)
+* **release:** 4.2.0-1
+* **release:** 4.2.0-0
 
-### [2.2.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.1...2.2.2) (2022-04-16)
+### Fix
 
+* true/false between mdlinks parameters and links
 
-### Bug Fixes
 
-* Run workflow only on success ([de4f3ce](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/de4f3ce971d5ac0fa2f462a5a26d2a55b0319f85))
+<a name="4.2.0-0"></a>
+## [4.2.0-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.1.3-1...4.2.0-0) (2022-09-04)
 
-### [2.2.1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.0...2.2.1) (2022-04-15)
+### Chore
 
+* **release:** 4.2.0-0
+* **release:** 4.1.3-1
 
-### Bug Fixes
+### Feat
 
-* File menu/menu editor doesn't active workflow ([8d2ce3e](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/8d2ce3e2cf7eacb05c8f1a3313623a03dabbd854))
-* If excludedFolder is empty, no file is shared ([f55d950](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/f55d950964b8a438a3c29c53f537f0d748e53caf))
+* frontmatter key for per file settings
 
-## [2.2.0](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/2.1.0...2.2.0) (2022-04-13)
 
+<a name="4.1.3-1"></a>
+## [4.1.3-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.1.3-0...4.1.3-1) (2022-08-29)
 
-### Features
+### Chore
 
-*  Adding editor menu option to share file on right click ([b7ed228](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/b7ed228989bd5cbaaa01ed001e8fb5ae63e8a6ea))
+* **release:** 4.1.3-1
+* **release:** 4.1.3-0
 
-## [2.1.0](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/2.0.3...2.1.0) (2022-04-13)
+### Docs
 
+* fix french typos
 
-### Features
 
-* Adding a command to update obs2mk setting using obsidian ([0496bed](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/0496bed29843a03afa1a8cdefb482958796dcffb))
+<a name="4.1.3-0"></a>
+## [4.1.3-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.1.2...4.1.3-0) (2022-08-29)
 
-### 2.0.3 (2022-04-12)
+### Chore
 
+* **release:** 4.1.3-0
+* **release:** 4.1.2
 
-### Bug Fixes
+### Perf
 
-* Typo ([ddf6591](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/ddf6591a5fe0fb00017f67145df5733347990efa))
+* adjust performance of tagging ; remove uncessary log
 
-### 2.0.2 (2022-04-12)
 
-### [2.0.1](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/2.0.0...2.0.1) (2022-04-11)
+<a name="4.1.2"></a>
+## [4.1.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.1.1...4.1.2) (2022-08-29)
 
+### Chore
 
-### Bug Fixes
+* **release:** 4.1.2
+* **release:** 4.1.1
 
-* Base64 errors on mobile ([26dbe6d](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/26dbe6d514f08ddc4ad60ced7d6cce16c14f2142))
+### Fix
 
-## [2.0.0](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/1.0.3...2.0.0) (2022-04-11)
+* **tags:** exclude either filename AND display links
 
 
-### ⚠ BREAKING CHANGES
+<a name="4.1.1"></a>
+## [4.1.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.1.0...4.1.1) (2022-08-29)
 
-* This change/erase the previous parameters. Also, the plugin need to be deleted from older installation.
+### Chore
 
-### Bug Fixes
+* **release:** 4.1.1
+* **release:** 4.2.0
+* **release:** 4.2.0
+* **release:** 4.1.0
 
-* Mobile multiples errors ([5eecb9a](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/5eecb9a4daa3b67fb1dbb109cd5133ce527ea7f9))
+### Fix
 
+* better naming for tags
 
-* !ci: Rename plugins ([f8926a3](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/f8926a335b0a6adb6763c8c61b3bc72766824864))
 
-### [1.0.3](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/1.0.2...1.0.3) (2022-04-11)
+<a name="4.1.0"></a>
+## [4.1.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.1.0-1...4.1.0) (2022-08-28)
 
+### Chore
 
-### Bug Fixes
+* **release:** 4.1.0
+* **release:** 4.1.0-1
 
-* Fix sharing one file with filemenu ([5e51626](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/5e51626b98ff0e0f2ade997f9bf54296143c7d09))
 
-### [1.0.2](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/1.0.1...1.0.2) (2022-04-11)
+<a name="4.1.0-1"></a>
+## [4.1.0-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.1.0-0...4.1.0-1) (2022-08-28)
 
+### Chore
 
-### Bug Fixes
+* **release:** 4.1.0-1
+* **release:** 4.1.0-0
 
-* Trim whitespace for excluded folder checking ([2a44ab9](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/2a44ab9b7c97c20eab6f190d59ed6c0a4f0ccb7c))
+### Fix
 
-### [1.0.1](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/1.0.0...1.0.1) (2022-04-11)
+* inlines / previous tags removed if dataview inline field close [#26](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/26)
 
 
-### Bug Fixes
+<a name="4.1.0-0"></a>
+## [4.1.0-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.0.2...4.1.0-0) (2022-08-28)
 
-* CheckCallback() and code duplicate; adding //[@ts-ignore](https://github.com/ts-ignore) for sha error ([9c559c8](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/9c559c8f8ebd7e02f80c2d93f9372deb1cad0f8d))
+### Chore
 
-## [1.0.0](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/0.0.2...1.0.0) (2022-04-11)
+* **release:** 4.1.0-0
 
-### [0.0.2](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/0.0.1...0.0.2) (2022-04-11)
+### Feat
 
-### 0.0.1 (2022-04-11)
+* field to tags conversion close [#26](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/26)
 
 
-### Features
+<a name="4.0.2"></a>
+## [4.0.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.0.1...4.0.2) (2022-08-26)
 
-* BREAKING CHANGE: It's the first version ([6d77162](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/6d771624ba91106e95b4ef281749c9fed560a804))
+### Chore
 
+* **release:** 4.0.2
+* **release:** 4.0.1
 
-### Bug Fixes
+### Fix
 
-* conflict ([0d72d97](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/0d72d97817bcdd9a30425139c1a1c50e7165a73f))
-* remove style.css ([4c767e0](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/4c767e0d2c5296d6b958210bb153980185a195cb))
+* **inlineTags:** handle the case where is no frontmatter tags in a note close: [#24](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/24) (again)
+
+
+<a name="4.0.1"></a>
+## [4.0.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.0.0...4.0.1) (2022-08-26)
+
+### Chore
+
+* **release:** 4.0.1
+* **release:** 4.0.0
+
+### Fix
+
+* addinlinetags removes part of note containing --- (keeping only the first) close [#25](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/25)
+* handle the case where is no inline tags in a note close [#24](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/24)
+
+
+<a name="4.0.0"></a>
+## [4.0.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.17.1...4.0.0) (2022-08-26)
+
+### Chore
+
+* **release:** 4.0.0
+* **release:** 3.17.1
+
+
+<a name="3.17.1"></a>
+## [3.17.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.17.0...3.17.1) (2022-08-25)
+
+### Chore
+
+* **release:** 3.17.1
+* **release:** 3.17.0
+
+### Fix
+
+* forgot language string
+
+
+<a name="3.17.0"></a>
+## [3.17.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.16.2...3.17.0) (2022-08-25)
+
+### Chore
+
+* lib ES2021 for replaceAll support
+* **release:** 3.17.0
+* **release:** 3.16.2
+
+### Feat
+
+* add inline tags in tags frontmatter close [#23](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/23)
+
+### Refactor
+
+* rename class
+
+
+<a name="3.16.2"></a>
+## [3.16.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.16.1...3.16.2) (2022-08-23)
+
+### Chore
+
+* **release:** 3.16.2
+* **release:** 3.16.1
+
+### Fix
+
+* add some docs directly in settings
+
+
+<a name="3.16.1"></a>
+## [3.16.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.16.0...3.16.1) (2022-08-23)
+
+### Chore
+
+* **release:** 3.16.1
+
+### Perf
+
+* list for censor description
+
+
+<a name="3.16.0"></a>
+## [3.16.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.15.0...3.16.0) (2022-08-23)
+
+### Chore
+
+* **release:** 3.16.0
+* **release:** 3.15.0
+
+### Feat
+
+* allow to regex replace some text
+
+### Fix
+
+* in some condition, autoclean can be activated same if the parameters is false
+
+
+<a name="3.15.0"></a>
+## [3.15.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.7...3.15.0) (2022-08-12)
+
+### Chore
+
+* **release:** 3.15.0
+
+### Feat
+
+* **i18n:** integrate ru translation
+* **i18n:** ru translation
+
+### Pull Requests
+
+* Merge pull request [#20](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/20) from zyuhel/patch-1
+
+
+<a name="3.14.7"></a>
+## [3.14.7](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.6...3.14.7) (2022-08-11)
+
+### Chore
+
+* **release:** 3.14.7
+* **release:** 3.14.6
+
+### Fix
+
+* character not removed when wikilinks are created close [#19](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/19)
+
+
+<a name="3.14.6"></a>
+## [3.14.6](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.5...3.14.6) (2022-08-07)
+
+### Chore
+
+* **release:** 3.14.6
+* **release:** 3.14.5
+
+### Fix
+
+* remove error when DOMException : document is not focused
+
+
+<a name="3.14.5"></a>
+## [3.14.5](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.5-0...3.14.5) (2022-08-07)
+
+### Chore
+
+* **release:** 3.14.5
+* **release:** 3.14.5-0
+
+### Docs
+
+* **i18n:** better translation
+
+### Fix
+
+* file deleted because fileName != file.name in converted object
+
+### Refactor
+
+* change filename, optimize interface object
+
+
+<a name="3.14.5-0"></a>
+## [3.14.5-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.4...3.14.5-0) (2022-08-06)
+
+### Chore
+
+* **release:** 3.14.5-0
+* **release:** 3.14.4
+
+### Fix
+
+* deleted translation forgotten
+
+
+<a name="3.14.4"></a>
+## [3.14.4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.3...3.14.4) (2022-08-06)
+
+### Chore
+
+* **release:** 3.14.4
+* **release:** 3.14.3
+
+### Fix
+
+* adding more check for changing filename to frontmatter title
+
+
+<a name="3.14.3"></a>
+## [3.14.3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.2...3.14.3) (2022-08-06)
+
+### Chore
+
+* **release:** 3.14.3
+* **release:** 3.14.2
+
+### Fix
+
+* hotfix for title file generation
+
+
+<a name="3.14.2"></a>
+## [3.14.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.1...3.14.2) (2022-08-06)
+
+### Chore
+
+* **release:** 3.14.2
+* **release:** 3.14.1
+
+### Feat
+
+* Add using frontmatter title field for generate filename
+
+### Fix
+
+* title wasn't used with frontmatter/fixed folder settings
+
+
+<a name="3.14.1"></a>
+## [3.14.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.0...3.14.1) (2022-08-05)
+
+### Chore
+
+* **release:** 3.14.1
+* **release:** 3.15.0
+* **release:** 3.14.0
+
+
+<a name="3.14.0"></a>
+## [3.14.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.0-8...3.14.0) (2022-08-05)
+
+### Chore
+
+* **release:** 3.14.0
+* **release:** 3.15.0
+* **release:** 3.14.0
+* **release:** 3.14.0-8
+
+### Style
+
+* lint for reading
+
+
+<a name="3.14.0-8"></a>
+## [3.14.0-8](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.0-7...3.14.0-8) (2022-07-30)
+
+### Chore
+
+* **release:** 3.14.0-8
+* **release:** 3.14.0-7
+
+### Feat
+
+* dataview queries will now follow path and links parameters
+
+
+<a name="3.14.0-7"></a>
+## [3.14.0-7](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.0-6...3.14.0-7) (2022-07-30)
+
+### Chore
+
+* **release:** 3.14.0-7
+* **release:** 3.14.0-6
+
+
+<a name="3.14.0-6"></a>
+## [3.14.0-6](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.0-5...3.14.0-6) (2022-07-30)
+
+### Chore
+
+* **release:** 3.14.0-6
+* **release:** 3.14.0-5
+
+### Feat
+
+* prevent dataview conversion
+
+
+<a name="3.14.0-5"></a>
+## [3.14.0-5](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.0-4...3.14.0-5) (2022-07-25)
+
+### Chore
+
+* **release:** 3.14.0-5
+* **release:** 3.14.0-4
+
+### Refactor
+
+* rename folders
+* **i18n:** Update translation
+
+### Style
+
+* **lint:** whitespace linter
+
+
+<a name="3.14.0-4"></a>
+## [3.14.0-4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.0-3...3.14.0-4) (2022-07-24)
+
+### Chore
+
+* **release:** 3.14.0-4
+* **release:** 3.14.0-3
+
+### Fix
+
+* typo broke the plugins
+
+
+<a name="3.14.0-3"></a>
+## [3.14.0-3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.0-2...3.14.0-3) (2022-07-24)
+
+### Chore
+
+* **release:** 3.14.0-3
+* **release:** 3.14.0-2
+
+### Docs
+
+* typo
+
+### Feat
+
+* notice log in option to help debugging
+
+
+<a name="3.14.0-2"></a>
+## [3.14.0-2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.0-1...3.14.0-2) (2022-07-24)
+
+### Chore
+
+* **release:** 3.14.0-2
+* **release:** 3.14.0-1
+
+### Feat
+
+* **text:** Hard line break conversion
+
+### Refactor
+
+* remove unused import
+
+
+<a name="3.14.0-1"></a>
+## [3.14.0-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.14.0-0...3.14.0-1) (2022-07-20)
+
+### Chore
+
+* **release:** 3.14.0-1
+* **release:** 3.14.0-0
+
+### Feat
+
+* support of FolderNote with outside+same name strategies
+
+
+<a name="3.14.0-0"></a>
+## [3.14.0-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.13.0...3.14.0-0) (2022-07-17)
+
+### Chore
+
+* **release:** 3.14.0-0
+* **release:** 3.13.0
+
+### Docs
+
+* **typo:** Typo in french translation
+
+### Feat
+
+* Dataview simple query are not correctly rendered!
+
+### Refactor
+
+* move file in another folder
+
+
+<a name="3.13.0"></a>
+## [3.13.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.12.0...3.13.0) (2022-07-14)
+
+### Chore
+
+* **release:** 3.13.0
+* **release:** 3.12.0
+
+### Docs
+
+* **translation:** update translation
+
+### Feat
+
+* adding multiple possibility to remove part links
+* send a link to the clipboard when sharing 1note
+
+### Fix
+
+* adding a way to remove part links (for mkdocs ...)
+* **translation:** Add deepl minimal translation
+
+
+<a name="3.12.0"></a>
+## [3.12.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.11.0...3.12.0) (2022-07-13)
+
+### Chore
+
+* **release:** 3.12.0
+* **release:** 3.11.0
+
+### Fix
+
+* **typo:** remove . in extension using obsidian.extension
+
+
+<a name="3.11.0"></a>
+## [3.11.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.11.0-2...3.11.0) (2022-07-13)
+
+### Chore
+
+* **release:** 3.11.0
+* **release:** 3.11.0-2
+
+### Docs
+
+* rename fr to frFR
+* add docs functions
+
+### Feat
+
+* **translation:** add new variable update translation
+
+### Pull Requests
+
+* Merge pull request [#16](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/16) from windily-cloud/add-i18n
+
+
+<a name="3.11.0-2"></a>
+## [3.11.0-2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.11.0-1...3.11.0-2) (2022-07-11)
+
+### Chore
+
+* **release:** 3.11.0-2
+* **release:** 3.11.0-1
+* **release:** 3.11.0-1
+
+### Feat
+
+* **embed:** share embed notes only on "one file" commands Sharing one note => share all hierarchy for embed notes
+
+
+<a name="3.11.0-1"></a>
+## [3.11.0-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.11.0-0...3.11.0-1) (2022-07-10)
+
+### Chore
+
+* bump 3.11.0-0
+* **release:** 3.11.0-1
+
+### Fix
+
+* **embed:** prevent cycle embed with file historic
+
+
+<a name="3.11.0-0"></a>
+## [3.11.0-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.3-0...3.11.0-0) (2022-07-10)
+
+### Chore
+
+* **release:** 3.11.0-0
+
+### Feat
+
+* **embed:** Adding specific settings to share embedded notes
+* **embed:** share embed files too!
+* **image:** adding statusbar for shared image
+
+### Refactor
+
+* **log:** remove uncessary message notice
+
+
+<a name="3.10.3-0"></a>
+## [3.10.3-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.2...3.10.3-0) (2022-07-10)
+
+### Chore
+
+* bump 3.10.2
+* **release:** 3.10.3-0
+
+
+<a name="3.10.2"></a>
+## [3.10.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.2-7...3.10.2) (2022-07-07)
+
+### Chore
+
+* **release:** 3.10.2
+
+### Fix
+
+* image path not converted correctly
+
+
+<a name="3.10.2-7"></a>
+## [3.10.2-7](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.2-6...3.10.2-7) (2022-07-07)
+
+### Beta
+
+* add new new logging event to check crash
+
+### Chore
+
+* **release:** 3.10.2-7
+
+
+<a name="3.10.2-6"></a>
+## [3.10.2-6](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.2-5...3.10.2-6) (2022-07-07)
+
+### Beta
+
+* added new logging event
+
+### Chore
+
+* **release:** 3.10.2-6
+
+
+<a name="3.10.2-5"></a>
+## [3.10.2-5](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.2-4...3.10.2-5) (2022-07-07)
+
+### Beta
+
+* logging event of merging
+
+### Build
+
+* update node version
+
+### Chore
+
+* **release:** 3.10.2-5
+
+
+<a name="3.10.2-4"></a>
+## [3.10.2-4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.2-3...3.10.2-4) (2022-07-07)
+
+### Beta
+
+* attemps fixing link, logging with notice for Ipad
+
+### Chore
+
+* **release:** 3.10.2-4
+
+
+<a name="3.10.2-3"></a>
+## [3.10.2-3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.2-2...3.10.2-3) (2022-07-07)
+
+### Chore
+
+* **release:** 3.10.2-3
+
+### Fix
+
+* use alt text for linked files
+* attemps to fix image relative creator
+
+
+<a name="3.10.2-2"></a>
+## [3.10.2-2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.2-1...3.10.2-2) (2022-07-07)
+
+### Build
+
+* log notice
+
+### Chore
+
+* **release:** 3.10.2-2
+
+
+<a name="3.10.2-1"></a>
+## [3.10.2-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.2-0...3.10.2-1) (2022-07-07)
+
+### Chore
+
+* **release:** 3.10.2-1
+
+
+<a name="3.10.2-0"></a>
+## [3.10.2-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.1...3.10.2-0) (2022-07-07)
+
+### Chore
+
+* **release:** 3.10.2-0
+* **release:** 3.10.1
+
+
+<a name="3.10.1"></a>
+## [3.10.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.0...3.10.1) (2022-07-07)
+
+### Chore
+
+* invert manifest revert: minappversion for non insider
+* **release:** 3.10.1
+
+
+<a name="3.10.0"></a>
+## [3.10.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.0-5...3.10.0) (2022-07-07)
+
+### Chore
+
+* **release:** 3.10.0
+
+
+<a name="3.10.0-5"></a>
+## [3.10.0-5](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.0-4...3.10.0-5) (2022-07-05)
+
+### Chore
+
+* **release:** 3.10.0-5
+
+### Feat
+
+* prevent change links if file not shared
+
+
+<a name="3.10.0-4"></a>
+## [3.10.0-4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.0-3...3.10.0-4) (2022-07-05)
+
+### Chore
+
+* **release:** 3.10.0-4
+
+### Fix
+
+* Finally of finally of fixing the trim and length error in yaml.
+
+
+<a name="3.10.0-3"></a>
+## [3.10.0-3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.0-2...3.10.0-3) (2022-07-05)
+
+### Chore
+
+* **release:** 3.10.0-3
+
+### Fix
+
+* finally fix this fucking trim & length error
+
+
+<a name="3.10.0-2"></a>
+## [3.10.0-2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.0-1...3.10.0-2) (2022-07-05)
+
+### Build
+
+* package.json update
+
+### Chore
+
+* **release:** 3.10.0-2
+
+### Fix
+
+* Fix trim reading of undefined
+
+
+<a name="3.10.0-1"></a>
+## [3.10.0-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.10.0-0...3.10.0-1) (2022-07-05)
+
+### Chore
+
+* **release:** 3.10.0-1
+
+
+<a name="3.10.0-0"></a>
+## [3.10.0-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.9.3-1...3.10.0-0) (2022-06-28)
+
+### Build
+
+* update dependencies
+
+### Chore
+
+* **release:** 3.10.0-0
+
+### Feat
+
+* support of setSection for items only for obsidian 15.3
+
+
+<a name="3.9.3-1"></a>
+## [3.9.3-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.9.3-0...3.9.3-1) (2022-06-23)
+
+### Chore
+
+* **release:** 3.9.3-1
+
+### Docs
+
+* adding links
+* update issue template
+
+### Style
+
+* the best debug method is console.log Change my mind!
+
+
+<a name="3.9.3-0"></a>
+## [3.9.3-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.9.2...3.9.3-0) (2022-06-23)
+
+### Chore
+
+* **release:** 3.9.3-0
+
+### Fix
+
+* use a strict replacement of link
+
+
+<a name="3.9.2"></a>
+## [3.9.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.9.1...3.9.2) (2022-06-23)
+
+### Chore
+
+* **release:** 3.9.2
+
+### Fix
+
+* embed files not converted regex hell
+
+
+<a name="3.9.1"></a>
+## [3.9.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.9.0...3.9.1) (2022-06-21)
+
+### Chore
+
+* **issue:** update form
+* **release:** 3.9.1
+* **release:** 3.9.1
+
+### Fix
+
+* regex lookbehind / ahead crash on ios Thanks Silver!
+* crash if branch already exists and plugin take some times to scanning (adding notice)
+
+### Revert
+
+* version error
+
+### Style
+
+* semicolon
+
+
+<a name="3.9.0"></a>
+## [3.9.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.8.3-1...3.9.0) (2022-06-18)
+
+### Chore
+
+* **release:** 3.9.0
+
+### Feat
+
+* adding subfolder sync close [#9](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/9)
+
+### Fix
+
+* crash on empty default path close [#10](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/10)
+
+### Refactor
+
+* use enum for folderRecept Settings
+
+### Style
+
+* add comments for reading help
+
+
+<a name="3.8.3-1"></a>
+## [3.8.3-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.8.3-0...3.8.3-1) (2022-06-18)
+
+### Chore
+
+* **release:** 3.8.3-1
+* **release:** 3.8.3-0
+
+### Perf
+
+* **merge:** allow squash merging methods
+
+
+<a name="3.8.3-0"></a>
+## [3.8.3-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.8.2...3.8.3-0) (2022-06-18)
+
+### Chore
+
+* **release:** 3.8.3-0
+* **release:** 3.8.2
+
+### Perf
+
+* remove log error about non existing image
+
+
+<a name="3.8.2"></a>
+## [3.8.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.8.2-0...3.8.2) (2022-06-18)
+
+### Chore
+
+* **release:** 3.8.2
+* **release:** 3.8.2-0
+
+
+<a name="3.8.2-0"></a>
+## [3.8.2-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.8.1...3.8.2-0) (2022-06-18)
+
+### Chore
+
+* **build:** add beta
+* **release:** 3.8.2-0
+* **release:** 3.8.3
+* **release:** 3.8.3-0
+* **release:** 3.8.2
+* **release:** 3.8.2
+
+### Fix
+
+* crash with multiple send
+
+### Perf
+
+* remove console.log
+
+### Reverts
+
+* chore(release): 3.8.2
+
+
+<a name="3.8.1"></a>
+## [3.8.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.8.0...3.8.1) (2022-06-17)
+
+### Chore
+
+* **release:** 3.8.1
+
+### Fix
+
+* **foldernote:** fix not renaming using frontmatter I forgot an option...
+
+
+<a name="3.8.0"></a>
+## [3.8.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.7.0...3.8.0) (2022-06-17)
+
+### Chore
+
+* **release:** 3.8.0
+
+### Feat
+
+* Add a command for only edited notes
+* share new and edited notes
+
+### Fix
+
+* error with checkcallback use callback with async
+
+### Refactor
+
+* rename class & functions
+* remove unused files
+
+
+<a name="3.7.0"></a>
+## [3.7.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.6.8...3.7.0) (2022-06-17)
+
+### Chore
+
+* **release:** 3.7.0
+
+### Feat
+
+* Adding a command to share only new shared notes
+
+### Refactor
+
+* refactor all commands
+
+
+<a name="3.6.8"></a>
+## [3.6.8](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.6.7...3.6.8) (2022-06-17)
+
+### Chore
+
+* **release:** 3.6.8
+
+### Fix
+
+* index deleted by error using frontmatter settings
+
+
+<a name="3.6.7"></a>
+## [3.6.7](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.6.6...3.6.7) (2022-06-17)
+
+### Chore
+
+* **release:** 3.6.7
+
+### Perf
+
+* fix matchedlink not iterable
+
+
+<a name="3.6.6"></a>
+## [3.6.6](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.6.5...3.6.6) (2022-06-15)
+
+### Chore
+
+* **release:** 3.6.6
+
+### Fix
+
+* fix regex convertor note: regex hell
+
+### Perf
+
+* ignore error if file not exists
+* adding support for auto-deleting branch from pr (github options)
+
+### Refactor
+
+* remove useless console.log
+* **merge:** adding a specific commit title for merging PR Now, all merging are prepend by [PUBLISHER] Merge #nb_pr
+
+
+<a name="3.6.5"></a>
+## [3.6.5](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.6.4...3.6.5) (2022-06-15)
+
+### Chore
+
+* **release:** 3.6.5
+
+### Fix
+
+* trim whitespace excluding autoclean
+
+
+<a name="3.6.4"></a>
+## [3.6.4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.6.3...3.6.4) (2022-06-14)
+
+### Chore
+
+* **release:** 3.6.4
+
+### Fix
+
+* relative links and image not converted with wiki to md close [#8](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/8)
+
+
+<a name="3.6.3"></a>
+## [3.6.3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.6.2...3.6.3) (2022-06-14)
+
+### Chore
+
+* **release:** 3.6.3
+
+### Fix
+
+* **img:** fix image path error Close [#7](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/7)
+
+
+<a name="3.6.2"></a>
+## [3.6.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.6.1...3.6.2) (2022-06-12)
+
+### Chore
+
+* **release:** 3.6.2
+
+### Fix
+
+* error using category frontmatter because of metadataCache
+
+### Refactor
+
+* remove useless console.log
+* delete branch if already exists
+* **delete:** check frontmatter of index file prevent deleting index created outside Obsidian using frontmatter keys
+
+
+<a name="3.6.1"></a>
+## [3.6.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.6.0...3.6.1) (2022-06-05)
+
+### Chore
+
+* **release:** 3.6.1
+
+### Fix
+
+* Alt text for wikilinks if index.md
+
+
+<a name="3.6.0"></a>
+## [3.6.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.5.0...3.6.0) (2022-06-05)
+
+### Chore
+
+* **release:** 3.6.0
+
+### Feat
+
+* Adding internal links converter and wikilinks to mdlinks
+
+### Refactor
+
+* Refactor settings for better comprehension
+* Renaming function
+* Create a function to create path for github
+
+
+<a name="3.5.0"></a>
+## [3.5.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.4.0...3.5.0) (2022-06-01)
+
+### Chore
+
+* **release:** 3.5.0
+
+### Feat
+
+* Adding support for folder note !
+
+
+<a name="3.4.0"></a>
+## [3.4.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.3.1...3.4.0) (2022-05-29)
+
+### Chore
+
+* **release:** 3.4.0
+
+### Feat
+
+* you can now exclude folder path from be deleted !
+
+
+<a name="3.3.1"></a>
+## [3.3.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.3.0...3.3.1) (2022-05-28)
+
+### Chore
+
+* **release:** 3.3.1
+
+### Style
+
+* remove useless console.log
+
+
+<a name="3.3.0"></a>
+## [3.3.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.2.0...3.3.0) (2022-05-28)
+
+### Chore
+
+* **release:** 3.3.0
+
+### Feat
+
+* use PR + merge + delete branch instead of force push files
+
+### Fix
+
+* fix error with pullrequest & workflow
+
+### Refactor
+
+* refactor files & cleanning
+
+
+<a name="3.2.0"></a>
+## [3.2.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.1.0...3.2.0) (2022-05-24)
+
+### Chore
+
+* **release:** 3.2.0
+
+### Feat
+
+* add cleanning command
+
+### Fix
+
+* add cleanning command => run clean when push /
+
+### Refactor
+
+* toggle move in function of the settings for folder
+
+### Style
+
+* correct indent
+
+
+<a name="3.1.0"></a>
+## [3.1.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.0.1...3.1.0) (2022-05-24)
+
+### Chore
+
+* **release:** 3.1.0
+
+### Feat
+
+* adding obsidian path option
+
+### Perf
+
+* Remove padding & border from hidden settings
+
+### Refactor
+
+* Adding noticeMessage for workflow
+* adding noticeMessage for workflow
+
+### Style
+
+* eslint
+* eslint
+* adding lint indentation
+
+
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/3.0.0...3.0.1) (2022-05-23)
+
+### Chore
+
+* **release:** 3.0.1
+
+### Fix
+
+* double .yml if .yml in workflow name
+
+
+<a name="3.0.0"></a>
+## [3.0.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.4.0...3.0.0) (2022-05-23)
+
+### Chore
+
+* **release:** 3.0.0
+* **release:** 3.0.0
+
+### Feat
+
+* Universalize the plugin
+
+### Pull Requests
+
+* Merge pull request [#5](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/5) from Mara-Li/Publisher
+
+### BREAKING CHANGE
+
+
+Remove the workflow update
+
+
+<a name="2.4.0"></a>
+## [2.4.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.3.4...2.4.0) (2022-05-18)
+
+### Chore
+
+* **release:** 2.4.0
+
+### Feat
+
+* send a notification when the build workflow is completed
+
+
+<a name="2.3.4"></a>
+## [2.3.4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.3.3...2.3.4) (2022-05-14)
+
+### Chore
+
+* **release:** 2.3.4
+
+### Refactor
+
+* remove json log
+
+
+<a name="2.3.3"></a>
+## [2.3.3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.3.2...2.3.3) (2022-05-13)
+
+### Chore
+
+* **release:** 2.3.3
+
+### Fix
+
+* **github:** github action delete filename with coma Change vault_published.txt to json
+
+
+<a name="2.3.2"></a>
+## [2.3.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.3.1...2.3.2) (2022-05-01)
+
+### Chore
+
+* **release:** 2.3.2
+* **release:** 2.3.4
+* **release:** 2.3.3
+* **release:** 2.3.2
+
+### Fix
+
+* Trim settings whitespace See [#4](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/4)
+
+### Revert
+
+* Revert wrong version number
+* Revert wrong version number
+
+
+<a name="2.3.1"></a>
+## [2.3.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.3.0...2.3.1) (2022-04-26)
+
+### Build
+
+* **obsidian:** Update Obsidian API
+
+### Chore
+
+* **release:** 2.3.1
+
+### Fix
+
+* **image:** Add catching error + log when reading metadataCache for image
+* **publish:** Checking file extension during publish
+
+### Refactor
+
+* Use setText instead of innerText
+* Remove arrayBufferToBase64 and use api
+
+
+<a name="2.3.0"></a>
+## [2.3.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.2.4...2.3.0) (2022-04-18)
+
+### Chore
+
+* **release:** 2.3.0
+
+### Feat
+
+* Update notice with repo name
+
+
+<a name="2.2.4"></a>
+## [2.2.4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.2.3...2.2.4) (2022-04-18)
+
+### Chore
+
+* **release:** 2.2.4
+
+### Refactor
+
+* Rename variable for convention
+
+### Pull Requests
+
+* Merge pull request [#3](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/3) from Mara-Li/repo-sync/obsidian_mkdocs_publisher_docs/default
+* Merge pull request [#2](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/2) from Mara-Li/repo-sync/obsidian_mkdocs_publisher_docs/default
+
+
+<a name="2.2.3"></a>
+## [2.2.3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.2.2...2.2.3) (2022-04-16)
+
+### Chore
+
+* **release:** 2.2.3
+* **release:** 2.2.3
+
+### Refactor
+
+* Remove useless error
+* Remove useless console.log ; error on console.error instead of log
+
+### Reverts
+
+* chore(release): 2.2.3
+
+
+<a name="2.2.2"></a>
+## [2.2.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.2.1...2.2.2) (2022-04-16)
+
+### Chore
+
+* **release:** 2.2.2
+
+### Fix
+
+* Run workflow only on success
+
+
+<a name="2.2.1"></a>
+## [2.2.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.2.0...2.2.1) (2022-04-16)
+
+### Chore
+
+* **release:** 2.2.1
+
+### Fix
+
+* File menu/menu editor doesn't active workflow
+* If excludedFolder is empty, no file is shared
+
+
+<a name="2.2.0"></a>
+## [2.2.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.1.0...2.2.0) (2022-04-13)
+
+### Chore
+
+* **release:** 2.2.0
+
+### Feat
+
+*  Adding editor menu option to share file on right click
+
+### Style
+
+* Use eslinter
+
+
+<a name="2.1.0"></a>
+## [2.1.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.0.3...2.1.0) (2022-04-13)
+
+### Chore
+
+* **release:** 2.1.0
+
+### Ci
+
+* match id & use get latest tag action
+
+### Docs
+
+* Adding the docs about the commands "update setting workflow"
+* Adding template issue
+
+### Feat
+
+* Adding a command to update obs2mk setting using obsidian
+
+### Refactor
+
+* Change folder and move files
+
+
+<a name="2.0.3"></a>
+## [2.0.3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.0.2...2.0.3) (2022-04-12)
+
+### CI
+
+* manuall release
+
+### Chore
+
+* **release:** 2.0.3
+
+### Fix
+
+* Typo
+
+
+<a name="2.0.2"></a>
+## [2.0.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.0.1...2.0.2) (2022-04-12)
+
+### Chore
+
+* **release:** 2.0.2
+
+### Ci
+
+* fix name
+* Create a manually workflow for quick update
+
+### Docs
+
+* typo
+* update token
+
+### Fix
+
+* Optimize with regex image extension  search
+* Update generating token link
+
+
+<a name="2.0.1"></a>
+## [2.0.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/2.0.0...2.0.1) (2022-04-12)
+
+### Chore
+
+* **release:** 2.0.1
+
+### Docs
+
+* Typo
+
+### Fix
+
+* Base64 errors on mobile
+
+
+<a name="2.0.0"></a>
+## [2.0.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/1.0.3...2.0.0) (2022-04-11)
+
+### Chore
+
+* **release:** 2.0.0
+
+### Ci
+
+* Reinstall standard version
+* Fix building
+
+### Fix
+
+* Mobile multiples errors
+
+### Test
+
+*  some testing to debug mobile
+
+
+<a name="1.0.3"></a>
+## [1.0.3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/1.0.2...1.0.3) (2022-04-11)
+
+### Chore
+
+* **release:** 1.0.3
+
+### Fix
+
+* Fix sharing one file with filemenu
+
+
+<a name="1.0.2"></a>
+## [1.0.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/1.0.1...1.0.2) (2022-04-11)
+
+### Chore
+
+* **release:** 1.0.2
+
+### Docs
+
+* **readme:** Adding credit + some useful plugins
+
+### Fix
+
+* Trim whitespace for excluded folder checking
+
+
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/1.0.0...1.0.1) (2022-04-11)
+
+### Chore
+
+* **release:** 1.0.1
+
+### Fix
+
+* CheckCallback() and code duplicate; adding //[@ts](https://github.com/ts)-ignore for sha error
+
+
+<a name="1.0.0"></a>
+## 1.0.0 (2022-04-11)
+
+### Chore
+
+* **release:** 1.0.0
+* **release:** 0.0.2
+* **release:** 0.0.1
+
+### Docs
+
+* Adding LICENSE
+* fix gif
+* adding metacopy & limitation info
+* add README
+
+### Feat
+
+* BREAKING CHANGE: It's the first version
+
+### Fix
+
+* conflict
+* remove style.css
+
+### Refactor
+
+* Adding file and hierarchy
+
