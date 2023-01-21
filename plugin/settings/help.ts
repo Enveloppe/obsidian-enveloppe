@@ -147,6 +147,12 @@ export function help(settings: GitHubPublisherSettings) {
 						)}`,
 					});
 				});
+				ul.createEl("li", null, (li) => {
+					li.createEl("code", { text: "autoclean", cls: "code-title" });
+					li.createEl("span", {
+						text: `: ${subSettings("help.frontmatter.autoclean")}`,
+					});
+				});
 			});
 		});
 		span.createEl("li", null, (span) => {
@@ -159,13 +165,7 @@ export function help(settings: GitHubPublisherSettings) {
 			});
 		});
 		span.createEl("li", null, (span) => {
-			span.createEl("code", { text: "autoclean", cls: "code-title" });
-			span.createEl("span", {
-				text: `: ${subSettings("help.frontmatter.autoclean")}`,
-			});
-		});
-		span.createEl("li", null, (span) => {
-			span.createEl("code", { text: "baseLink:", cls: "code-title" });
+			span.createEl("code", { text: "baseLink", cls: "code-title" });
 			span.createEl("span", {
 				text: `: ${subSettings("help.frontmatter.baselink")}`,
 			});
@@ -230,6 +230,7 @@ export function multipleRepoExplained(
 			el.createEl("li", { text: "owner" }).addClass("code");
 			el.createEl("li", { text: "repo" }).addClass("code");
 			el.createEl("li", { text: "branch" }).addClass("code");
+			el.createEl("li", { text: "autoclean" }).addClass("code");
 		});
 		el.createEl("span", {
 			text: subSettings("help.multiRepoHelp.exampleDesc") as string,
@@ -238,7 +239,7 @@ export function multipleRepoExplained(
 	multipleRepoExplained
 		.createEl("pre", { cls: "language-yaml" })
 		.createEl("code", {
-			text: `multipleRepo:\n  - owner: ${settings.githubName}\n    repo: ${settings.githubRepo}\n    branch: ${settings.githubBranch}\n  - owner: ${settings.githubName}\n    repo: my_second_brain\n    branch: master\n    autoclean: false`,
+			text: `multipleRepo:\n  - owner: ${settings.githubName}\n    repo: ${settings.githubRepo}\n    branch: ${settings.githubBranch}\n    autoclean: false\n  - owner: ${settings.githubName}\n    repo: my_second_brain\n    branch: master\n    autoclean: false`,
 			cls: "language-yaml",
 		});
 	return multipleRepoExplained;
