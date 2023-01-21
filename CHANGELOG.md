@@ -1,10 +1,19 @@
 
-<a name="v4.11.15rc3"></a>
-## [v4.11.15rc3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15rc2...v4.11.15rc3) (2023-01-22)
+<a name="4.11.15rc4"></a>
+## [4.11.15rc4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15rc3...4.11.15rc4) (2023-01-22)
+
+### Docs
+
+* fix mispelled docs
+
+
+<a name="4.11.15rc3"></a>
+## [4.11.15rc3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15rc2...4.11.15rc3) (2023-01-22)
 
 ### Chore
 
 * bump manifest
+* **bump:** Bump to rc3
 * **bump:** Update to RC2
 * **bump:** Update to rc2
 * **bump:** v4.11.15rc2

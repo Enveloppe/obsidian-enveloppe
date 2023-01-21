@@ -148,7 +148,7 @@ export function help(settings: GitHubPublisherSettings) {
 					});
 				});
 				ul.createEl("li", null, (li) => {
-					li.createEl("code", { text: "autoclean", cls: "code-title" });
+					li.createEl("code", { text: "autoclean"});
 					li.createEl("span", {
 						text: `: ${subSettings("help.frontmatter.autoclean")}`,
 					});
