@@ -1,6 +1,18 @@
 
-<a name="v4.11.15rc1"></a>
-## [v4.11.15rc1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15rc...v4.11.15rc1) (2023-01-21)
+<a name="v4.11.15rc2"></a>
+## [v4.11.15rc2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15rc1...v4.11.15rc2) (2023-01-21)
+
+### Chore
+
+* **bump:** v4.11.15rc1
+
+### Docs
+
+* forgot to add autoclean into some help
+
+
+<a name="4.11.15rc1"></a>
+## [4.11.15rc1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15rc...4.11.15rc1) (2023-01-21)
 
 ### Ci
 
