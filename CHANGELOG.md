@@ -1,6 +1,18 @@
 
-<a name="v4.11.15rc"></a>
-## [v4.11.15rc](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15-0...v4.11.15rc) (2023-01-18)
+<a name="v4.11.15rc1"></a>
+## [v4.11.15rc1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15rc...v4.11.15rc1) (2023-01-21)
+
+### Ci
+
+* **changelog:** add script to change tag
+
+### Fix
+
+* misbehavior between repo autoclean & index preventing removing
+
+
+<a name="4.11.15rc"></a>
+## [4.11.15rc](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15-0...4.11.15rc) (2023-01-19)
 
 
 <a name="4.11.15-0"></a>
