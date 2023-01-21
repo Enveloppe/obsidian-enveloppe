@@ -20,9 +20,9 @@ Here, you will only get a quick setup!
 - Supporting any markdown syntax supported by your template, as well as other formats like Mermaid or Latex
 - And many more :sparkles:
 
-> **Warning**
-> Do not use this plugin to sync or save your Obsidian Vault!
-> Avoid opening the converted files from your repository in Obsidian!
+> **Warning**  
+> Do not use this plugin to sync or save your Obsidian Vault!  
+> Avoid opening the converted files from your repository in Obsidian!  
 
 ---
 
