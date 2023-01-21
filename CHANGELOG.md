@@ -1,6 +1,21 @@
 
-<a name="v4.11.15rc2"></a>
-## [v4.11.15rc2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15rc1...v4.11.15rc2) (2023-01-21)
+<a name="v4.11.15rc3"></a>
+## [v4.11.15rc3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15rc2...v4.11.15rc3) (2023-01-22)
+
+### Chore
+
+* bump manifest
+* **bump:** Update to RC2
+* **bump:** Update to rc2
+* **bump:** v4.11.15rc2
+
+### Ci
+
+* create another python release
+
+
+<a name="4.11.15rc2"></a>
+## [4.11.15rc2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15rc1...4.11.15rc2) (2023-01-21)
 
 ### Chore
 

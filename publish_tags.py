@@ -7,11 +7,9 @@ def create_tag(tag_name: str):
     repo = Repo(os.path.dirname(os.path.realpath(__file__)))
     tag = repo.create_tag(tag_name, message=f"chore(bump): v{tag_name}")
     print(f"Tag {tag_name} created")
-    // add all file to commit
     repo.git.add(A=True)
     repo.index.commit(f"chore(bump): v{tag_name}")
     print(f"Commit {tag_name} created")
-    // Push tag to remote
     origin = repo.remote(name="origin")
     origin.push(tag)
     origin.push()
@@ -34,8 +32,10 @@ def bump_all_files(version: str):
         bump_file_version(version, file)
 
 def generate_changelog(version: str):
-    os.system(f"git-chglog --next-tag v{version} --output CHANGELOG.md")
-
+    if "b" in version:
+        os.system(f"git-chglog --next-tag v{version} --output CHANGELOG-beta.md")
+    else:
+        os.system(f"git-chglog --next-tag v{version} --output CHANGELOG.md")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -43,4 +43,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     bump_all_files(args.version)
     generate_changelog(args.version)
-    create_tag(args.version)
+    #create_tag(args.version)
