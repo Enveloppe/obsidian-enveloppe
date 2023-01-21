@@ -44,7 +44,8 @@ Before you begin, you will need to configure your Github repository.
 5. Now, run the command to publish: `Upload single current active note`  
 6. If everything is good, a PR will be created on your repository and will be automatically merged (this can be disabled if desired!).  
 
-That's it! However, there are many options that a simple README cannot cover, so please refer to the documentation for more information. 💕.  
+That's it! 
+However, there are many options that a simple README cannot cover, so please refer to the documentation for more information 💕.  
 
 ---  
 
