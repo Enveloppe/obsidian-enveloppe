@@ -7,10 +7,15 @@ def create_tag(tag_name: str):
     repo = Repo(os.path.dirname(os.path.realpath(__file__)))
     tag = repo.create_tag(tag_name, message=f"chore(bump): v{tag_name}")
     print(f"Tag {tag_name} created")
-    # commit
-    repo.git.add(update=True)
+    // add all file to commit
+    repo.git.add(A=True)
     repo.index.commit(f"chore(bump): v{tag_name}")
-    repo.remotes.origin.push(tag.path)
+    print(f"Commit {tag_name} created")
+    // Push tag to remote
+    origin = repo.remote(name="origin")
+    origin.push(tag)
+    origin.push()
+
 
 def bump_file_version(version: str, file: str):
     with open(file, "r+") as f:
