@@ -459,6 +459,7 @@ export function getRepoFrontmatter(
 	if (!frontmatter) {
 		return repoFrontmatter;
 	}
+	let isFrontmatterAutoClean= null;
 	if (frontmatter.multipleRepo !== undefined) {
 		const multipleRepo = parseMultipleRepo(frontmatter, repoFrontmatter);
 		if (multipleRepo.length === 1) {
@@ -476,12 +477,18 @@ export function getRepoFrontmatter(
 			if (frontmatter.repo.owner !== undefined) {
 				repoFrontmatter.owner = frontmatter.repo.owner;
 			}
+			if (frontmatter.repo.autoclean !== undefined) {
+				repoFrontmatter.autoclean = frontmatter.repo.autoclean;
+				isFrontmatterAutoClean = true;
+			}
 		} else {
 			const repo = frontmatter.repo.split("/");
+			isFrontmatterAutoClean= repo.length > 4 ? true : null;
 			repoFrontmatter = repositoryStringSlice(repo, repoFrontmatter);
+
 		}
 	}
-	if (frontmatter.autoclean !== undefined) {
+	if (frontmatter.autoclean !== undefined && isFrontmatterAutoClean === null) {
 		repoFrontmatter.autoclean = frontmatter.autoclean;
 	}
 	return repoFrontmatter;

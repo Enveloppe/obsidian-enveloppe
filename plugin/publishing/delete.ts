@@ -272,11 +272,11 @@ async function checkIndexFiles(
 			// if not share => don't delete
 			// Key preventing deletion :
 			//	- index: true
-			//	- autoclean: false
+			//	- delete: false
 			// return true for NO DELETION
 			return (
 				fileFrontmatter.index === "true" ||
-				fileFrontmatter.autoclean === "false" ||
+				fileFrontmatter.delete === "false" ||
 				!fileFrontmatter.share
 			);
 		}

@@ -1016,7 +1016,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			`  owner: ${this.plugin.settings.githubName}\n` +
 			`  repo: ${this.plugin.settings.githubRepo}\n` +
 			`  branch: ${this.plugin.settings.githubBranch}\n` +
-			`autoclean: ${this.plugin.settings.autoCleanUp}\n` +
+			`  autoclean: ${this.plugin.settings.autoCleanUp}\n` +
 			`baseLink: ${this.plugin.settings.mainLink}`;
 		this.settingsPage
 			.createEl("pre", { cls: "language-yaml" })

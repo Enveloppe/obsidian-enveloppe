@@ -238,7 +238,7 @@ export function multipleRepoExplained(
 	multipleRepoExplained
 		.createEl("pre", { cls: "language-yaml" })
 		.createEl("code", {
-			text: `multipleRepo:\n  - owner: ${settings.githubName}\n    repo: ${settings.githubRepo}\n    branch: ${settings.githubBranch}\n  - owner: ${settings.githubName}\n    repo: my_second_brain\n    branch: master`,
+			text: `multipleRepo:\n  - owner: ${settings.githubName}\n    repo: ${settings.githubRepo}\n    branch: ${settings.githubBranch}\n  - owner: ${settings.githubName}\n    repo: my_second_brain\n    branch: master\n    autoclean: false`,
 			cls: "language-yaml",
 		});
 	return multipleRepoExplained;
