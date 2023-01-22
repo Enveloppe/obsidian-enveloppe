@@ -60,9 +60,9 @@ Each command is explained [here](https://github.com/ObsidianPublisher/obsidian-g
   
 ## How it works  
 
-First, the plugin will create a branch named after your vault name, where spaces are replaced by a `-`. After this, it will perform some conversion (based on your settings) and push to this branch.  
-  
-By default, the branch will be merged after processing the notes (either after one note or every note, depending on the command you use!)  
+1. The plugin will create a branch named after your vault, where spaces are replaced by a `-`.  
+2. The plugin will perform all conversion (based on your settings) and push the note(s) into the branch.  
+3. By default, the branch will be merged once all the notes (and their embedded files) have been processed.  
   
 > **Warning**  
 > Sometimes, the branch may not be merged due to merge conflicts. This can occur if you push too frequently.  
