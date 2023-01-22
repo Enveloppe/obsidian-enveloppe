@@ -9,7 +9,7 @@ def create_tag(tag_name: str):
     repo.git.add(update=True)
     repo.git.commit('-am', f"chore(bump): v{tag_name}")
     # create tag
-    repo.git.create_tag(f"v{tag_name}", message=f"chore(bump): v{tag_name}")
+    repo.create_tag(f"v{tag_name}")
     # push to remote
     repo.git.push('--atomic', 'origin', 'master', f"{tag_name}")
 
