@@ -4,15 +4,11 @@ import os
 import json
 
 def create_tag(tag_name: str):
-    repo = Repo(os.path.dirname(os.path.realpath(__file__)))
-    tag = repo.create_tag(tag_name, message=f"chore(bump): v{tag_name}")
-    print(f"Tag {tag_name} created")
-    repo.git.add(A=True)
-    repo.index.commit(f"chore(bump): v{tag_name}")
-    print(f"Commit {tag_name} created")
-    origin = repo.remote(name="origin")
-    origin.push(tag)
-    origin.push()
+    repo = Repo(os.getcwd())
+    repo.git.add(update=True)
+    repo.index.commit(f"Release {tag_name}")
+    repo.create_tag(tag_name)
+    repo.git.push('--atomic', 'origin', 'master', tag_name)
 
 
 def bump_file_version(version: str, file: str):
@@ -42,5 +38,5 @@ if __name__ == "__main__":
     parser.add_argument("version", help="The version to bump to")
     args = parser.parse_args()
     bump_all_files(args.version)
-    generate_changelog(args.version)
-    #create_tag(args.version)
+    #generate_changelog(args.version)
+    create_tag(args.version)
