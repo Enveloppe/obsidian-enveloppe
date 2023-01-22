@@ -13,7 +13,7 @@ You can help me to develop the plugin using `npm` !
 
 Some notes:
 
-- I use [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/) to generate the commit message, so please respect the format!
+- I use [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/) to generate the commit message, so please respect the format! 
 - Don't forget to document your functions!
 
 ## Translation
