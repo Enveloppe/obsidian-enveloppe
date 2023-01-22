@@ -6,7 +6,7 @@ import json
 def create_tag(tag_name: str):
     repo = Repo(os.getcwd())
     repo.git.add(update=True)
-    repo.index.commit(f"Release {tag_name}")
+    repo.index.commit(f"chore(bump): v{tag_name}")
     repo.create_tag(tag_name)
     repo.git.push('--atomic', 'origin', 'master', tag_name)
 
@@ -38,5 +38,5 @@ if __name__ == "__main__":
     parser.add_argument("version", help="The version to bump to")
     args = parser.parse_args()
     bump_all_files(args.version)
-    #generate_changelog(args.version)
+    generate_changelog(args.version)
     create_tag(args.version)
