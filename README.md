@@ -4,7 +4,7 @@ Publish your notes in your own GitHub repository for free and do whatever you wa
 
 This allows you to set up any template: Jekyll, Mkdocs, Hugo, and custom-made ones!  
   
-## Docs  
+## Documentation  
 
 [All documentation can be found here](https://obsidian-publisher.netlify.app/)  
   
@@ -67,21 +67,21 @@ Each command is explained [here](https://github.com/ObsidianPublisher/obsidian-g
 > **Warning**  
 > Sometimes, the branch may not be merged due to merge conflicts. This can occur if you push too frequently.  
   
----  
+
 ## Developing  
 
 Check [here](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/en/DEVELOPPING.md) if you want to help the plugin development.  
   
----  
+
 ## Looking for something?  
 
-→ [Settings explanation](https://obsidian-publisher.netlify.app/en/Obsidian/Settings/)  
-← [Commands references](https://obsidian-publisher.netlify.app/en/Obsidian/Commands)  
-→ [Template](https://obsidian-publisher.netlify.app/en/Getting%20Started/)  
-← [Developing](https://obsidian-publisher.netlify.app/en/Obsidian/Developping)  
+→ [Settings explanation](https://obsidian-publisher.netlify.app/Github%20Publisher/Settings/)  
+← [Commands references](https://obsidian-publisher.netlify.app/Github%20Publisher/Commands)  
+→ [Template](https://obsidian-publisher.netlify.app/Mkdocs%20Template/)  
+← [GitHub Discussion](https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions)  
   
 ---  
-If you find this plugin and workflow useful, you can give me some coffee money :<br>  
+If you find this plugin and workflow useful, you can give me some coffee money!<br>  
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;display:block;margin-left:50%;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>  
   
   
