@@ -1,16 +1,14 @@
-## GitHub Publisher  
+# GitHub Publisher  
   
 Publish your notes in your own GitHub repository for free and do whatever you want with them. ✨  
 
-This allows you to set up any template: Jekyll, Mkdocs, Hugo, and custom-made ones!  
+This allows you to set up any template: Jekyll, Mkdocs, Hugo, or custom-made ones!  
   
-## Documentation  
-
-[All documentation can be found here](https://obsidian-publisher.netlify.app/)  
+## 📑 [Documentation](https://obsidian-publisher.netlify.app/)  
   
 Here, you will only get a quick setup!  
   
-## Features  
+## 🪄 Features  
 
 - Converting `[[wikilinks]]` to markdown links  
 - Linking to other notes and updating the links according to your settings  
@@ -26,15 +24,15 @@ Here, you will only get a quick setup!
   
 ---  
 
-## Initial setup  
+## 🖥️ Initial setup  
 
-There are a lot of options available, some of which are pre-configured and others are optional.  
+There are plenty of options available, some of which are pre-configured and others are optional.  
   
-Before you begin, you will need to configure your Github repository.  
+Before you begin, you will need to configure your GitHub repository.  
 1. Fill in your username, repository name, and branch.  
-2. Generate a Github token from the settings link and paste it here.  
+2. Generate a GitHub token from the settings link and paste it here.  
 3. Click the button to check if everything is working as intended.  
-4. Now, let's try publishing your first note. To do this, you need to set the key `share: true` in the frontmatter of a file, like this:  
+4. Now, let's try publishing your first note! To achieve this, you need to set the key `share: true` in the frontmatter of a file, like this:  
 	```  
 	---  
 	share: true  
@@ -45,10 +43,10 @@ Before you begin, you will need to configure your Github repository.
   
 That's it! However, there are many options that a simple README cannot cover, so please refer to the documentation for more information. 💕.  
   
-## Usage  
+## ⚙️ Usage  
 
-The plugin adds seven commands, one of which is also available in the right-click menu.  
-- `Upload single current active note`  
+The plugin adds seven commands in the palette, one of which is also available in the right-click menu.  
+- `Upload single current active note` (*available in the right-click menu*)  
 - `Upload all notes`  
 - `Upload unpublished notes`  
 - `Refresh published and upload new notes`  
@@ -56,9 +54,9 @@ The plugin adds seven commands, one of which is also available in the right-clic
 - `Purge depublished and deleted files`  
 - `Test the connection to the configured repository`  
   
-Each command is explained [here](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/en/COMMANDS.md).  
+Each of the commands are explained [here](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/en/COMMANDS.md).  
   
-## How it works  
+## 🤖 How it works  
 
 1. The plugin will create a branch named after your vault, where spaces are replaced by a `-`.  
 2. The plugin will perform all conversion (based on your settings) and push the note(s) into the branch.  
@@ -66,14 +64,14 @@ Each command is explained [here](https://github.com/ObsidianPublisher/obsidian-g
   
 > **Warning**  
 > Sometimes, the branch may not be merged due to merge conflicts. This can occur if you push too frequently.  
-  
 
-## Developing  
+## 🪛 Developing  
 
-Check [here](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/en/DEVELOPPING.md) if you want to help the plugin development.  
-  
+You can :  
+- [Maintaining the project and adding new function](https://obsidian-publisher.netlify.app/github%20publisher/developping/#general)  
+- [Help with the translation](https://obsidian-publisher.netlify.app/github%20publisher/developping/#translation)  
 
-## Looking for something?  
+## 🪧 Looking for something?  
 
 → [Settings explanation](https://obsidian-publisher.netlify.app/Github%20Publisher/Settings/)  
 ← [Commands references](https://obsidian-publisher.netlify.app/Github%20Publisher/Commands)  
