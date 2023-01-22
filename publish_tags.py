@@ -43,4 +43,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     bump_all_files(args.version)
     generate_changelog(args.version)
-    create_tag(args.version)
+    #create_tag(args.version)
