@@ -1,6 +1,6 @@
 
-<a name="4.11.15rc4"></a>
-## [4.11.15rc4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15rc3...4.11.15rc4) (2023-01-22)
+<a name="v4.11.15rc4"></a>
+## [v4.11.15rc4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.15rc3...v4.11.15rc4) (2023-01-22)
 
 ### Docs
 
