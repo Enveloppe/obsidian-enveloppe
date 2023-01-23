@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [4.11.17-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.16...4.11.17-0) (2023-01-23)
+
+
+### Bug Fixes
+
+* set false if fixed folder for autoclean ([d4696af](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/d4696af6eec03a66c933f7af69e1d5ccfb8c8a04))
+* share multiple never check if autoclean is allowed ([76720b3](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/76720b372acc124c4f8a730db8bacf2c33062b1f)), closes [#87](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/87)
+
 ### [4.11.15-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.14...4.11.15-0) (2023-01-18)
 
 ## [4.8.0-8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.7.0...4.8.0-8) (2022-12-13)
