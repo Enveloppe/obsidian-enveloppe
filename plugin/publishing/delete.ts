@@ -63,6 +63,7 @@ async function deleteFromGithubOneRepo(
 	filesManagement: FilesManagement,
 	repo: RepoFrontmatter
 ): Promise<boolean> {
+	if (!repo.autoclean) return;
 	const getAllFile = await filesManagement.getAllFileFromRepo(
 		branchName,
 		octokit,
