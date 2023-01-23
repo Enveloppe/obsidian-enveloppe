@@ -8,6 +8,7 @@ import {
 	Vault,
 } from "obsidian";
 import {
+	folderSettings,
 	GitHubPublisherSettings,
 	MetadataExtractor,
 	RepoFrontmatter,
@@ -456,7 +457,10 @@ export function getRepoFrontmatter(
 		owner: settings.githubName,
 		autoclean: settings.autoCleanUp,
 	};
-	if (!frontmatter) {
+	if (settings.downloadedFolder === folderSettings.fixed) {
+		repoFrontmatter.autoclean = false;
+	}
+	if (!frontmatter || frontmatter.multipleRepo === undefined || frontmatter.repo === undefined) {
 		return repoFrontmatter;
 	}
 	let isFrontmatterAutoClean= null;
@@ -485,7 +489,6 @@ export function getRepoFrontmatter(
 			const repo = frontmatter.repo.split("/");
 			isFrontmatterAutoClean= repo.length > 4 ? true : null;
 			repoFrontmatter = repositoryStringSlice(repo, repoFrontmatter);
-
 		}
 	}
 	if (frontmatter.autoclean !== undefined && isFrontmatterAutoClean === null) {
@@ -563,7 +566,8 @@ function parseMultipleRepo(
 				(t) =>
 					t.repo === v.repo &&
 					t.owner === v.owner &&
-					t.branch === v.branch
+					t.branch === v.branch &&
+					t.autoclean === v.autoclean
 			) === i
 	);
 }
