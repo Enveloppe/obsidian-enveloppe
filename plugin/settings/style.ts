@@ -1,6 +1,6 @@
 import { Setting } from "obsidian";
 import GithubPublisherPlugin from "../main";
-import { folderSettings } from "./interface";
+import {folderSettings, GitHubPublisherSettings} from "./interface";
 
 /**
  * show a settings
@@ -23,6 +23,30 @@ export function hideSettings(containerEl: Setting) {
 	containerEl.nameEl.hide();
 	containerEl.controlEl.hide();
 }
+
+
+export function showHideBasedOnFolder(settings: GitHubPublisherSettings, frontmatterKeySettings: Setting, rootFolderSettings: Setting, subFolderSettings: Setting, folderNoteSettings: Setting) {
+	if (settings.downloadedFolder === folderSettings.yaml) {
+		showSettings(frontmatterKeySettings);
+		showSettings(rootFolderSettings);
+		hideSettings(subFolderSettings);
+		showSettings(folderNoteSettings);
+	} else {
+		hideSettings(frontmatterKeySettings);
+		hideSettings(rootFolderSettings);
+		if (
+			this.plugin.settings.downloadedFolder ===
+				folderSettings.obsidian
+		) {
+			showSettings(subFolderSettings);
+			showSettings(folderNoteSettings);
+		} else {
+			hideSettings(subFolderSettings);
+			hideSettings(folderNoteSettings);
+		}
+	}
+}
+
 
 /**
  * Show or hide the autoclean settings

@@ -1,6 +1,36 @@
 import { GitHubPublisherSettings } from "./interface";
 import { subSettings } from "../i18n";
 
+
+/**
+ * Export the YAML help to create an example of yaml with the value based on the Settings
+ * @param {GitHubPublisherSettings} settings
+ * @return {string}
+ */
+
+export function KeyBasedOnSettings(settings: GitHubPublisherSettings) {
+	return `${settings.shareKey}: true\n` +
+	"links:\n" +
+	`  mdlinks: ${settings.convertWikiLinks}\n` +
+	"  convert: true\n" +
+	`  internals: ${settings.convertForGithub}\n` +
+	`  nonShared: ${settings.convertInternalNonShared}\n` +
+	"embed:\n" +
+	`  send: ${settings.embedNotes}\n` +
+	"  remove: false\n" +
+	"attachment:\n" +
+	`  send: ${settings.embedImage}\n` +
+	`  folder: ${settings.defaultImageFolder}\n` +
+	`dataview: ${settings.convertDataview}\n` +
+	`hardBreak: ${settings.hardBreak}\n` +
+	"repo:\n" +
+	`  owner: ${settings.githubName}\n` +
+	`  repo: ${settings.githubRepo}\n` +
+	`  branch: ${settings.githubBranch}\n` +
+	`  autoclean: ${settings.autoCleanUp}\n` +
+	`baseLink: ${settings.mainLink}`;
+}
+
 /**
  * Create the contents of the help settings tab
  * @param {GitHubPublisherSettings} settings

@@ -2,12 +2,10 @@ import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
 import { Octokit } from "@octokit/core";
 import GithubPublisherPlugin from "./main";
 import {
-	hideSettings,
-	showSettings,
 	autoCleanCondition,
 	folderHideShowSettings,
 	autoCleanUpSettingsOnCondition,
-	shortcutsHideShow,
+	shortcutsHideShow, showHideBasedOnFolder,
 } from "./settings/style";
 import {
 	folderSettings,
@@ -20,6 +18,7 @@ import {
 	multipleRepoExplained,
 	supportMe,
 	usefullLinks,
+	KeyBasedOnSettings
 } from "./settings/help";
 
 import {checkRepositoryValidity} from "./commands";
@@ -396,25 +395,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 		}
 
-		if (this.plugin.settings.downloadedFolder === folderSettings.yaml) {
-			showSettings(frontmatterKeySettings);
-			showSettings(rootFolderSettings);
-			hideSettings(subFolderSettings);
-			showSettings(folderNoteSettings);
-		} else {
-			hideSettings(frontmatterKeySettings);
-			hideSettings(rootFolderSettings);
-			if (
-				this.plugin.settings.downloadedFolder ===
-				folderSettings.obsidian
-			) {
-				showSettings(subFolderSettings);
-				showSettings(folderNoteSettings);
-			} else {
-				hideSettings(subFolderSettings);
-				hideSettings(folderNoteSettings);
-			}
-		}
+		showHideBasedOnFolder(this.plugin.settings, frontmatterKeySettings, rootFolderSettings, subFolderSettings, folderNoteSettings);
+
 		this.settingsPage.createEl("h3", { text: "Github Workflow" });
 		new Setting(this.settingsPage)
 			.setName(settings("githubWorkflow", "githubActionName") as string)
@@ -997,31 +979,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		this.settingsPage.createEl("p", {
 			text: subSettings("help.frontmatter.desc") as string,
 		});
-		const yamlKeysUsefullBasedOnYourSettings =
-			`${this.plugin.settings.shareKey}: true\n` +
-			"links:\n" +
-			`  mdlinks: ${this.plugin.settings.convertWikiLinks}\n` +
-			"  convert: true\n" +
-			`  internals: ${this.plugin.settings.convertForGithub}\n` +
-			`  nonShared: ${this.plugin.settings.convertInternalNonShared}\n` +
-			"embed:\n" +
-			`  send: ${this.plugin.settings.embedNotes}\n` +
-			"  remove: false\n" +
-			"attachment:\n" +
-			`  send: ${this.plugin.settings.embedImage}\n` +
-			`  folder: ${this.plugin.settings.defaultImageFolder}\n` +
-			`dataview: ${this.plugin.settings.convertDataview}\n` +
-			`hardBreak: ${this.plugin.settings.hardBreak}\n` +
-			"repo:\n" +
-			`  owner: ${this.plugin.settings.githubName}\n` +
-			`  repo: ${this.plugin.settings.githubRepo}\n` +
-			`  branch: ${this.plugin.settings.githubBranch}\n` +
-			`  autoclean: ${this.plugin.settings.autoCleanUp}\n` +
-			`baseLink: ${this.plugin.settings.mainLink}`;
 		this.settingsPage
 			.createEl("pre", { cls: "language-yaml" })
 			.createEl("code", {
-				text: yamlKeysUsefullBasedOnYourSettings,
+				text: KeyBasedOnSettings(this.plugin.settings),
 				cls: "language-yaml",
 			});
 		this.settingsPage.appendChild(help(this.plugin.settings));
