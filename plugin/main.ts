@@ -24,10 +24,19 @@ import {getTitleField, regexOnFileName} from "./contents_conversion/filePathConv
 export default class GithubPublisher extends Plugin {
 	settings: GitHubPublisherSettings;
 
+	/**
+	 * Get the title field of a file
+	 * @param {TFile} file - The file to get the title field from
+	 * @param {FrontMatterCache} frontmatter - The frontmatter of the file
+	 * @return {string} - The title field of the file
+	 */
 	getTitleFieldForCommand(file:TFile, frontmatter: FrontMatterCache): string {
 		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
 	}
 
+	/**
+	 * Create a new instance of Octokit to load a new instance of GithubBranch 
+	*/
 	reloadOctokit() {
 		const octokit = new Octokit({ auth: this.settings.GhToken });
 		return new GithubBranch(
@@ -55,9 +64,6 @@ export default class GithubPublisher extends Plugin {
 		this.addSettingTab(new GithubPublisherSettings(this.app, this, branchName));
 		await convertOldSettings("ExcludedFolder", this);
 		await convertOldSettings("autoCleanUpExcluded", this);
-
-
-		const repo = getRepoFrontmatter(this.settings) as RepoFrontmatter;
 
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
@@ -184,7 +190,7 @@ export default class GithubPublisher extends Plugin {
 							this.settings,
 							publisher.octokit,
 							branchName,
-							repo
+							getRepoFrontmatter(this.settings) as RepoFrontmatter,
 						);
 					}
 					return true;
@@ -206,7 +212,7 @@ export default class GithubPublisher extends Plugin {
 					publisher.octokit,
 					statusBarItems,
 					branchName,
-					repo,
+					getRepoFrontmatter(this.settings) as RepoFrontmatter,
 					sharedFiles,
 					true
 				);
@@ -224,7 +230,7 @@ export default class GithubPublisher extends Plugin {
 					branchName,
 					this.app.vault,
 					this,
-					repo
+					getRepoFrontmatter(this.settings) as RepoFrontmatter,
 				);
 			},
 		});
@@ -240,7 +246,7 @@ export default class GithubPublisher extends Plugin {
 					branchName,
 					this.app.vault,
 					this,
-					repo
+					getRepoFrontmatter(this.settings) as RepoFrontmatter,
 				);
 			},
 		});
@@ -256,7 +262,7 @@ export default class GithubPublisher extends Plugin {
 					branchName,
 					this.app.vault,
 					this,
-					repo
+					getRepoFrontmatter(this.settings) as RepoFrontmatter,
 				);
 			},
 		});
