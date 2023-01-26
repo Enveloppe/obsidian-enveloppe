@@ -15,7 +15,6 @@ import {
 } from "./commands";
 import {commands, StringFunc, t, translationLanguage} from "./i18n";
 import {getTitleField, regexOnFileName} from "./contents_conversion/filePathConvertor";
-import {SettingValue} from "./src/modals";
 
 /**
  * Main class of the plugin
