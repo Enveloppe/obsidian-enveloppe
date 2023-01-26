@@ -195,10 +195,11 @@ export class ExportModal extends Modal {
 							href: `data:application/json;charset=utf-8,${encodeURIComponent(output)}`,
 						},
 					});
-				} else {
-					setting.addButton((b) => 
+				} else if (Platform.isMobile) {
+					setting.addButton((b) =>
 						b
-							.setButtonText(t("modals.export.download") as string).onClick(() => {
+							.setButtonText(t("modals.export.download") as string)
+							.onClick(() => {
 								// Can't use the method above on mobile, so we'll just open a new tab
 								//create a temporary file
 								this.app.vault.adapter.write(`${app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`, output);
@@ -210,7 +211,11 @@ export class ExportModal extends Modal {
 	}
 
 	onClose() {
-		this.app.vault.adapter.trashLocal(`${app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`);
+		try{
+			this.app.vault.adapter.trashSystem(`${app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`);
+		}catch(e){
+			//do nothing if file doesn't exist
+		}
 		const {contentEl} = this;
 		contentEl.empty();
 	}
