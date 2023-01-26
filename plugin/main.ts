@@ -35,15 +35,6 @@ export default class GithubPublisher extends Plugin {
 		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
 	}
 
-	setSettings(settings: Record<string, SettingValue>) {
-		Object.keys(settings).forEach((id) => {
-			// @ts-ignore
-			this.plugin.settings[id] = settings[id];
-		});
-
-		this.saveSettings();
-	}
-
 	/**
 	 * Create a new instance of Octokit to load a new instance of GithubBranch 
 	*/
