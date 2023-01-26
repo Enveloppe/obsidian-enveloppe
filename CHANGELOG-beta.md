@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.12.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.12.0-0...4.12.0-1) (2023-01-26)
+
+
+### Bug Fixes
+
+* error when using mobile ([0a7c193](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0a7c193b1ecc7fcbf570467cf79d3450c118298d))
+* reload settings tab when importing settings ([40dcbc4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/40dcbc4b3d1c8ec87975ae790d3819f53ce07d40))
+
 ## [4.12.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.17-0...4.12.0-0) (2023-01-26)
 
 
