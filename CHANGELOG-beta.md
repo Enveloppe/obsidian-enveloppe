@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.12.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.11.17-0...4.12.0-0) (2023-01-26)
+
+
+### Features
+
+* export & import settings ([90a6f9f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/90a6f9f4cff7ad53a33f0390a86b7b0a5c3cfa75)), closes [#94](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/94)
+
 ### [4.11.17-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/4.11.16...4.11.17-0) (2023-01-23)
 
 
