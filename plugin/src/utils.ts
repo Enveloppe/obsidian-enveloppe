@@ -464,13 +464,13 @@ export function getRepoFrontmatter(
 		return repoFrontmatter;
 	}
 	let isFrontmatterAutoClean= null;
-	if (frontmatter.multipleRepo !== undefined) {
+	if (frontmatter.multipleRepo) {
 		const multipleRepo = parseMultipleRepo(frontmatter, repoFrontmatter);
 		if (multipleRepo.length === 1) {
 			return multipleRepo[0] as RepoFrontmatter;
 		}
 		return multipleRepo;
-	} else if (frontmatter.repo !== undefined) {
+	} else if (frontmatter.repo) {
 		if (typeof frontmatter.repo === "object") {
 			if (frontmatter.repo.branch !== undefined) {
 				repoFrontmatter.branch = frontmatter.repo.branch;
@@ -684,5 +684,6 @@ export function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoF
 	}
 	const allInvalid = isEmpty.every((value) => value === true);
 	return !allInvalid;
-
 }
+
+
