@@ -1,114 +1,142 @@
 /* styles.css */
-.obs-git-publisher {
+.github-publisher {
 	border-top: transparent;
 	padding: 0 0 3px 0;
 }
-summary.obs-git-publisher-summary {
+summary.github-publisher-summary {
 	border-top: 1px solid var(--background-modifier-border);
 	padding-top: 10px;
 }
-.obs-git-publisher-censor-desc p {
+.github-publisher-censor-desc p {
 	margin: 0 !important;
 }
-.setting-item.obs-git-publisher-censor-desc {
+.setting-item.github-publisher-censor-desc {
 	padding: 0;
 }
-.setting-item.obs-git-publisher-censor-entry {
+.setting-item.github-publisher-censor-entry {
 	border: 0 !important;
 	padding: 0 !important;
 }
-hr.obs-git-publisher-hr {
+hr.github-publisher-hr {
 	margin: 1px !important;
 	padding-bottom: 1px;
 }
-.setting-item.obs-git-publisher-censor-entry input[placeholder="flags"] {
+.setting-item.github-publisher-censor-entry input[placeholder="flags"] {
 	width: 50px;
 }
-.setting-item.obs-git-publisher-censor-entry .setting-item-info {
+.setting-item.github-publisher-censor-entry .setting-item-info {
 	display: none;
 }
-.setting-item.obs-git-publisher-censor-entry .setting-item-control {
+.setting-item.github-publisher-censor-entry .setting-item-control {
 	width: auto;
 }
-.setting-item.obs-git-publisher-censor-entry
+.setting-item.github-publisher-censor-entry
 	> .setting-item-control
 	> input[type="text"]:first-child {
 	width: 300px;
 }
-.setting-item.obs-git-publisher-censor-entry
+.setting-item.github-publisher-censor-entry
 	> .setting-item-control
 	> input[type="text"]:nth-child(2) {
 	width: 250px;
 }
-button.obs-git-publisher-censor-flags {
+button.github-publisher-censor-flags {
 	box-shadow: none;
 	background-color: transparent;
 	border: 0;
 	padding: 0 0 0 5px;
 	margin: 0;
 }
-button.obs-git-publisher-censor-flags:hover {
+button.github-publisher-censor-flags:hover {
 	background-color: transparent;
 	box-shadow: none;
 	border: 0;
 }
-.obs-git-publisher-textarea textarea {
+.github-publisher-textarea textarea {
 	width: 250px;
 	height: 100px;
 }
-.settings-tab-bar.obs-git-publisher {
+.settings-tab-bar.github-publisher {
 	display: flex;
 	flex-direction: row;
 	gap: 4px;
 	overflow: hidden;
 	padding: 0;
 }
-.settings-tab.obs-git-publisher {
+
+.setting-item.github-publisher-export-import {
+	display: inline;
+	padding-bottom: 10px;
+}
+
+.github-publisher-export-import > .setting-item-info {
+	display: flex;
+	flex-direction: row;
+	gap: 4px;
+	overflow: hidden;
+	padding: 0;
+}
+
+.setting-item.github-publisher-export-import > .setting-item-control {
+	padding-bottom: 10px;
+}
+
+.settings-tab.github-publisher {
 	padding: 10px;
 	border: 1px solid var(--background-modifier-border);
 	border-radius: 5px;
 }
-.settings-tab.obs-git-publisher:hover {
+.settings-tab.github-publisher:hover {
 	background-color: var(--background-modifier-hover);
 }
 @media screen and (max-width: 900px) {
-	.settings-tab-bar.obs-git-publisher {
+	.settings-tab-bar.github-publisher,
+	.setting-item.github-publisher-export-import > .setting-item-control {
 		flex-direction: column;
 		width: 100%;
 	}
+
+	.setting-item.github-publisher-export-import
+		> .setting-item-control
+		button {
+		width: 100%;
+	}
+	a.github-publisher-copy+button {
+		height: 10%;
+	}
 }
 @media screen and (max-width: 1200px) {
-	.settings-tab-bar.obs-git-publisher {
+	.settings-tab-bar.github-publisher {
 		flex-wrap: wrap;
 	}
-	.settings-tab.obs-git-publisher {
+	.settings-tab.github-publisher {
 		border-bottom: 1px solid var(--background-modifier-border);
 	}
-	.settings-tab-bar.obs-git-publisher {
+	.settings-tab-bar.github-publisher {
 		border-bottom: 0;
 	}
 }
-.settings-tab-active.obs-git-publisher {
+.settings-tab-active.github-publisher {
 	background-color: var(--color-accent);
 	color: var(--text-on-accent);
 	border: 0;
 	border-bottom-right-radius: 0;
 	border-bottom-left-radius: 0;
 }
-.settings-tab-name.obs-git-publisher {
+.settings-tab-name.github-publisher {
 	font-weight: bold;
 	text-align: center;
 }
-.settings-tab-icon.obs-git-publisher {
+.settings-tab-icon.github-publisher {
 	text-align: center;
 }
-.settings-tab-page.obs-git-publisher > .setting-item:first-child {
+.settings-tab-page.github-publisher > .setting-item:first-child {
 	margin-top: 15px;
 }
-.settings-tab-page.obs-git-publisher h5 {
+.settings-tab-page.github-publisher h5 {
 	margin-bottom: 10px !important;
 }
-.settings-tab-page.obs-git-publisher code,
+.settings-tab-page.github-publisher code,
 .code {
 	color: var(--code-normal);
 	font-family: var(--font-monospace);
@@ -116,21 +144,101 @@ button.obs-git-publisher-censor-flags:hover {
 	border-radius: var(--radius-s);
 	font-size: var(--code-size);
 }
-.settings-tab-page.obs-git-publisher code.code-title,
+.settings-tab-page.github-publisher code.code-title,
 .code.code-title {
 	font-size: calc(var(--code-size) * 12px);
 	font-weight: bolder;
 	text-decoration: underline;
 }
 
-.setting-item.obs-git-publisher-title input[type="text"][placeholder="title"] {
+.setting-item.github-publisher-title input[type="text"][placeholder="title"] {
 	width: 100%;
 }
 
-button.obs-git-publisher-connect-button {
+button.github-publisher-connect-button {
 	margin: 0 50%;
 }
 
-.setting-item.obs-git-publisher-no-display > .setting-item-info {
+.setting-item.github-publisher-no-display > .setting-item-info {
 	display: none;
 }
+
+.github-publisher-import-error {
+	display: none;
+	color: var(--text-error);
+}
+
+.github-publisher-import-error.active {
+	display: block;
+}
+
+.github-publisher-import-input {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.github-publisher-import-label,
+a.github-publisher-copy,
+a.github-publisher-download{
+	color: var(--text-normal);
+	font-size: var(--font-ui-small);
+	border-radius: var(--button-radius);
+	border: 0;
+	padding: var(--size-4-1) var(--size-4-3);
+	font-weight: var(--input-font-weight);
+	font-family: inherit;
+	cursor: pointer;
+	background-color: var(--interactive-normal);
+	box-shadow: var(--input-shadow);
+	text-align: center;
+	white-space: nowrap;
+	text-decoration: none;
+	transition: background-color 0.1s ease, box-shadow 0.1s ease;
+}
+
+.github-publisher-import-label:hover,
+a.github-publisher-copy:hover,
+a.github-publisher-download:hover{
+	background-color: var(--interactive-hover);
+	box-shadow: var(--input-shadow-hover);
+}
+
+.github-publisher-import-save-button {
+	text-align: center;
+	width: 100%;
+}
+
+.github-publisher-copy,
+.github-publisher-download {
+	position: relative;
+	display: inline-block;
+	margin-left: 10px;
+
+}
+
+.github-publisher-copy:before {
+	color: var(--interactive-success);
+	content: "✓";
+	position: absolute;
+	left: -18px;
+	font-weight: bold;
+	opacity: 0;
+	transition: 150ms opacity ease-in-out;
+}
+
+.github-publisher-copy.success:before {
+	opacity: 1;
+}
+
+.github-publisher-export-textarea,
+.github-publisher-import-textarea {
+	width: 100%;
+	height: 200px;
+	font-family: var(--font-monospace);
+	font-size: 14px;
+}
+

@@ -37,6 +37,8 @@ export default {
 		noFileDeleted: "Aucun fichier n'a été supprimé",
 	},
 	settings: {
+		exportSettings: "Exporter les paramètres",
+		importSettings: "Importer des paramètres",
 		github: {
 			githubConfiguration: "Configuration GitHub",
 			repoName: "Nom du dépôt",
@@ -304,4 +306,23 @@ export default {
 			ghToken: "Le token GitHub",
 		},
 	},
+	modals: {
+		import: {
+			title: "Importer",
+			desc: "Importer des paramètres depuis un fichier ou un texte.",
+			importFromFile: "Importer depuis un fichier",
+			save: "Sauvegarder",
+			paste: "Coller la configuration ici...",
+			error : {
+				span: "Erreur lors de l'importation de la configuration : ",
+				isEmpty: "la configuration est vide",
+			}
+		},
+		export: {
+			title: "Exporter",
+			desc: "Exporter les paramètres vers un fichier ou dans le presse-papier.",
+			copy: "Copier dans le presse-papier",
+			download: "Télécharger",
+		}
+	}
 };

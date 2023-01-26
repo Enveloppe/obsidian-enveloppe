@@ -15,6 +15,7 @@ import {
 } from "./commands";
 import {commands, StringFunc, t, translationLanguage} from "./i18n";
 import {getTitleField, regexOnFileName} from "./contents_conversion/filePathConvertor";
+import {SettingValue} from "./src/modals";
 
 /**
  * Main class of the plugin
@@ -32,6 +33,15 @@ export default class GithubPublisher extends Plugin {
 	 */
 	getTitleFieldForCommand(file:TFile, frontmatter: FrontMatterCache): string {
 		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
+	}
+
+	setSettings(settings: Record<string, SettingValue>) {
+		Object.keys(settings).forEach((id) => {
+			// @ts-ignore
+			this.plugin.settings[id] = settings[id];
+		});
+
+		this.saveSettings();
 	}
 
 	/**
@@ -64,6 +74,8 @@ export default class GithubPublisher extends Plugin {
 		this.addSettingTab(new GithubPublisherSettings(this.app, this, branchName));
 		await convertOldSettings("ExcludedFolder", this);
 		await convertOldSettings("autoCleanUpExcluded", this);
+
+
 
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
@@ -148,6 +160,8 @@ export default class GithubPublisher extends Plugin {
 				})
 			);
 		}
+
+
 
 		this.addCommand({
 			id: "publisher-one",

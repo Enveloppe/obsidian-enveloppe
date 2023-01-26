@@ -34,6 +34,8 @@ export default {
 		noFileDeleted: "No files have been deleted.",
 	},
 	settings: {
+		exportSettings: "Export settings",
+		importSettings: "Import settings",
 		github: {
 			githubConfiguration: "Github Configuration",
 			repoName: "Repo Name",
@@ -51,6 +53,8 @@ export default {
 				"If you use a different main branch than \"main\", you can specify it here.",
 			automaticallyMergePR: "Automatically merge pull requests",
 			testConnection: "Test connection",
+
+
 		},
 		uploadConfig: {
 			uploadConfig: "Upload configuration",
@@ -290,5 +294,24 @@ export default {
 			ghToken: "GitHub Token",
 		},
 	},
+	modals: {
+		import: {
+			title: "Import",
+			desc: "Import settings from text or a file.",
+			importFromFile: "Import from file",
+			save: "Save",
+			paste: "Paste configuration here...",
+			error : {
+				span: "Error importing configuration: ",
+				isEmpty: "the configuration is empty.",
+			}
+		},
+		export: {
+			title: "Export",
+			desc: "Export settings to clipboard or a file.",
+			copy: "Copy to clipboard",
+			download: "Download",
+		}
+	}
 
 };

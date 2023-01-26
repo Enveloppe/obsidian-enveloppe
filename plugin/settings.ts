@@ -12,7 +12,7 @@ import {
 	TextCleaner,
 	PUBLISHER_TABS,
 } from "./settings/interface";
-import { settings, StringFunc, subSettings } from "./i18n";
+import {settings, StringFunc, subSettings, t} from "./i18n";
 import {
 	help,
 	multipleRepoExplained,
@@ -23,6 +23,7 @@ import {
 
 import {checkRepositoryValidity} from "./commands";
 import {GithubBranch} from "./publishing/branch";
+import {ExportModal, ImportModal, SettingValue} from "./src/modals";
 
 function openDetails(groupName: string, detailsState: boolean) {
 	for (let i = 0; i < document.getElementsByTagName("details").length; i++) {
@@ -47,22 +48,43 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		this.branchName = branchName;
 	}
 
+
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
+		new Setting(containerEl)
+			.setClass("github-publisher-export-import")
+			.addButton((button) => {
+				button.setButtonText(t("settings.exportSettings") as string)
+					.setClass("github-publisher-export")
+					.onClick(() => {
+						new ExportModal(this.app, this.plugin).open();
+					});
+			}
+			)
+			.addButton((button) => {
+				button.setButtonText(t("settings.importSettings") as string)
+					.setClass("github-publisher-import")
+					.onClick(() => {
+						new ImportModal(this.app, this.plugin).open();
+					});
+			});
 		const tabBar = containerEl.createEl("nav", {
-			cls: "settings-tab-bar obs-git-publisher",
+			cls: "settings-tab-bar github-publisher",
 		});
+
+
+
 		for (const [tabID, tabInfo] of Object.entries(PUBLISHER_TABS)) {
 			const tabEl = tabBar.createEl("div", {
-				cls: "settings-tab obs-git-publisher",
+				cls: "settings-tab github-publisher",
 			});
 			const tabIcon = tabEl.createEl("div", {
-				cls: "settings-tab-icon obs-git-publisher",
+				cls: "settings-tab-icon github-publisher",
 			});
 			setIcon(tabIcon, tabInfo.icon);
 			tabEl.createEl("div", {
-				cls: "settings-tab-name obs-git-publisher",
+				cls: "settings-tab-name github-publisher",
 				text: tabInfo.name,
 			});
 			if (tabID === "github-configuration")
@@ -78,7 +100,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 		}
 		this.settingsPage = containerEl.createEl("div", {
-			cls: "settings-tab-page obs-git-publisher",
+			cls: "settings-tab-page github-publisher",
 		});
 		this.renderSettingsPage("github-configuration");
 	}
@@ -181,11 +203,11 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			);
 
 		new Setting(this.settingsPage)
-			.setClass("obs-git-publisher-no-display")
+			.setClass("github-publisher-no-display")
 			.addButton((button) =>
 				button
 					.setButtonText(settings("github", "testConnection") as string)
-					.setClass("obs-git-publisher-connect-button")
+					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
 						const octokit = new Octokit({auth: this.plugin.settings.GhToken});
 						console.log(octokit);
@@ -199,6 +221,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await checkRepositoryValidity(this.branchName, publisher, this.plugin.settings, null, this.app.metadataCache);
 					})
 			);
+		
+
 	}
 
 	renderUploadConfiguration() {
@@ -261,7 +285,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 
 		const subFolderSettings = new Setting(this.settingsPage)
 			.setName(settings("uploadConfig", "pathRemoving") as string)
-			.setClass("obs-git-publisher")
+			.setClass("github-publisher")
 			.setDesc(settings("uploadConfig", "pathRemovingDesc") as string)
 			.addText((text) => {
 				text.setPlaceholder(
@@ -281,7 +305,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 
 		const frontmatterKeySettings = new Setting(this.settingsPage)
 			.setName(settings("uploadConfig", "frontmatterKey") as string)
-			.setClass("obs-git-publisher")
+			.setClass("github-publisher")
 			.setDesc(settings("uploadConfig", "frontmatterKeyDesc") as string)
 			.addText((text) => {
 				text.setPlaceholder("category")
@@ -293,7 +317,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 		const rootFolderSettings = new Setting(this.settingsPage)
 			.setName(settings("uploadConfig", "rootFolder") as string)
-			.setClass("obs-git-publisher")
+			.setClass("github-publisher")
 			.setDesc(settings("uploadConfig", "rootFolderDesc") as string)
 			.addText((text) => {
 				text.setPlaceholder("docs")
@@ -318,7 +342,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(
 				subSettings("uploadConfig.useFrontmatterTitle.desc") as string
 			)
-			.setClass("obs-git-publisher-title")
+			.setClass("github-publisher-title")
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.useFrontmatterTitle)
@@ -368,7 +392,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 
 		const folderNoteSettings = new Setting(this.settingsPage)
 			.setName(subSettings("textConversion.links.folderNote") as string)
-			.setClass("obs-git-publisher")
+			.setClass("github-publisher")
 			.setDesc(
 				subSettings("textConversion.links.folderNoteDesc") as string
 			)
@@ -460,7 +484,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		const autoCleanExcludedSettings = new Setting(this.settingsPage)
 			.setName(settings("githubWorkflow", "excludedFiles") as string)
 			.setDesc(settings("githubWorkflow", "excludedFilesDesc") as string)
-			.setClass("obs-git-publisher-textarea")
+			.setClass("github-publisher-textarea")
 			.addTextArea((textArea) => {
 				textArea
 					.setPlaceholder(
@@ -494,6 +518,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			this.plugin,
 			subFolderSettings
 		).then();
+
 	}
 
 	renderTextConversion() {
@@ -554,9 +579,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.createEl("summary", {
 				text: subSettings("textConversion.censor.TextHeader") as string,
 			})
-			.addClass("obs-git-publisher-summary");
+			.addClass("github-publisher-summary");
 		new Setting(details)
-			.setClass("obs-git-publisher-censor-desc")
+			.setClass("github-publisher-censor-desc")
 			.setDesc(censorTextDesc)
 			.addButton((btn) => {
 				btn.setIcon("plus")
@@ -593,7 +618,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				? (subSettings("textConversion.censor.After") as string)
 				: (subSettings("textConversion.censor.Before") as string);
 			new Setting(details)
-				.setClass("obs-git-publisher-censor-entry")
+				.setClass("github-publisher-censor-entry")
 				.addText((text) => {
 					text.setPlaceholder(
 						subSettings(
@@ -621,7 +646,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				.addButton((btn) => {
 					btn.setTooltip(toolTipRegex)
 						.setIcon("tags")
-						.setClass("obs-git-publisher-censor-flags");
+						.setClass("github-publisher-censor-flags");
 				})
 				.addText((text) => {
 					text.setPlaceholder("flags")
@@ -704,7 +729,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		new Setting(this.settingsPage)
 			.setName(subSettings("textConversion.tags.header") as string)
 			.setDesc(subSettings("textConversion.tags.desc") as string)
-			.setClass("obs-git-publisher-textarea")
+			.setClass("github-publisher-textarea")
 			.addTextArea((text) => {
 				text.setPlaceholder("field_name")
 					.setValue(this.plugin.settings.dataviewFields.join(","))
@@ -719,7 +744,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		new Setting(this.settingsPage)
 			.setName(subSettings("textConversion.tags.ExcludeHeader") as string)
 			.setDesc(subSettings("textConversion.tags.ExcludeDesc") as string)
-			.setClass("obs-git-publisher-textarea")
+			.setClass("github-publisher-textarea")
 			.addTextArea((text) => {
 				text.setPlaceholder("field value")
 					.setValue(
@@ -807,7 +832,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		new Setting(this.settingsPage)
 			.setName(settings("embed", "transferMetaFile") as string)
 			.setDesc(settings("embed", "transferMetaFileDesc") as string)
-			.setClass("obs-git-publisher-textarea")
+			.setClass("github-publisher-textarea")
 			.addTextArea((text) => {
 				text.setPlaceholder("banner")
 					.setValue(
@@ -866,7 +891,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		new Setting(this.settingsPage)
 			.setName(settings("plugin", "excludedFolder") as string)
 			.setDesc(settings("plugin", "excludedFolderDesc") as string)
-			.setClass("obs-git-publisher-textarea")
+			.setClass("github-publisher-textarea")
 			.addTextArea((textArea) =>
 				textArea
 					.setPlaceholder("_assets, Archive, /^_(.*)/gi")
@@ -930,7 +955,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		const baseLinkSettings = new Setting(this.settingsPage)
 			.setName(subSettings("plugin.copyLink.baselink") as string)
 			.setDesc(subSettings("plugin.copyLink.baselinkDesc") as string)
-			.setClass("obs-git-publisher")
+			.setClass("github-publisher")
 			.addText((text) => {
 				text.setPlaceholder("my_blog.com")
 					.setValue(this.plugin.settings.mainLink)
@@ -944,7 +969,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(
 				subSettings("plugin.copyLink.linkpathremoverDesc") as string
 			)
-			.setClass("obs-git-publisher")
+			.setClass("github-publisher")
 			.addText((text) => {
 				text.setPlaceholder("docs")
 					.setValue(this.plugin.settings.linkRemover)
