@@ -1,6 +1,7 @@
 import GithubPublisher from "../main";
 import { App, Modal, Setting, TextAreaComponent, ButtonComponent, Platform } from "obsidian";
-import {t} from "../i18n";
+import {settings, subSettings, t} from "../i18n";
+import {GithubPublisherSettings} from "../settings";
 
 export type SettingValue = number | string | boolean;
 
@@ -12,9 +13,13 @@ export type SettingValue = number | string | boolean;
 
 export class ImportModal extends Modal {
 	plugin: GithubPublisher;
-	constructor(app: App, plugin: GithubPublisher) {
+	settingsPage: HTMLElement;
+	settingsTab: GithubPublisherSettings;
+	constructor(app: App, plugin: GithubPublisher, settingsPage: HTMLElement, settingsTab: GithubPublisherSettings) {
 		super(app);
 		this.plugin = plugin;
+		this.settingsPage = settingsPage;
+		this.settingsTab = settingsTab;
 	}
 
 	onOpen() {
@@ -100,6 +105,30 @@ export class ImportModal extends Modal {
 	onClose() {
 		const { contentEl } = this;
 		contentEl.empty();
+		this.settingsPage.empty();
+		// @ts-ignore
+		const openedTab = document.querySelector(".settings-tab-active.github-publisher").innerText;
+		switch (openedTab) {
+		case settings("github", "githubConfiguration") as string:
+			this.settingsTab.renderGithubConfiguration();
+			break;
+		case "Upload Configuration":
+			this.settingsTab.renderUploadConfiguration();
+			break;
+		case settings("textConversion", "textConversion") as string:
+			this.settingsTab.renderTextConversion();
+			break;
+		case settings("embed", "embed") as string:
+			this.settingsTab.renderEmbedConfiguration();
+			break;
+		case settings("plugin", "pluginSettings") as string:
+			this.settingsTab.renderPluginSettings();
+			break;
+		case subSettings("help.help") as string:
+			this.settingsTab.renderHelp();
+			break;
+		}
+
 	}
 }
 

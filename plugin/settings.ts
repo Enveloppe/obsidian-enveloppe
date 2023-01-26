@@ -23,7 +23,7 @@ import {
 
 import {checkRepositoryValidity} from "./commands";
 import {GithubBranch} from "./publishing/branch";
-import {ExportModal, ImportModal, SettingValue} from "./src/modals";
+import {ExportModal, ImportModal} from "./src/modals";
 
 function openDetails(groupName: string, detailsState: boolean) {
 	for (let i = 0; i < document.getElementsByTagName("details").length; i++) {
@@ -48,7 +48,6 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		this.branchName = branchName;
 	}
 
-
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
@@ -66,7 +65,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				button.setButtonText(t("settings.importSettings") as string)
 					.setClass("github-publisher-import")
 					.onClick(() => {
-						new ImportModal(this.app, this.plugin).open();
+						new ImportModal(this.app, this.plugin, this.settingsPage, this).open();
 					});
 			});
 		const tabBar = containerEl.createEl("nav", {
