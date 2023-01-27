@@ -220,7 +220,38 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await checkRepositoryValidity(this.branchName, publisher, this.plugin.settings, null, this.app.metadataCache);
 					})
 			);
-		
+		this.settingsPage.createEl("h3", { text: "Github Workflow" });
+		new Setting(this.settingsPage)
+			.setName(subSettings("githubWorkflow.prRequest.title") as string)
+			.setDesc(subSettings("githubWorkflow.prRequest.desc") as string)
+			.addText((text)  =>
+				text
+					.setPlaceholder("[PUBLISHER] MERGE")
+					.setValue(this.plugin.settings.customCommitMsg)
+					.onChange(async (value)  => {
+						this.plugin.settings.customCommitMsg = value;
+						await this.plugin.saveSettings();
+					})
+			);
+
+		new Setting(this.settingsPage)
+			.setName(settings("githubWorkflow", "githubActionName") as string)
+			.setDesc(
+				settings("githubWorkflow", "githubActionNameDesc") as string
+			)
+			.addText((text) => {
+				text.setPlaceholder("ci")
+					.setValue(this.plugin.settings.workflowName)
+					.onChange(async (value) => {
+						value =
+							value.length > 0
+								? value.trim().replace(".yml", "") + ".yml"
+								: value;
+						this.plugin.settings.workflowName = value;
+						await this.plugin.saveSettings();
+					});
+			});
+
 
 	}
 
@@ -420,24 +451,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 
 		showHideBasedOnFolder(this.plugin.settings, frontmatterKeySettings, rootFolderSettings, subFolderSettings, folderNoteSettings);
 
-		this.settingsPage.createEl("h3", { text: "Github Workflow" });
-		new Setting(this.settingsPage)
-			.setName(settings("githubWorkflow", "githubActionName") as string)
-			.setDesc(
-				settings("githubWorkflow", "githubActionNameDesc") as string
-			)
-			.addText((text) => {
-				text.setPlaceholder("ci")
-					.setValue(this.plugin.settings.workflowName)
-					.onChange(async (value) => {
-						value =
-							value.length > 0
-								? value.trim().replace(".yml", "") + ".yml"
-								: value;
-						this.plugin.settings.workflowName = value;
-						await this.plugin.saveSettings();
-					});
-			});
+
 		//@ts-ignore
 		if (app.plugins.enabledPlugins.has("metadata-extractor")) {
 			new Setting(this.settingsPage)

@@ -57,6 +57,7 @@ export interface GitHubPublisherSettings {
 	yamlFolderKey: string;
 	rootFolder: string;
 	workflowName: string;
+	customCommitMsg: string;
 	embedImage: boolean;
 	defaultImageFolder: string;
 	autoCleanUp: boolean;
@@ -119,6 +120,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	yamlFolderKey: "",
 	rootFolder: "",
 	workflowName: "",
+	customCommitMsg: "",
 	embedImage: true,
 	defaultImageFolder: "",
 	autoCleanUp: false,

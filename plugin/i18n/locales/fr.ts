@@ -185,6 +185,10 @@ export default {
 			useMetadataExtractor: "Fichier de metadata-extractor",
 			useMetadataExtractorDesc:
 				"Envoyer les fichiers générés par metadata-extractor dans ce dossier.",
+			prRequest: {
+				title: "Commit message",
+				desc: "Le message envoyé lorsque la pull-request est fusionnée. Sera toujours suivie par le numéro de la pull-request."
+			}
 		},
 		plugin: {
 			pluginSettings: "Paramètres du plugin",

@@ -217,6 +217,7 @@ export class GithubBranch extends FilesManagement {
 		pullRequestNumber: number,
 		repoFrontmatter: RepoFrontmatter
 	) {
+		const commitMsg = this.settings.customCommitMsg.trim().length > 0 ? `${this.settings.customCommitMsg} #${pullRequestNumber}` : `[PUBLISHER] Merge #${pullRequestNumber}`
 		try {
 			const branch = await this.octokit.request(
 				"PUT" + " /repos/{owner}/{repo}/pulls/{pull_number}/merge",
@@ -224,7 +225,7 @@ export class GithubBranch extends FilesManagement {
 					owner: repoFrontmatter.owner,
 					repo: repoFrontmatter.repo,
 					pull_number: pullRequestNumber,
-					commit_title: `[PUBLISHER] Merge #${pullRequestNumber}`,
+					commit_title: commitMsg,
 					merge_method: "squash",
 				}
 			);
