@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.12.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.12.0-1...4.12.0-2) (2023-01-27)
+
+
+### Features
+
+* edit the commit message when PR are merged ([c47cfba](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c47cfba4819e867924ef37a478835be700698097))
+
 ## [4.12.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.12.0-0...4.12.0-1) (2023-01-26)
 
 
