@@ -182,6 +182,16 @@ function addAltText(link: string, linkedFile: LinkedNotes): string {
 }
 
 /**
+ * Escape special characters in a string
+ * @param {string} filepath The string to escape
+ * @return {string} The escaped string
+ */
+
+function escapeRegex(filepath: string): string {
+	return filepath.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
+}
+
+/**
  * Convert internal links with changing the path to the relative path in the github repository
  * @param {string} fileContent The file content
  * @param {GitHubPublisherSettings} settings Settings of the plugins
@@ -222,17 +232,18 @@ export async function convertLinkCitation(
 		);
 		pathInGithub = pathInGithub.replace(".md", "");
 		const anchor = linkedFile.anchor ? linkedFile.anchor : "";
-		const linkInMarkdown = linkedFile.linkFrom.replace(linkedFile.anchor, "").replaceAll(" ", "%20") + anchor.replace("^", "\\^");
+		const linkInMarkdown = escapeRegex(linkedFile.linkFrom.replace(linkedFile.anchor, "")).replaceAll(" ", "%20") + anchor.replace("^", "\\^");
+		const escapedLinkedFile = escapeRegex(linkedFile.linkFrom);
 
 
 		const regexToReplace = new RegExp(
-			`(\\[{2}${linkedFile.linkFrom.replace("^", "\\^")}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\((${linkedFile.linkFrom}|${linkInMarkdown})\\))`,
+			`(\\[{2}${escapedLinkedFile}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\((${escapedLinkedFile}|${linkInMarkdown})\\))`,
 			"g"
 		);
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {
 			for (const link of matchedLink) {
-				const regToReplace = new RegExp(`((${linkedFile.linkFrom})|(${linkInMarkdown}))`);
+				const regToReplace = new RegExp(`((${escapedLinkedFile})|(${linkInMarkdown}))`);
 				let pathInGithubWithAnchor = pathInGithub;
 				if (linkedFile.anchor) {
 					pathInGithub = pathInGithub.replace(/#.*/, "");
