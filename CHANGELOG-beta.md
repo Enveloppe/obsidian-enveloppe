@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.12.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.12.0-2...4.12.0-3) (2023-01-28)
+
+
+### Bug Fixes
+
+* char not escaped and considerate as regex in links conversion ([4313319](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4313319f5695fc51053fd9f33bed946cb346dc3b))
+
 ## [4.12.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.12.0-1...4.12.0-2) (2023-01-27)
 
 
