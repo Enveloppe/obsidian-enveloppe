@@ -248,7 +248,7 @@ function folderNoteIndexYAML(
 	frontmatter: FrontMatterCache,
 	settings: GitHubPublisherSettings
 ): string {
-	const category = frontmatter[settings.yamlFolderKey];
+	const category = frontmatter[settings.yamlFolderKey] instanceof Array ? frontmatter[settings.yamlFolderKey].join("/") : frontmatter[settings.yamlFolderKey];
 	const parentCatFolder = !category.endsWith("/")
 		? category.split("/").at(-1)
 		: category.split("/").at(-2);
@@ -276,6 +276,7 @@ function createFrontmatterPath(
 	frontmatter: FrontMatterCache,
 	fileName: string
 ): string {
+	const folderCategory = frontmatter[settings.yamlFolderKey] instanceof Array ? frontmatter[settings.yamlFolderKey].join("/") : frontmatter[settings.yamlFolderKey];
 	let path =
 		settings.folderDefaultName.length > 0
 			? settings.folderDefaultName + "/" + fileName
@@ -287,7 +288,7 @@ function createFrontmatterPath(
 	if (frontmatter && frontmatter[settings.yamlFolderKey]) {
 		path =
 			folderRoot +
-			frontmatter[settings.yamlFolderKey] +
+			folderCategory +
 			"/" +
 			folderNoteIndexYAML(fileName, frontmatter, settings);
 	}
