@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.12.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.12.0-3...4.12.0-4) (2023-01-31)
+
+
+### Bug Fixes
+
+* Crash if category is a array ; ([1f2ba90](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1f2ba9082c62e250d9e52421d6e520ee605811de)), closes [#97](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/97)
+
 ## [4.12.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.12.0-2...4.12.0-3) (2023-01-28)
 
 
