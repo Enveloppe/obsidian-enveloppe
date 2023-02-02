@@ -23,8 +23,7 @@ body:
     id: commands
     attributes:
       label: Command used
-      description: |
-        Select the commands you used to reproduce the bug.
+      description: Select the commands you used to reproduce the bug.
       multiple: true
       options:
         - Upload all notes
