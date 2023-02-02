@@ -1,8 +1,5 @@
 /* styles.css */
-.github-publisher {
-	border-top: transparent;
-	padding: 0 0 3px 0;
-}
+
 summary.github-publisher-summary {
 	border-top: 1px solid var(--background-modifier-border);
 	padding-top: 10px;

@@ -8,9 +8,11 @@ import {folderSettings, GitHubPublisherSettings} from "./interface";
  */
 
 export function showSettings(containerEl: Setting) {
-	containerEl.descEl.show();
-	containerEl.nameEl.show();
-	containerEl.controlEl.show();
+	for (const [type, elem] of Object.entries(containerEl)) {
+		if (type != "components") {
+			elem.show();
+		}
+	}
 }
 
 /**
@@ -19,9 +21,11 @@ export function showSettings(containerEl: Setting) {
  */
 
 export function hideSettings(containerEl: Setting) {
-	containerEl.descEl.hide();
-	containerEl.nameEl.hide();
-	containerEl.controlEl.hide();
+	for (const [type, elem] of Object.entries(containerEl)) {
+		if (type != "components") {
+			elem.hide();
+		}
+	}
 }
 
 
@@ -35,7 +39,7 @@ export function showHideBasedOnFolder(settings: GitHubPublisherSettings, frontma
 		hideSettings(frontmatterKeySettings);
 		hideSettings(rootFolderSettings);
 		if (
-			this.plugin.settings.downloadedFolder ===
+			settings.downloadedFolder ===
 				folderSettings.obsidian
 		) {
 			showSettings(subFolderSettings);
