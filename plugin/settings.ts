@@ -10,7 +10,7 @@ import {
 import {
 	folderSettings,
 	TextCleaner,
-	PUBLISHER_TABS,
+	PUBLISHER_TABS, GithubTiersVersion,
 } from "./settings/interface";
 import {settings, StringFunc, subSettings, t} from "./i18n";
 import {
@@ -130,6 +130,36 @@ export class GithubPublisherSettings extends PluginSettingTab {
 
 	renderGithubConfiguration() {
 		new Setting(this.settingsPage)
+			.setName(subSettings("github.apiType.title") as string)
+			.setDesc(subSettings("github.apiType.desc") as string)
+			.addDropdown((dropdown) => {
+				dropdown
+					.addOption(GithubTiersVersion.free, subSettings("github.apiType.dropdown.free") as string)
+					.addOption(GithubTiersVersion.entreprise, subSettings("github.apiType.dropdown.enterprise") as string)
+					.setValue(this.plugin.settings.tiersForApi)
+					.onChange(async (value) => {
+						this.plugin.settings.tiersForApi = value as GithubTiersVersion;
+						await this.plugin.saveSettings();
+						this.settingsPage.empty();
+						this.renderGithubConfiguration();
+					});
+			});
+		if (this.plugin.settings.tiersForApi === GithubTiersVersion.entreprise) {
+			new Setting(this.settingsPage)
+				.setName(subSettings("github.apiType.hostname") as string)
+				.setDesc(subSettings("github.apiType.hostnameDesc") as string)
+				.addText((text) =>
+					text
+						.setPlaceholder("https://github.mycompany.com")
+						.setValue(this.plugin.settings.hostname)
+						.onChange(async (value) => {
+							this.plugin.settings.hostname = value.trim();
+							await this.plugin.saveSettings();
+						})
+				);
+		}
+
+		new Setting(this.settingsPage)
 			.setName(settings("github", "repoName") as string)
 			.setDesc(settings("github", "repoNameDesc") as string)
 			.addText((text) =>
@@ -208,16 +238,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.setButtonText(settings("github", "testConnection") as string)
 					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
-						const octokit = new Octokit({auth: this.plugin.settings.GhToken});
-						console.log(octokit);
-						const publisher = new GithubBranch(
-							this.plugin.settings,
-							octokit,
-							this.app.vault,
-							this.app.metadataCache,
-							this.plugin,
-						);
-						await checkRepositoryValidity(this.branchName, publisher, this.plugin.settings, null, this.app.metadataCache);
+						await checkRepositoryValidity(this.branchName, this.plugin.reloadOctokit(), this.plugin.settings, null, this.app.metadataCache);
 					})
 			);
 		this.settingsPage.createEl("h3", { text: "Github Workflow" });
@@ -422,7 +443,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 
 		const folderNoteSettings = new Setting(this.settingsPage)
 			.setName(subSettings("textConversion.links.folderNote") as string)
-			.setClass("github-publisher")
+			.setClass("github-publisher-folderNote")
 			.setDesc(
 				subSettings("textConversion.links.folderNoteDesc") as string
 			)

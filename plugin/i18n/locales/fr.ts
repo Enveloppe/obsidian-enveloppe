@@ -40,6 +40,16 @@ export default {
 		exportSettings: "Exporter les paramètres",
 		importSettings: "Importer des paramètres",
 		github: {
+			apiType: {
+				title: "Type d'API",
+				desc: "Choisir entre l'API GitHub ou l'API pour GitHub Entreprise (uniquement pour les utilisateur de GitHub entreprise).",
+				hostname: "Instance GitHub Entreprise",
+				hostnameDesc: "Le nom de votre instance GitHub Entreprise.",
+				dropdown: {
+					free: "Free/Pro/Team (défaut)",
+					enterprise: "Entreprise",
+				}
+			},
 			githubConfiguration: "Configuration GitHub",
 			repoName: "Nom du dépôt",
 			repoNameDesc:
@@ -58,7 +68,7 @@ export default {
 			testConnection: "Tester la connexion",
 		},
 		uploadConfig: {
-			uploadConfig: "Configuration d'upload", //désolée du franglais ici mais je trouve pas de traduction propre
+			title: "Configuration du transfert", //désolée du franglais ici mais je trouve pas de traduction propre
 			pathSetting: "Paramètres du chemin d'accès",
 			folderBehavior: "Comportement du dossier",
 			folderBehaviorDesc:

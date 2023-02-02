@@ -87,6 +87,8 @@ export interface GitHubPublisherSettings {
 	convertInternalNonShared: boolean;
 	frontmatterTitleRegex: string;
 	frontmatterTitleReplacement: string;
+	tiersForApi: GithubTiersVersion;
+	hostname: string;
 }
 
 /**
@@ -99,6 +101,10 @@ export enum folderSettings {
 	fixed = "fixed",
 }
 
+export enum GithubTiersVersion {
+	free = "Github Free/Pro/Team (default)",
+	entreprise = "Enterprise",
+}
 /**
  * Default settings of the plugins
  * @type {{downloadedFolder: folderSettings.fixed, autoCleanUpExcluded: any[], subFolder: string, embedImage: boolean, dataviewFields: any[], githubName: string, useFrontmatterTitle: boolean, convertDataview: boolean, githubRepo: string, editorMenu: boolean, frontmatterTitleKey: string, metadataFileFields: any[], yamlFolderKey: string, folderDefaultName: string, copyLink: boolean, metadataExtractorPath: string, excludeDataviewValue: any[], GhToken: string, githubBranch: string, fileMenu: boolean, convertWikiLinks: boolean, embedNotes: boolean, folderNote: boolean, rootFolder: string, defaultImageFolder: string, mainLink: string, shareKey: string, workflowName: string, shareExternalModified: boolean, convertForGithub: boolean, autoCleanUp: boolean, inlineTags: boolean, logNotice: boolean, excludedFolder: any[], hardBreak: boolean, automaticallyMergePR: boolean, linkRemover: string, censorText: any[]}}
@@ -150,6 +156,8 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	convertInternalNonShared: false,
 	frontmatterTitleRegex: "",
 	frontmatterTitleReplacement: "",
+	tiersForApi: GithubTiersVersion.free,
+	hostname: "",
 };
 
 export interface MetadataExtractor {
@@ -190,7 +198,7 @@ export const PUBLISHER_TABS = {
 		icon: "cloud",
 	},
 	"upload-configuration": {
-		name: "Upload Configuration",
+		name: settings("uploadConfig", "title") as string,
 		icon: "upload",
 	},
 	"text-conversion": {

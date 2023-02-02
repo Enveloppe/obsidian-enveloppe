@@ -1,6 +1,6 @@
 import {FrontMatterCache, Menu, Plugin, TFile} from "obsidian";
 import {GithubPublisherSettings} from "./settings";
-import {DEFAULT_SETTINGS, GitHubPublisherSettings, RepoFrontmatter} from "./settings/interface";
+import {DEFAULT_SETTINGS, GitHubPublisherSettings, GithubTiersVersion, RepoFrontmatter} from "./settings/interface";
 import {convertOldSettings, disablePublish, getRepoFrontmatter,} from "./src/utils";
 import {GithubBranch} from "./publishing/branch";
 import {Octokit} from "@octokit/core";
@@ -38,7 +38,16 @@ export default class GithubPublisher extends Plugin {
 	 * Create a new instance of Octokit to load a new instance of GithubBranch 
 	*/
 	reloadOctokit() {
-		const octokit = new Octokit({ auth: this.settings.GhToken });
+		let octokit: Octokit;
+		if (this.settings.tiersForApi === GithubTiersVersion.entreprise && this.settings.hostname.length > 0) {
+			octokit = new Octokit(
+				{
+					baseUrl: `${this.settings.hostname}/api/v3`,
+					auth: this.settings.GhToken
+				});
+		} else {
+			octokit = new Octokit({auth: this.settings.GhToken});
+		}
 		return new GithubBranch(
 			this.settings,
 			octokit,

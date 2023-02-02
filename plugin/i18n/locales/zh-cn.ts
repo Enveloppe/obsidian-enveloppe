@@ -36,6 +36,16 @@ export default {
 		exportSettings: "Export settings",
 		importSettings: "Import settings",
 		github: {
+			apiType: {
+				title: "API Type",
+				desc: "Choose between the Github API or the Github Enterprise API (for Github Enterprise users).",
+				hostname: "Github Enterprise Hostname",
+				hostnameDesc: "The hostname of your Github Enterprise instance.",
+				dropdown: {
+					free: "Free/Pro/Team (default)",
+					enterprise: "Enterprise",
+				}
+			},
 			githubConfiguration: "Github设置",
 			repoName: "仓库名",
 			repoNameDesc: "你博客所在的github仓库名",
