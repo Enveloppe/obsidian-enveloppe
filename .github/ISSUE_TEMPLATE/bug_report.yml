@@ -19,7 +19,7 @@ body:
           required: true
         - label: "I checked my configurations files and the documentation"
           required: true
-  - type: DropDown
+  - type: dropdown
     id: commands
     attributes:
       label: Command used
@@ -39,7 +39,7 @@ body:
       label: Plugin version
       description: |
         Please copy and paste the version of the plugin you are using.
-      render: shell
+     render: shell
   - type: textarea
     id: describe-bug
     attributes:
