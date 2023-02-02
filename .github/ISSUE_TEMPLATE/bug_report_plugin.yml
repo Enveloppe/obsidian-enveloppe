@@ -1,7 +1,7 @@
-name: Bug Report for Obsidian Github Publisher (Plugin)
+name: Bug Report for Obsidian Github Publisher
 description: Fill a bug report for Obsidian Github Publisher (Plugin)
 title: "[Bug]: "
-labels: ["bug", "triage"]
+labels: ["bug", "Obsidian Github Publisher"]
 assignees:
   - lisandra-dev
 body:
@@ -57,7 +57,16 @@ body:
         1. Go to '...'
         2. Click on '....'
         3. Scroll down to '....'
-        4. See error 
+        4. See error
+    validations:
+      required: false
+  - type: textarea
+    id: minimal-repro
+    attributes:
+      label: Minimal Reproducible Example
+      description: Please provide a minimal reproducible example. You need, at last, one note, with the frontmatter and the content.
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Configuration

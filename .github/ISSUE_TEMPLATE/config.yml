@@ -3,4 +3,9 @@ contat_links:
   - name: Ask a Question
     url: https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions/categories/q-a
     about: Please ask and answer questions here.
+  - name: Report a Bug (Plugin)
+    url: https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/new?assignees=lisandra-dev&labels=bug%2Ctriage&template=bug_report_plugin.yml&title=%5BBug%5D%3A+
+    about: Please report bugs here.
+  - name: Request a Feature (Plugin)
+    url: https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/new?assignees=lisandra-dev&labels=enhancement&template=request_form_plugin.yml&title=%5BFR%5D%3A+
 

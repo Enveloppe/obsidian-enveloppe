@@ -1,0 +1,83 @@
+name: Bug report for Mkdocs Publisher template
+description: Fill a bug report for the mkdocs publisher template
+title: '[Bug]: '
+labels: ["bug", "Material Mkdocs Template"]
+assignees:
+  - lisandra-dev
+body:
+  - type: markdown
+    id: info-user
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report.
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Material General discussion
+      description: "Thanks to check if your issue is relative to the repository. Any non relative or duplicate issue will be closed."
+      options:
+        - label: "My issue is not a question relative to [Material Mkdocs](https://squidfunk.github.io/mkdocs-material/) nor [Mkdocs](https://www.mkdocs.org/) (*[You can open a discussion to get more help!](https://github.com/squidfunk/mkdocs-material/discussions)*)"
+          required: true
+        - label: "I checked the issue to prevent duplicate"
+          required: true
+        - label: "I checked my configurations files and the documentation"
+          required: true
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Requirements
+      description: Paste your `requirements.txt` file here
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: mkdocs-yml
+    attributes:
+      label: Mkdocs.yml
+      description: Paste your `mkdocs.yml` file here
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: Error
+      description: Paste the error you got here
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Bug description
+      description: What actually happened?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: How can we reproduce this issue?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen?
+    validations:
+      required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.
+    validations:
+      required: false
