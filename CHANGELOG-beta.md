@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [4.12.0-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.12.0-4...4.12.0-5) (2023-02-02)
+
+
+### Features
+
+* adding github entreprise API ([0868c7b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0868c7b77c2a2c19356f4db6d9fab92c6cad7945)), closes [#98](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/98)
+
+
+### Bug Fixes
+
+* Improve style settings when hide/show things ([42d73b7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/42d73b7a9492c1eebab81e27313a460363099032))
+
 ## [4.12.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.12.0-3...4.12.0-4) (2023-01-31)
 
 
