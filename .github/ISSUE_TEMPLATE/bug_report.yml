@@ -1,9 +1,9 @@
-name: Bug Report
-description: Fill a bug report
+name: Bug Report for Obsidian Github Publisher (Plugin)
+description: Fill a bug report for Obsidian Github Publisher (Plugin)
 title: "[Bug]: "
 labels: ["bug", "triage"]
 assignees:
-  - Mara-Li
+  - lisandra-dev
 body:
   - type: markdown
     id: info-user
@@ -15,23 +15,31 @@ body:
       label: Issue validation
       description: "Thanks to check if your issue is relative to the repository. Any non relative or duplicate issue will be closed."
       options:
-        - label: "My issue is not a question relative to [Material Mkdocs](https://squidfunk.github.io/mkdocs-material/) nor [Mkdocs](https://www.mkdocs.org/) (*[You can open a discussion to get more help!](https://github.com/squidfunk/mkdocs-material/discussions)*)"
-          required: true
         - label: "I checked the issue to prevent duplicate"
           required: true
         - label: "I checked my configurations files and the documentation"
           required: true
-  - type: dropdown
+  - type: DropDown
+    id: commands
     attributes:
-      label: Workflow
-      description: "Your problem concern : *(please, choose in the list)*"
+      label: Command used
+      description: |
+        Select the commands you used to reproduce the bug.
       multiple: true
       options:
-        - Mkdocs Template 🐍
-        - Obsidian plugin 💠
-        - Unknow 😿 (please save me!)
-    validations:
-      required: true   
+        - Upload all notes
+        - Upload unpublished notes
+        - Upload single current active note
+        - Refresh published and upload new notes
+        - Refresh all published notes
+        - Test the connection to the configured repository
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      description: |
+        Please copy and paste the version of the plugin you are using.
+      render: shell
   - type: textarea
     id: describe-bug
     attributes:
@@ -54,21 +62,16 @@ body:
     attributes:
       label: Configuration
       description: |
-        Please, send me a screenshot or a file with your configuration!
-        The configuration will be :
-          - For obsidian, the plugin's configuration, you can send the `data.json` (in `.obsidian/plugins/obsidian-mkdocs-publisher`). 
-          - For the template, please add a link to your repository (if public) or the `mkdocs.yml`.
-          - For the python package, the configuration file will be `configuration.yml`
+        Use the export configuration to paste it here.
+      render: shell
     validations:
-      required: true    
+      required: true
   - type: textarea
     id: logs
     attributes:
       label: Relevant log output
       description: |
-        Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks. 
-        - For the Obsidian plugin, you can open the Obsidian's console with "CTRL+MAJ+I."
-        - For the template, add a screenshot or link to the actions if the error appear during build.
+        Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks. You can open the Obsidian's console with "CTRL+MAJ+I."
       render: shell
   - type: dropdown
     id: version
@@ -90,4 +93,11 @@ body:
         Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
     validations:
       required: false
-  
+  - type: textarea
+    attributes:
+      label: Obsidian information
+      description: |
+        Please copy and paste the information about your Obsidian version using the command "show debug info" in the obsidian's commands palette.
+      render: shell
+    validations:
+      required: true

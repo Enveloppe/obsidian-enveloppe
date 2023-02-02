@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+contat_links:
+  - name: Ask a Question
+    url: https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions/categories/q-a
+    about: Please ask and answer questions here.
+
