@@ -40,7 +40,6 @@ body:
       placeholder: "1.0.0"
     validations:
       required: true
-    render: shell
   - type: textarea
     id: describe-bug
     attributes:
