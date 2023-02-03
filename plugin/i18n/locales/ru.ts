@@ -42,7 +42,7 @@ export default {
 		github: {
 			apiType: {
 				title: "API Type",
-				desc: "Choose between the Github API or the Github Enterprise API (for Github Enterprise users).",
+				desc: "Choose between the Github API or the Github Enterprise API (only Github Enterprise users — Advanced user!).",
 				hostname: "Github Enterprise Hostname",
 				hostnameDesc: "The hostname of your Github Enterprise instance.",
 				dropdown: {

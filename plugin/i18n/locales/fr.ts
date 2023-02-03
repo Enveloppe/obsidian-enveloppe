@@ -42,7 +42,7 @@ export default {
 		github: {
 			apiType: {
 				title: "Type d'API",
-				desc: "Choisir entre l'API GitHub ou l'API pour GitHub Entreprise (uniquement pour les utilisateur de GitHub entreprise).",
+				desc: "Choisir entre l'API GitHub ou l'API pour GitHub Entreprise (uniquement pour les utilisateurs de GitHub Enterprise — Utilisateur avancé !).",
 				hostname: "Instance GitHub Entreprise",
 				hostnameDesc: "Le nom de votre instance GitHub Entreprise.",
 				dropdown: {
