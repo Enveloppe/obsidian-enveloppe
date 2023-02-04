@@ -72,7 +72,7 @@ body:
       label: Configuration
       description: |
         Use the export configuration to paste it here.
-      render: shell
+      render: json
     validations:
       required: true
   - type: textarea

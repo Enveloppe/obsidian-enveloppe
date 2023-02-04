@@ -1,0 +1,80 @@
+title: "[Q&A] How to get help - Plugins"
+labels: ["question", "Obsidian GitHub Publisher"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please fill out the following template and submit your question. We will try to answer it as soon as possible.
+  - type: checkboxes
+    id: before-submitting
+    attributes:
+      label: Before submitting your question
+      description: Please make sure you've completed the following steps.
+      options:
+        - label: I've already check if my question is already answered in the Q&A section and the issue.
+          required: true
+        - label: I've already checked my configuration with using the button in the plugin, and my repository is valid.
+          required: true
+        - label: I've read the [documentation](https://obsidian-publisher.netlify.app/)
+          required: true
+  - type: markdown
+    attributes:
+      value: |
+        ## Common error
+          - **404**: The API of GitHub doesn't found your repository or the branch you linked. Please re-check and validate your settings.
+          - **301**: The repository was moved.
+          - **403**: Action forbidden.
+          - **409** (during merge): There is a merge conflict. You need to use the GitHub interface to solve it. It happens a lot when you « spam » the action.
+  - type: dropdown
+    id: commands
+    attributes:
+      label: Command used
+      description: Select the commands you used to reproduce the bug.
+      multiple: true
+      options:
+        - Upload all notes
+        - Upload unpublished notes
+        - Upload single current active note
+        - Refresh published and upload new notes
+        - Refresh all published notes
+        - Test the connection to the configured repository
+  - type: textarea
+    id: plugin-config
+    attributes:
+      label: Plugin configuration
+      description: Please copy and paste your plugin configuration here.
+      render: json
+  - type: textarea
+    id: file-tryed
+    attributes:
+      label: File tryed
+      description: Please copy and paste the file you tryed to publish here.
+      render: markdown
+  - type: markdown
+    attributes:
+      value: |
+        Please, try to send the file's example below :
+        ```md
+        ---
+        title: "My note"
+        share: true
+        ---
+        # My note
+        This is my note.
+        ```
+  - type: textarea
+    id: error
+    attributes:
+      label: Error message
+      description: Please copy and paste the error message here.
+      render: shell
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: Please add a screenshot of the error message here.
+  - type: markdown
+    attributes:
+      value: |
+       It is possible that you get a real bug. In this case, the discussion will be converted into an issue. Please, try to be as precise as possible in your description.
+       Thank you for your help.
