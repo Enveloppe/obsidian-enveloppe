@@ -10,6 +10,44 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report.
+
+        ## Common error codes
+        Before you submit, you can check the code below if the issue is relative to your repository :
+          - **404**: The API of GitHub doesn't found your repository or the branch you linked. Please re-check and validate your settings.
+          - **301**: The repository was moved.
+          - **403**: Action forbidden.
+          - **409** (during merge): There is a merge conflict. You need to use the GitHub interface to solve it. It happens a lot when you « spam » the action.
+
+        ## Try to send an file example
+        Please, try to send the file below to your repository before to fill the form. If it doesn't work, please fill the form. If it works, please check your settings and try to find the difference between the file below and your file.
+
+        ```markdown
+        ---
+        title: "Test"
+        share: true
+        ---
+        # Test
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+        ```
+
+        ## In case your repository exploded
+        If you fail, you can revert the merging branch using GitHub : [Here is a tutorial](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/reverting-a-pull-request)
+
+        If you can't revert, or if the revert doesn't work, you need to manually do it. First, check the PR number that explode your repo. You can get it using the Pull Requests menu, or checking the folder that have been edited by this PR
+
+        After, you need to create a branch :
+        1. In GitHub, click on Commit :
+          ![image](https://user-images.githubusercontent.com/30244939/210760305-43b9862f-91ed-4b33-87c3-abeb03ddec79.png)
+        2. You will get a list of commit. Search for the commit with the name `[Publisher] Merging #{PR number - 1}` for example, `#625` if it's the `#626` PR.
+        3. Click on `View commit details` :
+          ![image](https://user-images.githubusercontent.com/30244939/210760328-871a6601-88a0-4574-b757-2eb87ab6d258.png)
+        4. Click on the browse file button
+        5. Click on the commit number and type the branch name, for example, revert :
+          ![image](https://user-images.githubusercontent.com/30244939/210760359-536727b1-e701-4226-99ca-5cf812b16487.png)![image](https://user-images.githubusercontent.com/30244939/210760384-08810813-100a-49ee-a68f-2a6a5f9615b9.png)
+        6. Now, you need to open : A local terminal console (if you have git installed) or a codespace (if you have any) for this repository. Don't forget to `git pull` if you have already cloned the repository.
+        7. You need to be on your main branch, so first : `git checkout main` ; After, you have to run `git checkout revert <path to edited file or folder>`. If you want to take an entire folder, for example `docs`, just type `docs/.`. It will take all file
+        8. `git commit -am "restoring folder" && git push`. If you use VScode, you can also use the menu to ordering your file restoration.
+
   - type: checkboxes
     attributes:
       label: Issue validation
