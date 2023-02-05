@@ -1,3 +1,8 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+## [4.12.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.12.0-5...4.12.0) (2023-02-05)
 
 <a name="4.11.15rc4"></a>
 ## [4.11.15rc4](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/v4.11.15rc4...4.11.15rc4) (2023-01-22)
@@ -3051,4 +3056,3 @@ Remove the workflow update
 ### Refactor
 
 * Adding file and hierarchy
-
