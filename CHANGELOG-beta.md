@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.12.0...5.0.0-0) (2023-02-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* for maintining purpose, all settings are replaced/moved. Maybe broke if I forgot some things
+
+* fix!(settings): refactor all settings ([6d80b26](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6d80b2699b894b5c5c76b0302ac8492a131b55c0))
+
 ## [4.12.0-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.12.0-4...4.12.0-5) (2023-02-02)
 
 
