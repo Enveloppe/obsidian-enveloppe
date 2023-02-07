@@ -48,7 +48,7 @@ export class ImportModal extends Modal {
 							console.log("Migrated settings from old to new format");
 						} else {
 							console.log("Imported settings as new format");
-							importedSettings = importedSettings as unknown as GitHubPublisherSettings;
+							importedSettings = importedSettings as GitHubPublisherSettings;
 							if (Object.keys(importedSettings).includes("github")) {
 								importedSettings.github.repo = this.plugin.settings.github.repo;
 								importedSettings.github.token = this.plugin.settings.github.token;
@@ -161,18 +161,9 @@ export class ExportModal extends Modal {
 			.setName(t("modals.export.title") as string)
 			.setDesc(t("modals.export.desc") as string)
 			.then((setting) => {
-				const censuredSettings: Record<string, SettingValue> = {};
-				for (const [key, value] of Object.entries(this.plugin.settings)) {
-					if (key === "github") {
-						value.repo = "";
-						value.user = "";
-						value.token = "";
-					}
-					// @ts-ignore
-					censuredSettings[key] = value;
-
-				}
-				const output = JSON.stringify(censuredSettings, null, 2);
+				const censuredSettings: GitHubPublisherSettings = this.plugin.settings;
+				const output = JSON.stringify(censuredSettings, null, 2)
+					.replace(/,\s+"(repo|user|token)": "\w+"/g, "");
 
 				setting.controlEl.createEl("a",
 					{
