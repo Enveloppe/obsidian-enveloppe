@@ -8,8 +8,8 @@ import {
 	Vault,
 } from "obsidian";
 import {
-	folderSettings,
-	GitHubPublisherSettings,
+	FolderSettings,
+	GitHubPublisherSettings, GithubTiersVersion,
 	MetadataExtractor,
 	RepoFrontmatter,
 } from "../settings/interface";
@@ -62,7 +62,7 @@ export async function convertOldSettings(
  */
 
 export function noticeLog(message: string, settings: GitHubPublisherSettings) {
-	if (settings.logNotice) {
+	if (settings.plugin.noticeError) {
 		new Notice(message);
 	} else {
 		console.log(message);
@@ -86,7 +86,7 @@ export async function getSettingsOfMetadataExtractor(
 		Platform.isMobile ||
 		//@ts-ignore
 		!app.plugins.enabledPlugins.has("metadata-extractor") ||
-		settings.metadataExtractorPath.length === 0
+		settings.upload.metadataExtractorPath.length === 0
 	)
 		return null;
 	const metadataExtractor: MetadataExtractor = {
@@ -135,7 +135,7 @@ export function disablePublish(
 	}
 	const fileCache = app.metadataCache.getFileCache(file);
 	const meta = fileCache?.frontmatter;
-	const folderList = settings.excludedFolder;
+	const folderList = settings.plugin.excludedFolder;
 	if (meta === undefined) {
 		return false;
 	} else if (folderList.length > 0) {
@@ -149,7 +149,7 @@ export function disablePublish(
 			}
 		}
 	}
-	return meta[settings.shareKey];
+	return meta[settings.plugin.shareKey];
 }
 
 /**
@@ -185,15 +185,17 @@ export async function createLink(
 	vault: Vault,
 	settings: GitHubPublisherSettings
 ): Promise<void> {
-	if (!settings.copyLink) {
+	const copyLink = settings.plugin.copyLink;
+	const github = settings.github;
+	if (!copyLink.enable) {
 		return;
 	}
 	let filepath = getReceiptFolder(file, settings, metadataCache, vault);
 
-	let baseLink = settings.mainLink;
+	let baseLink = copyLink.links;
 	if (baseLink.length === 0) {
 		if (repo instanceof Array) {
-			baseLink = `https://${settings.githubName}.github.io/${settings.githubRepo}/`;
+			baseLink = `https://${github.user}.github.io/${settings.github.repo}/`;
 		} else {
 			baseLink = `https://${repo.owner}.github.io/${repo.repo}/`;
 		}
@@ -204,9 +206,8 @@ export async function createLink(
 	}
 
 	baseLink = checkSlash(baseLink);
-	if (settings.linkRemover.length > 0) {
-		const tobeRemoved = settings.linkRemover.split(",");
-		for (const part of tobeRemoved) {
+	if (copyLink.removePart.length > 0) {
+		for (const part of copyLink.removePart) {
 			if (part.length > 0) {
 				filepath = filepath.replace(part.trim(), "");
 			}
@@ -261,7 +262,7 @@ async function noticeMessageOneRepo(
 ): Promise<void> {
 	const noticeValue =
 		file instanceof TFile ? "\"" + file.basename + "\"" : file;
-	if (settings.workflowName.length > 0) {
+	if (settings.github.worflow.workflowName.length > 0) {
 		new Notice(
 			(informations("sendMessage") as StringFunc)([
 				noticeValue,
@@ -352,22 +353,22 @@ export function getFrontmatterCondition(
 	settings: GitHubPublisherSettings
 ) {
 	let imageDefaultFolder = null;
-	if (settings.defaultImageFolder.length > 0) {
-		imageDefaultFolder = settings.defaultImageFolder;
-	} else if (settings.folderDefaultName.length > 0) {
-		imageDefaultFolder = settings.folderDefaultName;
+	if (settings.embed.folder.length > 0) {
+		imageDefaultFolder = settings.embed.folder;
+	} else if (settings.upload.defaultName.length > 0) {
+		imageDefaultFolder = settings.upload.defaultName;
 	}
 	const settingsConversion: FrontmatterConvert = {
-		convertWiki: settings.convertWikiLinks,
-		attachment: settings.embedImage,
-		embed: settings.embedNotes,
+		convertWiki: settings.conversion.links.wiki,
+		attachment: settings.embed.attachments,
+		embed: settings.embed.notes,
 		attachmentLinks: imageDefaultFolder,
 		links: true,
 		removeEmbed: false,
-		dataview: settings.convertDataview,
-		hardbreak: settings.hardBreak,
-		convertInternalNonShared: settings.convertInternalNonShared,
-		convertInternalLinks: settings.convertForGithub,
+		dataview: settings.conversion.dataview,
+		hardbreak: settings.conversion.hardbreak,
+		convertInternalNonShared: settings.conversion.links.unshared,
+		convertInternalLinks: settings.conversion.links.internal,
 	};
 	if (frontmatter.links !== undefined) {
 		if (typeof frontmatter.links === "object") {
@@ -451,13 +452,14 @@ export function getRepoFrontmatter(
 	settings: GitHubPublisherSettings,
 	frontmatter?: FrontMatterCache
 ) {
+	const github = settings.github;
 	let repoFrontmatter: RepoFrontmatter = {
-		branch: settings.githubBranch,
-		repo: settings.githubRepo,
-		owner: settings.githubName,
-		autoclean: settings.autoCleanUp,
+		branch: github.branch,
+		repo: github.repo,
+		owner: github.user,
+		autoclean: settings.upload.autoclean.enable,
 	};
-	if (settings.downloadedFolder === folderSettings.fixed) {
+	if (settings.upload.behavior === FolderSettings.fixed) {
 		repoFrontmatter.autoclean = false;
 	}
 	if (!frontmatter || frontmatter.multipleRepo === undefined || frontmatter.repo === undefined) {
@@ -658,12 +660,12 @@ export function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoF
 		? repoFrontmatter
 		: [repoFrontmatter];
 	const isEmpty: boolean[]	= [];
-	if (settings.GhToken.length === 0) {
+	if (settings.github.token.length === 0) {
 		isEmpty.push(true);
 		const whatIsEmpty = t("error.whatEmpty.ghToken") as string;
 		new Notice((error("isEmpty") as StringFunc)(whatIsEmpty));
 	}
-	if (settings.GhToken.length != 0) {
+	if (settings.github.token.length != 0) {
 		for (const repo of repoFrontmatter) {
 			if (repo.repo.length === 0) {
 				isEmpty.push(true);
@@ -685,5 +687,3 @@ export function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoF
 	const allInvalid = isEmpty.every((value) => value === true);
 	return !allInvalid;
 }
-
-

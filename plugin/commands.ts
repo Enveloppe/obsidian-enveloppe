@@ -77,7 +77,7 @@ export async function shareAllMarkedNotes(
 				repoFrontmatter
 			);
 			if (
-				settings.metadataExtractorPath.length > 0 &&
+				settings.upload.metadataExtractorPath.length > 0 &&
 				Platform.isDesktop
 			) {
 				const metadataExtractor = await getSettingsOfMetadataExtractor(
@@ -105,7 +105,7 @@ export async function shareAllMarkedNotes(
 				);
 			} else {
 				new Notice(
-					(error("errorPublish") as StringFunc)(settings.githubRepo)
+					(error("errorPublish") as StringFunc)(settings.github.repo)
 				);
 			}
 		}
@@ -134,7 +134,7 @@ export async function deleteUnsharedDeletedNotes(
 ) {
 	try {
 		new Notice(
-			(informations("startingClean") as StringFunc)(settings.githubRepo)
+			(informations("startingClean") as StringFunc)(settings.github.repo)
 		);
 		const isValid = checkRepositoryValidityWithRepoFrontmatter(branchName, PublisherManager, settings, repoFrontmatter);
 		if (!isValid) return false;
@@ -187,7 +187,7 @@ export async function shareOneNote(
 		);
 		if (publishSuccess) {
 			if (
-				settings.metadataExtractorPath.length > 0 &&
+				settings.upload.metadataExtractorPath.length > 0 &&
 				Platform.isDesktop
 			) {
 				const metadataExtractor = await getSettingsOfMetadataExtractor(
@@ -222,7 +222,7 @@ export async function shareOneNote(
 				);
 			} else {
 				new Notice(
-					(error("errorPublish") as StringFunc)(settings.githubRepo)
+					(error("errorPublish") as StringFunc)(settings.github.repo)
 				);
 			}
 		}
@@ -230,7 +230,7 @@ export async function shareOneNote(
 		if (!(error instanceof DOMException)) {
 			noticeLog(error, settings);
 			new Notice(
-				(error("errorPublish") as StringFunc)(settings.githubRepo)
+				(error("errorPublish") as StringFunc)(settings.github.repo)
 			);
 		}
 	}

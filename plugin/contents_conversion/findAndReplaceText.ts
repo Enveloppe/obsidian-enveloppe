@@ -13,12 +13,12 @@ export default function findAndReplaceText(
 	settings: GitHubPublisherSettings,
 	after?: boolean
 ): string {
-	if (!settings.censorText) {
+	if (!settings.conversion.censorText) {
 		return text;
 	}
-	let censoring = settings.censorText.filter((censor) => !censor.after);
+	let censoring = settings.conversion.censorText.filter((censor) => !censor.after);
 	if (after) {
-		censoring = settings.censorText.filter((censor) => censor.after);
+		censoring = settings.conversion.censorText.filter((censor) => censor.after);
 	}
 	for (const censor of censoring) {
 		if (!censor.flags || !censor.flags.match(/^[gimsuy\s]+$/)) {

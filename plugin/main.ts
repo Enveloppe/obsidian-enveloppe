@@ -1,7 +1,14 @@
 import {FrontMatterCache, Menu, Plugin, TFile} from "obsidian";
 import {GithubPublisherSettings} from "./settings";
-import {DEFAULT_SETTINGS, GitHubPublisherSettings, GithubTiersVersion, RepoFrontmatter} from "./settings/interface";
-import {convertOldSettings, disablePublish, getRepoFrontmatter,} from "./src/utils";
+import {
+	DEFAULT_SETTINGS,
+	FolderSettings,
+	GitHubPublisherSettings,
+	GithubTiersVersion,
+	OldSettings,
+	RepoFrontmatter
+} from "./settings/interface";
+import {disablePublish, getRepoFrontmatter,} from "./src/utils";
 import {GithubBranch} from "./publishing/branch";
 import {Octokit} from "@octokit/core";
 import {
@@ -34,19 +41,104 @@ export default class GithubPublisher extends Plugin {
 		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
 	}
 
+	/** Export old settings to the new settings format */
+	async migrateSettings(old: OldSettings) {
+		if (Object.keys(old).includes("editorMenu")) {
+			console.log("Migrating settings...");
+			this.settings = {
+				github:
+					{
+						user: old.githubName ? old.githubName : this.settings.github.user ? this.settings.github.user : "",
+						repo: old.githubRepo ? old.githubRepo : this.settings.github.repo ? this.settings.github.repo : "",
+						token: old.GhToken ? old.GhToken : this.settings.github.token ? this.settings.github.token : "",
+						branch: old.githubBranch,
+						automaticallyMergePR: old.automaticallyMergePR,
+						api: {
+							tiersForApi: old.tiersForApi,
+							hostname: old.hostname,
+						},
+						worflow: {
+							workflowName: old.workflowName,
+							customCommitMsg: old.customCommitMsg,
+						}
+					},
+				upload: {
+					behavior: old.downloadedFolder as FolderSettings,
+					subFolder: old.subFolder,
+					defaultName: old.folderDefaultName,
+					rootFolder: old.rootFolder,
+					yamlFolderKey: old.yamlFolderKey,
+					frontmatterTitle: {
+						enable: old.useFrontmatterTitle,
+						key: old.frontmatterTitleKey,
+					},
+					replaceTitle: {
+						regex: old.frontmatterTitleRegex,
+						replacement: old.frontmatterTitleReplacement,
+					},
+					autoclean: {
+						enable: old.autoCleanUp,
+						excluded: old.autoCleanUpExcluded,
+					},
+					folderNote: {
+						enable: old.folderNote,
+						rename: old.folderNoteRename,
+					},
+					metadataExtractorPath: old.metadataExtractorPath,
+				},
+				conversion: {
+					hardbreak: old.hardBreak,
+					dataview: old.convertDataview,
+					censorText: old.censorText,
+					tags: {
+						inline: old.inlineTags,
+						exclude: old.excludeDataviewValue,
+						fields: old.dataviewFields,
+					},
+					links: {
+						internal: old.convertForGithub,
+						unshared: old.convertInternalNonShared,
+						wiki: old.convertWikiLinks,
+					},
+				},
+				embed: {
+					attachments: old.embedImage,
+					keySendFile: old.metadataFileFields,
+					notes: old.embedNotes,
+					folder: old.defaultImageFolder,
+				},
+				plugin: {
+					shareKey: old.shareKey,
+					fileMenu: old.fileMenu,
+					editorMenu: old.editorMenu,
+					excludedFolder: old.excludedFolder,
+					externalShare: old.shareExternalModified,
+					copyLink: {
+						enable: old.copyLink,
+						links: old.mainLink,
+						removePart: old.linkRemover.split(/[,\n]\W*/).map((s) => s.trim()),
+					},
+					noticeError: old.logNotice,
+				}
+			};
+			await this.saveSettings();
+		}
+	}
 	/**
 	 * Create a new instance of Octokit to load a new instance of GithubBranch 
 	*/
 	reloadOctokit() {
 		let octokit: Octokit;
-		if (this.settings.tiersForApi === GithubTiersVersion.entreprise && this.settings.hostname.length > 0) {
+		const apiSettings = this.settings.github.api;
+		const githubSettings = this.settings.github;
+		if (apiSettings.tiersForApi === GithubTiersVersion.entreprise && apiSettings.hostname.length > 0) {
 			octokit = new Octokit(
 				{
-					baseUrl: `${this.settings.hostname}/api/v3`,
-					auth: this.settings.GhToken
+					baseUrl: `${apiSettings.hostname}/api/v3`,
+					auth: githubSettings.token,
 				});
 		} else {
-			octokit = new Octokit({auth: this.settings.GhToken});
+			octokit = new Octokit({auth: githubSettings.token});
 		}
 		return new GithubBranch(
 			this.settings,
@@ -65,22 +157,22 @@ export default class GithubPublisher extends Plugin {
 		console.log(
 			`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`
 		);
+		
 		await this.loadSettings();
+		const oldSettings = this.settings;
+		//@ts-ignore
+		await this.migrateSettings(oldSettings as OldSettings);
 		const branchName =
 			app.vault.getName().replaceAll(" ", "-").replaceAll(".", "-") +
 			"-" +
 			new Date().toLocaleDateString("en-US").replace(/\//g, "-");
 		this.addSettingTab(new GithubPublisherSettings(this.app, this, branchName));
-		await convertOldSettings("ExcludedFolder", this);
-		await convertOldSettings("autoCleanUpExcluded", this);
-
-
-
+		
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
 				if (
 					disablePublish(this.app, this.settings, file) &&
-					this.settings.fileMenu
+					this.settings.plugin.fileMenu
 				) {
 					const fileName = this.getTitleFieldForCommand(file, this.app.metadataCache.getFileCache(file).frontmatter).replace(".md", "");
 					menu.addItem((item) => {
@@ -112,7 +204,7 @@ export default class GithubPublisher extends Plugin {
 			this.app.workspace.on("editor-menu", (menu, editor, view) => {
 				if (
 					disablePublish(this.app, this.settings, view.file) &&
-					this.settings.editorMenu
+					this.settings.plugin.editorMenu
 				) {
 					const fileName = this.getTitleFieldForCommand(view.file,this.app.metadataCache.getFileCache(view.file).frontmatter).replace(".md", "");
 					menu.addSeparator();
@@ -138,13 +230,14 @@ export default class GithubPublisher extends Plugin {
 				}
 			})
 		);
-		if (this.settings.shareExternalModified) {
+		if (this.settings.plugin.externalShare) {
 			this.registerEvent(
 				this.app.vault.on("modify", async (file: TFile) => {
+					const shareKey = this.settings.plugin.shareKey;
 					if (file !== this.app.workspace.getActiveFile()) {
 						const frontmatter = this.app.metadataCache.getFileCache(
 							file).frontmatter;
-						const isShared = frontmatter ? frontmatter[this.settings.shareKey] : false;
+						const isShared = frontmatter ? frontmatter[shareKey] : false;
 						if (isShared) {
 							await shareOneNote(
 								branchName,
@@ -195,7 +288,7 @@ export default class GithubPublisher extends Plugin {
 			name: commands("publisherDeleteClean") as string,
 			hotkeys: [],
 			checkCallback: (checking) => {
-				if (this.settings.autoCleanUp) {
+				if (this.settings.upload.autoclean.enable) {
 					if (!checking) {
 						const publisher = this.reloadOctokit();
 						deleteUnsharedDeletedNotes(

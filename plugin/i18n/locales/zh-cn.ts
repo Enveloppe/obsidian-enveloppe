@@ -63,7 +63,7 @@ export default {
 
 		},
 		uploadConfig: {
-			uploadConfig: "上传设置",
+			title: "上传设置",
 			pathSetting: "路径设置",
 			folderBehavior: "文件夹操作",
 			folderBehaviorDesc:
@@ -297,7 +297,7 @@ export default {
 	modals: {
 		import: {
 			title: "Import",
-			desc: "Import settings from text or a file.",
+			desc: "Import settings from text or a file. Note : this will overwrite your current settings (except for username, repo name and token).",
 			importFromFile: "Import from file",
 			save: "Save",
 			paste: "Paste configuration here...",

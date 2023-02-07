@@ -67,7 +67,7 @@ export default {
 
 		},
 		uploadConfig: {
-			uploadConfig: "Upload configuration",
+			title: "Upload configuration",
 			pathSetting: "Path settings",
 			folderBehavior: "Folder behavior",
 			folderBehaviorDesc:
@@ -311,7 +311,7 @@ export default {
 	modals: {
 		import: {
 			title: "Import",
-			desc: "Import settings from text or a file.",
+			desc: "Import settings from text or a file. Note : this will overwrite your current settings (except for username, repo name and token).",
 			importFromFile: "Import from file",
 			save: "Save",
 			paste: "Paste configuration here...",

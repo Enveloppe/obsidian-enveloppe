@@ -6,7 +6,7 @@ import {
 	FrontMatterCache,
 } from "obsidian";
 import {
-	folderSettings,
+	FolderSettings,
 	LinkedNotes,
 	GitHubPublisherSettings,
 	FrontmatterConvert,
@@ -31,7 +31,7 @@ function getDataviewPath(
 	settings: GitHubPublisherSettings,
 	vault: Vault
 ): LinkedNotes[] {
-	if (!settings.convertDataview) {
+	if (!settings.conversion.dataview) {
 		return [];
 	}
 	const wikiRegex = /\[\[(.*?)\]\]/gim;
@@ -106,7 +106,7 @@ async function createRelativePath(
 	const targetRepo = await getRepoFrontmatter(settings, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(sourceRepo, targetRepo);
 	const shared = isShared(
-		settings.shareKey,
+		settings.plugin.shareKey,
 		frontmatterTarget,
 		frontmatterSettings
 	);
@@ -196,10 +196,10 @@ function folderNoteIndexOBS(
 	settings: GitHubPublisherSettings,
 	fileName: string
 ): string {
-	const index = settings.folderNoteRename;
+	const index = settings.upload.folderNote.rename;
 	const folderParent = file.parent.path !== "/" ? `/${file.parent.path}/` : "/" ;
 	const defaultPath = `${folderParent}${regexOnFileName(fileName, settings)}`;
-	if (!settings.folderNote) return defaultPath;
+	if (!settings.upload.folderNote.enable) return defaultPath;
 	const parentFolderName = file.parent.name;
 	if (fileName.replace(".md", "") === parentFolderName) return `/${file.parent.path}/${index}`;
 	const outsideFolder = vault.getAbstractFileByPath(
@@ -224,13 +224,13 @@ function createObsidianPath(
 	vault: Vault,
 	fileName: string
 ): string {
-	const folderDefault = settings.folderDefaultName;
+	const folderDefault = settings.upload.defaultName;
 	fileName = folderNoteIndexOBS(file, vault, settings, fileName);
 
 	const rootFolder = folderDefault.length > 0 ? folderDefault : "";
 	const path = rootFolder + fileName;
-	if (settings.subFolder.length > 0) {
-		return path.replace(settings.subFolder + "/", "");
+	if (settings.upload.subFolder.length > 0) {
+		return path.replace(settings.upload.subFolder + "/", "");
 	}
 	return path;
 }
@@ -248,16 +248,17 @@ function folderNoteIndexYAML(
 	frontmatter: FrontMatterCache,
 	settings: GitHubPublisherSettings
 ): string {
-	const category = frontmatter[settings.yamlFolderKey] instanceof Array ? frontmatter[settings.yamlFolderKey].join("/") : frontmatter[settings.yamlFolderKey];
+	const shareKey = settings.plugin.shareKey;
+	const category = frontmatter[shareKey] instanceof Array ? frontmatter[shareKey].join("/") : frontmatter[shareKey];
 	const parentCatFolder = !category.endsWith("/")
 		? category.split("/").at(-1)
 		: category.split("/").at(-2);
-	if (!settings.folderNote) return regexOnFileName(fileName, settings);
+	if (!settings.upload.folderNote.enable) return regexOnFileName(fileName, settings);
 	if (
 		fileName.replace(".md", "").toLowerCase() ===
 		parentCatFolder.toLowerCase()
 	)
-		return settings.folderNoteRename;
+		return settings.upload.folderNote.rename;
 	return regexOnFileName(fileName, settings);
 }
 
@@ -276,16 +277,17 @@ function createFrontmatterPath(
 	frontmatter: FrontMatterCache,
 	fileName: string
 ): string {
-	const folderCategory = frontmatter[settings.yamlFolderKey] instanceof Array ? frontmatter[settings.yamlFolderKey].join("/") : frontmatter[settings.yamlFolderKey];
+	const uploadSettings = settings.upload;
+	const folderCategory = frontmatter[uploadSettings.yamlFolderKey] instanceof Array ? frontmatter[uploadSettings.yamlFolderKey].join("/") : frontmatter[uploadSettings.yamlFolderKey];
 	let path =
-		settings.folderDefaultName.length > 0
-			? settings.folderDefaultName + "/" + fileName
+		uploadSettings.defaultName.length > 0
+			? uploadSettings.defaultName + "/" + fileName
 			: fileName;
-	let folderRoot = settings.rootFolder;
+	let folderRoot = uploadSettings.rootFolder;
 	if (folderRoot.length > 0) {
 		folderRoot = folderRoot + "/";
 	}
-	if (frontmatter && frontmatter[settings.yamlFolderKey]) {
+	if (frontmatter && frontmatter[uploadSettings.yamlFolderKey]) {
 		path =
 			folderRoot +
 			folderCategory +
@@ -303,11 +305,12 @@ function createFrontmatterPath(
  * @return {string} edited file name
  */
 export function regexOnFileName(fileName: string, settings: GitHubPublisherSettings): string {
-	if (fileName === settings.folderNoteRename && settings.folderNote) return fileName;
+	const uploadSettings = settings.upload;
+	if (fileName === uploadSettings.folderNote.rename && uploadSettings.folderNote.enable) return fileName;
 	fileName = fileName.replace(".md", "");
-	if (settings.frontmatterTitleRegex.length > 0) {
-		const toReplace = settings.frontmatterTitleRegex;
-		const replaceWith = settings.frontmatterTitleReplacement;
+	if (uploadSettings.replaceTitle.regex.length > 0) {
+		const toReplace = uploadSettings.replaceTitle.regex;
+		const replaceWith = uploadSettings.replaceTitle.replacement;
 		if (toReplace.match(/\/.+\//)) {
 			const flagsRegex = toReplace.match(/\/([gimy]+)$/);
 			const flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join("") : "";
@@ -341,11 +344,11 @@ export function getTitleField(
 	let fileName = file.name;
 	if (
 		frontmatter &&
-		settings.useFrontmatterTitle &&
-		frontmatter[settings.frontmatterTitleKey] &&
-		frontmatter[settings.frontmatterTitleKey] !== file.name
+		settings.upload.frontmatterTitle.enable &&
+		frontmatter[settings.upload.frontmatterTitle.key] &&
+		frontmatter[settings.upload.frontmatterTitle.key] !== file.name
 	) {
-		fileName= frontmatter[settings.frontmatterTitleKey] + ".md";
+		fileName= frontmatter[settings.upload.frontmatterTitle.key] + ".md";
 	}
 	return fileName;
 }
@@ -374,20 +377,20 @@ function getReceiptFolder(
 
 		if (
 			!frontmatter ||
-			frontmatter[settings.shareKey] === undefined ||
-			!frontmatter[settings.shareKey]
+			frontmatter[settings.plugin.shareKey] === undefined ||
+			!frontmatter[settings.plugin.shareKey]
 		) {
 			return fileName;
 		}
 
 		let path =
-			settings.folderDefaultName.length > 0
-				? settings.folderDefaultName + "/" + regexOnFileName(fileName, settings)
+			settings.upload.defaultName.length > 0
+				? settings.upload.defaultName + "/" + regexOnFileName(fileName, settings)
 				: regexOnFileName(fileName, settings);
 
-		if (settings.downloadedFolder === folderSettings.yaml) {
+		if (settings.upload.behavior === FolderSettings.yaml) {
 			path = createFrontmatterPath(file, settings, frontmatter, fileName);
-		} else if (settings.downloadedFolder === folderSettings.obsidian) {
+		} else if (settings.upload.behavior === FolderSettings.obsidian) {
 			path = createObsidianPath(file, settings, vault, fileName);
 		}
 		return path;
@@ -408,10 +411,11 @@ function getImageLinkOptions(
 	sourceFrontmatter: FrontmatterConvert | null
 ): string {
 	if (!sourceFrontmatter) {
-		if (settings.defaultImageFolder.length > 0) {
-			return settings.defaultImageFolder + "/" + file.name;
-		} else if (settings.folderDefaultName.length > 0) {
-			return settings.folderDefaultName + "/" + file.name;
+		const defaultImageFolder = settings.embed.folder;
+		if (defaultImageFolder.length > 0) {
+			return defaultImageFolder + "/" + file.name;
+		} else if (settings.upload.defaultName.length > 0) {
+			return settings.upload.defaultName + "/" + file.name;
 		} else {
 			return file.path;
 		}

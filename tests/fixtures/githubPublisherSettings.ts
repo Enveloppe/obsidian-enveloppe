@@ -1,4 +1,4 @@
-import {folderSettings, GitHubPublisherSettings} from '../../plugin/settings/interface';
+import {FolderSettings, GitHubPublisherSettings} from '../../plugin/settings/interface';
 
 const settings: GitHubPublisherSettings = {
 	githubRepo: "",
@@ -9,7 +9,7 @@ const settings: GitHubPublisherSettings = {
 	excludedFolder: [],
 	fileMenu: false,
 	editorMenu: false,
-	downloadedFolder: folderSettings.fixed,
+	downloadedFolder: FolderSettings.fixed,
 	//fixedFolder
 	//yamlFrontmatter
 	//obsidianPath

@@ -108,7 +108,7 @@ export async function addInlineTags(
 	frontmatter: FrontMatterCache,
 	text: string
 ): Promise<string> {
-	if (!settings.inlineTags) {
+	if (!settings.conversion.tags.inline) {
 		return text;
 	}
 	const inlineTags = metadataCache.getFileCache(file)?.tags;
@@ -142,8 +142,8 @@ function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings) {
 		? fieldValue.display.toString()
 		: filename;
 	if (
-		!settings.excludeDataviewValue.includes(display) &&
-		!settings.excludeDataviewValue.includes(filename)
+		!settings.conversion.tags.exclude.includes(display) &&
+		!settings.conversion.tags.fields.includes(filename)
 	) {
 		return display;
 	}
@@ -169,7 +169,7 @@ export async function convertInlineDataview(
 ) {
 	// @ts-ignore
 	if (
-		settings.dataviewFields.length === 0 ||
+		settings.conversion.tags.fields.length === 0 ||
 		// @ts-ignore
 		!app.plugins.enabledPlugins.has("dataview")
 	) {
@@ -178,7 +178,7 @@ export async function convertInlineDataview(
 	const dvApi = getAPI();
 	const dataviewLinks = await dvApi.page(sourceFile.path);
 	const valueToAdd: string[] = [];
-	for (const field of settings.dataviewFields) {
+	for (const field of settings.conversion.tags.fields) {
 		const fieldValue = dataviewLinks[field];
 		if (fieldValue) {
 			if (fieldValue.constructor.name === "Link") {
@@ -191,7 +191,7 @@ export async function convertInlineDataview(
 						stringifyField = dataviewExtract(item, settings);
 						valueToAdd.push(stringifyField);
 					} else if (
-						!settings.excludeDataviewValue.includes(
+						!settings.conversion.tags.exclude.includes(
 							stringifyField.toString()
 						)
 					) {
@@ -199,7 +199,7 @@ export async function convertInlineDataview(
 					}
 				}
 			} else if (
-				!settings.excludeDataviewValue.includes(fieldValue.toString())
+				!settings.conversion.tags.exclude.includes(fieldValue.toString())
 			) {
 				valueToAdd.push(fieldValue.toString());
 			}

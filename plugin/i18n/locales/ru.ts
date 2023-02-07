@@ -69,7 +69,7 @@ export default {
 
 		},
 		uploadConfig: {
-			uploadConfig: "Настройки загрузки",
+			title: "Настройки загрузки",
 			pathSetting: "Настройки путей",
 			folderBehavior: "Поведение при создание папок",
 			folderBehaviorDesc:
@@ -316,7 +316,7 @@ export default {
 	modals: {
 		import: {
 			title: "Import",
-			desc: "Import settings from text or a file.",
+			desc: "Import settings from text or a file. Note : this will overwrite your current settings (except for username, repo name and token).",
 			importFromFile: "Import from file",
 			save: "Save",
 			paste: "Paste configuration here...",

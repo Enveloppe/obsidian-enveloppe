@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/core";
 import { Notice, parseYaml } from "obsidian";
 import {
-	folderSettings,
+	FolderSettings,
 	GitHubPublisherSettings,
 	GithubRepo,
 	RepoFrontmatter,
@@ -73,12 +73,12 @@ async function deleteFromGithubOneRepo(
 	const filesInRepo = await filterGithubFile(getAllFile, settings);
 	if (!filesInRepo) {
 		let errorMsg = "";
-		if (settings.folderDefaultName.length > 0) {
-			if (settings.folderDefaultName.length > 0) {
+		if (settings.upload.defaultName.length > 0) {
+			if (settings.upload.defaultName.length > 0) {
 				errorMsg = deletion("errorDeleteDefaultFolder") as string;
 			} else if (
-				settings.downloadedFolder === folderSettings.yaml &&
-				settings.rootFolder.length === 0
+				settings.upload.behavior === FolderSettings.yaml &&
+				settings.upload.rootFolder.length === 0
 			) {
 				errorMsg = deletion("errorDeleteRootFolder") as string;
 			}
@@ -109,7 +109,7 @@ async function deleteFromGithubOneRepo(
 			? isMarkdownForAnotherRepo
 			: true;
 		if (isNeedToBeDeleted) {
-			const checkingIndex = file.file.contains(settings.folderNoteRename)
+			const checkingIndex = file.file.contains(settings.upload.folderNote.rename)
 				? await checkIndexFiles(octokit, settings, file.file, repo)
 				: false;
 			try {
@@ -168,7 +168,7 @@ function excludedFileFromDelete(
 	file: string,
 	settings: GitHubPublisherSettings
 ): boolean {
-	const autoCleanExcluded = settings.autoCleanUpExcluded;
+	const autoCleanExcluded = settings.upload.autoclean.excluded;
 	if (autoCleanExcluded.length > 0) {
 		for (const excludedFile of autoCleanExcluded) {
 			const isRegex = excludedFile.match(/^\/(.*)\/[igmsuy]*$/);
@@ -203,19 +203,23 @@ export async function filterGithubFile(
 ): Promise<GithubRepo[]> {
 	const sharedFilesInRepo: GithubRepo[] = [];
 	for (const file of fileInRepo) {
+		const behavior = settings.upload.behavior;
+		const root = settings.upload.rootFolder;
+		const defaultName = settings.upload.defaultName;
+		const attachmentFolder = settings.embed.folder;
 		if (
-			(settings.downloadedFolder === folderSettings.yaml &&
-				settings.rootFolder.length === 0) ||
-			settings.folderDefaultName.length === 0
+			(behavior === FolderSettings.yaml &&
+				root.length === 0) ||
+			defaultName.length === 0
 		) {
 			return null;
 		}
 		if (
-			(file.file.includes(settings.folderDefaultName) ||
-				(settings.downloadedFolder === folderSettings.yaml &&
-					file.file.includes(settings.rootFolder)) ||
-				(settings.defaultImageFolder.length > 0 &&
-					file.file.includes(settings.defaultImageFolder))) &&
+			(file.file.includes(defaultName) ||
+				(behavior === FolderSettings.yaml &&
+					file.file.includes(root)) ||
+				(attachmentFolder.length > 0 &&
+					file.file.includes(attachmentFolder))) &&
 			!excludedFileFromDelete(file.file, settings) &&
 			(isAttachment(file.file) || file.file.match("md$"))
 		) {

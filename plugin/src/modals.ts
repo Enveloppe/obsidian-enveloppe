@@ -2,8 +2,9 @@ import GithubPublisher from "../main";
 import { App, Modal, Setting, TextAreaComponent, ButtonComponent, Platform } from "obsidian";
 import {settings, subSettings, t} from "../i18n";
 import {GithubPublisherSettings} from "../settings";
+import {GitHubPublisherSettings, OldSettings} from "../settings/interface";
 
-export type SettingValue = number | string | boolean;
+export type SettingValue = number | string | boolean | unknown;
 
 /**
  *
@@ -39,14 +40,26 @@ export class ImportModal extends Modal {
 			const importAndClose = async (str: string) => {
 				if (str) {
 					try {
-						const importedSettings = JSON.parse(str) as Record<string, SettingValue>;
-						for (const [key, value] of Object.entries(importedSettings)) {
-							if (key !== "githubRepo" && key !== "githubName" && key !== "GhToken") {
+						let importedSettings = JSON.parse(str);
+						if (Object.keys(importedSettings).includes("editorMenu")) {
+							//need to convert old settings to new settings
+							const oldSettings = importedSettings as unknown as OldSettings;
+							this.plugin.migrateSettings(oldSettings);
+							console.log("Migrated settings from old to new format");
+						} else {
+							console.log("Imported settings as new format");
+							importedSettings = importedSettings as unknown as GitHubPublisherSettings;
+							if (Object.keys(importedSettings).includes("github")) {
+								importedSettings.github.repo = this.plugin.settings.github.repo;
+								importedSettings.github.token = this.plugin.settings.github.token;
+								importedSettings.github.user = this.plugin.settings.github.user;
+							}
+							for (const [key, value] of Object.entries(importedSettings)) {
 								// @ts-ignore
 								this.plugin.settings[key] = value;
 							}
+							this.plugin.saveSettings();
 						}
-						this.plugin.saveSettings();
 						this.close();
 					} catch (e) {
 						errorSpan.addClass("active");
@@ -107,7 +120,7 @@ export class ImportModal extends Modal {
 		contentEl.empty();
 		this.settingsPage.empty();
 		// @ts-ignore
-		const openedTab = document.querySelector(".settings-tab-active.github-publisher").innerText;
+		const openedTab = document.querySelector(".settings-tab-active.github-publisher") ? document.querySelector(".settings-tab-active.github-publisher").innerText : settings("github", "githubConfiguration") as string;
 		switch (openedTab) {
 		case settings("github", "githubConfiguration") as string:
 			this.settingsTab.renderGithubConfiguration();
@@ -150,10 +163,14 @@ export class ExportModal extends Modal {
 			.then((setting) => {
 				const censuredSettings: Record<string, SettingValue> = {};
 				for (const [key, value] of Object.entries(this.plugin.settings)) {
-					if (key !== "githubRepo" && key !== "githubName" && key !== "GhToken") {
-						// @ts-ignore
-						censuredSettings[key] = value;
+					if (key === "github") {
+						value.repo = "";
+						value.user = "";
+						value.token = "";
 					}
+					// @ts-ignore
+					censuredSettings[key] = value;
+
 				}
 				const output = JSON.stringify(censuredSettings, null, 2);
 

@@ -194,7 +194,7 @@ export default class Publisher {
 			this.octokit,
 			this.plugin
 		);
-		const sharedKey = this.settings.shareKey;
+		const sharedKey = this.settings.plugin.shareKey;
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
 		const isNotEmpty = checkEmptyConfiguration(getRepoFrontmatter(this.settings, frontmatter), this.settings);
 		if (
@@ -482,7 +482,7 @@ export default class Publisher {
 				if (file) {
 					const contents = await app.vault.adapter.read(file);
 					const path =
-						this.settings.metadataExtractorPath +
+						this.settings.upload.metadataExtractorPath +
 						"/" +
 						file.split("/").pop();
 					repoFrontmatter = Array.isArray(repoFrontmatter)
@@ -510,7 +510,7 @@ export default class Publisher {
 
 	async workflowGestion(repoFrontmatter: RepoFrontmatter): Promise<boolean> {
 		let finished = false;
-		if (this.settings.workflowName.length === 0) {
+		if (this.settings.github.worflow.workflowName.length === 0) {
 			return false;
 		} else {
 			const octokit = this.octokit;
@@ -519,7 +519,7 @@ export default class Publisher {
 				{
 					owner: repoFrontmatter.owner,
 					repo: repoFrontmatter.repo,
-					workflow_id: this.settings.workflowName,
+					workflow_id: this.settings.github.worflow.workflowName,
 					ref: repoFrontmatter.branch,
 				}
 			);
@@ -536,7 +536,7 @@ export default class Publisher {
 					const build = workflowGet.data.workflow_runs.find(
 						(run) =>
 							run.name ===
-							this.settings.workflowName.replace(".yml", "")
+							this.settings.github.worflow.workflowName.replace(".yml", "")
 					);
 					if (build.status === "completed") {
 						finished = true;

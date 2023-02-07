@@ -1,6 +1,6 @@
 import { Setting } from "obsidian";
 import GithubPublisherPlugin from "../main";
-import {folderSettings, GitHubPublisherSettings} from "./interface";
+import {FolderSettings, GitHubPublisherSettings} from "./interface";
 
 /**
  * show a settings
@@ -30,7 +30,8 @@ export function hideSettings(containerEl: Setting) {
 
 
 export function showHideBasedOnFolder(settings: GitHubPublisherSettings, frontmatterKeySettings: Setting, rootFolderSettings: Setting, subFolderSettings: Setting, folderNoteSettings: Setting) {
-	if (settings.downloadedFolder === folderSettings.yaml) {
+	const upload = settings.upload;
+	if (upload.behavior === FolderSettings.yaml) {
 		showSettings(frontmatterKeySettings);
 		showSettings(rootFolderSettings);
 		hideSettings(subFolderSettings);
@@ -39,8 +40,8 @@ export function showHideBasedOnFolder(settings: GitHubPublisherSettings, frontma
 		hideSettings(frontmatterKeySettings);
 		hideSettings(rootFolderSettings);
 		if (
-			settings.downloadedFolder ===
-				folderSettings.obsidian
+			upload.behavior ===
+				FolderSettings.obsidian
 		) {
 			showSettings(subFolderSettings);
 			showSettings(folderNoteSettings);
@@ -65,24 +66,24 @@ export async function autoCleanCondition(
 	autoCleanSetting: Setting,
 	plugin: GithubPublisherPlugin
 ) {
-	const settings = plugin.settings;
-	if (value.length === 0 && settings.downloadedFolder) {
-		settings.autoCleanUp = false;
+	const settings = plugin.settings.upload;
+	if (value.length === 0 && settings.defaultName) {
+		settings.autoclean.enable = false;
 		await plugin.saveSettings();
 		autoCleanSetting.setDisabled(true);
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
 	} else if (
 		value.length === 0 &&
-		settings.downloadedFolder !== folderSettings.yaml
+		settings.behavior !== FolderSettings.yaml
 	) {
-		settings.autoCleanUp = false;
+		settings.autoclean.enable = false;
 		autoCleanSetting.setDisabled(true);
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
 	} else {
 		autoCleanSetting.setDisabled(false);
-		if (settings.autoCleanUp) {
+		if (settings.autoclean.enable) {
 			// @ts-ignore
 			autoCleanSetting.components[0].toggleEl.classList.add("is-enabled");
 		}
@@ -120,8 +121,8 @@ export async function folderHideShowSettings(
 	plugin: GithubPublisherPlugin,
 	subFolderSettings: Setting
 ) {
-	const settings = plugin.settings;
-	if (value === folderSettings.yaml) {
+	const settings = plugin.settings.upload;
+	if (value === FolderSettings.yaml) {
 		showSettings(frontmatterKeySettings);
 		showSettings(rootFolderSettings);
 		autoCleanCondition(
@@ -131,19 +132,19 @@ export async function folderHideShowSettings(
 		).then();
 		hideSettings(subFolderSettings);
 	} else {
-		if (settings.folderDefaultName.length > 0) {
+		if (settings.defaultName.length > 0) {
 			autoCleanSetting.setDisabled(false);
-			if (settings.autoCleanUp) {
+			if (settings.autoclean.enable) {
 				// @ts-ignore
 				autoCleanSetting.components[0].toggleEl.classList.add(
 					"is-enabled"
 				);
 			}
 		}
-		if (settings.downloadedFolder === folderSettings.obsidian) {
+		if (settings.behavior === FolderSettings.obsidian) {
 			showSettings(subFolderSettings);
 		} else {
-			// is folderSettings.fixed
+			// is FolderSettings.fixed
 			hideSettings(subFolderSettings);
 		}
 		hideSettings(frontmatterKeySettings);
@@ -163,16 +164,16 @@ export function autoCleanUpSettingsOnCondition(
 	autoCleanSetting: Setting,
 	plugin: GithubPublisherPlugin
 ) {
-	const settings = plugin.settings;
+	const settings = plugin.settings.upload;
 	if (condition) {
 		autoCleanSetting.setDisabled(true);
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
-		settings.autoCleanUp = false;
+		settings.autoclean.enable = false;
 		plugin.saveSettings().then();
 	} else {
 		autoCleanSetting.setDisabled(false);
-		if (settings.autoCleanUp) {
+		if (settings.autoclean.enable) {
 			// @ts-ignore
 			autoCleanSetting.components[0].toggleEl.classList.add("is-enabled");
 		}

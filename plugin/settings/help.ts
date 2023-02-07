@@ -9,26 +9,26 @@ import { subSettings } from "../i18n";
  */
 
 export function KeyBasedOnSettings(settings: GitHubPublisherSettings) {
-	return `${settings.shareKey}: true\n` +
+	return `${settings.plugin.shareKey}: true\n` +
 	"links:\n" +
-	`  mdlinks: ${settings.convertWikiLinks}\n` +
+	`  mdlinks: ${settings.conversion.links.wiki}\n` +
 	"  convert: true\n" +
-	`  internals: ${settings.convertForGithub}\n` +
-	`  nonShared: ${settings.convertInternalNonShared}\n` +
+	`  internals: ${settings.conversion.links.internal}\n` +
+	`  nonShared: ${settings.conversion.links.unshared}\n` +
 	"embed:\n" +
-	`  send: ${settings.embedNotes}\n` +
+	`  send: ${settings.embed.notes}\n` +
 	"  remove: false\n" +
 	"attachment:\n" +
-	`  send: ${settings.embedImage}\n` +
-	`  folder: ${settings.defaultImageFolder}\n` +
-	`dataview: ${settings.convertDataview}\n` +
-	`hardBreak: ${settings.hardBreak}\n` +
+	`  send: ${settings.embed.attachments}\n` +
+	`  folder: ${settings.embed.folder}\n` +
+	`dataview: ${settings.conversion.dataview}\n` +
+	`hardBreak: ${settings.conversion.hardbreak}\n` +
 	"repo:\n" +
-	`  owner: ${settings.githubName}\n` +
-	`  repo: ${settings.githubRepo}\n` +
-	`  branch: ${settings.githubBranch}\n` +
-	`  autoclean: ${settings.autoCleanUp}\n` +
-	`baseLink: ${settings.mainLink}`;
+	`  owner: ${settings.github.user}\n` +
+	`  repo: ${settings.github.repo}\n` +
+	`  branch: ${settings.github.branch}\n` +
+	`  autoclean: ${settings.upload.autoclean.enable}\n` +
+	`baseLink: ${settings.plugin.copyLink.links}`;
 }
 
 /**
@@ -41,7 +41,7 @@ export function help(settings: GitHubPublisherSettings) {
 	explanation.createEl("ul", null, (span) => {
 		span.createEl("li", null, (span) => {
 			span.createEl("code", {
-				text: `${settings.shareKey}:`,
+				text: `${settings.plugin.shareKey}:`,
 				cls: "code-title",
 			});
 			span.createEl("span", {
@@ -187,7 +187,7 @@ export function help(settings: GitHubPublisherSettings) {
 		});
 		span.createEl("li", null, (span) => {
 			span.createEl("code", {
-				text: `${settings.frontmatterTitleKey}`,
+				text: `${settings.upload.frontmatterTitle.key}`,
 				cls: "code-title",
 			});
 			span.createEl("span", {
@@ -269,7 +269,7 @@ export function multipleRepoExplained(
 	multipleRepoExplained
 		.createEl("pre", { cls: "language-yaml" })
 		.createEl("code", {
-			text: `multipleRepo:\n  - owner: ${settings.githubName}\n    repo: ${settings.githubRepo}\n    branch: ${settings.githubBranch}\n    autoclean: false\n  - owner: ${settings.githubName}\n    repo: my_second_brain\n    branch: master\n    autoclean: false`,
+			text: `multipleRepo:\n  - owner: ${settings.github.user}\n    repo: ${settings.github.repo}\n    branch: ${settings.github.branch}\n    autoclean: false\n  - owner: ${settings.github.user}\n    repo: my_second_brain\n    branch: master\n    autoclean: false`,
 			cls: "language-yaml",
 		});
 	return multipleRepoExplained;

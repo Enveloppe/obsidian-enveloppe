@@ -70,7 +70,7 @@ export class FilesManagement extends Publisher {
 	getSharedFiles(): TFile[] {
 		const files = this.vault.getMarkdownFiles();
 		const shared_File: TFile[] = [];
-		const sharedkey = this.settings.shareKey;
+		const sharedkey = this.settings.plugin.shareKey;
 		for (const file of files) {
 			try {
 				const frontMatter = this.metadataCache.getCache(
@@ -94,7 +94,7 @@ export class FilesManagement extends Publisher {
 	getAllFileWithPath(): ConvertedLink[] {
 		const files = this.vault.getFiles();
 		const allFileWithPath: ConvertedLink[] = [];
-		const shareKey = this.settings.shareKey;
+		const shareKey = this.settings.plugin.shareKey;
 		for (const file of files) {
 			if (isAttachment(file.extension)) {
 				const filepath = getImageLinkOptions(file, this.settings, null);
@@ -147,7 +147,7 @@ export class FilesManagement extends Publisher {
 						let altText = image.displayText !== imageLink.path.replace(".md", "") ? image.displayText : imageLink.basename;
 						let frontmatterDestinationFilePath;
 
-						if (this.settings.useFrontmatterTitle) {
+						if (this.settings.upload.frontmatterTitle.enable) {
 							const frontmatter = this.metadataCache.getCache(
 								imageLink.path
 							).frontmatter;
@@ -156,10 +156,10 @@ export class FilesManagement extends Publisher {
 							 * In case there's a frontmatter configuration, pass along
 							 * `filename` so we can later use that to convert wikilinks.
 							 */
-							if (frontmatter && frontmatter[this.settings.frontmatterTitleKey]) {
-								frontmatterDestinationFilePath = frontmatter[this.settings.frontmatterTitleKey];
+							if (frontmatter && frontmatter[this.settings.upload.frontmatterTitle.key]) {
+								frontmatterDestinationFilePath = frontmatter[this.settings.upload.frontmatterTitle.key];
 								if (altText === imageLink.basename) {
-									altText = frontmatter[this.settings.frontmatterTitleKey];
+									altText = frontmatterDestinationFilePath;
 								}
 							}
 						}
@@ -205,7 +205,7 @@ export class FilesManagement extends Publisher {
 						}
 						let frontmatterDestinationFilePath;
 
-						if (this.settings.useFrontmatterTitle) {
+						if (this.settings.upload.frontmatterTitle.enable) {
 							const frontmatter = this.metadataCache.getCache(
 								linkedFile.path
 							).frontmatter;
@@ -214,10 +214,10 @@ export class FilesManagement extends Publisher {
 							 * In case there's a frontmatter configuration, pass along
 							 * `filename` so we can later use that to convert wikilinks.
 							 */
-							if (frontmatter && frontmatter[this.settings.frontmatterTitleKey]) {
-								frontmatterDestinationFilePath = frontmatter[this.settings.frontmatterTitleKey];
+							if (frontmatter && frontmatter[this.settings.upload.frontmatterTitle.key]) {
+								frontmatterDestinationFilePath = frontmatter[this.settings.upload.frontmatterTitle.key];
 								if (altText === linkedFile.basename) {
-									altText = frontmatter[this.settings.frontmatterTitleKey];
+									altText = frontmatterDestinationFilePath;
 								}
 							}
 						}
@@ -290,7 +290,7 @@ export class FilesManagement extends Publisher {
 	 * @return {boolean} true if the file is in the excluded folder
 	 */
 	checkExcludedFolder(file: TFile): boolean {
-		const excludedFolder = this.settings.excludedFolder;
+		const excludedFolder = this.settings.plugin.excludedFolder;
 		if (excludedFolder.length > 0) {
 			for (let i = 0; i < excludedFolder.length; i++) {
 				const isRegex = excludedFolder[i].match(/^\/(.*)\/[igmsuy]*$/);
@@ -323,8 +323,8 @@ export class FilesManagement extends Publisher {
 		const commits = await octokit.request(
 			"GET /repos/{owner}/{repo}/commits",
 			{
-				owner: settings.githubName,
-				repo: settings.githubRepo,
+				owner: settings.github.user,
+				repo: settings.github.repo,
 				path: githubRepo.file,
 			}
 		);
@@ -485,7 +485,7 @@ export class FilesManagement extends Publisher {
 		frontmatterSourceFile: FrontMatterCache,
 		frontmatterSettings: FrontmatterConvert
 	) {
-		for (const field of this.settings.metadataFileFields) {
+		for (const field of this.settings.embed.keySendFile) {
 			if (frontmatterSourceFile[field] != undefined) {
 				const imageLink = this.metadataCache.getFirstLinkpathDest(
 					frontmatterSourceFile[field],
@@ -502,7 +502,7 @@ export class FilesManagement extends Publisher {
 		if (this.plugin.app.plugins.enabledPlugins.has("dataview")) {
 			const dvApi = getAPI();
 			const dataviewMetadata = await dvApi.page(file.path);
-			for (const field of this.settings.metadataFileFields) {
+			for (const field of this.settings.embed.keySendFile) {
 				const fieldValue = dataviewMetadata[field];
 
 				if (fieldValue != undefined) {

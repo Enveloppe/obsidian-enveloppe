@@ -323,7 +323,7 @@ export default {
 	modals: {
 		import: {
 			title: "Importer",
-			desc: "Importer des paramètres depuis un fichier ou un texte.",
+			desc: "Importer des paramètres depuis un fichier ou un texte. Cela écrasera vos paramètres actuels (sauf le nom du repo, votre nom d'utilisateur ainsi que votre token).",
 			importFromFile: "Importer depuis un fichier",
 			save: "Sauvegarder",
 			paste: "Coller la configuration ici...",

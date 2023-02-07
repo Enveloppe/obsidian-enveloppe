@@ -8,7 +8,7 @@ import {
 	shortcutsHideShow, showHideBasedOnFolder,
 } from "./settings/style";
 import {
-	folderSettings,
+	FolderSettings,
 	TextCleaner,
 	PUBLISHER_TABS, GithubTiersVersion,
 } from "./settings/interface";
@@ -129,6 +129,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	}
 
 	renderGithubConfiguration() {
+		const githubSettings = this.plugin.settings.github;
 		new Setting(this.settingsPage)
 			.setName(subSettings("github.apiType.title") as string)
 			.setDesc(subSettings("github.apiType.desc") as string)
@@ -136,24 +137,24 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				dropdown
 					.addOption(GithubTiersVersion.free, subSettings("github.apiType.dropdown.free") as string)
 					.addOption(GithubTiersVersion.entreprise, subSettings("github.apiType.dropdown.enterprise") as string)
-					.setValue(this.plugin.settings.tiersForApi)
+					.setValue(githubSettings.api.tiersForApi)
 					.onChange(async (value) => {
-						this.plugin.settings.tiersForApi = value as GithubTiersVersion;
+						githubSettings.api.tiersForApi = value as GithubTiersVersion;
 						await this.plugin.saveSettings();
 						this.settingsPage.empty();
 						this.renderGithubConfiguration();
 					});
 			});
-		if (this.plugin.settings.tiersForApi === GithubTiersVersion.entreprise) {
+		if (githubSettings.api.tiersForApi === GithubTiersVersion.entreprise) {
 			new Setting(this.settingsPage)
 				.setName(subSettings("github.apiType.hostname") as string)
 				.setDesc(subSettings("github.apiType.hostnameDesc") as string)
 				.addText((text) =>
 					text
 						.setPlaceholder("https://github.mycompany.com")
-						.setValue(this.plugin.settings.hostname)
+						.setValue(githubSettings.api.hostname)
 						.onChange(async (value) => {
-							this.plugin.settings.hostname = value.trim();
+							githubSettings.api.hostname = value.trim();
 							await this.plugin.saveSettings();
 						})
 				);
@@ -165,9 +166,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.addText((text) =>
 				text
 					.setPlaceholder("mkdocs-template")
-					.setValue(this.plugin.settings.githubRepo)
+					.setValue(githubSettings.repo)
 					.onChange(async (value) => {
-						this.plugin.settings.githubRepo = value.trim();
+						githubSettings.repo = value.trim();
 						await this.plugin.saveSettings();
 					})
 			);
@@ -179,9 +180,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.setPlaceholder(
 						settings("github", "githubUsername") as string
 					)
-					.setValue(this.plugin.settings.githubName)
+					.setValue(githubSettings.user)
 					.onChange(async (value) => {
-						this.plugin.settings.githubName = value.trim();
+						githubSettings.user = value.trim();
 						await this.plugin.saveSettings();
 					})
 			);
@@ -200,9 +201,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.addText((text) =>
 				text
 					.setPlaceholder("ghb-15457498545647987987112184")
-					.setValue(this.plugin.settings.GhToken)
+					.setValue(githubSettings.token)
 					.onChange(async (value) => {
-						this.plugin.settings.GhToken = value.trim();
+						githubSettings.token = value.trim();
 						await this.plugin.saveSettings();
 					})
 			);
@@ -213,9 +214,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.addText((text) =>
 				text
 					.setPlaceholder("main")
-					.setValue(this.plugin.settings.githubBranch)
+					.setValue(githubSettings.branch)
 					.onChange(async (value) => {
-						this.plugin.settings.githubBranch = value.trim();
+						githubSettings.branch = value.trim();
 						await this.plugin.saveSettings();
 					})
 			);
@@ -224,9 +225,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setName(settings("github", "automaticallyMergePR") as string)
 			.addToggle((toggle) =>
 				toggle
-					.setValue(this.plugin.settings.automaticallyMergePR)
+					.setValue(githubSettings.automaticallyMergePR)
 					.onChange(async (value) => {
-						this.plugin.settings.automaticallyMergePR = value;
+						githubSettings.automaticallyMergePR = value;
 						await this.plugin.saveSettings();
 					})
 			);
@@ -248,9 +249,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.addText((text)  =>
 				text
 					.setPlaceholder("[PUBLISHER] MERGE")
-					.setValue(this.plugin.settings.customCommitMsg)
+					.setValue(githubSettings.worflow.customCommitMsg)
 					.onChange(async (value)  => {
-						this.plugin.settings.customCommitMsg = value;
+						githubSettings.worflow.customCommitMsg = value;
 						await this.plugin.saveSettings();
 					})
 			);
@@ -262,13 +263,13 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			)
 			.addText((text) => {
 				text.setPlaceholder("ci")
-					.setValue(this.plugin.settings.workflowName)
+					.setValue(githubSettings.worflow.workflowName)
 					.onChange(async (value) => {
 						value =
 							value.length > 0
 								? value.trim().replace(".yml", "") + ".yml"
 								: value;
-						this.plugin.settings.workflowName = value;
+						githubSettings.worflow.customCommitMsg = value;
 						await this.plugin.saveSettings();
 					});
 			});
@@ -277,6 +278,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	}
 
 	renderUploadConfiguration() {
+		const uploadSettings = this.plugin.settings.upload;
 		this.settingsPage.createEl("h3", {
 			text: settings("uploadConfig", "pathSetting") as string,
 		});
@@ -297,9 +299,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 							"obsidianPath"
 						) as string,
 					})
-					.setValue(this.plugin.settings.downloadedFolder)
+					.setValue(uploadSettings.behavior)
 					.onChange(async (value: string) => {
-						this.plugin.settings.downloadedFolder = value;
+						uploadSettings.behavior = value as FolderSettings;
 						await folderHideShowSettings(
 							frontmatterKeySettings,
 							rootFolderSettings,
@@ -319,9 +321,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(settings("uploadConfig", "defaultFolderDesc") as string)
 			.addText((text) => {
 				text.setPlaceholder("docs")
-					.setValue(this.plugin.settings.folderDefaultName)
+					.setValue(uploadSettings.defaultName)
 					.onChange(async (value) => {
-						this.plugin.settings.folderDefaultName = value.replace(
+						uploadSettings.defaultName = value.replace(
 							/\/$/,
 							""
 						);
@@ -345,9 +347,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						"pathRemovingPlaceholder"
 					) as string
 				)
-					.setValue(this.plugin.settings.subFolder)
+					.setValue(uploadSettings.subFolder)
 					.onChange(async (value) => {
-						this.plugin.settings.subFolder = value
+						uploadSettings.subFolder = value
 							.replace(/\/$/, "")
 							.trim();
 						await this.plugin.saveSettings();
@@ -360,9 +362,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(settings("uploadConfig", "frontmatterKeyDesc") as string)
 			.addText((text) => {
 				text.setPlaceholder("category")
-					.setValue(this.plugin.settings.yamlFolderKey)
+					.setValue(uploadSettings.yamlFolderKey)
 					.onChange(async (value) => {
-						this.plugin.settings.yamlFolderKey = value.trim();
+						uploadSettings.yamlFolderKey = value.trim();
 						await this.plugin.saveSettings();
 					});
 			});
@@ -372,9 +374,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(settings("uploadConfig", "rootFolderDesc") as string)
 			.addText((text) => {
 				text.setPlaceholder("docs")
-					.setValue(this.plugin.settings.rootFolder)
+					.setValue(uploadSettings.rootFolder)
 					.onChange(async (value) => {
-						this.plugin.settings.rootFolder = value.replace(
+						uploadSettings.rootFolder = value.replace(
 							/\/$/,
 							""
 						);
@@ -396,20 +398,20 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setClass("github-publisher-title")
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.useFrontmatterTitle)
+					.setValue(uploadSettings.frontmatterTitle.enable)
 					.onChange(async (value) => {
-						this.plugin.settings.useFrontmatterTitle = value;
+						uploadSettings.frontmatterTitle.enable = value;
 						await this.plugin.saveSettings();
 						this.settingsPage.empty();
 						this.renderUploadConfiguration();
 					});
 			});
-		if (this.plugin.settings.useFrontmatterTitle) {
+		if (uploadSettings.frontmatterTitle.enable) {
 			frontmatterTitleSet.addText((text) => {
 				text.setPlaceholder("title")
-					.setValue(this.plugin.settings.frontmatterTitleKey)
+					.setValue(uploadSettings.frontmatterTitle.key)
 					.onChange(async (value) => {
-						this.plugin.settings.frontmatterTitleKey = value.trim();
+						uploadSettings.frontmatterTitle.key = value.trim();
 						await this.plugin.saveSettings();
 					});
 			});
@@ -425,17 +427,17 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			)
 			.addText((text) => {
 				text.setPlaceholder("regex")
-					.setValue(this.plugin.settings.frontmatterTitleRegex)
+					.setValue(uploadSettings.replaceTitle.regex)
 					.onChange(async (value) => {
-						this.plugin.settings.frontmatterTitleRegex = value;
+						uploadSettings.replaceTitle.regex = value;
 						await this.plugin.saveSettings();
 					});
 			})
 			.addText((text) => {
 				text.setPlaceholder("replacement")
-					.setValue(this.plugin.settings.frontmatterTitleReplacement)
+					.setValue(uploadSettings.replaceTitle.replacement)
 					.onChange(async (value) => {
-						this.plugin.settings.frontmatterTitleReplacement =
+						uploadSettings.replaceTitle.replacement =
 							value;
 						await this.plugin.saveSettings();
 					});
@@ -449,21 +451,21 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.folderNote)
+					.setValue(uploadSettings.folderNote.enable)
 					.onChange(async (value) => {
-						this.plugin.settings.folderNote = value;
+						uploadSettings.folderNote.enable = value;
 						await this.plugin.saveSettings();
 						this.settingsPage.empty();
 						await this.renderUploadConfiguration();
 					});
 			});
 
-		if (this.plugin.settings.folderNote) {
+		if (uploadSettings.folderNote.enable) {
 			folderNoteSettings.addText((text) => {
 				text.setPlaceholder("folderNote")
-					.setValue(this.plugin.settings.folderNoteRename)
+					.setValue(uploadSettings.folderNote.rename)
 					.onChange(async (value) => {
-						this.plugin.settings.folderNoteRename = value;
+						uploadSettings.folderNote.rename = value;
 						await this.plugin.saveSettings();
 
 					});
@@ -487,9 +489,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				)
 				.addText((text) => {
 					text.setPlaceholder("docs/_assets/metadata")
-						.setValue(this.plugin.settings.metadataExtractorPath)
+						.setValue(uploadSettings.metadataExtractorPath)
 						.onChange(async (value) => {
-							this.plugin.settings.metadataExtractorPath =
+							uploadSettings.metadataExtractorPath =
 								value.trim();
 							await this.plugin.saveSettings();
 						});
@@ -497,9 +499,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		}
 
 		const condition =
-			(this.plugin.settings.downloadedFolder === folderSettings.yaml &&
-				this.plugin.settings.rootFolder.length === 0) ||
-			this.plugin.settings.folderDefaultName.length === 0;
+			(uploadSettings.behavior === FolderSettings.yaml &&
+				uploadSettings.rootFolder.length === 0) ||
+			uploadSettings.defaultName.length === 0;
 
 		const autoCleanSetting = new Setting(this.settingsPage)
 			.setName(settings("githubWorkflow", "autoCleanUp") as string)
@@ -507,9 +509,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDisabled(condition)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.autoCleanUp)
+					.setValue(uploadSettings.autoclean.enable)
 					.onChange(async (value) => {
-						this.plugin.settings.autoCleanUp = value;
+						uploadSettings.autoclean.enable = value;
 						shortcutsHideShow(value, autoCleanExcludedSettings);
 						await this.plugin.saveSettings();
 					});
@@ -525,10 +527,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						"docs/assets/js, docs/assets/logo, /\\.js$/"
 					)
 					.setValue(
-						this.plugin.settings.autoCleanUpExcluded.join(", ")
+						uploadSettings.autoclean.excluded.join(", ")
 					)
 					.onChange(async (value) => {
-						this.plugin.settings.autoCleanUpExcluded = value
+						uploadSettings.autoclean.excluded = value
 							.split(/[,\n]\W*/)
 							.map((item) => item.trim())
 							.filter((item) => item.length > 0);
@@ -541,14 +543,14 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			this.plugin
 		);
 		shortcutsHideShow(
-			this.plugin.settings.autoCleanUp,
+			uploadSettings.autoclean.enable,
 			autoCleanExcludedSettings
 		);
 		folderHideShowSettings(
 			frontmatterKeySettings,
 			rootFolderSettings,
 			autoCleanSetting,
-			this.plugin.settings.downloadedFolder,
+			uploadSettings.behavior,
 			this.plugin,
 			subFolderSettings
 		).then();
@@ -556,6 +558,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	}
 
 	renderTextConversion() {
+		const textSettings = this.plugin.settings.conversion;
 		this.settingsPage.createEl("p", {
 			text: settings("textConversion", "textConversionDesc") as string,
 		});
@@ -567,9 +570,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(settings("textConversion", "hardBreakDesc") as string)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.hardBreak)
+					.setValue(textSettings.hardbreak)
 					.onChange(async (value) => {
-						this.plugin.settings.hardBreak = value;
+						textSettings.hardbreak = value;
 						await this.plugin.saveSettings();
 					});
 			});
@@ -578,9 +581,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(subSettings("textConversion.dataview.desc") as string)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.convertDataview)
+					.setValue(textSettings.dataview)
 					.onChange(async (value) => {
-						this.plugin.settings.convertDataview = value;
+						textSettings.dataview = value;
 						await this.plugin.saveSettings();
 					});
 			});
@@ -631,7 +634,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 							after: false,
 							flags: "gi",
 						};
-						this.plugin.settings.censorText.push(censorText);
+						textSettings.censorText.push(censorText);
 						await this.plugin.saveSettings();
 						this.settingsPage.empty();
 						this.renderTextConversion();
@@ -644,7 +647,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		for (const censorText of this.plugin.settings.censorText) {
+		for (const censorText of textSettings.censorText) {
 			const afterIcon = censorText.after
 				? "double-down-arrow-glyph"
 				: "double-up-arrow-glyph";
@@ -708,8 +711,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 							) as string
 						)
 						.onClick(async () => {
-							this.plugin.settings.censorText.splice(
-								this.plugin.settings.censorText.indexOf(
+							textSettings.censorText.splice(
+								textSettings.censorText.indexOf(
 									censorText
 								),
 								1
@@ -753,9 +756,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.inlineTags)
+					.setValue(textSettings.tags.inline)
 					.onChange(async (value) => {
-						this.plugin.settings.inlineTags = value;
+						textSettings.tags.inline = value;
 						await this.plugin.saveSettings();
 					});
 			});
@@ -766,9 +769,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setClass("github-publisher-textarea")
 			.addTextArea((text) => {
 				text.setPlaceholder("field_name")
-					.setValue(this.plugin.settings.dataviewFields.join(","))
+					.setValue(textSettings.tags.fields.join(","))
 					.onChange(async (value) => {
-						this.plugin.settings.dataviewFields = value
+						textSettings.tags.fields = value
 							.split(/[,\n]\W*/)
 							.map((item) => item.trim())
 							.filter((item) => item.length > 0);
@@ -782,10 +785,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.addTextArea((text) => {
 				text.setPlaceholder("field value")
 					.setValue(
-						this.plugin.settings.excludeDataviewValue.join(",")
+						textSettings.tags.exclude.join(",")
 					)
 					.onChange(async (value) => {
-						this.plugin.settings.excludeDataviewValue = value
+						textSettings.tags.exclude = value
 							.split(/[,\n]\W*/)
 							.map((item) => item.trim())
 							.filter((item) => item.length > 0);
@@ -807,15 +810,15 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.convertForGithub)
+					.setValue(textSettings.links.internal)
 					.onChange(async (value) => {
-						this.plugin.settings.convertForGithub = value;
+						textSettings.links.internal = value;
 						await this.plugin.saveSettings();
 						this.settingsPage.empty();
 						this.renderTextConversion();
 					});
 			});
-		if (this.plugin.settings.convertForGithub) {
+		if (textSettings.links.internal) {
 			new Setting(this.settingsPage)
 				.setName(
 					subSettings("textConversion.links.nonShared") as string
@@ -825,9 +828,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				)
 				.addToggle((toggle) => {
 					toggle
-						.setValue(this.plugin.settings.convertInternalNonShared)
+						.setValue(textSettings.links.unshared)
 						.onChange(async (value) => {
-							this.plugin.settings.convertInternalNonShared =
+							textSettings.links.unshared =
 								value;
 							await this.plugin.saveSettings();
 						});
@@ -841,23 +844,24 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.convertWikiLinks)
+					.setValue(textSettings.links.wiki)
 					.onChange(async (value) => {
-						this.plugin.settings.convertWikiLinks = value;
+						textSettings.links.wiki = value;
 						await this.plugin.saveSettings();
 					});
 			});
 	}
 
 	renderEmbedConfiguration() {
+		const embedSettings = this.plugin.settings.embed;
 		new Setting(this.settingsPage)
 			.setName(settings("embed", "transferImage") as string)
 			.setDesc(settings("embed", "transferImageDesc") as string)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.embedImage)
+					.setValue(embedSettings.attachments)
 					.onChange(async (value) => {
-						this.plugin.settings.embedImage = value;
+						embedSettings.attachments = value;
 						shortcutsHideShow(value, settingsDefaultImage);
 						await this.plugin.saveSettings();
 					});
@@ -870,10 +874,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.addTextArea((text) => {
 				text.setPlaceholder("banner")
 					.setValue(
-						this.plugin.settings.metadataFileFields.join(", ")
+						embedSettings.keySendFile.join(", ")
 					)
 					.onChange(async (value) => {
-						this.plugin.settings.metadataFileFields = value
+						embedSettings.keySendFile = value
 							.split(/[,\n]\W*/)
 							.map((item) => item.trim())
 							.filter((item) => item.length > 0);
@@ -886,9 +890,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(settings("embed", "transferEmbeddedNotesDesc") as string)
 			.addToggle((toggle) => {
 				toggle
-					.setValue(this.plugin.settings.embedNotes)
+					.setValue(embedSettings.notes)
 					.onChange(async (value) => {
-						this.plugin.settings.embedNotes = value;
+						embedSettings.notes = value;
 						await this.plugin.saveSettings();
 					});
 			});
@@ -898,9 +902,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(settings("embed", "defaultImageFolderDesc") as string)
 			.addText((text) => {
 				text.setPlaceholder("docs/images")
-					.setValue(this.plugin.settings.defaultImageFolder)
+					.setValue(embedSettings.folder)
 					.onChange(async (value) => {
-						this.plugin.settings.defaultImageFolder = value.replace(
+						embedSettings.folder = value.replace(
 							/\/$/,
 							""
 						);
@@ -910,15 +914,16 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	}
 
 	renderPluginSettings() {
+		const pluginSettings = this.plugin.settings.plugin;
 		new Setting(this.settingsPage)
 			.setName(settings("plugin", "shareKey") as string)
 			.setDesc(settings("plugin", "shareKeyDesc") as string)
 			.addText((text) =>
 				text
 					.setPlaceholder("share")
-					.setValue(this.plugin.settings.shareKey)
+					.setValue(pluginSettings.shareKey)
 					.onChange(async (value) => {
-						this.plugin.settings.shareKey = value.trim();
+						pluginSettings.shareKey = value.trim();
 						await this.plugin.saveSettings();
 					})
 			);
@@ -929,9 +934,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.addTextArea((textArea) =>
 				textArea
 					.setPlaceholder("_assets, Archive, /^_(.*)/gi")
-					.setValue(this.plugin.settings.excludedFolder.join(", "))
+					.setValue(pluginSettings.excludedFolder.join(", "))
 					.onChange(async (value) => {
-						this.plugin.settings.excludedFolder = value
+						pluginSettings.excludedFolder = value
 							.split(/[,\n]\W*/)
 							.map((item) => item.trim())
 							.filter((item) => item.length > 0);
@@ -943,9 +948,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(settings("plugin", "fileMenuDesc") as string)
 			.addToggle((toggle) =>
 				toggle
-					.setValue(this.plugin.settings.fileMenu)
+					.setValue(pluginSettings.fileMenu)
 					.onChange(async (value) => {
-						this.plugin.settings.fileMenu = value;
+						pluginSettings.fileMenu = value;
 						await this.plugin.saveSettings();
 					})
 			);
@@ -954,9 +959,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(settings("plugin", "editorMenuDesc") as string)
 			.addToggle((toggle) =>
 				toggle
-					.setValue(this.plugin.settings.editorMenu)
+					.setValue(pluginSettings.editorMenu)
 					.onChange(async (value) => {
-						this.plugin.settings.editorMenu = value;
+						pluginSettings.editorMenu = value;
 						await this.plugin.saveSettings();
 					})
 			);
@@ -965,9 +970,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(settings("plugin", "shareExternalModifiedDesc") as string)
 			.addToggle((toggle) =>
 				toggle
-					.setValue(this.plugin.settings.shareExternalModified)
+					.setValue(pluginSettings.externalShare)
 					.onChange(async (value) => {
-						this.plugin.settings.shareExternalModified = value;
+						pluginSettings.externalShare = value;
 						await this.plugin.saveSettings();
 					})
 			);
@@ -977,9 +982,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(subSettings("plugin.copyLink.copylinkDesc") as string)
 			.addToggle((toggle) =>
 				toggle
-					.setValue(this.plugin.settings.copyLink)
+					.setValue(pluginSettings.copyLink.enable)
 					.onChange(async (value) => {
-						this.plugin.settings.copyLink = value;
+						pluginSettings.copyLink.enable = value;
 						shortcutsHideShow(value, baseLinkSettings);
 						shortcutsHideShow(value, pathRemover);
 						await this.plugin.saveSettings();
@@ -992,9 +997,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setClass("github-publisher")
 			.addText((text) => {
 				text.setPlaceholder("my_blog.com")
-					.setValue(this.plugin.settings.mainLink)
+					.setValue(pluginSettings.copyLink.links)
 					.onChange(async (value) => {
-						this.plugin.settings.mainLink = value;
+						pluginSettings.copyLink.links = value;
 						await this.plugin.saveSettings();
 					});
 			});
@@ -1006,9 +1011,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setClass("github-publisher")
 			.addText((text) => {
 				text.setPlaceholder("docs")
-					.setValue(this.plugin.settings.linkRemover)
+					.setValue(pluginSettings.copyLink.removePart.join(", "))
 					.onChange(async (value) => {
-						this.plugin.settings.linkRemover = value;
+						pluginSettings.copyLink.removePart = value.split(/[,\n]\W*/).map((item) => item.trim()).filter((item) => item.length > 0);
 						await this.plugin.saveSettings();
 					});
 			});
@@ -1017,14 +1022,14 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(settings("plugin", "logNoticeDesc") as string)
 			.addToggle((toggle) =>
 				toggle
-					.setValue(this.plugin.settings.logNotice)
+					.setValue(pluginSettings.noticeError)
 					.onChange(async (value) => {
-						this.plugin.settings.logNotice = value;
+						pluginSettings.noticeError = value;
 						await this.plugin.saveSettings();
 					})
 			);
-		shortcutsHideShow(this.plugin.settings.copyLink, baseLinkSettings);
-		shortcutsHideShow(this.plugin.settings.copyLink, pathRemover);
+		shortcutsHideShow(pluginSettings.copyLink.links, baseLinkSettings);
+		shortcutsHideShow(pluginSettings.copyLink.links, pathRemover);
 	}
 	renderHelp() {
 		this.settingsPage.createEl("h2", {
