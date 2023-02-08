@@ -8,7 +8,8 @@ import {
 } from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
 import { Base64 } from "js-base64";
-import { isAttachment, noticeLog, trimObject } from "../src/utils";
+import {noticeLog, trimObject } from "../src/utils";
+import {isAttachment} from "../src/data_validation_test";
 import { StringFunc, deletion } from "../i18n";
 
 /**

@@ -6,7 +6,7 @@ import {
 	RepoFrontmatter,
 } from "../settings/interface";
 import { createRelativePath } from "./filePathConvertor";
-import { isAttachment } from "../src/utils";
+import {isAttachment, noTextConversion} from "../src/data_validation_test";
 
 /**
  * Convert wikilinks to markdown
@@ -25,14 +25,9 @@ export function convertWikilinks(
 ): string {
 	const convertWikilink = conditionConvert.convertWiki;
 	const imageSettings = conditionConvert.attachment;
-	const embedSettings = conditionConvert.embed;
 	const convertLinks = conditionConvert.links;
 	if (
-		!convertWikilink &&
-		convertLinks &&
-		imageSettings &&
-		embedSettings &&
-		!conditionConvert.removeEmbed
+		noTextConversion(conditionConvert)
 	) {
 		return fileContent;
 	}

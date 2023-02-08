@@ -9,51 +9,16 @@ import {
 } from "obsidian";
 import {
 	FolderSettings,
-	GitHubPublisherSettings, GithubTiersVersion,
+	GitHubPublisherSettings,
 	MetadataExtractor,
 	RepoFrontmatter,
 } from "../settings/interface";
 import Publisher from "../publishing/upload";
-import {error, informations, t} from "../i18n";
+import {informations} from "../i18n";
 import type { StringFunc } from "../i18n";
 import { getReceiptFolder } from "../contents_conversion/filePathConvertor";
 import { FrontmatterConvert } from "../settings/interface";
-import GithubPublisher from "../main";
 
-/**
- * convert the old string settings to string array
- * also clean if there is an empty value and remove it
- * @param {string} settingsToConvert
- * @param {GithubPublisher} plugin
- * @return {Promise<void>}
- */
-
-export async function convertOldSettings(
-	settingsToConvert: string,
-	plugin: GithubPublisher
-) {
-	const settings = plugin.settings;
-	// @ts-ignore
-	const oldSettings = settings[settingsToConvert] as unknown as string;
-	if (typeof oldSettings === "string") {
-		// @ts-ignore
-		settings[settingsToConvert] =
-			oldSettings === "" ? [] : oldSettings.split(/[,\n]\W*/);
-		await plugin.saveSettings();
-	}
-	try {
-		// @ts-ignore
-		settings[settingsToConvert] = settings[settingsToConvert].filter(
-			(e: string) => e !== ""
-		);
-		await plugin.saveSettings();
-	} catch (e) {
-		//if the error is settings[settingsToConvert] is undefined meaning the settings doesn't exist yet
-		// @ts-ignore
-		settings[settingsToConvert] = [];
-		await plugin.saveSettings();
-	}
-}
 
 /**
  * Create a notice message for the log
@@ -305,33 +270,6 @@ export function trimObject(obj: { [p: string]: string }) {
 	return JSON.parse(trimmed);
 }
 
-/**
- * Check if the file is an attachment file and return the regexMatchArray
- * Attachment files are :
- * - png
- * - jpg et jpeg
- * - gif
- * - svg
- * - pdf
- * - mp4 and mp3
- * - webm & webp
- * - wav
- * - ogg
- * - m4a
- * - 3gp
- * - flac
- * - mov
- * - mkv
- * - ogv
- * @param {string} filename
- * @return {RegExpMatchArray}
- */
-
-export function isAttachment(filename: string) {
-	return filename.match(
-		/(png|jpe?g|gif|bmp|svg|mp[34]|web[mp]|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)$/i
-	);
-}
 
 /**
  * Get all condition from the frontmatter
@@ -615,75 +553,11 @@ function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
 	return newRepo;
 }
 
-export function checkIfRepoIsInAnother(
-	source: RepoFrontmatter | RepoFrontmatter[],
-	target: RepoFrontmatter | RepoFrontmatter[]
-) {
-	source = source instanceof Array ? source : [source];
-	target = target instanceof Array ? target : [target];
-
-	/**
-	 * A function to compare two repoFrontmatter
-	 * @param {RepoFrontmatter} source
-	 * @param {RepoFrontmatter} target
-	 * @return {boolean}
-	 */
-	const isSame = (source: RepoFrontmatter, target: RepoFrontmatter) => {
-		return (
-			source.owner === target.owner &&
-			source.repo === target.repo &&
-			source.branch === target.branch
-		);
-	};
-
-	for (const repoTarget of target) {
-		for (const repoSource of source) {
-			if (isSame(repoTarget, repoSource)) {
-				return true;
-			}
-		}
+export function getCategory(frontmatter: FrontMatterCache, settings: GitHubPublisherSettings) {
+	const key = settings.upload.yamlFolderKey;
+	let category = frontmatter[key] !== undefined ? frontmatter[key] : settings.upload.defaultName;
+	if (category instanceof Array) {
+		category = category.join("/");
 	}
-	for (const sourceRepo of source) {
-		for (const targetRepo of target) {
-			if (isSame(sourceRepo, targetRepo)) {
-				return true;
-			}
-		}
-	}
-
-	return false;
-}
-
-
-export function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoFrontmatter[], settings: GitHubPublisherSettings) {
-	repoFrontmatter = Array.isArray(repoFrontmatter)
-		? repoFrontmatter
-		: [repoFrontmatter];
-	const isEmpty: boolean[]	= [];
-	if (settings.github.token.length === 0) {
-		isEmpty.push(true);
-		const whatIsEmpty = t("error.whatEmpty.ghToken") as string;
-		new Notice((error("isEmpty") as StringFunc)(whatIsEmpty));
-	}
-	if (settings.github.token.length != 0) {
-		for (const repo of repoFrontmatter) {
-			if (repo.repo.length === 0) {
-				isEmpty.push(true);
-				const whatIsEmpty = t("error.whatEmpty.repo") as string;
-				new Notice((error("isEmpty") as StringFunc)(whatIsEmpty));
-			} else if (repo.owner.length === 0) {
-				isEmpty.push(true);
-				const whatIsEmpty = t("error.whatEmpty.owner") as string;
-				new Notice((error("isEmpty") as StringFunc)(whatIsEmpty));
-			} else if (repo.branch.length === 0) {
-				isEmpty.push(true);
-				const whatIsEmpty = t("error.whatEmpty.branch") as string;
-				new Notice((error("isEmpty") as StringFunc)(whatIsEmpty));
-			} else {
-				isEmpty.push(false);
-			}
-		}
-	}
-	const allInvalid = isEmpty.every((value) => value === true);
-	return !allInvalid;
+	return category;
 }

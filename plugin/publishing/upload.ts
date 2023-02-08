@@ -23,12 +23,10 @@ import {
 } from "../contents_conversion/filePathConvertor";
 import { ShareStatusBar } from "../src/status_bar";
 import GithubPublisherPlugin from "../main";
+import {checkEmptyConfiguration, checkIfRepoIsInAnother, isShared, isAttachment} from "../src/data_validation_test";
 import {
-	checkEmptyConfiguration,
-	checkIfRepoIsInAnother,
 	getFrontmatterCondition,
 	getRepoFrontmatter,
-	isAttachment,
 	noticeLog,
 } from "plugin/src/utils";
 import { mainConverting } from "../contents_conversion/convertText";
@@ -198,8 +196,7 @@ export default class Publisher {
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
 		const isNotEmpty = checkEmptyConfiguration(getRepoFrontmatter(this.settings, frontmatter), this.settings);
 		if (
-			!frontmatter ||
-			!frontmatter[sharedKey] ||
+			!isShared(frontmatter, sharedKey) ||
 			shareFiles.checkExcludedFolder(file) ||
 			file.extension !== "md" ||
 			fileHistory.includes(file) ||

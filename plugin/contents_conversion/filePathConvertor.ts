@@ -13,10 +13,11 @@ import {
 	RepoFrontmatter,
 } from "../settings/interface";
 import {
-	checkIfRepoIsInAnother,
+	getCategory,
 	getFrontmatterCondition,
 	getRepoFrontmatter,
 } from "../src/utils";
+import {isInternalShared, checkIfRepoIsInAnother, isShared} from "../src/data_validation_test";
 
 /**
  * Get the dataview path from a markdown file
@@ -58,24 +59,6 @@ function getDataviewPath(
 	return linkedFiles;
 }
 
-/**
- * Vérifie qu'un fichier est partagé et permet la conversion du lien pointant vers lui s'il ne l'est pas
- * @param {string} sharekey
- * @param {FrontMatterCache} frontmatter
- * @param {FrontmatterConvert} frontmatterSettings
- * @return {boolean}
- */
-function isShared(
-	sharekey: string,
-	frontmatter: FrontMatterCache,
-	frontmatterSettings: FrontmatterConvert
-): boolean {
-	const shared =
-		frontmatter && frontmatter[sharekey] ? frontmatter[sharekey] : false;
-	if (shared) return true;
-	return !shared && frontmatterSettings.convertInternalNonShared === true;
-
-}
 
 /**
  * Create relative path from a sourceFile to a targetPath. If the target file is a note, only share if the frontmatter sharekey is present and true
@@ -105,7 +88,7 @@ async function createRelativePath(
 		.frontmatter;
 	const targetRepo = await getRepoFrontmatter(settings, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(sourceRepo, targetRepo);
-	const shared = isShared(
+	const shared = isInternalShared(
 		settings.plugin.shareKey,
 		frontmatterTarget,
 		frontmatterSettings
@@ -248,9 +231,7 @@ function folderNoteIndexYAML(
 	frontmatter: FrontMatterCache,
 	settings: GitHubPublisherSettings
 ): string {
-	const categoryKey = settings.upload.yamlFolderKey;
-	const isCategory = frontmatter[categoryKey] !== undefined ? frontmatter[categoryKey] : settings.upload.defaultName;
-	const category = frontmatter[categoryKey] instanceof Array ? frontmatter[categoryKey].join("/") : isCategory;
+	const category = getCategory(frontmatter, settings);
 	const parentCatFolder = !category.endsWith("/")
 		? category.split("/").at(-1)
 		: category.split("/").at(-2);
@@ -279,7 +260,7 @@ function createFrontmatterPath(
 	fileName: string
 ): string {
 	const uploadSettings = settings.upload;
-	const folderCategory = frontmatter[uploadSettings.yamlFolderKey] instanceof Array ? frontmatter[uploadSettings.yamlFolderKey].join("/") : frontmatter[uploadSettings.yamlFolderKey];
+	const folderCategory = getCategory(frontmatter, settings);
 	let path =
 		uploadSettings.defaultName.length > 0
 			? uploadSettings.defaultName + "/" + fileName
@@ -377,9 +358,7 @@ function getReceiptFolder(
 		const fileName = getTitleField(frontmatter, file, settings);
 
 		if (
-			!frontmatter ||
-			frontmatter[settings.plugin.shareKey] === undefined ||
-			!frontmatter[settings.plugin.shareKey]
+			!isShared(frontmatter, settings.plugin.shareKey)
 		) {
 			return fileName;
 		}
