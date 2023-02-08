@@ -248,8 +248,9 @@ function folderNoteIndexYAML(
 	frontmatter: FrontMatterCache,
 	settings: GitHubPublisherSettings
 ): string {
-	const shareKey = settings.plugin.shareKey;
-	const category = frontmatter[shareKey] instanceof Array ? frontmatter[shareKey].join("/") : frontmatter[shareKey];
+	const categoryKey = settings.upload.yamlFolderKey;
+	const isCategory = frontmatter[categoryKey] !== undefined ? frontmatter[categoryKey] : settings.upload.defaultName;
+	const category = frontmatter[categoryKey] instanceof Array ? frontmatter[categoryKey].join("/") : isCategory;
 	const parentCatFolder = !category.endsWith("/")
 		? category.split("/").at(-1)
 		: category.split("/").at(-2);
