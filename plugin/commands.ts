@@ -4,8 +4,9 @@ import {
 	noticeMessage,
 	getRepoFrontmatter,
 	noticeLog,
-	getSettingsOfMetadataExtractor, checkEmptyConfiguration,
+	getSettingsOfMetadataExtractor
 } from "./src/utils";
+import {checkRepositoryValidityWithRepoFrontmatter} from "./src/data_validation_test";
 import { GitHubPublisherSettings, RepoFrontmatter } from "./settings/interface";
 import { deleteFromGithub } from "./publishing/delete";
 import { GithubBranch } from "./publishing/branch";
@@ -418,50 +419,4 @@ export async function shareOnlyEdited(
 	}
 }
 
-/**
- * Check the validity of the repository settings, from the frontmatter of the file or from the settings of the plugin
- * It doesn't check if the repository allow to creating and merging branch, only if the repository and the main branch exists
- * @param {string} branchName The branch name created by the plugin
- * @param {GithubBranch} PublisherManager The class that manage the branch
- * @param {GitHubPublisherSettings} settings The settings of the plugin
- * @param { TFile | null} file The file to check if any
- * @param {MetadataCache} metadataCache The metadata cache of Obsidian
- * @return {Promise<void>}
- */
-export async function checkRepositoryValidity(
-	branchName: string,
-	PublisherManager: GithubBranch,
-	settings: GitHubPublisherSettings,
-	file: TFile | null,
-	metadataCache: MetadataCache): Promise<void> {
-	try {
-		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : null;
-		const repoFrontmatter = getRepoFrontmatter(settings, frontmatter);
-		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, settings);
-		if (isNotEmpty) {
-			await PublisherManager.checkRepository(repoFrontmatter, false);
-		}
-	}
-	catch (e) {
-		noticeLog(e, settings);
-	}
-}
 
-async function checkRepositoryValidityWithRepoFrontmatter(
-	branchName: string,
-	PublisherManager: GithubBranch,
-	settings: GitHubPublisherSettings,
-	repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]
-): Promise<boolean> {
-	try {
-		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, settings);
-		if (isNotEmpty) {
-			await PublisherManager.checkRepository(repoFrontmatter, true);
-			return true;
-		}
-	}
-	catch (e) {
-		noticeLog(e, settings);
-		return false;
-	}
-}

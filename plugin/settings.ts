@@ -1,5 +1,4 @@
 import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
-import { Octokit } from "@octokit/core";
 import GithubPublisherPlugin from "./main";
 import {
 	autoCleanCondition,
@@ -21,8 +20,7 @@ import {
 	KeyBasedOnSettings
 } from "./settings/help";
 
-import {checkRepositoryValidity} from "./commands";
-import {GithubBranch} from "./publishing/branch";
+import {checkRepositoryValidity} from "./src/data_validation_test";
 import {ExportModal, ImportModal} from "./src/modals";
 
 function openDetails(groupName: string, detailsState: boolean) {

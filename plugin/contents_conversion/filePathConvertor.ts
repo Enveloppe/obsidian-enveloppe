@@ -358,7 +358,7 @@ function getReceiptFolder(
 		const fileName = getTitleField(frontmatter, file, settings);
 
 		if (
-			!isShared(frontmatter, settings.plugin.shareKey)
+			!isShared(frontmatter, settings, file)
 		) {
 			return fileName;
 		}

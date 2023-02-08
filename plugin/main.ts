@@ -8,11 +8,11 @@ import {
 	OldSettings,
 	RepoFrontmatter
 } from "./settings/interface";
-import {disablePublish, getRepoFrontmatter,} from "./src/utils";
+import {getRepoFrontmatter,} from "./src/utils";
 import {GithubBranch} from "./publishing/branch";
 import {Octokit} from "@octokit/core";
+import {checkRepositoryValidity, isShared} from "./src/data_validation_test";
 import {
-	checkRepositoryValidity,
 	deleteUnsharedDeletedNotes,
 	shareAllEditedNotes,
 	shareAllMarkedNotes,
@@ -170,8 +170,9 @@ export default class GithubPublisher extends Plugin {
 		
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
+				const frontmatter = this.app.metadataCache.getFileCache(file).frontmatter;
 				if (
-					disablePublish(this.app, this.settings, file) &&
+					isShared(frontmatter, this.settings, file) &&
 					this.settings.plugin.fileMenu
 				) {
 					const fileName = this.getTitleFieldForCommand(file, this.app.metadataCache.getFileCache(file).frontmatter).replace(".md", "");
@@ -202,8 +203,9 @@ export default class GithubPublisher extends Plugin {
 
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor, view) => {
+				const frontmatter = this.app.metadataCache.getFileCache(view.file).frontmatter;
 				if (
-					disablePublish(this.app, this.settings, view.file) &&
+					isShared(frontmatter, this.settings, view.file) &&
 					this.settings.plugin.editorMenu
 				) {
 					const fileName = this.getTitleFieldForCommand(view.file,this.app.metadataCache.getFileCache(view.file).frontmatter).replace(".md", "");
@@ -260,19 +262,17 @@ export default class GithubPublisher extends Plugin {
 			name: commands("shareActiveFile") as string,
 			hotkeys: [],
 			checkCallback: (checking) => {
+				const frontmatter = this.app.metadataCache.getFileCache(this.app.workspace.getActiveFile()).frontmatter;
+				const file = this.app.workspace.getActiveFile();
 				if (
-					disablePublish(
-						this.app,
-						this.settings,
-						this.app.workspace.getActiveFile()
-					)
+					isShared(frontmatter, this.settings, file)
 				) {
 					if (!checking) {
 						shareOneNote(
 							branchName,
 							this.reloadOctokit(),
 							this.settings,
-							this.app.workspace.getActiveFile(),
+							file,
 							this.app.metadataCache,
 							this.app.vault
 						);

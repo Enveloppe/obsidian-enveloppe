@@ -1,6 +1,8 @@
-import {FrontMatterCache, Notice } from "obsidian";
+import {FrontMatterCache, Notice, TFile, MetadataCache } from "obsidian";
 import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter} from "../settings/interface";
 import {error, StringFunc, t} from "../i18n";
+import {GithubBranch} from "../publishing/branch";
+import {getRepoFrontmatter, noticeLog} from "./utils";
 
 export function isInternalShared(
 	sharekey: string,
@@ -13,9 +15,37 @@ export function isInternalShared(
 	return !shared && frontmatterSettings.convertInternalNonShared === true;
 }
 
-export function isShared(frontmatter: FrontMatterCache, sharekey: string): boolean {
-	return frontmatter && frontmatter[sharekey] !== undefined && frontmatter[sharekey];
+/**
+ * Disable publishing if the file hasn't a valid frontmatter or if the file is in the folder list to ignore
+ * @param {FrontMatterCache} meta the frontmatter of the file
+ * @param {GitHubPublisherSettings} settings
+ * @param {TFile} file
+ * @returns {boolean} the value of meta[settings.shareKey] or false if the file is in the ignore list/not valid
+ */
+
+export function isShared(
+	meta: FrontMatterCache,
+	settings: GitHubPublisherSettings,
+	file: TFile
+): boolean {
+	if (!file || file.extension !== "md") {
+		return false;
+	}
+	const folderList = settings.plugin.excludedFolder;
+	if (meta === undefined || meta[settings.plugin.shareKey] === undefined) {
+		return false;
+	} else if (folderList.length > 0) {
+		for (let i = 0; i < folderList.length; i++) {
+			const isRegex = folderList[i].match(/^\/(.*)\/[igmsuy]*$/);
+			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
+			if ((regex && regex.test(file.path)) || file.path.contains(folderList[i].trim())) {
+				return false;
+			}
+		}
+	}
+	return meta[settings.plugin.shareKey];
 }
+
 
 /**
  * Check if the file is an attachment file and return the regexMatchArray
@@ -129,4 +159,52 @@ export function noTextConversion(conditionConvert: FrontmatterConvert) {
 		&& imageSettings
 		&& embedSettings
 		&& !conditionConvert.removeEmbed;
+}
+
+/**
+ * Check the validity of the repository settings, from the frontmatter of the file or from the settings of the plugin
+ * It doesn't check if the repository allow to creating and merging branch, only if the repository and the main branch exists
+ * @param {string} branchName The branch name created by the plugin
+ * @param {GithubBranch} PublisherManager The class that manage the branch
+ * @param {GitHubPublisherSettings} settings The settings of the plugin
+ * @param { TFile | null} file The file to check if any
+ * @param {MetadataCache} metadataCache The metadata cache of Obsidian
+ * @return {Promise<void>}
+ */
+export async function checkRepositoryValidity(
+	branchName: string,
+	PublisherManager: GithubBranch,
+	settings: GitHubPublisherSettings,
+	file: TFile | null,
+	metadataCache: MetadataCache): Promise<void> {
+	try {
+		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : null;
+		const repoFrontmatter = getRepoFrontmatter(settings, frontmatter);
+		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, settings);
+		if (isNotEmpty) {
+			await PublisherManager.checkRepository(repoFrontmatter, false);
+		}
+	}
+	catch (e) {
+		noticeLog(e, settings);
+	}
+}
+
+export async function checkRepositoryValidityWithRepoFrontmatter(
+	branchName: string,
+	PublisherManager: GithubBranch,
+	settings: GitHubPublisherSettings,
+	repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]
+): Promise<boolean> {
+	try {
+		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, settings);
+		if (isNotEmpty) {
+			await PublisherManager.checkRepository(repoFrontmatter, true);
+			return true;
+		}
+	}
+	catch (e) {
+		noticeLog(e, settings);
+		return false;
+	}
 }

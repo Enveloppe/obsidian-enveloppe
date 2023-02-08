@@ -82,40 +82,6 @@ export async function getSettingsOfMetadataExtractor(
 	return null;
 }
 
-/**
- * Disable publishing if the file hasn't a valid frontmatter or if the file is in the folder list to ignore
- * @param {App} app
- * @param {GitHubPublisherSettings} settings
- * @param {TFile} file
- * @returns {boolean} the value of meta[settings.shareKey] or false if the file is in the ignore list/not valid
- */
-
-export function disablePublish(
-	app: App,
-	settings: GitHubPublisherSettings,
-	file: TFile
-): boolean {
-	if (!file) {
-		return false;
-	}
-	const fileCache = app.metadataCache.getFileCache(file);
-	const meta = fileCache?.frontmatter;
-	const folderList = settings.plugin.excludedFolder;
-	if (meta === undefined) {
-		return false;
-	} else if (folderList.length > 0) {
-		for (let i = 0; i < folderList.length; i++) {
-			const isRegex = folderList[i].match(/^\/(.*)\/[igmsuy]*$/);
-			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
-			if (regex && regex.test(file.path)) {
-				return false;
-			} else if (file.path.contains(folderList[i].trim())) {
-				return false;
-			}
-		}
-	}
-	return meta[settings.plugin.shareKey];
-}
 
 /**
  * Check if the link has a slash at the end and if not add it
