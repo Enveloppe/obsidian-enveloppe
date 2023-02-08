@@ -163,7 +163,7 @@ export class ExportModal extends Modal {
 			.then((setting) => {
 				const censuredSettings: GitHubPublisherSettings = this.plugin.settings;
 				const output = JSON.stringify(censuredSettings, null, 2)
-					.replace(/,\s+"(repo|user|token)": "\w+"/g, "");
+					.replace(/,\s+"(repo|user|token)": "\w*"/g, "");
 
 				setting.controlEl.createEl("a",
 					{
