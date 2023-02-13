@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.0-4...5.0.0-5) (2023-02-13)
+
+
+### Bug Fixes
+
+* Cannot read property of null when opening the command palette without file ([5b3d4a4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5b3d4a42c172d5dacf4eaf67571b4c5f4a930dc0))
+
 ## [5.0.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.0-3...5.0.0-4) (2023-02-08)
 
 ## [5.0.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.0-2...5.0.0-3) (2023-02-08)
