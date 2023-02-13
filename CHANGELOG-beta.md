@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.0-5...5.0.0-6) (2023-02-13)
+
+
+### Bug Fixes
+
+* cannot read property of frontmatter when click on folder ([6191f6d](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6191f6dc34ce68e96ac851e43fa270a78972ae1a))
+
 ### [5.0.1-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.0-5...5.0.1-0) (2023-02-13)
 
 
