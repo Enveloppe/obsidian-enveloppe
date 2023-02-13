@@ -262,10 +262,10 @@ export default class GithubPublisher extends Plugin {
 			name: commands("shareActiveFile") as string,
 			hotkeys: [],
 			checkCallback: (checking) => {
-				const frontmatter = this.app.metadataCache.getFileCache(this.app.workspace.getActiveFile()).frontmatter;
 				const file = this.app.workspace.getActiveFile();
+				const frontmatter = file ? this.app.metadataCache.getFileCache(file).frontmatter : null;
 				if (
-					isShared(frontmatter, this.settings, file)
+					file && frontmatter && isShared(frontmatter, this.settings, file)
 				) {
 					if (!checking) {
 						shareOneNote(

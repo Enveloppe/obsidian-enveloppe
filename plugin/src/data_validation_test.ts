@@ -24,11 +24,11 @@ export function isInternalShared(
  */
 
 export function isShared(
-	meta: FrontMatterCache,
+	meta: FrontMatterCache | null,
 	settings: GitHubPublisherSettings,
 	file: TFile
 ): boolean {
-	if (!file || file.extension !== "md") {
+	if (!file || file.extension !== "md" || meta === null) {
 		return false;
 	}
 	const folderList = settings.plugin.excludedFolder;
