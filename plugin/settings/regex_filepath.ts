@@ -95,7 +95,8 @@ export class RegexOnContents extends Modal {
     onOpen() {
         let {contentEl} = this;
         contentEl.empty();
-
+        contentEl.createEl("h2", {text: "Regex on contents"});
+        new Notice("This feature is not implemented yet.");
         const censorTextDesc = document.createDocumentFragment();
         censorTextDesc
             .createEl("p", {
@@ -126,7 +127,8 @@ export class RegexOnContents extends Modal {
             .setClass("github-publisher-censor-desc")
             .setDesc(censorTextDesc)
             .addButton((btn) => {
-                btn.setIcon("plus")
+                btn
+                .setIcon("plus")
                     .setTooltip(
                         subSettings(
                             "textConversion.censor.ToolTipAdd"
@@ -181,7 +183,8 @@ export class RegexOnContents extends Modal {
                         .setClass("github-publisher-censor-flags");
                 })
                 .addText((text) => {
-                    text.setPlaceholder("flags")
+                    text
+                        .setPlaceholder("flags")
                         .setValue(censorText.flags)
                         .onChange(async (value) => {
                             if (value.match(/^[gimsuy\s]+$/) || value === "") {

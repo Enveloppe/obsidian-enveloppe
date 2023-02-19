@@ -600,11 +600,12 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setName("censorText")
 			.setDesc("censorTextDesc")
 			.addButton((button) => {
-				button.setButtonText("censorText")
+				button
+					.setButtonText("censorText")
 					.onClick(async () => {
 						new RegexOnContents(this.app, this.plugin.settings, (result => {
 							this.plugin.settings.conversion.censorText = result.conversion.censorText;
-							this.plugin.saveSettings()
+							this.plugin.saveSettings();
 						})).onOpen();
 					});
 			});
