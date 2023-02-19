@@ -597,22 +597,19 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		new Setting(this.settingsPage)
-			.setName("censorText")
-			.setDesc("censorTextDesc")
+			.setName("placeholder")
+			.setDesc("placeholder")
 			.addButton((button) => {
 				button
-					.setButtonText("censorText")
+					.setIcon("pencil")
 					.onClick(async () => {
-						new RegexOnFilePathAndName(
-							this.app,
-							this.plugin.settings,
-							"path", 
-							(result => {
-								new Notice('Censoring text')
-							})).onOpen();
+						new RegexOnFilePathAndName(this.app, this.plugin.settings, "path", (result => {
+							this.plugin.settings.upload.replacePath = result.upload.replacePath;
+							this.plugin.saveSettings();
+						})).open();
 					});
 			});
-
+			
 		this.settingsPage.createEl("h5", { text: "Tags" });
 		new Setting(this.settingsPage)
 			.setName(
