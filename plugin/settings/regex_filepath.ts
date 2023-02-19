@@ -119,13 +119,10 @@ export class RegexOnContents extends Modal {
             subSettings("textConversion.censor.flags.unicode")) as string) +
             "\n" +
             subSettings("textConversion.censor.flags.sticky")) as string;
-        const details = contentEl.createEl("details");
-        details
-            .createEl("summary", {
-                text: subSettings("textConversion.censor.TextHeader") as string,
-            })
-            .addClass("github-publisher-summary");
-        new Setting(details)
+        contentEl.createEl("p", {
+            text: subSettings("textConversion.censor.TextHeader") as string,
+        });
+        new Setting(contentEl)
             .setClass("github-publisher-censor-desc")
             .setDesc(censorTextDesc)
             .addButton((btn) => {
@@ -154,7 +151,7 @@ export class RegexOnContents extends Modal {
             const afterDesc = censorText.after
                 ? (subSettings("textConversion.censor.After") as string)
                 : (subSettings("textConversion.censor.Before") as string);
-            new Setting(details)
+            new Setting(contentEl)
                 .setClass("github-publisher-censor-entry")
                 .addText((text) => {
                     text.setPlaceholder(
