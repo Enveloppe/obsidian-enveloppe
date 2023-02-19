@@ -1,6 +1,6 @@
 import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
 import GithubPublisherPlugin from "./main";
-import { RegexOnFilePathAndName } from "./settings/regex_filepath";
+import { RegexOnFilePathAndName, RegexOnContents } from "./settings/regex_filepath";
 import {
 	autoCleanCondition,
 	folderHideShowSettings,
@@ -596,163 +596,18 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		const censorTextDesc = document.createDocumentFragment();
-		censorTextDesc
-			.createEl("p", {
-				text: subSettings("textConversion.censor.TextDesc") as string,
-			})
-			.createEl("p", {
-				text: subSettings("textConversion.censor.TextEmpty") as string,
-			});
-		const toolTipRegex = ((((((((((((subSettings(
-			"textConversion.censor.TextFlags"
-		) as string) +
-			"\n" +
-			subSettings("textConversion.censor.flags.insensitive")) as string) +
-			"\n" +
-			subSettings("textConversion.censor.flags.global")) as string) +
-			"\n" +
-			subSettings("textConversion.censor.flags.multiline")) as string) +
-			"\n" +
-			subSettings("textConversion.censor.flags.dotAll")) as string) +
-			"\n" +
-			subSettings("textConversion.censor.flags.unicode")) as string) +
-			"\n" +
-			subSettings("textConversion.censor.flags.sticky")) as string;
-		const details = this.settingsPage.createEl("details");
-		details
-			.createEl("summary", {
-				text: subSettings("textConversion.censor.TextHeader") as string,
-			})
-			.addClass("github-publisher-summary");
-		new Setting(details)
-			.setClass("github-publisher-censor-desc")
-			.setDesc(censorTextDesc)
-			.addButton((btn) => {
-				btn.setIcon("plus")
-					.setTooltip(
-						subSettings(
-							"textConversion.censor.ToolTipAdd"
-						) as string
-					)
+		new Setting(this.settingsPage)
+			.setName("censorText")
+			.setDesc("censorTextDesc")
+			.addButton((button) => {
+				button.setButtonText("censorText")
 					.onClick(async () => {
-						const censorText: TextCleaner = {
-							entry: "",
-							replace: "",
-							after: false,
-							flags: "gi",
-						};
-						textSettings.censorText.push(censorText);
-						await this.plugin.saveSettings();
-						this.settingsPage.empty();
-						this.renderTextConversion();
-						openDetails(
-							subSettings(
-								"textConversion.censor.TextHeader"
-							) as string,
-							true
-						);
+						new RegexOnContents(this.app, this.plugin.settings, (result => {
+							this.plugin.settings.conversion.censorText = result.conversion.censorText;
+							this.plugin.saveSettings()
+						}))
 					});
 			});
-
-		for (const censorText of textSettings.censorText) {
-			const afterIcon = censorText.after
-				? "double-down-arrow-glyph"
-				: "double-up-arrow-glyph";
-			const afterDesc = censorText.after
-				? (subSettings("textConversion.censor.After") as string)
-				: (subSettings("textConversion.censor.Before") as string);
-			new Setting(details)
-				.setClass("github-publisher-censor-entry")
-				.addText((text) => {
-					text.setPlaceholder(
-						subSettings(
-							"textConversion.censor.PlaceHolder"
-						) as string
-					)
-						.setValue(censorText.entry)
-						.onChange(async (value) => {
-							censorText.entry = value;
-							await this.plugin.saveSettings();
-						});
-				})
-				.addText((text) => {
-					text.setPlaceholder(
-						subSettings(
-							"textConversion.censor.ValuePlaceHolder"
-						) as string
-					)
-						.setValue(censorText.replace)
-						.onChange(async (value) => {
-							censorText.replace = value;
-							await this.plugin.saveSettings();
-						});
-				})
-				.addButton((btn) => {
-					btn.setTooltip(toolTipRegex)
-						.setIcon("tags")
-						.setClass("github-publisher-censor-flags");
-				})
-				.addText((text) => {
-					text.setPlaceholder("flags")
-						.setValue(censorText.flags)
-						.onChange(async (value) => {
-							if (value.match(/^[gimsuy\s]+$/) || value === "") {
-								censorText.flags = value;
-								await this.plugin.saveSettings();
-							} else {
-								new Notice(
-									(
-										subSettings(
-											"textConversion.censor.flags.error"
-										) as StringFunc
-									)(value)
-								);
-							}
-						});
-				})
-				.addExtraButton((btn) => {
-					btn.setIcon("trash")
-						.setTooltip(
-							subSettings(
-								"textConversion.censor.ToolTipRemove"
-							) as string
-						)
-						.onClick(async () => {
-							textSettings.censorText.splice(
-								textSettings.censorText.indexOf(
-									censorText
-								),
-								1
-							);
-							await this.plugin.saveSettings();
-							this.settingsPage.empty();
-							this.renderTextConversion();
-							openDetails(
-								subSettings(
-									"textConversion.censor.TextHeader"
-								) as string,
-								true
-							);
-						});
-				})
-				.addExtraButton((btn) => {
-					btn.setIcon(afterIcon)
-						.setTooltip(afterDesc)
-						.onClick(async () => {
-							censorText.after = !censorText.after;
-							await this.plugin.saveSettings();
-							this.settingsPage.empty();
-							this.renderTextConversion();
-							openDetails(
-								subSettings(
-									"textConversion.censor.TextHeader"
-								) as string,
-								true
-							);
-						});
-				});
-		}
 
 		this.settingsPage.createEl("h5", { text: "Tags" });
 		new Setting(this.settingsPage)
