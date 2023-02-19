@@ -1,6 +1,11 @@
 import { TFile } from "obsidian";
 import { settings, subSettings } from "../i18n";
 
+export interface RegexReplace {
+	regex: string;
+	replacement: string;
+}
+
 export interface GitHubPublisherSettings {
 	github: {
 		user: string;
@@ -27,10 +32,8 @@ export interface GitHubPublisherSettings {
 			enable: boolean;
 			key: string;
 		}
-		replaceTitle: {
-			regex: string;
-			replacement: string;
-		},
+		replaceTitle: RegexReplace[],
+		replacePath: RegexReplace[],
 		autoclean: {
 			enable: boolean;
 			excluded: string[];
@@ -209,10 +212,8 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 			enable: false,
 			key: "title",
 		},
-		replaceTitle: {
-			regex: "",
-			replacement: "",
-		},
+		replaceTitle: [],
+		replacePath: [],
 		autoclean: {
 			enable: false,
 			excluded: [],

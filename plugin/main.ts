@@ -72,10 +72,11 @@ export default class GithubPublisher extends Plugin {
 						enable: old.useFrontmatterTitle,
 						key: old.frontmatterTitleKey,
 					},
-					replaceTitle: {
+					replaceTitle: [{
 						regex: old.frontmatterTitleRegex,
 						replacement: old.frontmatterTitleReplacement,
-					},
+					}],
+					replacePath: [],
 					autoclean: {
 						enable: old.autoCleanUp,
 						excluded: old.autoCleanUpExcluded,
@@ -160,6 +161,9 @@ export default class GithubPublisher extends Plugin {
 		
 		await this.loadSettings();
 		const oldSettings = this.settings;
+		if (!(this.settings.upload.replaceTitle instanceof Array)) {
+			this.settings.upload.replaceTitle = [this.settings.upload.replaceTitle];
+		}
 		//@ts-ignore
 		await this.migrateSettings(oldSettings as OldSettings);
 		const branchName =

@@ -1,5 +1,6 @@
 import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
 import GithubPublisherPlugin from "./main";
+import { RegexOnFilePathAndName } from "./settings/regex_filepath";
 import {
 	autoCleanCondition,
 	folderHideShowSettings,
@@ -423,21 +424,30 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(
 				subSettings("uploadConfig.frontmatterRegex.desc") as string
 			)
-			.addText((text) => {
-				text.setPlaceholder("regex")
-					.setValue(uploadSettings.replaceTitle.regex)
-					.onChange(async (value) => {
-						uploadSettings.replaceTitle.regex = value;
-						await this.plugin.saveSettings();
+			.addButton((button) => {
+				button
+					.setIcon("pencil")
+					.onClick(async () => {
+						new RegexOnFilePathAndName(this.app, this.plugin.settings, "file", (result =>
+							{
+								this.plugin.settings.upload.replaceTitle = result.upload.replaceTitle;
+								this.plugin.saveSettings();
+							})).open();
 					});
-			})
-			.addText((text) => {
-				text.setPlaceholder("replacement")
-					.setValue(uploadSettings.replaceTitle.replacement)
-					.onChange(async (value) => {
-						uploadSettings.replaceTitle.replacement =
-							value;
-						await this.plugin.saveSettings();
+			});
+
+		new Setting(this.settingsPage)
+			.setName("placeholder")
+			.setDesc("placeholder")
+			.addButton((button) => {
+				button
+					.setIcon("pencil")
+					.onClick(async () => {
+						new RegexOnFilePathAndName(this.app, this.plugin.settings, "path", (result =>
+							{
+								this.plugin.settings.upload.replacePath = result.upload.replacePath;
+								this.plugin.saveSettings();
+							})).open();
 					});
 			});
 

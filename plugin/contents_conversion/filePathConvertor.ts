@@ -18,6 +18,7 @@ import {
 	getRepoFrontmatter,
 } from "../src/utils";
 import {isInternalShared, checkIfRepoIsInAnother, isShared} from "../src/data_validation_test";
+import { GithubBranch } from "plugin/publishing/branch";
 
 /**
  * Get the dataview path from a markdown file
@@ -244,6 +245,10 @@ function folderNoteIndexYAML(
 	return regexOnFileName(fileName, settings);
 }
 
+function editPathWithRegex(path: string, settings: GitHubPublisherSettings) {
+
+}
+
 /**
  * Create filepath based on settings and frontmatter for the github repository
  * @param {TFile} file Source file
@@ -290,25 +295,53 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 	const uploadSettings = settings.upload;
 	if (fileName === uploadSettings.folderNote.rename && uploadSettings.folderNote.enable) return fileName;
 	fileName = fileName.replace(".md", "");
-	if (uploadSettings.replaceTitle.regex.length > 0) {
-		const toReplace = uploadSettings.replaceTitle.regex;
-		const replaceWith = uploadSettings.replaceTitle.replacement;
-		if (toReplace.match(/\/.+\//)) {
-			const flagsRegex = toReplace.match(/\/([gimy]+)$/);
-			const flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join("") : "";
-			const regex = new RegExp(toReplace.replace(/\/(.+)\/.*/, "$1"), flags);
-			return fileName.replace(
-				regex,
-				replaceWith
-			) + ".md";
-		} else {
-			return fileName.replaceAll(
+	for (const regexTitle of uploadSettings.replacePath) {
+		if (regexTitle.regex.trim().length > 0) {
+			const toReplace = regexTitle.regex;
+			const replaceWith = regexTitle.replacement;
+			if (toReplace.match(/\/.+\//)) {
+				const flagsRegex = toReplace.match(/\/([gimy]+)$/);
+				const flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join("") : "";
+				const regex = new RegExp(toReplace.replace(/\/(.+)\/.*/, "$1"), flags);
+				fileName = fileName.replace(
+					regex,
+					replaceWith
+				)
+			} else {
+				fileName = fileName.replaceAll(
 				toReplace,
 				replaceWith
-			) + ".md";
+				);
+			}
 		}
 	}
 	return fileName + ".md";
+}
+
+function regexOnPath(fileName: string, path: string, settings: GitHubPublisherSettings) {
+	const uploadSettings = settings.upload;
+	path = path.replace(fileName, "");
+	for (const regexTitle of uploadSettings.replacePath) {
+		if (regexTitle.regex.trim().length > 0) {
+			const toReplace = regexTitle.regex;
+			const replaceWith = regexTitle.replacement;
+			if (toReplace.match(/\/.+\//)) {
+				const flagsRegex = toReplace.match(/\/([gimy]+)$/);
+				const flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join("") : "";
+				const regex = new RegExp(toReplace.replace(/\/(.+)\/.*/, "$1"), flags);
+				path = path.replace(
+					regex,
+					replaceWith
+				)
+			} else {
+				path = path.replaceAll(
+				toReplace,
+				replaceWith
+				);
+			}
+		}
+	}
+	return path + fileName;
 }
 
 /**
@@ -373,7 +406,7 @@ function getReceiptFolder(
 		} else if (settings.upload.behavior === FolderSettings.obsidian) {
 			path = createObsidianPath(file, settings, vault, fileName);
 		}
-		return path;
+		return regexOnPath(fileName, path, settings);
 	}
 }
 
