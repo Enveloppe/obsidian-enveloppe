@@ -603,13 +603,13 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				button
 					.setIcon("pencil")
 					.onClick(async () => {
-						new RegexOnFilePathAndName(this.app, this.plugin.settings, "path", (result => {
-							this.plugin.settings.upload.replacePath = result.upload.replacePath;
+						new RegexOnContents(this.app, this.plugin.settings, (result => {
+							this.plugin.settings.conversion.censorText = result.conversion.censorText;
 							this.plugin.saveSettings();
 						})).open();
 					});
 			});
-			
+
 		this.settingsPage.createEl("h5", { text: "Tags" });
 		new Setting(this.settingsPage)
 			.setName(
