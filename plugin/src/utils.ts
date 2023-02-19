@@ -12,14 +12,13 @@ import {
 	GitHubPublisherSettings,
 	MetadataExtractor,
 	RepoFrontmatter,
+	OldSettings
 } from "../settings/interface";
-import Publisher from "../publishing/upload";
-import {informations} from "../i18n";
-import type { StringFunc } from "../i18n";
-import { getReceiptFolder } from "../contents_conversion/filePathConvertor";
+import Publisher from "../publish/upload";
+import { getReceiptFolder } from "../conversion/filePathConvertor";
 import { FrontmatterConvert } from "../settings/interface";
-
-
+import GithubPublisher from "plugin/main";
+import i18next from "i18next";
 /**
  * Create a notice message for the log
  * @param {string} message the message to display
@@ -176,6 +175,90 @@ export async function noticeMessage(
 	}
 }
 
+export async function migrateSettings(old: OldSettings, plugin: GithubPublisher ) {
+	if (Object.keys(old).includes("editorMenu")) {
+		console.log("Migrating settings...");
+		plugin.settings = {
+			github:
+			{
+				user: old.githubName ? old.githubName : this.settings.github.user ? this.settings.github.user : "",
+				repo: old.githubRepo ? old.githubRepo : this.settings.github.repo ? this.settings.github.repo : "",
+				token: old.GhToken ? old.GhToken : this.settings.github.token ? this.settings.github.token : "",
+				branch: old.githubBranch,
+				automaticallyMergePR: old.automaticallyMergePR,
+				api: {
+					tiersForApi: old.tiersForApi,
+					hostname: old.hostname,
+				},
+				worflow: {
+					workflowName: old.workflowName,
+					customCommitMsg: old.customCommitMsg,
+				}
+			},
+			upload: {
+				behavior: old.downloadedFolder as FolderSettings,
+				subFolder: old.subFolder,
+				defaultName: old.folderDefaultName,
+				rootFolder: old.rootFolder,
+				yamlFolderKey: old.yamlFolderKey,
+				frontmatterTitle: {
+					enable: old.useFrontmatterTitle,
+					key: old.frontmatterTitleKey,
+				},
+				replaceTitle: [{
+					regex: old.frontmatterTitleRegex,
+					replacement: old.frontmatterTitleReplacement,
+				}],
+				replacePath: [],
+				autoclean: {
+					enable: old.autoCleanUp,
+					excluded: old.autoCleanUpExcluded,
+				},
+				folderNote: {
+					enable: old.folderNote,
+					rename: old.folderNoteRename,
+				},
+				metadataExtractorPath: old.metadataExtractorPath,
+			},
+			conversion: {
+				hardbreak: old.hardBreak,
+				dataview: old.convertDataview,
+				censorText: old.censorText,
+				tags: {
+					inline: old.inlineTags,
+					exclude: old.excludeDataviewValue,
+					fields: old.dataviewFields,
+				},
+				links: {
+					internal: old.convertForGithub,
+					unshared: old.convertInternalNonShared,
+					wiki: old.convertWikiLinks,
+				},
+			},
+			embed: {
+				attachments: old.embedImage,
+				keySendFile: old.metadataFileFields,
+				notes: old.embedNotes,
+				folder: old.defaultImageFolder,
+			},
+			plugin: {
+				shareKey: old.shareKey,
+				fileMenu: old.fileMenu,
+				editorMenu: old.editorMenu,
+				excludedFolder: old.excludedFolder,
+				externalShare: old.shareExternalModified,
+				copyLink: {
+					enable: old.copyLink,
+					links: old.mainLink,
+					removePart: old.linkRemover.split(/[,\n]\W*/).map((s) => s.trim()),
+				},
+				noticeError: old.logNotice,
+			}
+		};
+		await plugin.saveSettings();
+	}
+}
+
 /**
  * Create a notice message for the sharing ; the message can be delayed if a workflow is used.
  * @param {Publisher} PublisherManager
@@ -194,29 +277,16 @@ async function noticeMessageOneRepo(
 	const noticeValue =
 		file instanceof TFile ? "\"" + file.basename + "\"" : file;
 	if (settings.github.worflow.workflowName.length > 0) {
-		new Notice(
-			(informations("sendMessage") as StringFunc)([
-				noticeValue,
-				repo.owner + ":" + repo.repo,
-				`.\n${informations("waitingWorkflow")}`,
-			])
-		);
+		const msg = i18next.t("informations.sendMessage", {nbNotes: noticeValue, repoOwner: `${repo.owner}:${repo.repo}`}) + ".\n" + i18next.t("informations.waitingWorkflow");
+		new Notice(msg);
 		const successWorkflow = await PublisherManager.workflowGestion(repo);
 		if (successWorkflow) {
-			new Notice(
-				(informations("successfullPublish") as StringFunc)([
-					noticeValue,
-					repo.owner + ":" + repo.repo,
-				])
-			);
+			const successMsg= i18next.t("informations.successfullPublish", {nbNotes: noticeValue, repoOwner: `${repo.owner}:${repo.repo}`});
+			new Notice(successMsg);
 		}
 	} else {
-		new Notice(
-			(informations("successfullPublish") as StringFunc)([
-				noticeValue,
-				repo.owner + ":" + repo.repo,
-			])
-		);
+		const informations = i18next.t("informations.successfullPublish", {nbNotes: noticeValue, repoOwner: `${repo.owner}:${repo.repo}`});
+		new Notice(informations);
 	}
 }
 

@@ -6,9 +6,18 @@ module.exports = {
 	},
 	"extends": [
 		"eslint:recommended",
-		"plugin:@typescript-eslint/recommended"
+		"plugin:@typescript-eslint/recommended",
+		"plugin:jsonc/recommended-with-jsonc",
+		"plugin:jsonc/recommended-with-json",
+
 	],
 	"parser": "@typescript-eslint/parser",
+	overrides: [
+		{
+			files: ["*.json"],
+			parser: "jsonc-eslint-parser"
+		},
+	],
 	"parserOptions": {
 		"ecmaVersion": "latest",
 		"sourceType": "module"
@@ -31,8 +40,15 @@ module.exports = {
 		],
 		"semi": [
 			"error",
-			"always"
+			"always" 
+		],
+		"jsonc/sort-keys": [
+			"error", 
+			"asc", {
+				"caseSensitive": false,
+				"natural": false
+			}
 		],
 		"@typescript-eslint/ban-ts-comment": "off"
 	}
-};
+}

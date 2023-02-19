@@ -8,14 +8,12 @@ import {
 } from "./src/utils";
 import {checkRepositoryValidityWithRepoFrontmatter} from "./src/data_validation_test";
 import { GitHubPublisherSettings, RepoFrontmatter } from "./settings/interface";
-import { deleteFromGithub } from "./publishing/delete";
-import { GithubBranch } from "./publishing/branch";
+import { deleteFromGithub } from "./publish/delete";
+import { GithubBranch } from "./publish/branch";
 import { Octokit } from "@octokit/core";
 import { MetadataCache, Notice, Platform, TFile, Vault } from "obsidian";
 import GithubPublisher from "./main";
-import { error, informations } from "./i18n";
-import { StringFunc } from "./i18n";
-
+import i18next from "i18next";
 /**
  * Share all marked note (share: true) from Obsidian to GitHub
  * @param {GithubBranch} PublisherManager
@@ -61,10 +59,7 @@ export async function shareAllMarkedNotes(
 				} catch {
 					errorCount++;
 					new Notice(
-						(error("unablePublishNote") as StringFunc)(
-							sharedFiles[files].name
-						)
-					);
+						(i18next.t("error.unablePublishNote", {file: sharedFiles[files].name})));
 				}
 			}
 			statusBar.finish(8000);
@@ -106,13 +101,13 @@ export async function shareAllMarkedNotes(
 				);
 			} else {
 				new Notice(
-					(error("errorPublish") as StringFunc)(settings.github.repo)
+					(i18next.t("error.errorPublish", {repoInfo: settings.github.repo}))
 				);
 			}
 		}
 	} catch (error) {
 		console.error(error);
-		new Notice(error("unablePublishMultiNotes") as string);
+		new Notice(i18next.t("error.unablePublishMultiNotes") );
 		statusBar.error();
 	}
 }
@@ -135,7 +130,7 @@ export async function deleteUnsharedDeletedNotes(
 ) {
 	try {
 		new Notice(
-			(informations("startingClean") as StringFunc)(settings.github.repo)
+			(i18next.t("informations.startingClean", {repoInfo: settings.github.repo}))
 		);
 		const isValid = checkRepositoryValidityWithRepoFrontmatter(branchName, PublisherManager, settings, repoFrontmatter);
 		if (!isValid) return false;
@@ -223,15 +218,14 @@ export async function shareOneNote(
 				);
 			} else {
 				new Notice(
-					(error("errorPublish") as StringFunc)(settings.github.repo)
-				);
+					(i18next.t("error.errorPublish", {repoInfo: settings.github.repo})));
 			}
 		}
 	} catch (error) {
 		if (!(error instanceof DOMException)) {
 			noticeLog(error, settings);
 			new Notice(
-				(error("errorPublish") as StringFunc)(settings.github.repo)
+				(i18next.t("error.errorPublish", {repoInfo: settings.github.repo}))
 			);
 		}
 	}
@@ -256,7 +250,7 @@ export async function shareNewNote(
 	repoFrontmatter: RepoFrontmatter
 ) {
 	const settings = plugin.settings;
-	new Notice(informations("scanningRepo") as string);
+	new Notice(i18next.t("informations.scanningRepo") );
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	// Get all file in the repo before the creation of the branch
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
@@ -272,8 +266,7 @@ export async function shareNewNote(
 	);
 	if (newlySharedNotes.length > 0) {
 		new Notice(
-			(informations("foundNoteToSend") as StringFunc)(
-				`${newlySharedNotes.length}`
+			(i18next.t("informations.foundNoteToSend", {nbNotes: newlySharedNotes.length})
 			)
 		);
 
@@ -292,7 +285,7 @@ export async function shareNewNote(
 			false
 		);
 	} else {
-		new Notice(informations("noNewNote") as string);
+		new Notice(i18next.t("informations.noNewNote") );
 	}
 }
 
@@ -315,7 +308,7 @@ export async function shareAllEditedNotes(
 	repoFrontmatter: RepoFrontmatter
 ) {
 	const settings = plugin.settings;
-	new Notice(informations("scanningRepo") as string);
+	new Notice(i18next.t("informations.scanningRepo") );
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
 		repoFrontmatter.branch,
@@ -336,8 +329,7 @@ export async function shareAllEditedNotes(
 	);
 	if (newlySharedNotes.length > 0) {
 		new Notice(
-			(informations("foundNoteToSend") as StringFunc)(
-				`${newlySharedNotes.length}`
+			(i18next.t("informations.foundNoteToSend", {nbNotes: newlySharedNotes.length})
 			)
 		);
 
@@ -356,7 +348,7 @@ export async function shareAllEditedNotes(
 			false
 		);
 	} else {
-		new Notice(informations("noNewNote") as string);
+		new Notice(i18next.t("informations.noNewNote") );
 	}
 }
 
@@ -379,7 +371,7 @@ export async function shareOnlyEdited(
 	repoFrontmatter: RepoFrontmatter
 ) {
 	const settings = plugin.settings;
-	new Notice(informations("scanningRepo") as string);
+	new Notice(i18next.t("informations.scanningRepo") );
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
 		repoFrontmatter.branch,
@@ -396,9 +388,7 @@ export async function shareOnlyEdited(
 	);
 	if (newlySharedNotes.length > 0) {
 		new Notice(
-			(informations("foundNoteToSend") as StringFunc)(
-				`${newlySharedNotes.length}`
-			)
+			(i18next.t("informations.foundNoteToSend", {nbNotes: newlySharedNotes.length}))
 		);
 		const statusBarElement = plugin.addStatusBarItem();
 		const isValid = checkRepositoryValidityWithRepoFrontmatter(branchName, PublisherManager, settings, repoFrontmatter);
@@ -415,7 +405,7 @@ export async function shareOnlyEdited(
 			false
 		);
 	} else {
-		new Notice(informations("noNewNote") as string);
+		new Notice(i18next.t("informations.noNewNote") );
 	}
 }
 

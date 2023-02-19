@@ -1,8 +1,9 @@
 import GithubPublisher from "../main";
 import { App, Modal, Setting, TextAreaComponent, ButtonComponent, Platform } from "obsidian";
-import {settings, subSettings, t} from "../i18n";
 import {GithubPublisherSettings} from "../settings";
+import i18next from "i18next";
 import {GitHubPublisherSettings, OldSettings} from "../settings/interface";
+import { migrateSettings } from "./utils";
 
 export type SettingValue = number | string | boolean | unknown;
 
@@ -27,14 +28,14 @@ export class ImportModal extends Modal {
 		const {contentEl} = this;
 
 		new Setting(contentEl)
-			.setName(t("modals.import.title") as string)
-			.setDesc(t("modals.import.desc") as string);
+			.setName(i18next.t("modals.import.title") )
+			.setDesc(i18next.t("modals.import.desc") );
 
 		new Setting(contentEl).then((setting) => {
 			// Build an error message container
 			const errorSpan = createSpan({
 				cls: "github-publisher-import-error",
-				text: t("modals.import.error.span") as string,
+				text: i18next.t("modals.import.error.span") ,
 			});
 			setting.nameEl.appendChild(errorSpan);
 			const importAndClose = async (str: string) => {
@@ -44,11 +45,15 @@ export class ImportModal extends Modal {
 						if (Object.keys(importedSettings).includes("editorMenu")) {
 							//need to convert old settings to new settings
 							const oldSettings = importedSettings as unknown as OldSettings;
-							this.plugin.migrateSettings(oldSettings);
+							await migrateSettings(oldSettings, this.plugin);
 							console.log("Migrated settings from old to new format");
 						} else {
 							console.log("Imported settings as new format");
 							importedSettings = importedSettings as GitHubPublisherSettings;
+							if (!(importedSettings.upload.replaceTitle instanceof Array)) {
+								importedSettings.upload.replaceTitle = [importedSettings.upload.replaceTitle];
+							}
+							
 							if (Object.keys(importedSettings).includes("github")) {
 								importedSettings.github.repo = this.plugin.settings.github.repo;
 								importedSettings.github.token = this.plugin.settings.github.token;
@@ -63,11 +68,11 @@ export class ImportModal extends Modal {
 						this.close();
 					} catch (e) {
 						errorSpan.addClass("active");
-						errorSpan.setText(`${t("modals.import.error.span")}${e}`);
+						errorSpan.setText(`${i18next.t("modals.import.error.span")}${e}`);
 					}
 				} else {
 					errorSpan.addClass("active");
-					errorSpan.setText(`${t("modals.import.error.span")}: ${t("modals.import.error.empty")}`);
+					errorSpan.setText(`${i18next.t("modals.import.error.span")}: ${i18next.t("modals.import.error.isEmpty")}`);
 				}
 			};
 			setting.controlEl.createEl(
@@ -98,15 +103,15 @@ export class ImportModal extends Modal {
 			// Build a label we will style as a link
 			setting.controlEl.createEl("label", {
 				cls: "github-publisher-import-label",
-				text: t("modals.import.importFromFile") as string,
+				text: i18next.t("modals.import.importFromFile") ,
 				attr: {
 					for: "github-publisher-import-input",
 				},
 			});
 
 			const textArea = new TextAreaComponent(contentEl)
-				.setPlaceholder(t("modals.import.paste") as string).then((ta) => {
-					const saveButton = new ButtonComponent(contentEl).setButtonText(t("modals.import.save") as string).onClick(async () => {
+				.setPlaceholder(i18next.t("modals.import.paste") ).then((ta) => {
+					const saveButton = new ButtonComponent(contentEl).setButtonText(i18next.t("common.save") ).onClick(async () => {
 						await importAndClose(ta.getValue().trim());
 					});
 					saveButton.buttonEl.addClass("github-publisher-import-save-button");
@@ -120,24 +125,24 @@ export class ImportModal extends Modal {
 		contentEl.empty();
 		this.settingsPage.empty();
 		// @ts-ignore
-		const openedTab = document.querySelector(".settings-tab-active.github-publisher") ? document.querySelector(".settings-tab-active.github-publisher").innerText : settings("github", "githubConfiguration") as string;
+		const openedTab = document.querySelector(".settings-tab-active.github-publisher") ? document.querySelector(".settings-tab-active.github-publisher").innerText : i18next.t("settings.github.title") ;
 		switch (openedTab) {
-		case settings("github", "githubConfiguration") as string:
+		case i18next.t("settings.github.title") :
 			this.settingsTab.renderGithubConfiguration();
 			break;
-		case "Upload Configuration":
+		case i18next.t("settings.upload.title"):
 			this.settingsTab.renderUploadConfiguration();
 			break;
-		case settings("textConversion", "textConversion") as string:
+		case i18next.t("settings.conversion.title") :
 			this.settingsTab.renderTextConversion();
 			break;
-		case settings("embed", "embed") as string:
+		case i18next.t("settings.embed.title") :
 			this.settingsTab.renderEmbedConfiguration();
 			break;
-		case settings("plugin", "pluginSettings") as string:
+		case i18next.t("settings.plugin.title") :
 			this.settingsTab.renderPluginSettings();
 			break;
-		case subSettings("help.help") as string:
+		case i18next.t("settings.help.title") :
 			this.settingsTab.renderHelp();
 			break;
 		}
@@ -158,8 +163,8 @@ export class ExportModal extends Modal {
 		const {contentEl, modalEl} = this;
 		modalEl.addClass("modal-github-publisher");
 		new Setting(contentEl)
-			.setName(t("modals.export.title") as string)
-			.setDesc(t("modals.export.desc") as string)
+			.setName(i18next.t("modals.export.title") )
+			.setDesc(i18next.t("modals.export.desc") )
 			.then((setting) => {
 				const censuredSettings: GitHubPublisherSettings = this.plugin.settings;
 				const output = JSON.stringify(censuredSettings, null, 2)
@@ -168,7 +173,7 @@ export class ExportModal extends Modal {
 				setting.controlEl.createEl("a",
 					{
 						cls: "github-publisher-copy",
-						text: t("modals.export.copy") as string,
+						text: i18next.t("modals.export.copy") ,
 						href: "#",
 					},
 					(copyButton) => {
@@ -197,7 +202,7 @@ export class ExportModal extends Modal {
 				if (Platform.isDesktop) {
 					setting.controlEl.createEl("a", {
 						cls: "github-publisher-download",
-						text: t("modals.export.download") as string,
+						text: i18next.t("modals.export.download") ,
 						attr: {
 							download: "github-publisher.json",
 							href: `data:application/json;charset=utf-8,${encodeURIComponent(output)}`,
@@ -206,12 +211,13 @@ export class ExportModal extends Modal {
 				} else if (Platform.isMobile) {
 					setting.addButton((b) =>
 						b
-							.setButtonText(t("modals.export.download") as string)
+							.setButtonText(i18next.t("modals.export.download") )
 							.onClick(() => {
 								// Can't use the method above on mobile, so we'll just open a new tab
 								//create a temporary file
 								this.app.vault.adapter.write(`${app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`, output);
 								//open the file with default application
+								//eslint-disable-next-line
 								(this.app as any).openWithDefaultApp(`${app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`);
 							}));
 				}

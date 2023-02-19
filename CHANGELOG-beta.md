@@ -2,6 +2,331 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-34](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-33...5.0.0-34) (2023-02-22)
+
+## [5.0.0-33](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-32...5.0.0-33) (2023-02-22)
+
+## [5.0.0-32](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-31...5.0.0-32) (2023-02-22)
+
+## [5.0.0-31](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-30...5.0.0-31) (2023-02-21)
+
+## [5.0.0-30](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-29...5.0.0-30) (2023-02-21)
+
+## [5.0.0-29](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-28...5.0.0-29) (2023-02-21)
+
+## [5.0.0-28](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-27...5.0.0-28) (2023-02-20)
+
+
+### Bug Fixes
+
+* add description ([64604b8](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/64604b8fb9f41c5fdf2d86037a2d3ab5e489e0ca))
+
+## [5.0.0-27](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-26...5.0.0-27) (2023-02-20)
+
+## [5.0.0-26](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-25...5.0.0-26) (2023-02-20)
+
+## [5.0.0-25](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-24...5.0.0-25) (2023-02-20)
+
+## [5.0.0-24](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-23...5.0.0-24) (2023-02-20)
+
+## [5.0.0-23](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-22...5.0.0-23) (2023-02-20)
+
+## [5.0.0-22](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-21...5.0.0-22) (2023-02-20)
+
+## [5.0.0-21](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-20...5.0.0-21) (2023-02-20)
+
+## [5.0.0-20](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-19...5.0.0-20) (2023-02-20)
+
+## [5.0.0-19](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-18...5.0.0-19) (2023-02-20)
+
+## [5.0.0-18](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-17...5.0.0-18) (2023-02-20)
+
+## [5.0.0-17](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-16...5.0.0-17) (2023-02-20)
+
+## [5.0.0-16](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-15...5.0.0-16) (2023-02-20)
+
+
+### Features
+
+* adjust style ([b5f511a](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/b5f511a533e523174ca15c4f46044714c49ca827))
+
+## [5.0.0-15](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-14...5.0.0-15) (2023-02-19)
+
+## [5.0.0-14](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-13...5.0.0-14) (2023-02-19)
+
+## [5.0.0-13](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-12...5.0.0-13) (2023-02-19)
+
+## [5.0.0-12](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-11...5.0.0-12) (2023-02-19)
+
+## [5.0.0-11](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-10...5.0.0-11) (2023-02-19)
+
+## [5.0.0-10](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-9...5.0.0-10) (2023-02-19)
+
+
+### Features
+
+* add regex contents in a modal ([4168e1d](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/4168e1d18d2a40797aae516094e6321f157ee374))
+
+## [5.0.0-9](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-8...5.0.0-9) (2023-02-19)
+
+
+### Bug Fixes
+
+* delete regex ([8c05469](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/8c05469af74522d33b9f34aaa03bdca8a00cf0de))
+
+## [5.0.0-8](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-7...5.0.0-8) (2023-02-19)
+
+
+### Bug Fixes
+
+* Forgot to apply type ([b68576e](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/b68576ef3a3bbe2c2672203916fc39d75158249a))
+
+## 5.0.0-7 (2023-02-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* for maintining purpose, all settings are replaced/moved. Maybe broke if I forgot some things
+* Remove the workflow update
+* This change/erase the previous parameters. Also, the plugin need to be deleted from older installation.
+
+### Features
+
+*  Adding editor menu option to share file on right click ([b7ed228](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/b7ed228989bd5cbaaa01ed001e8fb5ae63e8a6ea))
+* add 2 new frontmatter key for converting internal links ([a8d4a89](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/a8d4a89c8f3ad2da297b7495316ea20fef6caa28))
+* add a button to test the repository validity ([bfcf32e](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/bfcf32e8828af9157cd7342f28b6d2b595597df7))
+* Add a command for only edited notes ([a08c157](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/a08c157ee4a17fd88ec01b613f9ef4c529f0dac3))
+* add cleanning command ([a91e0e4](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/a91e0e4088ccba505fe6a1b4de0d4e5e7c02ad32))
+* add flags option for regex replacing ([a80d682](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/a80d6824192d8b13eea8d3958f3348f6c58eba96)), closes [#51](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/51) [#52](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/52)
+* add image & embed frontmatter perfile settings ([708b04a](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/708b04a83e897855c7aac6028b481a6756bcfafe))
+* add imageLink options ([e087cca](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/e087ccad8fd5f7362e6218015bc4fdd1cac55b34))
+* add inline tags in tags frontmatter ([54de5ad](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/54de5ad8ab03ee005e9610729c4102ba6780f24d)), closes [#23](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/23)
+* Add using frontmatter title field for generate filename ([b1bad43](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/b1bad4392e5ecb0a99e999cd1343385d7eee9ca8))
+* adding "moment" for text replacer ([f1dd05a](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/f1dd05a0b6b12422bd63d3b24828b686489658eb))
+* Adding a command to share only new shared notes ([176f586](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/176f586afed36d9b567f42bade9ade4883cfda60))
+* Adding a command to update obs2mk setting using obsidian ([0496bed](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/0496bed29843a03afa1a8cdefb482958796dcffb))
+* adding a new option that allow to change the name of folder note file ([a21ac4a](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/a21ac4a6112d4561f309f6f287e0151ec8bf93a4))
+* Adding baselink frontmatter key ([504fdd5](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/504fdd597d33f2eef20508bd5552857a5a934386))
+* adding github entreprise API ([0868c7b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/0868c7b77c2a2c19356f4db6d9fab92c6cad7945)), closes [#98](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/98)
+* Adding internal links converter and wikilinks to mdlinks ([742077a](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/742077a61112234aa05234ab7cf888a93a43e0e3))
+* adding multiple possibility to remove part links ([6e922ee](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/6e922ee2ea4ef6b93d625bc18c2068b3e338d059))
+* adding obsidian path option ([7714ae4](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/7714ae42f6f7b8df9800e593987139de1c95a9d1))
+* Adding per-files option for repo & autoclean ([f06712d](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/f06712d68fe26db4348fbd5f8026769e3d353026))
+* adding subfolder sync ([117c200](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/117c200977392da117649bb0f02fe1002e817763)), closes [#9](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/9)
+* Adding support for folder note ! ([cde9603](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/cde96039d7537aa508f0a13967b465a06e3374b1))
+* Allow sending file to multiple repo using the key "repo" ([5c74244](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/5c742444a7e2e1260a521091b9c987b6f7bf7f27))
+* allow to regex replace some text ([649be97](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/649be978a3466d95b20f4ba2986efcadf695339e))
+* allow to remove embeds mentionning using removeEmbed frontmatter key ([7edee37](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/7edee37a5eae91caf42f33e43f6ef415c7cd2a24))
+* apply a regex on the filename directly ([4afaaba](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/4afaaba16bac701d90ebef05e0e48ddd645e673b)), closes [#60](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/60)
+* BREAKING CHANGE: It's the first version ([6d77162](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/6d771624ba91106e95b4ef281749c9fed560a804))
+* dataview queries will now follow path and links parameters ([bf6c181](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/bf6c181b3e33ddb9872ddeb981c43c9b1ce2ed7d))
+* Dataview simple query are not correctly rendered! ([0b7b3c4](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/0b7b3c461809dc0f7b551c9cbf76309b83a97538))
+* edit the commit message when PR are merged ([c47cfba](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/c47cfba4819e867924ef37a478835be700698097))
+* **embed:** Adding specific settings to share embedded notes ([7396d6b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/7396d6bbdab944a5ce5b1465e5676a4463a674f2))
+* **embed:** share embed files too! ([558cc74](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/558cc7474079a7529b1cb5d9ef7d5b919596e194))
+* **embed:** share embed notes only on "one file" commands ([a8896c6](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/a8896c61840c82dfd6543e7c79916473a136e316))
+* export & import settings ([90a6f9f](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/90a6f9f4cff7ad53a33f0390a86b7b0a5c3cfa75)), closes [#94](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/94)
+* field to tags conversion ([f8af7af](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/f8af7afb58e1d5423b89665fd21d313159ae23fa)), closes [#26](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/26)
+* frontmatter key for per file settings ([a49bc98](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/a49bc98fe2bdd335df86f292c1be907c54da5c13))
+* **i18n:** integrate ru translation ([ff1bfe7](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/ff1bfe71fda50e0cd8e18171a79a2464f18e0450))
+* **i18n:** ru translation ([218de5b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/218de5ba369b0827ab1ed4259efbd4cb423e533b))
+* **image:** adding statusbar for shared image ([4c3c57a](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/4c3c57a3194ec13664a9a2603cc3ed6a1426c521))
+* introduce regex for folder excluded & autocleanup ([53a81ba](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/53a81ba553800d8bcb4ca41c0bf9c47b5463e2bc))
+* notice log in option to help debugging ([6ec514e](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/6ec514ef561e34a2f851e3e59cf0929886202a30))
+* Option for not automatically merging PR ([13abc47](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/13abc4728a3b4ed0f87c075669dbc8bd772a888a)), closes [#47](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/47)
+* option to convert internal links pointing to non shared file ([60ba072](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/60ba072eff30eaef5730c6725ace68443b146e58))
+* prevent change links if file not shared ([79b930e](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/79b930e3a6eb59ae90bf0d9f11a197c3424f8ba2))
+* prevent dataview conversion ([6125340](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/61253407daa118a88a0c417f9d2efec7f9752579))
+* **regex:** better UI for regex flags ([338a070](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/338a070ec474e9f6707d594bdf6a542afc3dd4cf))
+* send a link to the clipboard when sharing 1note ([6bff7bd](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/6bff7bde77101b061e66422a318c1d0c47a5b8a7))
+* send a notification when the build workflow is completed ([1808766](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/180876642a195e55b7af21fcd28316b7c8ca45dd))
+* send image using metadata value ([f43f16b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/f43f16bfc2470412d3ba21b06412e61b0a918890)), closes [#28](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/28)
+* send metadata-extractor file ([5524e07](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/5524e077b27e8b9a230dcea09304e77698f43d69))
+* share a file if they are externally modified ([cae032c](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/cae032c600ffab13ddfbf291ec127c41ed5baf85))
+* share new and edited notes ([629296e](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/629296ef8fb5ec4f3b1cfb7a865416d20999c953))
+* support frontmatter's filename when converting wikilinks ([c2dcde7](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/c2dcde7501d67dff3af9442f41ba2857d6d36f14))
+* support of FolderNote with outside+same name strategies ([0d661f3](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/0d661f32d170df4aa35aaf48e253c2ecbede5306))
+* support of setSection for items ([af6fca3](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/af6fca3be4ddc79f1034f26ff71319e6b53f7ad3))
+* **text:** Hard line break conversion ([398f02c](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/398f02c5bd1d0bd8675af0337c67c245119b1a6a))
+* **translation:** add new variable ([de4b7c1](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/de4b7c1a2e7cba902021aeacb138c54837fa6a3c))
+* **UI:** Better textArea (bigger) for settings ([261a11f](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/261a11fb70fc3ab4254811abca47bc798351bf93))
+* **UI:** Rework settings UI to use tab! ([c18aad7](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/c18aad7002a97cf179b726ad7f99df2439a938de))
+* Universalize the plugin ([837ef71](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/837ef710663a2e2eb80613ac4076ffc5d2bb7de8))
+* Update notice with repo name ([88ce078](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/88ce078766d9de24eb5a7ef3adb46eb2dae7c816))
+* use another value than title to generate the filename ([c08a49b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/c08a49b7f698f59ca7bc67678ae59e4ba2c7b657)), closes [PR#29](https://github.com/Lisandra-dev/PR/issues/29)
+* use PR + merge + delete branch instead of force push files ([ec8a367](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/ec8a367f79a322deb9e3494890a1779d1fa5217a))
+* you can now exclude folder path from be deleted ! ([32a9737](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/32a973728a3eb9d15b3fe195fe186d44597504a5))
+
+
+### Bug Fixes
+
+* .md not appended on file without heading ([545dc2e](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/545dc2e6f8a71972c1cb0178f4b6d100bfaa05ee))
+* a typo broke every image links ([1f203eb](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/1f203eb904b2dd1d3e0ce96d3889c161d81f167b))
+* add alt text to get a better name ([fff8280](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/fff8280e5fd4066b536676e2a6b3fc57de352f82))
+* add cleanning command ([a5a0c87](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/a5a0c874db4046407b8f75d829a61e204003422e))
+* add new string in test settings ([621cef3](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/621cef3bc2f459b6f8157596bb5311f4933b3dbc))
+* add some docs directly in settings ([0ca53f2](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/0ca53f2b33e86c98f466712a3149b2f8aa7f78db))
+* add support for all files found by obsidian using getFirstLinkpathDest ([42ef09b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/42ef09bdbf9d8d4070669debc2ce71f402b45170))
+* add support for any file supported by obsidian ([d22bc61](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/d22bc61042e3a3b27ff1816d8f0b11cf6f085701))
+* adding a way to remove part links (for mkdocs ...) ([16dde85](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/16dde856df174ec9f707c7de97520544fbc83296))
+* adding checking repository in all commands to check the validity & perform the programm ([b94af7d](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/b94af7df9a468ec38c057080560e5f15bf8af178))
+* adding error code if merging / branch error ([21a7ded](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/21a7ded7960c84474b6bdc9fa11b1aa55bc992e1))
+* adding more check for changing filename to frontmatter title ([3944e88](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/3944e88ade09ede7fd15a9342a7990b1f73fd6ff))
+* adding more info about error ([3309edf](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/3309edf8b5df8a7a08d10462e6eb7c78840b6802))
+* adding repoFrontmatter as value ([1bb72fa](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/1bb72fad45566a554de8c5dcec8897fa49745419))
+* addinlinetags removes part of note containing --- (keeping only the first) ([b196bbf](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/b196bbf3288116184b68e751d5841a82b10beae0)), closes [#25](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/25)
+* allowing to send every file supported by obsidian as attachments ([6353acf](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/6353acf47815b1580f3affc5e58396b9dd286e7a))
+* Alt text for wikilinks if index.md ([811592b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/811592b18256d3e591e746f280a4e978c4756ef8))
+* alt text using the path in obsidian ([c9424c7](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/c9424c75f3950bdebd82e30702cb47d6e107fbd5))
+* alt-text in markdown-links not saved ([96830a4](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/96830a428cdf0a2963ca898b1bdfd241b65261a1))
+* **ambulance:** urgent fix because forgot to add .md for filename. ([063f508](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/063f508349d857999aff95faffc6ab413da23f6a))
+* anchor links bug ([efca311](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/efca311821a971e2fbc7c73425d296a29ff4cfcb))
+* attemp to fix multiple added status bar ([0e322fd](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/0e322fd955493a2424764a11370de23bac35027e)), closes [#45](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/45)
+* attemps to fix image relative creator ([68a00b8](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/68a00b8a3ee7163ec2a1245f26d0d104d59659a6))
+* auto-reference empty ([cd9f49d](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/cd9f49daf9d8fe95b6eb79e2640d81b7ac1b5e5d))
+* **autoCleanUpExcluded:** convert to empty array if emptry string (aka `""`) ([e28f4d2](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/e28f4d2b134b2ea0f4655f1e9ef953b7d38c1cd6))
+* **autoCleanUpExcluded:** string to list conversion of settings ([cbf7810](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/cbf7810b244751bfa251521d8132421c21f0b7aa))
+* Base64 errors on mobile ([26dbe6d](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/26dbe6d514f08ddc4ad60ced7d6cce16c14f2142))
+* better delete message note in commit message ([623bdf6](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/623bdf6effa6f358beaf15dd86fdd357fedd6785))
+* better handling error during merge! ([7870553](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/787055351670bcdc8ae4651fb01a9e5cc12ae5d7))
+* better naming for tags ([91c1930](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/91c193064c1613ef603319ce556d0673a27b9537))
+* boolean around conversion with embed and the rest ([02becaa](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/02becaabd966f01a5fc4e5c40d4718e79598a32d))
+* Cannot read properties of undefined (reading 'filter') ([3cb5760](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/3cb57606097f30751259ad09ac939afef7e645db)), closes [#58](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/58)
+* cannot read property of frontmatter when click on folder ([6191f6d](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/6191f6dc34ce68e96ac851e43fa270a78972ae1a))
+* Cannot read property of null when opening the command palette without file ([5b3d4a4](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/5b3d4a42c172d5dacf4eaf67571b4c5f4a930dc0))
+* category not found ([c14fe40](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/c14fe40384d3ebef138f94065c806e8c650f16bc))
+* char not escaped and considerate as regex in links conversion ([4313319](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/4313319f5695fc51053fd9f33bed946cb346dc3b))
+* character not removed when wikilinks are created ([6a175db](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/6a175db4bedb5fd50cae84ad544682d07c6276bd)), closes [#19](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/19)
+* CheckCallback() and code duplicate; adding //[@ts-ignore](https://github.com/ts-ignore) for sha error ([9c559c8](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/9c559c8f8ebd7e02f80c2d93f9372deb1cad0f8d))
+* conflict ([0d72d97](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/0d72d97817bcdd9a30425139c1a1c50e7165a73f))
+* convert to wikilinks revert convert to github path ([6334dae](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/6334dae735c8418f6f6ab2242a88ec36886366a5))
+* convert wikilinks broken when anchor ([6495379](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/64953797c611e7d8d00f900de0681a099fd4f626))
+* crash if branch already exists and plugin take some times to scanning (adding notice) ([0dc7366](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/0dc73664049faf0df4ac005af68c623ec7ae23b7))
+* Crash if category is a array ; ([1f2ba90](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/1f2ba9082c62e250d9e52421d6e520ee605811de)), closes [#97](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/97)
+* crash if dataview not installed ([f7de231](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/f7de231791fb53749238186753752669063cc9c1))
+* crash if dataview not installed ([887ed5b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/887ed5b56c7518c86e5caf7e19c49d6540d5ff09))
+* crash on empty default path ([89815c2](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/89815c2878721718812023afc0229833253eb75c)), closes [#10](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/10)
+* crash with multiple send ([45989ce](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/45989ce278669d0024c35c4ac4813f766efe539f))
+* dataview tables not converted because of the `\|` for alt ([c2a92c6](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/c2a92c65c724864f343ac2c3773902440121c348))
+* deleted translation forgotten ([a2835c1](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/a2835c1ddb3229338d9ef8671c6fa7421bb478c8))
+* double .yml if .yml in workflow name ([2d8dabc](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/2d8dabc7004ff9774986ce9199a8519f2b4e00ad))
+* double fileHistory prevent pushing embeds ([e2a30bb](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/e2a30bb3b64bda00f38544c02a06d8f55f2e3732))
+* duple in tags + remove tag key in generated keys ([8db3162](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/8db31621672367e2e50b00d829529bca5fe03133))
+* embed files not converted ([19590d6](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/19590d6c0b64a3b7080a89742da5201c5c4a7704))
+* **embed:** prevent cycle embed with file historic ([b3b84e2](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/b3b84e2cd16c2fd7adb1772687cbcca8b238b7b9))
+* error using category frontmatter because of metadataCache ([79c2dbe](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/79c2dbebbb0c7e00f5d1a2e57144fbcdfaace353))
+* error when using mobile ([0a7c193](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/0a7c193b1ecc7fcbf570467cf79d3450c118298d))
+* error with checkcallback ([98f8b30](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/98f8b3045b287a4170617e851bc122a422a5d026))
+* error with empty settings ([1757b52](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/1757b52a960f2c00f2f27b0595367fbec4790362))
+* export settings clean settings ([cbce591](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/cbce591395533a2b320494ac8760cb6a2550f07a))
+* failing silently when branch is master not main ([ccdd7a7](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/ccdd7a7ae761f10056f590eacdb27b6855a72222)), closes [#33](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/33)
+* file deleted because fileName != file.name in converted object ([9d77627](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/9d77627a6329546b570d428c2d45ec062ddaa0f5))
+* File menu/menu editor doesn't active workflow ([8d2ce3e](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/8d2ce3e2cf7eacb05c8f1a3313623a03dabbd854))
+* finally fix this fucking trim & length error ([16a0763](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/16a07636fb677885cf2dd8ea6f4b012e8b3e346b))
+* Finally of finally of fixing the trim and length error in yaml. ([96c5dfb](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/96c5dfb135c6f9541425b4eccbfed916e94575b8))
+* fix error with pullrequest & workflow ([af3e25b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/af3e25b70cef2f4e779d7cf61bcf1efb17be85f3))
+* fix links not converted properly ([99e46d8](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/99e46d8345dcef63b8049a433007e596ccb46d7c)), closes [#67](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/67)
+* fix package.json missing build run ([4d243e6](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/4d243e64eaed6a68e5361c210d079562dc093047))
+* fix regex convertor ([ca0e8ff](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/ca0e8ff9ae154c3892c6ee05d052b2865dc61293))
+* Fix sharing one file with filemenu ([5e51626](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/5e51626b98ff0e0f2ade997f9bf54296143c7d09))
+* Fix trim reading of undefined ([610022c](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/610022c591195b6cb3839684be8303a86e2f0c6b))
+* **foldernote:** fix not renaming using frontmatter ([bb54447](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/bb54447abf1801c1623e444ea651e49ef0e5a49c))
+* forgot hardbreak settings ([a5a89ac](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/a5a89ac141068b5fe959268f35c9269393cf027c))
+* forgot language string ([f575cab](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/f575cab712c086ad5f7729e62d3494298a74837e))
+* forgot to replaceALL space. Not the first ([198da5a](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/198da5ae2053cc5bac3ccacead36f48c158eb3fd))
+* forgot webp files in attachments ([db59358](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/db59358ccac06f90cc4a058fe60f39d729ce7d86))
+* **fr:** major typo in commands name ([1046a27](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/1046a277b3c8fa53b46aefb70bbbbe76137dc3ad))
+* Frontmatter title value is used for filename ([568a239](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/568a239158e6709e239991157bb74e8de7c01e9b)), closes [#69](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/69)
+* **github:** github action delete filename with coma ([b89f153](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/b89f15318638120f6402a9b18b8f5f444071c9e8))
+* handle the case where is no inline tags in a note ([99e87be](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/99e87be5e940fc9d847ff8e007bc5160b1076e4e)), closes [#24](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/24)
+* hotfix for title file generation ([b86cc34](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/b86cc345043992e897213d8aad5d31723981d1cd))
+* **i18n:** forgot to check if locale translation exists; ([65606d4](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/65606d46a3dd49ed2f20655e3c1e68d7f3f476e7)), closes [#53](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/53)
+* If excludedFolder is empty, no file is shared ([f55d950](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/f55d950964b8a438a3c29c53f537f0d748e53caf))
+* if frontmatter title is used, use this as altText ([3ab3215](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/3ab32150198018d16f53a8d7fb156ff4d36a296c))
+* if frontmatter title is used, use this as filename for internal links that is not shared ([b717719](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/b7177196fd541ff0674b448023b56a3ac8dac8f2))
+* image links removed because I again missed up with boolean ([457d035](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/457d0354200888433cc1cd67219b30f356f9c693)), closes [#30](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/30)
+* image not shared/embeded also send ([2fcae41](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/2fcae4124f595ab416bf2cf59bd42dc881fc332a))
+* image path not converted correctly ([627172c](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/627172ccb402191327c6d0321b7a852bee9b953e))
+* **image:** Add catching error + log when reading metadataCache for image ([9250e23](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/9250e232e85d7ce413cff2bbab124ba3d0936aae))
+* **img:** fix image path error ([c51f7b3](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/c51f7b3a6df4f586098543fd740434a44edf3267)), closes [#7](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/7)
+* Improve style settings when hide/show things ([42d73b7](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/42d73b7a9492c1eebab81e27313a460363099032))
+* in dataview, filename not recognize because of the last `\` ([97b262b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/97b262b696eef1c0c32e1d5bfe44b51ae516458a))
+* in some condition, .md is append on image ([98e6a5e](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/98e6a5e901f27c002aa6f890759c735ee2c91120)), closes [#39](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/39)
+* in some condition, autoclean can be activated same if the parameters is false ([4e46e02](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/4e46e026fa70625b054257a1efe7f0f7734d88e2))
+* index deleted by error using frontmatter settings ([dbcfe2b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/dbcfe2bc3230dbd8b9d53f087cb7e66c11191767))
+* index note not recognized using regex ([295d2bc](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/295d2bcb7a87039d8bb690d2e39ad214ffef724b))
+* inlines / previous tags removed if dataview inline field ([d040239](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/d0402392574edabb076c996f34c50419ee7746ac)), closes [#26](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/26)
+* **inlineTags:** handle the case where is no frontmatter tags in a note ([b75e914](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/b75e9148379601f68c81e95dd01152a7bf742105)), closes [#24](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/24)
+* internal links alias mis-replaced ([ba45f54](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/ba45f54b3b7bc24b24a303eaac5a7bb06d166ffa)), closes [#72](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/72)
+* internal links are not converted in MDlinks ([40e091f](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/40e091f6960dc81b743f776c124c751b36a10bdd)), closes [#68](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/68)
+* internal links converted ([5451acf](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/5451acfbb3764e63252ae698b9e9ec6f471e086d))
+* keep basename instead of alt text ([92e89d5](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/92e89d55029fa4e63c9aa1dc1b3905bd5af6c9db))
+* Link generation when # block ([5cadc8f](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/5cadc8f32ea2d109f394c2f0da6da551d28a7526))
+* links creation with false & non existant files ([8fa583f](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/8fa583f27a28876485f124c4c9d46dab1aa6de0a))
+* misbehavior between repo autoclean & index preventing removing ([a6c7b47](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/a6c7b47879712cf116f6000b5e00a2c67352e7a6))
+* misplaced extension on markdown links with anchor to paragraph ([a209ca5](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/a209ca52bb9db9bde4cb33baad5e5049c4383172))
+* Mobile multiples errors ([5eecb9a](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/5eecb9a4daa3b67fb1dbb109cd5133ce527ea7f9))
+* **obsidianPath:** if folder note outside, wrong filepath created ([da4592e](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/da4592e8694781a9bc77eb1cf0c4de299c5e9710))
+* optimize multipleRepo & monoRepo perfile ([92fa34c](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/92fa34c2620a2d274a3465820c69ba5917500f05))
+* Optimize with regex image extension  search ([4dea3dc](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/4dea3dc88b6d7bbde687d8eded8be79dd4050701))
+* overriding dataview in better condition ([97c719b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/97c719ba1337ca0d500a2fab3795fcfa153de068))
+* overriding of hardbreak ([0d2a0e7](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/0d2a0e7fbb38de485e7e92e622e20e49f158bda9))
+* prevent array not copyLink if multiple repo are found (use default settings if multiple repo and not baselink) ([e39af6e](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/e39af6e4ce1ae1b8af3c2988750ae5eb729898f4))
+* prevent convert links when file is not on the same repo ([cedb1ae](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/cedb1aec841e61f35333d1a68565b54ef0498284))
+* prevent error in branchName if `.` in it ([16cf0b8](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/16cf0b81ac7218f61ced989b38e2dbcce28e615c))
+* private repo error / first loading settings error ([b8eb4dc](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/b8eb4dcc42eac7dfcde68994299b3a064f33f59e)), closes [#80](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/80)
+* **publish:** Checking file extension during publish ([c44c268](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/c44c268bbfb2f38e28f8a196f82ffea1d3d70000))
+* reference at same file return only a point ([457cd8b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/457cd8bf95894bac026e3dc40cfccd04e6e2478a))
+* regex lookbehind / ahead crash on ios ([1001001](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/1001001d88d54148a84c04b46b48454ef80c7553))
+* **regex:** add 'gi' as default flags for regex ([c30c571](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/c30c571ce7b3ea0926b80cf0af1a61a817e9919b))
+* **regex:** Prevent flags errors ([ab6717f](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/ab6717f697970717e6f5a8e0f0b3d4de663e2316))
+* Relative broken links after converting with markdown links ([6981724](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/6981724ba2d47c9ab90679597da0cf76e056534f)), closes [#37](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/37)
+* relative links and image not converted with wiki to md ([0755d37](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/0755d375e672ceeab1a0216e0c9f4bf63ec762f7)), closes [#8](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/8)
+* relative path created for no shared file / file from another repo ([aac1031](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/aac1031d7b4571ef5fedc471f12232d3ea14c054))
+* relative path for the same folder ([3a4f232](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/3a4f232f6ebf8c3d5e58095cbd4140f7ae9bc5ab))
+* **relativePath:** if two same folder name, the src generated is false ([06bd9be](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/06bd9beee6edf9d832b38c75b7f91ab0b9d7ff0f)), closes [#32](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/32)
+* release tags ([07fc6e9](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/07fc6e9ae31226ce0ae813998e17806e235cd88e))
+* reload settings tab when importing settings ([40dcbc4](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/40dcbc4b3d1c8ec87975ae790d3819f53ce07d40))
+* remove embedding on embed: false ([7d42abd](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/7d42abd269eacdd18ac68d15d7b646b9f3e99762))
+* remove error when DOMException : document is not focused ([6a99c02](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/6a99c02b86cb8e1220de1471062341cac878d327))
+* remove style.css ([4c767e0](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/4c767e0d2c5296d6b958210bb153980185a195cb))
+* remove the regex edition of title from the title key settings ([8020eed](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/8020eedf05e0d8c76173e7d249d0708d3d5410d8))
+* remove useless check repo as repo is never an Array ([ca80e08](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/ca80e0805d81340466c1a3a5966688538de5264c))
+* rework translation ([927bcb3](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/927bcb33353d7a84662836b9955874365909a339))
+* Run workflow only on success ([de4f3ce](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/de4f3ce971d5ac0fa2f462a5a26d2a55b0319f85))
+* set false if fixed folder for autoclean ([d4696af](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/d4696af6eec03a66c933f7af69e1d5ccfb8c8a04))
+* setting is empty string in an array ⇒ convert to empty array ([802be97](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/802be978884b2aa805871bc6246c8b45c5ad4602))
+* share external modified share file when disabled ([2216ba1](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/2216ba18e612f5d9ae6f171ac9002d319a0888ae))
+* share multiple never check if autoclean is allowed ([76720b3](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/76720b372acc124c4f8a730db8bacf2c33062b1f)), closes [#87](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/87)
+* sourceFrontmatter.attachmentLinks is null ([4e8387e](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/4e8387edccbd7aa84ebb4339f3ec6c9c1c320e49))
+* space in vault name broke the plugin ([d940069](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/d94006945bc181591e3de34ec4a19843cf1e1086))
+* **tags:** exclude either filename AND display links ([17c8da9](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/17c8da95d87d7cc31537cf9c0826594ae3cdf4b6))
+* the plugin try to continue same if no branch are found /created ([b418984](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/b4189847c88b161669697fabc7dfdb8723f26961))
+* title not found for renaming ([d202df1](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/d202df1b815c05aaa5342000ebafe55c1ed308c6))
+* title wasn't used with frontmatter/fixed folder settings ([1489024](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/1489024efffa0e8cc47221c27941a4215ceaae01))
+* **translation:** Add deepl minimal translation ([35b7733](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/35b7733a0bd25bcb7e98693d225fe13311b3bd8f))
+* Trim settings whitespace ([4738991](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/4738991823aee63ad1f76834c0ac28204e525e7f)), closes [#4](https://github.com/Lisandra-dev/private-beta-obs-publisher/issues/4)
+* trim whitespace excluding autoclean ([f45ba1b](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/f45ba1bd8cfb4c1d7c479e779a683af4f6e0734c))
+* Trim whitespace for excluded folder checking ([2a44ab9](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/2a44ab9b7c97c20eab6f190d59ed6c0a4f0ccb7c))
+* true/false between mdlinks parameters and links ([71dad6f](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/71dad6f149ee179b404f7993eab11086f5fd9b15))
+* TypeError: Cannot read properties of undefined (reading 'share') ([321bcf1](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/321bcf1a36034289b579d1a7997db9235981d61a))
+* typo ([d51e988](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/d51e98896069ce2491a7a3ecd7419f071bca0657))
+* Typo ([ddf6591](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/ddf6591a5fe0fb00017f67145df5733347990efa))
+* typo broke the plugins ([a977cf9](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/a977cf960f0f5d730050e1eb16184e2f06e7b2f7))
+* **typo:** remove . in extension using obsidian.extension ([3fd3e63](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/3fd3e636beadfa1b8d7fc2608f00a45e2630f8d0))
+* **UI:** increase the size for  UI in column ([da975fb](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/da975fb8e4381abb6bc60dc40fb4e0dd0aecc63b))
+* Uncaught TypeError: Cannot read properties of null (reading 'path') ([3dc9eaf](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/3dc9eaf0b7cce12031830ab86947013570f60a9f))
+* Update generating token link ([6aa6649](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/6aa664906928bc0fbaad196d615d257b2f0859ef))
+* use a strict replacement of link ([ac5ae73](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/ac5ae734658b86cfa89f35d9be5e1e68bace98d3))
+* use alt text for linked files ([1b800cd](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/1b800cd3edf79ed14d33772292a61de1ff763aeb))
+* use the filetitle instead of basename for commands menu ([3f3ddee](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/3f3ddee553e5183f50ad4e36299f9a62204b9d5d))
+* wrong message when successfully publishing on another repo ([2bf3234](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/2bf3234c93330f9e26aa1f48dab2cfaf6596ae66))
+* wrong repository used in all-commands if settings changed ([9d6a81d](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/9d6a81d729a7eeeef224ca43bec1e853c516c774))
+
+
+* fix!(settings): refactor all settings ([6d80b26](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/6d80b2699b894b5c5c76b0302ac8492a131b55c0))
+* !ci: Rename plugins ([f8926a3](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/f8926a335b0a6adb6763c8c61b3bc72766824864))
+
 ## [5.0.0-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.0-5...5.0.0-6) (2023-02-13)
 
 

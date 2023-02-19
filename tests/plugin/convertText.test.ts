@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "@jest/globals";
 import settingsFixture from "../fixtures/githubPublisherSettings";
 import { GitHubPublisherSettings } from "../../plugin/settings/interface";
-import findAndReplaceText from "./../../plugin/contents_conversion/findAndReplaceText";
+import findAndReplaceText from "../../plugin/conversion/findAndReplaceText";
 
 let settings: GitHubPublisherSettings;
 
@@ -18,7 +18,7 @@ describe("findAndReplaceText standard behavior", () => {
 		const initialText = `file v1`;
 		const expectedText = `file v1`;
 
-		settings["censorText"] = [];
+		settings.conversion.censorText = [];
 		const subject = findAndReplaceText(initialText, settings);
 
 		expect(subject).toBe(expectedText);
@@ -28,7 +28,7 @@ describe("findAndReplaceText standard behavior", () => {
 		const initialText = `file v1`;
 		const expectedText = `file v4`;
 
-		settings["censorText"] = [
+		settings.conversion.censorText = [
 			{
 				entry: "file v1",
 				replace: "file v2",
@@ -95,7 +95,7 @@ describe("findAndReplaceText with patterns for Jekyll", () => {
 			\`[Alt Text]({% link obsidian/touch-code-examples with space.md %})\`
 		`;
 
-		settings["censorText"] = [
+		settings.conversion.censorText = [
 			{
 				// Converts [a](b) into [a]({% link obsidian/b.md %})
 				//
