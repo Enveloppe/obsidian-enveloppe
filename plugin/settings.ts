@@ -605,7 +605,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						new RegexOnContents(this.app, this.plugin.settings, (result => {
 							this.plugin.settings.conversion.censorText = result.conversion.censorText;
 							this.plugin.saveSettings()
-						}))
+						})).onOpen();
 					});
 			});
 
