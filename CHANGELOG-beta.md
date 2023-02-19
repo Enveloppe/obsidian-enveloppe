@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-10](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-9...5.0.0-10) (2023-02-19)
+
+
+### Features
+
+* add regex contents in a modal ([4168e1d](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/4168e1d18d2a40797aae516094e6321f157ee374))
+
 ## [5.0.0-9](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-8...5.0.0-9) (2023-02-19)
 
 
