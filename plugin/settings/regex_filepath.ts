@@ -21,17 +21,18 @@ export class RegexOnFilePathAndName extends Modal {
         let {contentEl} = this;
         contentEl.empty();
         contentEl.createEl("h2", {text: "Regex on file path and name"});
+        let what = this.type === "path" ? this.settings.upload.replacePath : this.settings.upload.replaceTitle;
+
         new Setting(contentEl)
             .addButton((button) => {
                 button.setButtonText("Add new regex")
                     .onClick(() => {
-                        this.settings.upload.replaceTitle.push({
+                        what.push({
                             regex: "",
                             replacement: "",
                         });
                         this.onOpen();
                     });
-        const what = this.type === "path" ? this.settings.upload.replacePath : this.settings.upload.replaceTitle;
         for (const title of what) {
             new Setting(contentEl)
                 .addText((text) => {
@@ -52,7 +53,7 @@ export class RegexOnFilePathAndName extends Modal {
                     button
                         .setIcon("trash")
                         .onClick(() => {
-                            this.settings.upload.replaceTitle = this.settings.upload.replaceTitle.filter((t) => t !== title);
+                            what = what.filter((t) => t !== title);
                             this.onOpen();
                         });
                 })
