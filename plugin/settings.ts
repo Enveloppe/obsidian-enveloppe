@@ -603,10 +603,13 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				button
 					.setButtonText("censorText")
 					.onClick(async () => {
-						new RegexOnContents(this.app, this.plugin.settings, (result => {
-							this.plugin.settings.conversion.censorText = result.conversion.censorText;
-							this.plugin.saveSettings();
-						})).onOpen();
+						new RegexOnFilePathAndName(
+							this.app,
+							this.plugin.settings,
+							"path", 
+							(result => {
+								new Notice('Censoring text')
+							})).onOpen();
 					});
 			});
 
