@@ -53,7 +53,11 @@ export class RegexOnFilePathAndName extends Modal {
                     button
                         .setIcon("trash")
                         .onClick(() => {
-                            what = what.filter((t) => t !== title);
+                            if (this.type === "path") {
+                                this.settings.upload.replacePath = this.settings.upload.replacePath.filter((t) => t !== title);
+                            } else {
+                                this.settings.upload.replaceTitle = this.settings.upload.replaceTitle.filter((t) => t !== title); 
+                            }
                             this.onOpen();
                         });
                 })
