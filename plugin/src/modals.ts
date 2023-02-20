@@ -49,6 +49,10 @@ export class ImportModal extends Modal {
 						} else {
 							console.log("Imported settings as new format");
 							importedSettings = importedSettings as GitHubPublisherSettings;
+							if (!(importedSettings.upload.replaceTitle instanceof Array)) {
+								importedSettings.upload.replaceTitle = [importedSettings.upload.replaceTitle];
+							}
+							
 							if (Object.keys(importedSettings).includes("github")) {
 								importedSettings.github.repo = this.plugin.settings.github.repo;
 								importedSettings.github.token = this.plugin.settings.github.token;
