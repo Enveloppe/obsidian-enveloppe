@@ -201,6 +201,7 @@ class ModalEditorRegex extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
+		contentEl.createEl('h2', {text: subSettings("textConversion.censor.edit") as string});
 		/*
 		Parameters :
 		- Flags ; 
