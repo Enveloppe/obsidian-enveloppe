@@ -149,7 +149,7 @@ export class ModalRegexOnContents extends Modal {
 							new ModalEditorRegex(this.app, censorText, (result => {
 								censorText.flags = result.flags;
 								censorText.after = result.after;
-							})).onOpen();
+							})).open();
 						});
 				});
 		}

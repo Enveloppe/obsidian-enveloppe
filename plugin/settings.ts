@@ -584,8 +584,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		new Setting(this.settingsPage)
-			.setName(subSettings("textConversion.censorText.TextHeader") as string)
-			.setDesc(subSettings("textConversion.censorText.TextDesc") as string)
+			.setName(subSettings("textConversion.censor.TextHeader") as string)
+			.setDesc(subSettings("textConversion.censor.TextDesc") as string)
 			.addButton((button) => {
 				button
 					.setIcon("pencil")
