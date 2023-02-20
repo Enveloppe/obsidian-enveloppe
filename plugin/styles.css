@@ -25,19 +25,7 @@ hr.github-publisher-hr {
 .setting-item.github-publisher-censor-entry .setting-item-info {
 	display: none;
 }
-.setting-item.github-publisher-censor-entry .setting-item-control {
-	width: auto;
-}
-.setting-item.github-publisher-censor-entry
-	> .setting-item-control
-	> input[type="text"]:first-child {
-	width: 300px;
-}
-.setting-item.github-publisher-censor-entry
-	> .setting-item-control
-	> input[type="text"]:nth-child(2) {
-	width: 250px;
-}
+
 button.github-publisher-censor-flags {
 	box-shadow: none;
 	background-color: transparent;
