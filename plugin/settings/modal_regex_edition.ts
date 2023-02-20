@@ -103,25 +103,6 @@ export class ModalRegexOnContents extends Modal {
 			.createEl("p", {
 				text: subSettings("textConversion.censor.TextEmpty") as string,
 			});
-		new Setting(contentEl)
-			.setClass("github-publisher-censor-desc")
-			.addButton((btn) => {
-				btn
-					.setIcon("plus")
-					.setTooltip(subSettings("textConversion.censor.ToolTipAdd") as string
-					)
-					.onClick(async () => {
-						const censorText: TextCleaner = {
-							entry: "",
-							replace: "",
-							after: false,
-							flags: "gi",
-						};
-						this.settings.conversion.censorText.push(censorText);
-						this.onOpen();
-					});
-			});
-
 		for (const censorText of this.settings.conversion.censorText) {
 			new Setting(contentEl)
 				.setClass("github-publisher-censor-entry")
@@ -165,14 +146,30 @@ export class ModalRegexOnContents extends Modal {
 						.setIcon("pencil")
 						.setTooltip(subSettings("textConversion.censor.edit") as string)
 						.onClick(async () => {
-							new ModalEditorRegex(this.app, censorText, (result) => {
+							new ModalEditorRegex(this.app, censorText, (result => {
 								censorText.flags = result.flags;
 								censorText.after = result.after;
-							}).onOpen();
+							})).onOpen();
 						});
 				});
 		}
 		new Setting(contentEl)
+			.addButton((btn) => {
+				btn
+					.setIcon("plus")
+					.setTooltip(subSettings("textConversion.censor.ToolTipAdd") as string
+					)
+					.onClick(async () => {
+						const censorText: TextCleaner = {
+							entry: "",
+							replace: "",
+							after: false,
+							flags: "gi",
+						};
+						this.settings.conversion.censorText.push(censorText);
+						this.onOpen();
+					});
+			})
 			.addButton((button) => {
 				button
 					.setButtonText(subSettings("textConversion.censor.save") as string)
@@ -206,8 +203,7 @@ class ModalEditorRegex extends Modal {
 		/*
 		Parameters :
 		- Flags ; 
-		- After/Before other ; 
-		 
+		- After/Before other ; */
 		const flagsDesc = document.createDocumentFragment();
 		const flagsDescription = flagsDesc.createEl("p", {
 			text: subSettings("textConversion.censor.TextFlags") as string
@@ -238,7 +234,7 @@ class ModalEditorRegex extends Modal {
 						}
 					});
 			});
-		/*
+		
 		new Setting(contentEl)
 			.setName(subSettings("textConversion.censor.MomentReplaceRegex.desc") as string)
 			.addDropdown((dropdown) => {
@@ -249,7 +245,7 @@ class ModalEditorRegex extends Modal {
 					.onChange(async (value) => {
 						this.result.after = value === "after";
 					});
-			});*/
+			});
 		new Setting(contentEl)
 			.addButton((button) => {
 				button
