@@ -132,7 +132,7 @@ export class ModalRegexOnContents extends Modal {
 			new Setting(contentEl)
 				.setClass("github-publisher-censor-entry")
 				.addText((text) => {
-					text.inputEl.style.width = "80px";
+					text.inputEl.style.width = "100%";
 					text.setPlaceholder(subSettings(
 						"textConversion.censor.PlaceHolder") as string
 					)
@@ -142,7 +142,7 @@ export class ModalRegexOnContents extends Modal {
 						});
 				})
 				.addText((text) => {
-					text.inputEl.style.width="80px";
+					text.inputEl.style.width="100%";
 					text.setPlaceholder(subSettings("textConversion.censor.ValuePlaceHolder") as string
 					)
 						.setValue(censorText.replace)
@@ -212,7 +212,7 @@ class ModalEditorRegex extends Modal {
 		Parameters :
 		- Flags ; 
 		- After/Before other ; 
-		 */
+		 
 		const flagsDesc = document.createDocumentFragment();
 		const flagsDescription = flagsDesc.createEl("p", {
 			text: subSettings("textConversion.censor.TextFlags") as string
@@ -223,10 +223,10 @@ class ModalEditorRegex extends Modal {
 		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.dotAll") as string});
 		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.unicode") as string}); 
 		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.sticky") as string});
-
+		*/
 		new Setting(contentEl)
 			.setName("Flags")
-			.setDesc(flagsDesc)
+			.setDesc('g : global, i : insensitive, m : multiline, s : dotAll, u : unicode, y : sticky')
 			.addText((text) => {
 				text.setPlaceholder("gimsuy")
 					.setValue(this.result.flags)
