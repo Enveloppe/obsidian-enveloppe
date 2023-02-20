@@ -167,6 +167,7 @@ export class RegexOnContents extends Modal {
                         });
                 })
                 .addText((text) => {
+                    text.inputEl.classList.add('github-publisher-censor-text');
                     text.setPlaceholder(
                         subSettings(
                             "textConversion.censor.ValuePlaceHolder"
@@ -176,6 +177,7 @@ export class RegexOnContents extends Modal {
                         .onChange(async (value) => {
                             censorText.replace = value;
                         });
+                
                 })
                 .addButton((btn) => {
                     btn.setTooltip(toolTipRegex)
