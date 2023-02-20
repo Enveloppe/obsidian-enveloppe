@@ -217,7 +217,7 @@ class ModalEditorRegex extends Modal {
 		
 		new Setting(contentEl)
 			.setName("Flags")
-			.setDesc('g : global, i : insensitive, m : multiline, s : dotAll, u : unicode, y : sticky')
+			.setDesc(flagsDesc)
 			.addText((text) => {
 				text.setPlaceholder("gimsuy")
 					.setValue(this.result.flags)
