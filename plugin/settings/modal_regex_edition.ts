@@ -217,7 +217,7 @@ class ModalEditorRegex extends Modal {
 		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.dotAll") as string});
 		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.unicode") as string}); 
 		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.sticky") as string});
-		*/
+		
 		new Setting(contentEl)
 			.setName("Flags")
 			.setDesc('g : global, i : insensitive, m : multiline, s : dotAll, u : unicode, y : sticky')
