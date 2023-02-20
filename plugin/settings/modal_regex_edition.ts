@@ -95,22 +95,15 @@ export class ModalRegexOnContents extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
-		contentEl.createEl("h2", {text: "Regex on contents"});
-		const censorTextDesc = document.createDocumentFragment();
-		censorTextDesc
+		contentEl
 			.createEl("p", {
 				text: subSettings("textConversion.censor.TextDesc") as string,
 			})
 			.createEl("p", {
 				text: subSettings("textConversion.censor.TextEmpty") as string,
 			});
-		
-		contentEl.createEl("p", {
-			text: subSettings("textConversion.censor.TextHeader") as string,
-		});
 		new Setting(contentEl)
 			.setClass("github-publisher-censor-desc")
-			.setDesc(censorTextDesc)
 			.addButton((btn) => {
 				btn
 					.setIcon("plus")
