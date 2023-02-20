@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-28](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-27...5.0.0-28) (2023-02-20)
+
+
+### Bug Fixes
+
+* add description ([64604b8](https://github.com/Lisandra-dev/private-beta-obs-publisher/commit/64604b8fb9f41c5fdf2d86037a2d3ab5e489e0ca))
+
 ## [5.0.0-27](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-26...5.0.0-27) (2023-02-20)
 
 ## [5.0.0-26](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-25...5.0.0-26) (2023-02-20)
