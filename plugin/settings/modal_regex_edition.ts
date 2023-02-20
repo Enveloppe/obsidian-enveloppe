@@ -21,20 +21,20 @@ export class ModalRegexFilePathName extends Modal {
 		const {contentEl} = this;
 		contentEl.empty();
 		const onWhat = this.type === "path" ? "file path" : "file name";
-		contentEl.createEl("h2", {text: "Regex on " + onWhat});
+		contentEl.createEl("h2", {text: subSettings("textConversion.censor.header") + onWhat});
 		const what = this.type === "path" ? this.settings.upload.replacePath : this.settings.upload.replaceTitle;
 
 		for (const title of what) {
 			new Setting(contentEl)
 				.addText((text) => {
-					text.setPlaceholder("Regex")
+					text.setPlaceholder(subSettings("textConversion.censor.replace") as string)
 						.setValue(title.regex)
 						.onChange((value) => {
 							title.regex = value;
 						});
 				})
 				.addText((text) => {
-					text.setPlaceholder("Replacement")
+					text.setPlaceholder(subSettings("textConversion.censor.value") as string)
 						.setValue(title.replacement)
 						.onChange((value) => {
 							title.replacement = value;
@@ -55,7 +55,8 @@ export class ModalRegexFilePathName extends Modal {
 		}
 		new Setting(contentEl)
 			.addButton((button) => {
-				button.setButtonText("Add new regex")
+				button
+				.setIcon("plus")
 					.onClick(() => {
 						what.push({
 							regex: "",

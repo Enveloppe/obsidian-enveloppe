@@ -96,10 +96,14 @@ export default {
 				desc: "Utilisez un champ du frontmatter pour générer le nom du fichier. Par défaut, \"title\" est utilisé.",
 			},
 			frontmatterRegex: {
-				placeholder: "Appliquer un remplacement au titre",
+				placeholder: "Appliquer un ou plusieurs remplacements au titre",
 				desc:
 					"Si le texte est entre \"//\", il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut.",
 			},
+			filepathRegex: {
+				placeholder: "Appliquer un ou plusieurs remplacements au chemin du fichier",
+				desc:
+					"Si le texte est entre \"//\", il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut. Le remplacement ne sera pas appliqué sur le nom du fichier.",
 		},
 		textConversion: {
 			textConversion: "Conversion du contenu",
@@ -128,6 +132,7 @@ export default {
 					"Convertit les liens internes pointant vers un fichier non partagé vers leur homologue dans le site web, avec un chemin relatif. Désactivé, le plugin conservera le nom du fichier.",
 			},
 			censor: {
+				header: "Remplacement sur : ",
 				TextHeader: "Replacement de texte",
 				TextDesc: "Replacement de texte (ou regex) par un autre texte.",
 				edit: "Modifier les paramètres (flags et moment d'exécution)",
@@ -150,6 +155,8 @@ export default {
 				PlaceHolder: "Regex ou text à remplacer",
 				ValuePlaceHolder: "Remplacement",
 				save: "Sauvegarder",
+				replace: "Text à remplacer",
+				value: "Remplacement",
 				MomentReplaceRegex: {
 					desc: "Choisir le moment où le regex sera exécuté : avant ou après les autres conversions (Dataview, liens internes...)",
 					before: "Avant",

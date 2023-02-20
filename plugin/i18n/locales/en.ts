@@ -94,10 +94,14 @@ export default {
 				desc: "Use a frontmatter value to generate the filename. By default, \"title\" is used. ",
 			},
 			frontmatterRegex: {
-				placeholder: "Apply a replacement to the filename",
+				placeholder: "Apply replacements to the filename",
 				desc:
 					"If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string.",
 			},
+			filepathRegex: {
+				placeholder: "Apply replacements to the filepath",
+				desc: "If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string. The replacement won't be applied to the filename.",
+			}
 		},
 		textConversion: {
 			textConversion: "Content's conversion",
@@ -124,6 +128,7 @@ export default {
 					"Convert internal links pointing to a non shared file to their counterpart in the website, with relative path. Disabled, the plugin will keep the filename.",
 			},
 			censor: {
+				header: "Replacement on: ",
 				TextHeader: "Text replacer",
 				edit: "Edit the parameters (flags and running order)",
 				TextDesc:
@@ -142,6 +147,8 @@ export default {
 				TextEmpty:
 					"Replacement can be empty to remove the whole string.",
 				save: "Save",
+				replace: "Text to replace",
+				value: "Replacement value",
 				ToolTipAdd: "Add a new text replacer",
 				ToolTipRemove: "Delete this text replacer",
 				PlaceHolder: "Regex or text to replace",
