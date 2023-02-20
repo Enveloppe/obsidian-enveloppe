@@ -424,8 +424,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		new Setting(this.settingsPage)
-			.setName(subSettings("textConversion.censor.TextHeader") as string)
-			.setDesc(subSettings("textConversion.censor.TextDesc") as string)
+			.setName(subSettings("uploadConfig.filepathRegex.placeholder") as string)
+			.setDesc(subSettings("uploadConfig.filepathRegex.desc") as string)
 			.addButton((button) => {
 				button
 					.setIcon("pencil")
@@ -584,8 +584,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		new Setting(this.settingsPage)
-			.setName("placeholder")
-			.setDesc("placeholder")
+			.setName(subSettings("textConversion.censorText.TextHeader") as string)
+			.setDesc(subSettings("textConversion.censorText.TextDesc") as string)
 			.addButton((button) => {
 				button
 					.setIcon("pencil")
