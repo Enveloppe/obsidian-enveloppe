@@ -125,6 +125,7 @@ export default {
 			},
 			censor: {
 				TextHeader: "Text replacer",
+				edit: "Edit the parameters (flags and running order)",
 				TextDesc:
 					"Replace text (or regex) in the file with the given value.",
 				TextFlags: "Flags (based on JS regex and can be combined) :",
@@ -140,12 +141,16 @@ export default {
 				},
 				TextEmpty:
 					"Replacement can be empty to remove the whole string.",
+				save: "Save",
 				ToolTipAdd: "Add a new text replacer",
 				ToolTipRemove: "Delete this text replacer",
 				PlaceHolder: "Regex or text to replace",
 				ValuePlaceHolder: "Replacement value",
-				Before: "Run it before the other plugin conversion (link, dataview, etc.)",
-				After: "Run it after the other plugin conversion (link, dataview, etc.)",
+				MomentReplaceRegex: {
+					desc: "Choose when the regex will be executed : before or after the other conversion (dataview, internal links...).",
+					before: "Before",
+					after: "After",
+				}
 			},
 			dataview: {
 				header: "Dataview",

@@ -130,6 +130,7 @@ export default {
 			censor: {
 				TextHeader: "Replacement de texte",
 				TextDesc: "Replacement de texte (ou regex) par un autre texte.",
+				edit: "Modifier les paramètres (flags et moment d'exécution)",
 				TextFlags:
 					"Flags (basé sur les regex JS et pouvant être combiné) :",
 				flags: {
@@ -148,6 +149,7 @@ export default {
 				ToolTipRemove: "Supprimer ce remplacement",
 				PlaceHolder: "Regex ou text à remplacer",
 				ValuePlaceHolder: "Remplacement",
+				save: "Sauvegarder",
 				MomentReplaceRegex: {
 					desc: "Choisir le moment où le regex sera exécuté : avant ou après les autres conversions (Dataview, liens internes...)",
 					before: "Avant",

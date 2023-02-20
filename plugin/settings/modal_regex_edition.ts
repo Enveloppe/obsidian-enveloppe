@@ -66,7 +66,7 @@ export class ModalRegexFilePathName extends Modal {
 			})
 			.addButton((button) => {
 				button
-					.setButtonText("Save")
+					.setButtonText(subSettings("textConversion.censor.save") as string)
 					.onClick(() => {
 						this.onSubmit(this.settings);
 						this.close();
@@ -168,7 +168,7 @@ export class ModalRegexOnContents extends Modal {
 				.addExtraButton((btn) => {
 					btn
 						.setIcon("pencil")
-						.setTooltip(subSettings("textConversion.censor.edit") as string) //TODO: WRITE THE TRANSLATION
+						.setTooltip(subSettings("textConversion.censor.edit") as string)
 						.onClick(async () => {
 							new ModalEditorRegex(this.app, censorText, (result) => {
 								censorText.flags = result.flags;
@@ -180,7 +180,7 @@ export class ModalRegexOnContents extends Modal {
 		new Setting(contentEl)
 			.addButton((button) => {
 				button
-					.setButtonText("Save") //TODO : WRITE THE TRANSLATION
+					.setButtonText(subSettings("textConversion.censor.save") as string)
 					.onClick(() => {
 						this.onSubmit(this.settings);
 						this.close();
@@ -242,13 +242,31 @@ class ModalEditorRegex extends Modal {
 						}
 					});
 			});
-			
-		enum MomentReplaceRegex {
-			before = false,
-			after = true
-		}
+		
 		new Setting(contentEl)
 			.setName(subSettings("textConversion.censor.MomentReplaceRegex.desc") as string)
-		
+			.addDropdown((dropdown) => {
+				dropdown
+					.addOption("before", subSettings("textConversion.censor.MomentReplaceRegex.before") as string)
+					.addOption("after", subSettings("textConversion.censor.MomentReplaceRegex.after") as string)
+					.setValue(this.result.after ? "after" : "before")
+					.onChange(async (value) => {
+						this.result.after = value === "after";
+					});
+			});
+		new Setting(contentEl)
+			.addButton((button) => {
+				button
+					.setButtonText(subSettings("textConversion.censor.save") as string) 
+					.onClick(() => {
+						this.onSubmit(this.result);
+						this.close();
+					});
+			});
+	}
+
+	onClose() {
+		const {contentEl} = this;
+		contentEl.empty();
 	}
 }
