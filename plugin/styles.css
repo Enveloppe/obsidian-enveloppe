@@ -22,10 +22,6 @@ hr.github-publisher-hr {
 	width: 50px;
 }
 
-.setting-item.github-publisher-censor-text input {
-	width: 100px;
-}
-
 .setting-item.github-publisher-censor-entry .setting-item-info {
 	display: none;
 }

@@ -167,7 +167,7 @@ export class RegexOnContents extends Modal {
                         });
                 })
                 .addText((text) => {
-                    text.inputEl.classList.add('github-publisher-censor-text');
+                    text.inputEl.style.width="30px";
                     text.setPlaceholder(
                         subSettings(
                             "textConversion.censor.ValuePlaceHolder"
