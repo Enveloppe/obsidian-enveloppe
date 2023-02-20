@@ -236,7 +236,7 @@ class ModalEditorRegex extends Modal {
 						}
 					});
 			});
-		
+		/*
 		new Setting(contentEl)
 			.setName(subSettings("textConversion.censor.MomentReplaceRegex.desc") as string)
 			.addDropdown((dropdown) => {
@@ -247,7 +247,7 @@ class ModalEditorRegex extends Modal {
 					.onChange(async (value) => {
 						this.result.after = value === "after";
 					});
-			});
+			});*/
 		new Setting(contentEl)
 			.addButton((button) => {
 				button
