@@ -132,6 +132,7 @@ export class ModalRegexOnContents extends Modal {
 			new Setting(contentEl)
 				.setClass("github-publisher-censor-entry")
 				.addText((text) => {
+					text.inputEl.style.width = "80px";
 					text.setPlaceholder(subSettings(
 						"textConversion.censor.PlaceHolder") as string
 					)
@@ -141,7 +142,7 @@ export class ModalRegexOnContents extends Modal {
 						});
 				})
 				.addText((text) => {
-					text.inputEl.style.width="30px";
+					text.inputEl.style.width="80px";
 					text.setPlaceholder(subSettings("textConversion.censor.ValuePlaceHolder") as string
 					)
 						.setValue(censorText.replace)
@@ -173,7 +174,7 @@ export class ModalRegexOnContents extends Modal {
 							new ModalEditorRegex(this.app, censorText, (result) => {
 								censorText.flags = result.flags;
 								censorText.after = result.after;
-							});
+							}).onOpen();
 						});
 				});
 		}
