@@ -1,6 +1,6 @@
-import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
+import { App, PluginSettingTab, setIcon, Setting } from "obsidian";
 import GithubPublisherPlugin from "./main";
-import { RegexOnFilePathAndName, RegexOnContents } from "./settings/regex_filepath";
+import { ModalRegexFilePathName, ModalRegexOnContents } from "./settings/modal_regex_edition";
 import {
 	autoCleanCondition,
 	folderHideShowSettings,
@@ -9,10 +9,9 @@ import {
 } from "./settings/style";
 import {
 	FolderSettings,
-	TextCleaner,
 	PUBLISHER_TABS, GithubTiersVersion,
 } from "./settings/interface";
-import {settings, StringFunc, subSettings, t} from "./i18n";
+import {settings, subSettings, t} from "./i18n";
 import {
 	help,
 	multipleRepoExplained,
@@ -23,18 +22,6 @@ import {
 
 import {checkRepositoryValidity} from "./src/data_validation_test";
 import {ExportModal, ImportModal} from "./src/modals";
-
-function openDetails(groupName: string, detailsState: boolean) {
-	for (let i = 0; i < document.getElementsByTagName("details").length; i++) {
-		const details = document.getElementsByTagName("details")[
-			i
-		] as HTMLDetailsElement;
-		if (details.innerText === groupName && detailsState) {
-			details.open = true;
-		}
-	}
-}
-
 
 export class GithubPublisherSettings extends PluginSettingTab {
 	plugin: GithubPublisherPlugin;
@@ -428,11 +415,11 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				button
 					.setIcon("pencil")
 					.onClick(async () => {
-						new RegexOnFilePathAndName(this.app, this.plugin.settings, "file", (result =>
-							{
-								this.plugin.settings.upload.replaceTitle = result.upload.replaceTitle;
-								this.plugin.saveSettings();
-							})).open();
+						new ModalRegexFilePathName(this.app, this.plugin.settings, "file", (result =>
+						{
+							this.plugin.settings.upload.replaceTitle = result.upload.replaceTitle;
+							this.plugin.saveSettings();
+						})).open();
 					});
 			});
 
@@ -443,11 +430,11 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				button
 					.setIcon("pencil")
 					.onClick(async () => {
-						new RegexOnFilePathAndName(this.app, this.plugin.settings, "path", (result =>
-							{
-								this.plugin.settings.upload.replacePath = result.upload.replacePath;
-								this.plugin.saveSettings();
-							})).open();
+						new ModalRegexFilePathName(this.app, this.plugin.settings, "path", (result =>
+						{
+							this.plugin.settings.upload.replacePath = result.upload.replacePath;
+							this.plugin.saveSettings();
+						})).open();
 					});
 			});
 
@@ -603,7 +590,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				button
 					.setIcon("pencil")
 					.onClick(async () => {
-						new RegexOnContents(this.app, this.plugin.settings, (result => {
+						new ModalRegexOnContents(this.app, this.plugin.settings, (result => {
 							this.plugin.settings.conversion.censorText = result.conversion.censorText;
 							this.plugin.saveSettings();
 						})).open();

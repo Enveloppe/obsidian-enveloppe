@@ -148,8 +148,11 @@ export default {
 				ToolTipRemove: "Supprimer ce remplacement",
 				PlaceHolder: "Regex ou text à remplacer",
 				ValuePlaceHolder: "Remplacement",
-				Before: "Exécuté avant les autres conversions (liens, dataview, etc.)",
-				After: "Exécuté après les autres conversions (liens, dataview, etc.)",
+				MomentReplaceRegex: {
+					desc: "Choisir le moment où le regex sera exécuté : avant ou après les autres conversions (Dataview, liens internes...)",
+					before: "Avant",
+					after: "Après"
+				}
 			},
 			dataview: {
 				header: "Dataview",

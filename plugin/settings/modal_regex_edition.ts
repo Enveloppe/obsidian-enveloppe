@@ -1,0 +1,254 @@
+import {App, Notice, Modal, Setting} from "obsidian";
+import { GitHubPublisherSettings, TextCleaner } from "./interface";
+import { subSettings, StringFunc } from "plugin/i18n";
+
+export class ModalRegexFilePathName extends Modal {
+	settings: GitHubPublisherSettings;
+	type: string;
+	onSubmit: (settings: GitHubPublisherSettings) => void;
+	constructor(
+		app: App, 
+		settings: GitHubPublisherSettings, 
+		type: string, 
+		onSubmit: (settings: GitHubPublisherSettings) => void) {
+		super(app);
+		this.type = type;
+		this.settings = settings;
+		this.onSubmit = onSubmit;
+	}
+
+	onOpen() {
+		const {contentEl} = this;
+		contentEl.empty();
+		const onWhat = this.type === "path" ? "file path" : "file name";
+		contentEl.createEl("h2", {text: "Regex on " + onWhat});
+		const what = this.type === "path" ? this.settings.upload.replacePath : this.settings.upload.replaceTitle;
+
+		for (const title of what) {
+			new Setting(contentEl)
+				.addText((text) => {
+					text.setPlaceholder("Regex")
+						.setValue(title.regex)
+						.onChange((value) => {
+							title.regex = value;
+						});
+				})
+				.addText((text) => {
+					text.setPlaceholder("Replacement")
+						.setValue(title.replacement)
+						.onChange((value) => {
+							title.replacement = value;
+						});
+				})
+				.addExtraButton((button) => {
+					button
+						.setIcon("trash")
+						.onClick(() => {
+							if (this.type === "path") {
+								this.settings.upload.replacePath = this.settings.upload.replacePath.filter((t) => t !== title);
+							} else {
+								this.settings.upload.replaceTitle = this.settings.upload.replaceTitle.filter((t) => t !== title); 
+							}
+							this.onOpen();
+						});
+				});
+		}
+		new Setting(contentEl)
+			.addButton((button) => {
+				button.setButtonText("Add new regex")
+					.onClick(() => {
+						what.push({
+							regex: "",
+							replacement: "",
+						});
+						this.onOpen();
+					});
+			})
+			.addButton((button) => {
+				button
+					.setButtonText("Save")
+					.onClick(() => {
+						this.onSubmit(this.settings);
+						this.close();
+					});
+			});
+	}
+
+	onClose() {
+		const {contentEl} = this;
+		contentEl.empty();
+	}
+}
+
+export class ModalRegexOnContents extends Modal {
+	settings: GitHubPublisherSettings;
+	onSubmit: (settings: GitHubPublisherSettings) => void;
+	constructor(
+		app: App, 
+		settings: GitHubPublisherSettings, 
+		onSubmit: (settings: GitHubPublisherSettings) => void) {
+		super(app);
+		this.settings = settings;
+		this.onSubmit = onSubmit;
+	}
+
+	onOpen() {
+		const {contentEl} = this;
+		contentEl.empty();
+		contentEl.createEl("h2", {text: "Regex on contents"});
+		const censorTextDesc = document.createDocumentFragment();
+		censorTextDesc
+			.createEl("p", {
+				text: subSettings("textConversion.censor.TextDesc") as string,
+			})
+			.createEl("p", {
+				text: subSettings("textConversion.censor.TextEmpty") as string,
+			});
+		
+		contentEl.createEl("p", {
+			text: subSettings("textConversion.censor.TextHeader") as string,
+		});
+		new Setting(contentEl)
+			.setClass("github-publisher-censor-desc")
+			.setDesc(censorTextDesc)
+			.addButton((btn) => {
+				btn
+					.setIcon("plus")
+					.setTooltip(subSettings("textConversion.censor.ToolTipAdd") as string
+					)
+					.onClick(async () => {
+						const censorText: TextCleaner = {
+							entry: "",
+							replace: "",
+							after: false,
+							flags: "gi",
+						};
+						this.settings.conversion.censorText.push(censorText);
+						this.onOpen();
+					});
+			});
+
+		for (const censorText of this.settings.conversion.censorText) {
+			new Setting(contentEl)
+				.setClass("github-publisher-censor-entry")
+				.addText((text) => {
+					text.setPlaceholder(subSettings(
+						"textConversion.censor.PlaceHolder") as string
+					)
+						.setValue(censorText.entry)
+						.onChange(async (value) => {
+							censorText.entry = value;
+						});
+				})
+				.addText((text) => {
+					text.inputEl.style.width="30px";
+					text.setPlaceholder(subSettings("textConversion.censor.ValuePlaceHolder") as string
+					)
+						.setValue(censorText.replace)
+						.onChange(async (value) => {
+							censorText.replace = value;
+						});
+                
+				})
+				
+				.addExtraButton((btn) => {
+					btn.setIcon("trash")
+						.setTooltip(subSettings("textConversion.censor.ToolTipRemove") as string
+						)
+						.onClick(async () => {
+							this.settings.conversion.censorText.splice(
+								this.settings.conversion.censorText.indexOf(
+									censorText
+								),
+								1
+							);
+							this.onOpen();
+						});
+				})
+				.addExtraButton((btn) => {
+					btn
+						.setIcon("pencil")
+						.setTooltip(subSettings("textConversion.censor.edit") as string) //TODO: WRITE THE TRANSLATION
+						.onClick(async () => {
+							new ModalEditorRegex(this.app, censorText, (result) => {
+								censorText.flags = result.flags;
+								censorText.after = result.after;
+							});
+						});
+				});
+		}
+		new Setting(contentEl)
+			.addButton((button) => {
+				button
+					.setButtonText("Save") //TODO : WRITE THE TRANSLATION
+					.onClick(() => {
+						this.onSubmit(this.settings);
+						this.close();
+					});
+			});
+	}
+
+	onClose() {
+		const {contentEl} = this;
+		contentEl.empty();
+	}
+}
+
+class ModalEditorRegex extends Modal {
+	result: TextCleaner;
+	onSubmit: (result: TextCleaner) => void;
+	
+	constructor(app: App, toEdit: TextCleaner, onSubmit: (result: TextCleaner) => void) {
+		super(app);
+		this.result = toEdit;
+		this.onSubmit = onSubmit;
+	}
+	
+	onOpen() {
+		const {contentEl} = this;
+		contentEl.empty();
+		/*
+		Parameters :
+		- Flags ; 
+		- After/Before other ; 
+		 */
+		const flagsDesc = document.createDocumentFragment();
+		const flagsDescription = flagsDesc.createEl("p", {
+			text: subSettings("textConversion.censor.TextFlags") as string
+		});
+		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.insensitive") as string});
+		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.global") as string});
+		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.multiline") as string}); 
+		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.dotAll") as string});
+		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.unicode") as string}); 
+		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.sticky") as string});
+
+		new Setting(contentEl)
+			.setName("Flags")
+			.setDesc(flagsDesc)
+			.addText((text) => {
+				text.setPlaceholder("gimsuy")
+					.setValue(this.result.flags)
+					.onChange(async (value) => {
+						if (value.match(/^[gimsuy\s]+$/) || value === "") {
+							this.result.flags = value;
+						} else {
+							new Notice(
+								(subSettings(
+									"textConversion.censor.flags.error"
+								) as StringFunc
+								)(value)
+							);
+						}
+					});
+			});
+			
+		enum MomentReplaceRegex {
+			before = false,
+			after = true
+		}
+		new Setting(contentEl)
+			.setName(subSettings("textConversion.censor.MomentReplaceRegex.desc") as string)
+		
+	}
+}

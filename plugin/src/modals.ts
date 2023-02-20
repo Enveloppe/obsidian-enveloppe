@@ -212,6 +212,7 @@ export class ExportModal extends Modal {
 								//create a temporary file
 								this.app.vault.adapter.write(`${app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`, output);
 								//open the file with default application
+								//eslint-disable-next-line
 								(this.app as any).openWithDefaultApp(`${app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`);
 							}));
 				}

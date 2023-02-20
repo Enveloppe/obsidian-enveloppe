@@ -18,7 +18,6 @@ import {
 	getRepoFrontmatter,
 } from "../src/utils";
 import {isInternalShared, checkIfRepoIsInAnother, isShared} from "../src/data_validation_test";
-import { GithubBranch } from "plugin/publishing/branch";
 
 /**
  * Get the dataview path from a markdown file
@@ -245,10 +244,6 @@ function folderNoteIndexYAML(
 	return regexOnFileName(fileName, settings);
 }
 
-function editPathWithRegex(path: string, settings: GitHubPublisherSettings) {
-
-}
-
 /**
  * Create filepath based on settings and frontmatter for the github repository
  * @param {TFile} file Source file
@@ -306,11 +301,11 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 				fileName = fileName.replace(
 					regex,
 					replaceWith
-				)
+				);
 			} else {
 				fileName = fileName.replaceAll(
-				toReplace,
-				replaceWith
+					toReplace,
+					replaceWith
 				);
 			}
 		}
@@ -332,11 +327,11 @@ function regexOnPath(fileName: string, path: string, settings: GitHubPublisherSe
 				path = path.replace(
 					regex,
 					replaceWith
-				)
+				);
 			} else {
 				path = path.replaceAll(
-				toReplace,
-				replaceWith
+					toReplace,
+					replaceWith
 				);
 			}
 		}
