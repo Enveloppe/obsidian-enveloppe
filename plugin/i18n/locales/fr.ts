@@ -104,6 +104,7 @@ export default {
 				placeholder: "Appliquer un ou plusieurs remplacements au chemin du fichier",
 				desc:
 					"Si le texte est entre \"//\", il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut. Le remplacement ne sera pas appliqué sur le nom du fichier.",
+			},
 		},
 		textConversion: {
 			textConversion: "Conversion du contenu",
@@ -351,4 +352,4 @@ export default {
 			download: "Télécharger",
 		}
 	}
-};
+}
