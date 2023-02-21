@@ -20,7 +20,7 @@ import { StringFunc, error } from "../i18n";
 import {
 	getReceiptFolder,
 	getImageLinkOptions,
-} from "../contents_conversion/filePathConvertor";
+} from "../conversion/filePathConvertor";
 import { ShareStatusBar } from "../src/status_bar";
 import GithubPublisherPlugin from "../main";
 import {
@@ -34,7 +34,7 @@ import {
 	getRepoFrontmatter,
 	noticeLog,
 } from "plugin/src/utils";
-import { mainConverting } from "../contents_conversion/convertText";
+import { mainConverting } from "../conversion/convertText";
 
 /** Class to manage the branch
  * @extends FilesManagement

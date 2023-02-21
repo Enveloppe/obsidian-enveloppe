@@ -11,7 +11,7 @@ import { Octokit } from "@octokit/core";
 import {
 	getImageLinkOptions,
 	getReceiptFolder,
-} from "../contents_conversion/filePathConvertor";
+} from "../conversion/filePathConvertor";
 import Publisher from "./upload";
 import GithubPublisher from "../main";
 import { getRepoFrontmatter, noticeLog } from "plugin/src/utils";

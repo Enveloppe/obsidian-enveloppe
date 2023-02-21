@@ -16,7 +16,7 @@ import {
 import Publisher from "../publishing/upload";
 import {informations} from "../i18n";
 import type { StringFunc } from "../i18n";
-import { getReceiptFolder } from "../contents_conversion/filePathConvertor";
+import { getReceiptFolder } from "../conversion/filePathConvertor";
 import { FrontmatterConvert } from "../settings/interface";
 
 
