@@ -8,8 +8,10 @@ import * as de from './locales/de.json';
 const locale = moment.locale();
 export const translationLanguage = locale ? moment.locale() : "en";
 
+console.log("Init i18next")
 
 i18next.init({
+    lng:locale,
     fallbackLng: "en",
     resources: {
         en: {
@@ -20,3 +22,5 @@ i18next.init({
         }
     },
 });
+
+console.log(i18next)

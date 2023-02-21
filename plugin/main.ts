@@ -158,6 +158,7 @@ export default class GithubPublisher extends Plugin {
 		console.log(
 			`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`
 		);
+		console.log(i18next.t("publish.branch.success") as string)
 		
 		await this.loadSettings();
 		const oldSettings = this.settings;
