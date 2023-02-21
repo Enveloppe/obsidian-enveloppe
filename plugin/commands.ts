@@ -8,8 +8,8 @@ import {
 } from "./src/utils";
 import {checkRepositoryValidityWithRepoFrontmatter} from "./src/data_validation_test";
 import { GitHubPublisherSettings, RepoFrontmatter } from "./settings/interface";
-import { deleteFromGithub } from "./publishing/delete";
-import { GithubBranch } from "./publishing/branch";
+import { deleteFromGithub } from "./publish/delete";
+import { GithubBranch } from "./publish/branch";
 import { Octokit } from "@octokit/core";
 import { MetadataCache, Notice, Platform, TFile, Vault } from "obsidian";
 import GithubPublisher from "./main";

@@ -1,7 +1,7 @@
 import {FrontMatterCache, Notice, TFile, MetadataCache } from "obsidian";
 import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter} from "../settings/interface";
 import {error, StringFunc, t} from "../i18n";
-import {GithubBranch} from "../publishing/branch";
+import {GithubBranch} from "../publish/branch";
 import {getRepoFrontmatter, noticeLog} from "./utils";
 
 export function isInternalShared(

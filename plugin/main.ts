@@ -9,7 +9,7 @@ import {
 	RepoFrontmatter
 } from "./settings/interface";
 import {getRepoFrontmatter,} from "./src/utils";
-import {GithubBranch} from "./publishing/branch";
+import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
 import {checkRepositoryValidity, isShared} from "./src/data_validation_test";
 import {

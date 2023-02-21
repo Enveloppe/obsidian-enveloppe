@@ -13,7 +13,7 @@ import {
 	MetadataExtractor,
 	RepoFrontmatter,
 } from "../settings/interface";
-import Publisher from "../publishing/upload";
+import Publisher from "../publish/upload";
 import {informations} from "../i18n";
 import type { StringFunc } from "../i18n";
 import { getReceiptFolder } from "../conversion/filePathConvertor";
