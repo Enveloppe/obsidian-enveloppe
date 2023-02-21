@@ -4,10 +4,10 @@ import {
 	RepoFrontmatter,
 } from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
-import { MetadataCache, Notice, Vault } from "obsidian";
+import { MetadataCache, Notice, parseFrontMatterAliases, Vault } from "obsidian";
 import GithubPublisherPlugin from "../main";
-import {StringFunc, error, t} from "../i18n";
 import { noticeLog } from "../src/utils";
+import i18next from "i18next";
 
 /**
  * Class to manage the branch
@@ -101,8 +101,7 @@ export class GithubBranch extends FilesManagement {
 					sha: shaMainBranch,
 				}
 			);
-			noticeLog(
-				`branch successfully created : ${branch.status} for :  ${repoFrontmatter.repo}`,
+			noticeLog(i18next.t("publish.branch.success", {branchStatus: branch.status, repoInfo: repoFrontmatter.repo}),
 				this.settings
 			);
 			return branch.status === 201;
@@ -120,7 +119,7 @@ export class GithubBranch extends FilesManagement {
 				const mainBranch = allBranch.data.find(
 					(branch: { name: string }) => branch.name === branchName
 				);
-				noticeLog(`branch already exists : ${mainBranch.name} — using it`, this.settings);
+				noticeLog(i18next.t('publish.branch.alreadyExists', {branchName: mainBranch.name, repoInfo: repoFrontmatter.repo}), this.settings);
 				return !!mainBranch;
 			} catch (e) {
 				noticeLog(e, this.settings);
@@ -147,7 +146,7 @@ export class GithubBranch extends FilesManagement {
 				{
 					owner: repoFrontmatter.owner,
 					repo: repoFrontmatter.repo,
-					title: `PullRequest ${branchName} from Obsidian`,
+					title: i18next.t('publish.branch.prMessage', {branchName: branchName}),
 					body: "",
 					head: branchName,
 					base: repoFrontmatter.branch,
@@ -168,7 +167,7 @@ export class GithubBranch extends FilesManagement {
 				return PR.data[0].number;
 			} catch (e) {
 				noticeLog(
-					`${e} : ERROR with ${repoFrontmatter}`,
+					i18next.t('publish.branch.error', {error: e, repoInfo: repoFrontmatter.repo}),
 					this.settings
 				);
 				return 0;
@@ -232,7 +231,7 @@ export class GithubBranch extends FilesManagement {
 			return branch.status === 200;
 		} catch (e) {
 			noticeLog(e, this.settings);
-			new Notice(error("mergeconflic") as string);
+			new Notice(i18next.t('error.mergeconflic'));
 			return false;
 		}
 	}
@@ -288,10 +287,8 @@ export class GithubBranch extends FilesManagement {
 			return true;
 		} catch (e) {
 			noticeLog(e, this.settings);
-			new Notice(
-				(error("errorConfig") as StringFunc)(
-					`${repoFrontmatter.owner}/${repoFrontmatter.repo}`
-				)
+			const repoInfo = `${repoFrontmatter.owner}/${repoFrontmatter.repo}`;
+			new Notice(i18next.t("error.errorConfig", {repoInfo: repoInfo})
 			);
 			return false;
 		}
@@ -323,21 +320,21 @@ export class GithubBranch extends FilesManagement {
 					//check the error code
 					if (e.status === 404) {
 						new Notice(
-							(t("commands.checkValidity.inRepo.error404") as StringFunc)(`${repo.owner}/${repo.repo}`)
+							(i18next.t("commands.checkValidity.inRepo.error404", {repoInfo: `${repo.owner}/${repo.repo}`}))
 						);
 					} else if (e.status === 403) {
 						new Notice(
-							(t("commands.checkValidity.inRepo.error403") as StringFunc)(`${repo.owner}/${repo.repo}`)
+							(i18next.t("commands.checkValidity.inRepo.error403", {repoInfo: `${repo.owner}/${repo.repo}`}))
 						);
 					} else if (e.status === 301) {
 						new Notice(
-							(t("commands.checkValidity.inRepo.error301") as StringFunc)(`${repo.owner}/${repo.repo}`)
+							(i18next.t("commands.checkValidity.inRepo.error301", {repoInfo: `${repo.owner}/${repo.repo}`}))
 						);
 					}
 				});
 				//@ts-ignore
 				if (repoExist.status === 200) {
-					noticeLog(`Repository ${repo.owner}/${repo.repo} exists ; Now testing the main branch`, this.settings);
+					noticeLog(i18next.t("commands.checkValidity.repoExistsTestBranch", {repoOwner: repo.owner, RepoName: repo.repo, main: repo.branch}), this.settings);
 
 					const branchExist = await this.octokit.request("GET /repos/{owner}/{repo}/branches/{branch}", {
 						owner: repo.owner,
@@ -347,18 +344,18 @@ export class GithubBranch extends FilesManagement {
 						//check the error code
 						if (e.status === 404) {
 							new Notice(
-								(t("commands.checkValidity.inBranch.error404") as StringFunc)([`${repo.owner}/${repo.repo}`,repo.branch])
+								(i18next.t("commands.checkValidity.inBranch.error404", { repoInfo: `${repo.owner}/${repo.repo}`, branchInfo: repo.branch}))
 							);
 						} else if (e.status === 403) {
 							new Notice(
-								(t("commands.checkValidity.inRepo.error403") as StringFunc)([`${repo.owner}/${repo.repo}`,repo.branch])
+								(i18next.t("commands.checkValidity.inRepo.error403", {repoInfo: `${repo.owner}/${repo.repo}`}))
 							);
 						}
 					});
 					//@ts-ignore
 					if (branchExist.status === 200 && !silent) {
 						new Notice(
-							(t("commands.checkValidity.success") as StringFunc)(`${repo.owner}/${repo.repo}/${repo.branch}`)
+							(i18next.t("commands.checkValidity.success", {repoInfo: `${repo.owner}/${repo.repo}/${repo.branch}`}))
 						);
 					}
 				}

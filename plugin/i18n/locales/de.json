@@ -1,0 +1,349 @@
+{
+    "commands": {
+        "shareActiveFile": "Laden Sie eine einzelne aktuelle aktive Notiz hoch",
+        "publisherDeleteClean": "Löschen Sie unveröffentlichte und gelöschte Dateien",
+        "uploadAllNotes": "Laden Sie alle Notizen hoch",
+        "uploadNewNotes": "Laden Sie unveröffentlichte Notizen hoch",
+        "uploadAllNewEditedNote": "Veröffentlichte aktualisieren und neue Notizen hochladen",
+        "uploadAllEditedNote": "Aktualisieren Sie alle veröffentlichten Notizen",
+        "shareViewFiles": "Hochladen {{viewFile}} mit Github Publisher",
+        "checkValidity": {
+            "name": "Testen Sie die Verbindung zum konfigurierten Repository",
+            "inRepo": {
+                "error301": "Fehler 301: {{repoInfo}}  wurde dauerhaft verlegt.",
+                "error404": "Fehler 404: {{repoInfo}}: wurde nicht gefunden.",
+                "error403": "Fehler 403: Diese Aktion ist verboten {{repoInfo}}."
+            },
+            "inBranch": {
+                "error404": "Fehler 404: Der Zweig {{branchInfo}} wurde nicht gefunden {{repoInfo}}.",
+                "error403": "Fehler 301: {{repoInfo}} wurde dauerhaft verschoben (von ${branchInfo})."
+            },
+            "success": "{{repoInfo}} scheint gültig zu sein!`"
+        }
+    },
+    "deletion": {
+        "errorDeleteDefaultFolder": "Sie benötigen einen Standardordnernamen in den Einstellungen, um diesen Befehl verwenden zu können.",
+        "errorDeleteRootFolder": "Sie müssen einen Stammordner in den Einstellungen konfigurieren, um diesen Befehl zu verwenden.",
+        "successDeleting": "Erfolgreich gelöscht {{nb}} Dateien.",
+        "failedDeleting": "Löschen fehlgeschlagen {{nb}} Dateien.",
+        "noFileDeleted": "Es wurden keine Dateien gelöscht."
+    },
+    "settings": {
+        "exportSettings": "Exporteinstellungen",
+        "importSettings": "Importeinstellungen",
+        "github": {
+            "apiType": {
+                "title": "API-Typ",
+                "desc": "Wählen Sie zwischen der Github-API oder der Github-Enterprise-API (nur Github-Enterprise-Benutzer — Fortgeschrittener Benutzer!).",
+                "hostname": "Github Enterprise-Hostname",
+                "hostnameDesc": "Der Hostname Ihrer Github Enterprise-Instanz.",
+                "dropdown": {
+                    "free": "Kostenlos/Pro/Team (Standard)",
+                    "enterprise": "Unternehmen"
+                }
+            },
+            "githubConfiguration": "Github-Konfiguration",
+            "repoName": "Repo-Name",
+            "repoNameDesc": "Der Name des Repositorys, in dem Sie Ihr Blog speichern.",
+            "mkdocsTemplate": "mkdocs-Vorlage",
+            "githubUsername": "Github-Benutzername",
+            "githubUsernameDesc": "Ihr Github-Benutzername.",
+            "ghTokenDesc": "Ein Github-Token mit Repository-Berechtigung.  ",
+            "here": "Hier.",
+            "githubToken": "Github-Token",
+            "githubBranchHeading": "Hauptzweig",
+            "githubBranchDesc": "Wenn Sie einen anderen Hauptzweig als \"main\" verwenden, können Sie diesen hier angeben.",
+            "automaticallyMergePR": "Pull-Requests automatisch zusammenführen",
+            "testConnection": "Testverbindung"
+        },
+        "uploadConfig": {
+            "title": "Konfiguration hochladen",
+            "pathSetting": "Pfadeinstellungen",
+            "folderBehavior": "Ordnerverhalten",
+            "folderBehaviorDesc": "Wählen Sie zwischen einem festen Ordner, dem Wert eines Frontmatter-Schlüssels oder Ihrem Obsidian-relativen Pfad.",
+            "fixedFolder": "Fester Ordner",
+            "yaml": "YAML-Frontmatter",
+            "obsidianPath": "Obsidian-Pfad",
+            "defaultFolder": {
+                "title": "Standard Ordner",
+                "desc": "Legen Sie den Standard-Empfangsordner fest",
+                "placeholder": "Dokumente"
+            },
+            "pathRemoving": {
+                "title": "API-Typ",
+                "desc": "Erlauben Sie, nur Unterordner zu veröffentlichen, indem Sie den Pfad davor entfernen:",
+                "placeholder": "GardenSketch"
+            },
+            "frontmatterKey": {
+                "title": "Frontmatter-Schlüssel",
+                "desc": "Legen Sie den Schlüssel fest, wo der Wert des Ordners abgerufen werden soll.",
+                "placeholder": "Kategorie"
+            },
+            "rootFolder": {
+                "title": "Root-Verzeichnis",
+                "desc": "Hängen Sie diesen Pfad an den Ordner an, der durch den Frontmatter-Schlüssel festgelegt wurde"
+            },
+            "useFrontmatterTitle": {
+                "title": "Legen Sie den Schlüssel fest, wo der Wert des Dateinamens abgerufen werden soll",
+                "desc": "Verwenden Sie einen Frontmatter-Wert, um den Dateinamen zu generieren.  "
+            },
+            "frontmatterRegex": {
+                "placeholder": "Wenden Sie Ersetzungen auf den Dateinamen an",
+                "desc": "Wenn der Text zwischen \"//\" steht, wird er als Regex verwendet. "
+            },
+            "filepathRegex": {
+                "placeholder": "Wenden Sie Ersetzungen auf den Dateipfad an",
+                "desc": "Wenn der Text zwischen \"//\" steht, wird er als Regex verwendet. "
+            }
+        },
+        "textConversion": {
+            "title": "Konvertierung von Inhalten",
+            "desc": "Diese Option ändert nicht den Inhalt der Datei in Ihrem Obsidian Vault, ändert aber den Inhalt der Datei in Github.",
+            "text": "Text",
+            "hardBreak": {
+                "title": "Markdown harter Zeilenumbruch",
+                "desc": "Fügen Sie nach jeder Zeile einen Markdown-Zeilenumbruch (doppeltes Leerzeichen) hinzu. "
+            },
+            "links": {
+                "title": "Verknüpfungen",
+                "desc": "Sie können die Konvertierung von Links verhindern und den Alt-Text (oder Dateinamen) beibehalten, indem Sie den Frontmatter-Schlüssel \"links\" mit dem Wert \"false\" verwenden.",
+                "internals": {
+                    "title": "Interne Links",
+                    "desc": "Konvertieren Sie den internen Link in der freigegebenen Datei, damit er mit den Ordnereinstellungen übereinstimmt"
+                },
+                "wikilinks": {
+                    "title": "[[Wikilinks]]",
+                    "desc": "Konvertieren Sie Wikilinks in MDlinks, ohne den Inhalt zu ändern. "
+                },
+                "folderNote": {
+                    "title": "Ordnerhinweis",
+                    "desc": "Benennen Sie Dateien in einen bestimmten Namen um (Standard: index.md), wenn dieser den gleichen Namen wie ihr übergeordneter Ordner/Kategorie hat (funktioniert auch, wenn sich die Notiz außerhalb des Ordners befindet)."
+                },
+                "nonShared": {
+                    "title": "Konvertieren Sie interne Links, die auf nicht freigegebene Dateien verweisen",
+                    "desc": "Konvertieren Sie interne Links, die auf eine nicht freigegebene Datei verweisen, in ihr Gegenstück auf der Website mit relativem Pfad. "
+                }
+            },
+            "censor": {
+                "title": "Ersatz am: ",
+                "modal": {
+                    "title": "Textersetzer",
+                    "desc": "Text (oder Regex) in der Datei durch den angegebenen Wert ersetzen"
+                },
+                "edit": "Bearbeiten Sie die Parameter (Flaggen und Running Order)",
+                "flags": {
+                    "title": "Flags (basierend auf JS Regex und kombinierbar):",
+                    "insensitive": "Ich: Unempfindlich.",
+                    "global": "g: Global",
+                    "multiline": "m : Mehrzeilig",
+                    "dotAll": "s: DotAll",
+                    "unicode": "u: Unicode",
+                    "sticky": "y: Klebrig",
+                    "error": "Die Flagge {{flag}} ist ungültig."
+                },
+                "empty": "Replacement kann leer sein, um die gesamte Zeichenfolge zu entfernen.",
+                "save": "Speichern",
+                "replace": "Zu ersetzender Text",
+                "value": "Wiederbeschaffungswert",
+                "tootltip": {
+                    "add": "Fügen Sie einen neuen Textersetzer hinzu",
+                    "remove": "Löschen Sie diesen Textersetzer",
+                    "placeholderToReplace": "Regex oder zu ersetzender Text",
+                    "placeholderToValue": "Wiederbeschaffungswert"
+                },
+                "MomentReplaceRegex": {
+                    "desc": "Wählen Sie, wann die Regex ausgeführt wird: vor oder nach der anderen Konvertierung (Datenansicht, interne Links ...).",
+                    "before": "Vor",
+                    "after": "Nach"
+                }
+            },
+            "dataview": {
+                "title": "Datenansicht",
+                "desc": "Datenansicht in Markdown umwandeln. "
+            },
+            "tags": {
+                "title": "Frontmatter/Dataview-Feld in Tags umwandeln",
+                "desc": "Dadurch werden alle Frontmatter- oder Dataview-Inline-Felder in Frontmatter-Tags umgewandelt. ",
+                "exclude": {
+                    "title": "Wert von der Konvertierung ausschließen",
+                    "desc": "Dadurch wird der Wert von der Konvertierung ausgeschlossen. "
+                },
+                "inlineTags": {
+                    "title": "Inline-Tags",
+                    "desc": "Fügen Sie Ihre Inline-Tags in Ihr Frontmatter-Tags-Feld ein und konvertieren Sie verschachtelte Tags, indem Sie „/“ durch „_“ ersetzen."
+                }
+            },
+            "embed": {
+                "title": "Einbetten",
+                "transferImage": {
+                    "title": "Anhänge übertragen",
+                    "desc": "Senden Sie in eine Datei eingebettete Anhänge an github. "
+                },
+                "transferNotes": {
+                    "title": "Übertragen Sie eingebettete Notizen",
+                    "desc": "Senden Sie eingebettete Notizen in einer freigegebenen Datei an github. "
+                },
+                "defaultImageFolder": {
+                    "title": "Standardordner für Anhänge",
+                    "desc": "So verwenden Sie einen anderen als den Standardordner"
+                },
+                "transferMetaFile": {
+                    "title": "Senden Sie Dateien mithilfe eines Metadatenfelds",
+                    "desc": "Legen Sie die Namen der Metadatenfelder fest, die Sie zum Senden von Dateien verwenden möchten. "
+                }
+            },
+            "githubWorkflow": {
+                "githubAction": {
+                    "title": "Github-Aktionsname",
+                    "desc": "Wenn Sie eine Github-Aktion aktivieren möchten, wenn das Plugin die Datei pusht, legen Sie den Namen der Datei fest (in Ihrem Ordner .github/worfklows)."
+                },
+                "autoCleanUp": {
+                    "title": "Automatische Bereinigung",
+                    "desc": "Wenn das Plugin die entfernten Dateien von Github entfernen muss (Freigabe stoppen oder gelöscht)"
+                },
+                "excludedFiles": {
+                    "title": "Ausgeschlossene Dateien",
+                    "desc": "Wenn Sie einige Ordner von der automatischen Bereinigung ausschließen möchten, legen Sie deren Pfad fest."
+                },
+                "useMetadataExtractor": {
+                    "title": "Metadaten-Extraktionsdateien",
+                    "desc": "Senden Sie die vom Metadatenextraktions-Plug-in generierten Dateien in diesem Ordner."
+                },
+                "prRequest": {
+                    "title": "Nachricht übernehmen",
+                    "desc": "Die Nachricht, die gesendet wird, wenn die Pull-Anforderung zusammengeführt wird. "
+                }
+            },
+            "plugin": {
+                "title": "Plugin-Einstellungen",
+                "shareKey": {
+                    "title": "Schlüssel teilen",
+                    "desc": "Der Frontmatter-Schlüssel zum Veröffentlichen Ihrer Datei auf der Website."
+                },
+                "excludedFolder": {
+                    "title": "Ausgeschlossener Ordner",
+                    "desc": "Veröffentlichen Sie niemals Dateien in diesen Ordnern, unabhängig vom Freigabeschlüssel. "
+                },
+                "fileMenu": {
+                    "title": "Dateimenü",
+                    "desc": "Fügen Sie im Dateimenü einen Freigabebefehl hinzu"
+                },
+                "editorMenu": {
+                    "title": "Editor-Menü",
+                    "desc": "Fügen Sie im Rechtsklickmenü einen Freigabebefehl hinzu"
+                },
+                "copyLink": {
+                    "title": "Link kopieren",
+                    "desc": "Senden Sie einen Link zu Ihrer Notiz in Ihrer Zwischenablage",
+                    "baselink": {
+                        "title": "Basislink",
+                        "desc": "Der Basislink Ihrer Website. "
+                    },
+                    "linkpathremover": {
+                        "title": "Linkteil entfernen",
+                        "desc": "Entfernen Sie diesen Teil aus den erstellten Links. "
+                    }
+                },
+                "logNoticeHeader": {
+                    "title": "Achte auf jeden Fehler",
+                    "desc": "Auf Mobilgeräten kann es schwierig sein, das Plugin zu debuggen. "
+                },
+                "shareExternalModified": {
+                    "title": "Externe modifizierte Datei teilen",
+                    "desc": "Bearbeitete Datei senden, wenn sie sich von der aktiven Datei unterscheidet. "
+                }
+            },
+            "help": {
+                "title": "Hilfe",
+                "usefulLinks": {
+                    "title": "Nützliche Links",
+                    "documentation": "Dokumentation",
+                    "repository": "Repository",
+                    "issue": "Ausgabe",
+                    "discussion": "Diskussion",
+                    "links": "https://obsidian-publisher.netlify.app/"
+                },
+                "frontmatter": {
+                    "title": "Cheatsheet für Frontmatter-Tasten",
+                    "desc": "Darüber hinaus gibt es einige Frontmatter-YAML-Schlüssel, die für Ihren Workflow nützlich sein können. ",
+                    "share": "Dieser Schlüssel wird verwendet, um eine Notiz mit dem Plugin zu teilen.",
+                    "mdlinks": "Wandeln Sie alle Wikilinks in Markdown-Links um",
+                    "convert": {
+                        "enableOrDisable": "Aktivieren oder deaktivieren Sie die Konvertierung von Links. ",
+                        "or": "oder",
+                        "syntax": "Syntax, unter Beibehaltung des Dateinamens oder des Alternativtextes."
+                    },
+                    "internals": "Konvertieren Sie interne Links in ihr Gegenstück auf der Website, mit relativem Pfad. ",
+                    "nonShared": "Konvertieren Sie interne Links, die auf eine nicht freigegebene Datei verweisen, in ihr Gegenstück auf der Website mit relativem Pfad. ",
+                    "embed": {
+                        "send": "Eingebettete Notiz an GitHub senden",
+                        "remove": "Entfernen Sie die Einbettung aus der Notiz und lassen Sie eine leere Zeile."
+                    },
+                    "attachment": {
+                        "send": "Senden Sie alle Anhänge an github",
+                        "folder": "Ändern Sie den Standardordner für die Anhänge"
+                    },
+                    "dataview": "Konvertieren Sie Dataview-Abfragen in Markdown.",
+                    "hardBreak": "Wandeln Sie alle Zeilenumbrüche in Markdown um «harter Umbruch».",
+                    "repo": {
+                        "desc": "Ändern Sie das Standardrepo für die Notiz.",
+                        "owner": "Besitzer des Repos",
+                        "repo": "Name des Repos",
+                        "branch": "Zweig des Repos"
+                    },
+                    "titleKey": "Ändern Sie den Titel der Notiz.",
+                    "autoclean": "Deaktivieren oder aktivieren Sie die automatische Reinigung",
+                    "baselink": "Ändern Sie den Basislink für den Befehl zum Kopieren des Links"
+                },
+                "multiRepoHelp": {
+                    "title": "An mehrere Repositorys senden",
+                    "desc": "Wenn Sie Ihre Notizen an mehrere Repositorys senden möchten, können Sie die verwenden ",
+                    "desc2": "Geben Sie Ihre Titelseite ein.  ",
+                    "exampleDesc": "Der YAML-Code unten zeigt ein Beispiel basierend auf Ihren Einstellungen."
+                }
+            }
+        },
+        "informations": {
+            "startingClean": "Reinigung starten {{repoInfo}}",
+            "scanningRepo": "Das Scannen des Repositorys kann eine Weile dauern ...",
+            "foundNoteToSend": "Gefunden {{nbNotes}} neue Notizen zu senden",
+            "noNewNote": "Keine neuen Notizen zum Teilen.",
+            "successfullPublish": "Erfolgreich veröffentlicht {{nbNotes}} Zu {{repoInfo}}",
+            "waitingWorkflow": "Warten Sie nun, bis der Workflow abgeschlossen ist ...",
+            "sendMessage": "Schicken {{nbNotes}} Notizen zu {{repoOwner}}:{{repoName}}"
+        },
+        "error": {
+            "unablePublishNote": "Notiz kann nicht hochgeladen werden {{file}}, es überspringen",
+            "errorPublish": "Fehler beim Hochladen auf {{repoInfo}}",
+            "unablePublishMultiNotes": "Mehrere Notizen konnten nicht hochgeladen werden, etwas ist schief gelaufen.",
+            "mergeconflic": "Pull-Request kann nicht zusammengeführt werden, Sie müssen dies manuell tun.",
+            "errorConfig": "Fehler beim Konfigurieren {{repoInfo}}. ",
+            "isEmpty": "{{repoInfo}} ist leer.",
+            "whatEmpty": {
+                "owner": "Eigentümer",
+                "repo": "Repository",
+                "branch": "Zweig",
+                "ghToken": "GitHub-Token"
+            }
+        },
+        "modals": {
+            "import": {
+                "title": "Importieren",
+                "desc": "Importieren Sie Einstellungen aus Text oder einer Datei. ",
+                "importFromFile": "Aus Datei importieren",
+                "save": "Speichern",
+                "paste": "Konfiguration hier einfügen...",
+                "error": {
+                    "span": "Fehler beim Importieren der Konfiguration: ",
+                    "isEmpty": "Die Konfiguration ist leer."
+                }
+            },
+            "export": {
+                "title": "Export",
+                "desc": "Einstellungen in die Zwischenablage oder eine Datei exportieren.",
+                "copy": "In die Zwischenablage kopieren",
+                "download": "Herunterladen"
+            }
+        }
+    }
+}
