@@ -175,15 +175,15 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			);
 		const desc_ghToken = document.createDocumentFragment();
 		desc_ghToken.createEl("span", null, (span) => {
-			span.innerText = i18next.t("settings.github.") as string;
+			span.innerText = i18next.t("settings.github.ghToken.desc") as string;
 			span.createEl("a", null, (link) => {
-				link.innerText = settings("github", "here") as string;
+				link.innerText = i18next.t("settings.github.ghToken.here") as string;
 				link.href =
 					"https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
 		});
 		new Setting(this.settingsPage)
-			.setName(settings("github", "githubToken") as string)
+			.setName(i18next.t("settings.github.ghToken.title") as string)
 			.setDesc(desc_ghToken)
 			.addText((text) =>
 				text
@@ -196,8 +196,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			);
 
 		new Setting(this.settingsPage)
-			.setName(settings("github", "githubBranchHeading") as string)
-			.setDesc(settings("github", "githubBranchDesc") as string)
+			.setName(i18next.t("settings.github.branch.title") as string)
+			.setDesc(i18next.t("settings.github.branch.desc") as string)
 			.addText((text) =>
 				text
 					.setPlaceholder("main")
@@ -209,7 +209,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			);
 
 		new Setting(this.settingsPage)
-			.setName(settings("github", "automaticallyMergePR") as string)
+			.setName(i18next.t("settings.github.automaticallyMergePR") as string)
 			.addToggle((toggle) =>
 				toggle
 					.setValue(githubSettings.automaticallyMergePR)
@@ -223,7 +223,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setClass("github-publisher-no-display")
 			.addButton((button) =>
 				button
-					.setButtonText(settings("github", "testConnection") as string)
+					.setButtonText(i18next.t("settings.github.testConnection") as string)
 					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
 						await checkRepositoryValidity(this.branchName, this.plugin.reloadOctokit(), this.plugin.settings, null, this.app.metadataCache);
@@ -244,9 +244,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			);
 
 		new Setting(this.settingsPage)
-			.setName(settings("githubWorkflow", "githubActionName") as string)
+			.setName(i18next.t("settings.githubWorkflow.githubAction.title") as string)
 			.setDesc(
-				settings("githubWorkflow", "githubActionNameDesc") as string
+				i18next.t("settings.githubWorkflow.githubAction.desc") as string
 			)
 			.addText((text) => {
 				text.setPlaceholder("ci")
