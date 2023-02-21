@@ -16,7 +16,7 @@
             },
             "inBranch": {
                 "error404": "Error 404: The branch {{branchInfo}} was not found in {{repoInfo}}.",
-                "error403": "Error 301: {{repoInfo}} was moved permanently (from ${branchInfo})."
+                "error403": "Error 301: {{repoInfo}} was moved permanently (from {{branchInfo}})."
             },
             "success": "{{repoInfo}} seems to be valid!`",
             "repoExistsTestBranch": "Repository {{repoOwner}}/{{repoName}} exists. Now testing the {{main}} branch."

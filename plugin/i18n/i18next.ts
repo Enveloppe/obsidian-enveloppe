@@ -1,8 +1,8 @@
 import i18next from 'i18next';
 import {moment} from "obsidian";
-import * as en from './locales/en.json';
-import * as de from './locales/de.json';
-//import fr from "./locales/fr.json";
+import en from './locales/en.json';
+import de from './locales/de.json';
+import fr from "./locales/fr.json";
 
 //detect language
 const locale = moment.locale();
@@ -19,6 +19,9 @@ i18next.init({
         },
         de: {
             translation: de,
+        },
+        fr: {
+            translation: fr
         }
     },
 });
