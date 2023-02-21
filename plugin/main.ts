@@ -22,7 +22,7 @@ import {
 } from "./commands";
 import {commands, StringFunc, t, translationLanguage} from "./i18n";
 import {getTitleField, regexOnFileName} from "./conversion/filePathConvertor";
-
+import i18next from "i18next";
 /**
  * Main class of the plugin
  * @extends Plugin
@@ -158,6 +158,7 @@ export default class GithubPublisher extends Plugin {
 		console.log(
 			`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`
 		);
+		console.log(i18next.t("publish.branch.success") as string)
 		
 		await this.loadSettings();
 		const oldSettings = this.settings;
