@@ -20,8 +20,8 @@ import {
 } from "./settings/help";
 import "i18next"
 
-import {checkRepositoryValidity} from "./src/data_validation_test";
-import {ExportModal, ImportModal} from "./src/modals";
+import { checkRepositoryValidity } from "./src/data_validation_test";
+import { ExportModal, ImportModal } from "./src/modals";
 import i18next from "i18next";
 
 export class GithubPublisherSettings extends PluginSettingTab {
@@ -94,24 +94,24 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	renderSettingsPage(tabId: string) {
 		this.settingsPage.empty();
 		switch (tabId) {
-		case "github-configuration":
-			this.renderGithubConfiguration();
-			break;
-		case "upload-configuration":
-			this.renderUploadConfiguration();
-			break;
-		case "text-conversion":
-			this.renderTextConversion();
-			break;
-		case "embed-configuration":
-			this.renderEmbedConfiguration();
-			break;
-		case "plugin-settings":
-			this.renderPluginSettings();
-			break;
-		case "help":
-			this.renderHelp();
-			break;
+			case "github-configuration":
+				this.renderGithubConfiguration();
+				break;
+			case "upload-configuration":
+				this.renderUploadConfiguration();
+				break;
+			case "text-conversion":
+				this.renderTextConversion();
+				break;
+			case "embed-configuration":
+				this.renderEmbedConfiguration();
+				break;
+			case "plugin-settings":
+				this.renderPluginSettings();
+				break;
+			case "help":
+				this.renderHelp();
+				break;
 		}
 	}
 
@@ -233,11 +233,11 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.githubWorkflow.prRequest.title") as string)
 			.setDesc(i18next.t("settings.githubWorkflow.prRequest.desc") as string)
-			.addText((text)  =>
+			.addText((text) =>
 				text
 					.setPlaceholder("[PUBLISHER] MERGE")
 					.setValue(githubSettings.worflow.customCommitMsg)
-					.onChange(async (value)  => {
+					.onChange(async (value) => {
 						githubSettings.worflow.customCommitMsg = value;
 						await this.plugin.saveSettings();
 					})
@@ -267,24 +267,20 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	renderUploadConfiguration() {
 		const uploadSettings = this.plugin.settings.upload;
 		this.settingsPage.createEl("h3", {
-			text: settings("uploadConfig", "pathSetting") as string,
+			text: i18next.t("settings.uploadConfig.title") as string,
 		});
 
 		new Setting(this.settingsPage)
-			.setName(settings("uploadConfig", "folderBehavior") as string)
-			.setDesc(settings("uploadConfig", "folderBehaviorDesc") as string)
+			.setName(i18next.t("settings.uploadConfig.folderBehavior.title") as string)
+			.setDesc(i18next.t("settings.uploadConfig.folderBehavior.desc") as string)
 			.addDropdown((dropDown) => {
 				dropDown
 					.addOptions({
-						fixed: settings(
-							"uploadConfig",
-							"fixedFolder"
-						) as string,
-						yaml: settings("uploadConfig", "yaml") as string,
-						obsidian: settings(
-							"uploadConfig",
-							"obsidianPath"
-						) as string,
+						fixed: i18next.t(
+							"settings.uploadConfig.folderBehavior.fixedFolder") as string, yaml: i18next.t("settings.uploadConfig.folderBehavior.yaml") as string,
+
+						obsidian: i18next.t(
+							"settings.uploadConfig.folderBehavior.obsidianPath") as string,
 					})
 					.setValue(uploadSettings.behavior)
 					.onChange(async (value: string) => {
@@ -416,8 +412,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				button
 					.setIcon("pencil")
 					.onClick(async () => {
-						new ModalRegexFilePathName(this.app, this.plugin.settings, "file", (result =>
-						{
+						new ModalRegexFilePathName(this.app, this.plugin.settings, "file", (result => {
 							this.plugin.settings.upload.replaceTitle = result.upload.replaceTitle;
 							this.plugin.saveSettings();
 						})).open();
@@ -431,8 +426,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				button
 					.setIcon("pencil")
 					.onClick(async () => {
-						new ModalRegexFilePathName(this.app, this.plugin.settings, "path", (result =>
-						{
+						new ModalRegexFilePathName(this.app, this.plugin.settings, "path", (result => {
 							this.plugin.settings.upload.replacePath = result.upload.replacePath;
 							this.plugin.saveSettings();
 						})).open();
