@@ -75,7 +75,8 @@
                 "desc": "Choose between a fixed folder, the value of a frontmatter key or your obsidian relative path.",
                 "fixedFolder": "Fixed Folder",
                 "yaml": "YAML frontmatter",
-                "obsidianPath": "Obsidian Path"},
+                "obsidianPath": "Obsidian Path"
+            },
             "defaultFolder": {
                 "title": "Default Folder",
                 "desc": "Set the default reception folder",
@@ -111,7 +112,7 @@
         "textConversion": {
             "title": "Content's conversion",
             "desc": "Theses option won't change the content of the file in your Obsidian Vault, but will change the content of the file in Github.",
-            "text": "Text",
+            "header": "Text",
             "hardBreak": {
                 "title": "Markdown hard line break",
                 "desc": "Add a markdown hard line break (double whitespace) after each line. This settings can be overridden by the frontmatter key \"hardbreak\"."
@@ -184,25 +185,25 @@
                     "title": "Inline tags",
                     "desc": "Add your inline tags in your frontmatter tags field and converting nested tags with replacing \"/\" with \"_\""
                 }
+            }
+        },
+        "embed": {
+            "title": "Embed",
+            "transferImage": {
+                "title": "Transfer attachments",
+                "desc": "Send attachments embedded in a file to github. This option can be overridden by the frontmatter key \"attachment\"."
             },
-            "embed": {
-                "title": "Embed",
-                "transferImage": {
-                    "title": "Transfer attachments",
-                    "desc": "Send attachments embedded in a file to github. This option can be overridden by the frontmatter key \"attachment\"."
-                },
-                "transferNotes": {
-                    "title": "Transfer embedded notes",
-                    "desc": "Send embedded notes in a shared file to github. Only shared files will be send! This option can be overridden by the frontmatter key \"embed\"."
-                },
-                "defaultImageFolder": {
-                    "title": "Default attachment folder",
-                    "desc": "To use a folder different from default"
-                },
-                "transferMetaFile": {
-                    "title": "Send files using a metadata field",
-                    "desc": "Set the names of the metadata field you want to use to send files. Separate fields with a comma. Dataview inline field are supported."
-                }
+            "transferNotes": {
+                "title": "Transfer embedded notes",
+                "desc": "Send embedded notes in a shared file to github. Only shared files will be send! This option can be overridden by the frontmatter key \"embed\"."
+            },
+            "defaultImageFolder": {
+                "title": "Default attachment folder",
+                "desc": "To use a folder different from default"
+            },
+            "transferMetaFile": {
+                "title": "Send files using a metadata field",
+                "desc": "Set the names of the metadata field you want to use to send files. Separate fields with a comma. Dataview inline field are supported."
             }
         },
         "githubWorkflow": {
@@ -314,56 +315,56 @@
                 "desc2": "key in your frontmatter. The value of this key must be a list of repository. Each repository must have the following keys ",
                 "exampleDesc": "The YAML code below show an example based on your settings."
             }
-        }
-    },
-    "informations": {
-        "startingClean": "Starting cleaning {{repoInfo}}",
-        "scanningRepo": "Scanning the repository, may take a while...",
-        "foundNoteToSend": "Found {{nbNotes}} new notes to send",
-        "noNewNote": "No new notes to share.",
-        "successfullPublish": "Successfully published {{nbNotes}} to {{repoInfo}}",
-        "waitingWorkflow": "Now, waiting for the workflow to be completed...",
-        "sendMessage": "Send {{nbNotes}} notes to {{repoOwner}}:{{repoName}}"
-    },
-    "error": {
-        "unablePublishNote": "Unable to upload note {{file}}, skipping it",
-        "errorPublish": "Error during upload to {{repoInfo}}",
-        "unablePublishMultiNotes": "Unable to upload multiple notes, something went wrong.",
-        "mergeconflic": "Pull-request is not mergeable, you need to do it manually.",
-        "errorConfig": "Error configuring {{repoInfo}}. Please check your settings.",
-        "isEmpty": "{{repoInfo}} is empty.",
-        "whatEmpty": {
-            "owner": "Owner",
-            "repo": "Repository",
-            "branch": "Branch",
-            "ghToken": "GitHub Token"
-        }
-    },
-    "modals": {
-        "import": {
-            "title": "Import",
-            "desc": "Import settings from text or a file. Note : this will overwrite your current settings (except for username, repo name and token).",
-            "importFromFile": "Import from file",
-            "save": "Save",
-            "paste": "Paste configuration here...",
-            "error": {
-                "span": "Error importing configuration: ",
-                "isEmpty": "the configuration is empty."
+        },
+        "informations": {
+            "startingClean": "Starting cleaning {{repoInfo}}",
+            "scanningRepo": "Scanning the repository, may take a while...",
+            "foundNoteToSend": "Found {{nbNotes}} new notes to send",
+            "noNewNote": "No new notes to share.",
+            "successfullPublish": "Successfully published {{nbNotes}} to {{repoInfo}}",
+            "waitingWorkflow": "Now, waiting for the workflow to be completed...",
+            "sendMessage": "Send {{nbNotes}} notes to {{repoOwner}}:{{repoName}}"
+        },
+        "error": {
+            "unablePublishNote": "Unable to upload note {{file}}, skipping it",
+            "errorPublish": "Error during upload to {{repoInfo}}",
+            "unablePublishMultiNotes": "Unable to upload multiple notes, something went wrong.",
+            "mergeconflic": "Pull-request is not mergeable, you need to do it manually.",
+            "errorConfig": "Error configuring {{repoInfo}}. Please check your settings.",
+            "isEmpty": "{{repoInfo}} is empty.",
+            "whatEmpty": {
+                "owner": "Owner",
+                "repo": "Repository",
+                "branch": "Branch",
+                "ghToken": "GitHub Token"
             }
         },
-        "export": {
-            "title": "Export",
-            "desc": "Export settings to clipboard or a file.",
-            "copy": "Copy to clipboard",
-            "download": "Download"
-        }
-    },
-    "publish": {
-        "branch": {
-            "success": "Branch successfully created (status: {{branchStatus}}) on {{repoInfo}}",
-            "alreadyExists": "Branch already exists ({{branchName}} on {{repoInfo}} - Using it.",
-            "prMessage": "Pull-Request [{{branchName}}] from Obsidian",
-            "error": "Error with {{repoInfo}}: {{error}}"
+        "modals": {
+            "import": {
+                "title": "Import",
+                "desc": "Import settings from text or a file. Note : this will overwrite your current settings (except for username, repo name and token).",
+                "importFromFile": "Import from file",
+                "save": "Save",
+                "paste": "Paste configuration here...",
+                "error": {
+                    "span": "Error importing configuration: ",
+                    "isEmpty": "the configuration is empty."
+                }
+            },
+            "export": {
+                "title": "Export",
+                "desc": "Export settings to clipboard or a file.",
+                "copy": "Copy to clipboard",
+                "download": "Download"
+            }
+        },
+        "publish": {
+            "branch": {
+                "success": "Branch successfully created (status: {{branchStatus}}) on {{repoInfo}}",
+                "alreadyExists": "Branch already exists ({{branchName}} on {{repoInfo}} - Using it.",
+                "prMessage": "Pull-Request [{{branchName}}] from Obsidian",
+                "error": "Error with {{repoInfo}}: {{error}}"
+            }
         }
     }
 }
