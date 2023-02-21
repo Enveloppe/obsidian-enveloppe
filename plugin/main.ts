@@ -22,7 +22,7 @@ import {
 } from "./commands";
 import {commands, StringFunc, t, translationLanguage} from "./i18n";
 import {getTitleField, regexOnFileName} from "./conversion/filePathConvertor";
-
+import i18next from "i18next";
 /**
  * Main class of the plugin
  * @extends Plugin
