@@ -10,9 +10,9 @@
 				"error403": "Erreur 403 : Cette action est interdite pour {{repoInfo}}",
 				"error404": "Erreur 404 : {{repoInfo}} est introuvable"
 			},
-			"title": "Tester la connexion au dépôt configuré",
 			"repoExistsTestBranch": "Le dépôt {{repoOwner}}/{{repoName}} existe. Maintenant, nous allons tester la branche {{main}}",
-			"success": "{{repoInfo}} semble valide !"
+			"success": "{{repoInfo}} semble valide !",
+			"title": "Tester la connexion au dépôt configuré"
 		},
 		"publisherDeleteClean": "Purger les fichiers dépubliés et supprimés",
 		"shareActiveFile": "Transférer la note active",
@@ -50,80 +50,80 @@
 		"success": "Suppression réussie de {{nb}} fichiers."
 	},
 	"error": {
-		"dataview": "",
-		"errorConfig": "",
-		"errorPublish": "",
-		"isEmpty": "",
-		"mergeconflic": "",
-		"unablePublishMultiNotes": "",
-		"unablePublishNote": "",
+		"dataview": "Impossible de convertir la requête Dataview. Veuillez mettre à jour le module Dataview à la dernière version;",
+		"errorConfig": "Erreur de configuration pour {{repoInfo}}. Merci de vérifier vos paramètres.",
+		"errorPublish": "Erreur lors de la publication sur {{repoInfo}}",
+		"isEmpty": "{{repoInfo}} est vide.",
+		"mergeconflic": "La Pull-Request n'est pas fusionnale, vous avez besoin de le faire manuellement.",
+		"unablePublishMultiNotes": "Impossible de transférer plusieurs notes, quelque chose s'est mal passé.",
+		"unablePublishNote": "Impossible de transférer {{file}}, le fichier a été ignoré.",
 		"whatEmpty": {
-			"branch": "",
-			"ghToken": "",
-			"owner": "",
-			"repo": ""
+			"branch": "Branch",
+			"ghToken": "Github Token",
+			"owner": "Propriétaire",
+			"repo": "Dépôt"
 		}
 	},
 	"informations": {
-		"foundNoteToSend": "",
-		"noNewNote": "",
-		"scanningRepo": "",
-		"sendMessage": "",
-		"startingClean": "",
-		"successfullPublish": "",
-		"waitingWorkflow": ""
+		"foundNoteToSend": "Trouvé {{nbNotes}} nouvelles notes à transférer.",
+		"noNewNote": "Aucune note à transférer.",
+		"scanningRepo": "Scan du dépôt, veuillez patienter...",
+		"sendMessage": "Transfert de {{nbNotes}} notes vers {{repoOwner}}/{{repoName}}",
+		"startingClean": "Début du nettoyage de {{repoInfo}}",
+		"successfullPublish": "Transfert réussi de {{nbNotes}} notes vers {{repoInfo}}",
+		"waitingWorkflow": "Maintenant, attente de la fin du workflow..."
 	},
 	"modals": {
 		"export": {
-			"copy": "",
-			"desc": "",
-			"download": "",
-			"title": ""
+			"copy": "Copier vers le presse-papier",
+			"desc": "Exporter les paramètres vers un fichier ou dans le presse-papier.",
+			"download": "Télécharger",
+			"title": "Exporter"
 		},
 		"import": {
-			"desc": "",
+			"desc": "Importer des paramètres depuis un fichier ou un texte. Cela écrasera vos paramètres actuels (sauf le nom du dépôt, le nom d'utilisateur et votre token)",
 			"error": {
-				"isEmpty": "",
-				"span": ""
+				"isEmpty": "la configuration est vide",
+				"span": "Erreur lors de l'importation de la configuration :"
 			},
-			"importFromFile": "",
-			"paste": "",
-			"title": ""
+			"importFromFile": "Import depuis le fichier",
+			"paste": "Coller la configuration ici...",
+			"title": "Importer"
 		}
 	},
 	"publish": {
 		"branch": {
-			"alreadyExists": "",
-			"error": "",
-			"prMessage": "",
-			"success": ""
+			"alreadyExists": "La branche {{branchName}} sur {{repoInfo}} existe déjà - Utilisation de celle-ci.",
+			"error": "Erreur avec {{repoInfo}} : {{error}}",
+			"prMessage": "Pull-Request [{{branchName}}] depuis Obsidian",
+			"success": "La branche a été crée avec succès (status: {{branchStatuts}} sur {{repoInfo}})"
 		}
 	},
 	"regex": {
-		"entry": "",
-		"replace": ""
+		"entry": "Valeur à remplacer",
+		"replace": "Remplacement"
 	},
 	"settings": {
 		"conversion": {
 			"censor": {
-				"MomentReplaceRegex": "",
-				"edit": "",
-				"empty": "",
+				"edit": "Éditer les paramètres (flags et ordre d'éxécution)",
+				"empty": "Le remplacement peut être vide pour supprimer l'ensemble de la chaîne de caractère.",
 				"flags": {
-					"dotAll": "",
-					"error": "",
-					"global": "",
-					"insensitive": "",
-					"multiline": "",
-					"sticky": "",
-					"title": "",
-					"unicode": ""
+					"dotAll": "s : Dot-all",
+					"error": "Le flags {{flag}} n'est pas valide.",
+					"global": "g : Global",
+					"insensitive": "i : Insensible à la casse",
+					"multiline": "m: Multi-ligne",
+					"sticky": "y : Sticky",
+					"title": "Flags (basé sur JS regex et pouvant être combinés) :",
+					"unicode": "u : Unicode"
 				},
 				"modal": {
-					"desc": "",
-					"title": ""
+					"desc": "Replace des textes (ou des regex) dans le fichier par la valeur donnée.",
+					"title": "Remplacement de texte"
 				},
-				"title": ""
+				"MomentReplaceRegex": "Choisissez quand le regex sera appliqué : Avant ou après les autres conversions (dataview, liens internes...)",
+				"title": "Remplacement de texte sur : {{what}}"
 			},
 			"dataview": {
 				"desc": "",

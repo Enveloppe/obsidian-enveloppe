@@ -66,11 +66,11 @@
 	},
 	"informations": {
 		"foundNoteToSend": "Found {{nbNotes}} new notes to send",
-		"noNewNote": "No new notes to share.",
+		"noNewNote": "No new notes to upload.",
 		"scanningRepo": "Scanning the repository, may take a while...",
-		"sendMessage": "Send {{nbNotes}} notes to {{repoOwner}}:{{repoName}}",
+		"sendMessage": "Upload {{nbNotes}} notes to {{repoOwner}}:{{repoName}}",
 		"startingClean": "Starting cleaning {{repoInfo}}",
-		"successfullPublish": "Successfully published {{nbNotes}} to {{repoInfo}}",
+		"successfullPublish": "Successfully uploaded {{nbNotes}} to {{repoInfo}}",
 		"waitingWorkflow": "Now, waiting for the workflow to be completed..."
 	},
 	"modals": {
@@ -109,14 +109,14 @@
 				"edit": "Edit the parameters (flags and running order)",
 				"empty": "Replacement can be empty to remove the whole string.",
 				"flags": {
-					"global": "g : Global",
-					"insensitive": "i : Insensitive.",
+					"global": "g: Global",
+					"insensitive": "i: Insensitive.",
 					"title": "Flags (based on JS regex and can be combined):",
-					"multiline": "m : Multiline",
-					"dotAll": "s : DotAll",
+					"multiline": "m: Multiline",
+					"dotAll": "s: DotAll",
 					"error": "The flag {{flag}} is not valid.",
-					"sticky": "y : Sticky",
-					"unicode": "u : Unicode"
+					"sticky": "y: Sticky",
+					"unicode": "u: Unicode"
 				},
 				"modal": {
 					"title": "Text replacer",
