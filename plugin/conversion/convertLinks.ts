@@ -20,7 +20,6 @@ import {isAttachment, noTextConversion} from "../src/data_validation_test";
 export function convertWikilinks(
 	fileContent: string,
 	conditionConvert: FrontmatterConvert,
-	settings: GitHubPublisherSettings,
 	linkedFiles: LinkedNotes[]
 ): string {
 	const convertWikilink = conditionConvert.convertWiki;

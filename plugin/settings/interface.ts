@@ -1,5 +1,5 @@
+import i18next from "i18next";
 import { TFile } from "obsidian";
-import { settings, subSettings } from "../i18n";
 
 export interface RegexReplace {
 	regex: string;
@@ -294,27 +294,27 @@ export interface TextCleaner {
 
 export const PUBLISHER_TABS = {
 	"github-configuration": {
-		name: settings("github", "githubConfiguration") as string,
+		name: i18next.t("settings.github.title") as string,
 		icon: "cloud",
 	},
 	"upload-configuration": {
-		name: settings("uploadConfig", "title") as string,
+		name: i18next.t("settings.upload.title") as string,
 		icon: "upload",
 	},
 	"text-conversion": {
-		name: settings("textConversion", "textConversion") as string,
+		name: i18next.t("settings.conversion.title") as string,
 		icon: "file-text",
 	},
 	"embed-configuration": {
-		name: settings("embed", "embed") as string,
+		name: i18next.t("settings.embed.title") as string,
 		icon: "link",
 	},
 	"plugin-settings": {
-		name: settings("plugin", "pluginSettings") as string,
+		name: i18next.t("settings.plugin.title") as string,
 		icon: "gear",
 	},
 	help: {
-		name: subSettings("help.help") as string,
+		name: i18next.t("settings.help.title") as string,
 		icon: "info",
 	},
 };

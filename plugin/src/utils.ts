@@ -15,12 +15,10 @@ import {
 	OldSettings
 } from "../settings/interface";
 import Publisher from "../publish/upload";
-import {informations} from "../i18n";
-import type { StringFunc } from "../i18n";
 import { getReceiptFolder } from "../conversion/filePathConvertor";
 import { FrontmatterConvert } from "../settings/interface";
 import GithubPublisher from "plugin/main";
-
+import i18next from "i18next";
 /**
  * Create a notice message for the log
  * @param {string} message the message to display
@@ -279,29 +277,16 @@ async function noticeMessageOneRepo(
 	const noticeValue =
 		file instanceof TFile ? "\"" + file.basename + "\"" : file;
 	if (settings.github.worflow.workflowName.length > 0) {
-		new Notice(
-			(informations("sendMessage") as StringFunc)([
-				noticeValue,
-				repo.owner + ":" + repo.repo,
-				`.\n${informations("waitingWorkflow")}`,
-			])
-		);
+		const msg = i18next.t("informations.sendMessage", {nbNotes: noticeValue, repoOwner: `${repo.owner}:${repo.repo}`}) + ".\n" + i18next.t("informations.waitingWorkflow");
+		new Notice(msg);
 		const successWorkflow = await PublisherManager.workflowGestion(repo);
 		if (successWorkflow) {
-			new Notice(
-				(informations("successfullPublish") as StringFunc)([
-					noticeValue,
-					repo.owner + ":" + repo.repo,
-				])
-			);
+			const successMsg= i18next.t("informations.successfullPublish", {nbNotes: noticeValue, repoOwner: `${repo.owner}:${repo.repo}`});
+			new Notice(successMsg);
 		}
 	} else {
-		new Notice(
-			(informations("successfullPublish") as StringFunc)([
-				noticeValue,
-				repo.owner + ":" + repo.repo,
-			])
-		);
+		const informations = i18next.t("informations.successfullPublish", {nbNotes: noticeValue, repoOwner: `${repo.owner}:${repo.repo}`});
+		new Notice(informations);
 	}
 }
 

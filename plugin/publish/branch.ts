@@ -4,7 +4,7 @@ import {
 	RepoFrontmatter,
 } from "../settings/interface";
 import { FilesManagement } from "./filesManagement";
-import { MetadataCache, Notice, parseFrontMatterAliases, Vault } from "obsidian";
+import { MetadataCache, Notice, Vault } from "obsidian";
 import GithubPublisherPlugin from "../main";
 import { noticeLog } from "../src/utils";
 import i18next from "i18next";

@@ -1,4 +1,14 @@
 {
+    "common": {
+        "save" : "Save", 
+        "cancel" : "Cancel",
+        "delete" : "Delete",
+        "close" : "Close",
+        "error" : "Error",
+        "warning" : "Warning",
+        "here" : "here",
+        "text": "text"
+    },
     "commands": {
         "shareActiveFile": "Upload single current active note",
         "publisherDeleteClean": "Purge depublished and deleted files",
@@ -23,11 +33,11 @@
         }
     },
     "deletion": {
-        "errorDeleteDefaultFolder": "You need a default folder name in the settings to use this command.",
-        "errorDeleteRootFolder": "You need to configure a root folder in the settings to use this command.",
-        "successDeleting": "Successfully deleted {{nb}} files.",
-        "failedDeleting": "Failed to delete {{nb}} files.",
-        "noFileDeleted": "No files have been deleted."
+        "defaultFolder": "You need a default folder name in the settings to use this command.",
+        "rootFolder": "You need to configure a root folder in the settings to use this command.",
+        "success": "Successfully deleted {{nb}} files.",
+        "failed": "Failed to delete {{nb}} files.",
+        "noFile": "No files have been deleted."
     },
     "settings": {
         "exportSettings": "Export settings",
@@ -45,7 +55,7 @@
                     "enterprise": "Enterprise"
                 }
             },
-            "githubConfiguration": "Github Configuration",
+            "title": "Github Configuration",
             "repoName": {
                 "title": "Repository Name",
                 "desc": "The name of the repository where you store your blog.",
@@ -67,7 +77,7 @@
             "automaticallyMergePR": "Automatically merge pull requests",
             "testConnection": "Test connection"
         },
-        "uploadConfig": {
+        "upload": {
             "title": "Upload configuration",
             "pathSetting": "Path settings",
             "folderBehavior": {
@@ -109,10 +119,10 @@
                 "desc": "If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string. The replacement won't be applied to the filename."
             }
         },
-        "textConversion": {
+        "conversion": {
             "title": "Content's conversion",
             "desc": "Theses option won't change the content of the file in your Obsidian Vault, but will change the content of the file in Github.",
-            "header": "Text",
+            "sectionTitle": "On contents",
             "hardBreak": {
                 "title": "Markdown hard line break",
                 "desc": "Add a markdown hard line break (double whitespace) after each line. This settings can be overridden by the frontmatter key \"hardbreak\"."
@@ -155,7 +165,6 @@
                     "error": "The flag {{flag}} is not valid."
                 },
                 "empty": "Replacement can be empty to remove the whole string.",
-                "save": "Save",
                 "replace": "Text to replace",
                 "value": "Replacement value",
                 "tootltip": {
@@ -338,14 +347,14 @@
             "repo": "Repository",
             "branch": "Branch",
             "ghToken": "GitHub Token"
-        }
+        },
+        "dataview": "Unable to render dataview query. Please update the dataview plugin to the last version."
     },
     "modals": {
         "import": {
             "title": "Import",
             "desc": "Import settings from text or a file. Note : this will overwrite your current settings (except for username, repo name and token).",
             "importFromFile": "Import from file",
-            "save": "Save",
             "paste": "Paste configuration here...",
             "error": {
                 "span": "Error importing configuration: ",

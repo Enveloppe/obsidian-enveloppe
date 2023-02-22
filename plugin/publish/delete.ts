@@ -10,7 +10,7 @@ import { FilesManagement } from "./filesManagement";
 import { Base64 } from "js-base64";
 import {noticeLog, trimObject } from "../src/utils";
 import {isAttachment} from "../src/data_validation_test";
-import { StringFunc, deletion } from "../i18n";
+import i18next from "i18next";
 
 /**
  * Delete file from github, based on a list of file in the original vault
@@ -76,12 +76,12 @@ async function deleteFromGithubOneRepo(
 		let errorMsg = "";
 		if (settings.upload.defaultName.length > 0) {
 			if (settings.upload.defaultName.length > 0) {
-				errorMsg = deletion("errorDeleteDefaultFolder") as string;
+				errorMsg = i18next.t("deletion.defaultFolder") as string;
 			} else if (
 				settings.upload.behavior === FolderSettings.yaml &&
 				settings.upload.rootFolder.length === 0
 			) {
-				errorMsg = deletion("errorDeleteRootFolder") as string;
+				errorMsg = i18next.t("deletion.rootFolder") as string;
 			}
 			if (!silent) {
 				new Notice("Error : " + errorMsg);
@@ -141,17 +141,13 @@ async function deleteFromGithubOneRepo(
 			}
 		}
 	}
-	let successMsg = deletion("noFileDeleted") as string;
+	let successMsg = i18next.t("deletion.noFile") as string;
 	let failedMsg = "";
 	if (deletedSuccess > 0) {
-		successMsg = (deletion("successDeleting") as StringFunc)(
-			deletedSuccess.toString()
-		);
+		successMsg = (i18next.t("deletion.success", {nb: deletedSuccess.toString()}));
 	}
 	if (deletedFailed > 0) {
-		failedMsg = (deletion("failedDeleting") as StringFunc)(
-			deletedFailed.toString()
-		);
+		failedMsg = (i18next.t("deletion.failed", {nb: deletedFailed.toString()}));	
 	}
 	if (!silent) {
 		new Notice(successMsg + failedMsg);

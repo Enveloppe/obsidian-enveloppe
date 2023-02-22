@@ -21,6 +21,7 @@ import { noticeLog } from "../src/utils";
 import { convertLinkCitation, convertWikilinks } from "./convertLinks";
 import findAndReplaceText from "./findAndReplaceText";
 import GithubPublisher from "../main";
+import i18next from "i18next";
 
 /**
  * Convert soft line breaks to hard line breaks, adding two space at the end of the line.
@@ -272,15 +273,12 @@ export async function convertDataviewQueries(
 			md = convertWikilinks(
 				md,
 				frontmatterSettings,
-				settings,
 				dataviewPath
 			);
 			replacedText = replacedText.replace(block, md);
 		} catch (e) {
 			noticeLog(e, settings);
-			new Notice(
-				"Unable to render dataview query. Please update the dataview plugin to the last version."
-			);
+			new Notice(i18next.t("error.dataview"));
 			return queryBlock[0];
 		}
 	}
@@ -349,7 +347,7 @@ export async function mainConverting(
 		sourceRepo,
 		frontmatterSettings
 	);
-	text = convertWikilinks(text, frontmatterSettings, settings, linkedFiles);
+	text = convertWikilinks(text, frontmatterSettings, linkedFiles);
 	text = findAndReplaceText(text, settings, true);
 
 	return text;
