@@ -62,6 +62,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 
 
 		for (const [tabID, tabInfo] of Object.entries(PUBLISHER_TABS)) {
+			console.log(tabID, tabInfo.name)
 			const tabEl = tabBar.createEl("div", {
 				cls: "settings-tab github-publisher",
 			});
