@@ -80,7 +80,7 @@ export default class GithubPublisher extends Plugin {
 			resources: ressources,
 		});
 
-		console.log(i18next.t("publish.branch.success") as string)
+		console.log(i18next.t("publish.branch.success", {branchStatus : "truc", repoInfo: "machin"}) as string)
 		
 		await this.loadSettings();
 		const oldSettings = this.settings;
