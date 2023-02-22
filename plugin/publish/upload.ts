@@ -15,7 +15,7 @@ import { FilesManagement } from "./filesManagement";
 import { Octokit } from "@octokit/core";
 import { Base64 } from "js-base64";
 import { deleteFromGithub } from "./delete";
-import { StringFunc, error } from "../i18n";
+import i18next from "i18next";
 
 import {
 	getReceiptFolder,
@@ -125,8 +125,7 @@ export default class Publisher {
 							statusBar.increment();
 						} catch (e) {
 							new Notice(
-								(error("unablePublishNote") as StringFunc)(
-									image.name
+								(i18next.t("error.unablePublishNote", {file: image.name})
 								)
 							);
 							console.error(e);

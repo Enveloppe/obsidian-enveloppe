@@ -1,5 +1,5 @@
 import { GitHubPublisherSettings } from "./interface";
-import { subSettings } from "../i18n";
+import i18next from "i18next";
 
 
 /**
@@ -45,7 +45,7 @@ export function help(settings: GitHubPublisherSettings) {
 				cls: "code-title",
 			});
 			span.createEl("span", {
-				text: ` ${subSettings("help.frontmatter.share") as string}`,
+				text: ` ${i18next.t("settings.help.frontmatter.share")}`,
 			});
 		});
 		span.createEl("li", null, (span) => {
@@ -56,7 +56,7 @@ export function help(settings: GitHubPublisherSettings) {
 				p.createEl("code", { text: "mdlinks" });
 				p.createEl("span", {
 					text: `: ${
-						subSettings("help.frontmatter.mdlinks") as string
+						i18next.t("settings.help.frontmatter.mdlinks")
 					}`,
 				});
 			});
@@ -65,34 +65,30 @@ export function help(settings: GitHubPublisherSettings) {
 				p.createEl("span", null, (span) => {
 					span.createEl("span", {
 						text: `: ${
-							subSettings(
-								"help.frontmatter.convert.enableOrDisable"
+							i18next.t(
+								"settings.help.frontmatter.convert.enableOrDisable"
 							) as string
 						} `,
 					});
 					span.createEl("code", { text: " [[link]] " });
 					span.createEl("span", {
-						text: subSettings(
-							"help.frontmatter.convert.or"
-						) as string,
+						text: i18next.t("settings.help.frontmatter.convert.or")
 					});
 					span.createEl("code", { text: " [](link) " });
 					span.createEl("span", {
-						text: subSettings(
-							"help.frontmatter.convert.syntax"
-						) as string,
+						text: i18next.t("settings.help.frontmatter.convert.syntax")
 					});
 				});
 			});
 			l.createEl("li", null, (p) => {
 				p.createEl("code", {text: "internals"});
 				p.createEl("span", {
-					text: `: ${subSettings("help.frontmatter.internals") as string}`
+					text: `: ${i18next.t("settings.help.frontmatter.internals")}`
 				});
 			});
 			l.createEl("li", null, (p) => {
 				p.createEl("code", { text: "nonShared" });
-				p.createEl("span", { text: `: ${subSettings("help.frontmatter.nonShared") as string}` });
+				p.createEl("span", { text: `: ${i18next.t("settings.help.frontmatter.nonShared")}` });
 			});
 		});
 		span.createEl("li", { text: "embed:", cls: "code code-title" });
@@ -101,7 +97,7 @@ export function help(settings: GitHubPublisherSettings) {
 				p.createEl("code", { text: "send" });
 				p.createEl("span", {
 					text: `: ${
-						subSettings("help.frontmatter.embed.send") as string
+						i18next.t("settings.help.frontmatter.embed.send")
 					}`,
 				});
 			});
@@ -109,7 +105,7 @@ export function help(settings: GitHubPublisherSettings) {
 				p.createEl("code", { text: "remove" });
 				p.createEl("span", {
 					text: `: ${
-						subSettings("help.frontmatter.embed.remove") as string
+						i18next.t("settings.help.frontmatter.embed.remove")
 					}`,
 				});
 			});
@@ -120,8 +116,8 @@ export function help(settings: GitHubPublisherSettings) {
 				span.createEl("code", { text: "send" });
 				span.createEl("span", {
 					text: `: ${
-						subSettings(
-							"help.frontmatter.attachment.send"
+						i18next.t(
+							"settings.help.frontmatter.attachment.send"
 						) as string
 					}`,
 				});
@@ -130,8 +126,8 @@ export function help(settings: GitHubPublisherSettings) {
 				p.createEl("code", { text: "folder" });
 				p.createEl("span", {
 					text: `: ${
-						subSettings(
-							"help.frontmatter.attachment.folder"
+						i18next.t(
+							"settings.help.frontmatter.attachment.folder"
 						) as string
 					}`,
 				});
@@ -140,47 +136,47 @@ export function help(settings: GitHubPublisherSettings) {
 		span.createEl("li", null, (span) => {
 			span.createEl("code", { text: "dataview", cls: "code-title" });
 			span.createEl("span", {
-				text: `: ${subSettings("help.frontmatter.dataview") as string}`,
+				text: `: ${i18next.t("settings.help.frontmatter.dataview")}`,
 			});
 		});
 		span.createEl("li", null, (span) => {
 			span.createEl("code", { text: "hardbreak", cls: "code-title" });
 			span.createEl("span", {
 				text: `: ${
-					subSettings("help.frontmatter.hardBreak") as string
+					i18next.t("settings.help.frontmatter.hardBreak")
 				}`,
 			});
 		});
 		span.createEl("li", null, (span) => {
 			span.createEl("code", { text: "repo", cls: "code-title" });
 			span.createEl("span", {
-				text: `: ${subSettings("help.frontmatter.repo.desc")}`,
+				text: `: ${i18next.t("settings.help.frontmatter.repo.desc")}`,
 			});
 			span.createEl("ul", null, (ul) => {
 				ul.createEl("li", null, (li) => {
 					li.createEl("code", { text: "owner" });
 					li.createEl("span", {
-						text: `: ${subSettings("help.frontmatter.repo.owner")}`,
+						text: `: ${i18next.t("settings.help.frontmatter.repo.owner")}`,
 					});
 				});
 				ul.createEl("li", null, (li) => {
 					li.createEl("code", { text: "repo" });
 					li.createEl("span", {
-						text: `: ${subSettings("help.frontmatter.repo.repo")}`,
+						text: `: ${i18next.t("settings.help.frontmatter.repo.repo")}`,
 					});
 				});
 				ul.createEl("li", null, (li) => {
 					li.createEl("code", { text: "branch" });
 					li.createEl("span", {
-						text: `: ${subSettings(
-							"help.frontmatter.repo.branch"
+						text: `: ${i18next.t(
+							"settings.help.frontmatter.repo.branch"
 						)}`,
 					});
 				});
 				ul.createEl("li", null, (li) => {
 					li.createEl("code", { text: "autoclean"});
 					li.createEl("span", {
-						text: `: ${subSettings("help.frontmatter.autoclean")}`,
+						text: `: ${i18next.t("settings.help.frontmatter.autoclean")}`,
 					});
 				});
 			});
@@ -191,13 +187,13 @@ export function help(settings: GitHubPublisherSettings) {
 				cls: "code-title",
 			});
 			span.createEl("span", {
-				text: `: ${subSettings("help.frontmatter.titleKey")}`,
+				text: `: ${i18next.t("settings.help.frontmatter.titleKey")}`,
 			});
 		});
 		span.createEl("li", null, (span) => {
 			span.createEl("code", { text: "baseLink", cls: "code-title" });
 			span.createEl("span", {
-				text: `: ${subSettings("help.frontmatter.baselink")}`,
+				text: `: ${i18next.t("settings.help.frontmatter.baselink")}`,
 			});
 		});
 	});
@@ -213,25 +209,25 @@ export function usefullLinks(): DocumentFragment {
 	usefullLinks.createEl("ul", null, (el) => {
 		el.createEl("li", null, (el) => {
 			el.createEl("a", {
-				text: subSettings("help.usefulLinks.documentation") as string,
-				href: subSettings("help.usefulLinks.links") as string,
+				text: i18next.t("settings.help.usefulLinks.documentation"),
+				href: i18next.t("settings.help.usefulLinks.links"),
 			});
 		});
 		el.createEl("li", null, (el) => {
 			el.createEl("a", {
-				text: subSettings("help.usefulLinks.repository") as string,
+				text: i18next.t("settings.help.usefulLinks.repository"),
 				href: "https://github.com/ObsidianPublisher/obsidian-github-publisher",
 			});
 		});
 		el.createEl("li", null, (el) => {
 			el.createEl("a", {
-				text: subSettings("help.usefulLinks.issue") as string,
+				text: i18next.t("settings.help.usefulLinks.issue"),
 				href: "https://github.com/ObsidianPublisher/obsidian-github-publisher/issues",
 			});
 		});
 		el.createEl("li", null, (el) => {
 			el.createEl("a", {
-				text: subSettings("help.usefulLinks.discussion") as string,
+				text: i18next.t("settings.help.usefulLinks.discussion"),
 				href: "https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions",
 			});
 		});
@@ -250,11 +246,11 @@ export function multipleRepoExplained(
 	const multipleRepoExplained = document.createDocumentFragment();
 	multipleRepoExplained.createEl("p", null, (el) => {
 		el.createEl("span", {
-			text: subSettings("help.multiRepoHelp.desc") as string,
+			text: i18next.t("settings.help.multiRepoHelp.desc"),
 		});
 		el.createEl("code", { text: "multipleRepo" });
 		el.createEl("span", {
-			text: ` ${subSettings("help.multiRepoHelp.desc2") as string}:`,
+			text: ` ${i18next.t("settings.help.multiRepoHelp.desc2")}:`,
 		});
 		el.createEl("ul", null, (el) => {
 			el.createEl("li", { text: "owner" }).addClass("code");
@@ -263,7 +259,7 @@ export function multipleRepoExplained(
 			el.createEl("li", { text: "autoclean" }).addClass("code");
 		});
 		el.createEl("span", {
-			text: subSettings("help.multiRepoHelp.exampleDesc") as string,
+			text: i18next.t("settings.help.multiRepoHelp.exampleDesc"),
 		});
 	});
 	multipleRepoExplained
