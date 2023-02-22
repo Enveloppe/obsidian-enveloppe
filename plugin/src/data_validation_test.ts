@@ -1,9 +1,16 @@
 import {FrontMatterCache, Notice, TFile, MetadataCache } from "obsidian";
 import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter} from "../settings/interface";
-import {error, StringFunc, t} from "../i18n";
 import {GithubBranch} from "../publish/branch";
 import {getRepoFrontmatter, noticeLog} from "./utils";
+import i18next from "i18next";
 
+/**
+ *  Check if the file is a valid file to publish
+ * @param {TFile} file
+ * @param {GitHubPublisherSettings} settings
+ * @param {FrontMatterCache} frontmatter
+ * @returns {boolean} true if the file can be published
+ */
 export function isInternalShared(
 	sharekey: string,
 	frontmatter: FrontMatterCache,
@@ -123,23 +130,23 @@ export function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoF
 	const isEmpty: boolean[]	= [];
 	if (settings.github.token.length === 0) {
 		isEmpty.push(true);
-		const whatIsEmpty = t("error.whatEmpty.ghToken") as string;
-		new Notice((error("isEmpty") as StringFunc)(whatIsEmpty));
+		const whatIsEmpty = i18next.t("error.whatEmpty.ghToken") as string;
+		new Notice(i18next.t("error.isEmpty", {repoInfo: whatIsEmpty}))
 	}
 	if (settings.github.token.length != 0) {
 		for (const repo of repoFrontmatter) {
 			if (repo.repo.length === 0) {
 				isEmpty.push(true);
-				const whatIsEmpty = t("error.whatEmpty.repo") as string;
-				new Notice((error("isEmpty") as StringFunc)(whatIsEmpty));
+				const whatIsEmpty = i18next.t("error.whatEmpty.repo") as string;
+				new Notice(i18next.t("error.isEmpty", {repoInfo: whatIsEmpty}))
 			} else if (repo.owner.length === 0) {
 				isEmpty.push(true);
-				const whatIsEmpty = t("error.whatEmpty.owner") as string;
-				new Notice((error("isEmpty") as StringFunc)(whatIsEmpty));
+				const whatIsEmpty = i18next.t("error.whatEmpty.owner") as string;
+				new Notice(i18next.t("error.isEmpty", {repoInfo: whatIsEmpty}))
 			} else if (repo.branch.length === 0) {
 				isEmpty.push(true);
-				const whatIsEmpty = t("error.whatEmpty.branch") as string;
-				new Notice((error("isEmpty") as StringFunc)(whatIsEmpty));
+				const whatIsEmpty = i18next.t("error.whatEmpty.branch") as string;
+				new Notice(i18next.t("error.isEmpty", {repoInfo: whatIsEmpty}));
 			} else {
 				isEmpty.push(false);
 			}
