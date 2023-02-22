@@ -292,32 +292,6 @@ export interface TextCleaner {
 	flags: string;
 }
 
-export const PUBLISHER_TABS = {
-	"github-configuration": {
-		name: i18next.t("settings.github.title") ,
-		icon: "cloud",
-	},
-	"upload-configuration": {
-		name: i18next.t("settings.upload.title") ,
-		icon: "upload",
-	},
-	"text-conversion": {
-		name: i18next.t("settings.conversion.title") ,
-		icon: "file-text",
-	},
-	"embed-configuration": {
-		name: i18next.t("settings.embed.title") ,
-		icon: "link",
-	},
-	"plugin-settings": {
-		name: i18next.t("settings.plugin.title"),
-		icon: "gear",
-	},
-	help: {
-		name: i18next.t("settings.help.title") ,
-		icon: "info",
-	},
-};
 
 export interface FrontmatterConvert {
 	links: boolean;

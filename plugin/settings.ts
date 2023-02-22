@@ -8,8 +8,7 @@ import {
 	shortcutsHideShow, showHideBasedOnFolder,
 } from "./settings/style";
 import {
-	FolderSettings,
-	PUBLISHER_TABS, GithubTiersVersion,
+	FolderSettings, GithubTiersVersion,
 } from "./settings/interface";
 import {
 	help,
@@ -19,10 +18,36 @@ import {
 	KeyBasedOnSettings
 } from "./settings/help";
 import "i18next";
-
 import { checkRepositoryValidity } from "./src/data_validation_test";
 import { ExportModal, ImportModal } from "./src/modals";
 import i18next from "i18next";
+
+const PUBLISHER_TABS = {
+	"github-configuration": {
+		name: i18next.t("settings.github.title"),
+		icon: "cloud",
+	},
+	"upload-configuration": {
+		name: i18next.t("settings.upload.title"),
+		icon: "upload",
+	},
+	"text-conversion": {
+		name: i18next.t("settings.conversion.title"),
+		icon: "file-text",
+	},
+	"embed-configuration": {
+		name: i18next.t("settings.embed.title"),
+		icon: "link",
+	},
+	"plugin-settings": {
+		name: i18next.t("settings.plugin.title"),
+		icon: "gear",
+	},
+	help: {
+		name: i18next.t("settings.help.title"),
+		icon: "info",
+	},
+};
 
 export class GithubPublisherSettings extends PluginSettingTab {
 	plugin: GithubPublisherPlugin;
