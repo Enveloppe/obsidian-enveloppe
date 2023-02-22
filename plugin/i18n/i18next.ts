@@ -22,7 +22,7 @@ declare module 'i18next' {
     }
 }
 
-i18next.use().init({
+i18next.init({
     lng:locale,
     fallbackLng: "en",
     resources: ressources,
