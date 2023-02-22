@@ -93,7 +93,6 @@
         },
         "upload": {
             "title": "Upload configuration",
-            "pathSetting": "Path settings",
             "folderBehavior": {
                 "title": "Folder behavior",
                 "desc": "Choose between a fixed folder, the value of a frontmatter key or your obsidian relative path.",

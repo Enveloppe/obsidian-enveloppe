@@ -20,10 +20,10 @@ import {
 	shareOneNote,
 	shareOnlyEdited
 } from "./commands";
-import {commands, StringFunc, t, translationLanguage} from "./i18n";
-import {getTitleField, regexOnFileName} from "./conversion/filePathConvertor";
 import i18next from "i18next";
-import { ressources, locale } from "./i18n/i18next";
+import {getTitleField, regexOnFileName} from "./conversion/filePathConvertor";
+import { ressources, locale, translationLanguage } from "./i18n/i18next";
+
 /**
  * Main class of the plugin
  * @extends Plugin
@@ -79,8 +79,6 @@ export default class GithubPublisher extends Plugin {
 			fallbackLng: "en",
 			resources: ressources,
 		});
-
-		console.log(i18next.t("publish.branch.success", {branchStatus : "truc", repoInfo: "machin"}) as string)
 		
 		await this.loadSettings();
 		const oldSettings = this.settings;
@@ -105,10 +103,7 @@ export default class GithubPublisher extends Plugin {
 					menu.addItem((item) => {
 						item.setSection("action");
 						item.setTitle(
-							(commands("shareViewFiles") as StringFunc)(
-								fileName
-							)
-						)
+							(i18next.t("commands.shareViewFiles", {viewFile: fileName})))
 							.setIcon("share")
 							.onClick(async () => {
 								await shareOneNote(
@@ -139,9 +134,7 @@ export default class GithubPublisher extends Plugin {
 					menu.addItem((item) => {
 						item.setSection("mkdocs-publisher");
 						item.setTitle(
-							(commands("shareViewFiles") as StringFunc)(
-								fileName
-							)
+							(i18next.t("commands.shareViewFiles", {viewFile: fileName}))
 						)
 							.setIcon("share")
 							.onClick(async () => {
@@ -185,7 +178,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-one",
-			name: commands("shareActiveFile") as string,
+			name: i18next.t("commands.shareActiveFile") as string,
 			hotkeys: [],
 			checkCallback: (checking) => {
 				const file = this.app.workspace.getActiveFile();
@@ -211,7 +204,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-delete-clean",
-			name: commands("publisherDeleteClean") as string,
+			name: i18next.t("commands.publisherDeleteClean") as string,
 			hotkeys: [],
 			checkCallback: (checking) => {
 				if (this.settings.upload.autoclean.enable) {
@@ -233,7 +226,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-publish-all",
-			name: commands("uploadAllNotes") as string,
+			name: i18next.t("commands.uploadAllNotes") as string,
 			callback: async () => {
 				const sharedFiles = this.reloadOctokit().getSharedFiles();
 				const statusBarItems = this.addStatusBarItem();
@@ -253,7 +246,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-upload-new",
-			name: commands("uploadNewNotes") as string,
+			name: i18next.t("commands.uploadNewNotes") as string,
 			callback: async () => {
 				const publisher = this.reloadOctokit();
 				await shareNewNote(
@@ -269,7 +262,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-upload-all-edited-new",
-			name: commands("uploadAllNewEditedNote") as string,
+			name: i18next.t("commands.uploadAllNewEditedNote") as string,
 			callback: async () => {
 				const publisher = this.reloadOctokit();
 				await shareAllEditedNotes(
@@ -285,7 +278,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-upload-edited",
-			name: commands("uploadAllEditedNote") as string,
+			name: i18next.t("commands.uploadAllEditedNote") as string,
 			callback: async () => {
 				const publisher = this.reloadOctokit();
 				await shareOnlyEdited(
@@ -301,7 +294,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "check-this-repo-validy",
-			name: t("commands.checkValidity.name") as string,
+			name: i18next.t("commands.checkValidity.name") as string,
 			checkCallback: (checking) => {
 				if (this.app.workspace.getActiveFile())
 				{

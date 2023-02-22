@@ -103,7 +103,9 @@ export class ModalRegexOnContents extends Modal {
 			})
 			.createEl("p", {
 				text: i18next.t("settings.conversion.censor.modal.desc") as string,
-			});
+			})
+			.createEl("p", {
+				text: i18next.t("settings.conversion.censor.empty")});
 		for (const censorText of this.settings.conversion.censorText) {
 			new Setting(contentEl)
 				.setClass("github-publisher-censor-entry")

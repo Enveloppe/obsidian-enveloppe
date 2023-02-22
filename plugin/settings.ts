@@ -152,7 +152,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(i18next.t("settings.github.repoName.desc") as string)
 			.addText((text) =>
 				text
-					.setPlaceholder("mkdocs-template")
+					.setPlaceholder(i18next.t("settings.github.repoName.placeholder"))
 					.setValue(githubSettings.repo)
 					.onChange(async (value) => {
 						githubSettings.repo = value.trim();
@@ -177,7 +177,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		desc_ghToken.createEl("span", null, (span) => {
 			span.innerText = i18next.t("settings.github.ghToken.desc") as string;
 			span.createEl("a", null, (link) => {
-				link.innerText = i18next.t("settings.github.ghToken.here") as string;
+				link.innerText = i18next.t("common.here") as string;
 				link.href =
 					"https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
@@ -266,10 +266,6 @@ export class GithubPublisherSettings extends PluginSettingTab {
 
 	renderUploadConfiguration() {
 		const uploadSettings = this.plugin.settings.upload;
-		this.settingsPage.createEl("h3", {
-			text: i18next.t("settings.upload.title") as string,
-		});
-
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.upload.folderBehavior.title") as string)
 			.setDesc(i18next.t("settings.upload.folderBehavior.desc") as string)
@@ -303,7 +299,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setName(i18next.t("settings.upload.defaultFolder.title") as string)
 			.setDesc(i18next.t("settings.upload.defaultFolder.desc") as string)
 			.addText((text) => {
-				text.setPlaceholder("docs")
+				text.setPlaceholder(i18next.t("settings.upload.defaultFolder.placeholder"))
 					.setValue(uploadSettings.defaultName)
 					.onChange(async (value) => {
 						uploadSettings.defaultName = value.replace(
@@ -343,7 +339,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setClass("github-publisher")
 			.setDesc(i18next.t("settings.upload.frontmatterKey.desc") as string)
 			.addText((text) => {
-				text.setPlaceholder("category")
+				text.setPlaceholder(i18next.t("settings.upload.frontmatterKey.placeholder"))
 					.setValue(uploadSettings.yamlFolderKey)
 					.onChange(async (value) => {
 						uploadSettings.yamlFolderKey = value.trim();
@@ -549,7 +545,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			text: i18next.t("settings.conversion.desc") as string,
 		});
 		this.settingsPage.createEl("h5", {
-			text: i18next.t("settings.conversion.header") as string,
+			text: i18next.t("settings.conversion.sectionTitle") as string,
 		});
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.hardBreak.title") as string)
@@ -846,7 +842,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 		const pathRemover = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.copyLink.linkpathremover.desc") as string)
+			.setName(i18next.t("settings.plugin.copyLink.linkpathremover.title") as string)
 			.setDesc(
 				i18next.t("settings.plugin.copyLink.linkpathremover.desc") as string
 			)

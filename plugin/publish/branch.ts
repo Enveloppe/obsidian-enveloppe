@@ -348,7 +348,7 @@ export class GithubBranch extends FilesManagement {
 							);
 						} else if (e.status === 403) {
 							new Notice(
-								(i18next.t("commands.checkValidity.inRepo.error403", {repoInfo: `${repo.owner}/${repo.repo}`}))
+								(i18next.t("commands.checkValidity.inBranch.error403", {repoInfo: `${repo.owner}/${repo.repo}`, branchInfo: repo.branch}))
 							);
 						}
 					});
