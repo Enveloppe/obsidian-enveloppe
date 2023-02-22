@@ -28,14 +28,14 @@ export class ImportModal extends Modal {
 		const {contentEl} = this;
 
 		new Setting(contentEl)
-			.setName(i18next.t("modals.import.title") as string)
-			.setDesc(i18next.t("modals.import.desc") as string);
+			.setName(i18next.t("modals.import.title") )
+			.setDesc(i18next.t("modals.import.desc") );
 
 		new Setting(contentEl).then((setting) => {
 			// Build an error message container
 			const errorSpan = createSpan({
 				cls: "github-publisher-import-error",
-				text: i18next.t("modals.import.error.span") as string,
+				text: i18next.t("modals.import.error.span") ,
 			});
 			setting.nameEl.appendChild(errorSpan);
 			const importAndClose = async (str: string) => {
@@ -103,15 +103,15 @@ export class ImportModal extends Modal {
 			// Build a label we will style as a link
 			setting.controlEl.createEl("label", {
 				cls: "github-publisher-import-label",
-				text: i18next.t("modals.import.importFromFile") as string,
+				text: i18next.t("modals.import.importFromFile") ,
 				attr: {
 					for: "github-publisher-import-input",
 				},
 			});
 
 			const textArea = new TextAreaComponent(contentEl)
-				.setPlaceholder(i18next.t("modals.import.paste") as string).then((ta) => {
-					const saveButton = new ButtonComponent(contentEl).setButtonText(i18next.t("common.save") as string).onClick(async () => {
+				.setPlaceholder(i18next.t("modals.import.paste") ).then((ta) => {
+					const saveButton = new ButtonComponent(contentEl).setButtonText(i18next.t("common.save") ).onClick(async () => {
 						await importAndClose(ta.getValue().trim());
 					});
 					saveButton.buttonEl.addClass("github-publisher-import-save-button");
@@ -125,24 +125,24 @@ export class ImportModal extends Modal {
 		contentEl.empty();
 		this.settingsPage.empty();
 		// @ts-ignore
-		const openedTab = document.querySelector(".settings-tab-active.github-publisher") ? document.querySelector(".settings-tab-active.github-publisher").innerText : i18next.t("settings.github.title") as string;
+		const openedTab = document.querySelector(".settings-tab-active.github-publisher") ? document.querySelector(".settings-tab-active.github-publisher").innerText : i18next.t("settings.github.title") ;
 		switch (openedTab) {
-		case i18next.t("settings.github.title") as string:
+		case i18next.t("settings.github.title") :
 			this.settingsTab.renderGithubConfiguration();
 			break;
 		case i18next.t("settings.upload.title"):
 			this.settingsTab.renderUploadConfiguration();
 			break;
-		case i18next.t("settings.conversion.title") as string:
+		case i18next.t("settings.conversion.title") :
 			this.settingsTab.renderTextConversion();
 			break;
-		case i18next.t("settings.embed.title") as string:
+		case i18next.t("settings.embed.title") :
 			this.settingsTab.renderEmbedConfiguration();
 			break;
-		case i18next.t("settings.plugin.title") as string:
+		case i18next.t("settings.plugin.title") :
 			this.settingsTab.renderPluginSettings();
 			break;
-		case i18next.t("settings.help.title") as string:
+		case i18next.t("settings.help.title") :
 			this.settingsTab.renderHelp();
 			break;
 		}
@@ -163,8 +163,8 @@ export class ExportModal extends Modal {
 		const {contentEl, modalEl} = this;
 		modalEl.addClass("modal-github-publisher");
 		new Setting(contentEl)
-			.setName(i18next.t("modals.export.title") as string)
-			.setDesc(i18next.t("modals.export.desc") as string)
+			.setName(i18next.t("modals.export.title") )
+			.setDesc(i18next.t("modals.export.desc") )
 			.then((setting) => {
 				const censuredSettings: GitHubPublisherSettings = this.plugin.settings;
 				const output = JSON.stringify(censuredSettings, null, 2)
@@ -173,7 +173,7 @@ export class ExportModal extends Modal {
 				setting.controlEl.createEl("a",
 					{
 						cls: "github-publisher-copy",
-						text: i18next.t("modals.export.copy") as string,
+						text: i18next.t("modals.export.copy") ,
 						href: "#",
 					},
 					(copyButton) => {
@@ -202,7 +202,7 @@ export class ExportModal extends Modal {
 				if (Platform.isDesktop) {
 					setting.controlEl.createEl("a", {
 						cls: "github-publisher-download",
-						text: i18next.t("modals.export.download") as string,
+						text: i18next.t("modals.export.download") ,
 						attr: {
 							download: "github-publisher.json",
 							href: `data:application/json;charset=utf-8,${encodeURIComponent(output)}`,
@@ -211,7 +211,7 @@ export class ExportModal extends Modal {
 				} else if (Platform.isMobile) {
 					setting.addButton((b) =>
 						b
-							.setButtonText(i18next.t("modals.export.download") as string)
+							.setButtonText(i18next.t("modals.export.download") )
 							.onClick(() => {
 								// Can't use the method above on mobile, so we'll just open a new tab
 								//create a temporary file

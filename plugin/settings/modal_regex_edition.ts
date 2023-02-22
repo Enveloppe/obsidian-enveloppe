@@ -57,7 +57,7 @@ export class ModalRegexFilePathName extends Modal {
 		new Setting(contentEl)
 			.addButton((button) => {
 				button
-				.setIcon("plus")
+					.setIcon("plus")
 					.onClick(() => {
 						what.push({
 							regex: "",
@@ -99,10 +99,10 @@ export class ModalRegexOnContents extends Modal {
 		contentEl.empty();
 		contentEl
 			.createEl("p", {
-				text: i18next.t("settings.conversion.censor.modal.title") as string,
+				text: i18next.t("settings.conversion.censor.modal.title") ,
 			})
 			.createEl("p", {
-				text: i18next.t("settings.conversion.censor.modal.desc") as string,
+				text: i18next.t("settings.conversion.censor.modal.desc") ,
 			})
 			.createEl("p", {
 				text: i18next.t("settings.conversion.censor.empty")});
@@ -112,7 +112,7 @@ export class ModalRegexOnContents extends Modal {
 				.addText((text) => {
 					text.inputEl.style.width = "100%";
 					text.setPlaceholder(i18next.t(
-						"regex.entry") as string
+						"regex.entry") 
 					)
 						.setValue(censorText.entry)
 						.onChange(async (value) => {
@@ -200,7 +200,7 @@ class ModalEditorRegex extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
-		contentEl.createEl('h2', {text: i18next.t("settings.conversion.censor.edit")});
+		contentEl.createEl("h2", {text: i18next.t("settings.conversion.censor.edit")});
 		/*
 		Parameters :
 		- Flags ; 

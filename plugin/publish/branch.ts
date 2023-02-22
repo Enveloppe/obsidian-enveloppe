@@ -119,7 +119,7 @@ export class GithubBranch extends FilesManagement {
 				const mainBranch = allBranch.data.find(
 					(branch: { name: string }) => branch.name === branchName
 				);
-				noticeLog(i18next.t('publish.branch.alreadyExists', {branchName: mainBranch.name, repoInfo: repoFrontmatter.repo}), this.settings);
+				noticeLog(i18next.t("publish.branch.alreadyExists", {branchName: mainBranch.name, repoInfo: repoFrontmatter.repo}), this.settings);
 				return !!mainBranch;
 			} catch (e) {
 				noticeLog(e, this.settings);
@@ -146,7 +146,7 @@ export class GithubBranch extends FilesManagement {
 				{
 					owner: repoFrontmatter.owner,
 					repo: repoFrontmatter.repo,
-					title: i18next.t('publish.branch.prMessage', {branchName: branchName}),
+					title: i18next.t("publish.branch.prMessage", {branchName: branchName}),
 					body: "",
 					head: branchName,
 					base: repoFrontmatter.branch,
@@ -167,7 +167,7 @@ export class GithubBranch extends FilesManagement {
 				return PR.data[0].number;
 			} catch (e) {
 				noticeLog(
-					i18next.t('publish.branch.error', {error: e, repoInfo: repoFrontmatter.repo}),
+					i18next.t("publish.branch.error", {error: e, repoInfo: repoFrontmatter.repo}),
 					this.settings
 				);
 				return 0;
@@ -231,7 +231,7 @@ export class GithubBranch extends FilesManagement {
 			return branch.status === 200;
 		} catch (e) {
 			noticeLog(e, this.settings);
-			new Notice(i18next.t('error.mergeconflic'));
+			new Notice(i18next.t("error.mergeconflic"));
 			return false;
 		}
 	}

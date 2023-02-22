@@ -76,12 +76,12 @@ async function deleteFromGithubOneRepo(
 		let errorMsg = "";
 		if (settings.upload.defaultName.length > 0) {
 			if (settings.upload.defaultName.length > 0) {
-				errorMsg = i18next.t("deletion.defaultFolder") as string;
+				errorMsg = i18next.t("deletion.defaultFolder") ;
 			} else if (
 				settings.upload.behavior === FolderSettings.yaml &&
 				settings.upload.rootFolder.length === 0
 			) {
-				errorMsg = i18next.t("deletion.rootFolder") as string;
+				errorMsg = i18next.t("deletion.rootFolder") ;
 			}
 			if (!silent) {
 				new Notice("Error : " + errorMsg);
@@ -141,7 +141,7 @@ async function deleteFromGithubOneRepo(
 			}
 		}
 	}
-	let successMsg = i18next.t("deletion.noFile") as string;
+	let successMsg = i18next.t("deletion.noFile") ;
 	let failedMsg = "";
 	if (deletedSuccess > 0) {
 		successMsg = (i18next.t("deletion.success", {nb: deletedSuccess.toString()}));

@@ -352,4 +352,4 @@ export default {
 			download: "Télécharger",
 		}
 	}
-}
+};

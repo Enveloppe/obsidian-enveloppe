@@ -2,7 +2,6 @@ import {FrontMatterCache, Menu, Plugin, TFile} from "obsidian";
 import {GithubPublisherSettings} from "./settings";
 import {
 	DEFAULT_SETTINGS,
-	FolderSettings,
 	GitHubPublisherSettings,
 	GithubTiersVersion,
 	OldSettings,
@@ -178,7 +177,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-one",
-			name: i18next.t("commands.shareActiveFile") as string,
+			name: i18next.t("commands.shareActiveFile") ,
 			hotkeys: [],
 			checkCallback: (checking) => {
 				const file = this.app.workspace.getActiveFile();
@@ -204,7 +203,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-delete-clean",
-			name: i18next.t("commands.publisherDeleteClean") as string,
+			name: i18next.t("commands.publisherDeleteClean") ,
 			hotkeys: [],
 			checkCallback: (checking) => {
 				if (this.settings.upload.autoclean.enable) {
@@ -226,7 +225,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-publish-all",
-			name: i18next.t("commands.uploadAllNotes") as string,
+			name: i18next.t("commands.uploadAllNotes") ,
 			callback: async () => {
 				const sharedFiles = this.reloadOctokit().getSharedFiles();
 				const statusBarItems = this.addStatusBarItem();
@@ -246,7 +245,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-upload-new",
-			name: i18next.t("commands.uploadNewNotes") as string,
+			name: i18next.t("commands.uploadNewNotes") ,
 			callback: async () => {
 				const publisher = this.reloadOctokit();
 				await shareNewNote(
@@ -262,7 +261,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-upload-all-edited-new",
-			name: i18next.t("commands.uploadAllNewEditedNote") as string,
+			name: i18next.t("commands.uploadAllNewEditedNote") ,
 			callback: async () => {
 				const publisher = this.reloadOctokit();
 				await shareAllEditedNotes(
@@ -278,7 +277,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "publisher-upload-edited",
-			name: i18next.t("commands.uploadAllEditedNote") as string,
+			name: i18next.t("commands.uploadAllEditedNote") ,
 			callback: async () => {
 				const publisher = this.reloadOctokit();
 				await shareOnlyEdited(
@@ -294,7 +293,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "check-this-repo-validy",
-			name: i18next.t("commands.checkValidity.name") as string,
+			name: i18next.t("commands.checkValidity.name") ,
 			checkCallback: (checking) => {
 				if (this.app.workspace.getActiveFile())
 				{

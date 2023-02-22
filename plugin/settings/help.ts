@@ -67,7 +67,7 @@ export function help(settings: GitHubPublisherSettings) {
 						text: `: ${
 							i18next.t(
 								"settings.help.frontmatter.convert.enableOrDisable"
-							) as string
+							) 
 						} `,
 					});
 					span.createEl("code", { text: " [[link]] " });
@@ -118,7 +118,7 @@ export function help(settings: GitHubPublisherSettings) {
 					text: `: ${
 						i18next.t(
 							"settings.help.frontmatter.attachment.send"
-						) as string
+						) 
 					}`,
 				});
 			});
@@ -128,7 +128,7 @@ export function help(settings: GitHubPublisherSettings) {
 					text: `: ${
 						i18next.t(
 							"settings.help.frontmatter.attachment.folder"
-						) as string
+						) 
 					}`,
 				});
 			});

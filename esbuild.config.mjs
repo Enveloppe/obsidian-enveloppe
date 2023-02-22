@@ -21,7 +21,7 @@ const prod = (process.argv[2] === 'production');
 console.log(`Building in ${prod ? 'production' : 'development'} mode`);
 console.log('Process arguments: ', process.argv);
 
-esbuild.build({
+/* esbuild.build({
 	banner: {
 		js: banner,
 	},
@@ -37,4 +37,26 @@ esbuild.build({
 	outdir: './',
 	plugins: [moveStyles],
 
+}).catch(() => process.exit(1));*/
+
+esbuild.context({
+	banner: {
+		js: banner,
+	},
+	entryPoints: ['plugin/main.ts', 'plugin/styles.css'],
+	bundle: true,
+	sourcemap: true,
+	external: ['obsidian', 'electron', ...builtins],
+	format: 'cjs',
+	outdir: './',
+	plugins: [moveStyles],
+	logLevel: "info",
+	treeShaking: true,
+	minify: prod,
+}).then(context => {
+	if (!prod) context.watch();
+	else {
+		context.rebuild().then(result => { context.dispose()
+		});
+	}
 }).catch(() => process.exit(1));

@@ -18,7 +18,7 @@ import {
 	usefullLinks,
 	KeyBasedOnSettings
 } from "./settings/help";
-import "i18next"
+import "i18next";
 
 import { checkRepositoryValidity } from "./src/data_validation_test";
 import { ExportModal, ImportModal } from "./src/modals";
@@ -41,7 +41,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		new Setting(containerEl)
 			.setClass("github-publisher-export-import")
 			.addButton((button) => {
-				button.setButtonText(i18next.t("settings.exportSettings") as string)
+				button.setButtonText(i18next.t("settings.exportSettings") )
 					.setClass("github-publisher-export")
 					.onClick(() => {
 						new ExportModal(this.app, this.plugin).open();
@@ -49,7 +49,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			}
 			)
 			.addButton((button) => {
-				button.setButtonText(i18next.t("settings.importSettings") as string)
+				button.setButtonText(i18next.t("settings.importSettings") )
 					.setClass("github-publisher-import")
 					.onClick(() => {
 						new ImportModal(this.app, this.plugin, this.settingsPage, this).open();
@@ -94,36 +94,36 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	renderSettingsPage(tabId: string) {
 		this.settingsPage.empty();
 		switch (tabId) {
-			case "github-configuration":
-				this.renderGithubConfiguration();
-				break;
-			case "upload-configuration":
-				this.renderUploadConfiguration();
-				break;
-			case "text-conversion":
-				this.renderTextConversion();
-				break;
-			case "embed-configuration":
-				this.renderEmbedConfiguration();
-				break;
-			case "plugin-settings":
-				this.renderPluginSettings();
-				break;
-			case "help":
-				this.renderHelp();
-				break;
+		case "github-configuration":
+			this.renderGithubConfiguration();
+			break;
+		case "upload-configuration":
+			this.renderUploadConfiguration();
+			break;
+		case "text-conversion":
+			this.renderTextConversion();
+			break;
+		case "embed-configuration":
+			this.renderEmbedConfiguration();
+			break;
+		case "plugin-settings":
+			this.renderPluginSettings();
+			break;
+		case "help":
+			this.renderHelp();
+			break;
 		}
 	}
 
 	renderGithubConfiguration() {
 		const githubSettings = this.plugin.settings.github;
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.github.apiType.title") as string)
-			.setDesc(i18next.t("settings.github.apiType.desc") as string)
+			.setName(i18next.t("settings.github.apiType.title") )
+			.setDesc(i18next.t("settings.github.apiType.desc") )
 			.addDropdown((dropdown) => {
 				dropdown
-					.addOption(GithubTiersVersion.free, i18next.t("settings.github.apiType.dropdown.free") as string)
-					.addOption(GithubTiersVersion.entreprise, i18next.t("settings.github.apiType.dropdown.enterprise") as string)
+					.addOption(GithubTiersVersion.free, i18next.t("settings.github.apiType.dropdown.free") )
+					.addOption(GithubTiersVersion.entreprise, i18next.t("settings.github.apiType.dropdown.enterprise") )
 					.setValue(githubSettings.api.tiersForApi)
 					.onChange(async (value) => {
 						githubSettings.api.tiersForApi = value as GithubTiersVersion;
@@ -134,8 +134,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 		if (githubSettings.api.tiersForApi === GithubTiersVersion.entreprise) {
 			new Setting(this.settingsPage)
-				.setName(i18next.t("settings.github.apiType.hostname.title") as string)
-				.setDesc(i18next.t("settings.github.apiType.hostname.desc") as string)
+				.setName(i18next.t("settings.github.apiType.hostname.title") )
+				.setDesc(i18next.t("settings.github.apiType.hostname.desc") )
 				.addText((text) =>
 					text
 						.setPlaceholder("https://github.mycompany.com")
@@ -148,8 +148,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		}
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.github.repoName.title") as string)
-			.setDesc(i18next.t("settings.github.repoName.desc") as string)
+			.setName(i18next.t("settings.github.repoName.title") )
+			.setDesc(i18next.t("settings.github.repoName.desc") )
 			.addText((text) =>
 				text
 					.setPlaceholder(i18next.t("settings.github.repoName.placeholder"))
@@ -160,12 +160,12 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					})
 			);
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.github.username.title") as string)
-			.setDesc(i18next.t("settings.github.username.desc") as string)
+			.setName(i18next.t("settings.github.username.title") )
+			.setDesc(i18next.t("settings.github.username.desc") )
 			.addText((text) =>
 				text
 					.setPlaceholder(
-						i18next.t("settings.github.username.title") as string
+						i18next.t("settings.github.username.title") 
 					)
 					.setValue(githubSettings.user)
 					.onChange(async (value) => {
@@ -175,15 +175,15 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			);
 		const desc_ghToken = document.createDocumentFragment();
 		desc_ghToken.createEl("span", null, (span) => {
-			span.innerText = i18next.t("settings.github.ghToken.desc") as string;
+			span.innerText = i18next.t("settings.github.ghToken.desc") ;
 			span.createEl("a", null, (link) => {
-				link.innerText = i18next.t("common.here") as string;
+				link.innerText = i18next.t("common.here") ;
 				link.href =
 					"https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
 		});
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.github.ghToken.title") as string)
+			.setName(i18next.t("settings.github.ghToken.title") )
 			.setDesc(desc_ghToken)
 			.addText((text) =>
 				text
@@ -196,8 +196,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			);
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.github.branch.title") as string)
-			.setDesc(i18next.t("settings.github.branch.desc") as string)
+			.setName(i18next.t("settings.github.branch.title") )
+			.setDesc(i18next.t("settings.github.branch.desc") )
 			.addText((text) =>
 				text
 					.setPlaceholder("main")
@@ -209,7 +209,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			);
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.github.automaticallyMergePR") as string)
+			.setName(i18next.t("settings.github.automaticallyMergePR") )
 			.addToggle((toggle) =>
 				toggle
 					.setValue(githubSettings.automaticallyMergePR)
@@ -223,7 +223,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setClass("github-publisher-no-display")
 			.addButton((button) =>
 				button
-					.setButtonText(i18next.t("settings.github.testConnection") as string)
+					.setButtonText(i18next.t("settings.github.testConnection") )
 					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
 						await checkRepositoryValidity(this.branchName, this.plugin.reloadOctokit(), this.plugin.settings, null, this.app.metadataCache);
@@ -231,8 +231,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			);
 		this.settingsPage.createEl("h3", { text: "Github Workflow" });
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.githubWorkflow.prRequest.title") as string)
-			.setDesc(i18next.t("settings.githubWorkflow.prRequest.desc") as string)
+			.setName(i18next.t("settings.githubWorkflow.prRequest.title") )
+			.setDesc(i18next.t("settings.githubWorkflow.prRequest.desc") )
 			.addText((text) =>
 				text
 					.setPlaceholder("[PUBLISHER] MERGE")
@@ -244,9 +244,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			);
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.githubWorkflow.githubAction.title") as string)
+			.setName(i18next.t("settings.githubWorkflow.githubAction.title") )
 			.setDesc(
-				i18next.t("settings.githubWorkflow.githubAction.desc") as string
+				i18next.t("settings.githubWorkflow.githubAction.desc") 
 			)
 			.addText((text) => {
 				text.setPlaceholder("ci")
@@ -267,16 +267,16 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	renderUploadConfiguration() {
 		const uploadSettings = this.plugin.settings.upload;
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.upload.folderBehavior.title") as string)
-			.setDesc(i18next.t("settings.upload.folderBehavior.desc") as string)
+			.setName(i18next.t("settings.upload.folderBehavior.title") )
+			.setDesc(i18next.t("settings.upload.folderBehavior.desc") )
 			.addDropdown((dropDown) => {
 				dropDown
 					.addOptions({
 						fixed: i18next.t(
-							"settings.upload.folderBehavior.fixedFolder") as string,
-						yaml: i18next.t("settings.upload.folderBehavior.yaml") as string,
+							"settings.upload.folderBehavior.fixedFolder") ,
+						yaml: i18next.t("settings.upload.folderBehavior.yaml") ,
 						obsidian: i18next.t(
-							"settings.upload.folderBehavior.obsidianPath") as string,
+							"settings.upload.folderBehavior.obsidianPath") ,
 					})
 					.setValue(uploadSettings.behavior)
 					.onChange(async (value: string) => {
@@ -296,8 +296,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.upload.defaultFolder.title") as string)
-			.setDesc(i18next.t("settings.upload.defaultFolder.desc") as string)
+			.setName(i18next.t("settings.upload.defaultFolder.title") )
+			.setDesc(i18next.t("settings.upload.defaultFolder.desc") )
 			.addText((text) => {
 				text.setPlaceholder(i18next.t("settings.upload.defaultFolder.placeholder"))
 					.setValue(uploadSettings.defaultName)
@@ -316,14 +316,14 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		const subFolderSettings = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.upload.pathRemoving.title") as string)
+			.setName(i18next.t("settings.upload.pathRemoving.title") )
 			.setClass("github-publisher")
 			.setDesc(i18next.t("settings.upload.pathRemoving.desc"))
 			.addText((text) => {
 				text.setPlaceholder(
 					i18next.t(
 						"settings.upload.pathRemoving.placeholder"
-					) as string
+					) 
 				)
 					.setValue(uploadSettings.subFolder)
 					.onChange(async (value) => {
@@ -335,9 +335,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		const frontmatterKeySettings = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.upload.frontmatterKey.title") as string)
+			.setName(i18next.t("settings.upload.frontmatterKey.title") )
 			.setClass("github-publisher")
-			.setDesc(i18next.t("settings.upload.frontmatterKey.desc") as string)
+			.setDesc(i18next.t("settings.upload.frontmatterKey.desc") )
 			.addText((text) => {
 				text.setPlaceholder(i18next.t("settings.upload.frontmatterKey.placeholder"))
 					.setValue(uploadSettings.yamlFolderKey)
@@ -347,9 +347,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 		const rootFolderSettings = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.upload.rootFolder.title") as string)
+			.setName(i18next.t("settings.upload.rootFolder.title") )
 			.setClass("github-publisher")
-			.setDesc(i18next.t("settings.upload.rootFolder.desc") as string)
+			.setDesc(i18next.t("settings.upload.rootFolder.desc") )
 			.addText((text) => {
 				text.setPlaceholder("docs")
 					.setValue(uploadSettings.rootFolder)
@@ -368,10 +368,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 		const frontmatterTitleSet = new Setting(this.settingsPage)
 			.setName(
-				i18next.t("settings.upload.useFrontmatterTitle.title") as string
+				i18next.t("settings.upload.useFrontmatterTitle.title") 
 			)
 			.setDesc(
-				i18next.t("settings.upload.useFrontmatterTitle.desc") as string
+				i18next.t("settings.upload.useFrontmatterTitle.desc") 
 			)
 			.setClass("github-publisher-title")
 			.addToggle((toggle) => {
@@ -398,10 +398,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setName(
 				i18next.t(
 					"settings.upload.frontmatterRegex.placeholder"
-				) as string
+				) 
 			)
 			.setDesc(
-				i18next.t("settings.upload.frontmatterRegex.desc") as string
+				i18next.t("settings.upload.frontmatterRegex.desc") 
 			)
 			.addButton((button) => {
 				button
@@ -415,8 +415,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.upload.filepathRegex.placeholder") as string)
-			.setDesc(i18next.t("settings.upload.filepathRegex.desc") as string)
+			.setName(i18next.t("settings.upload.filepathRegex.placeholder") )
+			.setDesc(i18next.t("settings.upload.filepathRegex.desc") )
 			.addButton((button) => {
 				button
 					.setIcon("pencil")
@@ -429,10 +429,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		const folderNoteSettings = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.conversion.links.folderNote.title") as string)
+			.setName(i18next.t("settings.conversion.links.folderNote.title") )
 			.setClass("github-publisher-folderNote")
 			.setDesc(
-				i18next.t("settings.conversion.links.folderNote.desc") as string
+				i18next.t("settings.conversion.links.folderNote.desc") 
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -464,10 +464,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		if (app.plugins.enabledPlugins.has("metadata-extractor")) {
 			new Setting(this.settingsPage)
 				.setName(
-					i18next.t("settings.githubWorkflow.useMetadataExtractor.title") as string
+					i18next.t("settings.githubWorkflow.useMetadataExtractor.title") 
 				)
 				.setDesc(
-					i18next.t("settings.githubWorkflow.useMetadataExtractor.desc") as string
+					i18next.t("settings.githubWorkflow.useMetadataExtractor.desc") 
 				)
 				.addText((text) => {
 					text.setPlaceholder("docs/_assets/metadata")
@@ -486,8 +486,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			uploadSettings.defaultName.length === 0;
 
 		const autoCleanSetting = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.githubWorkflow.autoCleanUp.title") as string)
-			.setDesc(i18next.t("settings.githubWorkflow.autoCleanUp.desc") as string)
+			.setName(i18next.t("settings.githubWorkflow.autoCleanUp.title") )
+			.setDesc(i18next.t("settings.githubWorkflow.autoCleanUp.desc") )
 			.setDisabled(condition)
 			.addToggle((toggle) => {
 				toggle
@@ -500,8 +500,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		const autoCleanExcludedSettings = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.githubWorkflow.excludedFiles.title") as string)
-			.setDesc(i18next.t("settings.githubWorkflow.excludedFiles.desc") as string)
+			.setName(i18next.t("settings.githubWorkflow.excludedFiles.title") )
+			.setDesc(i18next.t("settings.githubWorkflow.excludedFiles.desc") )
 			.setClass("github-publisher-textarea")
 			.addTextArea((textArea) => {
 				textArea
@@ -542,14 +542,14 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	renderTextConversion() {
 		const textSettings = this.plugin.settings.conversion;
 		this.settingsPage.createEl("p", {
-			text: i18next.t("settings.conversion.desc") as string,
+			text: i18next.t("settings.conversion.desc") ,
 		});
 		this.settingsPage.createEl("h5", {
-			text: i18next.t("settings.conversion.sectionTitle") as string,
+			text: i18next.t("settings.conversion.sectionTitle") ,
 		});
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.conversion.hardBreak.title") as string)
-			.setDesc(i18next.t("settings.conversion.hardBreak.desc") as string)
+			.setName(i18next.t("settings.conversion.hardBreak.title") )
+			.setDesc(i18next.t("settings.conversion.hardBreak.desc") )
 			.addToggle((toggle) => {
 				toggle
 					.setValue(textSettings.hardbreak)
@@ -559,8 +559,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.conversion.dataview.title") as string)
-			.setDesc(i18next.t("settings.conversion.dataview.desc") as string)
+			.setName(i18next.t("settings.conversion.dataview.title") )
+			.setDesc(i18next.t("settings.conversion.dataview.desc") )
 			.addToggle((toggle) => {
 				toggle
 					.setValue(textSettings.dataview)
@@ -571,8 +571,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.conversion.censor.modal.title") as string)
-			.setDesc(i18next.t("settings.conversion.censor.modal.desc") as string)
+			.setName(i18next.t("settings.conversion.censor.modal.title") )
+			.setDesc(i18next.t("settings.conversion.censor.modal.desc") )
 			.addButton((button) => {
 				button
 					.setIcon("pencil")
@@ -587,10 +587,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		this.settingsPage.createEl("h5", { text: "Tags" });
 		new Setting(this.settingsPage)
 			.setName(
-				i18next.t("settings.conversion.tags.inlineTags.title") as string
+				i18next.t("settings.conversion.tags.inlineTags.title") 
 			)
 			.setDesc(
-				i18next.t("settings.conversion.tags.inlineTags.desc") as string
+				i18next.t("settings.conversion.tags.inlineTags.desc") 
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -602,8 +602,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.conversion.tags.title") as string)
-			.setDesc(i18next.t("settings.conversion.tags.desc") as string)
+			.setName(i18next.t("settings.conversion.tags.title") )
+			.setDesc(i18next.t("settings.conversion.tags.desc") )
 			.setClass("github-publisher-textarea")
 			.addTextArea((text) => {
 				text.setPlaceholder("field_name")
@@ -617,8 +617,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.conversion.tags.exclude.title") as string)
-			.setDesc(i18next.t("settings.conversion.tags.exclude.desc") as string)
+			.setName(i18next.t("settings.conversion.tags.exclude.title") )
+			.setDesc(i18next.t("settings.conversion.tags.exclude.desc") )
 			.setClass("github-publisher-textarea")
 			.addTextArea((text) => {
 				text.setPlaceholder("field value")
@@ -635,16 +635,16 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		this.settingsPage.createEl("h5", {
-			text: i18next.t("settings.conversion.links.title") as string,
+			text: i18next.t("settings.conversion.links.title") ,
 		});
 		this.settingsPage.createEl("p", {
-			text: i18next.t("settings.conversion.links.desc") as string,
+			text: i18next.t("settings.conversion.links.desc") ,
 		});
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.conversion.links.internals.title") as string)
+			.setName(i18next.t("settings.conversion.links.internals.title") )
 			.setDesc(
-				i18next.t("settings.conversion.links.internals.desc") as string
+				i18next.t("settings.conversion.links.internals.desc") 
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -659,10 +659,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		if (textSettings.links.internal) {
 			new Setting(this.settingsPage)
 				.setName(
-					i18next.t("settings.conversion.links.nonShared.title") as string
+					i18next.t("settings.conversion.links.nonShared.title") 
 				)
 				.setDesc(
-					i18next.t("settings.conversion.links.nonShared.desc") as string
+					i18next.t("settings.conversion.links.nonShared.desc") 
 				)
 				.addToggle((toggle) => {
 					toggle
@@ -676,9 +676,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		}
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.conversion.links.wikilinks.title") as string)
+			.setName(i18next.t("settings.conversion.links.wikilinks.title") )
 			.setDesc(
-				i18next.t("settings.conversion.links.wikilinks.desc") as string
+				i18next.t("settings.conversion.links.wikilinks.desc") 
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -693,8 +693,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	renderEmbedConfiguration() {
 		const embedSettings = this.plugin.settings.embed;
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.embed.transferImage.title") as string)
-			.setDesc(i18next.t("settings.embed.transferImage.desc") as string)
+			.setName(i18next.t("settings.embed.transferImage.title") )
+			.setDesc(i18next.t("settings.embed.transferImage.desc") )
 			.addToggle((toggle) => {
 				toggle
 					.setValue(embedSettings.attachments)
@@ -706,8 +706,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.embed.transferMetaFile.title") as string)
-			.setDesc(i18next.t("settings.embed.transferMetaFile.desc") as string)
+			.setName(i18next.t("settings.embed.transferMetaFile.title") )
+			.setDesc(i18next.t("settings.embed.transferMetaFile.desc") )
 			.setClass("github-publisher-textarea")
 			.addTextArea((text) => {
 				text.setPlaceholder("banner")
@@ -724,8 +724,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.embed.transferNotes.title") as string)
-			.setDesc(i18next.t("settings.embed.transferNotes.desc") as string)
+			.setName(i18next.t("settings.embed.transferNotes.title") )
+			.setDesc(i18next.t("settings.embed.transferNotes.desc") )
 			.addToggle((toggle) => {
 				toggle
 					.setValue(embedSettings.notes)
@@ -736,8 +736,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		const settingsDefaultImage = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.embed.defaultImageFolder.title") as string)
-			.setDesc(i18next.t("settings.embed.defaultImageFolder.desc") as string)
+			.setName(i18next.t("settings.embed.defaultImageFolder.title") )
+			.setDesc(i18next.t("settings.embed.defaultImageFolder.desc") )
 			.addText((text) => {
 				text.setPlaceholder("docs/images")
 					.setValue(embedSettings.folder)
@@ -754,8 +754,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	renderPluginSettings() {
 		const pluginSettings = this.plugin.settings.plugin;
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.shareKey.title") as string)
-			.setDesc(i18next.t("settings.plugin.shareKey.desc") as string)
+			.setName(i18next.t("settings.plugin.shareKey.title") )
+			.setDesc(i18next.t("settings.plugin.shareKey.desc") )
 			.addText((text) =>
 				text
 					.setPlaceholder("share")
@@ -766,8 +766,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					})
 			);
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.excludedFolder.title") as string)
-			.setDesc(i18next.t("settings.plugin.excludedFolder.desc") as string)
+			.setName(i18next.t("settings.plugin.excludedFolder.title") )
+			.setDesc(i18next.t("settings.plugin.excludedFolder.desc") )
 			.setClass("github-publisher-textarea")
 			.addTextArea((textArea) =>
 				textArea
@@ -782,8 +782,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					})
 			);
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.fileMenu.title") as string)
-			.setDesc(i18next.t("settings.plugin.fileMenu.desc") as string)
+			.setName(i18next.t("settings.plugin.fileMenu.title") )
+			.setDesc(i18next.t("settings.plugin.fileMenu.desc") )
 			.addToggle((toggle) =>
 				toggle
 					.setValue(pluginSettings.fileMenu)
@@ -793,8 +793,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					})
 			);
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.editorMenu.title") as string)
-			.setDesc(i18next.t("settings.plugin.editorMenu.desc") as string)
+			.setName(i18next.t("settings.plugin.editorMenu.title") )
+			.setDesc(i18next.t("settings.plugin.editorMenu.desc") )
 			.addToggle((toggle) =>
 				toggle
 					.setValue(pluginSettings.editorMenu)
@@ -804,8 +804,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					})
 			);
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.shareExternalModified.title") as string)
-			.setDesc(i18next.t("settings.plugin.shareExternalModified.desc") as string)
+			.setName(i18next.t("settings.plugin.shareExternalModified.title") )
+			.setDesc(i18next.t("settings.plugin.shareExternalModified.desc") )
 			.addToggle((toggle) =>
 				toggle
 					.setValue(pluginSettings.externalShare)
@@ -816,8 +816,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			);
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.copyLink.title") as string)
-			.setDesc(i18next.t("settings.plugin.copyLink.desc") as string)
+			.setName(i18next.t("settings.plugin.copyLink.title") )
+			.setDesc(i18next.t("settings.plugin.copyLink.desc") )
 			.addToggle((toggle) =>
 				toggle
 					.setValue(pluginSettings.copyLink.enable)
@@ -830,8 +830,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			);
 
 		const baseLinkSettings = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.copyLink.baselink.title") as string)
-			.setDesc(i18next.t("settings.plugin.copyLink.baselink.desc") as string)
+			.setName(i18next.t("settings.plugin.copyLink.baselink.title") )
+			.setDesc(i18next.t("settings.plugin.copyLink.baselink.desc") )
 			.setClass("github-publisher")
 			.addText((text) => {
 				text.setPlaceholder("my_blog.com")
@@ -842,9 +842,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 		const pathRemover = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.copyLink.linkpathremover.title") as string)
+			.setName(i18next.t("settings.plugin.copyLink.linkpathremover.title") )
 			.setDesc(
-				i18next.t("settings.plugin.copyLink.linkpathremover.desc") as string
+				i18next.t("settings.plugin.copyLink.linkpathremover.desc") 
 			)
 			.setClass("github-publisher")
 			.addText((text) => {
@@ -856,8 +856,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.logNoticeHeader.title") as string)
-			.setDesc(i18next.t("settings.plugin.logNoticeHeader.desc") as string)
+			.setName(i18next.t("settings.plugin.logNoticeHeader.title") )
+			.setDesc(i18next.t("settings.plugin.logNoticeHeader.desc") )
 			.addToggle((toggle) =>
 				toggle
 					.setValue(pluginSettings.noticeError)
@@ -871,15 +871,15 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	}
 	renderHelp() {
 		this.settingsPage.createEl("h2", {
-			text: i18next.t("settings.help.usefulLinks.title") as string,
+			text: i18next.t("settings.help.usefulLinks.title") ,
 		});
 		this.settingsPage.appendChild(usefullLinks());
 		this.settingsPage.createEl("hr");
 		this.settingsPage.createEl("h2", {
-			text: i18next.t("settings.help.frontmatter.title") as string,
+			text: i18next.t("settings.help.frontmatter.title") ,
 		});
 		this.settingsPage.createEl("p", {
-			text: i18next.t("settings.help.frontmatter.desc") as string,
+			text: i18next.t("settings.help.frontmatter.desc") ,
 		});
 		this.settingsPage
 			.createEl("pre", { cls: "language-yaml" })
@@ -889,7 +889,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 		this.settingsPage.appendChild(help(this.plugin.settings));
 		this.settingsPage.createEl("h2", {
-			text: i18next.t("settings.help.multiRepoHelp.title") as string,
+			text: i18next.t("settings.help.multiRepoHelp.title") ,
 		});
 		this.settingsPage.appendChild(
 			multipleRepoExplained(this.plugin.settings)

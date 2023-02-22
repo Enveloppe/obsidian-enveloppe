@@ -107,7 +107,7 @@ export async function shareAllMarkedNotes(
 		}
 	} catch (error) {
 		console.error(error);
-		new Notice(i18next.t("error.unablePublishMultiNotes") as string);
+		new Notice(i18next.t("error.unablePublishMultiNotes") );
 		statusBar.error();
 	}
 }
@@ -250,7 +250,7 @@ export async function shareNewNote(
 	repoFrontmatter: RepoFrontmatter
 ) {
 	const settings = plugin.settings;
-	new Notice(i18next.t("informations.scanningRepo") as string);
+	new Notice(i18next.t("informations.scanningRepo") );
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	// Get all file in the repo before the creation of the branch
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
@@ -285,7 +285,7 @@ export async function shareNewNote(
 			false
 		);
 	} else {
-		new Notice(i18next.t("informations.noNewNote") as string);
+		new Notice(i18next.t("informations.noNewNote") );
 	}
 }
 
@@ -308,7 +308,7 @@ export async function shareAllEditedNotes(
 	repoFrontmatter: RepoFrontmatter
 ) {
 	const settings = plugin.settings;
-	new Notice(i18next.t("informations.scanningRepo") as string);
+	new Notice(i18next.t("informations.scanningRepo") );
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
 		repoFrontmatter.branch,
@@ -348,7 +348,7 @@ export async function shareAllEditedNotes(
 			false
 		);
 	} else {
-		new Notice(i18next.t("informations.noNewNote") as string);
+		new Notice(i18next.t("informations.noNewNote") );
 	}
 }
 
@@ -371,7 +371,7 @@ export async function shareOnlyEdited(
 	repoFrontmatter: RepoFrontmatter
 ) {
 	const settings = plugin.settings;
-	new Notice(i18next.t("informations.scanningRepo") as string);
+	new Notice(i18next.t("informations.scanningRepo") );
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
 		repoFrontmatter.branch,
@@ -405,7 +405,7 @@ export async function shareOnlyEdited(
 			false
 		);
 	} else {
-		new Notice(i18next.t("informations.noNewNote") as string);
+		new Notice(i18next.t("informations.noNewNote") );
 	}
 }
 

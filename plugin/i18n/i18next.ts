@@ -1,5 +1,5 @@
 import {moment} from "obsidian";
-import * as en from './locales/en.json';
+import * as en from "./locales/en.json";
 //import * as de from './locales/de.json';
 //import * as fr from "./locales/fr.json";
 
@@ -7,9 +7,9 @@ import * as en from './locales/en.json';
 export const locale = moment.locale();
 export const translationLanguage = locale ? moment.locale() : "en";
 
-console.log("Init i18next")
+console.log("Init i18next");
 
 export const ressources = {
-    en: { translation: en },
-    //de : { translation: de },
+	en: { translation: en },
+	//de : { translation: de },
 } as const;

@@ -106,8 +106,8 @@
                 "placeholder": "docs"
             },
             "pathRemoving": {
-                "title": "API Type",
-                "desc": "Allow to publish only subfolder by removing the path before that :",
+                "title": "Path removing",
+                "desc": "Allow to publish only subfolder by removing the path before that.",
                 "placeholder": "GardenSketch"
             },
             "frontmatterKey": {
