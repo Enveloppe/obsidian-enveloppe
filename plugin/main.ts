@@ -8,7 +8,7 @@ import {
 	OldSettings,
 	RepoFrontmatter
 } from "./settings/interface";
-import {getRepoFrontmatter,} from "./src/utils";
+import { getRepoFrontmatter, migrateSettings } from "./src/utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
 import {checkRepositoryValidity, isShared} from "./src/data_validation_test";
@@ -23,6 +23,7 @@ import {
 import {commands, StringFunc, t, translationLanguage} from "./i18n";
 import {getTitleField, regexOnFileName} from "./conversion/filePathConvertor";
 import i18next from "i18next";
+import { ressources, locale } from "./i18n/i18next";
 /**
  * Main class of the plugin
  * @extends Plugin
@@ -39,92 +40,7 @@ export default class GithubPublisher extends Plugin {
 	 */
 	getTitleFieldForCommand(file:TFile, frontmatter: FrontMatterCache): string {
 		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
-	}
-
-	/** Export old settings to the new settings format */
-	async migrateSettings(old: OldSettings) {
-		if (Object.keys(old).includes("editorMenu")) {
-			console.log("Migrating settings...");
-			this.settings = {
-				github:
-					{
-						user: old.githubName ? old.githubName : this.settings.github.user ? this.settings.github.user : "",
-						repo: old.githubRepo ? old.githubRepo : this.settings.github.repo ? this.settings.github.repo : "",
-						token: old.GhToken ? old.GhToken : this.settings.github.token ? this.settings.github.token : "",
-						branch: old.githubBranch,
-						automaticallyMergePR: old.automaticallyMergePR,
-						api: {
-							tiersForApi: old.tiersForApi,
-							hostname: old.hostname,
-						},
-						worflow: {
-							workflowName: old.workflowName,
-							customCommitMsg: old.customCommitMsg,
-						}
-					},
-				upload: {
-					behavior: old.downloadedFolder as FolderSettings,
-					subFolder: old.subFolder,
-					defaultName: old.folderDefaultName,
-					rootFolder: old.rootFolder,
-					yamlFolderKey: old.yamlFolderKey,
-					frontmatterTitle: {
-						enable: old.useFrontmatterTitle,
-						key: old.frontmatterTitleKey,
-					},
-					replaceTitle: [{
-						regex: old.frontmatterTitleRegex,
-						replacement: old.frontmatterTitleReplacement,
-					}],
-					replacePath: [],
-					autoclean: {
-						enable: old.autoCleanUp,
-						excluded: old.autoCleanUpExcluded,
-					},
-					folderNote: {
-						enable: old.folderNote,
-						rename: old.folderNoteRename,
-					},
-					metadataExtractorPath: old.metadataExtractorPath,
-				},
-				conversion: {
-					hardbreak: old.hardBreak,
-					dataview: old.convertDataview,
-					censorText: old.censorText,
-					tags: {
-						inline: old.inlineTags,
-						exclude: old.excludeDataviewValue,
-						fields: old.dataviewFields,
-					},
-					links: {
-						internal: old.convertForGithub,
-						unshared: old.convertInternalNonShared,
-						wiki: old.convertWikiLinks,
-					},
-				},
-				embed: {
-					attachments: old.embedImage,
-					keySendFile: old.metadataFileFields,
-					notes: old.embedNotes,
-					folder: old.defaultImageFolder,
-				},
-				plugin: {
-					shareKey: old.shareKey,
-					fileMenu: old.fileMenu,
-					editorMenu: old.editorMenu,
-					excludedFolder: old.excludedFolder,
-					externalShare: old.shareExternalModified,
-					copyLink: {
-						enable: old.copyLink,
-						links: old.mainLink,
-						removePart: old.linkRemover.split(/[,\n]\W*/).map((s) => s.trim()),
-					},
-					noticeError: old.logNotice,
-				}
-			};
-			await this.saveSettings();
-		}
-	}
+	}	
 	/**
 	 * Create a new instance of Octokit to load a new instance of GithubBranch 
 	*/
@@ -158,6 +74,12 @@ export default class GithubPublisher extends Plugin {
 		console.log(
 			`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`
 		);
+		i18next.init({
+			lng: locale,
+			fallbackLng: "en",
+			resources: ressources,
+		});
+
 		console.log(i18next.t("publish.branch.success") as string)
 		
 		await this.loadSettings();
@@ -165,8 +87,7 @@ export default class GithubPublisher extends Plugin {
 		if (!(this.settings.upload.replaceTitle instanceof Array)) {
 			this.settings.upload.replaceTitle = [this.settings.upload.replaceTitle];
 		}
-		//@ts-ignore
-		await this.migrateSettings(oldSettings as OldSettings);
+		await migrateSettings(oldSettings as unknown as OldSettings, this);
 		const branchName =
 			app.vault.getName().replaceAll(" ", "-").replaceAll(".", "-") +
 			"-" +

@@ -12,13 +12,14 @@ import {
 	GitHubPublisherSettings,
 	MetadataExtractor,
 	RepoFrontmatter,
+	OldSettings
 } from "../settings/interface";
 import Publisher from "../publish/upload";
 import {informations} from "../i18n";
 import type { StringFunc } from "../i18n";
 import { getReceiptFolder } from "../conversion/filePathConvertor";
 import { FrontmatterConvert } from "../settings/interface";
-
+import GithubPublisher from "plugin/main";
 
 /**
  * Create a notice message for the log
@@ -173,6 +174,90 @@ export async function noticeMessage(
 			settings,
 			repository
 		);
+	}
+}
+
+export async function migrateSettings(old: OldSettings, plugin: GithubPublisher ) {
+	if (Object.keys(old).includes("editorMenu")) {
+		console.log("Migrating settings...");
+		plugin.settings = {
+			github:
+			{
+				user: old.githubName ? old.githubName : this.settings.github.user ? this.settings.github.user : "",
+				repo: old.githubRepo ? old.githubRepo : this.settings.github.repo ? this.settings.github.repo : "",
+				token: old.GhToken ? old.GhToken : this.settings.github.token ? this.settings.github.token : "",
+				branch: old.githubBranch,
+				automaticallyMergePR: old.automaticallyMergePR,
+				api: {
+					tiersForApi: old.tiersForApi,
+					hostname: old.hostname,
+				},
+				worflow: {
+					workflowName: old.workflowName,
+					customCommitMsg: old.customCommitMsg,
+				}
+			},
+			upload: {
+				behavior: old.downloadedFolder as FolderSettings,
+				subFolder: old.subFolder,
+				defaultName: old.folderDefaultName,
+				rootFolder: old.rootFolder,
+				yamlFolderKey: old.yamlFolderKey,
+				frontmatterTitle: {
+					enable: old.useFrontmatterTitle,
+					key: old.frontmatterTitleKey,
+				},
+				replaceTitle: [{
+					regex: old.frontmatterTitleRegex,
+					replacement: old.frontmatterTitleReplacement,
+				}],
+				replacePath: [],
+				autoclean: {
+					enable: old.autoCleanUp,
+					excluded: old.autoCleanUpExcluded,
+				},
+				folderNote: {
+					enable: old.folderNote,
+					rename: old.folderNoteRename,
+				},
+				metadataExtractorPath: old.metadataExtractorPath,
+			},
+			conversion: {
+				hardbreak: old.hardBreak,
+				dataview: old.convertDataview,
+				censorText: old.censorText,
+				tags: {
+					inline: old.inlineTags,
+					exclude: old.excludeDataviewValue,
+					fields: old.dataviewFields,
+				},
+				links: {
+					internal: old.convertForGithub,
+					unshared: old.convertInternalNonShared,
+					wiki: old.convertWikiLinks,
+				},
+			},
+			embed: {
+				attachments: old.embedImage,
+				keySendFile: old.metadataFileFields,
+				notes: old.embedNotes,
+				folder: old.defaultImageFolder,
+			},
+			plugin: {
+				shareKey: old.shareKey,
+				fileMenu: old.fileMenu,
+				editorMenu: old.editorMenu,
+				excludedFolder: old.excludedFolder,
+				externalShare: old.shareExternalModified,
+				copyLink: {
+					enable: old.copyLink,
+					links: old.mainLink,
+					removePart: old.linkRemover.split(/[,\n]\W*/).map((s) => s.trim()),
+				},
+				noticeError: old.logNotice,
+			}
+		};
+		await plugin.saveSettings();
 	}
 }
 

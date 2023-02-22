@@ -3,6 +3,7 @@ import { App, Modal, Setting, TextAreaComponent, ButtonComponent, Platform } fro
 import {settings, subSettings, t} from "../i18n";
 import {GithubPublisherSettings} from "../settings";
 import {GitHubPublisherSettings, OldSettings} from "../settings/interface";
+import { migrateSettings } from "./utils";
 
 export type SettingValue = number | string | boolean | unknown;
 
@@ -44,7 +45,7 @@ export class ImportModal extends Modal {
 						if (Object.keys(importedSettings).includes("editorMenu")) {
 							//need to convert old settings to new settings
 							const oldSettings = importedSettings as unknown as OldSettings;
-							this.plugin.migrateSettings(oldSettings);
+							await migrateSettings(oldSettings, this.plugin);
 							console.log("Migrated settings from old to new format");
 						} else {
 							console.log("Imported settings as new format");
