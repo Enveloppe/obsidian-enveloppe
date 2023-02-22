@@ -1,52 +1,77 @@
-import {FolderSettings, GitHubPublisherSettings} from '../../plugin/settings/interface';
+import {FolderSettings, GitHubPublisherSettings, GithubTiersVersion} from '../../plugin/settings/interface';
 
 const settings: GitHubPublisherSettings = {
-	githubRepo: "",
-	githubName: "",
-	GhToken: "",
-	githubBranch: "main",
-	shareKey: "share",
-	excludedFolder: [],
-	fileMenu: false,
-	editorMenu: false,
-	downloadedFolder: FolderSettings.fixed,
-	//fixedFolder
-	//yamlFrontmatter
-	//obsidianPath
-	folderDefaultName: "",
-	yamlFolderKey: "",
-	rootFolder: "",
-	workflowName: "",
-	embedImage: true,
-	defaultImageFolder: "",
-	autoCleanUp: false,
-	autoCleanUpExcluded: [],
-	folderNote: false,
-	folderNoteRename: "index.md",
-	convertWikiLinks: false,
-	convertForGithub: false,
-	subFolder: "",
-	embedNotes: false,
-	copyLink: false,
-	mainLink: "",
-	linkRemover: "",
-	hardBreak: false,
-	logNotice: false,
-	convertDataview: true,
-	useFrontmatterTitle: false,
-	censorText: [],
-	inlineTags: false,
-	dataviewFields: [],
-	excludeDataviewValue: [],
-	metadataFileFields: [],
-	frontmatterTitleKey: "title",
-	shareExternalModified: false,
-	automaticallyMergePR: true,
-	metadataExtractorPath: "",
-	convertInternalNonShared: false,
-	frontmatterTitleRegex: "",
-	frontmatterTitleReplacement: "",
-
+    github: {
+        user: "",
+        repo: "",
+        branch: "main",
+        token: "",
+        automaticallyMergePR: true,
+        api: {
+            tiersForApi: GithubTiersVersion.free,
+            hostname: "",
+        },
+        worflow: {
+            customCommitMsg: "",
+            workflowName: "",
+        },
+    },
+    upload: {
+        behavior: FolderSettings.fixed,
+        subFolder: "",
+        defaultName: "",
+        rootFolder: "",
+        yamlFolderKey: "",
+        frontmatterTitle: {
+            enable: false,
+            key: "title",
+        },
+        replaceTitle: [],
+        replacePath: [],
+        autoclean: {
+            enable: false,
+            excluded: [],
+        },
+        folderNote: {
+            enable: false,
+            rename: "index.md",
+        },
+        metadataExtractorPath: "",
+    },
+    conversion: {
+        hardbreak: false,
+        dataview: true,
+        censorText: [],
+        tags: {
+            inline: false,
+            exclude: [],
+            fields: [],
+        },
+        links: {
+            internal: false,
+            unshared: false,
+            wiki: false,
+        },
+    },
+    embed: {
+        attachments: true,
+        keySendFile: [],
+        notes: false,
+        folder: "",
+    },
+    plugin: {
+        shareKey: "share",
+        fileMenu: false,
+        editorMenu: false,
+        excludedFolder: [],
+        externalShare: false,
+        copyLink: {
+            enable: false,
+            links: "",
+            removePart: [],
+        },
+        noticeError: false,
+    }
 }
 
 export default settings;
