@@ -1,6 +1,6 @@
 import {App, Notice, Modal, Setting} from "obsidian";
 import { GitHubPublisherSettings, TextCleaner } from "./interface";
-import { subSettings, StringFunc } from "plugin/i18n";
+import i18next from "i18next";
 
 export class ModalRegexFilePathName extends Modal {
 	settings: GitHubPublisherSettings;
@@ -20,21 +20,22 @@ export class ModalRegexFilePathName extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
-		const onWhat = this.type === "path" ? "file path" : "file name";
-		contentEl.createEl("h2", {text: subSettings("textConversion.censor.header") + onWhat});
+		const onWhat = this.type === "path" ? i18next.t("common.path.folder") : i18next.t("common.path.file");
+
+		contentEl.createEl("h2", {text: i18next.t("settings.conversion.censor.title", {what: onWhat})});
 		const what = this.type === "path" ? this.settings.upload.replacePath : this.settings.upload.replaceTitle;
 
 		for (const title of what) {
 			new Setting(contentEl)
 				.addText((text) => {
-					text.setPlaceholder(subSettings("textConversion.censor.replace") as string)
+					text.setPlaceholder(i18next.t("regex.entry"))
 						.setValue(title.regex)
 						.onChange((value) => {
 							title.regex = value;
 						});
 				})
 				.addText((text) => {
-					text.setPlaceholder(subSettings("textConversion.censor.value") as string)
+					text.setPlaceholder(i18next.t("regex.replace"))
 						.setValue(title.replacement)
 						.onChange((value) => {
 							title.replacement = value;
@@ -67,7 +68,7 @@ export class ModalRegexFilePathName extends Modal {
 			})
 			.addButton((button) => {
 				button
-					.setButtonText(subSettings("textConversion.censor.save") as string)
+					.setButtonText(i18next.t("common.save"))
 					.onClick(() => {
 						this.onSubmit(this.settings);
 						this.close();
@@ -98,18 +99,18 @@ export class ModalRegexOnContents extends Modal {
 		contentEl.empty();
 		contentEl
 			.createEl("p", {
-				text: subSettings("textConversion.censor.TextDesc") as string,
+				text: i18next.t("settings.conversion.censor.modal.title") as string,
 			})
 			.createEl("p", {
-				text: subSettings("textConversion.censor.TextEmpty") as string,
+				text: i18next.t("settings.conversion.censor.modal.desc") as string,
 			});
 		for (const censorText of this.settings.conversion.censorText) {
 			new Setting(contentEl)
 				.setClass("github-publisher-censor-entry")
 				.addText((text) => {
 					text.inputEl.style.width = "100%";
-					text.setPlaceholder(subSettings(
-						"textConversion.censor.PlaceHolder") as string
+					text.setPlaceholder(i18next.t(
+						"regex.entry") as string
 					)
 						.setValue(censorText.entry)
 						.onChange(async (value) => {
@@ -118,8 +119,7 @@ export class ModalRegexOnContents extends Modal {
 				})
 				.addText((text) => {
 					text.inputEl.style.width="100%";
-					text.setPlaceholder(subSettings("textConversion.censor.ValuePlaceHolder") as string
-					)
+					text.setPlaceholder(i18next.t("regex.replace"))
 						.setValue(censorText.replace)
 						.onChange(async (value) => {
 							censorText.replace = value;
@@ -129,8 +129,7 @@ export class ModalRegexOnContents extends Modal {
 				
 				.addExtraButton((btn) => {
 					btn.setIcon("trash")
-						.setTooltip(subSettings("textConversion.censor.ToolTipRemove") as string
-						)
+						.setTooltip(i18next.t("common.delete", {things: "Regex"}))
 						.onClick(async () => {
 							this.settings.conversion.censorText.splice(
 								this.settings.conversion.censorText.indexOf(
@@ -144,7 +143,7 @@ export class ModalRegexOnContents extends Modal {
 				.addExtraButton((btn) => {
 					btn
 						.setIcon("pencil")
-						.setTooltip(subSettings("textConversion.censor.edit") as string)
+						.setTooltip(i18next.t("settings.conversion.censor.edit"))
 						.onClick(async () => {
 							new ModalEditorRegex(this.app, censorText, (result => {
 								censorText.flags = result.flags;
@@ -157,8 +156,8 @@ export class ModalRegexOnContents extends Modal {
 			.addButton((btn) => {
 				btn
 					.setIcon("plus")
-					.setTooltip(subSettings("textConversion.censor.ToolTipAdd") as string
-					)
+					.setTooltip(i18next.t("common.add", {things: "Regex"}))
+					
 					.onClick(async () => {
 						const censorText: TextCleaner = {
 							entry: "",
@@ -172,7 +171,7 @@ export class ModalRegexOnContents extends Modal {
 			})
 			.addButton((button) => {
 				button
-					.setButtonText(subSettings("textConversion.censor.save") as string)
+					.setButtonText(i18next.t("common.save"))
 					.onClick(() => {
 						this.onSubmit(this.settings);
 						this.close();
@@ -199,21 +198,21 @@ class ModalEditorRegex extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
-		contentEl.createEl('h2', {text: subSettings("textConversion.censor.edit") as string});
+		contentEl.createEl('h2', {text: i18next.t("settings.conversion.censor.edit")});
 		/*
 		Parameters :
 		- Flags ; 
 		- After/Before other ; */
 		const flagsDesc = document.createDocumentFragment();
 		const flagsDescription = flagsDesc.createEl("p", {
-			text: subSettings("textConversion.censor.TextFlags") as string
+			text: i18next.t("settings.conversion.censor.flags.title")
 		});
-		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.insensitive") as string});
-		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.global") as string});
-		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.multiline") as string}); 
-		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.dotAll") as string});
-		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.unicode") as string}); 
-		flagsDescription.createEl("li", {text: subSettings("textConversion.censor.flags.sticky") as string});
+		flagsDescription.createEl("li", {text: i18next.t("settings.conversion.censor.flags.insensitive")});
+		flagsDescription.createEl("li", {text: i18next.t("settings.conversion.censor.flags.global")});
+		flagsDescription.createEl("li", {text: i18next.t("settings.conversion.censor.flags.multiline")}); 
+		flagsDescription.createEl("li", {text: i18next.t("settings.conversion.censor.flags.dotAll")});
+		flagsDescription.createEl("li", {text: i18next.t("settings.conversion.censor.flags.unicode")}); 
+		flagsDescription.createEl("li", {text: i18next.t("settings.conversion.censor.flags.sticky")});
 		
 		new Setting(contentEl)
 			.setName("Flags")
@@ -226,21 +225,19 @@ class ModalEditorRegex extends Modal {
 							this.result.flags = value;
 						} else {
 							new Notice(
-								(subSettings(
-									"textConversion.censor.flags.error"
-								) as StringFunc
-								)(value)
+								(i18next.t(
+									"settings.conversion.censor.flags.error", {flags: value}))
 							);
 						}
 					});
 			});
 		
 		new Setting(contentEl)
-			.setName(subSettings("textConversion.censor.MomentReplaceRegex.desc") as string)
+			.setName(i18next.t("settings.conversion.censor.MomentReplaceRegex"))
 			.addDropdown((dropdown) => {
 				dropdown
-					.addOption("before", subSettings("textConversion.censor.MomentReplaceRegex.before") as string)
-					.addOption("after", subSettings("textConversion.censor.MomentReplaceRegex.after") as string)
+					.addOption("before", i18next.t("common.before"))
+					.addOption("after", i18next.t("common.after"))
 					.setValue(this.result.after ? "after" : "before")
 					.onChange(async (value) => {
 						this.result.after = value === "after";
@@ -249,7 +246,7 @@ class ModalEditorRegex extends Modal {
 		new Setting(contentEl)
 			.addButton((button) => {
 				button
-					.setButtonText(subSettings("textConversion.censor.save") as string) 
+					.setButtonText(i18next.t("common.save")) 
 					.onClick(() => {
 						this.onSubmit(this.result);
 						this.close();

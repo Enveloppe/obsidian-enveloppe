@@ -1,13 +1,27 @@
 {
     "common": {
-        "save" : "Save", 
-        "cancel" : "Cancel",
-        "delete" : "Delete",
-        "close" : "Close",
-        "error" : "Error",
-        "warning" : "Warning",
-        "here" : "here",
-        "text": "text"
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete {{things}}",
+        "close": "Close",
+        "error": "Error",
+        "warning": "Warning",
+        "here": "here",
+        "text": "text",
+        "regex": "regex",
+        "edit": "Edit {{things}}",
+        "path" : {
+            "file": "File name",
+            "folder" : "Folder path",
+            "full" : "Filepath"
+        },
+        "add" : "Add {{things}}",
+        "before" : "Before",
+        "after" : "After"
+    },
+    "regex": {
+        "entry": "Value to replace",
+        "replace": "Replacement"
     },
     "commands": {
         "shareActiveFile": "Upload single current active note",
@@ -148,7 +162,7 @@
                 }
             },
             "censor": {
-                "title": "Replacement on: ",
+                "title" : "Text replacer on: {{what}}",
                 "modal": {
                     "title": "Text replacer",
                     "desc": "Replace text (or regex) in the file with the given value"
@@ -165,19 +179,7 @@
                     "error": "The flag {{flag}} is not valid."
                 },
                 "empty": "Replacement can be empty to remove the whole string.",
-                "replace": "Text to replace",
-                "value": "Replacement value",
-                "tootltip": {
-                    "add": "Add a new text replacer",
-                    "remove": "Delete this text replacer",
-                    "placeholderToReplace": "Regex or text to replace",
-                    "placeholderToValue": "Replacement value"
-                },
-                "MomentReplaceRegex": {
-                    "desc": "Choose when the regex will be executed : before or after the other conversion (dataview, internal links...).",
-                    "before": "Before",
-                    "after": "After"
-                }
+                "MomentReplaceRegex": "Choose when the regex will be executed : before or after the other conversion (dataview, internal links...)."
             },
             "dataview": {
                 "title": "Dataview",
