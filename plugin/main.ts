@@ -293,7 +293,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "check-this-repo-validy",
-			name: i18next.t("commands.checkValidity.name") ,
+			name: i18next.t("commands.checkValidity.title") ,
 			checkCallback: (checking) => {
 				if (this.app.workspace.getActiveFile())
 				{

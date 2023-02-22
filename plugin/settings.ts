@@ -22,33 +22,6 @@ import { checkRepositoryValidity } from "./src/data_validation_test";
 import { ExportModal, ImportModal } from "./src/modals";
 import i18next from "i18next";
 
-const PUBLISHER_TABS = {
-	"github-configuration": {
-		name: i18next.t("settings.github.title"),
-		icon: "cloud",
-	},
-	"upload-configuration": {
-		name: i18next.t("settings.upload.title"),
-		icon: "upload",
-	},
-	"text-conversion": {
-		name: i18next.t("settings.conversion.title"),
-		icon: "file-text",
-	},
-	"embed-configuration": {
-		name: i18next.t("settings.embed.title"),
-		icon: "link",
-	},
-	"plugin-settings": {
-		name: i18next.t("settings.plugin.title"),
-		icon: "gear",
-	},
-	help: {
-		name: i18next.t("settings.help.title"),
-		icon: "info",
-	},
-};
-
 export class GithubPublisherSettings extends PluginSettingTab {
 	plugin: GithubPublisherPlugin;
 	settingsPage: HTMLElement;
@@ -63,6 +36,34 @@ export class GithubPublisherSettings extends PluginSettingTab {
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
+		
+		const PUBLISHER_TABS = {
+			"github-configuration": {
+				name: i18next.t("settings.github.title"),
+				icon: "cloud",
+			},
+			"upload-configuration": {
+				name: i18next.t("settings.upload.title"),
+				icon: "upload",
+			},
+			"text-conversion": {
+				name: i18next.t("settings.conversion.title"),
+				icon: "file-text",
+			},
+			"embed-configuration": {
+				name: i18next.t("settings.embed.title"),
+				icon: "link",
+			},
+			"plugin-settings": {
+				name: i18next.t("settings.plugin.title"),
+				icon: "gear",
+			},
+			help: {
+				name: i18next.t("settings.help.title"),
+				icon: "info",
+			},
+		};
+
 		new Setting(containerEl)
 			.setClass("github-publisher-export-import")
 			.addButton((button) => {
@@ -87,7 +88,6 @@ export class GithubPublisherSettings extends PluginSettingTab {
 
 
 		for (const [tabID, tabInfo] of Object.entries(PUBLISHER_TABS)) {
-			console.log(tabID, tabInfo.name)
 			const tabEl = tabBar.createEl("div", {
 				cls: "settings-tab github-publisher",
 			});
