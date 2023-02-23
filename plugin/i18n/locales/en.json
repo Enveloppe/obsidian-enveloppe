@@ -32,13 +32,14 @@
 		"edit": "Edit {{things}}",
 		"error": "Error",
 		"here": "here",
-		"save": "Save",
+		"or" : "or",
 		"path": {
 			"file": "File name",
 			"folder": "Folder path",
 			"full": "Filepath"
 		},
 		"regex": "regex",
+		"save": "Save",
 		"text": "text",
 		"warning": "Warning"
 	},
@@ -109,33 +110,31 @@
 				"edit": "Edit the parameters (flags and running order)",
 				"empty": "Replacement can be empty to remove the whole string.",
 				"flags": {
-					"global": "g: Global",
-					"insensitive": "i: Insensitive.",
-					"title": "Flags (based on JS regex and can be combined):",
-					"multiline": "m: Multiline",
 					"dotAll": "s: DotAll",
 					"error": "The flag {{flag}} is not valid.",
+					"global": "g: Global",
+					"insensitive": "i: Insensitive.",
+					"multiline": "m: Multiline",
 					"sticky": "y: Sticky",
+					"title": "Flags (based on JS regex and can be combined):",
 					"unicode": "u: Unicode"
 				},
 				"modal": {
-					"title": "Text replacer",
-					"desc": "Replace text (or regex) in the file with the given value"
+					"desc": "Replace text (or regex) in the file with the given value",
+					"title": "Text replacer"
 				},
-				"title": "Text replacer on: {{what}}",
-				"MomentReplaceRegex": "Choose when the regex will be executed : before or after the other conversion (dataview, internal links...)."
+				"MomentReplaceRegex": "Choose when the regex will be executed : before or after the other conversion (dataview, internal links...).",
+				"title": "Text replacer on: {{what}}"
 			},
 			"dataview": {
-				"desc": "Convert dataview to markdown. This settings can be overridden by the frontmatter key \"dataview\".",
+				"desc": "Convert dataview to markdown.",
 				"title": "Dataview"
 			},
 			"desc": "Theses option won't change the content of the file in your Obsidian Vault, but will change the content of the file in Github.",
 			"hardBreak": {
-				"desc": "Add a markdown hard line break (double whitespace) after each line. This settings can be overridden by the frontmatter key \"hardbreak\".",
+				"desc": "Add a markdown hard line break (double whitespace) after each line.",
 				"title": "Markdown hard line break"
 			},
-			"sectionTitle": "On contents",
-			"title": "Content's conversion",
 			"links": {
 				"desc": "You can prevent links to be converted and keep the alt text (or filename) by using the frontmatter key \"links\" with the value \"false\".",
 				"folderNote": {
@@ -143,19 +142,20 @@
 					"title": "Folder note"
 				},
 				"internals": {
-					"desc": "Convert the internal link in shared file to match the folder settings",
+					"desc": "Convert internal links to their counterpart in the repository, with relative path.",
 					"title": "Internals Links"
+				},
+				"nonShared": {
+					"desc": "Same option as internals, but for notes that are not yet published. Disabled, only the filename will be conserved.",
+					"title": "Convert internal links pointing to unpublished notes"
 				},
 				"title": "Links",
 				"wikilinks": {
-					"desc": "Convert Wikilinks to MDlinks, without changing the contents. This option can be overridden by the frontmatter key \"mdlinks\".",
-					"title": "[[Wikilinks]]"
-				},
-				"nonShared": {
-					"desc": "Convert internal links pointing to a non shared file to their counterpart in the website, with relative path. Disabled, the plugin will keep the filename.",
-					"title": "Convert internal links pointing to unshared files"
+					"desc": "Convert Wikilinks to MDlinks, without changing the contents.",
+					"title": "[[Wikilinks]] to [MDlinks](links)"
 				}
 			},
+			"sectionTitle": "On contents",
 			"tags": {
 				"desc": "This will convert any frontmatter or dataview inline field into frontmatter tags. Separate fields with a comma.",
 				"exclude": {
@@ -167,7 +167,8 @@
 					"title": "Inline tags"
 				},
 				"title": "Convert frontmatter/dataview field into tags"
-			}
+			},
+			"title": "Content's conversion"
 		},
 		"embed": {
 			"defaultImageFolder": {
@@ -176,7 +177,7 @@
 			},
 			"title": "Embed",
 			"transferImage": {
-				"desc": "Send attachments embedded in a file to github. This option can be overridden by the frontmatter key \"attachment\".",
+				"desc": "Send attachments embedded in a file to github.",
 				"title": "Transfer attachments"
 			},
 			"transferMetaFile": {
@@ -184,11 +185,11 @@
 				"title": "Send files using a metadata field"
 			},
 			"transferNotes": {
-				"desc": "Send embedded notes in a shared file to github. Only shared files will be send! This option can be overridden by the frontmatter key \"embed\".",
+				"desc": "Send embedded notes in a shared file to github. Only shared files will be send!",
 				"title": "Transfer embedded notes"
 			}
 		},
-		"exportSettings": "Export settings",
+		"exportSettings": "Export",
 		"github": {
 			"apiType": {
 				"desc": "Choose between the Github API or the Github Enterprise API (only Github Enterprise users — Advanced user!).",
@@ -202,39 +203,38 @@
 				},
 				"title": "API Type"
 			},
+			"automaticallyMergePR": "Automatically merge pull requests",
 			"branch": {
-				"desc": "If you use a different main branch than \"main\", you can specify it here.",
+				"desc": "If you use a different branch than \"main\"",
 				"title": "Main branch"
 			},
 			"ghToken": {
 				"desc": "A github token with repository permission. You can generate it ",
-				"here": "here.",
 				"title": "Github Token"
 			},
 			"repoName": {
-				"title": "Repository Name",
 				"desc": "The name of the repository where you store your blog.",
-				"placeholder": "mkdocs-template"
+				"placeholder": "mkdocs-template",
+				"title": "Repository Name"
 			},
-			"title": "Github Configuration",
+			"testConnection": "Test connection",
+			"title": "GitHub Configuration",
 			"username": {
 				"desc": "Your github username.",
 				"title": "Github Username"
-			},
-			"automaticallyMergePR": "Automatically merge pull requests",
-			"testConnection": "Test connection"
+			}
 		},
 		"githubWorkflow": {
 			"autoCleanUp": {
-				"desc": "If the plugin must remove from github the removed files (stop share or deleted)",
+				"desc": "If the plugin must remove from github the depublished files (stop share or deleted)",
 				"title": "Auto clean up"
 			},
 			"excludedFiles": {
-				"desc": "If you want to exclude some folder from the auto clean up, set their path.",
-				"title": "Excluded files"
+				"desc": "If you want to exclude some folder or file from the autoclean, add them here. You can use regex by surrounding the string with \"/\". Separate files with a comma.",
+				"title": "Excluded files and folder"
 			},
 			"githubAction": {
-				"desc": "If you want to activate a github action when the plugin push the file, set the name of the file (in your .github/worfklows folder).",
+				"desc": "If you want to activate a github action when the plugin push the file, set the name of the file (in your .github/worfklows folder). Only workflow with the \"workflow_dispatch\" event will be triggered.",
 				"title": "Github action name"
 			},
 			"prRequest": {
@@ -252,31 +252,30 @@
 					"folder": "Change the default folder for the attachments",
 					"send": "Send all attachments to github"
 				},
+				"autoclean": "Disable or enable autocleaning",
+				"baselink": "Change the base link for the copy link command",
 				"convert": {
 					"enableOrDisable": "Enable or disable the conversion of links. Disabling this will remove the",
-					"or": "or",
 					"syntax": "syntax, while keeping the file name or the alternative text."
 				},
+				"dataview": "Convert dataview queries to markdown.",
 				"desc": "Moreover, there are some frontmatter YAML keys that can be usefull for your workflow. The YAML code below show the default settings, but feel free to change it to your needs in each notes!",
-				"title": "Frontmatter keys cheatsheet",
-				"share": "This key is used to share a note with the plugin.",
-				"mdlinks": "Convert all wikilinks to markdown links",
 				"embed": {
 					"remove": "Remove the embed from the note, leaving empty line.",
 					"send": "Send embedded note to GitHub"
 				},
-				"internals": "Convert internals links to their counterpart in the website, with relative path. Disabled, the plugin will keep the internal link as is.",
-				"nonShared": "Convert internal links pointing to a non shared file to their counterpart in the website, with relative path. Disabled, the plugin will keep the filename.",
-				"autoclean": "Disable or enable autocleaning",
-				"baselink": "Change the base link for the copy link command",
-				"dataview": "Convert dataview queries to markdown.",
 				"hardBreak": "Convert all linebreaks to markdown «hard break».",
+				"internals": "Convert internals links to their counterpart in the website, with relative path. Disabled, the plugin will keep the internal link as is.",
+				"mdlinks": "Convert all [[wikilinks]] to [markdown](links)",
+				"nonShared": "Convert internal links pointing to a unshared file to their counterpart in the website, with relative path. Disabled, the plugin will keep the filename.",
 				"repo": {
 					"branch": "Branch of the repo",
 					"desc": "Change the default repo for the note.",
 					"owner": "Owner of the repo",
 					"repo": "Name of the repo"
 				},
+				"share": "This key is used to share a note with the plugin.",
+				"title": "Frontmatter keys cheatsheet",
 				"titleKey": "Change the title of the note."
 			},
 			"multiRepoHelp": {
@@ -289,10 +288,10 @@
 			"usefulLinks": {
 				"discussion": "Discussion",
 				"documentation": "Documentation",
-				"title": "Useful links",
-				"repository": "Repository",
 				"issue": "Issue",
-				"links": "https://obsidian-publisher.netlify.app/"
+				"links": "https://obsidian-publisher.netlify.app/",
+				"repository": "Repository",
+				"title": "Useful links"
 			}
 		},
 		"importSettings": "Import settings",
@@ -317,11 +316,6 @@
 				"desc": "Never publish file in these folder, regardless of the share key. Separate folder name by comma.",
 				"title": "Excluded Folder"
 			},
-			"shareKey": {
-				"title": "Share Key",
-				"desc": "The frontmatter key to publish your file on the website."
-			},
-			"title": "Plugin Settings",
 			"fileMenu": {
 				"desc": "Add an sharing commands in the file menu",
 				"title": "File Menu"
@@ -333,47 +327,52 @@
 			"shareExternalModified": {
 				"desc": "Send edited file if they are different from the active file. Useful when editing metadata using MetaEdit or Metadata Menu.",
 				"title": "Share external modified file"
-			}
+			},
+			"shareKey": {
+				"desc": "The frontmatter key to publish your file on the website.",
+				"title": "Share Key"
+			},
+			"title": "Plugin Settings"
 		},
 		"upload": {
-			"folderBehavior": {
-				"title": "Folder behavior",
-				"desc": "Choose between a fixed folder, the value of a frontmatter key or your obsidian relative path.",
-				"fixedFolder": "Fixed Folder",
-				"yaml": "YAML frontmatter",
-				"obsidianPath": "Obsidian Path"
-			},
-			"title": "Upload configuration",
 			"defaultFolder": {
 				"desc": "Set the default reception folder",
-				"title": "Default Folder",
-				"placeholder": "docs"
+				"placeholder": "docs",
+				"title": "Default Folder"
+			},
+			"filepathRegex": {
+				"desc": "The replacement won't be applied to the filename. Use the same settings than the filename replacement.",
+				"placeholder": "Apply replacements to the filepath"
+			},
+			"folderBehavior": {
+				"desc": "Choose the file tree in the repository, with using a frontmatter key, a fixed folder or your Obsidian file tree.",
+				"fixedFolder": "Fixed Folder",
+				"obsidianPath": "Obsidian Path",
+				"title": "File tree in repository",
+				"yaml": "YAML frontmatter"
 			},
 			"frontmatterKey": {
-				"title": "Frontmatter key",
 				"desc": "Set the key where to get the folder's value.",
-				"placeholder": "category"
-			},
-			"pathRemoving": {
-				"title": "Path removing",
-				"desc": "Allow to publish only subfolder by removing the path before that.",
-				"placeholder": "GardenSketch"
-			},
-			"rootFolder": {
-				"desc": "Append this path to the folder set by the frontmatter key",
-				"title": "Root folder"
-			},
-			"useFrontmatterTitle": {
-				"desc": "Use a frontmatter value to generate the filename. By default, \"title\" is used. ",
-				"title": "Set the key where to get the value of the filename"
+				"placeholder": "category",
+				"title": "Frontmatter key"
 			},
 			"frontmatterRegex": {
 				"desc": "If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string.",
 				"placeholder": "Apply replacements to the filename"
 			},
-			"filepathRegex": {
-				"desc": "If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string. The replacement won't be applied to the filename.",
-				"placeholder": "Apply replacements to the filepath"
+			"pathRemoving": {
+				"desc": "Allow to publish only subfolder by removing the path before that.",
+				"placeholder": "GardenSketch",
+				"title": "Path removing"
+			},
+			"rootFolder": {
+				"desc": "Append this path to the folder set by the frontmatter key",
+				"title": "Root folder"
+			},
+			"title": "Upload configuration",
+			"useFrontmatterTitle": {
+				"desc": "Use a frontmatter value to generate the filename. By default, \"title\" is used. ",
+				"title": "Set the key where to get the value of the filename"
 			}
 		}
 	}

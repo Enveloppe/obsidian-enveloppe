@@ -72,7 +72,7 @@ export function help(settings: GitHubPublisherSettings) {
 					});
 					span.createEl("code", { text: " [[link]] " });
 					span.createEl("span", {
-						text: i18next.t("settings.help.frontmatter.convert.or")
+						text: i18next.t("common.or")
 					});
 					span.createEl("code", { text: " [](link) " });
 					span.createEl("span", {
