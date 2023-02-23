@@ -440,19 +440,21 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.upload.filepathRegex.placeholder") )
-			.setDesc(i18next.t("settings.upload.filepathRegex.desc") )
-			.addButton((button) => {
-				button
-					.setIcon("pencil")
-					.onClick(async () => {
-						new ModalRegexFilePathName(this.app, this.plugin.settings, "path", (result => {
-							this.plugin.settings.upload.replacePath = result.upload.replacePath;
-							this.plugin.saveSettings();
-						})).open();
-					});
-			});
+		if (uploadSettings.behavior !== FolderSettings.fixed) {
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.upload.filepathRegex.placeholder") )
+				.setDesc(i18next.t("settings.upload.filepathRegex.desc") )
+				.addButton((button) => {
+					button
+						.setIcon("pencil")
+						.onClick(async () => {
+							new ModalRegexFilePathName(this.app, this.plugin.settings, "path", (result => {
+								this.plugin.settings.upload.replacePath = result.upload.replacePath;
+								this.plugin.saveSettings();
+							})).open();
+						});
+				});
+		}			
 
 		const folderNoteSettings = new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.links.folderNote.title") )

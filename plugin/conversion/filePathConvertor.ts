@@ -323,6 +323,7 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
  */
 function regexOnPath(fileName: string, path: string, settings: GitHubPublisherSettings) {
 	const uploadSettings = settings.upload;
+	if (uploadSettings.behavior === FolderSettings.fixed) return path;
 	path = path.replace(fileName, "");
 	for (const regexTitle of uploadSettings.replacePath) {
 		if (regexTitle.regex.trim().length > 0) {

@@ -17,21 +17,29 @@ export class ModalRegexFilePathName extends Modal {
 		this.onSubmit = onSubmit;
 	}
 
-	forbiddenValue(value: string, onWhat: string): string {
-		if (
-			(value.match(/[\\><:"|?*(\\/)]|(^\w+\/\w+)/)) && (this.type === "file")
-		) {
-			new Notice(i18next.t("settings.conversion.censor.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[\\><:"|?*(\\/)]|(^\w+\/\w+)/)[0]}));
+	forbiddenValue(value: string, onWhat: string): (string|boolean)[] {
+		let isForbidden: boolean = false;
+		if (value == '/') {
+			new Notice(i18next.t("settings.conversion.censor.forbiddenValue", {what: onWhat, forbiddenChar: value}));
 			value = "";
+			isForbidden = true;
+		}
+		else if (
+			(value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)) && (this.type === "file")
+		) {
+			new Notice(i18next.t("settings.conversion.censor.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)[0]}));
+			value = "";
+			isForbidden = true;
 		} else if (this.type === "path") {
 			if (value.match(/[\\><:"|?*]/)){
-				new Notice(i18next.t("settings.conversion.censor.forbiddenValue", { what: onWhat, forbiddenChar: value.match(/[><:"\\|?*]/)[0]}));
+				new Notice(i18next.t("settings.conversion.censor.forbiddenValue", { what: onWhat, forbiddenChar: value.match(/[\\><:"|?*]/)[0]}));
 				value = "";
+				isForbidden = true;
 			} else if (value.match(/(^\w+\/\w+)|(\\\/)/)) {
 				new Notice(i18next.t("settings.conversion.censor.warningPath"));
 			}
 		}
-		return value;
+		return [value, isForbidden];
 	}
 
 	onOpen() {
@@ -48,14 +56,14 @@ export class ModalRegexFilePathName extends Modal {
 					text.setPlaceholder(i18next.t("regex.entry"))
 						.setValue(title.regex)
 						.onChange((value) => {
-							title.regex = this.forbiddenValue(value, onWhat);
+							title.regex = value;
 						});
 				})
 				.addText((text) => {
 					text.setPlaceholder(i18next.t("regex.replace"))
 						.setValue(title.replacement)
 						.onChange((value) => {
-							title.replacement = this.forbiddenValue(value, onWhat);
+							title.replacement = value;
 						});
 				})
 				.addExtraButton((button) => {
@@ -87,8 +95,22 @@ export class ModalRegexFilePathName extends Modal {
 				button
 					.setButtonText(i18next.t("common.save"))
 					.onClick(() => {
-						this.onSubmit(this.settings);
-						this.close();
+						const canBeValidated: boolean[] = [];
+						what.forEach((title) => {
+							const isForbiddenEntry = this.forbiddenValue(title.regex, onWhat);
+							const isForbiddenReplace = this.forbiddenValue(title.replacement, onWhat);
+							canBeValidated.push(isForbiddenEntry[1] as boolean);
+							canBeValidated.push(isForbiddenReplace[1] as boolean);
+							console.log(isForbiddenEntry[0], isForbiddenEntry[1], isForbiddenReplace[0], isForbiddenReplace[1])
+							if (isForbiddenEntry[1] || isForbiddenReplace[1]) {
+								title.regex = isForbiddenEntry[0] as string;
+								title.replacement = isForbiddenReplace[0] as string;
+							}
+						});
+						if (!canBeValidated.includes(true)) {
+							this.onSubmit(this.settings);
+							this.close();
+						}
 					});
 			});
 	}
