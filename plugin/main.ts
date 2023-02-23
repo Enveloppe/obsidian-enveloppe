@@ -21,7 +21,7 @@ import {
 } from "./commands";
 import i18next from "i18next";
 import {getTitleField, regexOnFileName} from "./conversion/filePathConvertor";
-import { ressources, locale, translationLanguage } from "./i18n/i18next";
+import { ressources, translationLanguage } from "./i18n/i18next";
 
 /**
  * Main class of the plugin
@@ -74,7 +74,7 @@ export default class GithubPublisher extends Plugin {
 			`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`
 		);
 		i18next.init({
-			lng: locale,
+			lng: translationLanguage,
 			fallbackLng: "en",
 			resources: ressources,
 		});
