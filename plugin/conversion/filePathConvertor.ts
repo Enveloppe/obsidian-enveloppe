@@ -313,6 +313,14 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 	return fileName + ".md";
 }
 
+
+/** 
+ * Allow to modify enterely the path of a file, using regex / string replace 
+ * @param {string} fileName file name
+ * @param {string} path path
+ * @param {GitHubPublisherSettings} settings Settings
+ * @return {string} edited path
+ */
 function regexOnPath(fileName: string, path: string, settings: GitHubPublisherSettings) {
 	const uploadSettings = settings.upload;
 	path = path.replace(fileName, "");
