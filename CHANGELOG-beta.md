@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-11](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/5.0.0-10...5.0.0-11) (2023-02-23)
+
+
+### Bug Fixes
+
+* **modal_regex_edition:** Can't add new folder regex on old config ([926f5a7](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/926f5a7056c993f12325f317e2d627544d848500))
+
 ## [5.0.0-10](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/5.0.0-9...5.0.0-10) (2023-02-23)
 
 
