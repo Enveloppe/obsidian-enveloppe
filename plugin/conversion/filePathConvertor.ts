@@ -263,7 +263,7 @@ function createFrontmatterPath(
 	const folderNote = folderNoteIndexYAML(fileName, frontmatter, settings);
 	let folderRoot = "";
 	if (uploadSettings.rootFolder.length > 0 && !folderCategory.includes(uploadSettings.rootFolder)) {
-		folderRoot = folderRoot + "/";
+		folderRoot = uploadSettings.rootFolder + "/";
 	}
 	if (folderCategory.trim().length === 0) return folderNote;
 	return regexOnPath(folderRoot + folderCategory, settings) + "/" + folderNote;
