@@ -210,14 +210,11 @@ function createObsidianPath(
 ): string {
 	fileName = folderNoteIndexOBS(file, vault, settings, fileName);
 	const rootFolder = settings.upload.defaultName.length > 0 ? settings.upload.defaultName : "";
-	console.log(`ROOTFOLDER: ${rootFolder}`);
-	console.log(`FILENAME: ${fileName}`);
 	let path = rootFolder + fileName;
 	//remove last word from path splitted with /
 	let pathWithoutEnd = path.split("/").slice(0, -1).join("/");
 	//get file name only
 	const fileNameOnly = path.split("/").at(-1);
-	console.log(`PATH/END: ${pathWithoutEnd} ;FILENAMEONLY : ${fileNameOnly}`);
 	pathWithoutEnd = regexOnPath(pathWithoutEnd, settings);
 	return pathWithoutEnd + "/" + fileNameOnly;
 }
