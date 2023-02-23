@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-35](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/5.0.0-6...5.0.0-35) (2023-02-23)
+
+
+### Features
+
+* Add folderpath regex ; redo translation ; add modals ([e08696a](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/e08696a8bf9a96a0eef52aa129a2b0b5cb49d458))
+
+
+### Bug Fixes
+
+* add default message for merge ([7a3394f](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/7a3394f62e111b4de2b55124d23eb83b70c22e59))
+* add error msg when using forbidden char ([0bd1405](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/0bd14051cf78009fde841552b3396897b190d6e1))
+* empty view when importing settings ([ed44728](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/ed447284f4bdb6d4a806d135bee4d9f78c34fa6e))
+* folder path not edited on fixed folder ([5883968](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/58839689ab97965b0212668fcffef34e02cb4e28))
+* regex counted as forbidden value ([db691c9](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/db691c9790f3a405b1ba339f7e1383de03e48324))
+* template wrong set ([f828f1a](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/f828f1a3576ccb4cd7641a5740935911ff5e2c92))
+* undefined / object in migrating settings ([2aaad96](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/2aaad96db182a3630279559a7e82c81f910dab7f))
+
 ## [5.0.0-34](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-33...5.0.0-34) (2023-02-22)
 
 ## [5.0.0-33](https://github.com/Lisandra-dev/private-beta-obs-publisher/compare/5.0.0-32...5.0.0-33) (2023-02-22)
