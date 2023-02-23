@@ -177,7 +177,7 @@
 			},
 			"title": "Embed",
 			"transferImage": {
-				"desc": "Send attachments embedded in a file to github.",
+				"desc": "Send attachments embedded in a file to GitHub.",
 				"title": "Transfer attachments"
 			},
 			"transferMetaFile": {
@@ -185,7 +185,7 @@
 				"title": "Send files using a metadata field"
 			},
 			"transferNotes": {
-				"desc": "Send embedded notes in a shared file to github. Only shared files will be send!",
+				"desc": "Send embedded notes in a shared file to GitHub. Only shared files will be send!",
 				"title": "Transfer embedded notes"
 			}
 		},
@@ -209,7 +209,7 @@
 				"title": "Main branch"
 			},
 			"ghToken": {
-				"desc": "A github token with repository permission. You can generate it ",
+				"desc": "A GitHub token with repository permission. You can generate it ",
 				"title": "Github Token"
 			},
 			"repoName": {
@@ -220,13 +220,13 @@
 			"testConnection": "Test connection",
 			"title": "GitHub Configuration",
 			"username": {
-				"desc": "Your github username.",
+				"desc": "Your GitHub username.",
 				"title": "Github Username"
 			}
 		},
 		"githubWorkflow": {
 			"autoCleanUp": {
-				"desc": "If the plugin must remove from github the depublished files (stop share or deleted)",
+				"desc": "If the plugin must remove from GitHub the depublished files (stop share or deleted)",
 				"title": "Auto clean up"
 			},
 			"excludedFiles": {
@@ -234,7 +234,7 @@
 				"title": "Excluded files and folder"
 			},
 			"githubAction": {
-				"desc": "If you want to activate a github action when the plugin push the file, set the name of the file (in your .github/worfklows folder). Only workflow with the \"workflow_dispatch\" event will be triggered.",
+				"desc": "If you want to activate a GitHub action when the plugin push the file, set the name of the file (in your .github/worfklows folder). Only workflow with the \"workflow_dispatch\" event will be triggered.",
 				"title": "Github action name"
 			},
 			"prRequest": {
@@ -250,7 +250,7 @@
 			"frontmatter": {
 				"attachment": {
 					"folder": "Change the default folder for the attachments",
-					"send": "Send all attachments to github"
+					"send": "Send all attachments to GitHub"
 				},
 				"autoclean": "Disable or enable autocleaning",
 				"baselink": "Change the base link for the copy link command",

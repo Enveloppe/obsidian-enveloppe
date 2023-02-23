@@ -221,7 +221,7 @@
       "title": "Configuration GitHub",
       "username": {
         "desc": "Votre pseudo GitHub.",
-        "title": "Github Username"
+        "title": "Pseudo GitHub"
       }
     },
     "githubWorkflow": {
