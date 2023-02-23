@@ -3,7 +3,7 @@ import { App, Modal, Setting, TextAreaComponent, ButtonComponent, Platform } fro
 import {GithubPublisherSettings} from "../settings";
 import i18next from "i18next";
 import {GitHubPublisherSettings, OldSettings} from "../settings/interface";
-import { migrateSettings } from "./utils";
+import { migrateSettings, noticeLog } from "./utils";
 
 export type SettingValue = number | string | boolean | unknown;
 
@@ -46,9 +46,9 @@ export class ImportModal extends Modal {
 							//need to convert old settings to new settings
 							const oldSettings = importedSettings as unknown as OldSettings;
 							await migrateSettings(oldSettings, this.plugin);
-							console.log("Migrated settings from old to new format");
+							noticeLog("Migrated settings from old to new format", this.plugin.settings);
 						} else {
-							console.log("Imported settings as new format");
+							noticeLog("Imported settings as new format", this.plugin.settings);
 							importedSettings = importedSettings as GitHubPublisherSettings;
 							if (!(importedSettings.upload.replaceTitle instanceof Array)) {
 								importedSettings.upload.replaceTitle = [importedSettings.upload.replaceTitle];

@@ -101,7 +101,6 @@ export class ModalRegexFilePathName extends Modal {
 							const isForbiddenReplace = this.forbiddenValue(title.replacement, onWhat);
 							canBeValidated.push(isForbiddenEntry[1] as boolean);
 							canBeValidated.push(isForbiddenReplace[1] as boolean);
-							console.log(isForbiddenEntry[0], isForbiddenEntry[1], isForbiddenReplace[0], isForbiddenReplace[1])
 							if (isForbiddenEntry[1] || isForbiddenReplace[1]) {
 								title.regex = isForbiddenEntry[0] as string;
 								title.replacement = isForbiddenReplace[0] as string;

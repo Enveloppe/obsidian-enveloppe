@@ -177,7 +177,7 @@ export async function noticeMessage(
 
 export async function migrateSettings(old: OldSettings, plugin: GithubPublisher ) {
 	if (Object.keys(old).includes("editorMenu")) {
-		console.log("Migrating settings...");
+		noticeLog("Migrating settings...", plugin.settings);
 		plugin.settings = {
 			github:
 			{
