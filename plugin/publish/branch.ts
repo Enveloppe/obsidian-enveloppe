@@ -334,7 +334,7 @@ export class GithubBranch extends FilesManagement {
 				});
 				//@ts-ignore
 				if (repoExist.status === 200) {
-					noticeLog(i18next.t("commands.checkValidity.repoExistsTestBranch", {repoOwner: repo.owner, RepoName: repo.repo, main: repo.branch}), this.settings);
+					noticeLog(i18next.t("commands.checkValidity.repoExistsTestBranch", {repoOwner: repo.owner, repoName: repo.repo, main: repo.branch}), this.settings);
 
 					const branchExist = await this.octokit.request("GET /repos/{owner}/{repo}/branches/{branch}", {
 						owner: repo.owner,

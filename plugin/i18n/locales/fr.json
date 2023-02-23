@@ -98,7 +98,7 @@
       "alreadyExists": "La branche {{- branchName}} sur {{- repoInfo}} existe déjà - Utilisation de celle-ci.",
       "error": "Erreur avec {{- repoInfo}} : {{- error}}",
       "prMessage": "Pull-Request [{{- branchName}}] depuis Obsidian",
-      "success": "La branche a été crée avec succès (status: {{- branchStatuts}} sur {{- repoInfo}})"
+      "success": "La branche a été crée avec succès (status: {{- branchStatus}} sur {{- repoInfo}})"
     }
   },
   "regex": {
