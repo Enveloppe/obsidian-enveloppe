@@ -2,34 +2,34 @@
   "commands": {
     "checkValidity": {
       "inBranch": {
-        "error403": "Error 403: {{repoInfo}} was moved permanently (from {{branchInfo}}).",
-        "error404": "Error 404: The branch {{branchInfo}} was not found in {{repoInfo}}."
+        "error403": "Error 403: {{- repoInfo}} was moved permanently (from {{- branchInfo}}).",
+        "error404": "Error 404: The branch {{- branchInfo}} was not found in {{- repoInfo}}."
       },
       "inRepo": {
-        "error301": "Error 301: {{repoInfo}}  was moved permanently.",
-        "error403": "Error 403: this action is forbidden for {{repoInfo}}.",
-        "error404": "Error 404: {{repoInfo}}: is not found."
+        "error301": "Error 301: {{- repoInfo}}  was moved permanently.",
+        "error403": "Error 403: this action is forbidden for {{- repoInfo}}.",
+        "error404": "Error 404: {{- repoInfo}}: is not found."
       },
-      "repoExistsTestBranch": "Repository {{repoOwner}}/{{repoName}} exists. Now testing the {{main}} branch.",
-      "success": "{{repoInfo}} seems to be valid!",
+      "repoExistsTestBranch": "Repository {{- repoOwner}}/{{- repoName}} exists. Now testing the {{- main}} branch.",
+      "success": "{{- repoInfo}} seems to be valid!",
       "title": "Test the connection to the configured repository"
     },
     "publisherDeleteClean": "Purge depublished and deleted files",
     "shareActiveFile": "Upload single current active note",
-    "shareViewFiles": "Upload {{viewFile}} with Github Publisher",
+    "shareViewFiles": "Upload {{- viewFile}} with Github Publisher",
     "uploadAllEditedNote": "Refresh all published notes",
     "uploadAllNewEditedNote": "Refresh published and upload new notes",
     "uploadAllNotes": "Upload all shared notes",
     "uploadNewNotes": "Upload unpublished notes"
   },
   "common": {
-    "add": "Add {{things}}",
+    "add": "Add {{- things}}",
     "after": "After",
     "before": "Before",
     "cancel": "Cancel",
     "close": "Close",
-    "delete": "Delete {{things}}",
-    "edit": "Edit {{things}}",
+    "delete": "Delete {{- things}}",
+    "edit": "Edit {{- things}}",
     "error": "Error",
     "here": "here",
     "or": "or",
@@ -45,19 +45,19 @@
   },
   "deletion": {
     "defaultFolder": "You need a default folder name in the settings to use this command.",
-    "failed": "Failed to delete {{nb}} files.",
+    "failed": "Failed to delete {{- nb}} files.",
     "noFile": "No files have been deleted.",
     "rootFolder": "You need to configure a root folder in the settings to use this command.",
-    "success": "Successfully deleted {{nb}} files."
+    "success": "Successfully deleted {{- nb}} files."
   },
   "error": {
     "dataview": "Unable to render dataview query. Please update the dataview plugin to the last version.",
-    "errorConfig": "Error configuring {{repoInfo}}. Please check your settings.",
-    "errorPublish": "Error during upload to {{repoInfo}}",
-    "isEmpty": "{{repoInfo}} is empty.",
+    "errorConfig": "Error configuring {{- repoInfo}}. Please check your settings.",
+    "errorPublish": "Error during upload to {{- repoInfo}}",
+    "isEmpty": "{{- repoInfo}} is empty.",
     "mergeconflic": "Pull-request is not mergeable, you need to do it manually.",
     "unablePublishMultiNotes": "Unable to upload multiple notes, something went wrong.",
-    "unablePublishNote": "Unable to upload note {{file}}, skipping it",
+    "unablePublishNote": "Unable to upload note {{- file}}, skipping it",
     "whatEmpty": {
       "branch": "Branch",
       "ghToken": "GitHub Token",
@@ -66,12 +66,12 @@
     }
   },
   "informations": {
-    "foundNoteToSend": "Found {{nbNotes}} new notes to send",
+    "foundNoteToSend": "Found {{- nbNotes}} new notes to send",
     "noNewNote": "No new notes to upload.",
     "scanningRepo": "Scanning the repository, may take a while...",
-    "sendMessage": "Upload {{nbNotes}} notes to {{repoOwner}}:{{repoName}}",
-    "startingClean": "Starting cleaning {{repoInfo}}",
-    "successfullPublish": "Successfully uploaded {{nbNotes}} to {{repoInfo}}",
+    "sendMessage": "Upload {{- nbNotes}} notes to {{- repoOwner}}:{{- repoName}}",
+    "startingClean": "Starting cleaning {{- repoInfo}}",
+    "successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repoInfo}}",
     "waitingWorkflow": "Now, waiting for the workflow to be completed..."
   },
   "modals": {
@@ -94,10 +94,10 @@
   },
   "publish": {
     "branch": {
-      "alreadyExists": "Branch already exists ({{branchName}} on {{repoInfo}} - Using it.",
-      "error": "Error with {{repoInfo}}: {{error}}",
-      "prMessage": "Pull-Request [{{branchName}}] from Obsidian",
-      "success": "Branch successfully created (status: {{branchStatus}}) on {{repoInfo}}"
+      "alreadyExists": "Branch already exists ({{- branchName}} on {{- repoInfo}} - Using it.",
+      "error": "Error with {{- repoInfo}}: {{- error}}",
+      "prMessage": "Pull-Request [{{- branchName}}] from Obsidian",
+      "success": "Branch successfully created (status: {{- branchStatus}}) on {{- repoInfo}}"
     }
   },
   "regex": {
@@ -111,7 +111,7 @@
         "empty": "Replacement can be empty to remove the whole string.",
         "flags": {
           "dotAll": "s: DotAll",
-          "error": "The flag {{flag}} is not valid.",
+          "error": "The flag {{- flag}} is not valid.",
           "global": "g: Global",
           "insensitive": "i: Insensitive.",
           "multiline": "m: Multiline",
@@ -124,8 +124,8 @@
           "title": "Text replacer"
         },
         "MomentReplaceRegex": "Choose when the regex will be executed : before or after the other conversion (dataview, internal links...).",
-        "title": "Replace the {{what}}",
-        "forbiddenValue" : "The {{what}} cannont contain the character: {{forbiddenChar}}",
+        "title": "Replace the {{- what}}",
+        "forbiddenValue" : "The {{- what}} cannont contain the character: {{- forbiddenChar}}",
         "warningPath" : "Warning! Using the character \"/\" will edit the path, be careful with this option."
       },
       "dataview": {

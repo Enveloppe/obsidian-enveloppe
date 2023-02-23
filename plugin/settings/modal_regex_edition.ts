@@ -19,15 +19,15 @@ export class ModalRegexFilePathName extends Modal {
 
 	forbiddenValue(value: string, onWhat: string): string {
 		if (
-			(value.match(/[><:"/\\|*]/)) && (this.type === "file")
+			(value.match(/[\\><:"|?*(\\/)]|(^\w+\/\w+)/)) && (this.type === "file")
 		) {
-			new Notice(i18next.t("settings.conversion.censor.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[><:"/\\|*]/)[0]}));
+			new Notice(i18next.t("settings.conversion.censor.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[\\><:"|?*(\\/)]|(^\w+\/\w+)/)[0]}));
 			value = "";
 		} else if (this.type === "path") {
 			if (value.match(/[\\><:"|?*]/)){
 				new Notice(i18next.t("settings.conversion.censor.forbiddenValue", { what: onWhat, forbiddenChar: value.match(/[><:"\\|?*]/)[0]}));
 				value = "";
-			} else if (value.includes("/")) {
+			} else if (value.match(/(^\w+\/\w+)|(\\\/)/)) {
 				new Notice(i18next.t("settings.conversion.censor.warningPath"));
 			}
 		}
