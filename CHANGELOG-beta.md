@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.0-12](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/5.0.0-11...5.0.0-12) (2023-02-23)
+
+
+### Bug Fixes
+
+* duple option -> add subFolder editing to folderpath edition ([4690459](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/469045958c3267a60a38120ac037d0062f2477df))
+* folderRoot empty ([c5ad7f7](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/c5ad7f78b73bd9c7797935f7a4b0a3d674bc42df))
+* wrong category path ([6cdbbe4](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/6cdbbe40742e16b609a763928d26220cb0a8a575))
+
 ## [5.0.0-11](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/5.0.0-10...5.0.0-11) (2023-02-23)
 
 
