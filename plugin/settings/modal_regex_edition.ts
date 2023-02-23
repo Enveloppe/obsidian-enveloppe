@@ -37,7 +37,7 @@ export class ModalRegexFilePathName extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
-		const onWhat = this.type === "path" ? i18next.t("common.path.folder") : i18next.t("common.path.file");
+		let onWhat = this.type === "path" ? i18next.t("common.path.folder") : i18next.t("common.path.file");
 		onWhat = onWhat.toLowerCase();
 		contentEl.createEl("h2", {text: i18next.t("settings.conversion.censor.title", {what: onWhat})});
 		const what = this.type === "path" ? this.settings.upload.replacePath : this.settings.upload.replaceTitle;
