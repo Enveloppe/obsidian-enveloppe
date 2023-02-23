@@ -6,8 +6,6 @@ import {
 	GithubTiersVersion,
 	OldSettings,
 	RepoFrontmatter,
-	Version,
-	VersionToUpdate
 } from "./settings/interface";
 import { getRepoFrontmatter, migrateSettings } from "./src/utils";
 import {GithubBranch} from "./publish/branch";
@@ -77,14 +75,12 @@ export default class GithubPublisher extends Plugin {
 		console.log(
 			`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`
 		);
-		console.log('i18next init')
 		i18next.init({
 			lng: translationLanguage,
 			fallbackLng: "en",
 			resources: ressources,
 		});
 		
-		console.log('load settings')
 		await this.loadSettings();
 		
 		const oldSettings = this.settings;

@@ -5,13 +5,7 @@ export interface RegexReplace {
 	replacement: string;
 }
 
-export interface Version {
-	beta: string;
-	stable: string;
-}
-
 export interface GitHubPublisherSettings {
-	pluginVersion: Version;
 	github: {
 		user: string;
 		repo: string;
@@ -148,16 +142,7 @@ export enum GithubTiersVersion {
 	entreprise = "Enterprise",
 }
 
-export interface VersionToUpdate {
-	needed: boolean;
-	oldVersion: Version
-}
-
 export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
-	pluginVersion: {
-		"beta" : "0",
-		"stable" : "0.0.0",
-	},
 	github: {
 		user: "",
 		repo: "",

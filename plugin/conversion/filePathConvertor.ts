@@ -16,7 +16,6 @@ import {
 	getCategory,
 	getFrontmatterCondition,
 	getRepoFrontmatter,
-	noticeLog,
 } from "../src/utils";
 import {isInternalShared, checkIfRepoIsInAnother, isShared} from "../src/data_validation_test";
 
@@ -210,7 +209,7 @@ function createObsidianPath(
 ): string {
 	fileName = folderNoteIndexOBS(file, vault, settings, fileName);
 	const rootFolder = settings.upload.defaultName.length > 0 ? settings.upload.defaultName : "";
-	let path = rootFolder + fileName;
+	const path = rootFolder + fileName;
 	//remove last word from path splitted with /
 	let pathWithoutEnd = path.split("/").slice(0, -1).join("/");
 	//get file name only
@@ -258,14 +257,16 @@ function createFrontmatterPath(
 	frontmatter: FrontMatterCache,
 	fileName: string
 ): string {
+	
 	const uploadSettings = settings.upload;
 	const folderCategory = getCategory(frontmatter, settings);
-	let folderRoot = uploadSettings.rootFolder;
-	if (folderRoot.length > 0) {
+	const folderNote = folderNoteIndexYAML(fileName, frontmatter, settings);
+	let folderRoot = "";
+	if (uploadSettings.rootFolder.length > 0 && !folderCategory.includes(uploadSettings.rootFolder)) {
 		folderRoot = folderRoot + "/";
 	}
-	if (folderCategory.trim().length === 0) return folderNoteIndexYAML(fileName, frontmatter, settings);
-	return regexOnPath(folderRoot + folderCategory, settings) + "/" + folderNoteIndexYAML(fileName, frontmatter, settings);
+	if (folderCategory.trim().length === 0) return folderNote;
+	return regexOnPath(folderRoot + folderCategory, settings) + "/" + folderNote;
 }
 
 /**

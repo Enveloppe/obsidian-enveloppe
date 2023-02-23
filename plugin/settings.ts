@@ -612,6 +612,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			.setDesc(i18next.t("settings.conversion.tags.desc") )
 			.setClass("github-publisher-textarea")
 			.addTextArea((text) => {
+				text.inputEl.style.width = "50%";
 				text.setPlaceholder("field_name")
 					.setValue(textSettings.tags.fields.join(","))
 					.onChange(async (value) => {

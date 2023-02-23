@@ -6,7 +6,6 @@ import {
 	Platform,
 	TFile,
 	Vault,
-	PluginManifest
 } from "obsidian";
 import {
 	FolderSettings,
@@ -14,7 +13,6 @@ import {
 	MetadataExtractor,
 	RepoFrontmatter,
 	OldSettings,
-	VersionToUpdate
 } from "../settings/interface";
 import Publisher from "../publish/upload";
 import { getReceiptFolder } from "../conversion/filePathConvertor";
@@ -177,14 +175,10 @@ export async function noticeMessage(
 	}
 }
 
-export async function migrateSettings(old: OldSettings, plugin: GithubPublisher, manifest: PluginManifest, needToBeUpdated: VersionToUpdate ) {
+export async function migrateSettings(old: OldSettings, plugin: GithubPublisher) {
 	if (Object.keys(old).includes("editorMenu")) {
 		noticeLog(i18next.t("informations.migrating.oldSettings"), plugin.settings);
 		plugin.settings = {
-			pluginVersion: {
-				beta: isBeta ? manifest.version.split('-')[1] : "0",
-				stable: manifest.version.split('-')[0]
-			},
 			github:
 			{
 				user: old.githubName ? old.githubName : plugin.settings.github.user ? plugin.settings.github.user : "",
@@ -215,8 +209,10 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher,
 					replacement: old.frontmatterTitleReplacement,
 				}],
 				replacePath: [
-					{regex: old.subFolder,
-					replacement: ""}
+					{
+						regex: old.subFolder,
+						replacement: ""
+					}
 				],
 				autoclean: {
 					enable: old.autoCleanUp,
@@ -266,18 +262,24 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher,
 		await plugin.saveSettings();
 	} 
 	if (!(plugin.settings.upload.replaceTitle instanceof Array)) {
-		noticeLog(i18next.t("informations.migrating.fileReplace"), plugin.settings)
+		noticeLog(i18next.t("informations.migrating.fileReplace"), plugin.settings);
 		plugin.settings.upload.replaceTitle = [plugin.settings.upload.replaceTitle];
 		await plugin.saveSettings();
 	} 
 	//@ts-ignore
-	if (plugin.settings.upload.subFolder.length > 0) {
-		noticeLog(i18next.t("informations.migrating.subFolder"), plugin.settings)
-		plugin.settings.upload.replacePath.push({
-			//@ts-ignore
-			regex: "/" + plugin.settings.upload.subFolder,
-			replacement: ""
-		});
+	if (plugin.settings.upload.subFolder && (!plugin.settings.upload.replacePath.find((e) => e.regex === "/" + plugin.settings.upload.subFolder))) {
+		noticeLog(i18next.t("informations.migrating.subFolder"), plugin.settings);
+		//@ts-ignore
+		if (plugin.settings.upload.subFolder.length > 0) {
+			plugin.settings.upload.replacePath.push({
+				//@ts-ignore
+				regex: "/" + plugin.settings.upload.subFolder,
+				replacement: ""
+			});
+		}
+		//delete plugin.settings.upload.subFolder from settings;
+		//@ts-ignore
+		delete plugin.settings.upload.subFolder;
 		await plugin.saveSettings();
 	}
 }
@@ -299,12 +301,12 @@ async function noticeMessageOneRepo(
 ): Promise<void> {
 	const noticeValue =
 		file instanceof TFile ? "\"" + file.basename + "\"" : file;
-	let successMsg = ""
-	let repoInfo = `${repo.owner}:${repo.repo}`;
+	let successMsg = "";
+	const repoInfo = `${repo.owner}:${repo.repo}`;
 	if (file instanceof String) {
 		successMsg = i18next.t("informations.successfullPublish", { nbNotes: noticeValue, repoInfo: repoInfo });
 	} else {
-		successMsg = i18next.t("informations.successPublishOneNote", { file: noticeValue, repoInfo: repoInfo })
+		successMsg = i18next.t("informations.successPublishOneNote", { file: noticeValue, repoInfo: repoInfo });
 	}
 	if (settings.github.worflow.workflowName.length > 0) {
 		const msg = i18next.t("informations.sendMessage", {nbNotes: noticeValue, repoOwner: repo.owner, repoInfo: repo.repo}) + ".\n" + i18next.t("informations.waitingWorkflow");
