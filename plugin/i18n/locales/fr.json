@@ -131,6 +131,7 @@
         "title": "Dataview"
       },
       "desc": "Ces options ne changent pas le contenu du fichier dans votre coffre Obsidian, mais changeront le contenu du fichier publié sur GitHub.",
+      "forbiddenValue": "Le {{what}} ne peut contenir : {{forbiddenChar}}.",
       "hardBreak": {
         "desc": "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne.",
         "title": "Saut de ligne strict"
@@ -168,7 +169,8 @@
         },
         "title": "Convertir des champs dataview ou frontmatter en tags"
       },
-      "title": "Conversion du contenu"
+      "title": "Conversion du contenu",
+      "warningPath" : "Utiliser le caractère \"/\" changera le chemin complet !" 
     },
     "embed": {
       "defaultImageFolder": {
@@ -358,7 +360,7 @@
       },
       "frontmatterRegex": {
         "desc": "Si le texte est entre \"//\", il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut.",
-        "placeholder": "Apply replacements to the filename"
+        "placeholder": "Appliquer un remplacement sur le nom du fichier"
       },
       "pathRemoving": {
         "desc": "Permet de publier uniquement un sous-dossier en supprimant le chemin avant celui-ci.",

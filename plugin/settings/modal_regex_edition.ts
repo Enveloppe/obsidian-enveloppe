@@ -17,6 +17,23 @@ export class ModalRegexFilePathName extends Modal {
 		this.onSubmit = onSubmit;
 	}
 
+	forbiddenValue(value: string): string {
+		if (
+			(value.match(/[><:"/\\|*]/)) && (this.type === "file")
+		) {
+			new Notice(i18next.t("settings.conversion.censor.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[><:"/\\|*]/)[0]}));
+			value = "";
+		} else if (this.type === "path") {
+			if (value.match(/[\\><:"|?*]/)){
+				new Notice(i18next.t("settings.conversion.censor.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[><:"\\|?*]/)[0]}));
+				value = "";
+			} else if (value.includes("/")) {
+				new Notice(i18next.t("settings.conversion.censor.warningPath"));
+			}
+		}
+		return value;
+	}
+
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
@@ -31,14 +48,14 @@ export class ModalRegexFilePathName extends Modal {
 					text.setPlaceholder(i18next.t("regex.entry"))
 						.setValue(title.regex)
 						.onChange((value) => {
-							title.regex = value;
+							title.regex = this.forbiddenValue(value);
 						});
 				})
 				.addText((text) => {
 					text.setPlaceholder(i18next.t("regex.replace"))
 						.setValue(title.replacement)
 						.onChange((value) => {
-							title.replacement = value;
+							title.replacement = this.forbiddenValue(value);
 						});
 				})
 				.addExtraButton((button) => {
