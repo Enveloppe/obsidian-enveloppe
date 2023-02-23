@@ -181,9 +181,9 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher 
 		plugin.settings = {
 			github:
 			{
-				user: old.githubName ? old.githubName : this.settings.github.user ? this.settings.github.user : "",
-				repo: old.githubRepo ? old.githubRepo : this.settings.github.repo ? this.settings.github.repo : "",
-				token: old.GhToken ? old.GhToken : this.settings.github.token ? this.settings.github.token : "",
+				user: old.githubName ? old.githubName : plugin.settings.github.user ? plugin.settings.github.user : "",
+				repo: old.githubRepo ? old.githubRepo : plugin.settings.github.repo ? plugin.settings.github.repo : "",
+				token: old.GhToken ? old.GhToken : plugin.settings.github.token ? plugin.settings.github.token : "",
 				branch: old.githubBranch,
 				automaticallyMergePR: old.automaticallyMergePR,
 				api: {
