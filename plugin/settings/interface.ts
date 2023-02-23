@@ -155,7 +155,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 			hostname: "",
 		},
 		worflow: {
-			customCommitMsg: "",
+			customCommitMsg: "[PUBLISHER] Merge",
 			workflowName: "",
 		},
 	},
