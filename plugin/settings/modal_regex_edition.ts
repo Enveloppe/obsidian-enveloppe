@@ -1,5 +1,5 @@
 import {App, Notice, Modal, Setting} from "obsidian";
-import { GitHubPublisherSettings, TextCleaner } from "./interface";
+import { GitHubPublisherSettings, TextCleaner, RegexReplace } from "./interface";
 import i18next from "i18next";
 
 export class ModalRegexFilePathName extends Modal {
@@ -48,11 +48,19 @@ export class ModalRegexFilePathName extends Modal {
 		let onWhat = this.type === "path" ? i18next.t("common.path.folder") : i18next.t("common.path.file");
 		onWhat = onWhat.toLowerCase();
 		contentEl.createEl("h2", {text: i18next.t("settings.conversion.censor.title", {what: onWhat})});
-		const what = this.type === "path" ? this.settings.upload.replacePath : this.settings.upload.replaceTitle;
+		if (this.type === "path" && !this.settings.upload.replacePath) {
+			this.settings.upload.replacePath = [];
+		}
+		else if (!this.settings.upload.replaceTitle) {
+			this.settings.upload.replaceTitle = [];
+		}
+		let what: RegexReplace[] = this.type === "path" ? this.settings.upload.replacePath : this.settings.upload.replaceTitle;
 
 		for (const title of what) {
 			new Setting(contentEl)
+				.setClass("github-publisher-censor-entry")
 				.addText((text) => {
+					text.inputEl.style.width = "100%";
 					text.setPlaceholder(i18next.t("regex.entry"))
 						.setValue(title.regex)
 						.onChange((value) => {
@@ -60,6 +68,7 @@ export class ModalRegexFilePathName extends Modal {
 						});
 				})
 				.addText((text) => {
+					text.inputEl.style.width = "100%";
 					text.setPlaceholder(i18next.t("regex.replace"))
 						.setValue(title.replacement)
 						.onChange((value) => {
@@ -84,10 +93,11 @@ export class ModalRegexFilePathName extends Modal {
 				button
 					.setIcon("plus")
 					.onClick(() => {
-						what.push({
-							regex: "",
-							replacement: "",
-						});
+						if (this.type === "path") {
+							this.settings.upload.replacePath.push({regex: "", replacement: ""});
+						} else {
+							this.settings.upload.replaceTitle.push({regex: "", replacement: ""});
+						}
 						this.onOpen();
 					});
 			})
