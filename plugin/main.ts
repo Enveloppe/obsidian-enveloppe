@@ -5,7 +5,9 @@ import {
 	GitHubPublisherSettings,
 	GithubTiersVersion,
 	OldSettings,
-	RepoFrontmatter
+	RepoFrontmatter,
+	Version,
+	VersionToUpdate
 } from "./settings/interface";
 import { getRepoFrontmatter, migrateSettings } from "./src/utils";
 import {GithubBranch} from "./publish/branch";
@@ -65,6 +67,8 @@ export default class GithubPublisher extends Plugin {
 		);
 	}
 
+			
+
 	/**
 	 * Function called when the plugin is loaded
 	 * @return {Promise<void>}
@@ -73,17 +77,17 @@ export default class GithubPublisher extends Plugin {
 		console.log(
 			`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`
 		);
+		console.log('i18next init')
 		i18next.init({
 			lng: translationLanguage,
 			fallbackLng: "en",
 			resources: ressources,
 		});
 		
+		console.log('load settings')
 		await this.loadSettings();
+		
 		const oldSettings = this.settings;
-		if (!(this.settings.upload.replaceTitle instanceof Array)) {
-			this.settings.upload.replaceTitle = [this.settings.upload.replaceTitle];
-		}
 		await migrateSettings(oldSettings as unknown as OldSettings, this);
 		const branchName =
 			app.vault.getName().replaceAll(" ", "-").replaceAll(".", "-") +

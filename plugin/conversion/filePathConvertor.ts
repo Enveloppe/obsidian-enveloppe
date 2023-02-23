@@ -16,6 +16,7 @@ import {
 	getCategory,
 	getFrontmatterCondition,
 	getRepoFrontmatter,
+	noticeLog,
 } from "../src/utils";
 import {isInternalShared, checkIfRepoIsInAnother, isShared} from "../src/data_validation_test";
 
@@ -207,15 +208,18 @@ function createObsidianPath(
 	vault: Vault,
 	fileName: string
 ): string {
-	const folderDefault = settings.upload.defaultName;
 	fileName = folderNoteIndexOBS(file, vault, settings, fileName);
-
-	const rootFolder = folderDefault.length > 0 ? folderDefault : "";
-	const path = rootFolder + fileName;
-	if (settings.upload.subFolder.length > 0) {
-		return path.replace(settings.upload.subFolder + "/", "");
-	}
-	return path;
+	const rootFolder = settings.upload.defaultName.length > 0 ? settings.upload.defaultName : "";
+	console.log(`ROOTFOLDER: ${rootFolder}`);
+	console.log(`FILENAME: ${fileName}`);
+	let path = rootFolder + fileName;
+	//remove last word from path splitted with /
+	let pathWithoutEnd = path.split("/").slice(0, -1).join("/");
+	//get file name only
+	const fileNameOnly = path.split("/").at(-1);
+	console.log(`PATH/END: ${pathWithoutEnd} ;FILENAMEONLY : ${fileNameOnly}`);
+	pathWithoutEnd = regexOnPath(pathWithoutEnd, settings);
+	return pathWithoutEnd + "/" + fileNameOnly;
 }
 
 /**
@@ -246,7 +250,6 @@ function folderNoteIndexYAML(
 
 /**
  * Create filepath based on settings and frontmatter for the github repository
- * @param {TFile} file Source file
  * @param {GitHubPublisherSettings} settings Settings
  * @param {FrontMatterCache} frontmatter frontmatter
  * @param {string} fileName file name
@@ -254,29 +257,18 @@ function folderNoteIndexYAML(
  */
 
 function createFrontmatterPath(
-	file: TFile,
 	settings: GitHubPublisherSettings,
 	frontmatter: FrontMatterCache,
 	fileName: string
 ): string {
 	const uploadSettings = settings.upload;
 	const folderCategory = getCategory(frontmatter, settings);
-	let path =
-		uploadSettings.defaultName.length > 0
-			? uploadSettings.defaultName + "/" + fileName
-			: fileName;
 	let folderRoot = uploadSettings.rootFolder;
 	if (folderRoot.length > 0) {
 		folderRoot = folderRoot + "/";
 	}
-	if (frontmatter && frontmatter[uploadSettings.yamlFolderKey]) {
-		path =
-			folderRoot +
-			folderCategory +
-			"/" +
-			folderNoteIndexYAML(fileName, frontmatter, settings);
-	}
-	return path;
+	if (folderCategory.trim().length === 0) return folderNoteIndexYAML(fileName, frontmatter, settings);
+	return regexOnPath(folderRoot + folderCategory, settings) + "/" + folderNoteIndexYAML(fileName, frontmatter, settings);
 }
 
 /**
@@ -288,9 +280,9 @@ function createFrontmatterPath(
  */
 export function regexOnFileName(fileName: string, settings: GitHubPublisherSettings): string {
 	const uploadSettings = settings.upload;
-	if (fileName === uploadSettings.folderNote.rename && uploadSettings.folderNote.enable) return fileName;
+	if (fileName === uploadSettings.folderNote.rename && uploadSettings.folderNote.enable || uploadSettings.replaceTitle.length === 0) return fileName;
 	fileName = fileName.replace(".md", "");
-	for (const regexTitle of uploadSettings.replacePath) {
+	for (const regexTitle of uploadSettings.replaceTitle) {
 		if (regexTitle.regex.trim().length > 0) {
 			const toReplace = regexTitle.regex;
 			const replaceWith = regexTitle.replacement;
@@ -316,15 +308,13 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 
 /** 
  * Allow to modify enterely the path of a file, using regex / string replace 
- * @param {string} fileName file name
  * @param {string} path path
  * @param {GitHubPublisherSettings} settings Settings
  * @return {string} edited path
  */
-function regexOnPath(fileName: string, path: string, settings: GitHubPublisherSettings) {
+function regexOnPath(path: string, settings: GitHubPublisherSettings) {
 	const uploadSettings = settings.upload;
-	if (uploadSettings.behavior === FolderSettings.fixed) return path;
-	path = path.replace(fileName, "");
+	if (uploadSettings.behavior === FolderSettings.fixed || uploadSettings.replacePath.length === 0) return path;
 	for (const regexTitle of uploadSettings.replacePath) {
 		if (regexTitle.regex.trim().length > 0) {
 			const toReplace = regexTitle.regex;
@@ -345,7 +335,7 @@ function regexOnPath(fileName: string, path: string, settings: GitHubPublisherSe
 			}
 		}
 	}
-	return path + fileName;
+	return path;
 }
 
 /**
@@ -393,6 +383,7 @@ function getReceiptFolder(
 		const frontmatter = metadataCache.getCache(file.path)?.frontmatter;
 
 		const fileName = getTitleField(frontmatter, file, settings);
+		const editedFileName = regexOnFileName(fileName, settings);
 
 		if (
 			!isShared(frontmatter, settings, file)
@@ -402,15 +393,15 @@ function getReceiptFolder(
 
 		let path =
 			settings.upload.defaultName.length > 0
-				? settings.upload.defaultName + "/" + regexOnFileName(fileName, settings)
-				: regexOnFileName(fileName, settings);
+				? settings.upload.defaultName + "/" + editedFileName
+				: editedFileName;
 
 		if (settings.upload.behavior === FolderSettings.yaml) {
-			path = createFrontmatterPath(file, settings, frontmatter, fileName);
+			path = createFrontmatterPath(settings, frontmatter, fileName);
 		} else if (settings.upload.behavior === FolderSettings.obsidian) {
 			path = createObsidianPath(file, settings, vault, fileName);
 		}
-		return regexOnPath(fileName, path, settings);
+		return path;
 	}
 }
 

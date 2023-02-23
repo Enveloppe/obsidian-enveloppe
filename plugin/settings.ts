@@ -312,9 +312,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 							rootFolderSettings,
 							autoCleanSetting,
 							value,
-							this.plugin,
-							subFolderSettings
-						);
+							this.plugin						);
 						this.settingsPage.empty();
 						this.renderUploadConfiguration();
 						await this.plugin.saveSettings();
@@ -337,25 +335,6 @@ export class GithubPublisherSettings extends PluginSettingTab {
 							autoCleanSetting,
 							this.plugin
 						);
-						await this.plugin.saveSettings();
-					});
-			});
-
-		const subFolderSettings = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.upload.pathRemoving.title") )
-			.setClass("github-publisher")
-			.setDesc(i18next.t("settings.upload.pathRemoving.desc"))
-			.addText((text) => {
-				text.setPlaceholder(
-					i18next.t(
-						"settings.upload.pathRemoving.placeholder"
-					) 
-				)
-					.setValue(uploadSettings.subFolder)
-					.onChange(async (value) => {
-						uploadSettings.subFolder = value
-							.replace(/\/$/, "")
-							.trim();
 						await this.plugin.saveSettings();
 					});
 			});
@@ -485,7 +464,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 		}
 
-		showHideBasedOnFolder(this.plugin.settings, frontmatterKeySettings, rootFolderSettings, subFolderSettings, folderNoteSettings);
+		showHideBasedOnFolder(this.plugin.settings, frontmatterKeySettings, rootFolderSettings, folderNoteSettings);
 
 
 		//@ts-ignore
@@ -562,7 +541,6 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			autoCleanSetting,
 			uploadSettings.behavior,
 			this.plugin,
-			subFolderSettings
 		).then();
 
 	}

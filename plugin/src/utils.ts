@@ -6,13 +6,15 @@ import {
 	Platform,
 	TFile,
 	Vault,
+	PluginManifest
 } from "obsidian";
 import {
 	FolderSettings,
 	GitHubPublisherSettings,
 	MetadataExtractor,
 	RepoFrontmatter,
-	OldSettings
+	OldSettings,
+	VersionToUpdate
 } from "../settings/interface";
 import Publisher from "../publish/upload";
 import { getReceiptFolder } from "../conversion/filePathConvertor";
@@ -175,10 +177,14 @@ export async function noticeMessage(
 	}
 }
 
-export async function migrateSettings(old: OldSettings, plugin: GithubPublisher ) {
+export async function migrateSettings(old: OldSettings, plugin: GithubPublisher, manifest: PluginManifest, needToBeUpdated: VersionToUpdate ) {
 	if (Object.keys(old).includes("editorMenu")) {
-		noticeLog("Migrating settings...", plugin.settings);
+		noticeLog(i18next.t("informations.migrating.oldSettings"), plugin.settings);
 		plugin.settings = {
+			pluginVersion: {
+				beta: isBeta ? manifest.version.split('-')[1] : "0",
+				stable: manifest.version.split('-')[0]
+			},
 			github:
 			{
 				user: old.githubName ? old.githubName : plugin.settings.github.user ? plugin.settings.github.user : "",
@@ -197,7 +203,6 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher 
 			},
 			upload: {
 				behavior: old.downloadedFolder as FolderSettings,
-				subFolder: old.subFolder,
 				defaultName: old.folderDefaultName,
 				rootFolder: old.rootFolder,
 				yamlFolderKey: old.yamlFolderKey,
@@ -209,7 +214,10 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher 
 					regex: old.frontmatterTitleRegex,
 					replacement: old.frontmatterTitleReplacement,
 				}],
-				replacePath: [],
+				replacePath: [
+					{regex: old.subFolder,
+					replacement: ""}
+				],
 				autoclean: {
 					enable: old.autoCleanUp,
 					excluded: old.autoCleanUpExcluded,
@@ -255,6 +263,21 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher 
 				noticeError: old.logNotice,
 			}
 		};
+		await plugin.saveSettings();
+	} 
+	if (!(plugin.settings.upload.replaceTitle instanceof Array)) {
+		noticeLog(i18next.t("informations.migrating.fileReplace"), plugin.settings)
+		plugin.settings.upload.replaceTitle = [plugin.settings.upload.replaceTitle];
+		await plugin.saveSettings();
+	} 
+	//@ts-ignore
+	if (plugin.settings.upload.subFolder.length > 0) {
+		noticeLog(i18next.t("informations.migrating.subFolder"), plugin.settings)
+		plugin.settings.upload.replacePath.push({
+			//@ts-ignore
+			regex: "/" + plugin.settings.upload.subFolder,
+			replacement: ""
+		});
 		await plugin.saveSettings();
 	}
 }

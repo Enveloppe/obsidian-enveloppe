@@ -73,7 +73,12 @@
     "startingClean": "Starting cleaning {{- repoInfo}}",
     "successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repoInfo}}",
     "successPublishOneNote": "Successfully uploaded {{- file}} to {{- repoInfo}}",
-    "waitingWorkflow": "Now, waiting for the workflow to be completed..."
+    "waitingWorkflow": "Now, waiting for the workflow to be completed...",
+    "migrating": {
+      "oldSettings": "Migration of old settings to new settings format...",
+      "fileReplace": "Migration of filename replace to the new format...",
+      "subFolder": "Adding replacing subfolder to the folderpath replacement..."
+    }
   },
   "modals": {
     "export": {
@@ -345,7 +350,7 @@
       },
       "filepathRegex": {
         "desc": "The replacement won't be applied to the filename. Use the same settings than the filename replacement.",
-        "placeholder": "Apply replacements to the filepath"
+        "placeholder": "Filepath edit"
       },
       "folderBehavior": {
         "desc": "Choose the file tree in the repository, with using a frontmatter key, a fixed folder or your Obsidian file tree.",
@@ -361,7 +366,7 @@
       },
       "frontmatterRegex": {
         "desc": "If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string.",
-        "placeholder": "Apply replacements to the filename"
+        "placeholder": "Filename edit"
       },
       "pathRemoving": {
         "desc": "Allow to publish only subfolder by removing the path before that.",

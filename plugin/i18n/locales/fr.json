@@ -73,7 +73,12 @@
     "startingClean": "Début du nettoyage de {{- repoInfo}}",
     "successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repoInfo}}",
     "successPublishOneNote" : "Transfert réussi de {{- file}} vers {{- repoInfo}}",
-    "waitingWorkflow": "Maintenant, attente de la fin du workflow..."
+    "waitingWorkflow": "Maintenant, attente de la fin du workflow...",
+    "migrating": {
+      "oldSettings" : "Migration des anciens paramètres au nouveau format...",
+      "fileReplace": "Migration du remplacement du nom du fichier au nouveau format...",
+      "subFolder" : "Ajout du remplacement du sous-dossier au remplacement de chemin de fichier..."
+    }
   },
   "modals": {
     "export": {
@@ -344,8 +349,8 @@
         "title": "Dossier par défaut"
       },
       "filepathRegex": {
-        "desc": "Le remplacement ne sera pas appliqué sur le nom du fichier. Utilise les mêmes options que pour le nom du fichier.",
-        "placeholder": "Appliquer un ou plusieurs remplacements au chemin du fichier"
+        "desc": "Le remplacement ne sera pas appliqué sur le nom du fichier. Utilise les mêmes options que pour le nom du fichier",
+        "placeholder": "Modification du chemin"
       },
       "folderBehavior": {
         "desc": "Choisir la hierarchie des dossiers dans le dépôt, en se basant sur une clé frontmatter, un dossier fixe ou la hierarchie des dossiers dans Obsidian.",
@@ -361,7 +366,7 @@
       },
       "frontmatterRegex": {
         "desc": "Si le texte est entre \"//\", il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut.",
-        "placeholder": "Appliquer un remplacement sur le nom du fichier"
+        "placeholder": "Modification du titre"
       },
       "pathRemoving": {
         "desc": "Permet de publier uniquement un sous-dossier en supprimant le chemin avant celui-ci.",

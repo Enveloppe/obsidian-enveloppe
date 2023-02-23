@@ -29,12 +29,11 @@ export function hideSettings(containerEl: Setting) {
 }
 
 
-export function showHideBasedOnFolder(settings: GitHubPublisherSettings, frontmatterKeySettings: Setting, rootFolderSettings: Setting, subFolderSettings: Setting, folderNoteSettings: Setting) {
+export function showHideBasedOnFolder(settings: GitHubPublisherSettings, frontmatterKeySettings: Setting, rootFolderSettings: Setting, folderNoteSettings: Setting) {
 	const upload = settings.upload;
 	if (upload.behavior === FolderSettings.yaml) {
 		showSettings(frontmatterKeySettings);
 		showSettings(rootFolderSettings);
-		hideSettings(subFolderSettings);
 		showSettings(folderNoteSettings);
 	} else {
 		hideSettings(frontmatterKeySettings);
@@ -43,10 +42,8 @@ export function showHideBasedOnFolder(settings: GitHubPublisherSettings, frontma
 			upload.behavior ===
 				FolderSettings.obsidian
 		) {
-			showSettings(subFolderSettings);
 			showSettings(folderNoteSettings);
 		} else {
-			hideSettings(subFolderSettings);
 			hideSettings(folderNoteSettings);
 		}
 	}
@@ -98,18 +95,14 @@ export async function autoCleanCondition(
  * - Show the frontmatterKey setting (to set the category key)
  * - Show the rootFolder settings
  * - Check the condition to show or hide the autoClean settings (with checking the length of the defaultFolder)
- * - Hide the subFolder settings
  *
  * @example
  * - If obsidian path or fixed folder : hide the frontmatterKey setting and the rootFolder settings
- * - If obsidian path : show the subFolder settings
- * - If fixed folder : hide the subFolder settings
  * @param {Setting} frontmatterKeySettings
  * @param {Setting} rootFolderSettings
  * @param {Setting} autoCleanSetting
  * @param {string} value
  * @param {GithubPublisher} plugin
- * @param {Setting} subFolderSettings
  * @return {Promise<void>}
  */
 
@@ -119,7 +112,6 @@ export async function folderHideShowSettings(
 	autoCleanSetting: Setting,
 	value: string,
 	plugin: GithubPublisherPlugin,
-	subFolderSettings: Setting
 ) {
 	const settings = plugin.settings.upload;
 	if (value === FolderSettings.yaml) {
@@ -130,7 +122,6 @@ export async function folderHideShowSettings(
 			autoCleanSetting,
 			plugin
 		).then();
-		hideSettings(subFolderSettings);
 	} else {
 		if (settings.defaultName.length > 0) {
 			autoCleanSetting.setDisabled(false);
@@ -140,12 +131,6 @@ export async function folderHideShowSettings(
 					"is-enabled"
 				);
 			}
-		}
-		if (settings.behavior === FolderSettings.obsidian) {
-			showSettings(subFolderSettings);
-		} else {
-			// is FolderSettings.fixed
-			hideSettings(subFolderSettings);
 		}
 		hideSettings(frontmatterKeySettings);
 		hideSettings(rootFolderSettings);
