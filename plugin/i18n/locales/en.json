@@ -72,6 +72,7 @@
     "sendMessage": "Upload {{- nbNotes}} notes to {{- repoOwner}}:{{- repoName}}",
     "startingClean": "Starting cleaning {{- repoInfo}}",
     "successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repoInfo}}",
+    "successPublishOneNote": "Successfully uploaded {{- file}} to {{- repoInfo}}",
     "waitingWorkflow": "Now, waiting for the workflow to be completed..."
   },
   "modals": {

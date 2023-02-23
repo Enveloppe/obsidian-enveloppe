@@ -72,6 +72,7 @@
     "sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repoOwner}}/{{- repoName}}",
     "startingClean": "Début du nettoyage de {{- repoInfo}}",
     "successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repoInfo}}",
+    "successPublishOneNote" : "Transfert réussi de {{- file}} vers {{- repoInfo}}",
     "waitingWorkflow": "Maintenant, attente de la fin du workflow..."
   },
   "modals": {
