@@ -222,8 +222,8 @@
       "testConnection": "Tester la connexion",
       "title": "Configuration GitHub",
       "username": {
-        "desc": "Votre pseudo GitHub.",
-        "title": "Pseudo GitHub"
+        "desc": "Votre username sur GitHub.",
+        "title": "Nom d'utilisateur GitHub"
       }
     },
     "githubWorkflow": {
