@@ -22,11 +22,15 @@ Using [i18n](https://www.i18next.com/), you can translate the plugin.
 
 To add a new language:
 
-- Clone the `i18n/locales/en.ts` and rename it to your language.
+- Clone the `i18n/locales/en.json` and rename it to your language.
 - Get your locale language from Obsidian using [obsidian translation](https://github.com/obsidianmd/obsidian-translations) or using the commands (in templater for example) : `<% tp.obsidian.moment.locale() %>`
 - Translate the file and save it.
-- In `i18n/index.ts` :
-    - Import the new file as `import language from '.locales/language'`
-    - add the new language in the `localeMap` json object: `{ "language": language }`
-- Additionally, you can test if your translation is okay.
-- Create a PR to add your translation!
+- In `i18n/i18next.ts` :
+    - Add `import * as <lang> from "./locales/<lang>.json";`
+    - Edit the `ressource` part with adding : `<lang> : {translation: <lang>}`
+
+>[!info] Test locally 
+> You can test locally your translation if you want, but you need to clone, have `node`, run `npm i` and run `npm run build`, without forget to add the file `main.js` in your `.obsidian/plugin/obsidian-mkdocs-publisher`. Don't forget to reload Obsidian after the copy!
+
+> [!note] Advice
+> If you use VSCode or jetbrain editor, you can look at [i18n Ally](https://i18nally.org) to get some useful tool for your translation!
