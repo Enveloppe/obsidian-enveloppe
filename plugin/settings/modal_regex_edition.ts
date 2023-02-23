@@ -17,7 +17,7 @@ export class ModalRegexFilePathName extends Modal {
 		this.onSubmit = onSubmit;
 	}
 
-	forbiddenValue(value: string): string {
+	forbiddenValue(value: string, onWhat: string): string {
 		if (
 			(value.match(/[><:"/\\|*]/)) && (this.type === "file")
 		) {
@@ -25,7 +25,7 @@ export class ModalRegexFilePathName extends Modal {
 			value = "";
 		} else if (this.type === "path") {
 			if (value.match(/[\\><:"|?*]/)){
-				new Notice(i18next.t("settings.conversion.censor.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[><:"\\|?*]/)[0]}));
+				new Notice(i18next.t("settings.conversion.censor.forbiddenValue", { what: onWhat, forbiddenChar: value.match(/[><:"\\|?*]/)[0]}));
 				value = "";
 			} else if (value.includes("/")) {
 				new Notice(i18next.t("settings.conversion.censor.warningPath"));
@@ -38,7 +38,7 @@ export class ModalRegexFilePathName extends Modal {
 		const {contentEl} = this;
 		contentEl.empty();
 		const onWhat = this.type === "path" ? i18next.t("common.path.folder") : i18next.t("common.path.file");
-
+		onWhat = onWhat.toLowerCase();
 		contentEl.createEl("h2", {text: i18next.t("settings.conversion.censor.title", {what: onWhat})});
 		const what = this.type === "path" ? this.settings.upload.replacePath : this.settings.upload.replaceTitle;
 
@@ -48,14 +48,14 @@ export class ModalRegexFilePathName extends Modal {
 					text.setPlaceholder(i18next.t("regex.entry"))
 						.setValue(title.regex)
 						.onChange((value) => {
-							title.regex = this.forbiddenValue(value);
+							title.regex = this.forbiddenValue(value, onWhat);
 						});
 				})
 				.addText((text) => {
 					text.setPlaceholder(i18next.t("regex.replace"))
 						.setValue(title.replacement)
 						.onChange((value) => {
-							title.replacement = this.forbiddenValue(value);
+							title.replacement = this.forbiddenValue(value, onWhat);
 						});
 				})
 				.addExtraButton((button) => {

@@ -124,14 +124,15 @@
           "title": "Remplacement de texte"
         },
         "MomentReplaceRegex": "Choisir le moment où les regexs seront exécutés : avant ou après les autres conversions (Dataview, liens internes...)",
-        "title": "Remplacement de texte sur : {{what}}"
+        "title": "Remplacer le {{what}}",
+        "forbiddenValue": "Le {{what}} ne peut contenir le caractère : {{forbiddenChar}}.",
+        "warningPath": "Attention ! Utiliser le caractère \"/\" modifiera le chemin du fichier. Veuillez faire attention avec cette option."
       },
       "dataview": {
         "desc": "Convertir les requêtes Dataview en markdown.",
         "title": "Dataview"
       },
       "desc": "Ces options ne changent pas le contenu du fichier dans votre coffre Obsidian, mais changeront le contenu du fichier publié sur GitHub.",
-      "forbiddenValue": "Le {{what}} ne peut contenir : {{forbiddenChar}}.",
       "hardBreak": {
         "desc": "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne.",
         "title": "Saut de ligne strict"
@@ -169,8 +170,7 @@
         },
         "title": "Convertir des champs dataview ou frontmatter en tags"
       },
-      "title": "Conversion du contenu",
-      "warningPath" : "Utiliser le caractère \"/\" changera le chemin complet !" 
+      "title": "Conversion du contenu"
     },
     "embed": {
       "defaultImageFolder": {
