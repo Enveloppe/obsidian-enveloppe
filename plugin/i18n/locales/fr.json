@@ -158,7 +158,7 @@
           "title": "Convertir [[WikiLinks]] en [liens](Markdown)"
         }
       },
-      "sectionTitle": "Sur le contenu",
+      "sectionTitle": "Texte principal",
       "tags": {
         "desc": "Ceci convertira tous les champs du frontmatter/dataview en tags. Séparez les champs par une virgule.",
         "exclude": {

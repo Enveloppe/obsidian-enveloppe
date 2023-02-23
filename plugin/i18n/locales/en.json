@@ -158,7 +158,7 @@
           "title": "[[Wikilinks]] to [MDlinks](links)"
         }
       },
-      "sectionTitle": "On contents",
+      "sectionTitle": "Main text",
       "tags": {
         "desc": "This will convert any frontmatter or dataview inline field into frontmatter tags. Separate fields with a comma.",
         "exclude": {
