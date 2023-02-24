@@ -1,387 +1,382 @@
 {
-  "commands": {
-    "checkValidity": {
-      "inBranch": {
-        "error403": "Erreur 403: {{- repoInfo}} a été déplacé de manière permanente (depuis {{- branchInfo}}",
-        "error404": "Erreur 404 : La branche {{- branchInfo}} est introuvable depuis {{- repoInfo}}"
-      },
-      "inRepo": {
-        "error301": "Erreur 301 : {{- repoInfo}} a été déplacé de manière permanente",
-        "error403": "Erreur 403 : Cette action est interdite pour {{- repoInfo}}",
-        "error404": "Erreur 404 : {{- repoInfo}} est introuvable"
-      },
-      "repoExistsTestBranch": "Le dépôt {{- repoOwner}}/{{- repoName}} existe. Maintenant, nous allons tester la branche {{- main}}",
-      "success": "{{- repoInfo}} semble valide !",
-      "title": "Tester la connexion au dépôt configuré"
-    },
-    "publisherDeleteClean": "Purger les fichiers dépubliés et supprimés",
-    "shareActiveFile": "Transférer la note active",
-    "shareViewFiles": "Transférer {{- viewFile}} avec Github Publisher",
-    "uploadAllEditedNote": "Rafraîchir toutes les notes publiées",
-    "uploadAllNewEditedNote": "Rafraîchir les notes publiées et transférer les nouvelles notes",
-    "uploadAllNotes": "Transférer toutes les notes",
-    "uploadNewNotes": "Transférer les nouvelles notes"
-  },
-  "common": {
-    "add": "Ajouter {{- things}}",
-    "after": "Après",
-    "before": "Avant",
-    "cancel": "Annuler",
-    "close": "Fermer",
-    "delete": "Supprimer {{- things}}",
-    "edit": "Éditer {{- things}}",
-    "error": "Erreur",
-    "here": "ici",
-    "or": "ou",
-    "path": {
-      "file": "Nom du fichier",
-      "folder": "Chemin du dossier",
-      "full": "Chemin du fichier"
-    },
-    "regex": "regex",
-    "save": "Sauvegarder",
-    "text": "texte",
-    "warning": "Attention"
-  },
-  "deletion": {
-    "defaultFolder": "Vous avez besoin d'un dossier par défaut dans les paramètres pour utiliser cette commande.",
-    "failed": "Échec de la suppression de {{- nb}} notes.",
-    "noFile": "Aucun fichier n'a été supprimé.",
-    "rootFolder": "Vous devez configurer un dossier racine dans les paramètres pour utiliser cette commande.",
-    "success": "Suppression réussie de {{- nb}} fichiers."
-  },
-  "error": {
-    "dataview": "Impossible de convertir la requête Dataview. Veuillez mettre à jour le module Dataview à la dernière version;",
-    "errorConfig": "Erreur de configuration pour {{- repoInfo}}. Merci de vérifier vos paramètres.",
-    "errorPublish": "Erreur lors de la publication sur {{- repoInfo}}",
-    "isEmpty": "{{- repoInfo}} est vide.",
-    "mergeconflic": "La Pull-Request n'est pas fusionnale, vous avez besoin de le faire manuellement.",
-    "unablePublishMultiNotes": "Impossible de transférer plusieurs notes, quelque chose s'est mal passé.",
-    "unablePublishNote": "Impossible de transférer {{- file}}, le fichier a été ignoré.",
-    "whatEmpty": {
-      "branch": "Branch",
-      "ghToken": "Github Token",
-      "owner": "Propriétaire",
-      "repo": "Dépôt"
-    }
-  },
-  "informations": {
-    "foundNoteToSend": "Trouvé {{- nbNotes}} nouvelles notes à transférer.",
-    "noNewNote": "Aucune note à transférer.",
-    "scanningRepo": "Scan du dépôt, veuillez patienter...",
-    "sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repoOwner}}/{{- repoName}}",
-    "startingClean": "Début du nettoyage de {{- repoInfo}}",
-    "successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repoInfo}}",
-    "successPublishOneNote" : "Transfert réussi de {{- file}} vers {{- repoInfo}}",
-    "waitingWorkflow": "Maintenant, attente de la fin du workflow...",
-    "migrating": {
-      "oldSettings" : "Migration des anciens paramètres au nouveau format...",
-      "fileReplace": "Migration du remplacement du nom du fichier au nouveau format...",
-      "subFolder" : "Ajout du remplacement du sous-dossier au remplacement de chemin de fichier..."
-    }
-  },
-  "modals": {
-    "export": {
-      "copy": "Copier vers le presse-papier",
-      "desc": "Exporter les paramètres vers un fichier ou dans le presse-papier.",
-      "download": "Télécharger",
-      "title": "Exporter"
-    },
-    "import": {
-      "desc": "Importer des paramètres depuis un fichier ou un texte. Cela écrasera vos paramètres actuels (sauf le nom du dépôt, le nom d'utilisateur et votre token)",
-      "error": {
-        "isEmpty": "la configuration est vide",
-        "span": "Erreur lors de l'importation de la configuration :"
-      },
-      "importFromFile": "Import depuis le fichier",
-      "paste": "Coller la configuration ici...",
-      "title": "Importer"
-    }
-  },
-  "publish": {
-    "branch": {
-      "alreadyExists": "La branche {{- branchName}} sur {{- repoInfo}} existe déjà - Utilisation de celle-ci.",
-      "error": "Erreur avec {{- repoInfo}} : {{- error}}",
-      "prMessage": "Pull-Request [{{- branchName}}] depuis Obsidian",
-      "success": "La branche a été crée avec succès (status: {{- branchStatus}} sur {{- repoInfo}})"
-    }
-  },
-  "regex": {
-    "entry": "Valeur à remplacer",
-    "replace": "Remplacement"
-  },
-  "settings": {
-    "conversion": {
-      "censor": {
-        "edit": "Éditer les paramètres (flags et ordre d'éxécution)",
-        "empty": "Le remplacement peut être vide pour supprimer l'ensemble de la chaîne de caractère.",
-        "flags": {
-          "dotAll": "s : Dot-all",
-          "error": "Le flags {{- flag}} n'est pas valide.",
-          "global": "g : Global",
-          "insensitive": "i : Insensible à la casse",
-          "multiline": "m: Multi-ligne",
-          "sticky": "y : Sticky",
-          "title": "Flags (basé sur JS regex et pouvant être combinés) :",
-          "unicode": "u : Unicode"
-        },
-        "modal": {
-          "desc": "Replace des textes (ou des regex) dans le fichier par la valeur donnée.",
-          "title": "Remplacement de texte"
-        },
-        "MomentReplaceRegex": "Choisir le moment où les regexs seront exécutés : avant ou après les autres conversions (Dataview, liens internes...)",
-        "title": "Remplacer le {{- what}}",
-        "forbiddenValue": "Le {{- what}} ne peut contenir le caractère : {{- forbiddenChar}}.",
-        "warningPath": "Attention ! Utiliser le caractère \"/\" modifiera le chemin du fichier. Veuillez faire attention avec cette option."
-      },
-      "dataview": {
-        "desc": "Convertir les requêtes Dataview en markdown.",
-        "title": "Dataview"
-      },
-      "desc": "Ces options ne changent pas le contenu du fichier dans votre coffre Obsidian, mais changeront le contenu du fichier publié sur GitHub.",
-      "hardBreak": {
-        "desc": "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne.",
-        "title": "Saut de ligne strict"
-      },
-      "links": {
-        "desc": "Vous pouvez empêcher la conversion des liens et conserver le texte alt (ou le nom du fichier) en utilisant la clé frontmatter \"links\" avec la valeur \"false\".",
-        "folderNote": {
-          "desc": "Renommer les fichiers en un nom spécifique (défaut : \"index.md\") s'il porte le même nom que leur dossier/catégorie parent (fonctionne aussi si la note est à l'extérieur du dossier).",
-          "title": "Folder Note"
-        },
-        "internals": {
-          "desc": "Convertir les liens internes pointant vers les notes publiées vers leur homologue dans le dépôt, sous forme de chemin relatif.",
-          "title": "Liens internes"
-        },
-        "nonShared": {
-          "desc": "L'option précédente, mais appliquées aux liens internes pointant vers des notes non-publiées. Désactivé, seul le nom du fichier sera conservé.",
-          "title": "Conversion des liens internes pointant vers des notes non-publiées"
-        },
-        "title": "Liens",
-        "wikilinks": {
-          "desc": "Conversion des liens wikilinks en liens Markdown, sans en modifier le contenu.",
-          "title": "Convertir [[WikiLinks]] en [liens](Markdown)"
-        }
-      },
-      "sectionTitle": "Texte principal",
-      "tags": {
-        "desc": "Ceci convertira tous les champs du frontmatter/dataview en tags. Séparez les champs par une virgule.",
-        "exclude": {
-          "desc": "Exclusion de champs de la conversion. Séparer les valeurs par une virgule.",
-          "title": "Exclusion de tags"
-        },
-        "inlineTags": {
-          "desc": "Ajoute vos inlines tags dans votre bloc frontmatter et converti les tags imbriqués en remplaçant \"/\" par \"_\".",
-          "title": "Inlines tags"
-        },
-        "title": "Convertir des champs dataview ou frontmatter en tags"
-      },
-      "title": "Conversion du contenu"
-    },
-    "embed": {
-      "defaultImageFolder": {
-        "desc": "Pour utiliser un dossier différent de celui par défaut pour les pièces-jointes.",
-        "title": "Dossier de pièces-jointes par défaut"
-      },
-      "title": "Embed",
-      "transferImage": {
-        "desc": "Transférer les pièces-jointes",
-        "title": "Envoyer les pièces-jointes intégrées dans un fichier dans le dépôt."
-      },
-      "transferMetaFile": {
-        "desc": "Permet d'envoyer des fichiers en utilisant une clé frontmatter/dataview. Séparer les champs par une virgule.",
-        "title": "Envoyer des fichiers en utilisant une clé frontmatter/dataview"
-      },
-      "transferNotes": {
-        "desc": "Envoyer les notes intégrées dans un fichier publié dans le dépôt. Seul les fichiers publiés seront envoyés !",
-        "title": "Transférer les notes intégrées"
-      }
-    },
-    "exportSettings": "Export",
-    "github": {
-      "apiType": {
-        "desc": "Choisir entre l'API GitHub ou l'API pour GitHub Entreprise (uniquement pour les utilisateurs de GitHub Enterprise — Utilisateur avancé !).",
-        "dropdown": {
-          "enterprise": "Entreprise",
-          "free": "Free/Pro/Team (défaut)"
-        },
-        "hostname": {
-          "desc": "Le nom de l'instance Github de votre entreprise.",
-          "title": "Instance Github Entreprise"
-        },
-        "title": "Type d'API"
-      },
-      "automaticallyMergePR": "Fusionner automatiquement les pull-request",
-      "branch": {
-        "desc": "Dans le cas où vous souhaitez utiliser une branche différente de \"main\".",
-        "title": "Branche principale"
-      },
-      "ghToken": {
-        "desc": "Un token GitHub avec autorisation de dépôt. Vous pouvez le générer ",
-        "title": "Token Github"
-      },
-      "repoName": {
-        "desc": "Le nom du dépôt dans lequel vos fichiers seront transférés.",
-        "placeholder": "mkdocs-template",
-        "title": "Nom du dépôt"
-      },
-      "testConnection": "Tester la connexion",
-      "title": "Configuration GitHub",
-      "username": {
-        "desc": "Votre username sur GitHub.",
-        "title": "Nom d'utilisateur GitHub"
-      }
-    },
-    "githubWorkflow": {
-      "autoCleanUp": {
-        "desc": "Si le plugin doit supprimer de votre dépôt les fichiers dépubliés (arrêt du partage ou suppression).",
-        "title": "Auto-nettoyage"
-      },
-      "excludedFiles": {
-        "desc": "Si vous voulez exclure certains dossier ou fichier du nettoyage automatique, définissez leur chemin. Les regex sont acceptées en les encadrant par des slashs. Séparer les valeurs par une virgule.",
-        "title": "fichiers et dossier exclus"
-      },
-      "githubAction": {
-        "desc": "Si vous souhaitez activer une action GitHub lorsque le plugin push les fichiers dans le dépôt, il vous faut indiquer le nom du fichier issus du dossier .github/workflows/. Seules les actions activées par un workflow_dispatch sont activées.",
-        "title": "Nom de l'action GitHub"
-      },
-      "prRequest": {
-        "desc": "Le message envoyé lorsque la pull-request est fusionnée. Sera toujours suivi par le numéro de la pull-request.",
-        "title": "Message de commit"
-      },
-      "useMetadataExtractor": {
-        "desc": "Envoyer les fichiers générés par metadata-extractor dans ce dossier.",
-        "title": "Fichier de metadata-extractor"
-      }
-    },
-    "help": {
-      "frontmatter": {
-        "attachment": {
-          "folder": "Change le dossier par défaut pour les pièces-jointes.",
-          "send": "Envoie toutes les pièces-jointes dans le dépôt GitHub."
-        },
-        "autoclean": "Désactive ou active le nettoyage automatique du dépôt GitHub.",
-        "baselink": "Change le lien de base pour la commande de copie de lien.",
-        "convert": {
-          "enableOrDisable": "Active ou désactive la conversion des liens. En désactivant cette option, vous supprimez les",
-          "syntax": "syntaxes, tout en gardant le nom du fichier ou son text alternatif."
-        },
-        "dataview": "Convertit les requêtes dataview en markdown.",
-        "desc": "Il existe quelques clés YAML qui peuvent vous êtes utile. Le code ci-dessous montre les paramètres par défaut, mais n'hésitez pas à le modifier selon vos besoins pour chaque note !",
-        "embed": {
-          "remove": "Supprime les notes intégrées du fichier partagés en ne laissant qu'une ligne vide.",
-          "send": "Envoie les notes intégrées de la note publiées dans le dépôt. Seules les notes partagées seront envoyées !"
-        },
-        "hardBreak": "Convertit tous les sauts de lignes en \"hard break\" markdown.",
-        "internals": "Convertit les liens internes vers leur homologue du dépôt, sous forme de liens relatifs. Désactivés, les liens seront conservés tels quels.",
-        "mdlinks": "Convertir tous les liens [[wikilinks]] en [liens](Markdown)",
-        "nonShared": "Convertit les liens internes pointat vers une notes non publiées vers son futur homologue. Désactivé, le plugin conservera le nom du fichier ou son texte alternatif.",
-        "repo": {
-          "branch": "Nom de la branche",
-          "desc": "Changer le dépôt GitHub pour cette note",
-          "owner": "Pseudo GitHub du propriétaire du dépôt",
-          "repo": "Nom du dépôt"
-        },
-        "share": "La clé utilisée pour partager une note",
-        "title": "Aide-mémoire frontmatter",
-        "titleKey": "Change le titre de la note"
-      },
-      "multiRepoHelp": {
-        "desc": "Si vous souhaitez envoyer vos notes dans plusieurs dépôt en même temps, vous pouvez utiliser la clé ",
-        "desc2": "dans votre frontmatter. La valeur de cette clé doit être une liste. Chaque dépôt doit avoir les clés suivantes :",
-        "exampleDesc": "Le code YAML ci-dessous montre un exemple basé sur vos paramètres.",
-        "title": "Envoie dans plusieurs dépôt"
-      },
-      "title": "Aide",
-      "usefulLinks": {
-        "discussion": "Discussion",
-        "documentation": "Documentation (en anglais)",
-        "issue": "Issue",
-        "links": "https://obsidian-publisher.netlify.app",
-        "repository": "Dépôt",
-        "title": "Liens utiles"
-      }
-    },
-    "importSettings": "Import",
-    "plugin": {
-      "copyLink": {
-        "baselink": {
-          "desc": "Permet de créer un lien dans le presse-papier avec cette base. Par défaut : \"https://username.github.io/repo/\"",
-          "title": "Lien du dépôt/blog"
-        },
-        "desc": "Envoie d'un lien vers la note publiées dans votre presse-papier.",
-        "linkpathremover": {
-          "desc": "Supprimer cette partie des liens créés. Séparer par une virgule si plusieurs valeurs doivent être supprimées.",
-          "title": "Suppression d'une partie du lien"
-        },
-        "title": "Copie de lien"
-      },
-      "editorMenu": {
-        "desc": "Ajouter une commande de partage dans le menu du clic droit.",
-        "title": "Menu \"Edition\""
-      },
-      "excludedFolder": {
-        "desc": "Les fichiers dans ses dossiers ne seront jamais publiés, quelle que soit l'état de la clé de partage. Séparez les noms de dossier par une virgule.",
-        "title": "Dossiers exclus"
-      },
-      "fileMenu": {
-        "desc": "Ajouter une commande de partage dans le menu \"Fichier\"",
-        "title": "Menu \"Fichier\""
-      },
-      "logNoticeHeader": {
-        "desc": "Sur mobile, il peut être difficile de debug le module. Activer cette option pour notifier toutes les erreurs via une notification Obsidian.",
-        "title": "Notifier toutes les erreurs"
-      },
-      "shareExternalModified": {
-        "desc": "Envoyer les fichiers modifiés s'ils sont différents du fichier actif. Utile si vous modifier les métadonnées à l'aide de Metadata Menu ou MetaEdit.",
-        "title": "Partager les fichiers modifiés externes"
-      },
-      "shareKey": {
-        "desc": "Clé de partage",
-        "title": "La clé frontmatter pour publier la note sur le dépôt."
-      },
-      "title": "Paramètres du plugin"
-    },
-    "upload": {
-      "defaultFolder": {
-        "desc": "Définir le dossier de réception par défaut",
-        "placeholder": "docs",
-        "title": "Dossier par défaut"
-      },
-      "filepathRegex": {
-        "desc": "Le remplacement ne sera pas appliqué sur le nom du fichier. Utilise les mêmes options que pour le nom du fichier",
-        "placeholder": "Modification du chemin"
-      },
-      "folderBehavior": {
-        "desc": "Choisir la hierarchie des dossiers dans le dépôt, en se basant sur une clé frontmatter, un dossier fixe ou la hierarchie des dossiers dans Obsidian.",
-        "fixedFolder": "Dossier fixé",
-        "obsidianPath": "Chemin Obsidian",
-        "title": "Hierarchie des dossiers",
-        "yaml": "Valeur d'une clé frontmatter"
-      },
-      "frontmatterKey": {
-        "desc": "Définir le nom de la clé où obtenir le dossier",
-        "placeholder": "category",
-        "title": "Clé frontmatter"
-      },
-      "frontmatterRegex": {
-        "desc": "Si le texte est entre \"//\", il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut.",
-        "placeholder": "Modification du titre"
-      },
-      "pathRemoving": {
-        "desc": "Permet de publier uniquement un sous-dossier en supprimant le chemin avant celui-ci.",
-        "placeholder": "Blog",
-        "title": "Suppression de chemin"
-      },
-      "rootFolder": {
-        "desc": "Ajouter ce chemin au dossier définit par la clé frontmatter.",
-        "title": "Dossier racine"
-      },
-      "title": "Configuration du transfert",
-      "useFrontmatterTitle": {
-        "desc": "Utiliser un champ du frontmatter pour générer le nom du fichier. Par défaut, \"title\" est utilisé.",
-        "title": "Utiliser une clé frontmatter pour définir le titre"
-      }
-    }
-  }
+	"commands": {
+		"checkValidity": {
+			"inBranch": {
+				"error403": "Erreur 403: {{- repoInfo}} a été déplacé de manière permanente (depuis {{- branchInfo}}",
+				"error404": "Erreur 404 : La branche {{- branchInfo}} est introuvable depuis {{- repoInfo}}"
+			},
+			"inRepo": {
+				"error301": "Erreur 301 : {{- repoInfo}} a été déplacé de manière permanente",
+				"error403": "Erreur 403 : Cette action est interdite pour {{- repoInfo}}",
+				"error404": "Erreur 404 : {{- repoInfo}} est introuvable"
+			},
+			"repoExistsTestBranch": "Le dépôt {{- repoOwner}}/{{- repoName}} existe. Maintenant, nous allons tester la branche {{- main}}",
+			"success": "{{- repoInfo}} semble valide !",
+			"title": "Tester la connexion au dépôt configuré"
+		},
+		"publisherDeleteClean": "Purger les fichiers dépubliés et supprimés",
+		"shareActiveFile": "Transférer la note active",
+		"shareViewFiles": "Transférer {{- viewFile}} avec Github Publisher",
+		"uploadAllEditedNote": "Rafraîchir toutes les notes publiées",
+		"uploadAllNewEditedNote": "Rafraîchir les notes publiées et transférer les nouvelles notes",
+		"uploadAllNotes": "Transférer toutes les notes",
+		"uploadNewNotes": "Transférer les nouvelles notes"
+	},
+	"common": {
+		"add": "Ajouter {{- things}}",
+		"after": "Après",
+		"before": "Avant",
+		"cancel": "Annuler",
+		"close": "Fermer",
+		"delete": "Supprimer {{- things}}",
+		"edit": "Éditer {{- things}}",
+		"error": "Erreur",
+		"here": "ici",
+		"or": "ou",
+		"path": {
+			"file": "Nom du fichier",
+			"folder": "Chemin du dossier",
+			"full": "Chemin du fichier"
+		},
+		"regex": "regex",
+		"save": "Sauvegarder",
+		"text": "texte",
+		"warning": "Attention"
+	},
+	"deletion": {
+		"defaultFolder": "Vous avez besoin d'un dossier par défaut dans les paramètres pour utiliser cette commande.",
+		"failed": "Échec de la suppression de {{- nb}} notes.",
+		"noFile": "Aucun fichier n'a été supprimé.",
+		"rootFolder": "Vous devez configurer un dossier racine dans les paramètres pour utiliser cette commande.",
+		"success": "Suppression réussie de {{- nb}} fichiers."
+	},
+	"error": {
+		"dataview": "Impossible de convertir la requête Dataview. Veuillez mettre à jour le module Dataview à la dernière version;",
+		"errorConfig": "Erreur de configuration pour {{- repoInfo}}. Merci de vérifier vos paramètres.",
+		"errorPublish": "Erreur lors de la publication sur {{- repoInfo}}",
+		"isEmpty": "{{- repoInfo}} est vide.",
+		"mergeconflic": "La Pull-Request n'est pas fusionnale, vous avez besoin de le faire manuellement.",
+		"unablePublishMultiNotes": "Impossible de transférer plusieurs notes, quelque chose s'est mal passé.",
+		"unablePublishNote": "Impossible de transférer {{- file}}, le fichier a été ignoré.",
+		"whatEmpty": {
+			"branch": "Branch",
+			"ghToken": "Github Token",
+			"owner": "Propriétaire",
+			"repo": "Dépôt"
+		}
+	},
+	"informations": {
+		"foundNoteToSend": "Trouvé {{- nbNotes}} nouvelles notes à transférer.",
+		"migrating": {
+			"fileReplace": "Migration du remplacement du nom du fichier au nouveau format...",
+			"oldSettings": "Migration des anciens paramètres au nouveau format...",
+			"subFolder": "Ajout du remplacement du sous-dossier au remplacement de chemin de fichier..."
+		},
+		"noNewNote": "Aucune note à transférer.",
+		"scanningRepo": "Scan du dépôt, veuillez patienter...",
+		"sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repoOwner}}/{{- repoName}}",
+		"startingClean": "Début du nettoyage de {{- repoInfo}}",
+		"successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repoInfo}}",
+		"successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repoInfo}}",
+		"waitingWorkflow": "Maintenant, attente de la fin du workflow..."
+	},
+	"modals": {
+		"export": {
+			"copy": "Copier vers le presse-papier",
+			"desc": "Exporter les paramètres vers un fichier ou dans le presse-papier.",
+			"download": "Télécharger",
+			"title": "Exporter"
+		},
+		"import": {
+			"desc": "Importer des paramètres depuis un fichier ou un texte. Cela écrasera vos paramètres actuels (sauf le nom du dépôt, le nom d'utilisateur et votre token)",
+			"error": {
+				"isEmpty": "la configuration est vide",
+				"span": "Erreur lors de l'importation de la configuration :"
+			},
+			"importFromFile": "Import depuis le fichier",
+			"paste": "Coller la configuration ici...",
+			"title": "Importer"
+		}
+	},
+	"publish": {
+		"branch": {
+			"alreadyExists": "La branche {{- branchName}} sur {{- repoInfo}} existe déjà - Utilisation de celle-ci.",
+			"error": "Erreur avec {{- repoInfo}} : {{- error}}",
+			"prMessage": "Pull-Request [{{- branchName}}] depuis Obsidian",
+			"success": "La branche a été crée avec succès (status: {{- branchStatus}} sur {{- repoInfo}})"
+		}
+	},
+	"regex": {
+		"entry": "Valeur à remplacer",
+		"replace": "Remplacement"
+	},
+	"settings": {
+		"conversion": {
+			"censor": {
+				"MomentReplaceRegex": "Choisir le moment où les regexs seront exécutés : avant ou après les autres conversions (Dataview, liens internes...)",
+				"edit": "Éditer les paramètres (flags et ordre d'éxécution)",
+				"empty": "Le remplacement peut être vide pour supprimer l'ensemble de la chaîne de caractère.",
+				"flags": {
+					"dotAll": "s : Dot-all",
+					"error": "Le flags {{- flag}} n'est pas valide.",
+					"global": "g : Global",
+					"insensitive": "i : Insensible à la casse",
+					"multiline": "m: Multi-ligne",
+					"sticky": "y : Sticky",
+					"title": "Flags (basé sur JS regex et pouvant être combinés) :",
+					"unicode": "u : Unicode"
+				},
+				"forbiddenValue": "Le {{- what}} ne peut contenir le caractère : {{- forbiddenChar}}.",
+				"modal": {
+					"desc": "Replace des textes (ou des regex) dans le fichier par la valeur donnée.",
+					"title": "Remplacement de texte"
+				},
+				"title": "Remplacer le {{- what}}",
+				"warningPath": "Attention ! Utiliser le caractère \"/\" modifiera le chemin du fichier. Veuillez faire attention avec cette option."
+			},
+			"dataview": {
+				"desc": "Convertir les requêtes Dataview en markdown.",
+				"title": "Dataview"
+			},
+			"desc": "Ces options ne changent pas le contenu du fichier dans votre coffre Obsidian, mais changeront le contenu du fichier publié sur GitHub.",
+			"hardBreak": {
+				"desc": "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne.",
+				"title": "Saut de ligne strict"
+			},
+			"links": {
+				"desc": "Vous pouvez empêcher la conversion des liens et conserver le texte alt (ou le nom du fichier) en utilisant la clé frontmatter \"links\" avec la valeur \"false\".",
+				"folderNote": {
+					"desc": "Renommer les fichiers en un nom spécifique (défaut : \"index.md\") s'il porte le même nom que leur dossier/catégorie parent (fonctionne aussi si la note est à l'extérieur du dossier).",
+					"title": "Folder Note"
+				},
+				"internals": {
+					"desc": "Convertir les liens internes pointant vers les notes publiées vers leur homologue dans le dépôt, sous forme de chemin relatif.",
+					"title": "Liens internes"
+				},
+				"nonShared": {
+					"desc": "L'option précédente, mais appliquées aux liens internes pointant vers des notes non-publiées. Désactivé, seul le nom du fichier sera conservé.",
+					"title": "Conversion des liens internes pointant vers des notes non-publiées"
+				},
+				"title": "Liens",
+				"wikilinks": {
+					"desc": "Conversion des liens wikilinks en liens Markdown, sans en modifier le contenu.",
+					"title": "Convertir [[WikiLinks]] en [liens](Markdown)"
+				}
+			},
+			"sectionTitle": "Texte principal",
+			"tags": {
+				"desc": "Ceci convertira tous les champs du frontmatter/dataview en tags. Séparez les champs par une virgule.",
+				"exclude": {
+					"desc": "Exclusion de champs de la conversion. Séparer les valeurs par une virgule.",
+					"title": "Exclusion de tags"
+				},
+				"inlineTags": {
+					"desc": "Ajoute vos inlines tags dans votre bloc frontmatter et converti les tags imbriqués en remplaçant \"/\" par \"_\".",
+					"title": "Inlines tags"
+				},
+				"title": "Convertir des champs dataview ou frontmatter en tags"
+			},
+			"title": "Conversion du contenu"
+		},
+		"embed": {
+			"defaultImageFolder": {
+				"desc": "Pour utiliser un dossier différent de celui par défaut pour les pièces-jointes.",
+				"title": "Dossier de pièces-jointes par défaut"
+			},
+			"title": "Embed",
+			"transferImage": {
+				"desc": "Transférer les pièces-jointes",
+				"title": "Envoyer les pièces-jointes intégrées dans un fichier dans le dépôt."
+			},
+			"transferMetaFile": {
+				"desc": "Permet d'envoyer des fichiers en utilisant une clé frontmatter/dataview. Séparer les champs par une virgule.",
+				"title": "Envoyer des fichiers en utilisant une clé frontmatter/dataview"
+			},
+			"transferNotes": {
+				"desc": "Envoyer les notes intégrées dans un fichier publié dans le dépôt. Seul les fichiers publiés seront envoyés !",
+				"title": "Transférer les notes intégrées"
+			}
+		},
+		"exportSettings": "Export",
+		"github": {
+			"apiType": {
+				"desc": "Choisir entre l'API GitHub ou l'API pour GitHub Entreprise (uniquement pour les utilisateurs de GitHub Enterprise — Utilisateur avancé !).",
+				"dropdown": {
+					"enterprise": "Entreprise",
+					"free": "Free/Pro/Team (défaut)"
+				},
+				"hostname": {
+					"desc": "Le nom de l'instance Github de votre entreprise.",
+					"title": "Instance Github Entreprise"
+				},
+				"title": "Type d'API"
+			},
+			"automaticallyMergePR": "Fusionner automatiquement les pull-request",
+			"branch": {
+				"desc": "Dans le cas où vous souhaitez utiliser une branche différente de \"main\".",
+				"title": "Branche principale"
+			},
+			"ghToken": {
+				"desc": "Un token GitHub avec autorisation de dépôt. Vous pouvez le générer ",
+				"title": "Token Github"
+			},
+			"repoName": {
+				"desc": "Le nom du dépôt dans lequel vos fichiers seront transférés.",
+				"placeholder": "mkdocs-template",
+				"title": "Nom du dépôt"
+			},
+			"testConnection": "Tester la connexion",
+			"title": "Configuration GitHub",
+			"username": {
+				"desc": "Votre username sur GitHub.",
+				"title": "Nom d'utilisateur GitHub"
+			}
+		},
+		"githubWorkflow": {
+			"autoCleanUp": {
+				"desc": "Si le plugin doit supprimer de votre dépôt les fichiers dépubliés (arrêt du partage ou suppression).",
+				"title": "Auto-nettoyage"
+			},
+			"excludedFiles": {
+				"desc": "Si vous voulez exclure certains dossier ou fichier du nettoyage automatique, définissez leur chemin. Les regex sont acceptées en les encadrant par des slashs. Séparer les valeurs par une virgule.",
+				"title": "fichiers et dossier exclus"
+			},
+			"githubAction": {
+				"desc": "Si vous souhaitez activer une action GitHub lorsque le plugin push les fichiers dans le dépôt, il vous faut indiquer le nom du fichier issus du dossier .github/workflows/. Seules les actions activées par un workflow_dispatch sont activées.",
+				"title": "Nom de l'action GitHub"
+			},
+			"prRequest": {
+				"desc": "Le message envoyé lorsque la pull-request est fusionnée. Sera toujours suivi par le numéro de la pull-request.",
+				"title": "Message de commit"
+			},
+			"useMetadataExtractor": {
+				"desc": "Envoyer les fichiers générés par metadata-extractor dans ce dossier.",
+				"title": "Fichier de metadata-extractor"
+			}
+		},
+		"help": {
+			"frontmatter": {
+				"attachment": {
+					"folder": "Change le dossier par défaut pour les pièces-jointes.",
+					"send": "Envoie toutes les pièces-jointes dans le dépôt GitHub."
+				},
+				"autoclean": "Désactive ou active le nettoyage automatique du dépôt GitHub.",
+				"baselink": "Change le lien de base pour la commande de copie de lien.",
+				"convert": {
+					"enableOrDisable": "Active ou désactive la conversion des liens. En désactivant cette option, vous supprimez les",
+					"syntax": "syntaxes, tout en gardant le nom du fichier ou son text alternatif."
+				},
+				"dataview": "Convertit les requêtes dataview en markdown.",
+				"desc": "Il existe quelques clés YAML qui peuvent vous êtes utile. Le code ci-dessous montre les paramètres par défaut, mais n'hésitez pas à le modifier selon vos besoins pour chaque note !",
+				"embed": {
+					"remove": "Supprime les notes intégrées du fichier partagés en ne laissant qu'une ligne vide.",
+					"send": "Envoie les notes intégrées de la note publiées dans le dépôt. Seules les notes partagées seront envoyées !"
+				},
+				"hardBreak": "Convertit tous les sauts de lignes en \"hard break\" markdown.",
+				"internals": "Convertit les liens internes vers leur homologue du dépôt, sous forme de liens relatifs. Désactivés, les liens seront conservés tels quels.",
+				"mdlinks": "Convertir tous les liens [[wikilinks]] en [liens](Markdown)",
+				"nonShared": "Convertit les liens internes pointat vers une notes non publiées vers son futur homologue. Désactivé, le plugin conservera le nom du fichier ou son texte alternatif.",
+				"repo": {
+					"branch": "Nom de la branche",
+					"desc": "Changer le dépôt GitHub pour cette note",
+					"owner": "Pseudo GitHub du propriétaire du dépôt",
+					"repo": "Nom du dépôt"
+				},
+				"share": "La clé utilisée pour partager une note",
+				"title": "Aide-mémoire frontmatter",
+				"titleKey": "Change le titre de la note"
+			},
+			"multiRepoHelp": {
+				"desc": "Si vous souhaitez envoyer vos notes dans plusieurs dépôt en même temps, vous pouvez utiliser la clé ",
+				"desc2": "dans votre frontmatter. La valeur de cette clé doit être une liste. Chaque dépôt doit avoir les clés suivantes :",
+				"exampleDesc": "Le code YAML ci-dessous montre un exemple basé sur vos paramètres.",
+				"title": "Envoie dans plusieurs dépôt"
+			},
+			"title": "Aide",
+			"usefulLinks": {
+				"discussion": "Discussion",
+				"documentation": "Documentation (en anglais)",
+				"issue": "Issue",
+				"links": "https://obsidian-publisher.netlify.app",
+				"repository": "Dépôt",
+				"title": "Liens utiles"
+			}
+		},
+		"importSettings": "Import",
+		"plugin": {
+			"copyLink": {
+				"baselink": {
+					"desc": "Permet de créer un lien dans le presse-papier avec cette base. Par défaut : \"https://username.github.io/repo/\"",
+					"title": "Lien du dépôt/blog"
+				},
+				"desc": "Envoie d'un lien vers la note publiées dans votre presse-papier.",
+				"linkpathremover": {
+					"desc": "Supprimer cette partie des liens créés. Séparer par une virgule si plusieurs valeurs doivent être supprimées.",
+					"title": "Suppression d'une partie du lien"
+				},
+				"title": "Copie de lien"
+			},
+			"editorMenu": {
+				"desc": "Ajouter une commande de partage dans le menu du clic droit.",
+				"title": "Menu \"Edition\""
+			},
+			"excludedFolder": {
+				"desc": "Les fichiers dans ses dossiers ne seront jamais publiés, quelle que soit l'état de la clé de partage. Séparez les noms de dossier par une virgule.",
+				"title": "Dossiers exclus"
+			},
+			"fileMenu": {
+				"desc": "Ajouter une commande de partage dans le menu \"Fichier\"",
+				"title": "Menu \"Fichier\""
+			},
+			"logNoticeHeader": {
+				"desc": "Sur mobile, il peut être difficile de debug le module. Activer cette option pour notifier toutes les erreurs via une notification Obsidian.",
+				"title": "Notifier toutes les erreurs"
+			},
+			"shareExternalModified": {
+				"desc": "Envoyer les fichiers modifiés s'ils sont différents du fichier actif. Utile si vous modifier les métadonnées à l'aide de Metadata Menu ou MetaEdit.",
+				"title": "Partager les fichiers modifiés externes"
+			},
+			"shareKey": {
+				"desc": "Clé de partage",
+				"title": "La clé frontmatter pour publier la note sur le dépôt."
+			},
+			"title": "Paramètres du plugin"
+		},
+		"upload": {
+			"defaultFolder": {
+				"desc": "Définir le dossier de réception par défaut",
+				"placeholder": "docs",
+				"title": "Dossier par défaut"
+			},
+			"filepathRegex": {
+				"desc": "Le remplacement ne sera pas appliqué sur le nom du fichier. Utilise les mêmes options que pour le nom du fichier",
+				"placeholder": "Modification du chemin"
+			},
+			"folderBehavior": {
+				"desc": "Choisir la hierarchie des dossiers dans le dépôt, en se basant sur une clé frontmatter, un dossier fixe ou la hierarchie des dossiers dans Obsidian.",
+				"fixedFolder": "Dossier fixé",
+				"obsidianPath": "Chemin Obsidian",
+				"title": "Hierarchie des dossiers",
+				"yaml": "Valeur d'une clé frontmatter"
+			},
+			"frontmatterKey": {
+				"desc": "Définir le nom de la clé où obtenir le dossier",
+				"placeholder": "category",
+				"title": "Clé frontmatter"
+			},
+			"frontmatterRegex": {
+				"desc": "Si le texte est entre \"//\", il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut.",
+				"placeholder": "Modification du titre"
+			},
+			"rootFolder": {
+				"desc": "Ajouter ce chemin au dossier définit par la clé frontmatter.",
+				"title": "Dossier racine"
+			},
+			"title": "Configuration du transfert",
+			"useFrontmatterTitle": {
+				"desc": "Utiliser un champ du frontmatter pour générer le nom du fichier. Par défaut, \"title\" est utilisé.",
+				"title": "Utiliser une clé frontmatter pour définir le titre"
+			}
+		}
+	}
 }

@@ -18,8 +18,8 @@ export class ModalRegexFilePathName extends Modal {
 	}
 
 	forbiddenValue(value: string, onWhat: string): (string|boolean)[] {
-		let isForbidden: boolean = false;
-		if (value == '/') {
+		let isForbidden = false;
+		if (value == "/") {
 			new Notice(i18next.t("settings.conversion.censor.forbiddenValue", {what: onWhat, forbiddenChar: value}));
 			value = "";
 			isForbidden = true;
@@ -54,7 +54,7 @@ export class ModalRegexFilePathName extends Modal {
 		else if (!this.settings.upload.replaceTitle) {
 			this.settings.upload.replaceTitle = [];
 		}
-		let what: RegexReplace[] = this.type === "path" ? this.settings.upload.replacePath : this.settings.upload.replaceTitle;
+		const what: RegexReplace[] = this.type === "path" ? this.settings.upload.replacePath : this.settings.upload.replaceTitle;
 
 		for (const title of what) {
 			new Setting(contentEl)
