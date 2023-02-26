@@ -1,7 +1,7 @@
 name: "[Mkdocs Publisher Template] Bug report"
 description: Fill a bug report for the mkdocs publisher template
 title: '[Bug]: '
-labels: ["bug", "Material Mkdocs Template"]
+labels: ["🐛 Bug ", "📫 Material Mkdocs Template"]
 assignees:
   - lisandra-dev
 body:
