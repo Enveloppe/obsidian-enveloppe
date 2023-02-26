@@ -15,7 +15,7 @@ body:
       label: Issue validation
       description: "Thanks to check if your issue is relative to the repository. Any non relative or duplicate issue will be closed."
       options:
-        - label: "My issue concern strickly the template, adn isn't a question relative to [Material Mkdocs](https://squidfunk.github.io/mkdocs-material/) nor [Mkdocs](https://www.mkdocs.org/).
+        - label: "My issue concern strickly the template, adn isn't a question relative to [Material Mkdocs](https://squidfunk.github.io/mkdocs-material/) nor [Mkdocs](https://www.mkdocs.org/)."
           required: true
         - label: "I checked the issue to prevent duplicate"
           required: true
