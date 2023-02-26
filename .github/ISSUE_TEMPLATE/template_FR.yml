@@ -1,7 +1,7 @@
 name: "[Mkdocs Publisher Template] Feature request"
 description: Suggest an idea for the publisher mkdocs template.
 title: "[FR]: "
-labels: ["enhancement", "Material Mkdocs Template"]
+labels: ["✨ Enhancement", "📫 Material Mkdocs Template"]
 assignees:
   - lisandra-dev
 body:
