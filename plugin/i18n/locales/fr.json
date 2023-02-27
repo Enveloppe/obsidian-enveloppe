@@ -131,7 +131,7 @@
 					"desc": "Replace des textes (ou des regex) dans le fichier par la valeur donnée.",
 					"title": "Remplacement de texte"
 				},
-				"title": "Remplacer le {{- what}}",
+				"title": "Remplacer les nom du fichier ou son chemin",
 				"warningPath": "Attention ! Utiliser le caractère \"/\" modifiera le chemin du fichier. Veuillez faire attention avec cette option."
 			},
 			"dataview": {
@@ -349,8 +349,6 @@
 				"title": "Dossier par défaut"
 			},
 			"filepathRegex": {
-				"desc": "Le remplacement ne sera pas appliqué sur le nom du fichier. Utilise les mêmes options que pour le nom du fichier",
-				"placeholder": "Modification du chemin"
 			},
 			"folderBehavior": {
 				"desc": "Choisir la hierarchie des dossiers dans le dépôt, en se basant sur une clé frontmatter, un dossier fixe ou la hierarchie des dossiers dans Obsidian.",
@@ -364,9 +362,12 @@
 				"placeholder": "category",
 				"title": "Clé frontmatter"
 			},
-			"frontmatterRegex": {
+			"regexFilePathTitle": {
 				"desc": "Si le texte est entre \"//\", il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut.",
-				"placeholder": "Modification du titre"
+				"title": {
+					"FolderPathTitle": "Éditer le titre et le chemin du dossier (automatiquement)",
+					"titleOnly": "Éditer le titre (automatiquement)"
+				}
 			},
 			"rootFolder": {
 				"desc": "Ajouter ce chemin au dossier définit par la clé frontmatter.",

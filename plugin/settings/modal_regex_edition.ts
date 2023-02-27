@@ -1,23 +1,35 @@
 import {App, Notice, Modal, Setting} from "obsidian";
-import { GitHubPublisherSettings, TextCleaner, RegexReplace } from "./interface";
+import { FolderSettings, GitHubPublisherSettings, RegexReplace, TextCleaner, TypeOfEditRegex } from "./interface";
 import i18next from "i18next";
 
 export class ModalRegexFilePathName extends Modal {
 	settings: GitHubPublisherSettings;
-	type: string;
-	onSubmit: (settings: GitHubPublisherSettings) => void;
+	allRegex: RegexReplace[];
+	onSubmit: (result: RegexReplace[]) => void;
 	constructor(
 		app: App, 
 		settings: GitHubPublisherSettings, 
-		type: string, 
-		onSubmit: (settings: GitHubPublisherSettings) => void) {
+		allRegex : RegexReplace[],
+		onSubmit: (result: RegexReplace[]) => void) {
 		super(app);
-		this.type = type;
+		this.allRegex = allRegex;
 		this.settings = settings;
 		this.onSubmit = onSubmit;
 	}
 
-	forbiddenValue(value: string, onWhat: string): (string|boolean)[] {
+	classValue(allRegex: RegexReplace[]) {
+		this.settings.upload.replacePath = allRegex.filter((regex) => {
+			return regex.type === TypeOfEditRegex.path;
+		});
+		this.settings.upload.replaceTitle = allRegex.filter((regex) => {
+			return regex.type === TypeOfEditRegex.title;
+		}
+		);
+	}
+
+	forbiddenValue(value: string, type: TypeOfEditRegex): (string|boolean)[] {
+		let onWhat = type === TypeOfEditRegex.path ? i18next.t("common.path.folder") : i18next.t("common.path.file");
+		onWhat = onWhat.toLowerCase();
 		let isForbidden = false;
 		if (value == "/") {
 			new Notice(i18next.t("settings.conversion.censor.forbiddenValue", {what: onWhat, forbiddenChar: value}));
@@ -25,12 +37,12 @@ export class ModalRegexFilePathName extends Modal {
 			isForbidden = true;
 		}
 		else if (
-			(value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)) && (this.type === "file")
+			(value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)) && (type === TypeOfEditRegex.title)
 		) {
 			new Notice(i18next.t("settings.conversion.censor.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)[0]}));
 			value = "";
 			isForbidden = true;
-		} else if (this.type === "path") {
+		} else if (type === TypeOfEditRegex.path) {
 			if (value.match(/[\\><:"|?*]/)){
 				new Notice(i18next.t("settings.conversion.censor.forbiddenValue", { what: onWhat, forbiddenChar: value.match(/[\\><:"|?*]/)[0]}));
 				value = "";
@@ -45,19 +57,26 @@ export class ModalRegexFilePathName extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
-		let onWhat = this.type === "path" ? i18next.t("common.path.folder") : i18next.t("common.path.file");
-		onWhat = onWhat.toLowerCase();
-		contentEl.createEl("h2", {text: i18next.t("settings.conversion.censor.title", {what: onWhat})});
-		if (this.type === "path" && !this.settings.upload.replacePath) {
+		contentEl.createEl("h2", {text: i18next.t("settings.conversion.censor.title")});
+		if (!this.settings.upload.replacePath) {
 			this.settings.upload.replacePath = [];
 		}
 		else if (!this.settings.upload.replaceTitle) {
 			this.settings.upload.replaceTitle = [];
 		}
-		const what: RegexReplace[] = this.type === "path" ? this.settings.upload.replacePath : this.settings.upload.replaceTitle;
+		this.settings.upload.replacePath.forEach((title) => {
+			if (!title.type) {
+				title.type = TypeOfEditRegex.path;
+			}
+		});
+		this.settings.upload.replaceTitle.forEach((title) => {
+			if (!title.type) {
+				title.type = TypeOfEditRegex.title;
+			}	
+		});
 
-		for (const title of what) {
-			new Setting(contentEl)
+		for (const title of this.allRegex) {
+			const sett = new Setting(contentEl)
 				.setClass("github-publisher-censor-entry")
 				.addText((text) => {
 					text.inputEl.style.width = "100%";
@@ -74,30 +93,47 @@ export class ModalRegexFilePathName extends Modal {
 						.onChange((value) => {
 							title.replacement = value;
 						});
-				})
-				.addExtraButton((button) => {
-					button
-						.setIcon("trash")
-						.onClick(() => {
-							if (this.type === "path") {
-								this.settings.upload.replacePath = this.settings.upload.replacePath.filter((t) => t !== title);
-							} else {
-								this.settings.upload.replaceTitle = this.settings.upload.replaceTitle.filter((t) => t !== title); 
-							}
-							this.onOpen();
+				});
+
+			if (this.settings.upload.behavior !== FolderSettings.fixed) {
+				sett.addDropdown((dropdown) => {
+					dropdown
+						.addOption("path", i18next.t("common.path.folder"))
+						.addOption("title", i18next.t("common.path.file"))
+						.setValue(title.type)
+						.onChange((value) => {
+							title.type = value as TypeOfEditRegex;
+
 						});
 				});
+			} else {
+				sett
+					.addButton((button) => {
+						button.buttonEl.classList.add("github-publisher-disabled-button");
+						button.setButtonText(i18next.t("common.path.file"));
+					});
+			}
+			sett.addExtraButton((button) => {
+				button
+					.setIcon("trash")
+					.onClick(() => {
+						//remove replace 
+						this.allRegex.splice(this.allRegex.indexOf(title), 1);
+						this.onOpen();
+					});
+			});
 		}
 		new Setting(contentEl)
+			.setClass("github-publisher-modals")
 			.addButton((button) => {
 				button
 					.setIcon("plus")
 					.onClick(() => {
-						if (this.type === "path") {
-							this.settings.upload.replacePath.push({regex: "", replacement: ""});
-						} else {
-							this.settings.upload.replaceTitle.push({regex: "", replacement: ""});
-						}
+						this.allRegex.push({
+							regex: "",
+							replacement: "",
+							type: TypeOfEditRegex.title
+						});
 						this.onOpen();
 					});
 			})
@@ -106,9 +142,9 @@ export class ModalRegexFilePathName extends Modal {
 					.setButtonText(i18next.t("common.save"))
 					.onClick(() => {
 						const canBeValidated: boolean[] = [];
-						what.forEach((title) => {
-							const isForbiddenEntry = this.forbiddenValue(title.regex, onWhat);
-							const isForbiddenReplace = this.forbiddenValue(title.replacement, onWhat);
+						this.allRegex.forEach((title) => {
+							const isForbiddenEntry = this.forbiddenValue(title.regex, title.type);
+							const isForbiddenReplace = this.forbiddenValue(title.replacement, title.type);
 							canBeValidated.push(isForbiddenEntry[1] as boolean);
 							canBeValidated.push(isForbiddenReplace[1] as boolean);
 							if (isForbiddenEntry[1] || isForbiddenReplace[1]) {
@@ -117,7 +153,7 @@ export class ModalRegexFilePathName extends Modal {
 							}
 						});
 						if (!canBeValidated.includes(true)) {
-							this.onSubmit(this.settings);
+							this.onSubmit(this.allRegex);
 							this.close();
 						}
 					});

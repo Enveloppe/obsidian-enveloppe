@@ -12,8 +12,9 @@ summary.github-publisher-summary {
 }
 .setting-item.github-publisher-censor-entry {
 	border: 0 !important;
-	padding: 0 !important;
+	padding: 5px !important;
 }
+
 hr.github-publisher-hr {
 	margin: 1px !important;
 	padding-bottom: 1px;
@@ -228,3 +229,19 @@ a.github-publisher-download:hover{
 	font-size: 14px;
 }
 
+.github-publisher-disabled-button {
+	pointer-events: none;
+	opacity: 0.5;
+	font-style: italic;
+	color: var(--text-muted);
+	cursor: default;
+	box-shadow: none !important;
+	border: none !important;
+	background-color: transparent !important;
+	font-family: var(--font-monospace);
+
+}
+
+.github-publisher-modals {
+	border-top: 0 !important;
+}

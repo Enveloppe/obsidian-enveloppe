@@ -79,6 +79,7 @@ export default class GithubPublisher extends Plugin {
 			lng: translationLanguage,
 			fallbackLng: "en",
 			resources: ressources,
+			returnNull: false,
 		});
 		
 		await this.loadSettings();

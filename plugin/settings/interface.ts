@@ -1,8 +1,14 @@
 import { TFile } from "obsidian";
 
+export enum TypeOfEditRegex {
+	path = "path",
+	title = "title",
+}
+
 export interface RegexReplace {
 	regex: string;
 	replacement: string;
+	type: TypeOfEditRegex;
 }
 
 export interface GitHubPublisherSettings {

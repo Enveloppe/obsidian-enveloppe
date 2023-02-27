@@ -349,8 +349,6 @@
 				"title": "Default Folder"
 			},
 			"filepathRegex": {
-				"desc": "The replacement won't be applied to the filename. Use the same settings than the filename replacement.",
-				"placeholder": "Filepath edit"
 			},
 			"folderBehavior": {
 				"desc": "Choose the file tree in the repository, with using a frontmatter key, a fixed folder or your Obsidian file tree.",
@@ -364,9 +362,12 @@
 				"placeholder": "category",
 				"title": "Frontmatter key"
 			},
-			"frontmatterRegex": {
+			"regexFilePathTitle": {
 				"desc": "If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string.",
-				"placeholder": "Filename edit"
+				"title": {
+					"FolderPathTitle": "Apply edit on the folder path or the filename (automatically)",
+					"titleOnly": "Apply edit on the filename (automatically)"
+				}
 			},
 			"rootFolder": {
 				"desc": "Append this path to the folder set by the frontmatter key",

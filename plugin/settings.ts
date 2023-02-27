@@ -399,42 +399,33 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 		}
+
+		let desc = i18next.t("settings.upload.regexFilePathTitle.title.FolderPathTitle") ;
+		if (uploadSettings.behavior === FolderSettings.fixed) {
+			desc = i18next.t("settings.upload.regexFilePathTitle.title.titleOnly");
+		}
+
 		new Setting(this.settingsPage)
-			.setName(
-				i18next.t(
-					"settings.upload.frontmatterRegex.placeholder"
-				) 
-			)
+			.setName(desc)
 			.setDesc(
-				i18next.t("settings.upload.frontmatterRegex.desc") 
+				i18next.t("settings.upload.regexFilePathTitle.desc") 
 			)
 			.addButton((button) => {
 				button
 					.setIcon("pencil")
 					.onClick(async () => {
-						new ModalRegexFilePathName(this.app, this.plugin.settings, "file", (result => {
-							this.plugin.settings.upload.replaceTitle = result.upload.replaceTitle;
+						let allRegex = uploadSettings.replaceTitle;
+						if (uploadSettings.behavior !== FolderSettings.fixed) {
+							allRegex = allRegex.concat(uploadSettings.replacePath);
+						}
+						new ModalRegexFilePathName(this.app, this.plugin.settings, allRegex, (result => {
+							uploadSettings.replacePath = result.filter(title => {return title.type === "path";});
+							uploadSettings.replaceTitle = result.filter(title => {return title.type === "title";});
 							this.plugin.saveSettings();
 						})).open();
 					});
 			});
-
-		if (uploadSettings.behavior !== FolderSettings.fixed) {
-			new Setting(this.settingsPage)
-				.setName(i18next.t("settings.upload.filepathRegex.placeholder") )
-				.setDesc(i18next.t("settings.upload.filepathRegex.desc") )
-				.addButton((button) => {
-					button
-						.setIcon("pencil")
-						.onClick(async () => {
-							new ModalRegexFilePathName(this.app, this.plugin.settings, "path", (result => {
-								this.plugin.settings.upload.replacePath = result.upload.replacePath;
-								this.plugin.saveSettings();
-							})).open();
-						});
-				});
-		}			
-
+				
 		const folderNoteSettings = new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.links.folderNote.title") )
 			.setClass("github-publisher-folderNote")

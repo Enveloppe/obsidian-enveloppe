@@ -45,7 +45,6 @@ esbuild.context({
 	},
 	entryPoints: ['plugin/main.ts', 'plugin/styles.css'],
 	bundle: true,
-	sourcemap: true,
 	external: ['obsidian', 'electron', ...builtins],
 	format: 'cjs',
 	outdir: './',
