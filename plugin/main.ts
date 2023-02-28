@@ -7,7 +7,7 @@ import {
 	OldSettings,
 	RepoFrontmatter,
 } from "./settings/interface";
-import { getRepoFrontmatter, migrateSettings } from "./src/utils";
+import { getRepoFrontmatter } from "./src/utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
 import {checkRepositoryValidity, isShared} from "./src/data_validation_test";
@@ -22,6 +22,7 @@ import {
 import i18next from "i18next";
 import {getTitleField, regexOnFileName} from "./conversion/filePathConvertor";
 import { ressources, translationLanguage } from "./i18n/i18next";
+import {migrateSettings} from "./settings/migrate";
 
 /**
  * Main class of the plugin

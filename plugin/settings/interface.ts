@@ -85,53 +85,7 @@ export interface GitHubPublisherSettings {
 	}
 }
 
-export interface OldSettings {
-	githubRepo: string;
-	githubName: string;
-	GhToken: string;
-	githubBranch: string;
-	shareKey: string;
-	excludedFolder: string[];
-	fileMenu: boolean;
-	editorMenu: boolean;
-	downloadedFolder: string;
-	folderDefaultName: string;
-	yamlFolderKey: string;
-	rootFolder: string;
-	workflowName: string;
-	customCommitMsg: string;
-	embedImage: boolean;
-	defaultImageFolder: string;
-	autoCleanUp: boolean;
-	autoCleanUpExcluded: string[];
-	folderNote: boolean;
-	folderNoteRename: string;
-	convertWikiLinks: boolean;
-	convertForGithub: boolean;
-	subFolder: string;
-	embedNotes: boolean;
-	copyLink: boolean;
-	mainLink: string;
-	linkRemover: string;
-	hardBreak: boolean;
-	logNotice: boolean;
-	convertDataview: boolean;
-	useFrontmatterTitle: boolean;
-	censorText: TextCleaner[];
-	inlineTags: boolean;
-	dataviewFields: string[];
-	frontmatterTitleKey: string;
-	excludeDataviewValue: string[];
-	metadataFileFields: string[];
-	shareExternalModified: boolean;
-	automaticallyMergePR: boolean;
-	metadataExtractorPath: string;
-	convertInternalNonShared: boolean;
-	frontmatterTitleRegex: string;
-	frontmatterTitleReplacement: string;
-	tiersForApi: GithubTiersVersion;
-	hostname: string;
-}
+
 
 /**
  * Allow to set a value for the folder settings

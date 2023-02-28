@@ -24,6 +24,8 @@
 	},
 	"common": {
 		"add": "Add {{- things}}",
+		"files": "files",
+		"attachments": "attachments",
 		"after": "After",
 		"before": "Before",
 		"cancel": "Cancel",
@@ -41,7 +43,9 @@
 		"regex": "regex",
 		"save": "Save",
 		"text": "text",
-		"warning": "Warning"
+		"warning": "Warning",
+		"shared": "Shared",
+		"published": "Published"
 	},
 	"deletion": {
 		"defaultFolder": "You need a default folder name in the settings to use this command.",
@@ -379,5 +383,11 @@
 				"title": "Set the key where to get the value of the filename"
 			}
 		}
+	},
+	"statusBar" : {
+		"markedForSharing": "{{- nb}} {{- type}} marked for sharing",
+		"sharing": "⌛Sharing {{- type}}",
+		"counter": "{{msg}}: {{counter}}/{{total}}",
+		"success": "✅ {{- action}} {{- type}}"
 	}
 }

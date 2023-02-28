@@ -1,24 +1,15 @@
-import {
-	App,
-	FrontMatterCache,
-	MetadataCache,
-	Notice,
-	Platform,
-	TFile,
-	Vault,
-} from "obsidian";
+import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, Vault,} from "obsidian";
 import {
 	FolderSettings,
+	FrontmatterConvert,
 	GitHubPublisherSettings,
 	MetadataExtractor,
 	RepoFrontmatter,
-	OldSettings,
 } from "../settings/interface";
 import Publisher from "../publish/upload";
-import { getReceiptFolder } from "../conversion/filePathConvertor";
-import { FrontmatterConvert } from "../settings/interface";
-import GithubPublisher from "plugin/main";
+import {getReceiptFolder} from "../conversion/filePathConvertor";
 import i18next from "i18next";
+
 /**
  * Create a notice message for the log
  * @param {string} message the message to display
@@ -172,115 +163,6 @@ export async function noticeMessage(
 			settings,
 			repository
 		);
-	}
-}
-
-export async function migrateSettings(old: OldSettings, plugin: GithubPublisher) {
-	if (Object.keys(old).includes("editorMenu")) {
-		noticeLog(i18next.t("informations.migrating.oldSettings"), plugin.settings);
-		plugin.settings = {
-			github:
-			{
-				user: old.githubName ? old.githubName : plugin.settings.github.user ? plugin.settings.github.user : "",
-				repo: old.githubRepo ? old.githubRepo : plugin.settings.github.repo ? plugin.settings.github.repo : "",
-				token: old.GhToken ? old.GhToken : plugin.settings.github.token ? plugin.settings.github.token : "",
-				branch: old.githubBranch,
-				automaticallyMergePR: old.automaticallyMergePR,
-				api: {
-					tiersForApi: old.tiersForApi,
-					hostname: old.hostname,
-				},
-				worflow: {
-					workflowName: old.workflowName,
-					customCommitMsg: old.customCommitMsg,
-				}
-			},
-			upload: {
-				behavior: old.downloadedFolder as FolderSettings,
-				defaultName: old.folderDefaultName,
-				rootFolder: old.rootFolder,
-				yamlFolderKey: old.yamlFolderKey,
-				frontmatterTitle: {
-					enable: old.useFrontmatterTitle,
-					key: old.frontmatterTitleKey,
-				},
-				replaceTitle: [{
-					regex: old.frontmatterTitleRegex,
-					replacement: old.frontmatterTitleReplacement,
-				}],
-				replacePath: [
-					{
-						regex: old.subFolder,
-						replacement: ""
-					}
-				],
-				autoclean: {
-					enable: old.autoCleanUp,
-					excluded: old.autoCleanUpExcluded,
-				},
-				folderNote: {
-					enable: old.folderNote,
-					rename: old.folderNoteRename,
-				},
-				metadataExtractorPath: old.metadataExtractorPath,
-			},
-			conversion: {
-				hardbreak: old.hardBreak,
-				dataview: old.convertDataview,
-				censorText: old.censorText,
-				tags: {
-					inline: old.inlineTags,
-					exclude: old.excludeDataviewValue,
-					fields: old.dataviewFields,
-				},
-				links: {
-					internal: old.convertForGithub,
-					unshared: old.convertInternalNonShared,
-					wiki: old.convertWikiLinks,
-				},
-			},
-			embed: {
-				attachments: old.embedImage,
-				keySendFile: old.metadataFileFields,
-				notes: old.embedNotes,
-				folder: old.defaultImageFolder,
-			},
-			plugin: {
-				shareKey: old.shareKey,
-				fileMenu: old.fileMenu,
-				editorMenu: old.editorMenu,
-				excludedFolder: old.excludedFolder,
-				externalShare: old.shareExternalModified,
-				copyLink: {
-					enable: old.copyLink,
-					links: old.mainLink,
-					removePart: old.linkRemover.split(/[,\n]\W*/).map((s) => s.trim()),
-				},
-				noticeError: old.logNotice,
-			}
-		};
-		await plugin.saveSettings();
-	} 
-	if (!(plugin.settings.upload.replaceTitle instanceof Array)) {
-		noticeLog(i18next.t("informations.migrating.fileReplace"), plugin.settings);
-		plugin.settings.upload.replaceTitle = [plugin.settings.upload.replaceTitle];
-		await plugin.saveSettings();
-	} 
-	//@ts-ignore
-	if (plugin.settings.upload.subFolder && (!plugin.settings.upload.replacePath.find((e) => e.regex === "/" + plugin.settings.upload.subFolder))) {
-		noticeLog(i18next.t("informations.migrating.subFolder"), plugin.settings);
-		//@ts-ignore
-		if (plugin.settings.upload.subFolder.length > 0) {
-			plugin.settings.upload.replacePath.push({
-				//@ts-ignore
-				regex: "/" + plugin.settings.upload.subFolder,
-				replacement: ""
-			});
-		}
-		//delete plugin.settings.upload.subFolder from settings;
-		//@ts-ignore
-		delete plugin.settings.upload.subFolder;
-		await plugin.saveSettings();
 	}
 }
 

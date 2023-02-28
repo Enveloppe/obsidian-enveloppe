@@ -25,12 +25,14 @@
 	"common": {
 		"add": "Ajouter {{- things}}",
 		"after": "Après",
+		"attachments": "pièces-jointes",
 		"before": "Avant",
 		"cancel": "Annuler",
 		"close": "Fermer",
 		"delete": "Supprimer {{- things}}",
 		"edit": "Éditer {{- things}}",
 		"error": "Erreur",
+		"files": "fichiers",
 		"here": "ici",
 		"or": "ou",
 		"path": {
@@ -38,8 +40,10 @@
 			"folder": "Chemin du dossier",
 			"full": "Chemin du fichier"
 		},
+		"published": "publiés",
 		"regex": "regex",
 		"save": "Sauvegarder",
+		"shared": "partagés",
 		"text": "texte",
 		"warning": "Attention"
 	},
@@ -379,5 +383,11 @@
 				"title": "Utiliser une clé frontmatter pour définir le titre"
 			}
 		}
+	},
+	"statusBar": {
+		"counter": "{{msg}} : {{counter}}/{{total}}",
+		"markedForSharing": "{{- nb}} {{- type}} à partager",
+		"sharing": "⌛Partage de {{- type}}",
+		"success": "✅{{- action}} {{- type}}"
 	}
 }

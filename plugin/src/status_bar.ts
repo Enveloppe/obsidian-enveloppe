@@ -1,3 +1,5 @@
+import i18next from "i18next";
+
 // Credit : https://github.com/oleeskild/obsidian-digital-garden/ @oleeskild
 
 /**
@@ -30,10 +32,11 @@ export class ShareStatusBar {
 		this.attachment = attachment;
 
 		this.statusBarItem.createEl("span", { text: "" });
-		let msg = `${this.numberOfNotesToPublish} files marked for sharing`;
+		let typeAttachment = i18next.t("common.files");
 		if (this.attachment) {
-			msg = `${this.numberOfNotesToPublish} attachments linked`;
+			typeAttachment = i18next.t("common.attachments");
 		}
+		const msg = i18next.t("statusBar.markedForSharing", { nb : this.numberOfNotesToPublish, type: typeAttachment });
 		this.status = this.statusBarItem.createEl("span", { text: `${msg}` });
 	}
 
@@ -42,12 +45,13 @@ export class ShareStatusBar {
 	 */
 
 	increment() {
-		let msg = "⌛Sharing files";
+		let typeAttachment = i18next.t("common.files");
 		if (this.attachment) {
-			msg = "⌛Sharing attachments";
+			typeAttachment = i18next.t("common.attachments");
 		}
+		const msg = i18next.t("statusBar.sharing", { type: typeAttachment});
 		this.status.setText(
-			`${msg}: ${++this.counter}/${this.numberOfNotesToPublish}`
+			i18next.t("statusBar.counter", {msg : msg, counter: ++this.counter, nb: this.numberOfNotesToPublish})
 		);
 	}
 
@@ -57,12 +61,12 @@ export class ShareStatusBar {
 	 */
 
 	finish(displayDurationMillisec: number) {
-		let msg = "✅ Published files";
+		let msg = i18next.t("statusBar.success", { action: i18next.t("common.published"), type: i18next.t("common.files")});
 		if (this.attachment) {
-			msg = "✅ Shared attachments";
+			msg = i18next.t("statusBar.success", { action: i18next.t("common.shared"), type: i18next.t("common.attachments")});
 		}
 		this.status.setText(
-			`${msg}: ${this.counter}/${this.numberOfNotesToPublish}`
+			i18next.t("statusBar.counter", {msg : msg, counter: this.counter, nb: this.numberOfNotesToPublish})
 		);
 		setTimeout(() => {
 			this.statusBarItem.remove();
