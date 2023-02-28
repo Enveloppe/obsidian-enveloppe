@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.1...5.0.2) (2023-02-28)
+
+
+### Bug Fixes
+
+* **conversion:** remove useless check (as settings are migrated) ([5a5e448](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5a5e448439e27621ae49a18883ef92c1d142a625))
+* **conversion:** unify the text replacement with other regex ([864e26e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/864e26e9ad980d17ee8adcd32ed8352092e0de79))
+* import not found for oldsettings ([06610ce](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/06610ce60e6299ad10ad882c4df042feadace28c))
+* **translation:** move censor -> regexReplacing ([9c427e8](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/9c427e832c4ffb01f095020ac90af80a37866455))
+
 ## [5.0.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.0...5.0.1) (2023-02-28)
 
 
