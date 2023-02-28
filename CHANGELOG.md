@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.0.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.0...5.0.1) (2023-02-28)
+
+
+### Bug Fixes
+
+* **translation:** error in template & value ([e62cc1a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e62cc1ad1811f19c9201d79bfcdf13c526020e0c))
+
 ## [5.0.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.0-13...5.0.0) (2023-02-28)
 
 
