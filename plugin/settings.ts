@@ -568,7 +568,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.conversion.censor.modal.title") )
+			.setName(i18next.t("settings.conversion.censor.modal.title.text") )
 			.setDesc(i18next.t("settings.conversion.censor.modal.desc") )
 			.addButton((button) => {
 				button

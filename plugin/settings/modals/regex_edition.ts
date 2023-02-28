@@ -57,7 +57,11 @@ export class ModalRegexFilePathName extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
-		contentEl.createEl("h2", {text: i18next.t("settings.conversion.censor.title")});
+		if (this.settings.upload.behavior === FolderSettings.fixed) {
+			contentEl.createEl("h2", {text: i18next.t("settings.conversion.censor.modal.title.only")});
+		} else {
+			contentEl.createEl("h2", {text: i18next.t("settings.conversion.censor.modal.title.all")});
+		}
 		if (!this.settings.upload.replacePath) {
 			this.settings.upload.replacePath = [];
 		}
@@ -183,7 +187,7 @@ export class ModalRegexOnContents extends Modal {
 		contentEl.empty();
 		contentEl
 			.createEl("p", {
-				text: i18next.t("settings.conversion.censor.modal.title") ,
+				text: i18next.t("settings.conversion.censor.modal.title.text") ,
 			})
 			.createEl("p", {
 				text: i18next.t("settings.conversion.censor.modal.desc") ,

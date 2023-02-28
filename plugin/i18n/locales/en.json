@@ -133,9 +133,12 @@
 				"forbiddenValue": "The {{- what}} cannont contain the character: {{- forbiddenChar}}",
 				"modal": {
 					"desc": "Replace text (or regex) in the file with the given value",
-					"title": "Text replacer"
+					"title": {
+						"text": "Text replacer",
+						"only": "Replace filename",
+						"all": "Folder path & filename replacer"
+					}
 				},
-				"title": "Replace the {{- what}}",
 				"warningPath": "Warning! Using the character \"/\" will edit the path, be careful with this option."
 			},
 			"dataview": {
