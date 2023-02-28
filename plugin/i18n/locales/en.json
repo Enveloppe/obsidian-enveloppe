@@ -115,21 +115,21 @@
 		"replace": "Replacement"
 	},
 	"settings": {
-		"conversion": {
-			"censor": {
-				"empty": "Replacement can be empty to remove the whole string.",
-				"forbiddenValue": "The {{- what}} cannont contain the character: {{- forbiddenChar}}",
-				"modal": {
-					"desc": "Replace text in the file with the given value. Enclose the text with \"\" to use regex.",
-					"title": {
-						"all": "Folder path & filename replacer",
-						"only": "Replace filename",
-						"text": "Text replacer"
-					}
-				},
-				"momentReplaceRegex": "Run replacement {{- moment}} the other plugin conversion (dataview, internals links...)",
-				"warningPath": "Warning! Using the character \"/\" will edit the path, be careful with this option."
+		"regexReplacing": {
+			"empty": "Replacement can be empty to remove the whole string.",
+			"forbiddenValue": "The {{- what}} cannont contain the character: {{- forbiddenChar}}",
+			"modal": {
+				"desc": "Replace text in the file with the given value. Enclose the text with \"\" to use regex.",
+				"title": {
+					"all": "Folder path & filename replacer",
+					"only": "Replace filename",
+					"text": "Text replacer"
+				}
 			},
+			"momentReplaceRegex": "Run replacement {{- moment}} the other plugin conversion (dataview, internals links...)",
+			"warningPath": "Warning! Using the character \"/\" will edit the path, be careful with this option."
+		},
+		"conversion": {
 			"dataview": {
 				"desc": "Convert dataview to markdown.",
 				"title": "Dataview"

@@ -115,21 +115,21 @@
 		"replace": "Remplacement"
 	},
 	"settings": {
-		"conversion": {
-			"censor": {
-				"empty": "Le remplacement peut être vide pour supprimer l'ensemble de la chaîne de caractère.",
-				"forbiddenValue": "Le {{- what}} ne peut contenir le caractère : {{- forbiddenChar}}.",
-				"modal": {
-					"desc": "Replace des textes dans le fichier par la valeur donnée. Vous pouvez encadrer le text à remplacer par \"/\" pour utiliser un regex.",
-					"title": {
-						"all": "Remplacement du nom ou du chemin du fichier",
-						"only": "Remplacement du titre uniquement",
-						"text": "Remplacement de texte"
-					}
-				},
-				"momentReplaceRegex": "Éxécuter le remplacement {{- moment}} les autres conversions (dataview, liens internes...)",
-				"warningPath": "Attention ! Utiliser le caractère \"/\" modifiera le chemin du fichier. Veuillez faire attention avec cette option."
+		"regexReplacing": {
+			"empty": "Le remplacement peut être vide pour supprimer l'ensemble de la chaîne de caractère.",
+			"forbiddenValue": "Le {{- what}} ne peut contenir le caractère : {{- forbiddenChar}}.",
+			"modal": {
+				"desc": "Replace des textes dans le fichier par la valeur donnée. Vous pouvez encadrer le text à remplacer par \"/\" pour utiliser un regex.",
+				"title": {
+					"all": "Remplacement du nom ou du chemin du fichier",
+					"only": "Remplacement du titre uniquement",
+					"text": "Remplacement de texte"
+				}
 			},
+			"momentReplaceRegex": "Éxécuter le remplacement {{- moment}} les autres conversions (dataview, liens internes...)",
+			"warningPath": "Attention ! Utiliser le caractère \"/\" modifiera le chemin du fichier. Veuillez faire attention avec cette option."
+		},
+		"conversion": {
 			"dataview": {
 				"desc": "Convertir les requêtes Dataview en markdown.",
 				"title": "Dataview"

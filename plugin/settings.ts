@@ -568,8 +568,8 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			});
 
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.conversion.censor.modal.title.text") )
-			.setDesc(i18next.t("settings.conversion.censor.modal.desc") )
+			.setName(i18next.t("settings.regexReplacing.modal.title.text") )
+			.setDesc(i18next.t("settings.regexReplacing.modal.desc") )
 			.addButton((button) => {
 				button
 					.setIcon("pencil")

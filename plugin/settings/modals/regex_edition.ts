@@ -32,23 +32,23 @@ export class ModalRegexFilePathName extends Modal {
 		onWhat = onWhat.toLowerCase();
 		let isForbidden = false;
 		if (value == "/") {
-			new Notice(i18next.t("settings.conversion.censor.forbiddenValue", {what: onWhat, forbiddenChar: value}));
+			new Notice(i18next.t("settings.regexReplacing.forbiddenValue", {what: onWhat, forbiddenChar: value}));
 			value = "";
 			isForbidden = true;
 		}
 		else if (
 			(value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)) && (type === TypeOfEditRegex.title)
 		) {
-			new Notice(i18next.t("settings.conversion.censor.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)[0]}));
+			new Notice(i18next.t("settings.regexReplacing.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)[0]}));
 			value = "";
 			isForbidden = true;
 		} else if (type === TypeOfEditRegex.path) {
 			if (value.match(/[\\><:"|?*]/)){
-				new Notice(i18next.t("settings.conversion.censor.forbiddenValue", { what: onWhat, forbiddenChar: value.match(/[\\><:"|?*]/)[0]}));
+				new Notice(i18next.t("settings.regexReplacing.forbiddenValue", { what: onWhat, forbiddenChar: value.match(/[\\><:"|?*]/)[0]}));
 				value = "";
 				isForbidden = true;
 			} else if (value.match(/(^\w+\/\w+)|(\\\/)/)) {
-				new Notice(i18next.t("settings.conversion.censor.warningPath"));
+				new Notice(i18next.t("settings.regexReplacing.warningPath"));
 			}
 		}
 		return [value, isForbidden];
@@ -58,9 +58,9 @@ export class ModalRegexFilePathName extends Modal {
 		const {contentEl} = this;
 		contentEl.empty();
 		if (this.settings.upload.behavior === FolderSettings.fixed) {
-			contentEl.createEl("h2", {text: i18next.t("settings.conversion.censor.modal.title.only")});
+			contentEl.createEl("h2", { text: i18next.t("settings.regexReplacing.modal.title.only")});
 		} else {
-			contentEl.createEl("h2", {text: i18next.t("settings.conversion.censor.modal.title.all")});
+			contentEl.createEl("h2", { text: i18next.t("settings.regexReplacing.modal.title.all")});
 		}
 		if (!this.settings.upload.replacePath) {
 			this.settings.upload.replacePath = [];
@@ -187,17 +187,17 @@ export class ModalRegexOnContents extends Modal {
 		contentEl.empty();
 		contentEl
 			.createEl("p", {
-				text: i18next.t("settings.conversion.censor.modal.title.text") ,
+				text: i18next.t("settings.regexReplacing.modal.title.text") ,
 			})
 			.createEl("p", {
-				text: i18next.t("settings.conversion.censor.modal.desc") ,
+				text: i18next.t("settings.regexReplacing.modal.desc") ,
 			})
 			.createEl("p", {
-				text: i18next.t("settings.conversion.censor.empty")});
+				text: i18next.t("settings.regexReplacing.empty")});
 		for (const censorText of this.settings.conversion.censorText) {
 			const afterIcon = censorText.after ? "arrow-down" : "arrow-up";
 			const moment = censorText.after ? i18next.t("common.after").toLowerCase() : i18next.t("common.before").toLowerCase();
-			const desc = i18next.t("settings.conversion.censor.momentReplaceRegex", {moment: moment});
+			const desc = i18next.t("settings.regexReplacing.momentReplaceRegex", {moment: moment});
 			new Setting(contentEl)
 				.setClass("github-publisher-censor-entry")
 				.addText((text) => {
