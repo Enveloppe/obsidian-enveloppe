@@ -1,6 +1,6 @@
 import { App, PluginSettingTab, setIcon, Setting } from "obsidian";
 import GithubPublisherPlugin from "./main";
-import { ModalRegexFilePathName, ModalRegexOnContents } from "./settings/modal_regex_edition";
+import { ModalRegexFilePathName, ModalRegexOnContents } from "./settings/modals/regex_edition";
 import {
 	autoCleanCondition,
 	folderHideShowSettings,
@@ -19,7 +19,7 @@ import {
 } from "./settings/help";
 import "i18next";
 import { checkRepositoryValidity } from "./src/data_validation_test";
-import { ExportModal, ImportModal } from "./src/modals";
+import { ExportModal, ImportModal } from "./settings/modals/import_export";
 import i18next from "i18next";
 
 export class GithubPublisherSettings extends PluginSettingTab {
