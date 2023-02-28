@@ -1,7 +1,13 @@
 import { GitHubPublisherSettings } from "../settings/interface";
 
+/**
+ * Convert a string to a regex object when the string is in the form of a regex (enclosed by /)
+ * @param toReplace {string} The string to be converted to a regex object
+ * @param withflag {string} The flags to be used in the regex object. If not provided, the flags will be extracted from the string.
+ * @returns RegExp The regex object
+ */
 
-export function createRegexFromText(toReplace: string, withflag?: string): RegExp|null {
+export function createRegexFromText(toReplace: string, withflag?: string): RegExp {
 	let flags = withflag;
 	if (!withflag) {
 		const flagsRegex = toReplace.match(/\/([gimy]+)$/);
