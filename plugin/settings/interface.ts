@@ -204,7 +204,7 @@ export interface TextCleaner {
 	entry: string;
 	replace: string;
 	after: boolean;
-	flags: string;
+	flags?: string;
 }
 
 

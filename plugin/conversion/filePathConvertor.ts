@@ -18,6 +18,7 @@ import {
 	getRepoFrontmatter,
 } from "../src/utils";
 import {isInternalShared, checkIfRepoIsInAnother, isShared} from "../src/data_validation_test";
+import { createRegexFromText } from "./findAndReplaceText";
 
 /**
  * Get the dataview path from a markdown file
@@ -285,9 +286,7 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 			const toReplace = regexTitle.regex;
 			const replaceWith = regexTitle.replacement;
 			if (toReplace.match(/\/.+\//)) {
-				const flagsRegex = toReplace.match(/\/([gimy]+)$/);
-				const flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join("") : "";
-				const regex = new RegExp(toReplace.replace(/\/(.+)\/.*/, "$1"), flags);
+				const regex = createRegexFromText(toReplace);
 				fileName = fileName.replace(
 					regex,
 					replaceWith

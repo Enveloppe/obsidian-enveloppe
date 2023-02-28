@@ -24,15 +24,15 @@
 	},
 	"common": {
 		"add": "Add {{- things}}",
-		"files": "files",
-		"attachments": "attachments",
 		"after": "After",
+		"attachments": "attachments",
 		"before": "Before",
 		"cancel": "Cancel",
 		"close": "Close",
 		"delete": "Delete {{- things}}",
 		"edit": "Edit {{- things}}",
 		"error": "Error",
+		"files": "files",
 		"here": "here",
 		"or": "or",
 		"path": {
@@ -40,12 +40,12 @@
 			"folder": "Folder path",
 			"full": "Filepath"
 		},
+		"published": "Published",
 		"regex": "regex",
 		"save": "Save",
-		"text": "text",
-		"warning": "Warning",
 		"shared": "Shared",
-		"published": "Published"
+		"text": "text",
+		"warning": "Warning"
 	},
 	"deletion": {
 		"defaultFolder": "You need a default folder name in the settings to use this command.",
@@ -80,8 +80,8 @@
 		"scanningRepo": "Scanning the repository, may take a while...",
 		"sendMessage": "Upload {{- nbNotes}} notes to {{- repoOwner}}:{{- repoName}}",
 		"startingClean": "Starting cleaning {{- repoInfo}}",
-		"successPublishOneNote": "Successfully uploaded {{- file}} to {{- repoInfo}}",
 		"successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repoInfo}}",
+		"successPublishOneNote": "Successfully uploaded {{- file}} to {{- repoInfo}}",
 		"waitingWorkflow": "Now, waiting for the workflow to be completed..."
 	},
 	"modals": {
@@ -117,28 +117,17 @@
 	"settings": {
 		"conversion": {
 			"censor": {
-				"MomentReplaceRegex": "Choose when the regex will be executed : before or after the other conversion (dataview, internal links...).",
-				"edit": "Edit the parameters (flags and running order)",
 				"empty": "Replacement can be empty to remove the whole string.",
-				"flags": {
-					"dotAll": "s: DotAll",
-					"error": "The flag {{- flag}} is not valid.",
-					"global": "g: Global",
-					"insensitive": "i: Insensitive.",
-					"multiline": "m: Multiline",
-					"sticky": "y: Sticky",
-					"title": "Flags (based on JS regex and can be combined):",
-					"unicode": "u: Unicode"
-				},
 				"forbiddenValue": "The {{- what}} cannont contain the character: {{- forbiddenChar}}",
 				"modal": {
-					"desc": "Replace text (or regex) in the file with the given value",
+					"desc": "Replace text in the file with the given value. Enclose the text with \"\" to use regex.",
 					"title": {
-						"text": "Text replacer",
+						"all": "Folder path & filename replacer",
 						"only": "Replace filename",
-						"all": "Folder path & filename replacer"
+						"text": "Text replacer"
 					}
 				},
+				"momentReplaceRegex": "Run replacement {{- moment}} the other plugin conversion (dataview, internals links...)",
 				"warningPath": "Warning! Using the character \"/\" will edit the path, be careful with this option."
 			},
 			"dataview": {
@@ -387,10 +376,10 @@
 			}
 		}
 	},
-	"statusBar" : {
+	"statusBar": {
+		"counter": "{{msg}}: {{counter}}/{{total}}",
 		"markedForSharing": "{{- nb}} {{- type}} marked for sharing",
 		"sharing": "⌛Sharing {{- type}}",
-		"counter": "{{msg}}: {{counter}}/{{total}}",
 		"success": "✅ {{- action}} {{- type}}"
 	}
 }

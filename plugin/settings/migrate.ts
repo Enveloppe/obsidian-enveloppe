@@ -161,4 +161,12 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 		delete plugin.settings.upload.subFolder;
 		await plugin.saveSettings();
 	}
+	for (const censor of plugin.settings.conversion.censorText) {
+		if (censor.flags) {
+			//enclose regex in / / and add flags
+			censor.entry = "/" + censor.entry + "/" + censor.flags;
+			delete censor.flags;
+			await plugin.saveSettings();
+		}
+	}
 }

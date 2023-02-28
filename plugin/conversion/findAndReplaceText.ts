@@ -1,5 +1,15 @@
 import { GitHubPublisherSettings } from "../settings/interface";
 
+
+export function createRegexFromText(toReplace: string, withflag?: string): RegExp|null {
+	let flags = withflag;
+	if (!withflag) {
+		const flagsRegex = toReplace.match(/\/([gimy]+)$/);
+		flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join("") : "";
+	}
+	return new RegExp(toReplace.replace(/\/(.+)\/.*/, "$1"), flags);
+}
+
 /**
  * Given a series of `censor` entries in Settings, this will loop through each
  * then find and replace.
@@ -21,11 +31,16 @@ export default function findAndReplaceText(
 		censoring = settings.conversion.censorText.filter((censor) => censor.after);
 	}
 	for (const censor of censoring) {
-		if (!censor.flags || !censor.flags.match(/^[gimsuy\s]+$/)) {
-			censor.flags = "gi";
+		if (censor.entry.trim().length > 0) {
+			const toReplace = censor.entry;
+			const replaceWith = censor.replace;
+			if (toReplace.match(/\/.+\//) || (censor.flags && censor.flags.length > 0)) {
+				const regex = createRegexFromText(toReplace, censor.flags);
+				text = text.replace(regex, replaceWith);
+			} else {
+				text = text.replaceAll(toReplace, replaceWith);
+			}
 		}
-		const regex = new RegExp(censor.entry, censor.flags);
-		text = text.replaceAll(regex, censor.replace);
 	}
 	return text;
 }

@@ -195,6 +195,9 @@ export class ModalRegexOnContents extends Modal {
 			.createEl("p", {
 				text: i18next.t("settings.conversion.censor.empty")});
 		for (const censorText of this.settings.conversion.censorText) {
+			const afterIcon = censorText.after ? "arrow-down" : "arrow-up";
+			const moment = censorText.after ? i18next.t("common.after").toLowerCase() : i18next.t("common.before").toLowerCase();
+			const desc = i18next.t("settings.conversion.censor.momentReplaceRegex", {moment: moment});
 			new Setting(contentEl)
 				.setClass("github-publisher-censor-entry")
 				.addText((text) => {
@@ -231,16 +234,15 @@ export class ModalRegexOnContents extends Modal {
 						});
 				})
 				.addExtraButton((btn) => {
-					btn
-						.setIcon("pencil")
-						.setTooltip(i18next.t("settings.conversion.censor.edit"))
+					btn 
+						.setTooltip(desc)
+						.setIcon(afterIcon)
 						.onClick(async () => {
-							new ModalEditorRegex(this.app, censorText, (result => {
-								censorText.flags = result.flags;
-								censorText.after = result.after;
-							})).open();
+							censorText.after = !censorText.after;
+							this.onOpen();
 						});
 				});
+				
 		}
 		new Setting(contentEl)
 			.addButton((btn) => {
@@ -253,7 +255,6 @@ export class ModalRegexOnContents extends Modal {
 							entry: "",
 							replace: "",
 							after: false,
-							flags: "gi",
 						};
 						this.settings.conversion.censorText.push(censorText);
 						this.onOpen();
@@ -275,77 +276,4 @@ export class ModalRegexOnContents extends Modal {
 	}
 }
 
-class ModalEditorRegex extends Modal {
-	result: TextCleaner;
-	onSubmit: (result: TextCleaner) => void;
-	
-	constructor(app: App, toEdit: TextCleaner, onSubmit: (result: TextCleaner) => void) {
-		super(app);
-		this.result = toEdit;
-		this.onSubmit = onSubmit;
-	}
-	
-	onOpen() {
-		const {contentEl} = this;
-		contentEl.empty();
-		contentEl.createEl("h2", {text: i18next.t("settings.conversion.censor.edit")});
-		/*
-		Parameters :
-		- Flags ; 
-		- After/Before other ; */
-		const flagsDesc = document.createDocumentFragment();
-		const flagsDescription = flagsDesc.createEl("p", {
-			text: i18next.t("settings.conversion.censor.flags.title")
-		});
-		flagsDescription.createEl("li", {text: i18next.t("settings.conversion.censor.flags.insensitive")});
-		flagsDescription.createEl("li", {text: i18next.t("settings.conversion.censor.flags.global")});
-		flagsDescription.createEl("li", {text: i18next.t("settings.conversion.censor.flags.multiline")}); 
-		flagsDescription.createEl("li", {text: i18next.t("settings.conversion.censor.flags.dotAll")});
-		flagsDescription.createEl("li", {text: i18next.t("settings.conversion.censor.flags.unicode")}); 
-		flagsDescription.createEl("li", {text: i18next.t("settings.conversion.censor.flags.sticky")});
-		
-		new Setting(contentEl)
-			.setName("Flags")
-			.setDesc(flagsDesc)
-			.addText((text) => {
-				text.setPlaceholder("gimsuy")
-					.setValue(this.result.flags)
-					.onChange(async (value) => {
-						if (value.match(/^[gimsuy\s]+$/) || value === "") {
-							this.result.flags = value;
-						} else {
-							new Notice(
-								(i18next.t(
-									"settings.conversion.censor.flags.error", {flags: value}))
-							);
-						}
-					});
-			});
-		
-		new Setting(contentEl)
-			.setName(i18next.t("settings.conversion.censor.MomentReplaceRegex"))
-			.addDropdown((dropdown) => {
-				dropdown
-					.addOption("before", i18next.t("common.before"))
-					.addOption("after", i18next.t("common.after"))
-					.setValue(this.result.after ? "after" : "before")
-					.onChange(async (value) => {
-						this.result.after = value === "after";
-					});
-			});
-		new Setting(contentEl)
-			.addButton((button) => {
-				button
-					.setButtonText(i18next.t("common.save")) 
-					.onClick(() => {
-						this.onSubmit(this.result);
-						this.close();
-					});
-			});
-	}
 
-	onClose() {
-		const {contentEl} = this;
-		contentEl.empty();
-	}
-}

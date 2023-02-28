@@ -2,7 +2,8 @@ import GithubPublisher from "../../main";
 import { App, Modal, Setting, TextAreaComponent, ButtonComponent, Platform } from "obsidian";
 import {GithubPublisherSettings} from "../../settings";
 import i18next from "i18next";
-import {GitHubPublisherSettings, OldSettings} from "../interface";
+import {GitHubPublisherSettings} from "../interface";
+import { OldSettings } from "../migrate";
 import { noticeLog } from "../../src/utils";
 import {migrateSettings} from "../migrate";
 

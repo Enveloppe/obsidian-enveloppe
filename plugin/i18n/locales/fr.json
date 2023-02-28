@@ -80,8 +80,8 @@
 		"scanningRepo": "Scan du dépôt, veuillez patienter...",
 		"sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repoOwner}}/{{- repoName}}",
 		"startingClean": "Début du nettoyage de {{- repoInfo}}",
-		"successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repoInfo}}",
 		"successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repoInfo}}",
+		"successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repoInfo}}",
 		"waitingWorkflow": "Maintenant, attente de la fin du workflow..."
 	},
 	"modals": {
@@ -117,28 +117,17 @@
 	"settings": {
 		"conversion": {
 			"censor": {
-				"MomentReplaceRegex": "Choisir le moment où les regexs seront exécutés : avant ou après les autres conversions (Dataview, liens internes...)",
-				"edit": "Éditer les paramètres (flags et ordre d'éxécution)",
 				"empty": "Le remplacement peut être vide pour supprimer l'ensemble de la chaîne de caractère.",
-				"flags": {
-					"dotAll": "s : Dot-all",
-					"error": "Le flags {{- flag}} n'est pas valide.",
-					"global": "g : Global",
-					"insensitive": "i : Insensible à la casse",
-					"multiline": "m: Multi-ligne",
-					"sticky": "y : Sticky",
-					"title": "Flags (basé sur JS regex et pouvant être combinés) :",
-					"unicode": "u : Unicode"
-				},
 				"forbiddenValue": "Le {{- what}} ne peut contenir le caractère : {{- forbiddenChar}}.",
 				"modal": {
-					"desc": "Replace des textes (ou des regex) dans le fichier par la valeur donnée.",
+					"desc": "Replace des textes dans le fichier par la valeur donnée. Vous pouvez encadrer le text à remplacer par \"/\" pour utiliser un regex.",
 					"title": {
-						"text": "Remplacement de texte",
+						"all": "Remplacement du nom ou du chemin du fichier",
 						"only": "Remplacement du titre uniquement",
-						"all": "Remplacement du nom ou du chemin du fichier"
+						"text": "Remplacement de texte"
 					}
 				},
+				"momentReplaceRegex": "Éxécuter le remplacement {{- moment}} les autres conversions (dataview, liens internes...)",
 				"warningPath": "Attention ! Utiliser le caractère \"/\" modifiera le chemin du fichier. Veuillez faire attention avec cette option."
 			},
 			"dataview": {
