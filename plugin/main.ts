@@ -4,9 +4,9 @@ import {
 	DEFAULT_SETTINGS,
 	GitHubPublisherSettings,
 	GithubTiersVersion,
-	OldSettings,
 	RepoFrontmatter,
 } from "./settings/interface";
+import { OldSettings } from "./settings/migrate";
 import { getRepoFrontmatter } from "./src/utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
