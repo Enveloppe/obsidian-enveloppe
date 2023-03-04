@@ -5,6 +5,15 @@ export enum TypeOfEditRegex {
 	title = "title",
 }
 
+export enum enumbSettingsTabId {
+	github = "github-configuration",
+	upload = "upload-configuration",
+	text = "text-configuration",
+	embed = "embed-configuration",
+	plugin = "plugin-settings",
+	help = "help",
+}
+
 export interface RegexReplace {
 	regex: string;
 	replacement: string;
@@ -80,12 +89,11 @@ export interface GitHubPublisherSettings {
 			enable: boolean;
 			links: string;
 			removePart: string[];
+			addCmd: boolean;
 		}
 		noticeError: boolean;
 	}
 }
-
-
 
 /**
  * Allow to set a value for the folder settings
@@ -170,6 +178,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 			enable: false,
 			links: "",
 			removePart: [],
+			addCmd: false,
 		},
 		noticeError: false,
 	}

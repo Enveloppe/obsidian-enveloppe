@@ -14,6 +14,7 @@
 			"success": "{{- repoInfo}} semble valide !",
 			"title": "Tester la connexion au dépôt configuré"
 		},
+		"copyLink": "Créer un lien vers cette note",
 		"publisherDeleteClean": "Purger les fichiers dépubliés et supprimés",
 		"shareActiveFile": "Transférer la note active",
 		"shareViewFiles": "Transférer {{- viewFile}} avec Github Publisher",
@@ -292,6 +293,7 @@
 					"desc": "Permet de créer un lien dans le presse-papier avec cette base. Par défaut : \"https://username.github.io/repo/\"",
 					"title": "Lien du dépôt/blog"
 				},
+				"command": "Ajouter une commande permettant de copier le lien de la note publiée dans le presse-papier (nécessite de recharger le plugin pour prendre effet)",
 				"desc": "Envoie d'un lien vers la note publiées dans votre presse-papier.",
 				"linkpathremover": {
 					"desc": "Supprimer cette partie des liens créés. Séparer par une virgule si plusieurs valeurs doivent être supprimées.",

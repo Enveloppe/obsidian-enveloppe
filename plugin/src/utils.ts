@@ -134,7 +134,8 @@ export async function createLink(
 			}
 		}
 	}
-	const url = encodeURI(baseLink + filepath.replace(".md", ""));
+	const url = encodeURI(baseLink + filepath);
+	console.log(url, filepath);
 	await navigator.clipboard.writeText(url);
 	return;
 }

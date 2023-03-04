@@ -7,7 +7,7 @@ import {
 	RepoFrontmatter,
 } from "./settings/interface";
 import { OldSettings } from "./settings/migrate";
-import { getRepoFrontmatter } from "./src/utils";
+import { getRepoFrontmatter, createLink } from "./src/utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
 import {checkRepositoryValidity, isShared} from "./src/data_validation_test";
@@ -175,7 +175,32 @@ export default class GithubPublisher extends Plugin {
 			);
 		}
 
-
+		if (this.settings.plugin.copyLink.addCmd) {
+			this.addCommand({
+				id: "publisher-copy-link",
+				name: i18next.t("commands.copyLink"),
+				hotkeys: [],
+				checkCallback: (checking) => {
+					const file = this.app.workspace.getActiveFile();
+					const frontmatter = file ? this.app.metadataCache.getFileCache(file).frontmatter : null;
+					if (
+						file && frontmatter && isShared(frontmatter, this.settings, file)
+					) {
+						if (!checking) {
+							createLink(
+								file, 
+								getRepoFrontmatter(this.settings, frontmatter),
+								this.app.metadataCache,
+								this.app.vault,
+								this.settings
+							);
+						}
+						return true;
+					}
+					return false;
+				},
+			});
+		}
 
 		this.addCommand({
 			id: "publisher-one",

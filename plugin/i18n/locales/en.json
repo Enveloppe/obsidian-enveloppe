@@ -14,6 +14,7 @@
 			"success": "{{- repoInfo}} seems to be valid!",
 			"title": "Test the connection to the configured repository"
 		},
+		"copyLink": "Create a link to this note",
 		"publisherDeleteClean": "Purge depublished and deleted files",
 		"shareActiveFile": "Upload single current active note",
 		"shareViewFiles": "Upload {{- viewFile}} with Github Publisher",
@@ -80,8 +81,8 @@
 		"scanningRepo": "Scanning the repository, may take a while...",
 		"sendMessage": "Upload {{- nbNotes}} notes to {{- repoOwner}}:{{- repoName}}",
 		"startingClean": "Starting cleaning {{- repoInfo}}",
-		"successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repoInfo}}",
 		"successPublishOneNote": "Successfully uploaded {{- file}} to {{- repoInfo}}",
+		"successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repoInfo}}",
 		"waitingWorkflow": "Now, waiting for the workflow to be completed..."
 	},
 	"modals": {
@@ -115,20 +116,6 @@
 		"replace": "Replacement"
 	},
 	"settings": {
-		"regexReplacing": {
-			"empty": "Replacement can be empty to remove the whole string.",
-			"forbiddenValue": "The {{- what}} cannont contain the character: {{- forbiddenChar}}",
-			"modal": {
-				"desc": "Replace text in the file with the given value. Enclose the text with \"\" to use regex.",
-				"title": {
-					"all": "Folder path & filename replacer",
-					"only": "Replace filename",
-					"text": "Text replacer"
-				}
-			},
-			"momentReplaceRegex": "Run replacement {{- moment}} the other plugin conversion (dataview, internals links...)",
-			"warningPath": "Warning! Using the character \"/\" will edit the path, be careful with this option."
-		},
 		"conversion": {
 			"dataview": {
 				"desc": "Convert dataview to markdown.",
@@ -256,7 +243,6 @@
 					"folder": "Change the default folder for the attachments",
 					"send": "Send all attachments to GitHub"
 				},
-				"path" : "You can override all path settings using this key. The path will be relative to the root of your repository.",
 				"autoclean": "Disable or enable autocleaning",
 				"baselink": "Change the base link for the copy link command",
 				"convert": {
@@ -273,6 +259,7 @@
 				"internals": "Convert internals links to their counterpart in the website, with relative path. Disabled, the plugin will keep the internal link as is.",
 				"mdlinks": "Convert all [[wikilinks]] to [markdown](links)",
 				"nonShared": "Convert internal links pointing to a unshared file to their counterpart in the website, with relative path. Disabled, the plugin will keep the filename.",
+				"path": "You can override all path settings using this key. The path will be relative to the root of your repository.",
 				"repo": {
 					"branch": "Branch of the repo",
 					"desc": "Change the default repo for the note.",
@@ -306,6 +293,7 @@
 					"desc": "The base link of your website. By default : https://username.github.io/repo/",
 					"title": "Base link"
 				},
+				"command": "Add a command to copy the link of the note (need reloading the plugin to take effect)",
 				"desc": "Send a link to your note in your clipboard",
 				"linkpathremover": {
 					"desc": "Remove this part from the created links. Separate by comma if multiple value must be removed.",
@@ -338,6 +326,20 @@
 				"title": "Share Key"
 			},
 			"title": "Plugin Settings"
+		},
+		"regexReplacing": {
+			"empty": "Replacement can be empty to remove the whole string.",
+			"forbiddenValue": "The {{- what}} cannont contain the character: {{- forbiddenChar}}",
+			"modal": {
+				"desc": "Replace text in the file with the given value. Enclose the text with \"\" to use regex.",
+				"title": {
+					"all": "Folder path & filename replacer",
+					"only": "Replace filename",
+					"text": "Text replacer"
+				}
+			},
+			"momentReplaceRegex": "Run replacement {{- moment}} the other plugin conversion (dataview, internals links...)",
+			"warningPath": "Warning! Using the character \"/\" will edit the path, be careful with this option."
 		},
 		"upload": {
 			"defaultFolder": {

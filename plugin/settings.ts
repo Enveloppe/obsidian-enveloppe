@@ -21,6 +21,8 @@ import "i18next";
 import { checkRepositoryValidity } from "./src/data_validation_test";
 import { ExportModal, ImportModal } from "./settings/modals/import_export";
 import i18next from "i18next";
+import { enumbSettingsTabId } from "./settings/interface";
+
 
 export class GithubPublisherSettings extends PluginSettingTab {
 	plugin: GithubPublisherPlugin;
@@ -58,7 +60,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				name: i18next.t("settings.plugin.title"),
 				icon: "gear",
 			},
-			help: {
+			"help": {
 				name: i18next.t("settings.help.title"),
 				icon: "info",
 			},
@@ -154,8 +156,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						githubSettings.api.tiersForApi = value as GithubTiersVersion;
 						await this.plugin.saveSettings();
-						this.settingsPage.empty();
-						this.renderGithubConfiguration();
+						this.renderSettingsPage(enumbSettingsTabId.github);
 					});
 			});
 		if (githubSettings.api.tiersForApi === GithubTiersVersion.entreprise) {
@@ -312,10 +313,9 @@ export class GithubPublisherSettings extends PluginSettingTab {
 							rootFolderSettings,
 							autoCleanSetting,
 							value,
-							this.plugin						);
-						this.settingsPage.empty();
-						this.renderUploadConfiguration();
+							this.plugin);
 						await this.plugin.saveSettings();
+						this.renderSettingsPage(enumbSettingsTabId.upload);
 					});
 			});
 
@@ -385,8 +385,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						uploadSettings.frontmatterTitle.enable = value;
 						await this.plugin.saveSettings();
-						this.settingsPage.empty();
-						this.renderUploadConfiguration();
+						this.renderSettingsPage(enumbSettingsTabId.upload);
 					});
 			});
 		if (uploadSettings.frontmatterTitle.enable) {
@@ -438,8 +437,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						uploadSettings.folderNote.enable = value;
 						await this.plugin.saveSettings();
-						this.settingsPage.empty();
-						await this.renderUploadConfiguration();
+						this.renderSettingsPage("upload-configuration");
 					});
 			});
 
@@ -492,47 +490,45 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.setValue(uploadSettings.autoclean.enable)
 					.onChange(async (value) => {
 						uploadSettings.autoclean.enable = value;
-						shortcutsHideShow(value, autoCleanExcludedSettings);
 						await this.plugin.saveSettings();
+						this.renderSettingsPage(enumbSettingsTabId.upload);
 					});
 			});
-
-		const autoCleanExcludedSettings = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.githubWorkflow.excludedFiles.title") )
-			.setDesc(i18next.t("settings.githubWorkflow.excludedFiles.desc") )
-			.setClass("github-publisher-textarea")
-			.addTextArea((textArea) => {
-				textArea
-					.setPlaceholder(
-						"docs/assets/js, docs/assets/logo, /\\.js$/"
-					)
-					.setValue(
-						uploadSettings.autoclean.excluded.join(", ")
-					)
-					.onChange(async (value) => {
-						uploadSettings.autoclean.excluded = value
-							.split(/[,\n]\W*/)
-							.map((item) => item.trim())
-							.filter((item) => item.length > 0);
-						await this.plugin.saveSettings();
-					});
-			});
+		if (uploadSettings.autoclean.enable) {
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.githubWorkflow.excludedFiles.title") )
+				.setDesc(i18next.t("settings.githubWorkflow.excludedFiles.desc") )
+				.setClass("github-publisher-textarea")
+				.addTextArea((textArea) => {
+					textArea
+						.setPlaceholder(
+							"docs/assets/js, docs/assets/logo, /\\.js$/"
+						)
+						.setValue(
+							uploadSettings.autoclean.excluded.join(", ")
+						)
+						.onChange(async (value) => {
+							uploadSettings.autoclean.excluded = value
+								.split(/[,\n]\W*/)
+								.map((item) => item.trim())
+								.filter((item) => item.length > 0);
+							await this.plugin.saveSettings();
+						});
+				});
+		}
 		autoCleanUpSettingsOnCondition(
 			condition,
 			autoCleanSetting,
 			this.plugin
 		);
-		shortcutsHideShow(
-			uploadSettings.autoclean.enable,
-			autoCleanExcludedSettings
-		);
+		
 		folderHideShowSettings(
 			frontmatterKeySettings,
 			rootFolderSettings,
 			autoCleanSetting,
 			uploadSettings.behavior,
 			this.plugin,
-		).then();
+		);
 
 	}
 
@@ -650,8 +646,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.onChange(async (value) => {
 						textSettings.links.internal = value;
 						await this.plugin.saveSettings();
-						this.settingsPage.empty();
-						this.renderTextConversion();
+						this.renderSettingsPage(enumbSettingsTabId.text);
 					});
 			});
 		if (textSettings.links.internal) {
@@ -821,38 +816,50 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.setValue(pluginSettings.copyLink.enable)
 					.onChange(async (value) => {
 						pluginSettings.copyLink.enable = value;
-						shortcutsHideShow(value, baseLinkSettings);
-						shortcutsHideShow(value, pathRemover);
 						await this.plugin.saveSettings();
+						this.renderSettingsPage(enumbSettingsTabId.plugin);
+						
 					})
 			);
-
-		const baseLinkSettings = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.copyLink.baselink.title") )
-			.setDesc(i18next.t("settings.plugin.copyLink.baselink.desc") )
-			.setClass("github-publisher")
-			.addText((text) => {
-				text.setPlaceholder("my_blog.com")
-					.setValue(pluginSettings.copyLink.links)
-					.onChange(async (value) => {
-						pluginSettings.copyLink.links = value;
-						await this.plugin.saveSettings();
-					});
-			});
-		const pathRemover = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.copyLink.linkpathremover.title") )
-			.setDesc(
-				i18next.t("settings.plugin.copyLink.linkpathremover.desc") 
-			)
-			.setClass("github-publisher")
-			.addText((text) => {
-				text.setPlaceholder("docs")
-					.setValue(pluginSettings.copyLink.removePart.join(", "))
-					.onChange(async (value) => {
-						pluginSettings.copyLink.removePart = value.split(/[,\n]\W*/).map((item) => item.trim()).filter((item) => item.length > 0);
-						await this.plugin.saveSettings();
-					});
-			});
+		if (pluginSettings.copyLink.enable) {
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.plugin.copyLink.baselink.title") )
+				.setDesc(i18next.t("settings.plugin.copyLink.baselink.desc") )
+				.setClass("github-publisher")
+				.addText((text) => {
+					text.setPlaceholder("my_blog.com")
+						.setValue(pluginSettings.copyLink.links)
+						.onChange(async (value) => {
+							pluginSettings.copyLink.links = value;
+							await this.plugin.saveSettings();
+						});
+				});
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.plugin.copyLink.linkpathremover.title") )
+				.setDesc(
+					i18next.t("settings.plugin.copyLink.linkpathremover.desc") 
+				)
+				.setClass("github-publisher")
+				.addText((text) => {
+					text.setPlaceholder("docs")
+						.setValue(pluginSettings.copyLink.removePart.join(", "))
+						.onChange(async (value) => {
+							pluginSettings.copyLink.removePart = value.split(/[,\n]\s*/).map((item) => item.trim()).filter((item) => item.length > 0);
+							await this.plugin.saveSettings();
+						});
+				});
+			
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.plugin.copyLink.command"))
+				.addToggle((toggle) =>
+					toggle
+						.setValue(pluginSettings.copyLink.addCmd)
+						.onChange(async (value) => {
+							pluginSettings.copyLink.addCmd = value;
+							await this.plugin.saveSettings();
+						})
+				);
+		}
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.logNoticeHeader.title") )
 			.setDesc(i18next.t("settings.plugin.logNoticeHeader.desc") )
@@ -864,8 +871,6 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
-		shortcutsHideShow(pluginSettings.copyLink.links, baseLinkSettings);
-		shortcutsHideShow(pluginSettings.copyLink.links, pathRemover);
 	}
 	renderHelp() {
 		this.settingsPage.createEl("h2", {
