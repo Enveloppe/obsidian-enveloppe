@@ -380,7 +380,7 @@
 		}
 	},
 	"statusBar": {
-		"counter": "{{msg}}: {{counter}}/{{total}}",
+		"counter": "{{- msg}}: {{- counter}}/{{- nb}}",
 		"markedForSharing": "{{- nb}} {{- type}} marked for sharing",
 		"sharing": "⌛Sharing {{- type}}",
 		"success": "✅ {{- action}} {{- type}}"
