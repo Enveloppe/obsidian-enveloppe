@@ -256,6 +256,7 @@
 					"folder": "Change the default folder for the attachments",
 					"send": "Send all attachments to GitHub"
 				},
+				"path" : "You can override all path settings using this key. The path will be relative to the root of your repository.",
 				"autoclean": "Disable or enable autocleaning",
 				"baselink": "Change the base link for the copy link command",
 				"convert": {

@@ -1,4 +1,4 @@
-import { GitHubPublisherSettings } from "./interface";
+import {FolderSettings, GitHubPublisherSettings} from "./interface";
 import i18next from "i18next";
 
 
@@ -9,7 +9,11 @@ import i18next from "i18next";
  */
 
 export function KeyBasedOnSettings(settings: GitHubPublisherSettings) {
-	return `${settings.plugin.shareKey}: true\n` +
+	let category = "";
+	if (settings.upload.behavior === FolderSettings.yaml) {
+		category = `${settings.upload.yamlFolderKey}: ${settings.upload.defaultName}\n`;
+	}
+	return `${settings.plugin.shareKey}: true\n` + category +
 	"links:\n" +
 	`  mdlinks: ${settings.conversion.links.wiki}\n` +
 	"  convert: true\n" +
@@ -46,6 +50,15 @@ export function help(settings: GitHubPublisherSettings) {
 			});
 			span.createEl("span", {
 				text: ` ${i18next.t("settings.help.frontmatter.share")}`,
+			});
+		});
+		span.createEl("li", null, (span) => {
+			span.createEl("code", {
+				text: "path:",
+				cls: "code-title",
+			});
+			span.createEl("span", {
+				text: ` ${i18next.t("settings.help.frontmatter.path")}`,
 			});
 		});
 		span.createEl("li", null, (span) => {

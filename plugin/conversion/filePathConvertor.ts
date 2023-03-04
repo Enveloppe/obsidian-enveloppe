@@ -28,7 +28,7 @@ import { createRegexFromText } from "./findAndReplaceText";
  * @returns {LinkedNotes[]} Array of linked notes
  */
 
-function getDataviewPath(
+export function getDataviewPath(
 	markdown: string,
 	settings: GitHubPublisherSettings,
 	vault: Vault
@@ -74,7 +74,7 @@ function getDataviewPath(
  * @return {string} relative path
  */
 
-async function createRelativePath(
+export async function createRelativePath(
 	sourceFile: TFile,
 	targetFile: LinkedNotes,
 	metadata: MetadataCache,
@@ -370,7 +370,7 @@ export function getTitleField(
  * @return {string} folder path
  */
 
-function getReceiptFolder(
+export function getReceiptFolder(
 	file: TFile,
 	settings: GitHubPublisherSettings,
 	metadataCache: MetadataCache,
@@ -388,17 +388,21 @@ function getReceiptFolder(
 			return fileName;
 		}
 
-		let path =
-			settings.upload.defaultName.length > 0
+		if (frontmatter.path) {
+			const frontmatterPath = frontmatter["path"] instanceof Array ? frontmatter["path"].join("/") : frontmatter["path"];
+			if (frontmatterPath == "" || frontmatterPath == "/") {
+				return editedFileName;
+			}
+			return frontmatterPath + "/" + editedFileName;
+		} else if (settings.upload.behavior === FolderSettings.yaml) {
+			return createFrontmatterPath(settings, frontmatter, fileName);
+		} else if (settings.upload.behavior === FolderSettings.obsidian) {
+			return createObsidianPath(file, settings, vault, fileName);
+		} else {
+			return settings.upload.defaultName.length > 0
 				? settings.upload.defaultName + "/" + editedFileName
 				: editedFileName;
-
-		if (settings.upload.behavior === FolderSettings.yaml) {
-			path = createFrontmatterPath(settings, frontmatter, fileName);
-		} else if (settings.upload.behavior === FolderSettings.obsidian) {
-			path = createObsidianPath(file, settings, vault, fileName);
 		}
-		return path;
 	}
 }
 
@@ -410,7 +414,7 @@ function getReceiptFolder(
  * @return {string} the new filepath
  */
 
-function getImageLinkOptions(
+export function getImageLinkOptions(
 	file: TFile,
 	settings: GitHubPublisherSettings,
 	sourceFrontmatter: FrontmatterConvert | null
@@ -433,9 +437,3 @@ function getImageLinkOptions(
 	return file.path;
 }
 
-export {
-	getReceiptFolder,
-	getImageLinkOptions,
-	createRelativePath,
-	getDataviewPath,
-};

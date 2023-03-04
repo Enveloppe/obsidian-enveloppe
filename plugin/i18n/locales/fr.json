@@ -80,8 +80,8 @@
 		"scanningRepo": "Scan du dépôt, veuillez patienter...",
 		"sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repoOwner}}/{{- repoName}}",
 		"startingClean": "Début du nettoyage de {{- repoInfo}}",
-		"successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repoInfo}}",
 		"successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repoInfo}}",
+		"successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repoInfo}}",
 		"waitingWorkflow": "Maintenant, attente de la fin du workflow..."
 	},
 	"modals": {
@@ -115,20 +115,6 @@
 		"replace": "Remplacement"
 	},
 	"settings": {
-		"regexReplacing": {
-			"empty": "Le remplacement peut être vide pour supprimer l'ensemble de la chaîne de caractère.",
-			"forbiddenValue": "Le {{- what}} ne peut contenir le caractère : {{- forbiddenChar}}.",
-			"modal": {
-				"desc": "Replace des textes dans le fichier par la valeur donnée. Vous pouvez encadrer le text à remplacer par \"/\" pour utiliser un regex.",
-				"title": {
-					"all": "Remplacement du nom ou du chemin du fichier",
-					"only": "Remplacement du titre uniquement",
-					"text": "Remplacement de texte"
-				}
-			},
-			"momentReplaceRegex": "Éxécuter le remplacement {{- moment}} les autres conversions (dataview, liens internes...)",
-			"warningPath": "Attention ! Utiliser le caractère \"/\" modifiera le chemin du fichier. Veuillez faire attention avec cette option."
-		},
 		"conversion": {
 			"dataview": {
 				"desc": "Convertir les requêtes Dataview en markdown.",
@@ -272,6 +258,7 @@
 				"internals": "Convertit les liens internes vers leur homologue du dépôt, sous forme de liens relatifs. Désactivés, les liens seront conservés tels quels.",
 				"mdlinks": "Convertir tous les liens [[wikilinks]] en [liens](Markdown)",
 				"nonShared": "Convertit les liens internes pointat vers une notes non publiées vers son futur homologue. Désactivé, le plugin conservera le nom du fichier ou son texte alternatif.",
+				"path": "Vous pouvez écraser tous les paramètres de chemins en utilisant cette clé. Le chemin sera créée à partir de la racine du dépôt.",
 				"repo": {
 					"branch": "Nom de la branche",
 					"desc": "Changer le dépôt GitHub pour cette note",
@@ -337,6 +324,20 @@
 				"title": "La clé frontmatter pour publier la note sur le dépôt."
 			},
 			"title": "Paramètres du plugin"
+		},
+		"regexReplacing": {
+			"empty": "Le remplacement peut être vide pour supprimer l'ensemble de la chaîne de caractère.",
+			"forbiddenValue": "Le {{- what}} ne peut contenir le caractère : {{- forbiddenChar}}.",
+			"modal": {
+				"desc": "Replace des textes dans le fichier par la valeur donnée. Vous pouvez encadrer le text à remplacer par \"/\" pour utiliser un regex.",
+				"title": {
+					"all": "Remplacement du nom ou du chemin du fichier",
+					"only": "Remplacement du titre uniquement",
+					"text": "Remplacement de texte"
+				}
+			},
+			"momentReplaceRegex": "Éxécuter le remplacement {{- moment}} les autres conversions (dataview, liens internes...)",
+			"warningPath": "Attention ! Utiliser le caractère \"/\" modifiera le chemin du fichier. Veuillez faire attention avec cette option."
 		},
 		"upload": {
 			"defaultFolder": {
