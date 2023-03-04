@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.2.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.2.0...5.2.1) (2023-03-04)
+
+
+### Bug Fixes
+
+* **translation:** statusbar counter-interpolation ([45bb4c7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/45bb4c7a8a79f363ca68adf0e539357dad48c15f))
+
 ## [5.2.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.1.0...5.2.0) (2023-03-04)
 
 
