@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.2.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.1.0...5.2.0) (2023-03-04)
+
+
+### Features
+
+* **link:** allow creating a cmd to copy link ([c9bd418](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c9bd4181db278ad86797ef53d2e85d488f4dd89e))
+
 ## [5.1.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.2...5.1.0) (2023-03-04)
 
 
