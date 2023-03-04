@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.1.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.2...5.1.0) (2023-03-04)
+
+
+### Features
+
+* **path:** add path frontmatter key to override settings ([de99d7f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de99d7ffbbdf040f3a0a7ce741c1e26a961094b6))
+
 ## [5.0.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.1...5.0.2) (2023-02-28)
 
 
