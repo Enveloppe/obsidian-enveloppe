@@ -279,11 +279,14 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				text.setPlaceholder("ci")
 					.setValue(githubSettings.worflow.workflowName)
 					.onChange(async (value) => {
-						value =
-							value.length > 0
-								? value.trim().replace(".yml", "") + ".yml"
-								: value;
-						githubSettings.worflow.customCommitMsg = value;
+						if (value.length > 0) {
+							value = value.trim();
+							const yamlEndings = [".yml", ".yaml"];
+							if (! yamlEndings.some(ending => value.endsWith(ending))) {
+								value += yamlEndings[0];
+							}
+						}
+						githubSettings.worflow.workflowName = value;
 						await this.plugin.saveSettings();
 					});
 			});
