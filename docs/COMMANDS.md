@@ -43,3 +43,7 @@ This command will clean your configured repository by removing the files you del
 Again, only one command : `Test the connection to the configured repository`.
 
 It will check if the repository exists, and also the main branch you set. It also checks whether you forgot (or not) to set a value.
+
+## Copy path
+
+You can choose to add a command to copy the path (from the blog) of the current note. This command is only available if you have enabled the copy link feature in [[Plugin]]. 
