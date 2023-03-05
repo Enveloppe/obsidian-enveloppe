@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.2.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.2.1...5.2.2) (2023-03-05)
+
+
+### Bug Fixes
+
+* **settings:** workflow endings and value ([da3ff56](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/da3ff562c8f0974c084c117389717023e6e49226))
+
 ## [5.2.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.2.0...5.2.1) (2023-03-04)
 
 
