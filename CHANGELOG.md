@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.2.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.2.2...5.2.3) (2023-03-06)
+
+
+### Bug Fixes
+
+* remove share external modified ([8d891e5](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8d891e5ccedf2e8c8be4765c2fa07eb92515c1b5))
+
 ## [5.2.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.2.1...5.2.2) (2023-03-05)
 
 
