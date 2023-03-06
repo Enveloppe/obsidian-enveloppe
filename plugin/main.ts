@@ -152,29 +152,6 @@ export default class GithubPublisher extends Plugin {
 				}
 			})
 		);
-		if (this.settings.plugin.externalShare) {
-			this.registerEvent(
-				this.app.vault.on("modify", async (file: TFile) => {
-					const shareKey = this.settings.plugin.shareKey;
-					if (file !== this.app.workspace.getActiveFile()) {
-						const frontmatter = this.app.metadataCache.getFileCache(
-							file).frontmatter;
-						const isShared = frontmatter ? frontmatter[shareKey] : false;
-						if (isShared) {
-							await shareOneNote(
-								branchName,
-								this.reloadOctokit(),
-								this.settings,
-								file,
-								this.app.metadataCache,
-								this.app.vault
-							);
-						}
-					}
-				})
-			);
-		}
-
 		if (this.settings.plugin.copyLink.addCmd) {
 			this.addCommand({
 				id: "publisher-copy-link",

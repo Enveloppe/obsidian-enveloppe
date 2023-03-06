@@ -15,8 +15,8 @@ beforeEach(() => {
 
 describe("findAndReplaceText standard behavior", () => {
 	test("skips if settings.censorText is empty", () => {
-		const initialText = `file v1`;
-		const expectedText = `file v1`;
+		const initialText = "file v1";
+		const expectedText = "file v1";
 
 		settings.conversion.censorText = [];
 		const subject = findAndReplaceText(initialText, settings);
@@ -25,8 +25,8 @@ describe("findAndReplaceText standard behavior", () => {
 	});
 
 	test("replaces patterns in a string in sequence", () => {
-		const initialText = `file v1`;
-		const expectedText = `file v4`;
+		const initialText = "file v1";
+		const expectedText = "file v4";
 
 		settings.conversion.censorText = [
 			{

@@ -128,11 +128,11 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 				fileMenu: old.fileMenu,
 				editorMenu: old.editorMenu,
 				excludedFolder: old.excludedFolder,
-				externalShare: old.shareExternalModified,
 				copyLink: {
 					enable: old.copyLink,
 					links: old.mainLink,
 					removePart: old.linkRemover.split(/[,\n]\W*/).map((s) => s.trim()),
+					addCmd: false,
 				},
 				noticeError: old.logNotice,
 			}

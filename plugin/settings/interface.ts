@@ -84,7 +84,6 @@ export interface GitHubPublisherSettings {
 		fileMenu: boolean;
 		editorMenu: boolean;
 		excludedFolder: string[];
-		externalShare: boolean;
 		copyLink: {
 			enable: boolean;
 			links: string;
@@ -173,7 +172,6 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 		fileMenu: false,
 		editorMenu: false,
 		excludedFolder: [],
-		externalShare: false,
 		copyLink: {
 			enable: false,
 			links: "",

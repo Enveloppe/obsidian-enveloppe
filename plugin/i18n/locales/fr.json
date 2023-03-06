@@ -318,8 +318,6 @@
 				"title": "Notifier toutes les erreurs"
 			},
 			"shareExternalModified": {
-				"desc": "Envoyer les fichiers modifiés s'ils sont différents du fichier actif. Utile si vous modifier les métadonnées à l'aide de Metadata Menu ou MetaEdit.",
-				"title": "Partager les fichiers modifiés externes"
 			},
 			"shareKey": {
 				"desc": "Clé de partage",

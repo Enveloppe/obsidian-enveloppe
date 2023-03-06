@@ -318,8 +318,6 @@
 				"title": "Notice every error"
 			},
 			"shareExternalModified": {
-				"desc": "Send edited file if they are different from the active file. Useful when editing metadata using MetaEdit or Metadata Menu.",
-				"title": "Share external modified file"
 			},
 			"shareKey": {
 				"desc": "The frontmatter key to publish your file on the website.",

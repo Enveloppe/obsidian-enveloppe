@@ -800,18 +800,6 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					})
 			);
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.shareExternalModified.title") )
-			.setDesc(i18next.t("settings.plugin.shareExternalModified.desc") )
-			.addToggle((toggle) =>
-				toggle
-					.setValue(pluginSettings.externalShare)
-					.onChange(async (value) => {
-						pluginSettings.externalShare = value;
-						await this.plugin.saveSettings();
-					})
-			);
-
-		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.copyLink.title") )
 			.setDesc(i18next.t("settings.plugin.copyLink.desc") )
 			.addToggle((toggle) =>

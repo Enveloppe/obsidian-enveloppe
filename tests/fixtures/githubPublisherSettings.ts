@@ -63,11 +63,11 @@ const settings: GitHubPublisherSettings = {
 		fileMenu: false,
 		editorMenu: false,
 		excludedFolder: [],
-		externalShare: false,
 		copyLink: {
 			enable: false,
 			links: "",
 			removePart: [],
+			addCmd: false
 		},
 		noticeError: false,
 	}
