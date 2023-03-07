@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.3.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.2.3...5.3.0) (2023-03-07)
+
+
+### Features
+
+* object for copylink ([11b649d](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/11b649db8d17bdbef1f367c99b7d30bcc3420481))
+
+
+### Bug Fixes
+
+* multipleRepo/Repo problem ([3d7b769](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3d7b76999ce5a6cfbb7abcec336ec9ea9f4a0158))
+
 ## [5.2.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.2.2...5.2.3) (2023-03-06)
 
 
