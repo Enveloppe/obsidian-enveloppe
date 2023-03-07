@@ -349,7 +349,7 @@ export function getRepoFrontmatter(
 	if (settings.upload.behavior === FolderSettings.fixed) {
 		repoFrontmatter.autoclean = false;
 	}
-	if (!frontmatter || frontmatter.multipleRepo === undefined || frontmatter.repo === undefined) {
+	if (!frontmatter || (frontmatter.multipleRepo === undefined && frontmatter.repo === undefined)) {
 		return repoFrontmatter;
 	}
 	let isFrontmatterAutoClean= null;
