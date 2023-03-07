@@ -244,7 +244,11 @@
 					"send": "Envoie toutes les pièces-jointes dans le dépôt GitHub."
 				},
 				"autoclean": "Désactive ou active le nettoyage automatique du dépôt GitHub.",
-				"baselink": "Change le lien de base pour la commande de copie de lien.",
+				"baselink": {
+					"desc": "Change le lien de base pour la commande de copie de lien. Désactive aussi la suppression de partie de lien. Peut être utilisée en tant qu'objet sous le nom de ",
+					"base": "Lien de base",
+					"remove": "Supprime les parties de lien. À mettre sous forme de liste !"
+				},
 				"convert": {
 					"enableOrDisable": "Active ou désactive la conversion des liens. En désactivant cette option, vous supprimez les",
 					"syntax": "syntaxes, tout en gardant le nom du fichier ou son text alternatif."

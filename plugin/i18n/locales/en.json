@@ -244,7 +244,11 @@
 					"send": "Send all attachments to GitHub"
 				},
 				"autoclean": "Disable or enable autocleaning",
-				"baselink": "Change the base link for the copy link command",
+				"baselink": {
+					"desc": "Change the base link for the copy link command. Also disable the link replacer part. Can be used as an YAML object with the name ",
+					"base": "Base link",
+					"remove": "Remove part of the link. It must be a list!"
+				},
 				"convert": {
 					"enableOrDisable": "Enable or disable the conversion of links. Disabling this will remove the",
 					"syntax": "syntax, while keeping the file name or the alternative text."

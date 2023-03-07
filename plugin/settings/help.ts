@@ -32,7 +32,9 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings) {
 	`  repo: ${settings.github.repo}\n` +
 	`  branch: ${settings.github.branch}\n` +
 	`  autoclean: ${settings.upload.autoclean.enable}\n` +
-	`baseLink: ${settings.plugin.copyLink.links}`;
+	"copylink:\n" +
+	`  base: ${settings.plugin.copyLink.links}\n` +
+	`  remove: [${settings.plugin.copyLink.removePart.map(val => `"${val}"`).join(", ")}]\n`;
 }
 
 /**
@@ -206,7 +208,22 @@ export function help(settings: GitHubPublisherSettings) {
 		span.createEl("li", null, (span) => {
 			span.createEl("code", { text: "baseLink", cls: "code-title" });
 			span.createEl("span", {
-				text: `: ${i18next.t("settings.help.frontmatter.baselink")}`,
+				text: `: ${i18next.t("settings.help.frontmatter.baselink.desc")}`,
+			});
+			span.createEl("code", {text: "copylink:", cls: "code-title"});
+			span.createEl("ul", null, (ul) => {
+				ul.createEl("li", null, (li) => {
+					li.createEl("code", { text: "base"});
+					li.createEl("span", {
+						text: `: ${i18next.t("settings.help.frontmatter.baselink.base")}`,
+					});
+				});
+				ul.createEl("li", null, (li) => {
+					li.createEl("code", { text: "remove"});
+					li.createEl("span", {
+						text: `: ${i18next.t("settings.help.frontmatter.baselink.remove")}`,
+					});
+				});
 			});
 		});
 	});

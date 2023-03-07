@@ -121,21 +121,28 @@ export async function createLink(
 			baseLink = `https://${repo.owner}.github.io/${repo.repo}/`;
 		}
 	}
-	const keyRepo = metadataCache.getFileCache(file)?.frontmatter["baselink"];
-	if (keyRepo !== undefined) {
+	const frontmatter = metadataCache.getFileCache(file)?.frontmatter;
+	const keyRepo = frontmatter["baselink"];
+	let removePart = copyLink.removePart;
+	if (frontmatter["baselink"] !== undefined) {
 		baseLink = keyRepo;
+		removePart = [];
+	} else if (frontmatter["copylink"] && typeof frontmatter["copylink"]==="object") {
+		baseLink = frontmatter["copylink"].base;
+		removePart = frontmatter["copylink"].remove ?? [];
 	}
-
+	console.log(baseLink, removePart);
 	baseLink = checkSlash(baseLink);
-	if (copyLink.removePart.length > 0) {
-		for (const part of copyLink.removePart) {
+	if (removePart.length > 0) {
+		for (const part of removePart) {
 			if (part.length > 0) {
+				console.log(part);
 				filepath = filepath.replace(part.trim(), "");
+				console.log(filepath);
 			}
 		}
 	}
 	const url = encodeURI(baseLink + filepath);
-	console.log(url, filepath);
 	await navigator.clipboard.writeText(url);
 	return;
 }
