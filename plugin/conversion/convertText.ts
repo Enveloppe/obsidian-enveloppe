@@ -279,7 +279,7 @@ export async function convertDataviewQueries(
 		} catch (e) {
 			noticeLog(e, settings);
 			new Notice(i18next.t("error.dataview"));
-			return queryBlock[0];
+			return text;
 		}
 	}
 	return replacedText;
