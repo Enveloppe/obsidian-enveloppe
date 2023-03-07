@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.3.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.3.0...5.3.1) (2023-03-07)
+
+
+### Bug Fixes
+
+* if dataview can be converted ; return text ([ab62335](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ab6233599450d2015a40922d95da14d4a4413c8e))
+* use object for translation repo ([975252c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/975252cf0313d386a499f28a64cd4ed1653afcde))
+
 ## [5.3.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.2.3...5.3.0) (2023-03-07)
 
 
