@@ -192,14 +192,13 @@ async function noticeMessageOneRepo(
 	const noticeValue =
 		file instanceof TFile ? "\"" + file.basename + "\"" : file;
 	let successMsg = "";
-	const repoInfo = `${repo.owner}:${repo.repo}`;
 	if (file instanceof String) {
-		successMsg = i18next.t("informations.successfullPublish", { nbNotes: noticeValue, repoInfo: repoInfo });
+		successMsg = i18next.t("informations.successfullPublish", { nbNotes: noticeValue, repo: repo });
 	} else {
-		successMsg = i18next.t("informations.successPublishOneNote", { file: noticeValue, repoInfo: repoInfo });
+		successMsg = i18next.t("informations.successPublishOneNote", { file: noticeValue, repo: repo });
 	}
 	if (settings.github.worflow.workflowName.length > 0) {
-		const msg = i18next.t("informations.sendMessage", {nbNotes: noticeValue, repoOwner: repo.owner, repoInfo: repo.repo}) + ".\n" + i18next.t("informations.waitingWorkflow");
+		const msg = i18next.t("informations.sendMessage", {nbNotes: noticeValue, repo: repo}) + ".\n" + i18next.t("informations.waitingWorkflow");
 		new Notice(msg);		
 		const successWorkflow = await PublisherManager.workflowGestion(repo);
 		if (successWorkflow) {

@@ -2,16 +2,16 @@
 	"commands": {
 		"checkValidity": {
 			"inBranch": {
-				"error403": "Error 403: {{- repoInfo}} was moved permanently (from {{- branchInfo}}).",
-				"error404": "Error 404: The branch {{- branchInfo}} was not found in {{- repoInfo}}."
+				"error403": "Error 403: {{- repo.owner}}/{{- repo.repo}} was moved permanently (from {{- branchInfo}}).",
+				"error404": "Error 404: The branch {{- branchInfo}} was not found in {{- repo.owner}}/{{- repo.repo}}."
 			},
 			"inRepo": {
-				"error301": "Error 301: {{- repoInfo}}  was moved permanently.",
-				"error403": "Error 403: this action is forbidden for {{- repoInfo}}.",
-				"error404": "Error 404: {{- repoInfo}}: is not found."
+				"error301": "Error 301: {{- repo.owner}}/{{- repo.repo}}  was moved permanently.",
+				"error403": "Error 403: this action is forbidden for {{- repo.owner}}/{{- repo.repo}}.",
+				"error404": "Error 404: {{- repo.owner}}/{{- repo.repo}}: is not found."
 			},
-			"repoExistsTestBranch": "Repository {{- repoOwner}}/{{- repoName}} exists. Now testing the {{- main}} branch.",
-			"success": "{{- repoInfo}} seems to be valid!",
+			"repoExistsTestBranch": "Repository {{- repo.owner}}/{{- repo.repo}} exists. Now testing the {{- main}} branch.",
+			"success": "{{- repo.owner}}/{{- repo.repo}} seems to be valid!",
 			"title": "Test the connection to the configured repository"
 		},
 		"copyLink": "Create a link to this note",
@@ -57,9 +57,9 @@
 	},
 	"error": {
 		"dataview": "Unable to render dataview query. Please update the dataview plugin to the last version.",
-		"errorConfig": "Error configuring {{- repoInfo}}. Please check your settings.",
-		"errorPublish": "Error during upload to {{- repoInfo}}",
-		"isEmpty": "{{- repoInfo}} is empty.",
+		"errorConfig": "Error configuring {{- repo.owner}}/{{- repo.repo}}. Please check your settings.",
+		"errorPublish": "Error during upload to {{- repo.owner}}/{{- repo.repo}}",
+		"isEmpty": "{{- what}} is empty.",
 		"mergeconflic": "Pull-request is not mergeable, you need to do it manually.",
 		"unablePublishMultiNotes": "Unable to upload multiple notes, something went wrong.",
 		"unablePublishNote": "Unable to upload note {{- file}}, skipping it",
@@ -79,10 +79,10 @@
 		},
 		"noNewNote": "No new notes to upload.",
 		"scanningRepo": "Scanning the repository, may take a while...",
-		"sendMessage": "Upload {{- nbNotes}} notes to {{- repoOwner}}:{{- repoName}}",
-		"startingClean": "Starting cleaning {{- repoInfo}}",
-		"successPublishOneNote": "Successfully uploaded {{- file}} to {{- repoInfo}}",
-		"successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repoInfo}}",
+		"sendMessage": "Upload {{- nbNotes}} notes to {{- repo.owner}}/{{- repo.repo}}",
+		"startingClean": "Starting cleaning {{- repo.owner}}/{{- repo.repo}}",
+		"successPublishOneNote": "Successfully uploaded {{- file}} to {{- repo.owner}}/{{- repo.repo}}",
+		"successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repo.owner}}/{{- repo.repo}}",
 		"waitingWorkflow": "Now, waiting for the workflow to be completed..."
 	},
 	"modals": {
@@ -105,10 +105,10 @@
 	},
 	"publish": {
 		"branch": {
-			"alreadyExists": "Branch already exists ({{- branchName}} on {{- repoInfo}} - Using it.",
-			"error": "Error with {{- repoInfo}}: {{- error}}",
+			"alreadyExists": "Branch already exists ({{- branchName}} on {{- repo.owner}}/{{- repo.repo}} - Using it.",
+			"error": "Error with {{- repo.owner}}/{{- repo.repo}}: {{- error}}",
 			"prMessage": "Pull-Request [{{- branchName}}] from Obsidian",
-			"success": "Branch successfully created (status: {{- branchStatus}}) on {{- repoInfo}}"
+			"success": "Branch successfully created (status: {{- branchStatus}}) on {{- repo.owner}}/{{- repo.repo}}"
 		}
 	},
 	"regex": {

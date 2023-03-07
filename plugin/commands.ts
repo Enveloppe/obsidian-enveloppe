@@ -101,8 +101,7 @@ export async function shareAllMarkedNotes(
 				);
 			} else {
 				new Notice(
-					(i18next.t("error.errorPublish", {repoInfo: settings.github.repo}))
-				);
+					(i18next.t("error.errorPublish", {repo: repoFrontmatter})));
 			}
 		}
 	} catch (error) {
@@ -130,7 +129,7 @@ export async function deleteUnsharedDeletedNotes(
 ) {
 	try {
 		new Notice(
-			(i18next.t("informations.startingClean", {repoInfo: settings.github.repo}))
+			(i18next.t("informations.startingClean", {repo: repoFrontmatter}))
 		);
 		const isValid = checkRepositoryValidityWithRepoFrontmatter(branchName, PublisherManager, settings, repoFrontmatter);
 		if (!isValid) return false;
@@ -218,14 +217,14 @@ export async function shareOneNote(
 				);
 			} else {
 				new Notice(
-					(i18next.t("error.errorPublish", {repoInfo: settings.github.repo})));
+					(i18next.t("error.errorPublish", { repo: repoFrontmatter})));
 			}
 		}
 	} catch (error) {
 		if (!(error instanceof DOMException)) {
 			noticeLog(error, settings);
 			new Notice(
-				(i18next.t("error.errorPublish", {repoInfo: settings.github.repo}))
+				(i18next.t("error.errorPublish", {repo: getRepoFrontmatter(settings, metadataCache.getFileCache(file).frontmatter)}))
 			);
 		}
 	}

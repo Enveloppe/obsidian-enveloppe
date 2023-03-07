@@ -131,22 +131,22 @@ export function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoF
 	if (settings.github.token.length === 0) {
 		isEmpty.push(true);
 		const whatIsEmpty = i18next.t("error.whatEmpty.ghToken") ;
-		new Notice(i18next.t("error.isEmpty", {repoInfo: whatIsEmpty}));
+		new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 	}
 	if (settings.github.token.length != 0) {
 		for (const repo of repoFrontmatter) {
 			if (repo.repo.length === 0) {
 				isEmpty.push(true);
 				const whatIsEmpty = i18next.t("error.whatEmpty.repo") ;
-				new Notice(i18next.t("error.isEmpty", {repoInfo: whatIsEmpty}));
+				new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 			} else if (repo.owner.length === 0) {
 				isEmpty.push(true);
 				const whatIsEmpty = i18next.t("error.whatEmpty.owner") ;
-				new Notice(i18next.t("error.isEmpty", {repoInfo: whatIsEmpty}));
+				new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 			} else if (repo.branch.length === 0) {
 				isEmpty.push(true);
 				const whatIsEmpty = i18next.t("error.whatEmpty.branch") ;
-				new Notice(i18next.t("error.isEmpty", {repoInfo: whatIsEmpty}));
+				new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 			} else {
 				isEmpty.push(false);
 			}

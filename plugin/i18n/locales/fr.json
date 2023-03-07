@@ -2,16 +2,16 @@
 	"commands": {
 		"checkValidity": {
 			"inBranch": {
-				"error403": "Erreur 403: {{- repoInfo}} a été déplacé de manière permanente (depuis {{- branchInfo}}",
-				"error404": "Erreur 404 : La branche {{- branchInfo}} est introuvable depuis {{- repoInfo}}"
+				"error403": "Erreur 403: {{- repo.owner}}/{{- repo.repo}} a été déplacé de manière permanente (depuis {{- branchInfo}}",
+				"error404": "Erreur 404 : La branche {{- repo.branch}} est introuvable depuis {{- repo.owner}}/{{- repo.repo}}"
 			},
 			"inRepo": {
-				"error301": "Erreur 301 : {{- repoInfo}} a été déplacé de manière permanente",
-				"error403": "Erreur 403 : Cette action est interdite pour {{- repoInfo}}",
-				"error404": "Erreur 404 : {{- repoInfo}} est introuvable"
+				"error301": "Erreur 301 : {{- repo.owner}}/{{- repo.repo}} a été déplacé de manière permanente",
+				"error403": "Erreur 403 : Cette action est interdite pour {{- repo.owner}}/{{- repo.repo}}",
+				"error404": "Erreur 404 : {{- repo.owner}}/{{- repo.repo}} est introuvable"
 			},
-			"repoExistsTestBranch": "Le dépôt {{- repoOwner}}/{{- repoName}} existe. Maintenant, nous allons tester la branche {{- main}}",
-			"success": "{{- repoInfo}} semble valide !",
+			"repoExistsTestBranch": "Le dépôt {{- repo.owner}}/{{- repo.repo}} existe. Maintenant, nous allons tester la branche {{- repo.branch}}",
+			"success": "{{- repo.owner}}/{{- repo.repo}} semble valide !",
 			"title": "Tester la connexion au dépôt configuré"
 		},
 		"copyLink": "Créer un lien vers cette note",
@@ -57,9 +57,9 @@
 	},
 	"error": {
 		"dataview": "Impossible de convertir la requête Dataview. Veuillez mettre à jour le module Dataview à la dernière version;",
-		"errorConfig": "Erreur de configuration pour {{- repoInfo}}. Merci de vérifier vos paramètres.",
-		"errorPublish": "Erreur lors de la publication sur {{- repoInfo}}",
-		"isEmpty": "{{- repoInfo}} est vide.",
+		"errorConfig": "Erreur de configuration pour {{- repo.owner}}/{{- repo.repo}}:{{- repo.branch}}. Merci de vérifier vos paramètres.",
+		"errorPublish": "Erreur lors de la publication sur {{- repo.owner}}/{{- repo.repo}}:{{- repo.branch}}",
+		"isEmpty": "{{- what}} est vide.",
 		"mergeconflic": "La Pull-Request n'est pas fusionnale, vous avez besoin de le faire manuellement.",
 		"unablePublishMultiNotes": "Impossible de transférer plusieurs notes, quelque chose s'est mal passé.",
 		"unablePublishNote": "Impossible de transférer {{- file}}, le fichier a été ignoré.",
@@ -79,10 +79,10 @@
 		},
 		"noNewNote": "Aucune note à transférer.",
 		"scanningRepo": "Scan du dépôt, veuillez patienter...",
-		"sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repoOwner}}/{{- repoName}}",
-		"startingClean": "Début du nettoyage de {{- repoInfo}}",
-		"successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repoInfo}}",
-		"successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repoInfo}}",
+		"sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
+		"startingClean": "Début du nettoyage de {{- repo.owner}}/{{- repo.repo}}",
+		"successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repo.owner}}/{{- repo.repo}}",
+		"successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
 		"waitingWorkflow": "Maintenant, attente de la fin du workflow..."
 	},
 	"modals": {
@@ -105,10 +105,10 @@
 	},
 	"publish": {
 		"branch": {
-			"alreadyExists": "La branche {{- branchName}} sur {{- repoInfo}} existe déjà - Utilisation de celle-ci.",
-			"error": "Erreur avec {{- repoInfo}} : {{- error}}",
+			"alreadyExists": "La branche {{- branchName}} sur {{- repo.owner}}/{{- repo.repo}} existe déjà - Utilisation de celle-ci.",
+			"error": "Erreur avec {{- repo.owner}}/{{- repo.repo}} : {{- error}}",
 			"prMessage": "Pull-Request [{{- branchName}}] depuis Obsidian",
-			"success": "La branche a été crée avec succès (status: {{- branchStatus}} sur {{- repoInfo}})"
+			"success": "La branche a été crée avec succès (status: {{- branchStatus}} sur {{- repo.owner}}/{{- repo.repo}})"
 		}
 	},
 	"regex": {
@@ -245,8 +245,8 @@
 				},
 				"autoclean": "Désactive ou active le nettoyage automatique du dépôt GitHub.",
 				"baselink": {
-					"desc": "Change le lien de base pour la commande de copie de lien. Désactive aussi la suppression de partie de lien. Peut être utilisée en tant qu'objet sous le nom de ",
 					"base": "Lien de base",
+					"desc": "Change le lien de base pour la commande de copie de lien. Désactive aussi la suppression de partie de lien. Peut être utilisée en tant qu'objet sous le nom de ",
 					"remove": "Supprime les parties de lien. À mettre sous forme de liste !"
 				},
 				"convert": {

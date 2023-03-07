@@ -135,7 +135,7 @@ export default class Publisher {
 				} catch (e) {
 					noticeLog(e, this.settings);
 					new Notice(
-						(i18next.t("error.errorPublish", {repoInfo: `${repoFrontmatter.owner}:${repoFrontmatter.repo}/${branchName}`}))
+						(i18next.t("error.errorPublish", {repo: repoFrontmatter}))
 					);
 					statusBar.error();
 				}
