@@ -131,18 +131,15 @@ export async function createLink(
 		baseLink = frontmatter["copylink"].base;
 		removePart = frontmatter["copylink"].remove ?? [];
 	}
-	console.log(baseLink, removePart);
 	baseLink = checkSlash(baseLink);
 	if (removePart.length > 0) {
 		for (const part of removePart) {
 			if (part.length > 0) {
-				console.log(part);
 				filepath = filepath.replace(part.trim(), "");
-				console.log(filepath);
 			}
 		}
 	}
-	const url = encodeURI(baseLink + filepath);
+	const url = encodeURI(baseLink + filepath + "/");
 	await navigator.clipboard.writeText(url);
 	return;
 }
