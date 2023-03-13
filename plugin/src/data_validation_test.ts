@@ -198,7 +198,6 @@ export async function checkRepositoryValidity(
 }
 
 export async function checkRepositoryValidityWithRepoFrontmatter(
-	branchName: string,
 	PublisherManager: GithubBranch,
 	settings: GitHubPublisherSettings,
 	repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]
