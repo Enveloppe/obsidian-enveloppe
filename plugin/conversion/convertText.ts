@@ -278,7 +278,7 @@ export async function convertDataviewQueries(
 			replacedText = replacedText.replace(block, md);
 		} catch (e) {
 			noticeLog(e, settings);
-			new Notice(i18next.t("error.dataview"));
+			if (!queryBlock[1].match("js")) new Notice(i18next.t("error.dataview"));
 			return text;
 		}
 	}
