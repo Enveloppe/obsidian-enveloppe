@@ -349,7 +349,7 @@ export function getRepoFrontmatter(
 		owner: github.user,
 		autoclean: settings.upload.autoclean.enable,
 	};
-	if (settings.upload.behavior === FolderSettings.fixed) {
+	if (settings.upload.behavior === FolderSettings.fixed || frontmatter?.path) {
 		repoFrontmatter.autoclean = false;
 	}
 	if (!frontmatter || (frontmatter.multipleRepo === undefined && frontmatter.repo === undefined)) {
