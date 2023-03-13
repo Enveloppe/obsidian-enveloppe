@@ -2,6 +2,7 @@ import {FrontMatterCache, Menu, Plugin, TFile} from "obsidian";
 import {GithubPublisherSettings} from "./settings";
 import {
 	DEFAULT_SETTINGS,
+	FolderSettings,
 	GitHubPublisherSettings,
 	GithubTiersVersion,
 	RepoFrontmatter,
@@ -210,7 +211,7 @@ export default class GithubPublisher extends Plugin {
 			name: i18next.t("commands.publisherDeleteClean") ,
 			hotkeys: [],
 			checkCallback: (checking) => {
-				if (this.settings.upload.autoclean.enable) {
+				if (this.settings.upload.autoclean.enable && this.settings.upload.behavior !== FolderSettings.fixed) {
 					if (!checking) {
 						const publisher = this.reloadOctokit();
 						deleteUnsharedDeletedNotes(
