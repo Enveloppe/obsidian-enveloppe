@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.3.3-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.3.2...5.3.3-0) (2023-03-13)
+
+
+### Bug Fixes
+
+* add silent error for dataviewjs ([0468bd0](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0468bd0188128e397aecc81694c3bd7aa0940dc9))
+* disable autoclean if path of file is edited ([fbd43eb](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/fbd43ebd0fd0ebac7388aff997133a2427162b51))
+
 ## [5.0.0-13](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.0.0-12...5.0.0-13) (2023-02-27)
 
 
