@@ -28,7 +28,7 @@ export async function deleteFromGithub(
 	octokit: Octokit,
 	branchName: string,
 	filesManagement: FilesManagement,
-	repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter
+	repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter,
 ) {
 	repoFrontmatter = Array.isArray(repoFrontmatter)
 		? repoFrontmatter
@@ -40,7 +40,7 @@ export async function deleteFromGithub(
 			octokit,
 			branchName,
 			filesManagement,
-			repo
+			repo,
 		);
 	}
 }
@@ -76,16 +76,16 @@ async function deleteFromGithubOneRepo(
 		let errorMsg = "";
 		if (settings.upload.defaultName.length > 0) {
 			if (settings.upload.defaultName.length > 0) {
-				errorMsg = i18next.t("deletion.defaultFolder") ;
+				errorMsg = i18next.t("deletion.defaultFolder");
 			} else if (
 				settings.upload.behavior === FolderSettings.yaml &&
 				settings.upload.rootFolder.length === 0
 			) {
-				errorMsg = i18next.t("deletion.rootFolder") ;
+				errorMsg = i18next.t("deletion.rootFolder");
 			}
-			if (!silent) {
-				new Notice("Error : " + errorMsg);
-			}
+		}
+		if (!silent) {
+			new Notice("Error : " + errorMsg);
 		}
 		return false;
 	}
@@ -207,7 +207,7 @@ export async function filterGithubFile(
 		if (
 			(behavior === FolderSettings.yaml &&
 				root.length === 0) ||
-			defaultName.length === 0
+			defaultName.length === 0 || behavior === FolderSettings.fixed
 		) {
 			return null;
 		}
