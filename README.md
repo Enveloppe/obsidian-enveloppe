@@ -54,7 +54,7 @@ The plugin adds seven commands in the palette, one of which is also available in
 - `Purge depublished and deleted files`  
 - `Test the connection to the configured repository`  
   
-Each of the commands are explained [here](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/en/COMMANDS.md).  
+Each of the commands are explained [here](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/COMMANDS.md).  
   
 ## 🤖 How it works  
 
