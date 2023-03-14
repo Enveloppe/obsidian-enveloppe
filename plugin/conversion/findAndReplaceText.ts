@@ -40,7 +40,7 @@ export default function findAndReplaceText(
 		if (censor.entry.trim().length > 0) {
 			const toReplace = censor.entry;
 			const replaceWith = censor.replace;
-			if (toReplace.match(/\/.+\//)) {
+			if (toReplace.match(/^\/.+\/$/)) {
 				const regex = createRegexFromText(toReplace, censor.flags);
 				text = text.replace(regex, replaceWith);
 			} else {
