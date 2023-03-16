@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.3.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.3.3...5.3.4) (2023-03-16)
+
+
+### Bug Fixes
+
+* Path cannot start with a slash ([bef44ec](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/bef44ec75828aeb3ac8e3880010c695a7a2bac20)), closes [#115](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/115)
+
 ## [5.3.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.3.3-0...5.3.3) (2023-03-14)
 
 
