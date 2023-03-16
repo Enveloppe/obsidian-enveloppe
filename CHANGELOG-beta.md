@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.4.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.3.4...5.4.0-0) (2023-03-16)
+
+
+### Features
+
+* display a modal with list of edited files ([fda0fd2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/fda0fd241693d2ecc269ade3ab6cc1cc5aa46fae))
+
+
+### Bug Fixes
+
+* path starting by "/" not working with git ([de326e7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de326e708e54764b11788dfcfb68bb1180ad3344))
+
 ## [5.3.3-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.3.2...5.3.3-0) (2023-03-13)
 
 
