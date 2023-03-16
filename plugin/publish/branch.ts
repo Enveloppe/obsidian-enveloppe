@@ -3,7 +3,7 @@ import {
 	GitHubPublisherSettings,
 	RepoFrontmatter,
 } from "../settings/interface";
-import { FilesManagement } from "./filesManagement";
+import { FilesManagement } from "./files";
 import { MetadataCache, Notice, Vault } from "obsidian";
 import GithubPublisherPlugin from "../main";
 import { noticeLog } from "../src/utils";

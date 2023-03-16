@@ -7,13 +7,14 @@ import {
 	getSettingsOfMetadataExtractor
 } from "./src/utils";
 import {checkRepositoryValidityWithRepoFrontmatter} from "./src/data_validation_test";
-import { GitHubPublisherSettings, RepoFrontmatter } from "./settings/interface";
+import { GitHubPublisherSettings, ListeEditedFiles, RepoFrontmatter, UploadedFiles } from "./settings/interface";
 import { deleteFromGithub } from "./publish/delete";
 import { GithubBranch } from "./publish/branch";
 import { Octokit } from "@octokit/core";
 import { MetadataCache, Notice, Platform, TFile, Vault } from "obsidian";
 import GithubPublisher from "./main";
 import i18next from "i18next";
+import { ListChangedFiles } from "./settings/modals/list_changed";
 /**
  * Share all marked note (share: true) from Obsidian to GitHub
  * @param {GithubBranch} PublisherManager
@@ -34,11 +35,14 @@ export async function shareAllMarkedNotes(
 	branchName: string,
 	repoFrontmatter: RepoFrontmatter,
 	sharedFiles: TFile[],
-	createGithubBranch = true
+	createGithubBranch = true,
+	plugin: GithubPublisher
 ) {
 	const statusBar = new ShareStatusBar(statusBarItems, sharedFiles.length);
 	try {
 		let errorCount = 0;
+		const fileError : string[] = [];
+		const listStateUploaded: UploadedFiles[] = [];
 		if (sharedFiles.length > 0) {
 			const publishedFiles = sharedFiles.map((file) => file.name);
 			if (createGithubBranch) {
@@ -50,21 +54,25 @@ export async function shareAllMarkedNotes(
 				try {
 					const file = sharedFiles[files];
 					statusBar.increment();
-					await PublisherManager.publish(
+					const uploaded = await PublisherManager.publish(
 						file,
 						false,
 						branchName,
 						repoFrontmatter
-					);
+					) ;
+					if (uploaded) {
+						listStateUploaded.push(...uploaded.uploaded);
+					}
 				} catch {
 					errorCount++;
+					fileError.push(sharedFiles[files].name);
 					new Notice(
 						(i18next.t("error.unablePublishNote", {file: sharedFiles[files].name})));
 				}
 			}
 			statusBar.finish(8000);
 			const noticeValue = `${publishedFiles.length - errorCount} notes`;
-			await deleteFromGithub(
+			const deleted = await deleteFromGithub(
 				true,
 				settings,
 				octokit,
@@ -72,6 +80,7 @@ export async function shareAllMarkedNotes(
 				PublisherManager,
 				repoFrontmatter
 			);
+			
 			if (
 				settings.upload.metadataExtractorPath.length > 0 &&
 				Platform.isDesktop
@@ -99,6 +108,22 @@ export async function shareAllMarkedNotes(
 					settings,
 					repoFrontmatter
 				);
+				if (settings.plugin.displayModalRepoEditing) {
+					const modified = listStateUploaded.filter(
+						(file) => file.isUpdated === true)
+						.map((file) => file.file);
+					const added = listStateUploaded.filter(
+						(file) => file.isUpdated === false)
+						.map((file) => file.file);
+					const listEdited: ListeEditedFiles = {
+						edited: modified,
+						deleted: deleted.deleted,
+						added: added,
+						unpublished: fileError,
+						notDeleted: deleted.undeleted,
+					};
+					new ListChangedFiles(plugin.app, listEdited).open();
+				}
 			} else {
 				new Notice(
 					(i18next.t("error.errorPublish", {repo: repoFrontmatter})));
@@ -134,7 +159,7 @@ export async function deleteUnsharedDeletedNotes(
 		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, settings, repoFrontmatter);
 		if (!isValid) return false;
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
-		await deleteFromGithub(
+		const deleted = await deleteFromGithub(
 			false,
 			settings,
 			octokit,
@@ -143,6 +168,7 @@ export async function deleteUnsharedDeletedNotes(
 			repoFrontmatter
 		);
 		await PublisherManager.updateRepository(branchName, repoFrontmatter);
+		if (settings.plugin.displayModalRepoEditing) new ListChangedFiles(app, deleted).open();
 	} catch (e) {
 		console.error(e);
 	}
@@ -215,6 +241,26 @@ export async function shareOneNote(
 					vault,
 					settings
 				);
+				if (settings.plugin.displayModalRepoEditing) {
+					const modified = publishSuccess.uploaded.filter(
+						(file) => file.isUpdated === true)
+						.map((file) => file.file);
+					const added = publishSuccess.uploaded.filter(
+						(file) => file.isUpdated === false)
+						.map((file) => file.file);
+					const undeleted = publishSuccess.deleted.undeleted;
+					const error = publishSuccess.error;
+					const deleted = publishSuccess.deleted.deleted;
+					const listEdited: ListeEditedFiles = {
+						edited: modified,
+						deleted: deleted,
+						added: added,
+						unpublished: error,
+						notDeleted: undeleted,
+					};
+					new ListChangedFiles(app, listEdited).open();
+				}
+				
 			} else {
 				new Notice(
 					(i18next.t("error.errorPublish", { repo: repoFrontmatter})));
@@ -281,7 +327,8 @@ export async function shareNewNote(
 			branchName,
 			repoFrontmatter,
 			newlySharedNotes,
-			false
+			false,
+			plugin
 		);
 	} else {
 		new Notice(i18next.t("informations.noNewNote") );
@@ -344,7 +391,8 @@ export async function shareAllEditedNotes(
 			branchName,
 			repoFrontmatter,
 			newlySharedNotes,
-			false
+			false,
+			plugin
 		);
 	} else {
 		new Notice(i18next.t("informations.noNewNote") );
@@ -401,7 +449,8 @@ export async function shareOnlyEdited(
 			branchName,
 			repoFrontmatter,
 			newlySharedNotes,
-			false
+			false,
+			plugin
 		);
 	} else {
 		new Notice(i18next.t("informations.noNewNote") );

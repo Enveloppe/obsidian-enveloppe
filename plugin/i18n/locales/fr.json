@@ -101,6 +101,14 @@
 			"importFromFile": "Import depuis le fichier",
 			"paste": "Coller la configuration ici...",
 			"title": "Importer"
+		},
+		"listChangedFiles": {
+			"added": "Ajouté",
+			"deleted": "Supprimé",
+			"edited": "Modifié",
+			"notDeleted": "Non-supprimé",
+			"title": "Liste des fichiers édité sur le dépôt :",
+			"unpublished": "Non-publié"
 		}
 	},
 	"publish": {
@@ -308,6 +316,10 @@
 			"editorMenu": {
 				"desc": "Ajouter une commande de partage dans le menu du clic droit.",
 				"title": "Menu \"Edition\""
+			},
+			"embedEditRepo": {
+				"desc": "Permet d'afficher la liste des fichiers éditer, ajouté, supprimé... Du dépôt principal (dans un modal).",
+				"title": "Afficher les éditions sur le dépôt"
 			},
 			"excludedFolder": {
 				"desc": "Les fichiers dans ses dossiers ne seront jamais publiés, quelle que soit l'état de la clé de partage. Séparez les noms de dossier par une virgule.",

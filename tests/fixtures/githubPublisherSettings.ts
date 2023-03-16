@@ -70,6 +70,7 @@ const settings: GitHubPublisherSettings = {
 			addCmd: false
 		},
 		noticeError: false,
+		displayModalRepoEditing: false,
 	}
 };
 

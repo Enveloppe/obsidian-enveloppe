@@ -862,6 +862,17 @@ export class GithubPublisherSettings extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+		new Setting(this.settingsPage)
+			.setName(i18next.t("settings.plugin.embedEditRepo.title"))
+			.setDesc(i18next.t("settings.plugin.embedEditRepo.desc"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(pluginSettings.displayModalRepoEditing)
+					.onChange(async (value) => {
+						pluginSettings.displayModalRepoEditing = value;
+						await this.plugin.saveSettings();
+					})
+			);
 	}
 	renderHelp() {
 		this.settingsPage.createEl("h2", {

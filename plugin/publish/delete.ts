@@ -1,12 +1,13 @@
 import { Octokit } from "@octokit/core";
 import { Notice, parseYaml } from "obsidian";
 import {
+	Deleted,
 	FolderSettings,
 	GitHubPublisherSettings,
 	GithubRepo,
 	RepoFrontmatter,
 } from "../settings/interface";
-import { FilesManagement } from "./filesManagement";
+import { FilesManagement } from "./files";
 import { Base64 } from "js-base64";
 import {noticeLog, trimObject } from "../src/utils";
 import {isAttachment} from "../src/data_validation_test";
@@ -29,20 +30,22 @@ export async function deleteFromGithub(
 	branchName: string,
 	filesManagement: FilesManagement,
 	repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter,
-) {
+): Promise<Deleted> {
 	repoFrontmatter = Array.isArray(repoFrontmatter)
 		? repoFrontmatter
 		: [repoFrontmatter];
+	const deleted: Deleted[] = [];
 	for (const repo of repoFrontmatter) {
-		await deleteFromGithubOneRepo(
+		deleted.push(await deleteFromGithubOneRepo(
 			silent,
 			settings,
 			octokit,
 			branchName,
 			filesManagement,
 			repo,
-		);
+		));
 	}
+	return deleted[0]; //needed only for main repo (not for repo in frontmatter)
 }
 
 /**
@@ -63,7 +66,7 @@ async function deleteFromGithubOneRepo(
 	branchName: string,
 	filesManagement: FilesManagement,
 	repo: RepoFrontmatter
-): Promise<boolean> {
+): Promise<Deleted> {
 	if (!repo.autoclean) return;
 	const getAllFile = await filesManagement.getAllFileFromRepo(
 		branchName,
@@ -87,7 +90,7 @@ async function deleteFromGithubOneRepo(
 		if (!silent) {
 			new Notice("Error : " + errorMsg);
 		}
-		return false;
+		return {success: false, deleted: [], undeleted: []};
 	}
 	const allSharedFiles = filesManagement.getAllFileWithPath();
 	const allSharedConverted = allSharedFiles.map((file) => {
@@ -95,6 +98,11 @@ async function deleteFromGithubOneRepo(
 	});
 	let deletedSuccess = 0;
 	let deletedFailed = 0;
+	const result: Deleted = {
+		deleted: [],
+		undeleted: [],
+		success: false,
+	};
 	for (const file of filesInRepo) {
 		const isInObsidian = allSharedConverted.some(
 			(f) => f.converted === file.file
@@ -132,8 +140,10 @@ async function deleteFromGithubOneRepo(
 					);
 					if (reponse.status === 200) {
 						deletedSuccess++;
+						result.deleted.push(file.file);
 					} else {
 						deletedFailed++;
+						result.undeleted.push(file.file);
 					}
 				}
 			} catch (e) {
@@ -152,7 +162,8 @@ async function deleteFromGithubOneRepo(
 	if (!silent) {
 		new Notice(successMsg + failedMsg);
 	}
-	return true;
+	result.success = deletedFailed === 0;
+	return result;
 }
 
 /**

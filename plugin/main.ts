@@ -243,7 +243,8 @@ export default class GithubPublisher extends Plugin {
 					branchName,
 					getRepoFrontmatter(this.settings) as RepoFrontmatter,
 					sharedFiles,
-					true
+					true,
+					this
 				);
 			},
 		});

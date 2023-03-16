@@ -6,12 +6,14 @@ import {
 	Vault,
 } from "obsidian";
 import {
+	Deleted,
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	MetadataExtractor,
 	RepoFrontmatter,
+	UploadedFiles,
 } from "../settings/interface";
-import { FilesManagement } from "./filesManagement";
+import { FilesManagement } from "./files";
 import { Octokit } from "@octokit/core";
 import { Base64 } from "js-base64";
 import { deleteFromGithub } from "./delete";
@@ -88,6 +90,8 @@ export default class Publisher {
 		sourceFrontmatter: FrontmatterConvert,
 		repoFrontmatter: RepoFrontmatter
 	) {
+		const uploadedFile: UploadedFiles[] = [];
+		const fileError: string[] = [];
 		if (linkedFiles.length > 0) {
 			if (linkedFiles.length > 1) {
 				const statusBarItems = this.plugin.addStatusBarItem();
@@ -96,38 +100,47 @@ export default class Publisher {
 					linkedFiles.length,
 					true
 				);
+
 				try {
-					for (const image of linkedFiles) {
+					for (const file of linkedFiles) {
 						try {
-							if (!fileHistory.includes(image)) {
-								if (image.extension === "md" && deepScan) {
-									await this.publish(
-										image,
+							if (!fileHistory.includes(file)) {
+								if (file.extension === "md" && deepScan) {
+									const published = await this.publish(
+										file,
 										false,
 										branchName,
 										repoFrontmatter,
 										fileHistory,
 										true
 									);
+									if (published) {
+										uploadedFile.push(...published.uploaded);
+									}
 								} else if (
-									isAttachment(image.extension) &&
+									isAttachment(file.extension) &&
 									sourceFrontmatter.attachment
 								) {
-									await this.uploadImage(
-										image,
+									const published = await this.uploadImage(
+										file,
 										branchName,
 										sourceFrontmatter,
 										repoFrontmatter
 									);
-									fileHistory.push(image);
+									fileHistory.push(file);
+									if (published) {
+										uploadedFile.push(published);
+									}
+
 								}
 							}
 							statusBar.increment();
 						} catch (e) {
 							new Notice(
-								(i18next.t("error.unablePublishNote", {file: image.name})
+								(i18next.t("error.unablePublishNote", {file: file.name})
 								)
 							);
+							fileError.push(file.name);
 							console.error(e);
 						}
 					}
@@ -144,7 +157,7 @@ export default class Publisher {
 				const embed = linkedFiles[0];
 				if (!fileHistory.includes(embed)) {
 					if (embed.extension === "md" && deepScan) {
-						await this.publish(
+						const published = await this.publish(
 							embed,
 							false,
 							branchName,
@@ -152,22 +165,33 @@ export default class Publisher {
 							fileHistory,
 							true
 						);
+						if (published) {
+							uploadedFile.push(...published.uploaded);
+						}
 					} else if (
 						isAttachment(embed.extension) &&
 						sourceFrontmatter.attachment
 					) {
-						await this.uploadImage(
+						const published = await this.uploadImage(
 							embed,
 							branchName,
 							sourceFrontmatter,
 							repoFrontmatter
 						);
 						fileHistory.push(embed);
+						if (published) {
+							uploadedFile.push(published);
+						}
 					}
 				}
 			}
 		}
-		return fileHistory;
+		console.log(uploadedFile, fileError, fileHistory);
+		return {
+			fileHistory: fileHistory,
+			uploaded: uploadedFile,
+			error: fileError,
+		};
 	}
 
 	/**
@@ -253,10 +277,12 @@ export default class Publisher {
 			}
 			const msg = `Publishing ${file.name} to ${multiRepMsg}`;
 			noticeLog(msg, this.settings);
-			const success: boolean[] = [];
+			const fileDeleted: Deleted[] = [];
+			const updated: UploadedFiles[][] = [];
+			const fileError: string[] = [];
 			for (const repo of repoFrontmatter) {
-				success.push(
-					await this.uploadMultiple(
+				const deleted = 
+					await this.uploadOnMultipleRepo(
 						file,
 						text,
 						branchName,
@@ -268,10 +294,13 @@ export default class Publisher {
 						deepScan,
 						shareFiles,
 						autoclean
-					)
-				);
+					);
+				fileDeleted.push(deleted.deleted);
+				// convert to UploadedFiles[]
+				updated.push(deleted.uploaded);
+				fileError.push(...deleted.error);
 			}
-			return !success.every((value) => value === false);
+			return {deleted: fileDeleted[0], uploaded: updated[0], error: fileError};
 		} catch (e) {
 			noticeLog(e, this.settings);
 			return false;
@@ -291,10 +320,9 @@ export default class Publisher {
 	 * @param {boolean} deepScan if the plugin must check the embed notes too.
 	 * @param {FilesManagement} shareFiles FilesManagement class
 	 * @param {boolean} autoclean If the autoclean must be done right after the file upload
-	 * @return {Promise<boolean>}
 	 */
 
-	async uploadMultiple(
+	async uploadOnMultipleRepo(
 		file: TFile,
 		text: string,
 		branchName: string,
@@ -311,8 +339,9 @@ export default class Publisher {
 			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${branchName}`,
 			this.settings
 		);
-		await this.uploadText(text, path, file.name, branchName, repo);
-		await this.statusBarForEmbed(
+		const uploaded: UploadedFiles = await this.uploadText(text, path, file.name, branchName, repo);
+		let deleted: Deleted; 
+		const embeded = await this.statusBarForEmbed(
 			embedFiles,
 			fileHistory,
 			branchName,
@@ -320,8 +349,10 @@ export default class Publisher {
 			frontmatterSettings,
 			repo
 		);
+		const embeddedUploaded = embeded.uploaded;
+		embeddedUploaded.push(uploaded);
 		if (autoclean && repo.autoclean) {
-			await deleteFromGithub(
+			deleted = await deleteFromGithub(
 				true,
 				this.settings,
 				this.octokit,
@@ -330,7 +361,12 @@ export default class Publisher {
 				repo
 			);
 		}
-		return true;
+		console.log(deleted, embeddedUploaded, embeded.error);
+		return {
+			deleted: deleted,
+			uploaded: embeddedUploaded,
+			error: embeded.error
+		};
 	}
 
 	/**
@@ -376,6 +412,10 @@ export default class Publisher {
 			sha: "",
 			branch: branchName,
 		};
+		const result: UploadedFiles = {
+			isUpdated: false,
+			file: title
+		};
 		try {
 			const response = await octokit.request(
 				"GET /repos/{owner}/{repo}/contents/{path}",
@@ -390,6 +430,7 @@ export default class Publisher {
 			if (response.status === 200 && response.data.type === "file") {
 				// @ts-ignore
 				payload.sha = response.data.sha;
+				result.isUpdated = true;
 			}
 		} catch {
 			noticeLog(
@@ -403,6 +444,7 @@ export default class Publisher {
 			"PUT /repos/{owner}/{repo}/contents/{path}",
 			payload
 		);
+		return result;
 	}
 
 	/**
@@ -426,7 +468,7 @@ export default class Publisher {
 			this.settings,
 			sourceFrontmatter
 		);
-		await this.upload(image64, path, "", branchName, repoFrontmatter);
+		return await this.upload(image64, path, "", branchName, repoFrontmatter);
 	}
 
 	/**
@@ -445,10 +487,10 @@ export default class Publisher {
 		title = "",
 		branchName: string,
 		repoFrontmatter: RepoFrontmatter
-	) {
+	): Promise<UploadedFiles | undefined> {
 		try {
 			const contentBase64 = Base64.encode(text).toString();
-			await this.upload(
+			return await this.upload(
 				contentBase64,
 				path,
 				title,
@@ -457,6 +499,7 @@ export default class Publisher {
 			);
 		} catch (e) {
 			console.error(e);
+			return undefined;
 		}
 	}
 

@@ -101,6 +101,14 @@
 			"importFromFile": "Import from file",
 			"paste": "Paste configuration here...",
 			"title": "Import"
+		},
+		"listChangedFiles": {
+			"added": "Added",
+			"deleted": "Deleted",
+			"edited": "Edited",
+			"notDeleted": "Not deleted",
+			"title": "List of files edited on the repository:",
+			"unpublished": "Un-published"
 		}
 	},
 	"publish": {
@@ -245,8 +253,8 @@
 				},
 				"autoclean": "Disable or enable autocleaning",
 				"baselink": {
-					"desc": "Change the base link for the copy link command. Also disable the link replacer part. Can be used as an YAML object with the name ",
 					"base": "Base link",
+					"desc": "Change the base link for the copy link command. Also disable the link replacer part. Can be used as an YAML object with the name ",
 					"remove": "Remove part of the link. It must be a list!"
 				},
 				"convert": {
@@ -308,6 +316,10 @@
 			"editorMenu": {
 				"desc": "Add a sharing commands in the right-click menu",
 				"title": "Editor Menu"
+			},
+			"embedEditRepo": {
+				"desc": "Display the editions on the repository",
+				"title": "Allows to display the list of edited, added, deleted files... From the main repository (in a modal)."
 			},
 			"excludedFolder": {
 				"desc": "Never publish file in these folder, regardless of the share key. Separate folder name by comma.",

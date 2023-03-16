@@ -91,6 +91,7 @@ export interface GitHubPublisherSettings {
 			addCmd: boolean;
 		}
 		noticeError: boolean;
+		displayModalRepoEditing: boolean;
 	}
 }
 
@@ -179,6 +180,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 			addCmd: false,
 		},
 		noticeError: false,
+		displayModalRepoEditing: false,
 	}
 };
 
@@ -233,5 +235,24 @@ export interface RepoFrontmatter {
 	repo: string;
 	owner: string;
 	autoclean: boolean;
+}
+
+export interface ListeEditedFiles {
+	edited: string[];
+	deleted: string[];
+	added: string[];
+	unpublished: string[];
+	notDeleted: string[];
+}
+
+export interface UploadedFiles {
+	isUpdated: boolean;
+	file: string;
+}
+
+export interface Deleted {
+	success: boolean;
+	deleted: string[];
+	undeleted: string[];
 }
 

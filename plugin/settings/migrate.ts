@@ -135,6 +135,7 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 					addCmd: false,
 				},
 				noticeError: old.logNotice,
+				displayModalRepoEditing: false
 			}
 		};
 		await plugin.saveSettings();
