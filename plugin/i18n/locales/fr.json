@@ -345,7 +345,7 @@
 		},
 		"upload": {
 			"defaultFolder": {
-				"desc": "Définir le dossier de réception par défaut",
+				"desc": "Définir le dossier de réception par défaut. Laisser vide pour utiliser la racine du dépôt.",
 				"placeholder": "docs",
 				"title": "Dossier par défaut"
 			},

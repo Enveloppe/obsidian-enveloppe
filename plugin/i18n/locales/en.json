@@ -345,7 +345,7 @@
 		},
 		"upload": {
 			"defaultFolder": {
-				"desc": "Set the default reception folder",
+				"desc": "Set the default reception folder. Let it empty to use the root of the repository.",
 				"placeholder": "docs",
 				"title": "Default Folder"
 			},

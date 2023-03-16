@@ -216,7 +216,9 @@ function createObsidianPath(
 	//get file name only
 	const fileNameOnly = path.split("/").at(-1);
 	pathWithoutEnd = regexOnPath(pathWithoutEnd, settings);
+	if (pathWithoutEnd.trim().length === 0) return fileNameOnly;
 	return pathWithoutEnd + "/" + fileNameOnly;
+
 }
 
 /**
@@ -267,6 +269,8 @@ function createFrontmatterPath(
 		folderRoot = uploadSettings.rootFolder + "/";
 	}
 	if (folderCategory.trim().length === 0) return folderNote;
+	const folderRegex = regexOnPath(folderRoot + folderCategory, settings);
+	if (folderRegex.trim().length === 0) return folderNote;
 	return regexOnPath(folderRoot + folderCategory, settings) + "/" + folderNote;
 }
 
