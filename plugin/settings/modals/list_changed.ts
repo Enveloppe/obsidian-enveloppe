@@ -13,6 +13,20 @@ export class ListChangedFiles extends Modal {
 	displayListOfFile(toDisplay: string[], contentEl: HTMLElement) {
 		const ul = contentEl.createEl("ul");
 		toDisplay.forEach((file) => {
+			if (file.endsWith(".md")) {
+				file = "🗒️" + file;
+			} else if (file.match(/\.png|\.jpg|\.jpeg|\.gif|\.svg|\.webp/)) {
+				file = "🖼️" + file;
+			} else if (file.match(/\.mp3|\.wav|\.ogg|\.flac|\.aac/)) {
+				file = "🎵" + file;
+			} else if (file.match(/\.mp4|\.avi|\.mov|\.mkv|\.webm/)) {
+				file = "🎥" + file;
+			} else if (file.match(/\.pdf/)) {
+				file = "📄" + file;
+			} else {
+				file = "❓" + file;
+			}
+			//set file in code block
 			ul.createEl("li", { text: file });
 		});
 	}
@@ -27,7 +41,7 @@ export class ListChangedFiles extends Modal {
 		*/
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.createEl("h2", { text: i18next.t("modals.listChangedFiles.title") });
+		contentEl.createEl("h2", { text: i18next.t("modals.listChangedFiles.title"), cls: "github-publisher title"});
 		if (Object.keys(this.listChanged).contains("edited")) {
 			this.listChanged = this.listChanged as ListeEditedFiles;
 			contentEl.createEl("h3", { text: i18next.t("modals.listChangedFiles.added") });

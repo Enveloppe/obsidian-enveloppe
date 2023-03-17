@@ -245,3 +245,7 @@ a.github-publisher-download:hover{
 .github-publisher-modals {
 	border-top: 0 !important;
 }
+
+h2.github-publisher.title {
+	text-align: center;
+}
