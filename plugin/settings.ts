@@ -69,7 +69,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 		new Setting(containerEl)
 			.setClass("github-publisher-export-import")
 			.addButton((button) => {
-				button.setButtonText(i18next.t("settings.exportSettings") )
+				button.setButtonText(i18next.t("modals.export.title"))
 					.setClass("github-publisher-export")
 					.onClick(() => {
 						new ExportModal(this.app, this.plugin).open();
@@ -77,7 +77,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 			}
 			)
 			.addButton((button) => {
-				button.setButtonText(i18next.t("settings.importSettings") )
+				button.setButtonText(i18next.t("modals.import.title"))
 					.setClass("github-publisher-import")
 					.onClick(() => {
 						new ImportModal(this.app, this.plugin, this.settingsPage, this).open();

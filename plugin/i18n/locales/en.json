@@ -90,7 +90,7 @@
 			"copy": "Copy to clipboard",
 			"desc": "Export settings to clipboard or a file.",
 			"download": "Download",
-			"title": "Export"
+			"title": "Export settings"
 		},
 		"import": {
 			"desc": "Import settings from text or a file. Note : this will overwrite your current settings (except for username, repo name and token).",
@@ -100,7 +100,7 @@
 			},
 			"importFromFile": "Import from file",
 			"paste": "Paste configuration here...",
-			"title": "Import"
+			"title": "Import settings"
 		},
 		"listChangedFiles": {
 			"added": "Added",
@@ -188,7 +188,6 @@
 				"title": "Transfer embedded notes"
 			}
 		},
-		"exportSettings": "Export",
 		"github": {
 			"apiType": {
 				"desc": "Choose between the Github API or the Github Enterprise API (only Github Enterprise users — Advanced user!).",
@@ -298,7 +297,6 @@
 				"title": "Useful links"
 			}
 		},
-		"importSettings": "Import settings",
 		"plugin": {
 			"copyLink": {
 				"baselink": {

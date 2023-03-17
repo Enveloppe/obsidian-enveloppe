@@ -90,7 +90,7 @@
 			"copy": "Copier vers le presse-papier",
 			"desc": "Exporter les paramètres vers un fichier ou dans le presse-papier.",
 			"download": "Télécharger",
-			"title": "Exporter"
+			"title": "Exporter les paramètres"
 		},
 		"import": {
 			"desc": "Importer des paramètres depuis un fichier ou un texte. Cela écrasera vos paramètres actuels (sauf le nom du dépôt, le nom d'utilisateur et votre token)",
@@ -100,7 +100,7 @@
 			},
 			"importFromFile": "Import depuis le fichier",
 			"paste": "Coller la configuration ici...",
-			"title": "Importer"
+			"title": "Importer des paramètres"
 		},
 		"listChangedFiles": {
 			"added": "Ajouté",
@@ -188,7 +188,6 @@
 				"title": "Transférer les notes intégrées"
 			}
 		},
-		"exportSettings": "Export",
 		"github": {
 			"apiType": {
 				"desc": "Choisir entre l'API GitHub ou l'API pour GitHub Entreprise (uniquement pour les utilisateurs de GitHub Enterprise — Utilisateur avancé !).",
@@ -298,7 +297,6 @@
 				"title": "Liens utiles"
 			}
 		},
-		"importSettings": "Import",
 		"plugin": {
 			"copyLink": {
 				"baselink": {

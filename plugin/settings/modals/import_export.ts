@@ -48,7 +48,7 @@ export class ImportModal extends Modal {
 							//need to convert old settings to new settings
 							const oldSettings = importedSettings as unknown as OldSettings;
 							await migrateSettings(oldSettings, this.plugin);
-							noticeLog("Migrated settings from old to new format", this.plugin.settings);
+							noticeLog(i18next.t("informations.migrating.oldSettings"), this.plugin.settings);
 						} else {
 							noticeLog("Imported settings as new format", this.plugin.settings);
 							importedSettings = importedSettings as GitHubPublisherSettings;
