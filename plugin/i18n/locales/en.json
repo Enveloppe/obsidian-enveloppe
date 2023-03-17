@@ -107,7 +107,7 @@
 			"deleted": "Deleted",
 			"edited": "Edited",
 			"notDeleted": "Not deleted",
-			"title": "List of files edited on the repository:",
+			"title": "List of files edited in the repository",
 			"unpublished": "Un-published"
 		}
 	},
