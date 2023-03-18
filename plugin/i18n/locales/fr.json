@@ -106,9 +106,10 @@
 			"added": "Ajouté",
 			"deleted": "Supprimé",
 			"edited": "Modifié",
-			"notDeleted": "Non-supprimé",
+			"error": "Erreurs",
+			"notDeleted": "Impossible à supprimer",
 			"title": "Liste des fichiers édités sur le dépôt",
-			"unpublished": "Non-publié"
+			"unpublished": "Impossible à publier"
 		}
 	},
 	"publish": {

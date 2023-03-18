@@ -13,21 +13,24 @@ export class ListChangedFiles extends Modal {
 	displayListOfFile(toDisplay: string[], contentEl: HTMLElement) {
 		const ul = contentEl.createEl("ul");
 		toDisplay.forEach((file) => {
+			let emoji = "❓";
 			if (file.endsWith(".md")) {
-				file = "🗒️" + file;
+				emoji = "🗒️";
 			} else if (file.match(/\.png|\.jpg|\.jpeg|\.gif|\.svg|\.webp/)) {
-				file = "🖼️" + file;
+				emoji = "🖼️";
 			} else if (file.match(/\.mp3|\.wav|\.ogg|\.flac|\.aac/)) {
-				file = "🎵" + file;
+				emoji = "🎵";
 			} else if (file.match(/\.mp4|\.avi|\.mov|\.mkv|\.webm/)) {
-				file = "🎥" + file;
+				emoji = "🎥";
 			} else if (file.match(/\.pdf/)) {
-				file = "📄" + file;
+				emoji = "📄";
 			} else {
-				file = "❓" + file;
+				emoji = "❓";
 			}
 			//set file in code block
-			ul.createEl("li", { text: file });
+			const li = ul.createEl("li");
+			li.createEl("span", { text: emoji, cls: "github-publisher emoji" });
+			li.createEl("code", { text: file, cls: "code-title github-publisher list-changed"});
 		});
 	}
 
@@ -44,21 +47,23 @@ export class ListChangedFiles extends Modal {
 		contentEl.createEl("h2", { text: i18next.t("modals.listChangedFiles.title"), cls: "github-publisher title"});
 		if (Object.keys(this.listChanged).contains("edited")) {
 			this.listChanged = this.listChanged as ListeEditedFiles;
-			contentEl.createEl("h3", { text: i18next.t("modals.listChangedFiles.added") });
+			contentEl.createEl("h3", { text: `📤 ${i18next.t("modals.listChangedFiles.added")}`});
 			this.displayListOfFile(this.listChanged.added, contentEl);
-			contentEl.createEl("h3", { text: i18next.t("modals.listChangedFiles.edited") });
+			contentEl.createEl("h3", { text: `✒️ ${i18next.t("modals.listChangedFiles.edited")}`});
 			this.displayListOfFile(this.listChanged.edited, contentEl);
-			contentEl.createEl("h3", { text: i18next.t("modals.listChangedFiles.deleted") });
+			contentEl.createEl("h3", { text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`});
 			this.displayListOfFile(this.listChanged.deleted, contentEl);
-			contentEl.createEl("h3", { text: i18next.t("modals.listChangedFiles.unpublished") });
+			contentEl.createEl("h2", { text: `❌ ${i18next.t("modals.listChangedFiles.error")}`, cls: "github-publisher title error"});
+			contentEl.createEl("h3", { text: `📤 ${i18next.t("modals.listChangedFiles.unpublished")}`});
 			this.displayListOfFile(this.listChanged.unpublished, contentEl);
-			contentEl.createEl("h3", { text: i18next.t("modals.listChangedFiles.notDeleted") });
+			contentEl.createEl("h3", { text: `♻️ ${i18next.t("modals.listChangedFiles.notDeleted")}`});
 			this.displayListOfFile(this.listChanged.notDeleted, contentEl);
 		} else {
 			this.listChanged = this.listChanged as Deleted;
-			contentEl.createEl("h3", { text: i18next.t("modals.listChangedFiles.deleted")});
+			contentEl.createEl("h3", { text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`});
 			this.displayListOfFile(this.listChanged.deleted, contentEl);
-			contentEl.createEl("h3", { text: i18next.t("modals.listChangedFiles.notDeleted")});
+			contentEl.createEl("h3", { text: `❌ ${i18next.t("modals.listChangedFiles.error")}`, cls: "github-publisher error"});
+			contentEl.createEl("h3", { text: `♻️ ${i18next.t("modals.listChangedFiles.notDeleted")}`});
 			this.displayListOfFile(this.listChanged.undeleted, contentEl);
 		}
 	}

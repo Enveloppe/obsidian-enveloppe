@@ -124,6 +124,7 @@ button.github-publisher-censor-flags:hover {
 	margin-bottom: 10px !important;
 }
 .settings-tab-page.github-publisher code,
+code.code-title.github-publisher.list-changed,
 .code {
 	color: var(--code-normal);
 	font-family: var(--font-monospace);
@@ -131,7 +132,9 @@ button.github-publisher-censor-flags:hover {
 	border-radius: var(--radius-s);
 	font-size: var(--code-size);
 }
+
 .settings-tab-page.github-publisher code.code-title,
+
 .code.code-title {
 	font-size: calc(var(--code-size) * 12px);
 	font-weight: bolder;
@@ -248,4 +251,15 @@ a.github-publisher-download:hover{
 
 h2.github-publisher.title {
 	text-align: center;
+	color: var(--color-green);
+}
+
+h2.github-publisher.title.error {
+	color: var(--text-error);
+	padding: 10px 10px;
+}
+
+.github-publisher.emoji {
+	padding-right: 5px;
+	font-size: 18px;
 }

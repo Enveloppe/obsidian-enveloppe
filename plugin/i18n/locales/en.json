@@ -106,9 +106,10 @@
 			"added": "Added",
 			"deleted": "Deleted",
 			"edited": "Edited",
-			"notDeleted": "Not deleted",
+			"error": "Errors",
+			"notDeleted": "Cannot be deleted",
 			"title": "List of files edited in the repository",
-			"unpublished": "Un-published"
+			"unpublished": "Cannot be published"
 		}
 	},
 	"publish": {
