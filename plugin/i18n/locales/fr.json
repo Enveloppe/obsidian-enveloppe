@@ -304,7 +304,10 @@
 					"desc": "Permet de créer un lien dans le presse-papier avec cette base. Par défaut : \"https://username.github.io/repo/\"",
 					"title": "Lien du dépôt/blog"
 				},
-				"command": "Ajouter une commande permettant de copier le lien de la note publiée dans le presse-papier (nécessite de recharger le plugin pour prendre effet)",
+				"command": {
+					"desc": "Ajouter une commande permettant de copier le lien de la note publiée dans le presse-papier (nécessite de recharger le plugin pour prendre effet)",
+					"onActivation" : "Lien copié dans le presse-papier !"
+				},
 				"desc": "Envoie d'un lien vers la note publiées dans votre presse-papier.",
 				"linkpathremover": {
 					"desc": "Supprimer cette partie des liens créés. Séparer par une virgule si plusieurs valeurs doivent être supprimées.",

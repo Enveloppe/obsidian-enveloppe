@@ -841,7 +841,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 				});
 			
 			new Setting(this.settingsPage)
-				.setName(i18next.t("settings.plugin.copyLink.command"))
+				.setName(i18next.t("settings.plugin.copyLink.command.desc"))
 				.addToggle((toggle) =>
 					toggle
 						.setValue(pluginSettings.copyLink.addCmd)

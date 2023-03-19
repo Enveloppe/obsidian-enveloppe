@@ -1,4 +1,4 @@
-import {FrontMatterCache, Menu, Plugin, TFile} from "obsidian";
+import {FrontMatterCache, Menu, Notice, Plugin, TFile} from "obsidian";
 import {GithubPublisherSettings} from "./settings";
 import {
 	DEFAULT_SETTINGS,
@@ -172,6 +172,7 @@ export default class GithubPublisher extends Plugin {
 								this.app.vault,
 								this.settings
 							);
+							new Notice(i18next.t("settings.plugin.copyLink.command.onActivation"));
 						}
 						return true;
 					}

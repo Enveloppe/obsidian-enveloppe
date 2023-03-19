@@ -304,7 +304,10 @@
 					"desc": "The base link of your website. By default : https://username.github.io/repo/",
 					"title": "Base link"
 				},
-				"command": "Add a command to copy the link of the note (need reloading the plugin to take effect)",
+				"command": {
+					"desc": "Add a command to copy the link of the note (need reloading the plugin to take effect)",
+					"onActivation": "Link copied to your clipboard"
+				},
 				"desc": "Send a link to your note in your clipboard",
 				"linkpathremover": {
 					"desc": "Remove this part from the created links. Separate by comma if multiple value must be removed.",
