@@ -186,7 +186,6 @@ export default class Publisher {
 				}
 			}
 		}
-		console.log(uploadedFile, fileError, fileHistory);
 		return {
 			fileHistory: fileHistory,
 			uploaded: uploadedFile,
@@ -361,7 +360,6 @@ export default class Publisher {
 				repo
 			);
 		}
-		console.log(deleted, embeddedUploaded, embeded.error);
 		return {
 			deleted: deleted,
 			uploaded: embeddedUploaded,

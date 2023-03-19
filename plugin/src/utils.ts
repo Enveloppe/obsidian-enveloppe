@@ -1,10 +1,13 @@
 import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, Vault,} from "obsidian";
 import {
+	Deleted,
 	FolderSettings,
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	MetadataExtractor,
 	RepoFrontmatter,
+	UploadedFiles,
+	ListeEditedFiles
 } from "../settings/interface";
 import Publisher from "../publish/upload";
 import {getReceiptFolder} from "../conversion/filePathConvertor";
@@ -22,6 +25,29 @@ export function noticeLog(message: string, settings: GitHubPublisherSettings) {
 	} else {
 		console.log(message);
 	}
+}
+
+export function createListEdited(listUploaded: UploadedFiles[], deleted: Deleted, fileError: string[]) {
+	const listEdited: ListeEditedFiles = {
+		added: [],
+		edited: [],
+		deleted: [],
+		unpublished: [],
+		notDeleted: [],
+	};
+	listUploaded.forEach((file) => {
+		if (file.isUpdated) {
+			listEdited.added.push(file.file);
+		} else {
+			listEdited.edited.push(file.file);
+		}
+	});
+	listEdited.unpublished = fileError;
+	if (deleted) {
+		listEdited.deleted = deleted.deleted;
+		listEdited.notDeleted = deleted.undeleted;
+	}
+	return listEdited;
 }
 
 /**

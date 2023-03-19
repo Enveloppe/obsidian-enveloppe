@@ -11,6 +11,9 @@ export class ListChangedFiles extends Modal {
 	}
 
 	displayListOfFile(toDisplay: string[], contentEl: HTMLElement) {
+		if (toDisplay.length === 0) {
+			return;
+		}
 		const ul = contentEl.createEl("ul");
 		toDisplay.forEach((file) => {
 			let emoji = "❓";
@@ -44,6 +47,7 @@ export class ListChangedFiles extends Modal {
 		*/
 		const { contentEl } = this;
 		contentEl.empty();
+		console.log(this.listChanged);
 		contentEl.createEl("h2", { text: i18next.t("modals.listChangedFiles.title"), cls: "github-publisher title"});
 		if (Object.keys(this.listChanged).contains("edited")) {
 			this.listChanged = this.listChanged as ListeEditedFiles;

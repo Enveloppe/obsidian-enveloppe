@@ -4,7 +4,8 @@ import {
 	noticeMessage,
 	getRepoFrontmatter,
 	noticeLog,
-	getSettingsOfMetadataExtractor
+	getSettingsOfMetadataExtractor,
+	createListEdited
 } from "./src/utils";
 import {checkRepositoryValidityWithRepoFrontmatter} from "./src/data_validation_test";
 import { GitHubPublisherSettings, ListeEditedFiles, RepoFrontmatter, UploadedFiles } from "./settings/interface";
@@ -109,19 +110,7 @@ export async function shareAllMarkedNotes(
 					repoFrontmatter
 				);
 				if (settings.plugin.displayModalRepoEditing) {
-					const modified = listStateUploaded.filter(
-						(file) => file.isUpdated === true)
-						.map((file) => file.file);
-					const added = listStateUploaded.filter(
-						(file) => file.isUpdated === false)
-						.map((file) => file.file);
-					const listEdited: ListeEditedFiles = {
-						edited: modified,
-						deleted: deleted.deleted,
-						added: added,
-						unpublished: fileError,
-						notDeleted: deleted.undeleted,
-					};
+					const listEdited = createListEdited(listStateUploaded, deleted, fileError);
 					new ListChangedFiles(plugin.app, listEdited).open();
 				}
 			} else {
@@ -242,22 +231,7 @@ export async function shareOneNote(
 					settings
 				);
 				if (settings.plugin.displayModalRepoEditing) {
-					const modified = publishSuccess.uploaded.filter(
-						(file) => file.isUpdated === true)
-						.map((file) => file.file);
-					const added = publishSuccess.uploaded.filter(
-						(file) => file.isUpdated === false)
-						.map((file) => file.file);
-					const undeleted = publishSuccess.deleted.undeleted;
-					const error = publishSuccess.error;
-					const deleted = publishSuccess.deleted.deleted;
-					const listEdited: ListeEditedFiles = {
-						edited: modified,
-						deleted: deleted,
-						added: added,
-						unpublished: error,
-						notDeleted: undeleted,
-					};
+					const listEdited = createListEdited(publishSuccess.uploaded, publishSuccess.deleted, publishSuccess.error);
 					new ListChangedFiles(app, listEdited).open();
 				}
 				
