@@ -165,7 +165,8 @@ export async function createLink(
 			}
 		}
 	}
-	const url = encodeURI(baseLink + filepath + "/");
+	filepath = checkSlash(filepath);
+	const url = checkSlash(encodeURI(baseLink + filepath));
 	await navigator.clipboard.writeText(url);
 	return;
 }
