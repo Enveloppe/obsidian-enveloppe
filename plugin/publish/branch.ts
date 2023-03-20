@@ -216,7 +216,7 @@ export class GithubBranch extends FilesManagement {
 		pullRequestNumber: number,
 		repoFrontmatter: RepoFrontmatter
 	) {
-		const commitMsg = this.plugin.settings.github.worflow.customCommitMsg.trim().length > 0 ? `${this.plugin.settings.github.worflow.customCommitMsg} #${pullRequestNumber}` : `[PUBLISHER] Merge #${pullRequestNumber}`;
+		const commitMsg = this.plugin.settings.github.worflow.customCommitMsg || this.plugin.settings.github.worflow.customCommitMsg.trim().length > 0 ? `${this.plugin.settings.github.worflow.customCommitMsg} #${pullRequestNumber}` : `[PUBLISHER] Merge #${pullRequestNumber}`;
 		try {
 			const branch = await this.octokit.request(
 				"PUT" + " /repos/{owner}/{repo}/pulls/{pull_number}/merge",

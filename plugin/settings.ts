@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, setIcon, Setting } from "obsidian";
+import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
 import GithubPublisherPlugin from "./main";
 import { ModalRegexFilePathName, ModalRegexOnContents } from "./settings/modals/regex_edition";
 import {
@@ -265,6 +265,10 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					.setPlaceholder("[PUBLISHER] MERGE")
 					.setValue(githubSettings.worflow.customCommitMsg)
 					.onChange(async (value) => {
+						if (value.trim().length === 0) {
+							value = "[PUBLISHER] MERGE";
+							new Notice(i18next.t("settings.githubWorkflow.prRequest.error"));
+						}
 						githubSettings.worflow.customCommitMsg = value;
 						await this.plugin.saveSettings();
 					})

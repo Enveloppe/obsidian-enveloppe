@@ -238,7 +238,8 @@
 			},
 			"prRequest": {
 				"desc": "Le message envoyé lorsque la pull-request est fusionnée. Sera toujours suivi par le numéro de la pull-request.",
-				"title": "Message de commit"
+				"title": "Message de commit",
+				"error": "Vous ne pouvez pas utiliser une valeur vide pour le message de commit."
 			},
 			"useMetadataExtractor": {
 				"desc": "Envoyer les fichiers générés par metadata-extractor dans ce dossier.",
