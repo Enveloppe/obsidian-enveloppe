@@ -1,6 +1,6 @@
 import GithubPublisher from "../../main";
 import { App, Modal, Setting, TextAreaComponent, ButtonComponent, Platform } from "obsidian";
-import {GithubPublisherSettings} from "../../settings";
+import {GithubPublisherSettingsTab} from "../../settings";
 import i18next from "i18next";
 import {GitHubPublisherSettings} from "../interface";
 import { OldSettings } from "../migrate";
@@ -18,8 +18,8 @@ export type SettingValue = number | string | boolean | unknown;
 export class ImportModal extends Modal {
 	plugin: GithubPublisher;
 	settingsPage: HTMLElement;
-	settingsTab: GithubPublisherSettings;
-	constructor(app: App, plugin: GithubPublisher, settingsPage: HTMLElement, settingsTab: GithubPublisherSettings) {
+	settingsTab: GithubPublisherSettingsTab;
+	constructor(app: App, plugin: GithubPublisher, settingsPage: HTMLElement, settingsTab: GithubPublisherSettingsTab) {
 		super(app);
 		this.plugin = plugin;
 		this.settingsPage = settingsPage;

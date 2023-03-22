@@ -11,9 +11,7 @@ export class ListChangedFiles extends Modal {
 	}
 
 	displayListOfFile(toDisplay: string[], contentEl: HTMLElement) {
-		if (toDisplay.length === 0) {
-			return;
-		}
+		if (!toDisplay.length) return;
 		const ul = contentEl.createEl("ul");
 		toDisplay.forEach((file) => {
 			let emoji = "❓";
@@ -71,9 +69,6 @@ export class ListChangedFiles extends Modal {
 	}
 	
 	onClose() {
-		/**
-		 * a modal is closed and the user can go back to the normal workflow
-		 */
 		const { contentEl } = this;
 		contentEl.empty();
 	}

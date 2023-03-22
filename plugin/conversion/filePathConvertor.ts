@@ -433,7 +433,7 @@ export function getImageLinkOptions(
 		}
 	} else if (
 		sourceFrontmatter &&
-		sourceFrontmatter.attachmentLinks !== undefined
+		sourceFrontmatter.attachmentLinks
 	) {
 		return sourceFrontmatter.attachmentLinks + "/" + file.name;
 	}

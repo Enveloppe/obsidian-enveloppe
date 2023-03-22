@@ -1,7 +1,7 @@
 import { Setting } from "obsidian";
 import GithubPublisherPlugin from "../main";
 import {FolderSettings, GitHubPublisherSettings} from "./interface";
-import { GithubPublisherSettings } from "plugin/settings";
+import { GithubPublisherSettingsTab } from "plugin/settings";
 /**
  * show a settings
  * @param {Setting} containerEl setting to show

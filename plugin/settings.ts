@@ -24,7 +24,7 @@ import i18next from "i18next";
 import { enumbSettingsTabId } from "./settings/interface";
 
 
-export class GithubPublisherSettings extends PluginSettingTab {
+export class GithubPublisherSettingsTab extends PluginSettingTab {
 	plugin: GithubPublisherPlugin;
 	settingsPage: HTMLElement;
 	branchName: string;
@@ -705,6 +705,21 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
+		const settingsDefaultImage = new Setting(this.settingsPage)
+			.setName(i18next.t("settings.embed.defaultImageFolder.title") )
+			.setDesc(i18next.t("settings.embed.defaultImageFolder.desc") )
+			.addText((text) => {
+				text.setPlaceholder("docs/images")
+					.setValue(embedSettings.folder)
+					.onChange(async (value) => {
+						embedSettings.folder = value.replace(
+							/\/$/,
+							""
+						);
+						await this.plugin.saveSettings();
+					});
+			});
+
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.embed.transferMetaFile.title") )
 			.setDesc(i18next.t("settings.embed.transferMetaFile.desc") )
@@ -735,20 +750,7 @@ export class GithubPublisherSettings extends PluginSettingTab {
 					});
 			});
 
-		const settingsDefaultImage = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.embed.defaultImageFolder.title") )
-			.setDesc(i18next.t("settings.embed.defaultImageFolder.desc") )
-			.addText((text) => {
-				text.setPlaceholder("docs/images")
-					.setValue(embedSettings.folder)
-					.onChange(async (value) => {
-						embedSettings.folder = value.replace(
-							/\/$/,
-							""
-						);
-						await this.plugin.saveSettings();
-					});
-			});
+		
 	}
 
 	renderPluginSettings() {

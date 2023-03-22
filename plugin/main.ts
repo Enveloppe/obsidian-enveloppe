@@ -1,5 +1,5 @@
 import {FrontMatterCache, Menu, Notice, Plugin, TFile} from "obsidian";
-import {GithubPublisherSettings} from "./settings";
+import {GithubPublisherSettingsTab} from "./settings";
 import {
 	DEFAULT_SETTINGS,
 	FolderSettings,
@@ -92,7 +92,7 @@ export default class GithubPublisher extends Plugin {
 			app.vault.getName().replaceAll(" ", "-").replaceAll(".", "-") +
 			"-" +
 			new Date().toLocaleDateString("en-US").replace(/\//g, "-");
-		this.addSettingTab(new GithubPublisherSettings(this.app, this, branchName));
+		this.addSettingTab(new GithubPublisherSettingsTab(this.app, this, branchName));
 		
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
