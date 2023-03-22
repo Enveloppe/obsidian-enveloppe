@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.5.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.5.1...5.5.2) (2023-03-22)
+
+
+### Bug Fixes
+
+* wrong parsing translation create documentation error in regex ([cf21b43](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/cf21b43637e29ee0d0161ea7c6cd395202e790b3)), closes [#121](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/121)
+
 ## [5.5.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.5.0...5.5.1) (2023-03-20)
 
 
