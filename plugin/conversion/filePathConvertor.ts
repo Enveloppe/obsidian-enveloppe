@@ -422,7 +422,7 @@ export function getImageLinkOptions(
 	settings: GitHubPublisherSettings,
 	sourceFrontmatter: FrontmatterConvert | null
 ): string {
-	if (!sourceFrontmatter) {
+	if (!sourceFrontmatter || !sourceFrontmatter.attachmentLinks) {
 		const defaultImageFolder = settings.embed.folder;
 		if (defaultImageFolder.length > 0) {
 			return defaultImageFolder + "/" + file.name;
