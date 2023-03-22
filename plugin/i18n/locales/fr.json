@@ -348,7 +348,7 @@
 			"empty": "Le remplacement peut être vide pour supprimer l'ensemble de la chaîne de caractère.",
 			"forbiddenValue": "Le {{- what}} ne peut contenir le caractère : {{- forbiddenChar}}.",
 			"modal": {
-				"desc": "Replace des textes dans le fichier par la valeur donnée. Vous pouvez encadrer le text à remplacer par \"/\" pour utiliser un regex.",
+				"desc": "Replace des textes dans le fichier par la valeur donnée. Vous pouvez encadrer le texte à remplacer avec \"//\" pour utiliser un regex.",
 				"title": {
 					"all": "Remplacement du nom ou du chemin du fichier",
 					"only": "Remplacement du titre uniquement",

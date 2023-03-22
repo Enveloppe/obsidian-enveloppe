@@ -348,7 +348,7 @@
 			"empty": "Replacement can be empty to remove the whole string.",
 			"forbiddenValue": "The {{- what}} cannont contain the character: {{- forbiddenChar}}",
 			"modal": {
-				"desc": "Replace text in the file with the given value. Enclose the text with \"\" to use regex.",
+				"desc": "Replace text in the file with the given value. Enclose the text with \"//\" to use regex.",
 				"title": {
 					"all": "Folder path & filename replacer",
 					"only": "Replace filename",
