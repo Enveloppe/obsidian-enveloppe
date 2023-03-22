@@ -17,20 +17,18 @@ export class ListChangedFiles extends Modal {
 		const ul = contentEl.createEl("ul");
 		toDisplay.forEach((file) => {
 			let emoji = "❓";
-			if (file.endsWith(".md")) {
+			const ext = file.split(".").pop();
+			if (["md"].includes(ext)) {
 				emoji = "🗒️";
-			} else if (file.match(/\.png|\.jpg|\.jpeg|\.gif|\.svg|\.webp/)) {
+			} else if ([".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"].includes(`.${ext}`)) {
 				emoji = "🖼️";
-			} else if (file.match(/\.mp3|\.wav|\.ogg|\.flac|\.aac/)) {
+			} else if ([".mp3", ".wav", ".ogg", ".flac", ".aac"].includes(`.${ext}`)) {
 				emoji = "🎵";
-			} else if (file.match(/\.mp4|\.avi|\.mov|\.mkv|\.webm/)) {
+			} else if ([".mp4", ".avi", ".mov", ".mkv", ".webm"].includes(`.${ext}`)) {
 				emoji = "🎥";
-			} else if (file.match(/\.pdf/)) {
+			} else if ([".pdf"].includes(`.${ext}`)) {
 				emoji = "📄";
-			} else {
-				emoji = "❓";
 			}
-			//set file in code block
 			const li = ul.createEl("li");
 			li.createEl("span", { text: emoji, cls: "github-publisher emoji" });
 			li.createEl("code", { text: file, cls: "code-title github-publisher list-changed"});
