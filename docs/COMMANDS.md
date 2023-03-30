@@ -30,6 +30,9 @@ Refresh scans the repository and updates or sends the notes based on some condit
 - `Refresh all published notes` : It only updates the content of the published notes. Here, the commit date and the last edited time (from Obsidian) are compared.
 - `Refresh published and upload new notes` : It uploads the note not present in the repository and also updates the note edited since the last push. Same as above, dates are compared.
 
+> [!tip] The refresh command use the last edited time and the last commit date to determine if the note has been edited since the last push.
+> As a dataview table/list/task update don't edit the contents of a note, it won't be updated by the refresh command. You can use the `Upload` command to update it.
+
 ## Purge
 
 There is only one command here : `Purge depublished and deleted files`
