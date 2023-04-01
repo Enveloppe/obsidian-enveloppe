@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.6.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.5.5...5.6.0-0) (2023-04-01)
+
+
+### Features
+
+* adding slugify for markdown links ([7f36a42](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7f36a4296b13b7f56b17e8c2a73f8d3f32b2cb12))
+
 ## [5.4.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.4.0-2...5.4.0-3) (2023-03-18)
 
 ## [5.4.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.4.0-1...5.4.0-2) (2023-03-17)
