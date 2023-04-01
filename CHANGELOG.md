@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.5.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.5.4...5.5.5) (2023-04-01)
+
+
+### Bug Fixes
+
+* remove links in export modals ([6b25986](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6b259861747e26bc5d78b475228075def41ea85d))
+
 ## [5.5.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.5.3...5.5.4) (2023-04-01)
 
 
