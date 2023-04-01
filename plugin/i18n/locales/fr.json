@@ -149,6 +149,11 @@
 					"desc": "L'option précédente, mais appliquées aux liens internes pointant vers des notes non-publiées. Désactivé, seul le nom du fichier sera conservé.",
 					"title": "Conversion des liens internes pointant vers des notes non-publiées"
 				},
+				"slugify": {
+					"title": "Slugifier l'ancre des liens markdown",
+					"desc": "Les ancres (pointant vers les titres) seront slugifiés en transformant le texte en minuscule et remplaçant les espace par des tirets. Ne fonctionne uniquement pour des liens markdown (incluant la transformation depuis les wikilinks)."
+
+				},
 				"title": "Liens",
 				"wikilinks": {
 					"desc": "Conversion des liens wikilinks en liens Markdown, sans en modifier le contenu.",
@@ -238,8 +243,8 @@
 			},
 			"prRequest": {
 				"desc": "Le message envoyé lorsque la pull-request est fusionnée. Sera toujours suivi par le numéro de la pull-request.",
-				"title": "Message de commit",
-				"error": "Vous ne pouvez pas utiliser une valeur vide pour le message de commit."
+				"error": "Vous ne pouvez pas utiliser une valeur vide pour le message de commit.",
+				"title": "Message de commit"
 			},
 			"useMetadataExtractor": {
 				"desc": "Envoyer les fichiers générés par metadata-extractor dans ce dossier.",
@@ -307,7 +312,7 @@
 				},
 				"command": {
 					"desc": "Ajouter une commande permettant de copier le lien de la note publiée dans le presse-papier (nécessite de recharger le plugin pour prendre effet)",
-					"onActivation" : "Lien copié dans le presse-papier !"
+					"onActivation": "Lien copié dans le presse-papier !"
 				},
 				"desc": "Envoie d'un lien vers la note publiées dans votre presse-papier.",
 				"linkpathremover": {

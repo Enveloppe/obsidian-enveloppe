@@ -7,6 +7,7 @@ import {
 } from "../settings/interface";
 import { createRelativePath } from "./filePathConvertor";
 import {isAttachment, noTextConversion} from "../src/data_validation_test";
+import slugify from "slugify";
 
 /**
  * Convert wikilinks to markdown
@@ -20,7 +21,8 @@ import {isAttachment, noTextConversion} from "../src/data_validation_test";
 export function convertWikilinks(
 	fileContent: string,
 	conditionConvert: FrontmatterConvert,
-	linkedFiles: LinkedNotes[]
+	linkedFiles: LinkedNotes[],
+	settings: GitHubPublisherSettings,
 ): string {
 	const convertWikilink = conditionConvert.convertWiki;
 	const imageSettings = conditionConvert.attachment;
@@ -94,7 +96,7 @@ export function convertWikilinks(
 							fileName.split(".").at(-1),
 							fileName
 						);
-						linkCreator = createWikiLinks(fileName, isEmbed, altLink);
+						linkCreator = createMarkdownLinks(fileName, isEmbed, altLink, settings);
 					}
 
 					if (
@@ -127,7 +129,7 @@ export function convertWikilinks(
 						conditionConvert.removeEmbed &&
 						isEmbedBool;
 					if (convertWikilink) {
-						linkCreator = createWikiLinks(fileName, isEmbed, altLink);
+						linkCreator = createMarkdownLinks(fileName, isEmbed, altLink, settings);
 					}
 					if (
 						!isAttachment(fileName.trim()) &&
@@ -152,14 +154,19 @@ export function convertWikilinks(
 }
 
 
-function createWikiLinks(fileName: string, isEmbed: string, altLink: string) {
+function createMarkdownLinks(fileName: string, isEmbed: string, altLink: string, settings: GitHubPublisherSettings) {
 	const markdownName = !isAttachment(fileName.trim())
 		? fileName.replace(/#.*/, "").trim() + ".md"
 		: fileName.trim();
-	const anchor = fileName.match(/(#.*)/) ? fileName.match(/(#.*)/)[0].replaceAll(" ", "%20") : "";
+	let anchor = fileName.match(/(#.*)/) ? fileName.match(/(#.*)/)[0].replaceAll(" ", "%20") : "";
 	const encodedURI = encodeURI(markdownName);
+	if (settings.conversion.links.slugify) {
+		anchor = fileName.match(/(#.*)/) ? slugify(fileName.match(/(#.*)/)[0], { lower: true, strict: true }) : "";
+		anchor = `#${anchor}`;
+	}
 	return `${isEmbed}[${altLink}](${encodedURI}${anchor})`;
 }
+
 
 /**
  * Add alt text to links
@@ -213,6 +220,7 @@ export async function convertLinkCitation(
 	if (!frontmatterSettings.convertInternalLinks) {
 		return fileContent;
 	}
+	console.log("convertLinkCitation", linkedFiles);
 	for (const linkedFile of linkedFiles) {
 		let pathInGithub = await createRelativePath(
 			sourceFile,
@@ -225,8 +233,9 @@ export async function convertLinkCitation(
 			frontmatterSettings
 		);
 		pathInGithub = pathInGithub.replace(".md", "");
-		const anchor = linkedFile.anchor ? linkedFile.anchor : "";
-		const linkInMarkdown = escapeRegex(linkedFile.linkFrom.replace(linkedFile.anchor, "")).replaceAll(" ", "%20") + anchor.replace("^", "\\^");
+		let anchor = linkedFile.anchor ? linkedFile.anchor : "";
+		let linkInMarkdown = escapeRegex(linkedFile.linkFrom.replace(linkedFile.anchor, "")).replaceAll(" ", "%20") + anchor.replace("^", "\\^");
+		linkInMarkdown = linkInMarkdown.replaceAll(" ", "%20");
 		const escapedLinkedFile = escapeRegex(linkedFile.linkFrom);
 
 
@@ -246,8 +255,10 @@ export async function convertLinkCitation(
 				let newLink = link.replace(regToReplace, pathInGithubWithAnchor); //strict replacement of link
 				if (link.match(/\[.*\]\(.*\)/)) {
 					if (linkedFile.linked.extension === "md") {
-						pathInGithub = pathInGithub.replaceAll(" ", "%20") + anchor;
-						pathInGithub = pathInGithub.replace(/(\.md)?(#.*)/, ".md$2");
+						anchor =  settings.conversion.links.slugify ? slugify(anchor, { lower: true, strict: true }) : anchor;
+						pathInGithub = pathInGithub.replaceAll(" ", "%20") + ".md#" + anchor;
+						//probably useless
+						// pathInGithub = pathInGithub.replace(/(\.md)?(#.*)/, ".md$2");
 						pathInGithub = !pathInGithub.match(/(#.*)/) && !pathInGithub.endsWith(".md") ?
 							pathInGithub + ".md"
 							: pathInGithub;

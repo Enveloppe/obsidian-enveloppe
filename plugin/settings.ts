@@ -121,6 +121,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 	renderSettingsPage(tabId: string) {
 		this.settingsPage.empty();
+		console.log("renderSettingsPage", tabId);
 		switch (tabId) {
 		case "github-configuration":
 			this.renderGithubConfiguration();
@@ -129,6 +130,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			this.renderUploadConfiguration();
 			break;
 		case "text-conversion":
+			console.log("render Text conversion", tabId);
 			this.renderTextConversion();
 			break;
 		case "embed-configuration":
@@ -653,9 +655,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						textSettings.links.internal = value;
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(enumbSettingsTabId.text);
+						this.renderSettingsPage("text-conversion");
 					});
 			});
+
 		if (textSettings.links.internal) {
 			new Setting(this.settingsPage)
 				.setName(
@@ -686,8 +689,23 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						textSettings.links.wiki = value;
 						await this.plugin.saveSettings();
+						this.renderSettingsPage("text-conversion");
 					});
 			});
+
+		if (textSettings.links.wiki || textSettings.links.internal) {
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.conversion.links.slugify.title"))
+				.setDesc(i18next.t("settings.conversion.links.slugify.desc"))
+				.addToggle((toggle) => {
+					toggle
+						.setValue(textSettings.links.slugify)
+						.onChange(async (value) => {
+							textSettings.links.slugify = value;
+							await this.plugin.saveSettings();
+						});
+				});
+		}
 	}
 
 	renderEmbedConfiguration() {

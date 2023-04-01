@@ -8,7 +8,7 @@ export enum TypeOfEditRegex {
 export enum enumbSettingsTabId {
 	github = "github-configuration",
 	upload = "upload-configuration",
-	text = "text-configuration",
+	text = "text-conversion",
 	embed = "embed-configuration",
 	plugin = "plugin-settings",
 	help = "help",
@@ -70,6 +70,7 @@ export interface GitHubPublisherSettings {
 			internal: boolean;
 			unshared: boolean;
 			wiki: boolean;
+			slugify: boolean;
 		}
 	}
 	embed: {
@@ -160,6 +161,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 			internal: false,
 			unshared: false,
 			wiki: false,
+			slugify: false,
 		},
 	},
 	embed: {

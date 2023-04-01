@@ -50,6 +50,7 @@ const settings: GitHubPublisherSettings = {
 			internal: false,
 			unshared: false,
 			wiki: false,
+			slugify: false,
 		},
 	},
 	embed: {

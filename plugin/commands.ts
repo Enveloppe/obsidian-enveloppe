@@ -8,7 +8,7 @@ import {
 	createListEdited
 } from "./src/utils";
 import {checkRepositoryValidityWithRepoFrontmatter} from "./src/data_validation_test";
-import { GitHubPublisherSettings, ListeEditedFiles, RepoFrontmatter, UploadedFiles } from "./settings/interface";
+import { GitHubPublisherSettings, RepoFrontmatter, UploadedFiles } from "./settings/interface";
 import { deleteFromGithub } from "./publish/delete";
 import { GithubBranch } from "./publish/branch";
 import { Octokit } from "@octokit/core";

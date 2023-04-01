@@ -273,7 +273,8 @@ export async function convertDataviewQueries(
 			md = convertWikilinks(
 				md,
 				frontmatterSettings,
-				dataviewPath
+				dataviewPath,
+				settings
 			);
 			replacedText = replacedText.replace(block, md);
 		} catch (e) {
@@ -347,7 +348,7 @@ export async function mainConverting(
 		sourceRepo,
 		frontmatterSettings
 	);
-	text = convertWikilinks(text, frontmatterSettings, linkedFiles);
+	text = convertWikilinks(text, frontmatterSettings, linkedFiles, settings);
 	text = findAndReplaceText(text, settings, true);
 
 	return text;
