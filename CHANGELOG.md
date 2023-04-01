@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.5.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.5.3...5.5.4) (2023-04-01)
+
+
+### Bug Fixes
+
+* export settings doesn't remove repo/user/token ([dbd65f4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/dbd65f4bf0bbe7169f298ddfe73cfb1172db1be3))
+
 ## [5.5.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.5.2...5.5.3) (2023-03-22)
 
 
