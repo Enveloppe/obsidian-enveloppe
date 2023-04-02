@@ -75,7 +75,8 @@
 		"migrating": {
 			"fileReplace": "Migration of filename replace to the new format...",
 			"oldSettings": "Migration of old settings to new settings format...",
-			"subFolder": "Adding replacing subfolder to the folderpath replacement..."
+			"subFolder": "Adding replacing subfolder to the folderpath replacement...",
+			"normalFormat" : "Migrating settings..."
 		},
 		"noNewNote": "No new notes to upload.",
 		"scanningRepo": "Scanning the repository, may take a while...",

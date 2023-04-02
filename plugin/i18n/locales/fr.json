@@ -75,7 +75,8 @@
 		"migrating": {
 			"fileReplace": "Migration du remplacement du nom du fichier au nouveau format...",
 			"oldSettings": "Migration des anciens paramètres au nouveau format...",
-			"subFolder": "Ajout du remplacement du sous-dossier au remplacement de chemin de fichier..."
+			"subFolder": "Ajout du remplacement du sous-dossier au remplacement de chemin de fichier...",
+			"normalFormat" : "Migration des paramètres..."
 		},
 		"noNewNote": "Aucune note à transférer.",
 		"scanningRepo": "Scan du dépôt, veuillez patienter...",

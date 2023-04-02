@@ -9,6 +9,9 @@ import {migrateSettings} from "../migrate";
 
 export type SettingValue = number | string | boolean | unknown;
 
+function clone(obj: GitHubPublisherSettings): GitHubPublisherSettings {
+	return JSON.parse(JSON.stringify(obj));
+}
 /**
  *
  * Credit : Style Settings Plugin
@@ -50,22 +53,23 @@ export class ImportModal extends Modal {
 							await migrateSettings(oldSettings, this.plugin);
 							noticeLog(i18next.t("informations.migrating.oldSettings"), this.plugin.settings);
 						} else {
-							noticeLog("Imported settings as new format", this.plugin.settings);
-							importedSettings = importedSettings as GitHubPublisherSettings;
+							noticeLog(i18next.t("informations.migrating.normalFormat"), this.plugin.settings);
+							importedSettings = importedSettings as unknown as GitHubPublisherSettings;
+							//create a copy of actual settings
+							const actualSettings = clone(this.plugin.settings);
 							if (!(importedSettings.upload.replaceTitle instanceof Array)) {
 								importedSettings.upload.replaceTitle = [importedSettings.upload.replaceTitle];
 							}
-							
-							if (Object.keys(importedSettings).includes("github")) {
-								importedSettings.github.repo = this.plugin.settings.github.repo;
-								importedSettings.github.token = this.plugin.settings.github.token;
-								importedSettings.github.user = this.plugin.settings.github.user;
-							}
+
 							for (const [key, value] of Object.entries(importedSettings)) {
 								// @ts-ignore
 								this.plugin.settings[key] = value;
 							}
-							this.plugin.saveSettings();
+							this.plugin.settings.plugin = actualSettings.plugin;
+							this.plugin.settings.github.repo = actualSettings.github.repo;
+							this.plugin.settings.github.token = actualSettings.github.token;
+							this.plugin.settings.github.user = actualSettings.github.user;
+							await this.plugin.saveSettings();
 						}
 						this.close();
 					} catch (e) {
@@ -169,9 +173,13 @@ export class ExportModal extends Modal {
 			.setName(i18next.t("modals.export.title") )
 			.setDesc(i18next.t("modals.export.desc") )
 			.then((setting) => {
-				const regex = new RegExp(",?\\s*\"(repo|user|token)\":\\s*\"[\\w\\.\\-\\/:]*\",?", "gm");
-				const censuredSettings: GitHubPublisherSettings = this.plugin.settings;
-				const output = JSON.stringify(censuredSettings, null, 2).replace(regex, "").replace(/,?\s*"(repo|user|token)":\s*"[\w\.\-\/:]*",?/gm, ",");
+				//create a copy of the settings object
+				const censuredSettings = clone(this.plugin.settings);
+				delete censuredSettings.github.repo;
+				delete censuredSettings.github.token;
+				delete censuredSettings.github.user;
+				delete censuredSettings.plugin;
+				const output = JSON.stringify(censuredSettings, null, 2);
 				setting.controlEl.createEl("a",
 					{
 						cls: "github-publisher-copy",
