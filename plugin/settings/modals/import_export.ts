@@ -169,9 +169,9 @@ export class ExportModal extends Modal {
 			.setName(i18next.t("modals.export.title") )
 			.setDesc(i18next.t("modals.export.desc") )
 			.then((setting) => {
-				const regex = new RegExp(",?\\s*\"(repo|user|token|links)\":\\s*\"[\\w\\.\\-\\/:]*\",?", "gm");
+				const regex = new RegExp(",?\\s*\"(repo|user|token)\":\\s*\"[\\w\\.\\-\\/:]*\",?", "gm");
 				const censuredSettings: GitHubPublisherSettings = this.plugin.settings;
-				const output = JSON.stringify(censuredSettings, null, 2).replace(regex, "");
+				const output = JSON.stringify(censuredSettings, null, 2).replace(regex, "").replace(/,?\s*"(repo|user|token)":\s*"[\w\.\-\/:]*",?/gm, ",");
 				setting.controlEl.createEl("a",
 					{
 						cls: "github-publisher-copy",
