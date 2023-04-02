@@ -115,6 +115,7 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 					internal: old.convertForGithub,
 					unshared: old.convertInternalNonShared,
 					wiki: old.convertWikiLinks,
+					slugify: false,
 				},
 			},
 			embed: {
