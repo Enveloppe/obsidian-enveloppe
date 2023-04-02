@@ -21,7 +21,7 @@ import {
 	shareOnlyEdited
 } from "./commands";
 import i18next from "i18next";
-import {getTitleField, regexOnFileName} from "./conversion/filePathConvertor";
+import {getTitleField, regexOnFileName} from "./conversion/filePath";
 import { ressources, translationLanguage } from "./i18n/i18next";
 import {migrateSettings} from "./settings/migrate";
 

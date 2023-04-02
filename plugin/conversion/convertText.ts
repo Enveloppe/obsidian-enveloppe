@@ -15,10 +15,10 @@ import {
 	TFile,
 	Vault,
 } from "obsidian";
-import { getDataviewPath } from "./filePathConvertor";
+import { getDataviewPath } from "./filePath";
 import { getAPI, Link } from "obsidian-dataview";
 import { noticeLog } from "../src/utils";
-import { convertLinkCitation, convertWikilinks } from "./convertLinks";
+import { convertLinkCitation, convertWikilinks } from "./links";
 import findAndReplaceText from "./findAndReplaceText";
 import GithubPublisher from "../main";
 import i18next from "i18next";

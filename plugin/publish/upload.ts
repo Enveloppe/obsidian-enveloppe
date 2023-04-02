@@ -22,7 +22,7 @@ import i18next from "i18next";
 import {
 	getReceiptFolder,
 	getImageLinkOptions,
-} from "../conversion/filePathConvertor";
+} from "../conversion/filePath";
 import { ShareStatusBar } from "../src/status_bar";
 import GithubPublisherPlugin from "../main";
 import {
