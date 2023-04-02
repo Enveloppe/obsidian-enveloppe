@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.6.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.6.0-1...5.6.0-2) (2023-04-02)
+
+
+### Bug Fixes
+
+* forgot to add slugify for migration ([5a9b3a3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5a9b3a3485977b80fcd169d91501e7655dc24af4))
+
 ## [5.6.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.6.0-0...5.6.0-1) (2023-04-02)
 
 
