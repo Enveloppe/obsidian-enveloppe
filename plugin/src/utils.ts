@@ -10,7 +10,7 @@ import {
 	ListeEditedFiles
 } from "../settings/interface";
 import Publisher from "../publish/upload";
-import {getReceiptFolder} from "../conversion/filePathConvertor";
+import {getReceiptFolder} from "../conversion/filePath";
 import i18next from "i18next";
 
 /**
@@ -534,7 +534,7 @@ function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
 
 export function getCategory(frontmatter: FrontMatterCache, settings: GitHubPublisherSettings) {
 	const key = settings.upload.yamlFolderKey;
-	let category = frontmatter[key] !== undefined ? frontmatter[key] : settings.upload.defaultName;
+	let category = frontmatter[key] ?? settings.upload.defaultName;
 	if (category instanceof Array) {
 		category = category.join("/");
 	}
