@@ -51,7 +51,6 @@ esbuild.context({
 	plugins: [moveStyles],
 	logLevel: "info",
 	treeShaking: true,
-	minify: prod,
 }).then(context => {
 	if (!prod) context.watch();
 	else {
