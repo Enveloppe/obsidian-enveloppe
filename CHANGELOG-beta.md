@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.6.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.6.0-0...5.6.0-1) (2023-04-02)
+
+
+### Bug Fixes
+
+* **export:** broken json with cleaning ([e476572](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e476572aa48a2178c2c3b35d20153e2cd83e92e8))
+
 ## [5.6.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.5.5...5.6.0-0) (2023-04-01)
 
 
