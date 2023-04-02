@@ -121,7 +121,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 	renderSettingsPage(tabId: string) {
 		this.settingsPage.empty();
-		console.log("renderSettingsPage", tabId);
 		switch (tabId) {
 		case "github-configuration":
 			this.renderGithubConfiguration();
@@ -130,7 +129,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			this.renderUploadConfiguration();
 			break;
 		case "text-conversion":
-			console.log("render Text conversion", tabId);
 			this.renderTextConversion();
 			break;
 		case "embed-configuration":
