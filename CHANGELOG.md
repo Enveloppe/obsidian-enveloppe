@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.6.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.6.0-2...5.6.0) (2023-04-02)
+
+
+### Bug Fixes
+
+* crash when category is null/undefined ([26aa974](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/26aa974847371a6b28e00bcf140458f200a5a5b8)), closes [#132](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/132)
+
 ## [5.5.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.5.4...5.5.5) (2023-04-01)
 
 
