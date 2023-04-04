@@ -152,7 +152,7 @@
 				},
 				"slugify": {
 					"title": "Slugifier l'ancre des liens markdown",
-					"desc": "Les ancres (pointant vers les titres) seront slugifiés en transformant le texte en minuscule et remplaçant les espace par des tirets. Ne fonctionne uniquement pour des liens markdown (incluant la transformation depuis les wikilinks)."
+					"desc": "Normaliser le lien (slug) des liens d'ancrage (pointant vers le titre de la rubrique). Transforme le texte en minuscules. Remplace l'espace par un tiret. Applicable uniquement aux liens d'ancrage dans la syntaxe de lien markdown."
 
 				},
 				"title": "Liens",

@@ -152,7 +152,7 @@
 				},
 				"slugify": {
 					"title": "Sluglify anchor in markdown links",
-					"desc": "Anchors (pointing to titles) will be slugified by transforming the text to lower case and replacing spaces with dashes. Only works for markdown links (including transformation from wikilinks)."
+					"desc": "Standardize the slug of anchor links (pointing to heading title). Transform the slug into all lower case. Replace space with hyphen. Applicable only for anchor links in markdown link syntax."
 				},
 				"title": "Links",
 				"wikilinks": {
