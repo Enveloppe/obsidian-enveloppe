@@ -1,7 +1,7 @@
 name: Add labels
 on:
   issues:
-    types: [opened]
+    types: [opened, edited, reopened]
 jobs:
   add_labels:
     runs-on: ubuntu-latest
