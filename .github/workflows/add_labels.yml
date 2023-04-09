@@ -7,16 +7,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/github-script@v5
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ startsWith(github.event.issue.title, '[Plugin][FR]:') }}
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const labels = context.payload.issue.body.match(/(?<=labels: )\[(.*?)\]/g)
-            if (labels) {
-              const labelsToAdd = labels[0].replace(/[\[\]"]+/g, '').split(', ')
-              github.issues.addLabels({
-                ...context.repo,
-                issue_number: context.issue.number,
-                labels: labelsToAdd
-              })
-            }
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            ✨ Enhancement
+            💎 Obsidian Github Publisher
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ startsWith(github.event.issue.title, '[MKDOCS][FR]:') }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            ✨ Enhancement
+            📫 Material Mkdocs Template
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ startsWith(github.event.issue.title, '[Plugin][Bug]:') }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            🐛 Bug
+            💎 Obsidian Github Publisher
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ startsWith(github.event.issue.title, '[MKDOCS][Bug]:') }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            🐛 Bug
+            📫 Material Mkdocs Template
+      
