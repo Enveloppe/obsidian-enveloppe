@@ -1,0 +1,22 @@
+name: Add labels
+on:
+  issues:
+    types: [opened]
+jobs:
+  add_labels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/github-script@v5
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const labels = context.payload.issue.body.match(/(?<=labels: )\[(.*?)\]/g)
+            if (labels) {
+              const labelsToAdd = labels[0].replace(/[\[\]"]+/g, '').split(', ')
+              github.issues.addLabels({
+                ...context.repo,
+                issue_number: context.issue.number,
+                labels: labelsToAdd
+              })
+            }

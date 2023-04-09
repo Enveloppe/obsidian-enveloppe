@@ -1,12 +1,11 @@
 name: "[Mkdocs Publisher Template] Feature request"
 description: Suggest an idea for the publisher mkdocs template.
-title: "[FR]: "
+title: "[MKDOCS][FR]: "
 labels: ["✨ Enhancement", "📫 Material Mkdocs Template"]
 assignees:
   - lisandra-dev
 body:
   - type: markdown
-    id: info-user
     attributes:
       value: |
         Thanks for this report!

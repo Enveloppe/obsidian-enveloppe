@@ -1,12 +1,11 @@
 name: "[Obsidian Github Publisher] Bug report"
 description: Fill a bug report for Obsidian Github Publisher (Plugin)
-title: "[Bug]: "
+title: "[Plugin][Bug]: "
 labels: ["🐛 Bug", "💎 Obsidian Github Publisher"]
 assignees:
   - lisandra-dev
 body:
   - type: markdown
-    id: info-user
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report.
@@ -110,7 +109,7 @@ body:
       label: Configuration
       description: |
         Use the export configuration to paste it here.
-      render: json
+      render: JSON
     validations:
       required: true
   - type: textarea
@@ -119,7 +118,7 @@ body:
       label: Relevant log output
       description: |
         Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks. You can open the Obsidian's console with "CTRL+MAJ+I."
-      render: shell
+      render: bash session
   - type: dropdown
     id: version
     attributes:
@@ -145,6 +144,6 @@ body:
       label: Obsidian information
       description: |
         Please copy and paste the information about your Obsidian version using the command "show debug info" in the obsidian's commands palette.
-      render: shell
+      render: bash session
     validations:
       required: true

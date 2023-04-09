@@ -1,12 +1,11 @@
 name: "[Mkdocs Publisher Template] Bug report"
 description: Fill a bug report for the mkdocs publisher template
-title: '[Bug]: '
+title: '[MKDOCS][Bug]: '
 labels: ["🐛 Bug ", "📫 Material Mkdocs Template"]
 assignees:
   - lisandra-dev
 body:
   - type: markdown
-    id: info-user
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report.
@@ -27,7 +26,7 @@ body:
     attributes:
       label: Requirements
       description: Paste your `requirements.txt` file here
-      render: shell
+      render: bash session
     validations:
       required: true
   - type: textarea
@@ -35,7 +34,7 @@ body:
     attributes:
       label: Mkdocs.yml
       description: Paste your `mkdocs.yml` file here
-      render: yaml
+      render: YAML
     validations:
       required: true
   - type: textarea
@@ -43,7 +42,7 @@ body:
     attributes:
       label: Error
       description: Paste the error you got here
-      render: shell
+      render: bash session
     validations:
       required: true
   - type: textarea
