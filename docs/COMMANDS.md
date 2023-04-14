@@ -9,7 +9,7 @@ There are four types of commands :
 - `Upload`
 - `Refresh`
 - `Purge`
-- `Test`
+- `Test` and `Check`
 
 ## Upload
 
@@ -46,6 +46,18 @@ This command will clean your configured repository by removing the files you del
 Again, only one command : `Test the connection to the configured repository`.
 
 It will check if the repository exists, and also the main branch you set. It also checks whether you forgot (or not) to set a value.
+
+### Check
+
+The commands is `Check the rate limit of the GitHub API`.
+It will show you the number of requests you have left, and the time when the limit will be reset.
+
+This commands is also run along the verification of the repository value, and check if you will reach the limit using the commands (upload, refresh and purge), based on the number of files you will send, update or delete.
+
+> [!note]
+> The rate limit is 5000 requests per hour. If you reach the limit, you will have to wait for the next hour to be able to push again.
+> Exceding the limit will result in a `403` error.
+> More information about the rate limit can be found [here](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting).
 
 ## Copy path
 
