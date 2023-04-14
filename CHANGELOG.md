@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [5.7.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.6.0...5.7.0) (2023-04-14)
+
+
+### Features
+
+* adding rateLimitingcheck when checking repo ([8688ee4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8688ee4d943e195ef3fdb9d8bb64135c8cd77258))
+* the ratelimit number is the number of note to send ([6bc1a18](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6bc1a182f38861a1a0cef08f5d613a9479a68912))
+
+
+### Bug Fixes
+
+* name not exist if branch exists ([10e8b1b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/10e8b1b607032ba58f46818da5fcebff6688ce14))
+* settings not exists in utils ([06a6502](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/06a65025c703dfa1cedc8733b45b2033763f4163))
+
 ## [5.6.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.6.0-2...5.6.0) (2023-04-02)
 
 
