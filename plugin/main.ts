@@ -41,7 +41,9 @@ export default class GithubPublisher extends Plugin {
 	 */
 	getTitleFieldForCommand(file:TFile, frontmatter: FrontMatterCache): string {
 		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
-	}	
+	}
+
+
 	/**
 	 * Create a new instance of Octokit to load a new instance of GithubBranch 
 	*/
@@ -317,8 +319,15 @@ export default class GithubPublisher extends Plugin {
 				return false;
 			},
 		});
-		
-		// get the trigger github:token-changed
+
+		this.addCommand({
+			id: "check-rate-limit",
+			name: i18next.t("commands.checkValidity.rateLimit.command"),
+			callback: async () => {
+				const publisher = this.reloadOctokit();
+				await publisher.verifyRateLimitAPI(true);
+			}
+		});
 	}
 
 	/**

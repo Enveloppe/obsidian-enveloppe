@@ -12,7 +12,12 @@
 			},
 			"repoExistsTestBranch": "Repository {{- repo.owner}}/{{- repo.repo}} exists. Now testing the {{- main}} branch.",
 			"success": "{{- repo.owner}}/{{- repo.repo}} seems to be valid!",
-			"title": "Test the connection to the configured repository"
+			"title": "Test the connection to the configured repository",
+			"rateLimit" : {
+				"command" : "Check the rate limit of the GitHub API",
+				"limited": "You have reached the rate limit of the GitHub API. The limit will be reset at {{- resetTime}}.",
+				"notLimited": "You are not rate limited. You can make {{- remaining}} requests before the limit is reset at {{- resetTime}}."
+			}
 		},
 		"copyLink": "Create a link to this note",
 		"publisherDeleteClean": "Purge depublished and deleted files",

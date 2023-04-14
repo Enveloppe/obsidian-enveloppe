@@ -12,7 +12,13 @@
 			},
 			"repoExistsTestBranch": "Le dépôt {{- repo.owner}}/{{- repo.repo}} existe. Maintenant, nous allons tester la branche {{- repo.branch}}",
 			"success": "{{- repo.owner}}/{{- repo.repo}} semble valide !",
-			"title": "Tester la connexion au dépôt configuré"
+			"title": "Tester la connexion au dépôt configuré",
+			"rateLimit" : {
+				"command" : "Vérifier la limite de requêtes de l'API GitHub",
+				"limited" : "Vous avez atteint la limite de requêtes Github. La limite sera réinitialisée à {{- resetTime}}. minutes.",
+				"notLimited": "Vous n'êtes pas limité par Github. Vous pouvez encore faire {{- remaining}} requêtes, et la limite sera réinitialisée à {{- resetTime}}."
+			}
+
 		},
 		"copyLink": "Créer un lien vers cette note",
 		"publisherDeleteClean": "Purger les fichiers dépubliés et supprimés",

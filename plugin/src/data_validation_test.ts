@@ -206,7 +206,7 @@ export async function checkRepositoryValidityWithRepoFrontmatter(
 		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, settings);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, true);
-			return true;
+			return await PublisherManager.verifyRateLimitAPI();
 		}
 	}
 	catch (e) {
