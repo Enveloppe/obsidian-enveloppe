@@ -12,6 +12,8 @@ import {
 import Publisher from "../publish/upload";
 import {getReceiptFolder} from "../conversion/filePath";
 import i18next from "i18next";
+import {Octokit} from "@octokit/core";
+
 
 /**
  * Create a notice message for the log
@@ -539,4 +541,34 @@ export function getCategory(frontmatter: FrontMatterCache, settings: GitHubPubli
 		category = category.join("/");
 	}
 	return category;
+}
+
+/**
+	 * The REST API of Github have a rate limit of 5000 requests per hour.
+	 * This function check if the user is over the limit, or will be over the limit after the next request.
+	 * If the user is over the limit, the function will display a message to the user.
+	 * It also calculate the time remaining before the limit is reset.
+	 */
+export async function verifyRateLimitAPI(octokit: Octokit, commands=false, numberOfFile=1): Promise<boolean> {
+	const rateLimit = await octokit.request("GET /rate_limit");
+	const remaining = rateLimit.data.resources.core.remaining;
+	const reset = rateLimit.data.resources.core.reset;
+	const date = new Date(reset * 1000);
+	const time = date.toLocaleTimeString();
+	if (remaining <= numberOfFile) {
+		new Notice(i18next.t("commands.checkValidity.rateLimit.limited", {resetTime: time}));
+		return false;
+	}
+	if (!commands) {
+		noticeLog(i18next.t("commands.checkValidity.rateLimit.notLimited", {
+			remaining: remaining,
+			resetTime: time
+		}), this.settings);
+	} else {
+		new Notice(i18next.t("commands.checkValidity.rateLimit.notLimited", {
+			remaining: remaining,
+			resetTime: time
+		}));
+	}
+	return true;
 }

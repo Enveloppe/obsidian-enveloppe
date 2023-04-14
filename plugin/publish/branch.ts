@@ -119,7 +119,7 @@ export class GithubBranch extends FilesManagement {
 				const mainBranch = allBranch.data.find(
 					(branch: { name: string }) => branch.name === branchName
 				);
-				noticeLog(i18next.t("publish.branch.alreadyExists", {branchName: mainBranch.name, repo: repoFrontmatter}), this.settings);
+				noticeLog(i18next.t("publish.branch.alreadyExists", {branchName: branchName, repo: repoFrontmatter}), this.settings);
 				return !!mainBranch;
 			} catch (e) {
 				noticeLog(e, this.settings);
@@ -293,35 +293,7 @@ export class GithubBranch extends FilesManagement {
 		}
 	}
 
-	/**
-	 * The REST API of Github have a rate limit of 5000 requests per hour.
-	 * This function check if the user is over the limit, or will be over the limit after the next request.
-	 * If the user is over the limit, the function will display a message to the user.
-	 * It also calculate the time remaining before the limit is reset.
-	 */
-	async verifyRateLimitAPI(commands=false, numberOfFile=1): Promise<boolean> {
-		const rateLimit = await this.octokit.request("GET /rate_limit");
-		const remaining = rateLimit.data.resources.core.remaining;
-		const reset = rateLimit.data.resources.core.reset;
-		const date = new Date(reset * 1000);
-		const time = date.toLocaleTimeString();
-		if (remaining <= numberOfFile) {
-			new Notice(i18next.t("commands.checkValidity.rateLimit.limited", {resetTime: time}));
-			return false;
-		}
-		if (!commands) {
-			noticeLog(i18next.t("commands.checkValidity.rateLimit.notLimited", {
-				remaining: remaining,
-				resetTime: time
-			}), this.settings);
-		} else {
-			new Notice(i18next.t("commands.checkValidity.rateLimit.notLimited", {
-				remaining: remaining,
-				resetTime: time
-			}));
-		}
-		return true;
-	}
+
 
 	/**
 	 * Use octokit to check if:

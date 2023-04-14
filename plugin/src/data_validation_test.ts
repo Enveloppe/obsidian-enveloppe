@@ -1,14 +1,14 @@
 import {FrontMatterCache, Notice, TFile, MetadataCache } from "obsidian";
 import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter} from "../settings/interface";
 import {GithubBranch} from "../publish/branch";
-import {getRepoFrontmatter, noticeLog} from "./utils";
+import {getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from "./utils";
 import i18next from "i18next";
 
 /**
  *  Check if the file is a valid file to publish
- * @param {TFile} file
- * @param {GitHubPublisherSettings} settings
+ * @param {string}  sharekey the key to check if the file is shared
  * @param {FrontMatterCache} frontmatter
+ * @param {FrontmatterConvert} frontmatterSettings
  * @returns {boolean} true if the file can be published
  */
 export function isInternalShared(
@@ -207,7 +207,7 @@ export async function checkRepositoryValidityWithRepoFrontmatter(
 		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, settings);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, true);
-			return await PublisherManager.verifyRateLimitAPI(false, numberOfFile);
+			return await verifyRateLimitAPI(PublisherManager.octokit, false, numberOfFile);
 		}
 	}
 	catch (e) {

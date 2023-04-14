@@ -8,7 +8,7 @@ import {
 	RepoFrontmatter,
 } from "./settings/interface";
 import { OldSettings } from "./settings/migrate";
-import { getRepoFrontmatter, createLink } from "./src/utils";
+import { getRepoFrontmatter, createLink, verifyRateLimitAPI } from "./src/utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
 import {checkRepositoryValidity, isShared} from "./src/data_validation_test";
@@ -324,8 +324,7 @@ export default class GithubPublisher extends Plugin {
 			id: "check-rate-limit",
 			name: i18next.t("commands.checkValidity.rateLimit.command"),
 			callback: async () => {
-				const publisher = this.reloadOctokit();
-				await publisher.verifyRateLimitAPI(true);
+				await verifyRateLimitAPI(this.reloadOctokit().octokit);
 			}
 		});
 	}
