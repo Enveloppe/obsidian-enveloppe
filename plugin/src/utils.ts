@@ -549,7 +549,7 @@ export function getCategory(frontmatter: FrontMatterCache, settings: GitHubPubli
 	 * If the user is over the limit, the function will display a message to the user.
 	 * It also calculate the time remaining before the limit is reset.
 	 */
-export async function verifyRateLimitAPI(octokit: Octokit, commands=false, numberOfFile=1): Promise<boolean> {
+export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPublisherSettings, commands=false, numberOfFile=1): Promise<boolean> {
 	const rateLimit = await octokit.request("GET /rate_limit");
 	const remaining = rateLimit.data.resources.core.remaining;
 	const reset = rateLimit.data.resources.core.reset;
@@ -563,7 +563,7 @@ export async function verifyRateLimitAPI(octokit: Octokit, commands=false, numbe
 		noticeLog(i18next.t("commands.checkValidity.rateLimit.notLimited", {
 			remaining: remaining,
 			resetTime: time
-		}), this.settings);
+		}), settings);
 	} else {
 		new Notice(i18next.t("commands.checkValidity.rateLimit.notLimited", {
 			remaining: remaining,

@@ -75,7 +75,7 @@ async function deleteFromGithubOneRepo(
 		repo
 	);
 	const filesInRepo = await filterGithubFile(getAllFile, settings);
-	const verifyRateLimit = await verifyRateLimitAPI(octokit, false, filesInRepo.length);
+	const verifyRateLimit = await verifyRateLimitAPI(octokit, settings, false, filesInRepo.length);
 	if (!verifyRateLimit) {
 		return {success: false, deleted: [], undeleted: []};
 	}
