@@ -299,13 +299,13 @@ export class GithubBranch extends FilesManagement {
 	 * If the user is over the limit, the function will display a message to the user.
 	 * It also calculate the time remaining before the limit is reset.
 	 */
-	async verifyRateLimitAPI(commands=false): Promise<boolean> {
+	async verifyRateLimitAPI(commands=false, numberOfFile=1): Promise<boolean> {
 		const rateLimit = await this.octokit.request("GET /rate_limit");
 		const remaining = rateLimit.data.resources.core.remaining;
 		const reset = rateLimit.data.resources.core.reset;
 		const date = new Date(reset * 1000);
 		const time = date.toLocaleTimeString();
-		if (remaining <= 1) {
+		if (remaining <= numberOfFile) {
 			new Notice(i18next.t("commands.checkValidity.rateLimit.limited", {resetTime: time}));
 			return false;
 		}

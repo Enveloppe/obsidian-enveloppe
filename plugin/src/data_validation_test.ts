@@ -200,13 +200,14 @@ export async function checkRepositoryValidity(
 export async function checkRepositoryValidityWithRepoFrontmatter(
 	PublisherManager: GithubBranch,
 	settings: GitHubPublisherSettings,
-	repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]
+	repoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
+	numberOfFile=1
 ): Promise<boolean> {
 	try {
 		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, settings);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, true);
-			return await PublisherManager.verifyRateLimitAPI();
+			return await PublisherManager.verifyRateLimitAPI(false, numberOfFile);
 		}
 	}
 	catch (e) {
