@@ -229,8 +229,8 @@
 			"testConnection": "Test connection",
 			"title": "GitHub Configuration",
 			"username": {
-				"desc": "Your GitHub username.",
-				"title": "Github Username"
+				"desc": "The username or organization hosting the repo in GitHub",
+				"title": "GitHub Username"
 			}
 		},
 		"githubWorkflow": {
