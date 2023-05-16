@@ -12,7 +12,7 @@
         "dev": "node dev.js",
         "preexport": "npm run build",
         "export": "node export.js",
-        "bump": "commit-and-tag-version",
+        "bump": "node commit-and-tag-version.js",
         "postbump": "git push --follow-tags origin master",
         "preupgrade": "npm run bump",
         "upgrade": "npm run export",
