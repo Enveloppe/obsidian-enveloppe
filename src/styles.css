@@ -1,0 +1,265 @@
+/* styles.css */
+
+summary.github-publisher-summary {
+	border-top: 1px solid var(--background-modifier-border);
+	padding-top: 10px;
+}
+.github-publisher-censor-desc p {
+	margin: 0 !important;
+}
+.setting-item.github-publisher-censor-desc {
+	padding: 0;
+}
+.setting-item.github-publisher-censor-entry {
+	border: 0 !important;
+	padding: 5px !important;
+}
+
+hr.github-publisher-hr {
+	margin: 1px !important;
+	padding-bottom: 1px;
+}
+.setting-item.github-publisher-censor-entry input[placeholder="flags"] {
+	width: 50px;
+}
+
+.setting-item.github-publisher-censor-entry .setting-item-info {
+	display: none;
+}
+
+button.github-publisher-censor-flags {
+	box-shadow: none;
+	background-color: transparent;
+	border: 0;
+	padding: 0 0 0 5px;
+	margin: 0;
+}
+button.github-publisher-censor-flags:hover {
+	background-color: transparent;
+	box-shadow: none;
+	border: 0;
+}
+.github-publisher-textarea textarea {
+	width: 250px;
+	height: 100px;
+}
+.settings-tab-bar.github-publisher {
+	display: flex;
+	flex-direction: row;
+	gap: 4px;
+	overflow: hidden;
+	padding: 0;
+}
+
+.setting-item.github-publisher-export-import {
+	display: inline;
+	padding-bottom: 10px;
+}
+
+.github-publisher-export-import > .setting-item-info {
+	display: flex;
+	flex-direction: row;
+	gap: 4px;
+	overflow: hidden;
+	padding: 0;
+}
+
+.setting-item.github-publisher-export-import > .setting-item-control {
+	padding-bottom: 10px;
+}
+
+.settings-tab.github-publisher {
+	padding: 10px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 5px;
+}
+.settings-tab.github-publisher:hover {
+	background-color: var(--background-modifier-hover);
+}
+@media screen and (max-width: 900px) {
+	.settings-tab-bar.github-publisher,
+	.setting-item.github-publisher-export-import > .setting-item-control {
+		flex-direction: column;
+		width: 100%;
+	}
+
+	.setting-item.github-publisher-export-import
+		> .setting-item-control
+		button {
+		width: 100%;
+	}
+	a.github-publisher-copy+button {
+		height: 10%;
+	}
+}
+@media screen and (max-width: 1200px) {
+	.settings-tab-bar.github-publisher {
+		flex-wrap: wrap;
+	}
+	.settings-tab.github-publisher {
+		border-bottom: 1px solid var(--background-modifier-border);
+	}
+	.settings-tab-bar.github-publisher {
+		border-bottom: 0;
+	}
+}
+.settings-tab-active.github-publisher {
+	background-color: var(--color-accent);
+	color: var(--text-on-accent);
+	border: 0;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+.settings-tab-name.github-publisher {
+	font-weight: bold;
+	text-align: center;
+}
+.settings-tab-icon.github-publisher {
+	text-align: center;
+}
+.settings-tab-page.github-publisher > .setting-item:first-child {
+	margin-top: 15px;
+}
+.settings-tab-page.github-publisher h5 {
+	margin-bottom: 10px !important;
+}
+.settings-tab-page.github-publisher code,
+code.code-title.github-publisher.list-changed,
+.code {
+	color: var(--code-normal);
+	font-family: var(--font-monospace);
+	background-color: var(--color-background);
+	border-radius: var(--radius-s);
+	font-size: var(--code-size);
+}
+
+.settings-tab-page.github-publisher code.code-title,
+
+.code.code-title {
+	font-size: calc(var(--code-size) * 12px);
+	font-weight: bolder;
+	text-decoration: underline;
+}
+
+.setting-item.github-publisher-title input[type="text"][placeholder="title"] {
+	width: 100%;
+}
+
+button.github-publisher-connect-button {
+	margin: 0 50%;
+}
+
+.setting-item.github-publisher-no-display > .setting-item-info {
+	display: none;
+}
+
+.github-publisher-import-error {
+	display: none;
+	color: var(--text-error);
+}
+
+.github-publisher-import-error.active {
+	display: block;
+}
+
+.github-publisher-import-input {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.github-publisher-import-label,
+a.github-publisher-copy,
+a.github-publisher-download{
+	color: var(--text-normal);
+	font-size: var(--font-ui-small);
+	border-radius: var(--button-radius);
+	border: 0;
+	padding: var(--size-4-1) var(--size-4-3);
+	font-weight: var(--input-font-weight);
+	font-family: inherit;
+	cursor: pointer;
+	background-color: var(--interactive-normal);
+	box-shadow: var(--input-shadow);
+	text-align: center;
+	white-space: nowrap;
+	text-decoration: none;
+	transition: background-color 0.1s ease, box-shadow 0.1s ease;
+}
+
+.github-publisher-import-label:hover,
+a.github-publisher-copy:hover,
+a.github-publisher-download:hover{
+	background-color: var(--interactive-hover);
+	box-shadow: var(--input-shadow-hover);
+}
+
+.github-publisher-import-save-button {
+	text-align: center;
+	width: 100%;
+}
+
+.github-publisher-copy,
+.github-publisher-download {
+	position: relative;
+	display: inline-block;
+	margin-left: 10px;
+
+}
+
+.github-publisher-copy:before {
+	color: var(--interactive-success);
+	content: "✓";
+	position: absolute;
+	left: -18px;
+	font-weight: bold;
+	opacity: 0;
+	transition: 150ms opacity ease-in-out;
+}
+
+.github-publisher-copy.success:before {
+	opacity: 1;
+}
+
+.github-publisher-export-textarea,
+.github-publisher-import-textarea {
+	width: 100%;
+	height: 200px;
+	font-family: var(--font-monospace);
+	font-size: 14px;
+}
+
+.github-publisher-disabled-button {
+	pointer-events: none;
+	opacity: 0.5;
+	font-style: italic;
+	color: var(--text-muted);
+	cursor: default;
+	box-shadow: none !important;
+	border: none !important;
+	background-color: transparent !important;
+	font-family: var(--font-monospace);
+
+}
+
+.github-publisher-modals {
+	border-top: 0 !important;
+}
+
+h2.github-publisher.title {
+	text-align: center;
+	color: var(--color-green);
+}
+
+h2.github-publisher.title.error {
+	color: var(--text-error);
+	padding: 10px 10px;
+}
+
+.github-publisher.emoji {
+	padding-right: 5px;
+	font-size: 18px;
+}
