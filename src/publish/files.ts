@@ -14,7 +14,7 @@ import {
 } from "../conversion/filePath";
 import Publisher from "./upload";
 import GithubPublisher from "../main";
-import { getRepoFrontmatter, noticeLog } from "plugin/src/utils";
+import { getRepoFrontmatter, noticeLog } from "../src/utils";
 import { isAttachment } from "../src/data_validation_test";
 import { getAPI, Link } from "obsidian-dataview";
 
