@@ -47,7 +47,7 @@ That's it! However, there are many options that a simple README cannot cover, so
   
 ## ⚙️ Usage  
 
-The plugin adds seven commands in the palette, one of which is also available in the right-click menu.  
+The plugin adds 8 commands in the palette, one of which is also available in the right-click menu.  
 - `Upload single current active note` (*available in the right-click menu*)  
 - `Upload all notes`  
 - `Upload unpublished notes`  
@@ -55,6 +55,7 @@ The plugin adds seven commands in the palette, one of which is also available in
 - `Refresh all published notes`  
 - `Purge depublished and deleted files`  
 - `Test the connection to the configured repository`  
+- `Check the rate limit of the GitHub API`   
   
 Each of the commands are explained [here](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/COMMANDS.md).  
   
