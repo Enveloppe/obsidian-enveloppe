@@ -1,6 +1,13 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [5.7.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.7.0...5.7.1) (2023-05-16)
+
+
+### Bug Fixes
+
+* **menu:** editor menu error in canvas ([da8deb1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/da8deb1551eb5261eaf67af8a37de6395f854953))
 
 ## [5.7.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.6.0...5.7.0) (2023-04-14)
 
