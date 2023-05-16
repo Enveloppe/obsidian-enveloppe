@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.0.3-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/v6.0.2...v6.0.3-0) (2023-05-16)
+
 ### [6.0.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/v6.0.2-beta.0...v6.0.2) (2023-05-16)
 
 ### [6.0.2-beta.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/v6.0.1...v6.0.2-beta.0) (2023-05-16)
