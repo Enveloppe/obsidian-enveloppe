@@ -1,45 +1,40 @@
-name: Release
-"on":
+name: Bump and release version
+on:
   workflow_dispatch:
-  push:
-    tags:
-      - "*"
+
 env:
   PLUGIN_NAME: obsidian-mkdocs-publisher
   STYLE: true
 permissions:
   contents: write
+  packages: write
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Build
-        id: build
+      - name: Install dependencies
+        run: npm install
+      - name: Bump version
         run: |
-          npm install
-          npm run build  -- --output-dir ${{ env.PLUGIN_NAME }}
-      - name: Get version
-        id: tags
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          npm run bump --ignore-scripts
+      - name: Get version number
         run: |
           echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
-          echo ${{ env. VERSION }}
-          echo "## Release ${{ env. VERSION }}" >> $GITHUB_STEP_SUMMARY
-      - name: Create zip
+          echo "### VERSION : ${{ env.VERSION }}" >> $GITHUB_STEP_SUMMARY
+          echo ${{ env.VERSION }}
+      - name: build
+        run: npm run build  -- --output-dir ${{ env.PLUGIN_NAME }}
+      - name: Zip files
         run: |
           zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
           echo "### Files" >> $GITHUB_STEP_SUMMARY
           ls >> $GITHUB_STEP_SUMMARY
-      - name: Delete release if workflow dispatch
-        if: github.event_name == 'workflow_dispatch'
-        continue-on-error: true
-        run: gh release delete ${{ env.VERSION }} -R ${{ github.repository }} -y
-        env:
-          GH_TOKEN: ${{ github.token }}
       - name: Create changelog
         run: |
           npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > CHANGELOG-LATEST.md
@@ -79,3 +74,5 @@ jobs:
             ${{ env.PLUGIN_NAME }}.zip
             ${{ env.PLUGIN_NAME }}/main.js
             ${{ env.PLUGIN_NAME }}/manifest.json
+      - name: Push updated changes
+        run: git push --follow-tags origin master
