@@ -125,11 +125,12 @@ export default class GithubPublisher extends Plugin {
 				
 			})
 		);
-
+		
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor, view) => {
-				const frontmatter = this.app.metadataCache.getFileCache(view.file).frontmatter;
+				const frontmatter = view.file instanceof TFile ? this.app.metadataCache.getFileCache(view.file).frontmatter : null;
 				if (
+					frontmatter && 
 					isShared(frontmatter, this.settings, view.file) &&
 					this.settings.plugin.editorMenu
 				) {
