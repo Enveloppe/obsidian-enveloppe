@@ -10,7 +10,7 @@ import { OldSettings } from "./settings/migrate";
 import { verifyRateLimitAPI } from "./src/utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
-import {isShared} from "./src/data_validation_test";
+import {getRepoSharedKey, isShared} from "./src/data_validation_test";
 import {
 	shareOneNote,
 } from "./commands/commands";
@@ -164,8 +164,9 @@ export default class GithubPublisher extends Plugin {
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
 				const frontmatter = file instanceof TFile ? this.app.metadataCache.getFileCache(file).frontmatter : null;
+				const getSharedKey = getRepoSharedKey(this.settings, frontmatter);
 				if (
-					isShared(frontmatter, this.settings, file) &&
+					isShared(frontmatter, this.settings, file, getSharedKey) &&
 					this.settings.plugin.fileMenu
 				) {
 					const fileName = this.getTitleFieldForCommand(file, this.app.metadataCache.getFileCache(file).frontmatter).replace(".md", "");
@@ -180,7 +181,7 @@ export default class GithubPublisher extends Plugin {
 									this.reloadOctokit(),
 									this.settings,
 									file,
-									null,
+									getSharedKey,
 									this.app.metadataCache,
 									this.app.vault
 								);
@@ -195,9 +196,10 @@ export default class GithubPublisher extends Plugin {
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor, view) => {
 				const frontmatter = view.file instanceof TFile ? this.app.metadataCache.getFileCache(view.file).frontmatter : null;
+				const otherRepo = getRepoSharedKey(this.settings, frontmatter);
 				if (
 					frontmatter && 
-					isShared(frontmatter, this.settings, view.file) &&
+					isShared(frontmatter, this.settings, view.file, otherRepo) &&
 					this.settings.plugin.editorMenu
 				) {
 					const fileName = this.getTitleFieldForCommand(view.file,this.app.metadataCache.getFileCache(view.file).frontmatter).replace(".md", "");
@@ -214,7 +216,7 @@ export default class GithubPublisher extends Plugin {
 									this.reloadOctokit(),
 									this.settings,
 									view.file,
-									null,
+									otherRepo,
 									this.app.metadataCache,
 									this.app.vault
 								);

@@ -21,7 +21,7 @@ export async function createLinkCommands(repo: Repository | null, branchName: st
 			const file = plugin.app.workspace.getActiveFile();
 			const frontmatter = file ? plugin.app.metadataCache.getFileCache(file).frontmatter : null;
 			if (
-				file && frontmatter && isShared(frontmatter, plugin.settings, file)
+				file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 			) {
 				if (!checking) {
 					createLink(
@@ -82,7 +82,7 @@ export async function publisherOneCall(repo: Repository|null, plugin: GithubPubl
 			const file = plugin.app.workspace.getActiveFile();
 			const frontmatter = file ? plugin.app.metadataCache.getFileCache(file).frontmatter : null;
 			if (
-				file && frontmatter && isShared(frontmatter, plugin.settings, file)
+				file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 			) {
 				if (!checking) {
 					shareOneNote(

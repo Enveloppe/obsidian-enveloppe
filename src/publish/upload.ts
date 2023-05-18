@@ -80,6 +80,7 @@ export default class Publisher {
 	 * @param {boolean} deepScan starts the conversion+push of md file. If false, just sharing image
 	 * @param {FrontmatterConvert} sourceFrontmatter frontmatter settings
 	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 * @param shortRepo
 	 * @returns {Promise<TFile[]>}
 	 */
 	async statusBarForEmbed(
@@ -225,7 +226,7 @@ export default class Publisher {
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
 		const isNotEmpty = checkEmptyConfiguration(getRepoFrontmatter(this.settings, shortRepo, frontmatter), this.settings);
 		if (
-			!isShared(frontmatter, this.settings, file) ||
+			!isShared(frontmatter, this.settings, file, shortRepo) ||
 			fileHistory.includes(file) ||
 			!checkIfRepoIsInAnother(
 				getRepoFrontmatter(this.settings, shortRepo, frontmatter),
@@ -271,7 +272,8 @@ export default class Publisher {
 				file,
 				this.settings,
 				this.metadataCache,
-				this.vault
+				this.vault,
+				shortRepo
 			);
 			repoFrontmatter = Array.isArray(repoFrontmatter)
 				? repoFrontmatter

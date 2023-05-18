@@ -263,3 +263,8 @@ h2.github-publisher.title.error {
 	padding-right: 5px;
 	font-size: 18px;
 }
+
+.github-publisher.important {
+	color: var(--text-error);
+	font-weight: bold;
+}

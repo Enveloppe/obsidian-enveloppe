@@ -35,7 +35,6 @@ export class ModalAddingNewRepository extends Modal {
 		contentEl.createEl("p", {text: i18next.t("settings.github.smartRepo.modals.frontmatterInfo")});
 
 
-
 		const defaultRepository: Repository = {
 			smartKey: "",
 			user: this.settings.github.user,
@@ -51,6 +50,7 @@ export class ModalAddingNewRepository extends Modal {
 				workflowName: "",
 			},
 			createShortcuts: false,
+			shareKey: this.settings.plugin.shareKey,
 		};
 
 		new Setting(contentEl)
@@ -273,7 +273,20 @@ class ModalEditingRepository extends Modal {
 						}
 						this.repository.worflow.workflowName = value;
 					});
-			});
+			})
+
+		new Setting(contentEl)
+			.setName(i18next.t("settings.plugin.shareKey.title") )
+			.setDesc(i18next.t("settings.plugin.shareKey.desc") )
+			.addText((text) =>
+				text
+					.setPlaceholder("share")
+					.setValue(this.repository.shareKey)
+					.onChange(async (value) => {
+						this.repository.shareKey = value.trim();
+						await this.plugin.saveSettings();
+					})
+			);
 
 		new Setting(contentEl)
 			.addButton((button) =>

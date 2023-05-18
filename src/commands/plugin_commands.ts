@@ -17,7 +17,7 @@ export async function createLinkOnActiveFile(branchName: string, repo: Repositor
 	const file = plugin.app.workspace.getActiveFile();
 	const frontmatter = file ? plugin.app.metadataCache.getFileCache(file).frontmatter : null;
 	if (
-		file && frontmatter && isShared(frontmatter, plugin.settings, file)
+		file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 	) {
 		await createLink(
 			file,
@@ -33,7 +33,7 @@ export async function createLinkOnActiveFile(branchName: string, repo: Repositor
 export async function shareActiveFile(plugin: GithubPublisher, repo: Repository | null, branchName: string) {
 	const file = plugin.app.workspace.getActiveFile();
 	const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
-	if (file && frontmatter && isShared(frontmatter, plugin.settings, file)) {
+	if (file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)) {
 		await shareOneNote(
 			branchName,
 			plugin.reloadOctokit(),

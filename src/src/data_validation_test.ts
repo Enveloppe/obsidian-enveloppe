@@ -22,24 +22,39 @@ export function isInternalShared(
 	return !shared && frontmatterSettings.convertInternalNonShared === true;
 }
 
+export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache): Repository | null{
+	const allOtherRepo = settings.github.otherRepo;
+	if (!frontmatter) return null;
+	//check all keys in the frontmatter
+	for (const repo of allOtherRepo) {
+		if (frontmatter[repo.shareKey]) {
+			return repo;
+		}
+	}
+	return null;
+}
+
 /**
  * Disable publishing if the file hasn't a valid frontmatter or if the file is in the folder list to ignore
  * @param {FrontMatterCache} meta the frontmatter of the file
  * @param {GitHubPublisherSettings} settings
  * @param {TFile} file
+ * @param otherRepo
  * @returns {boolean} the value of meta[settings.shareKey] or false if the file is in the ignore list/not valid
  */
 
 export function isShared(
 	meta: FrontMatterCache | null,
 	settings: GitHubPublisherSettings,
-	file: TFile
+	file: TFile,
+	otherRepo: Repository|null
 ): boolean {
 	if (!file || file.extension !== "md" || meta === null) {
 		return false;
 	}
 	const folderList = settings.plugin.excludedFolder;
-	if (meta === undefined || meta[settings.plugin.shareKey] === undefined) {
+	const shareKey = otherRepo ? otherRepo.shareKey : settings.plugin.shareKey;
+	if (meta === undefined || meta[shareKey] === undefined) {
 		return false;
 	} else if (folderList.length > 0) {
 		for (let i = 0; i < folderList.length; i++) {
@@ -50,7 +65,7 @@ export function isShared(
 			}
 		}
 	}
-	return meta[settings.plugin.shareKey];
+	return meta[shareKey];
 }
 
 

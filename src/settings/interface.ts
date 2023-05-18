@@ -35,6 +35,7 @@ export interface Repository {
 		workflowName: string;
 	}
 	createShortcuts: boolean;
+	shareKey: string;
 }
 
 export interface GitHubPublisherSettings {
