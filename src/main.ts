@@ -16,7 +16,7 @@ import {
 } from "./commands/commands";
 import i18next from "i18next";
 import {getTitleField, regexOnFileName} from "./conversion/filePath";
-import { ressources, translationLanguage } from "./i18n/i18next";
+import { resources, translationLanguage } from "./i18n/i18next";
 import {migrateSettings} from "./settings/migrate";
 import {ChooseWhichRepoToRun} from "./settings/modals/commandsModals";
 import {
@@ -147,7 +147,7 @@ export default class GithubPublisher extends Plugin {
 		i18next.init({
 			lng: translationLanguage,
 			fallbackLng: "en",
-			resources: ressources,
+			resources: resources,
 			returnNull: false,
 		});
 		
