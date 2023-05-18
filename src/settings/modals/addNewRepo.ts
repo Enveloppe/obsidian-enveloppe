@@ -9,6 +9,7 @@ export class ModalAddingNewRepository extends Modal {
 	settings: GitHubPublisherSettings;
 	plugin: GithubPublisherPlugin;
 	branchName: string;
+	repository: Repository[];
 	onSubmit: (result: Repository[]) => void;
 
 	constructor(
@@ -16,24 +17,24 @@ export class ModalAddingNewRepository extends Modal {
 		settings: GitHubPublisherSettings,
 		branchName: string,
 		plugin: GithubPublisherPlugin,
+		repository: Repository[],
 		onSubmit: (result: Repository[]) => void) {
 		super(app);
 		this.settings = settings;
+		this.repository = repository;
 		this.plugin = plugin;
 		this.onSubmit = onSubmit;
 		this.branchName = branchName;
 	}
 
 	onOpen() {
-
-
 		const {contentEl} = this;
 		contentEl.empty();
 		contentEl.createEl("h2", {text: i18next.t("settings.github.smartRepo.modals.title")});
 		contentEl.createEl("p", {text: i18next.t("settings.github.smartRepo.modals.desc")});
 		contentEl.createEl("p", {text: i18next.t("settings.github.smartRepo.modals.frontmatterInfo")});
 
-		const repository: Repository[] = this.settings.github.otherRepo ? this.settings.github.otherRepo : [];
+
 
 		const defaultRepository: Repository = {
 			smartKey: "",
@@ -58,14 +59,14 @@ export class ModalAddingNewRepository extends Modal {
 
 					.setButtonText(i18next.t("common.add", {things: i18next.t("settings.github.smartRepo.modals.newRepo").toLowerCase()}))
 					.onClick(() => {
-						repository.push(defaultRepository);
+						this.repository.push(defaultRepository);
 						this.onOpen();
 					})
 					.buttonEl.style.width = "100%";
 			})
 			.infoEl.style.display = "none";
 
-		for (const repo of repository) {
+		for (const repo of this.repository) {
 			new Setting(contentEl)
 				.addText((text) => {
 					text
@@ -73,6 +74,13 @@ export class ModalAddingNewRepository extends Modal {
 						.setValue(repo.smartKey)
 						.onChange((value) => {
 							repo.smartKey = value.toLowerCase();
+							if (this.plugin.settings.github.otherRepo.filter((r) => r.smartKey === repo.smartKey).length > 1) {
+								new Notice(i18next.t("settings.github.smartRepo.modals.duplicate"));
+								text.inputEl.style.border = "1px solid red";
+								repo.smartKey = "";
+							} else {
+								text.inputEl.style.border = "0";
+							}
 						})
 						.inputEl.style.width = "100%";
 
@@ -82,7 +90,7 @@ export class ModalAddingNewRepository extends Modal {
 					btn
 						.setIcon("trash")
 						.onClick(() => {
-							repository.splice(repository.indexOf(repo), 1);
+							this.repository.splice(this.repository.indexOf(repo), 1);
 							this.onOpen();
 						});
 				})
@@ -91,7 +99,7 @@ export class ModalAddingNewRepository extends Modal {
 						.setIcon("pencil")
 						.onClick(() => {
 							new ModalEditingRepository(this.app, repo, this.plugin, this.branchName, (result) => {
-								repository[repository.indexOf(repo)] = result;
+								this.repository[this.repository.indexOf(repo)] = result;
 							}).open();
 						});
 				})
@@ -103,7 +111,7 @@ export class ModalAddingNewRepository extends Modal {
 				button
 					.setButtonText(i18next.t("common.save"))
 					.onClick(() => {
-						this.onSubmit(repository);
+						this.onSubmit(this.repository);
 						this.close();
 					});
 			});
@@ -111,6 +119,7 @@ export class ModalAddingNewRepository extends Modal {
 	onClose() {
 		const {contentEl} = this;
 		contentEl.empty();
+		this.onSubmit(this.repository);
 	}
 }
 
@@ -279,5 +288,6 @@ class ModalEditingRepository extends Modal {
 	onClose() {
 		const {contentEl} = this;
 		contentEl.empty();
+		this.onSubmit(this.repository);
 	}
 }

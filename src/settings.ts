@@ -8,7 +8,7 @@ import {
 	shortcutsHideShow, showHideBasedOnFolder,
 } from "./settings/style";
 import {
-	FolderSettings, GithubTiersVersion,
+	FolderSettings, GithubTiersVersion, Repository,
 } from "./settings/interface";
 import {
 	help,
@@ -261,8 +261,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				button
 					.setButtonText(i18next.t("settings.github.smartRepo.button"))
 					.onClick(async () => {
-						this.plugin.settings.github.otherRepo ??= [];
-						new ModalAddingNewRepository(this.app, this.plugin.settings, this.branchName, this.plugin, (result => {
+						const repository: Repository[] = this.plugin.settings.github.otherRepo ? this.plugin.settings.github.otherRepo : [];
+						new ModalAddingNewRepository(this.app, this.plugin.settings, this.branchName, this.plugin, repository, (result => {
 							this.plugin.settings.github.otherRepo = result;
 							this.plugin.saveSettings();
 							this.plugin.reloadCommands(this.branchName);

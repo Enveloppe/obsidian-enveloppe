@@ -88,8 +88,8 @@
     "scanningRepo": "Scanning the repository, may take a while...",
     "sendMessage": "Upload {{- nbNotes}} notes to {{- repo.owner}}/{{- repo.repo}}",
     "startingClean": "Starting cleaning {{- repo.owner}}/{{- repo.repo}}",
-    "successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repo.owner}}/{{- repo.repo}}",
     "successPublishOneNote": "Successfully uploaded {{- file}} to {{- repo.owner}}/{{- repo.repo}}",
+    "successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repo.owner}}/{{- repo.repo}}",
     "waitingWorkflow": "Now, waiting for the workflow to be completed..."
   },
   "modals": {
@@ -231,6 +231,7 @@
         "button": "Manage more repository",
         "modals": {
           "desc": "These \"other repositories\" allow you to use all the commands on the repositories added below.",
+          "duplicate": "Smartkey must be unique!",
           "frontmatterInfo": "Using the \"shortKey\" frontmatter key with the \"smartKey\" also allows you to use this repository in a file without having to write its path.",
           "newRepo": "a new repository",
           "shortcuts": {

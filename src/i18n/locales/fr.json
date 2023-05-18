@@ -88,8 +88,8 @@
     "scanningRepo": "Scan du dépôt, veuillez patienter...",
     "sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
     "startingClean": "Début du nettoyage de {{- repo.owner}}/{{- repo.repo}}",
-    "successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
     "successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repo.owner}}/{{- repo.repo}}",
+    "successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
     "waitingWorkflow": "Maintenant, attente de la fin du workflow..."
   },
   "modals": {
@@ -231,6 +231,7 @@
         "button": "Gérer plus de dépôt",
         "modals": {
           "desc": "Ces \"autres dépôts\" vous permettent d'utiliser toutes les commandes sur les dépôts ajoutés ci-dessous.",
+          "duplicate": "Les smartKey doivent être uniques !",
           "frontmatterInfo": "L'utilisation de la clé frontmatter \"shortKey\" avec la \"smartKey\" permet également d'utiliser ce dépôt dans un fichier sans avoir à écrire son chemin.",
           "newRepo": "un nouveau dépôt",
           "shortcuts": {
