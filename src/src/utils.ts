@@ -7,7 +7,7 @@ import {
 	MetadataExtractor,
 	RepoFrontmatter,
 	UploadedFiles,
-	ListeEditedFiles
+	ListeEditedFiles, Repository
 } from "../settings/interface";
 import Publisher from "../publish/upload";
 import {getReceiptFolder} from "../conversion/filePath";
@@ -363,15 +363,22 @@ export function getFrontmatterCondition(
 /**
  * Get the frontmatter from the frontmatter
  * @param {GitHubPublisherSettings} settings
+ * @param repository
  * @param {FrontMatterCache} frontmatter
  * @return {RepoFrontmatter[] | RepoFrontmatter}
  */
 
 export function getRepoFrontmatter(
 	settings: GitHubPublisherSettings,
+	repository: Repository | null = null,
 	frontmatter?: FrontMatterCache
 ) {
-	const github = settings.github;
+	let github = repository ?? settings.github;
+	if (frontmatter && frontmatter.shortRepo) {
+		const smartKey = frontmatter.shortRepo.toLowerCase();
+		const allOtherRepo = settings.github.otherRepo;
+		github = allOtherRepo[smartKey] ?? github;
+	}
 	let repoFrontmatter: RepoFrontmatter = {
 		branch: github.branch,
 		repo: github.repo,

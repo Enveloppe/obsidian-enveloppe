@@ -8,7 +8,7 @@ import {
 	createListEdited
 } from "./src/utils";
 import {checkRepositoryValidityWithRepoFrontmatter} from "./src/data_validation_test";
-import { GitHubPublisherSettings, RepoFrontmatter, UploadedFiles } from "./settings/interface";
+import {GitHubPublisherSettings, RepoFrontmatter, Repository, UploadedFiles} from "./settings/interface";
 import { deleteFromGithub } from "./publish/delete";
 import { GithubBranch } from "./publish/branch";
 import { Octokit } from "@octokit/core";
@@ -26,6 +26,8 @@ import { ListChangedFiles } from "./settings/modals/list_changed";
  * @param {RepoFrontmatter} repoFrontmatter
  * @param {TFile[]} sharedFiles - The files marked as shared
  * @param {boolean} createGithubBranch - If the branch has to be created
+ * @param plugin
+ * @param shortRepo
  * @return {Promise<void>}
  */
 export async function shareAllMarkedNotes(
@@ -37,7 +39,8 @@ export async function shareAllMarkedNotes(
 	repoFrontmatter: RepoFrontmatter,
 	sharedFiles: TFile[],
 	createGithubBranch = true,
-	plugin: GithubPublisher
+	plugin: GithubPublisher,
+	shortRepo: Repository | null
 ) {
 	const statusBar = new ShareStatusBar(statusBarItems, sharedFiles.length);
 	try {
@@ -59,7 +62,8 @@ export async function shareAllMarkedNotes(
 						file,
 						false,
 						branchName,
-						repoFrontmatter
+						repoFrontmatter,
+						shortRepo
 					) ;
 					if (uploaded) {
 						listStateUploaded.push(...uploaded.uploaded);
@@ -169,6 +173,7 @@ export async function deleteUnsharedDeletedNotes(
  * @param {GithubBranch} PublisherManager
  * @param {GitHubPublisherSettings} settings
  * @param {TFile} file - The file to share
+ * @param repository
  * @param {MetadataCache} metadataCache
  * @param {Vault} vault
  * @return {Promise<void>}
@@ -178,12 +183,13 @@ export async function shareOneNote(
 	PublisherManager: GithubBranch,
 	settings: GitHubPublisherSettings,
 	file: TFile,
+	repository: Repository | null = null,
 	metadataCache: MetadataCache,
 	vault: Vault
 ) {
 	try {
 		const frontmatter = metadataCache.getFileCache(file).frontmatter;
-		const repoFrontmatter = getRepoFrontmatter(settings, frontmatter);
+		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
 		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, settings, repoFrontmatter);
 		if (!isValid) return false;
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
@@ -192,6 +198,7 @@ export async function shareOneNote(
 			true,
 			branchName,
 			repoFrontmatter,
+			repository,
 			[],
 			true
 		);
@@ -244,7 +251,7 @@ export async function shareOneNote(
 		if (!(error instanceof DOMException)) {
 			noticeLog(error, settings);
 			new Notice(
-				(i18next.t("error.errorPublish", {repo: getRepoFrontmatter(settings, metadataCache.getFileCache(file).frontmatter)}))
+				(i18next.t("error.errorPublish", {repo: getRepoFrontmatter(settings, repository, metadataCache.getFileCache(file).frontmatter)}))
 			);
 		}
 	}
@@ -258,6 +265,7 @@ export async function shareOneNote(
  * @param {Vault} vault
  * @param {GithubPublisher} plugin
  * @param {RepoFrontmatter} repoFrontmatter
+ * @param shortRepo
  * @return {Promise<void>}
  */
 export async function shareNewNote(
@@ -266,7 +274,8 @@ export async function shareNewNote(
 	branchName: string,
 	vault: Vault,
 	plugin: GithubPublisher,
-	repoFrontmatter: RepoFrontmatter
+	repoFrontmatter: RepoFrontmatter,
+	shortRepo: Repository
 ) {
 	const settings = plugin.settings;
 	new Notice(i18next.t("informations.scanningRepo") );
@@ -302,7 +311,8 @@ export async function shareNewNote(
 			repoFrontmatter,
 			newlySharedNotes,
 			false,
-			plugin
+			plugin,
+			shortRepo
 		);
 	} else {
 		new Notice(i18next.t("informations.noNewNote") );
@@ -325,7 +335,8 @@ export async function shareAllEditedNotes(
 	branchName: string,
 	vault: Vault,
 	plugin: GithubPublisher,
-	repoFrontmatter: RepoFrontmatter
+	repoFrontmatter: RepoFrontmatter,
+	shortRepo: Repository | null
 ) {
 	const settings = plugin.settings;
 	new Notice(i18next.t("informations.scanningRepo") );
@@ -366,7 +377,8 @@ export async function shareAllEditedNotes(
 			repoFrontmatter,
 			newlySharedNotes,
 			false,
-			plugin
+			plugin,
+			shortRepo
 		);
 	} else {
 		new Notice(i18next.t("informations.noNewNote") );
@@ -381,6 +393,7 @@ export async function shareAllEditedNotes(
  * @param {Vault} vault
  * @param {GithubPublisher} plugin
  * @param {RepoFrontmatter} repoFrontmatter
+ * @param shortRepo
  * @return {Promise<void>}
  */
 export async function shareOnlyEdited(
@@ -389,7 +402,8 @@ export async function shareOnlyEdited(
 	branchName: string,
 	vault: Vault,
 	plugin: GithubPublisher,
-	repoFrontmatter: RepoFrontmatter
+	repoFrontmatter: RepoFrontmatter,
+	shortRepo: Repository | null
 ) {
 	const settings = plugin.settings;
 	new Notice(i18next.t("informations.scanningRepo") );
@@ -424,7 +438,8 @@ export async function shareOnlyEdited(
 			repoFrontmatter,
 			newlySharedNotes,
 			false,
-			plugin
+			plugin,
+			shortRepo
 		);
 	} else {
 		new Notice(i18next.t("informations.noNewNote") );

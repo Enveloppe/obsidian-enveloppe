@@ -5,7 +5,7 @@ import {
 	FolderSettings,
 	GitHubPublisherSettings,
 	GithubTiersVersion,
-	RepoFrontmatter,
+	RepoFrontmatter, Repository,
 } from "./settings/interface";
 import { OldSettings } from "./settings/migrate";
 import { getRepoFrontmatter, createLink, verifyRateLimitAPI } from "./src/utils";
@@ -24,6 +24,7 @@ import i18next from "i18next";
 import {getTitleField, regexOnFileName} from "./conversion/filePath";
 import { ressources, translationLanguage } from "./i18n/i18next";
 import {migrateSettings} from "./settings/migrate";
+import {ChooseWhichRepoToRun} from "./settings/modals/commandsModals";
 
 /**
  * Main class of the plugin
@@ -43,6 +44,215 @@ export default class GithubPublisher extends Plugin {
 		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
 	}
 
+	async shareActiveFileCommands(repo: Repository, branchName: string) {
+		this.addCommand({
+			id: `publisher-one-on-${repo.smartKey}`,
+			name: i18next.t("commands.shareActiveFile"),
+			hotkeys: [],
+			checkCallback: (checking) => {
+				const file = this.app.workspace.getActiveFile();
+				const frontmatter = file ? this.app.metadataCache.getFileCache(file).frontmatter : null;
+				if (
+					file && frontmatter && isShared(frontmatter, this.settings, file)
+				) {
+					if (!checking) {
+						shareOneNote(
+							branchName,
+							this.reloadOctokit(),
+							this.settings,
+							file,
+							null,
+							this.app.metadataCache,
+							this.app.vault
+						);
+					}
+					return true;
+				}
+				return false;
+			},
+		});
+	}
+	
+	createLinkCommands(repo: Repository, branchName: string) {
+		this.addCommand({
+			id: "publisher-copy-link",
+			name: i18next.t("commands.copyLink"),
+			hotkeys: [],
+			checkCallback: (checking) => {
+				const file = this.app.workspace.getActiveFile();
+				const frontmatter = file ? this.app.metadataCache.getFileCache(file).frontmatter : null;
+				if (
+					file && frontmatter && isShared(frontmatter, this.settings, file)
+				) {
+					if (!checking) {
+						createLink(
+							file, 
+							getRepoFrontmatter(this.settings, repo, frontmatter),
+							this.app.metadataCache,
+							this.app.vault,
+							this.settings
+						);
+						new Notice(i18next.t("settings.plugin.copyLink.command.onActivation"));
+					}
+					return true;
+				}
+				return false;
+			},
+		});
+	}
+	
+	createLinkOnActiveFile(branchName: string, repo: Repository) {
+		const file = this.app.workspace.getActiveFile();
+		const frontmatter = file ? this.app.metadataCache.getFileCache(file).frontmatter : null;
+		if (
+			file && frontmatter && isShared(frontmatter, this.settings, file)
+		) {
+			createLink(
+				file,
+				getRepoFrontmatter(this.settings, repo, frontmatter),
+				this.app.metadataCache,
+				this.app.vault,
+				this.settings
+			);
+			new Notice(i18next.t("settings.plugin.copyLink.command.onActivation"));
+		}
+	}
+	
+	async shareActiveFile(repo: Repository | null, branchName: string) {
+		const file = this.app.workspace.getActiveFile();
+		const frontmatter = file ? this.app.metadataCache.getFileCache(file)?.frontmatter : null;
+		if (file && frontmatter && isShared(frontmatter, this.settings, file)) {
+			await shareOneNote(
+				branchName,
+				this.reloadOctokit(),
+				this.settings,
+				file,
+				repo,
+				this.app.metadataCache,
+				this.app.vault,
+			);
+		} else {
+			new Notice("No file is active or the file is not shared");
+		}
+	}
+	
+	async deleteCommands(repo: Repository, branchName: string) {
+		const repoFrontmatter = getRepoFrontmatter(this.settings, repo);
+		const publisher = this.reloadOctokit();
+		await deleteUnsharedDeletedNotes(
+			publisher,
+			this.settings,
+			publisher.octokit,
+			branchName,
+			repoFrontmatter as RepoFrontmatter,
+		);
+	}
+
+	async deleteCommandsOnRepo(repo: Repository, branchName: string) {
+		this.addCommand({
+			id: `publisher-delete-clean-${repo.smartKey}`,
+			name: i18next.t("commands.publisherDeleteClean") ,
+			hotkeys: [],
+			checkCallback: (checking) => {
+				if (this.settings.upload.autoclean.enable && this.settings.upload.behavior !== FolderSettings.fixed) {
+					if (!checking) {
+						const publisher = this.reloadOctokit();
+						deleteUnsharedDeletedNotes(
+							publisher,
+							this.settings,
+							publisher.octokit,
+							branchName,
+							getRepoFrontmatter(this.settings) as RepoFrontmatter,
+						);
+					}
+					return true;
+				}
+				return false;
+			},
+		});
+	}
+	
+	async uploadAllNotes(repo: Repository, branchName: string) {
+		const statusBarItems = this.addStatusBarItem();
+		const publisher = this.reloadOctokit();
+		const sharedFiles = publisher.getSharedFiles();
+		await shareAllMarkedNotes(
+			publisher,
+			this.settings,
+			publisher.octokit,
+			statusBarItems,
+			branchName,
+			getRepoFrontmatter(this.settings, repo) as RepoFrontmatter,
+			sharedFiles,
+			true,
+			this,
+			repo
+		);
+	}
+	
+	async uploadNewNotes(branchName: string, repo: Repository|null) {
+		const publisher = this.reloadOctokit();
+		await shareNewNote(
+			publisher,
+			publisher.octokit,
+			branchName,
+			this.app.vault,
+			this,
+			getRepoFrontmatter(this.settings, repo) as RepoFrontmatter,
+			repo
+		);
+	}
+
+	async repositoryValidityCallback(repo: Repository, branchName: string) {
+		this.addCommand({
+			id: "check-this-repo-validy",
+			name: i18next.t("commands.checkValidity.title") ,
+			checkCallback: (checking) => {
+				if (this.app.workspace.getActiveFile())
+				{
+					if (!checking) {
+						checkRepositoryValidity(
+							branchName,
+							this.reloadOctokit(),
+							this.settings,
+							repo,
+							this.app.workspace.getActiveFile(),
+							this.app.metadataCache);
+					}
+					return true;
+				}
+				return false;
+			},
+		});
+	}
+
+	async repositoryValidityActiveFile(branchName: string, repo: Repository) {
+		const file = this.app.workspace.getActiveFile();
+		if (file) {
+			await checkRepositoryValidity(
+				branchName,
+				this.reloadOctokit(),
+				this.settings,
+				repo,
+				file,
+				this.app.metadataCache);
+		} else {
+			new Notice("No file is active");
+		}
+	}
+	
+	async uploadAllEditedNotes(branchName: string, repo: Repository|null=null) {
+		const publisher = this.reloadOctokit();
+		await shareAllEditedNotes(
+			publisher,
+			publisher.octokit,
+			branchName,
+			this.app.vault,
+			this,
+			getRepoFrontmatter(this.settings, repo) as RepoFrontmatter,
+			repo
+		);
+	}
 
 	/**
 	 * Create a new instance of Octokit to load a new instance of GithubBranch 
@@ -50,15 +260,14 @@ export default class GithubPublisher extends Plugin {
 	reloadOctokit() {
 		let octokit: Octokit;
 		const apiSettings = this.settings.github.api;
-		const githubSettings = this.settings.github;
 		if (apiSettings.tiersForApi === GithubTiersVersion.entreprise && apiSettings.hostname.length > 0) {
 			octokit = new Octokit(
 				{
 					baseUrl: `${apiSettings.hostname}/api/v3`,
-					auth: githubSettings.token,
+					auth: this.settings.github.token,
 				});
 		} else {
-			octokit = new Octokit({auth: githubSettings.token});
+			octokit = new Octokit({auth: this.settings.github.token});
 		}
 		return new GithubBranch(
 			this.settings,
@@ -68,8 +277,19 @@ export default class GithubPublisher extends Plugin {
 			this
 		);
 	}
-
-			
+	
+	async shareEditedOnly(branchName: string, repo: Repository|null) {
+		const publisher = this.reloadOctokit();
+		await shareOnlyEdited(
+			publisher,
+			publisher.octokit,
+			branchName,
+			this.app.vault,
+			this,
+			getRepoFrontmatter(this.settings, repo) as RepoFrontmatter,
+			null
+		);
+	}
 
 	/**
 	 * Function called when the plugin is loaded
@@ -115,6 +335,7 @@ export default class GithubPublisher extends Plugin {
 									this.reloadOctokit(),
 									this.settings,
 									file,
+									null,
 									this.app.metadataCache,
 									this.app.vault
 								);
@@ -148,6 +369,7 @@ export default class GithubPublisher extends Plugin {
 									this.reloadOctokit(),
 									this.settings,
 									view.file,
+									null,
 									this.app.metadataCache,
 									this.app.vault
 								);
@@ -170,7 +392,7 @@ export default class GithubPublisher extends Plugin {
 						if (!checking) {
 							createLink(
 								file, 
-								getRepoFrontmatter(this.settings, frontmatter),
+								getRepoFrontmatter(this.settings, null, frontmatter),
 								this.app.metadataCache,
 								this.app.vault,
 								this.settings
@@ -200,6 +422,7 @@ export default class GithubPublisher extends Plugin {
 							this.reloadOctokit(),
 							this.settings,
 							file,
+							null,
 							this.app.metadataCache,
 							this.app.vault
 						);
@@ -236,20 +459,7 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-publish-all",
 			name: i18next.t("commands.uploadAllNotes") ,
 			callback: async () => {
-				const sharedFiles = this.reloadOctokit().getSharedFiles();
-				const statusBarItems = this.addStatusBarItem();
-				const publisher = this.reloadOctokit();
-				await shareAllMarkedNotes(
-					publisher,
-					this.settings,
-					publisher.octokit,
-					statusBarItems,
-					branchName,
-					getRepoFrontmatter(this.settings) as RepoFrontmatter,
-					sharedFiles,
-					true,
-					this
-				);
+				await this.uploadAllNotes(null, branchName);
 			},
 		});
 
@@ -257,15 +467,7 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-upload-new",
 			name: i18next.t("commands.uploadNewNotes") ,
 			callback: async () => {
-				const publisher = this.reloadOctokit();
-				await shareNewNote(
-					publisher,
-					publisher.octokit,
-					branchName,
-					this.app.vault,
-					this,
-					getRepoFrontmatter(this.settings) as RepoFrontmatter,
-				);
+				await this.uploadNewNotes(branchName, null);
 			},
 		});
 
@@ -273,15 +475,7 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-upload-all-edited-new",
 			name: i18next.t("commands.uploadAllNewEditedNote") ,
 			callback: async () => {
-				const publisher = this.reloadOctokit();
-				await shareAllEditedNotes(
-					publisher,
-					publisher.octokit,
-					branchName,
-					this.app.vault,
-					this,
-					getRepoFrontmatter(this.settings) as RepoFrontmatter,
-				);
+				await this.uploadAllEditedNotes(branchName, null);
 			},
 		});
 
@@ -289,15 +483,7 @@ export default class GithubPublisher extends Plugin {
 			id: "publisher-upload-edited",
 			name: i18next.t("commands.uploadAllEditedNote") ,
 			callback: async () => {
-				const publisher = this.reloadOctokit();
-				await shareOnlyEdited(
-					publisher,
-					publisher.octokit,
-					branchName,
-					this.app.vault,
-					this,
-					getRepoFrontmatter(this.settings) as RepoFrontmatter,
-				);
+				await this.shareEditedOnly(branchName, null);
 			},
 		});
 
@@ -312,6 +498,7 @@ export default class GithubPublisher extends Plugin {
 							branchName,
 							this.reloadOctokit(),
 							this.settings,
+							null,
 							this.app.workspace.getActiveFile(),
 							this.app.metadataCache);
 					}
@@ -326,6 +513,14 @@ export default class GithubPublisher extends Plugin {
 			name: i18next.t("commands.checkValidity.rateLimit.command"),
 			callback: async () => {
 				await verifyRateLimitAPI(this.reloadOctokit().octokit, this.settings);
+			}
+		});
+
+		this.addCommand({
+			id: "run-cmd-for-repo",
+			name: "Run command for a repository",
+			callback: async () => {
+				new ChooseWhichRepoToRun(this.app, this, branchName).open();
 			}
 		});
 	}

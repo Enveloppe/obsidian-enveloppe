@@ -1,5 +1,5 @@
 import {FrontMatterCache, Notice, TFile, MetadataCache } from "obsidian";
-import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter} from "../settings/interface";
+import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter, Repository} from "../settings/interface";
 import {GithubBranch} from "../publish/branch";
 import {getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from "./utils";
 import i18next from "i18next";
@@ -174,6 +174,7 @@ export function noTextConversion(conditionConvert: FrontmatterConvert) {
  * @param {string} branchName The branch name created by the plugin
  * @param {GithubBranch} PublisherManager The class that manage the branch
  * @param {GitHubPublisherSettings} settings The settings of the plugin
+ * @param repository
  * @param { TFile | null} file The file to check if any
  * @param {MetadataCache} metadataCache The metadata cache of Obsidian
  * @return {Promise<void>}
@@ -182,11 +183,12 @@ export async function checkRepositoryValidity(
 	branchName: string,
 	PublisherManager: GithubBranch,
 	settings: GitHubPublisherSettings,
+	repository: Repository | null = null,
 	file: TFile | null,
 	metadataCache: MetadataCache): Promise<void> {
 	try {
 		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : null;
-		const repoFrontmatter = getRepoFrontmatter(settings, frontmatter);
+		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
 		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, settings);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, false);

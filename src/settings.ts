@@ -22,6 +22,7 @@ import { checkRepositoryValidity } from "./src/data_validation_test";
 import { ExportModal, ImportModal } from "./settings/modals/import_export";
 import i18next from "i18next";
 import { enumbSettingsTabId } from "./settings/interface";
+import {ModalAddingNewRepository} from "./settings/modals/addNewRepo";
 
 
 export class GithubPublisherSettingsTab extends PluginSettingTab {
@@ -150,8 +151,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setDesc(i18next.t("settings.github.apiType.desc") )
 			.addDropdown((dropdown) => {
 				dropdown
-					.addOption(GithubTiersVersion.free, i18next.t("settings.github.apiType.dropdown.free") )
-					.addOption(GithubTiersVersion.entreprise, i18next.t("settings.github.apiType.dropdown.enterprise") )
+					.addOption(GithubTiersVersion.free, i18next.t("settings.github.apiType.dropdown.free"))
+					.addOption(GithubTiersVersion.entreprise, i18next.t("settings.github.apiType.dropdown.enterprise"))
 					.setValue(githubSettings.api.tiersForApi)
 					.onChange(async (value) => {
 						githubSettings.api.tiersForApi = value as GithubTiersVersion;
@@ -253,9 +254,20 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setButtonText(i18next.t("settings.github.testConnection") )
 					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
-						await checkRepositoryValidity(this.branchName, this.plugin.reloadOctokit(), this.plugin.settings, null, this.app.metadataCache);
+						await checkRepositoryValidity(this.branchName, this.plugin.reloadOctokit(), this.plugin.settings, null,null, this.app.metadataCache);
 					})
-			);
+			)
+			.addButton((button) =>
+				button
+					.setButtonText("Add new repository")
+					.onClick(async () => {
+						this.plugin.settings.github.otherRepo ??= [];
+						new ModalAddingNewRepository(this.app, this.plugin.settings, this.branchName, this.plugin, (result => {
+							this.plugin.settings.github.otherRepo = result;
+							this.plugin.saveSettings();
+						})
+						).open();
+					}));
 		this.settingsPage.createEl("h3", { text: "Github Workflow" });
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.githubWorkflow.prRequest.title") )

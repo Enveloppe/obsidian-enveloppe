@@ -52,7 +52,8 @@
 		"save": "Sauvegarder",
 		"shared": "partagés",
 		"text": "texte",
-		"warning": "Attention"
+		"warning": "Attention",
+		"repository": "Dépôt"
 	},
 	"deletion": {
 		"defaultFolder": "Vous avez besoin d'un dossier par défaut dans les paramètres pour utiliser cette commande.",

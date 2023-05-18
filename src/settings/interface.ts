@@ -20,6 +20,23 @@ export interface RegexReplace {
 	type: TypeOfEditRegex;
 }
 
+export interface Repository {
+	smartKey: string;
+	user: string;
+	repo: string;
+	branch: string;
+	automaticallyMergePR: boolean;
+	api: {
+		tiersForApi: GithubTiersVersion;
+		hostname: string;
+	}
+	worflow: {
+		customCommitMsg: string;
+		workflowName: string;
+	}
+	createShortcuts: boolean;
+}
+
 export interface GitHubPublisherSettings {
 	github: {
 		user: string;
@@ -34,7 +51,8 @@ export interface GitHubPublisherSettings {
 		worflow: {
 			customCommitMsg: string;
 			workflowName: string;
-		}
+		},
+		otherRepo: Repository[];
 	}
 	upload: {
 		behavior: FolderSettings;
@@ -111,6 +129,8 @@ export enum GithubTiersVersion {
 	entreprise = "Enterprise",
 }
 
+
+
 export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	github: {
 		user: "",
@@ -126,6 +146,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 			customCommitMsg: "[PUBLISHER] Merge",
 			workflowName: "",
 		},
+		otherRepo: [],
 	},
 	upload: {
 		behavior: FolderSettings.fixed,

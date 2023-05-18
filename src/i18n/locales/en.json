@@ -51,7 +51,8 @@
 		"save": "Save",
 		"shared": "Shared",
 		"text": "text",
-		"warning": "Warning"
+		"warning": "Warning",
+		"repository": "repository"
 	},
 	"deletion": {
 		"defaultFolder": "You need a default folder name in the settings to use this command.",

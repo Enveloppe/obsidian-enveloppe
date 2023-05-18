@@ -10,7 +10,7 @@ import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	MetadataExtractor,
-	RepoFrontmatter,
+	RepoFrontmatter, Repository,
 	UploadedFiles,
 } from "../settings/interface";
 import { FilesManagement } from "./files";
@@ -88,7 +88,8 @@ export default class Publisher {
 		branchName: string,
 		deepScan: boolean,
 		sourceFrontmatter: FrontmatterConvert,
-		repoFrontmatter: RepoFrontmatter
+		repoFrontmatter: RepoFrontmatter,
+		shortRepo: Repository | null
 	) {
 		const uploadedFile: UploadedFiles[] = [];
 		const fileError: string[] = [];
@@ -111,6 +112,7 @@ export default class Publisher {
 										false,
 										branchName,
 										repoFrontmatter,
+										shortRepo,
 										fileHistory,
 										true
 									);
@@ -162,6 +164,7 @@ export default class Publisher {
 							false,
 							branchName,
 							repoFrontmatter,
+							shortRepo,
 							fileHistory,
 							true
 						);
@@ -201,14 +204,16 @@ export default class Publisher {
 	 * @param {TFile[]} fileHistory File already sent during DeepScan
 	 * @param {boolean} deepScan if the plugin must check the embed notes too.
 	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 * @param shortRepo
 	 */
 	async publish(
 		file: TFile,
 		autoclean = false,
 		branchName: string,
 		repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter,
+		shortRepo: Repository | null,
 		fileHistory: TFile[] = [],
-		deepScan = false
+		deepScan = false,
 	) {
 		const shareFiles = new FilesManagement(
 			this.vault,
@@ -218,12 +223,12 @@ export default class Publisher {
 			this.plugin
 		);
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
-		const isNotEmpty = checkEmptyConfiguration(getRepoFrontmatter(this.settings, frontmatter), this.settings);
+		const isNotEmpty = checkEmptyConfiguration(getRepoFrontmatter(this.settings, shortRepo, frontmatter), this.settings);
 		if (
 			!isShared(frontmatter, this.settings, file) ||
 			fileHistory.includes(file) ||
 			!checkIfRepoIsInAnother(
-				getRepoFrontmatter(this.settings, frontmatter),
+				getRepoFrontmatter(this.settings, shortRepo, frontmatter),
 				repoFrontmatter
 			) || !isNotEmpty
 		) {
@@ -292,7 +297,8 @@ export default class Publisher {
 						fileHistory,
 						deepScan,
 						shareFiles,
-						autoclean
+						autoclean,
+						shortRepo
 					);
 				fileDeleted.push(deleted.deleted);
 				// convert to UploadedFiles[]
@@ -332,7 +338,8 @@ export default class Publisher {
 		fileHistory: TFile[],
 		deepScan: boolean,
 		shareFiles: FilesManagement,
-		autoclean: boolean
+		autoclean: boolean,
+		shortRepo: Repository | null
 	) {
 		noticeLog(
 			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${branchName}`,
@@ -346,7 +353,8 @@ export default class Publisher {
 			branchName,
 			deepScan,
 			frontmatterSettings,
-			repo
+			repo,
+			shortRepo
 		);
 		const embeddedUploaded = embeded.uploaded;
 		embeddedUploaded.push(uploaded);
