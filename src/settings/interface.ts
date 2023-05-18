@@ -36,6 +36,11 @@ export interface Repository {
 	}
 	createShortcuts: boolean;
 	shareKey: string;
+	copyLink: {	
+		links: string;
+		removePart: string[];
+	}
+
 }
 
 export interface GitHubPublisherSettings {
@@ -114,6 +119,8 @@ export interface GitHubPublisherSettings {
 		displayModalRepoEditing: boolean;
 	}
 }
+
+
 
 /**
  * Allow to set a value for the folder settings

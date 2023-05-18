@@ -29,7 +29,8 @@ export async function createLinkCommands(repo: Repository | null, branchName: st
 						getRepoFrontmatter(plugin.settings, repo, frontmatter),
 						plugin.app.metadataCache,
 						plugin.app.vault,
-						plugin.settings
+						plugin.settings,
+						repo
 					);
 					new Notice(i18next.t("settings.plugin.copyLink.command.onActivation"));
 				}

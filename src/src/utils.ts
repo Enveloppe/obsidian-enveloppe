@@ -137,6 +137,7 @@ export async function createLink(
 	settings: GitHubPublisherSettings,
 	otherRepo: Repository | null
 ): Promise<void> {
+	//TODO : Use OtherRepo settings to generate links if otherRepo != null
 	const copyLink = settings.plugin.copyLink;
 	const github = settings.github;
 	if (!copyLink.enable) {

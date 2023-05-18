@@ -51,6 +51,10 @@ export class ModalAddingNewRepository extends Modal {
 			},
 			createShortcuts: false,
 			shareKey: this.settings.plugin.shareKey,
+			copyLink: {
+				links: this.settings.plugin.copyLink.links,
+				removePart: []
+			}
 		};
 
 		new Setting(contentEl)
@@ -273,7 +277,7 @@ class ModalEditingRepository extends Modal {
 						}
 						this.repository.worflow.workflowName = value;
 					});
-			})
+			});
 
 		new Setting(contentEl)
 			.setName(i18next.t("settings.plugin.shareKey.title") )
@@ -287,6 +291,7 @@ class ModalEditingRepository extends Modal {
 						await this.plugin.saveSettings();
 					})
 			);
+		//TODO : Add links settings for generation links
 
 		new Setting(contentEl)
 			.addButton((button) =>
