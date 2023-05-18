@@ -238,7 +238,8 @@ export async function shareOneNote(
 					repoFrontmatter,
 					metadataCache,
 					vault,
-					settings
+					settings,
+					repository
 				);
 				if (settings.plugin.displayModalRepoEditing) {
 					const listEdited = createListEdited(publishSuccess.uploaded, publishSuccess.deleted, publishSuccess.error);
