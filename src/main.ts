@@ -1,30 +1,32 @@
-import {FrontMatterCache, Menu, Notice, Plugin, TFile} from "obsidian";
+import {FrontMatterCache, Menu, Plugin, TFile} from "obsidian";
 import {GithubPublisherSettingsTab} from "./settings";
 import {
 	DEFAULT_SETTINGS,
-	FolderSettings,
 	GitHubPublisherSettings,
 	GithubTiersVersion,
 	RepoFrontmatter, Repository,
 } from "./settings/interface";
 import { OldSettings } from "./settings/migrate";
-import { getRepoFrontmatter, createLink, verifyRateLimitAPI } from "./src/utils";
+import { getRepoFrontmatter, verifyRateLimitAPI } from "./src/utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
-import {checkRepositoryValidity, isShared} from "./src/data_validation_test";
+import {isShared} from "./src/data_validation_test";
 import {
-	deleteUnsharedDeletedNotes,
-	shareAllEditedNotes,
-	shareAllMarkedNotes,
-	shareNewNote,
 	shareOneNote,
 	shareOnlyEdited
-} from "./commands";
+} from "./commands/commands";
 import i18next from "i18next";
 import {getTitleField, regexOnFileName} from "./conversion/filePath";
 import { ressources, translationLanguage } from "./i18n/i18next";
 import {migrateSettings} from "./settings/migrate";
 import {ChooseWhichRepoToRun} from "./settings/modals/commandsModals";
+import {
+	createLinkCommands,
+	deleteCommandsOnRepo,
+	publisherOneCall,
+	publisherPublishAll, publisherUploadAllEditedNew, publisherUploadEdited,
+	publisherUploadNew, repositoryValidityCallback
+} from "./commands/callback";
 
 /**
  * Main class of the plugin
@@ -44,216 +46,19 @@ export default class GithubPublisher extends Plugin {
 		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
 	}
 
-	async shareActiveFileCommands(repo: Repository, branchName: string) {
-		this.addCommand({
-			id: `publisher-one-on-${repo.smartKey}`,
-			name: i18next.t("commands.shareActiveFile"),
-			hotkeys: [],
-			checkCallback: (checking) => {
-				const file = this.app.workspace.getActiveFile();
-				const frontmatter = file ? this.app.metadataCache.getFileCache(file).frontmatter : null;
-				if (
-					file && frontmatter && isShared(frontmatter, this.settings, file)
-				) {
-					if (!checking) {
-						shareOneNote(
-							branchName,
-							this.reloadOctokit(),
-							this.settings,
-							file,
-							null,
-							this.app.metadataCache,
-							this.app.vault
-						);
-					}
-					return true;
-				}
-				return false;
-			},
-		});
-	}
-	
-	createLinkCommands(repo: Repository, branchName: string) {
-		this.addCommand({
-			id: "publisher-copy-link",
-			name: i18next.t("commands.copyLink"),
-			hotkeys: [],
-			checkCallback: (checking) => {
-				const file = this.app.workspace.getActiveFile();
-				const frontmatter = file ? this.app.metadataCache.getFileCache(file).frontmatter : null;
-				if (
-					file && frontmatter && isShared(frontmatter, this.settings, file)
-				) {
-					if (!checking) {
-						createLink(
-							file, 
-							getRepoFrontmatter(this.settings, repo, frontmatter),
-							this.app.metadataCache,
-							this.app.vault,
-							this.settings
-						);
-						new Notice(i18next.t("settings.plugin.copyLink.command.onActivation"));
-					}
-					return true;
-				}
-				return false;
-			},
-		});
-	}
-	
-	createLinkOnActiveFile(branchName: string, repo: Repository) {
-		const file = this.app.workspace.getActiveFile();
-		const frontmatter = file ? this.app.metadataCache.getFileCache(file).frontmatter : null;
-		if (
-			file && frontmatter && isShared(frontmatter, this.settings, file)
-		) {
-			createLink(
-				file,
-				getRepoFrontmatter(this.settings, repo, frontmatter),
-				this.app.metadataCache,
-				this.app.vault,
-				this.settings
-			);
-			new Notice(i18next.t("settings.plugin.copyLink.command.onActivation"));
+	async chargeAllCommands(repo: Repository|null, plugin: GithubPublisher, branchName: string) {
+		if (plugin.settings.plugin.copyLink.addCmd) {
+			this.addCommand(createLinkCommands(repo, branchName, this));
 		}
+		this.addCommand(await publisherOneCall(repo, this, branchName));
+		this.addCommand(await deleteCommandsOnRepo(this, repo, branchName));
+		this.addCommand(await publisherPublishAll(repo, branchName));
+		this.addCommand(await publisherUploadNew(repo, branchName));
+		this.addCommand(await publisherUploadAllEditedNew(repo, branchName));
+		this.addCommand(await publisherUploadEdited(repo, branchName, this));
+		this.addCommand(await repositoryValidityCallback(this, repo, branchName));
 	}
 	
-	async shareActiveFile(repo: Repository | null, branchName: string) {
-		const file = this.app.workspace.getActiveFile();
-		const frontmatter = file ? this.app.metadataCache.getFileCache(file)?.frontmatter : null;
-		if (file && frontmatter && isShared(frontmatter, this.settings, file)) {
-			await shareOneNote(
-				branchName,
-				this.reloadOctokit(),
-				this.settings,
-				file,
-				repo,
-				this.app.metadataCache,
-				this.app.vault,
-			);
-		} else {
-			new Notice("No file is active or the file is not shared");
-		}
-	}
-	
-	async deleteCommands(repo: Repository, branchName: string) {
-		const repoFrontmatter = getRepoFrontmatter(this.settings, repo);
-		const publisher = this.reloadOctokit();
-		await deleteUnsharedDeletedNotes(
-			publisher,
-			this.settings,
-			publisher.octokit,
-			branchName,
-			repoFrontmatter as RepoFrontmatter,
-		);
-	}
-
-	async deleteCommandsOnRepo(repo: Repository, branchName: string) {
-		this.addCommand({
-			id: `publisher-delete-clean-${repo.smartKey}`,
-			name: i18next.t("commands.publisherDeleteClean") ,
-			hotkeys: [],
-			checkCallback: (checking) => {
-				if (this.settings.upload.autoclean.enable && this.settings.upload.behavior !== FolderSettings.fixed) {
-					if (!checking) {
-						const publisher = this.reloadOctokit();
-						deleteUnsharedDeletedNotes(
-							publisher,
-							this.settings,
-							publisher.octokit,
-							branchName,
-							getRepoFrontmatter(this.settings) as RepoFrontmatter,
-						);
-					}
-					return true;
-				}
-				return false;
-			},
-		});
-	}
-	
-	async uploadAllNotes(repo: Repository, branchName: string) {
-		const statusBarItems = this.addStatusBarItem();
-		const publisher = this.reloadOctokit();
-		const sharedFiles = publisher.getSharedFiles();
-		await shareAllMarkedNotes(
-			publisher,
-			this.settings,
-			publisher.octokit,
-			statusBarItems,
-			branchName,
-			getRepoFrontmatter(this.settings, repo) as RepoFrontmatter,
-			sharedFiles,
-			true,
-			this,
-			repo
-		);
-	}
-	
-	async uploadNewNotes(branchName: string, repo: Repository|null) {
-		const publisher = this.reloadOctokit();
-		await shareNewNote(
-			publisher,
-			publisher.octokit,
-			branchName,
-			this.app.vault,
-			this,
-			getRepoFrontmatter(this.settings, repo) as RepoFrontmatter,
-			repo
-		);
-	}
-
-	async repositoryValidityCallback(repo: Repository, branchName: string) {
-		this.addCommand({
-			id: "check-this-repo-validy",
-			name: i18next.t("commands.checkValidity.title") ,
-			checkCallback: (checking) => {
-				if (this.app.workspace.getActiveFile())
-				{
-					if (!checking) {
-						checkRepositoryValidity(
-							branchName,
-							this.reloadOctokit(),
-							this.settings,
-							repo,
-							this.app.workspace.getActiveFile(),
-							this.app.metadataCache);
-					}
-					return true;
-				}
-				return false;
-			},
-		});
-	}
-
-	async repositoryValidityActiveFile(branchName: string, repo: Repository) {
-		const file = this.app.workspace.getActiveFile();
-		if (file) {
-			await checkRepositoryValidity(
-				branchName,
-				this.reloadOctokit(),
-				this.settings,
-				repo,
-				file,
-				this.app.metadataCache);
-		} else {
-			new Notice("No file is active");
-		}
-	}
-	
-	async uploadAllEditedNotes(branchName: string, repo: Repository|null=null) {
-		const publisher = this.reloadOctokit();
-		await shareAllEditedNotes(
-			publisher,
-			publisher.octokit,
-			branchName,
-			this.app.vault,
-			this,
-			getRepoFrontmatter(this.settings, repo) as RepoFrontmatter,
-			repo
-		);
-	}
-
 	/**
 	 * Create a new instance of Octokit to load a new instance of GithubBranch 
 	*/
@@ -278,18 +83,7 @@ export default class GithubPublisher extends Plugin {
 		);
 	}
 	
-	async shareEditedOnly(branchName: string, repo: Repository|null) {
-		const publisher = this.reloadOctokit();
-		await shareOnlyEdited(
-			publisher,
-			publisher.octokit,
-			branchName,
-			this.app.vault,
-			this,
-			getRepoFrontmatter(this.settings, repo) as RepoFrontmatter,
-			null
-		);
-	}
+
 
 	/**
 	 * Function called when the plugin is loaded
@@ -378,135 +172,7 @@ export default class GithubPublisher extends Plugin {
 				}
 			})
 		);
-		if (this.settings.plugin.copyLink.addCmd) {
-			this.addCommand({
-				id: "publisher-copy-link",
-				name: i18next.t("commands.copyLink"),
-				hotkeys: [],
-				checkCallback: (checking) => {
-					const file = this.app.workspace.getActiveFile();
-					const frontmatter = file ? this.app.metadataCache.getFileCache(file).frontmatter : null;
-					if (
-						file && frontmatter && isShared(frontmatter, this.settings, file)
-					) {
-						if (!checking) {
-							createLink(
-								file, 
-								getRepoFrontmatter(this.settings, null, frontmatter),
-								this.app.metadataCache,
-								this.app.vault,
-								this.settings
-							);
-							new Notice(i18next.t("settings.plugin.copyLink.command.onActivation"));
-						}
-						return true;
-					}
-					return false;
-				},
-			});
-		}
-
-		this.addCommand({
-			id: "publisher-one",
-			name: i18next.t("commands.shareActiveFile") ,
-			hotkeys: [],
-			checkCallback: (checking) => {
-				const file = this.app.workspace.getActiveFile();
-				const frontmatter = file ? this.app.metadataCache.getFileCache(file).frontmatter : null;
-				if (
-					file && frontmatter && isShared(frontmatter, this.settings, file)
-				) {
-					if (!checking) {
-						shareOneNote(
-							branchName,
-							this.reloadOctokit(),
-							this.settings,
-							file,
-							null,
-							this.app.metadataCache,
-							this.app.vault
-						);
-					}
-					return true;
-				}
-				return false;
-			},
-		});
-
-		this.addCommand({
-			id: "publisher-delete-clean",
-			name: i18next.t("commands.publisherDeleteClean") ,
-			hotkeys: [],
-			checkCallback: (checking) => {
-				if (this.settings.upload.autoclean.enable && this.settings.upload.behavior !== FolderSettings.fixed) {
-					if (!checking) {
-						const publisher = this.reloadOctokit();
-						deleteUnsharedDeletedNotes(
-							publisher,
-							this.settings,
-							publisher.octokit,
-							branchName,
-							getRepoFrontmatter(this.settings) as RepoFrontmatter,
-						);
-					}
-					return true;
-				}
-				return false;
-			},
-		});
-
-		this.addCommand({
-			id: "publisher-publish-all",
-			name: i18next.t("commands.uploadAllNotes") ,
-			callback: async () => {
-				await this.uploadAllNotes(null, branchName);
-			},
-		});
-
-		this.addCommand({
-			id: "publisher-upload-new",
-			name: i18next.t("commands.uploadNewNotes") ,
-			callback: async () => {
-				await this.uploadNewNotes(branchName, null);
-			},
-		});
-
-		this.addCommand({
-			id: "publisher-upload-all-edited-new",
-			name: i18next.t("commands.uploadAllNewEditedNote") ,
-			callback: async () => {
-				await this.uploadAllEditedNotes(branchName, null);
-			},
-		});
-
-		this.addCommand({
-			id: "publisher-upload-edited",
-			name: i18next.t("commands.uploadAllEditedNote") ,
-			callback: async () => {
-				await this.shareEditedOnly(branchName, null);
-			},
-		});
-
-		this.addCommand({
-			id: "check-this-repo-validy",
-			name: i18next.t("commands.checkValidity.title") ,
-			checkCallback: (checking) => {
-				if (this.app.workspace.getActiveFile())
-				{
-					if (!checking) {
-						checkRepositoryValidity(
-							branchName,
-							this.reloadOctokit(),
-							this.settings,
-							null,
-							this.app.workspace.getActiveFile(),
-							this.app.metadataCache);
-					}
-					return true;
-				}
-				return false;
-			},
-		});
+		await this.chargeAllCommands(null, this, branchName);
 
 		this.addCommand({
 			id: "check-rate-limit",
@@ -523,6 +189,11 @@ export default class GithubPublisher extends Plugin {
 				new ChooseWhichRepoToRun(this.app, this, branchName).open();
 			}
 		});
+		
+		const repoWithShortcuts = this.settings.github.otherRepo.filter((repo) => repo.createShortcuts);
+		for (const repo of repoWithShortcuts) {
+			await this.chargeAllCommands(repo, this, branchName);
+		}
 	}
 
 	/**

@@ -1,4 +1,4 @@
-import { ShareStatusBar } from "./src/status_bar";
+import { ShareStatusBar } from "../src/status_bar";
 import {
 	createLink,
 	noticeMessage,
@@ -6,16 +6,16 @@ import {
 	noticeLog,
 	getSettingsOfMetadataExtractor,
 	createListEdited
-} from "./src/utils";
-import {checkRepositoryValidityWithRepoFrontmatter} from "./src/data_validation_test";
-import {GitHubPublisherSettings, RepoFrontmatter, Repository, UploadedFiles} from "./settings/interface";
-import { deleteFromGithub } from "./publish/delete";
-import { GithubBranch } from "./publish/branch";
+} from "../src/utils";
+import {checkRepositoryValidityWithRepoFrontmatter} from "../src/data_validation_test";
+import {GitHubPublisherSettings, RepoFrontmatter, Repository, UploadedFiles} from "../settings/interface";
+import { deleteFromGithub } from "../publish/delete";
+import { GithubBranch } from "../publish/branch";
 import { Octokit } from "@octokit/core";
 import { MetadataCache, Notice, Platform, TFile, Vault } from "obsidian";
-import GithubPublisher from "./main";
+import GithubPublisher from "../main";
 import i18next from "i18next";
-import { ListChangedFiles } from "./settings/modals/list_changed";
+import { ListChangedFiles } from "../settings/modals/list_changed";
 /**
  * Share all marked note (share: true) from Obsidian to GitHub
  * @param {GithubBranch} PublisherManager
