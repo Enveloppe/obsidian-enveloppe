@@ -124,6 +124,7 @@ function checkSlash(link: string): string {
  * @param {MetadataCache} metadataCache
  * @param {Vault} vault
  * @param {GitHubPublisherSettings} settings
+ * @param otherRepo
  * @return {Promise<void>}
  */
 
@@ -132,14 +133,15 @@ export async function createLink(
 	repo: RepoFrontmatter | RepoFrontmatter[],
 	metadataCache: MetadataCache,
 	vault: Vault,
-	settings: GitHubPublisherSettings
+	settings: GitHubPublisherSettings,
+	otherRepo: Repository | null
 ): Promise<void> {
 	const copyLink = settings.plugin.copyLink;
 	const github = settings.github;
 	if (!copyLink.enable) {
 		return;
 	}
-	let filepath = getReceiptFolder(file, settings, metadataCache, vault);
+	let filepath = getReceiptFolder(file, settings, metadataCache, vault, otherRepo);
 
 	let baseLink = copyLink.links;
 	if (baseLink.length === 0) {
@@ -370,11 +372,11 @@ export function getFrontmatterCondition(
 
 export function getRepoFrontmatter(
 	settings: GitHubPublisherSettings,
-	repository: Repository | null = null,
+	repository: Repository | null,
 	frontmatter?: FrontMatterCache
 ) {
 	let github = repository ?? settings.github;
-	if (frontmatter && frontmatter.shortRepo) {
+	if (frontmatter && frontmatter.shortRepo instanceof String) {
 		const smartKey = frontmatter.shortRepo.toLowerCase();
 		const allOtherRepo = settings.github.otherRepo;
 		const shortRepo = allOtherRepo.filter((repo) => {
@@ -421,6 +423,8 @@ export function getRepoFrontmatter(
 			isFrontmatterAutoClean= repo.length > 4 ? true : null;
 			repoFrontmatter = repositoryStringSlice(repo, repoFrontmatter);
 		}
+	} else if (frontmatter.shortRepo instanceof Array) {
+		return multipleShortKeyRepo(frontmatter, settings.github.otherRepo, repoFrontmatter);
 	}
 	if (frontmatter.autoclean !== undefined && isFrontmatterAutoClean === null) {
 		repoFrontmatter.autoclean = frontmatter.autoclean;
@@ -501,6 +505,28 @@ function parseMultipleRepo(
 					t.autoclean === v.autoclean
 			) === i
 	);
+}
+
+function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository[], repoFrontmatter: RepoFrontmatter) {
+	if (frontmatter.shortRepo instanceof Array) {
+		const multipleRepo: RepoFrontmatter[] = [];
+		for (const repo of frontmatter.shortRepo) {
+			const smartKey = repo.toLowerCase();
+			const shortRepo = allRepo.filter((repo) => {
+				return repo.smartKey.toLowerCase() === smartKey;
+			})[0];
+			if (shortRepo) {
+				multipleRepo.push({
+					branch: shortRepo.branch,
+					repo: shortRepo.repo,
+					owner: shortRepo.user,
+					autoclean: false,
+				} as RepoFrontmatter);
+			}
+		}
+		return multipleRepo;
+	}
+	return repoFrontmatter;
 }
 
 /**
