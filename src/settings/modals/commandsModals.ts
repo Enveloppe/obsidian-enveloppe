@@ -55,10 +55,6 @@ export class CommandsModals extends FuzzySuggestModal<GithubPublisherCommands> {
 				name: i18next.t("commands.uploadAllNotes")
 			},
 			{
-				commands: "deleteUnsharedDeletedNotes",
-				name: i18next.t("commands.publisherDeleteClean")
-			},
-			{
 				commands: "shareOneNote",
 				name: i18next.t("commands.shareActiveFile")
 			},
