@@ -13,6 +13,7 @@ import Publisher from "../publish/upload";
 import {getReceiptFolder} from "../conversion/filePath";
 import i18next from "i18next";
 import {Octokit} from "@octokit/core";
+import { type } from "os";
 
 
 /**
@@ -376,7 +377,7 @@ export function getRepoFrontmatter(
 	frontmatter?: FrontMatterCache
 ) {
 	let github = repository ?? settings.github;
-	if (frontmatter && frontmatter.shortRepo instanceof String) {
+	if (frontmatter && typeof frontmatter["shortRepo"] === "string") {
 		const smartKey = frontmatter.shortRepo.toLowerCase();
 		const allOtherRepo = settings.github.otherRepo;
 		const shortRepo = allOtherRepo.filter((repo) => {
@@ -393,7 +394,7 @@ export function getRepoFrontmatter(
 	if (settings.upload.behavior === FolderSettings.fixed) {
 		repoFrontmatter.autoclean = false;
 	}
-	if (!frontmatter || (frontmatter.multipleRepo === undefined && frontmatter.repo === undefined)) {
+	if (!frontmatter || (frontmatter.multipleRepo === undefined && frontmatter.repo === undefined && frontmatter.shortRepo === undefined)) {
 		return repoFrontmatter;
 	}
 	let isFrontmatterAutoClean= null;
