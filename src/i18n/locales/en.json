@@ -232,7 +232,7 @@
         "modals": {
           "desc": "These \"other repositories\" allow you to use all the commands on the repositories added below.",
           "duplicate": "Smartkey must be unique!",
-          "frontmatterInfo": "Using the \"shortKey\" frontmatter key with the \"smartKey\" also allows you to use this repository in a file without having to write its path.",
+          "frontmatterInfo": "Using the \"shortRepo\" frontmatter key with the \"smartKey\" also allows you to use this repository in a file without having to write its path.",
           "newRepo": "a new repository",
           "shortcuts": {
             "desc": "Add all commands for this repository in the command palette",
