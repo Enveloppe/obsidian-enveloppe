@@ -235,13 +235,16 @@ export default class GithubPublisher extends Plugin {
 			}
 		});
 
-		this.addCommand({
-			id: "run-cmd-for-repo",
-			name: i18next.t("commands.runOtherRepo"),
-			callback: async () => {
-				new ChooseWhichRepoToRun(this.app, this, branchName).open();
-			}
-		});
+
+		if (this.settings.github.otherRepo.length > 0) {
+			this.addCommand({
+				id: "run-cmd-for-repo",
+				name: i18next.t("commands.runOtherRepo"),
+				callback: async () => {
+					new ChooseWhichRepoToRun(this.app, this, branchName).open();
+				}
+			});
+		}
 		
 		const repoWithShortcuts = this.settings.github.otherRepo.filter((repo) => repo.createShortcuts);
 		for (const repo of repoWithShortcuts) {
