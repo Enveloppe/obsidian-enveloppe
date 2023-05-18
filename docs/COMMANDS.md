@@ -62,3 +62,7 @@ This commands is also run along the verification of the repository value, and ch
 ## Copy path
 
 You can choose to add a command to copy the path (from the blog) of the current note. This command is only available if you have enabled the copy link feature in [[Plugin]]. 
+
+## Run command for a repository
+
+This command is only available if you have more than one repository configured. It will allow you to run a command for a specific repository configured in the settings. 
