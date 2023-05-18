@@ -21,6 +21,7 @@
     },
     "copyLink": "Create a link to this note",
     "publisherDeleteClean": "Purge depublished and deleted files",
+    "runOtherRepo": "Run command for a repository",
     "shareActiveFile": "Upload single current active note",
     "shareViewFiles": "Upload {{- viewFile}} with Github Publisher",
     "uploadAllEditedNote": "Refresh all published notes",

@@ -235,7 +235,7 @@ export default class GithubPublisher extends Plugin {
 
 		this.addCommand({
 			id: "run-cmd-for-repo",
-			name: "Run command for a repository",
+			name: i18next.t("commands.runOtherRepo"),
 			callback: async () => {
 				new ChooseWhichRepoToRun(this.app, this, branchName).open();
 			}
