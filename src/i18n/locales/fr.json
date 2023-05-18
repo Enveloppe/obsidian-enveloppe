@@ -89,8 +89,8 @@
     "scanningRepo": "Scan du dépôt, veuillez patienter...",
     "sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
     "startingClean": "Début du nettoyage de {{- repo.owner}}/{{- repo.repo}}",
-    "successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
     "successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repo.owner}}/{{- repo.repo}}",
+    "successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
     "waitingWorkflow": "Maintenant, attente de la fin du workflow..."
   },
   "modals": {
@@ -305,7 +305,11 @@
           "owner": "Pseudo GitHub du propriétaire du dépôt",
           "repo": "Nom du dépôt"
         },
-        "share": "La clé utilisée pour partager une note",
+        "share": {
+          "other": "Vous pouvez également utiliser une autre shareKey basée sur la clé définie dans « Gérer plus de dépôt ». Cela vous permet de séparer vos différents dépôts. Si vous utilisez les clés principales et secondaires, le dépôt principal sera utilisé.",
+          "title": "La clé utilisée pour partager une note"
+        },
+        "shortRepo": "Autorise l'utilisation de l'un des dépôts définis dans les paramètres",
         "title": "Aide-mémoire frontmatter",
         "titleKey": "Change le titre de la note"
       },

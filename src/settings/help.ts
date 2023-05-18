@@ -13,6 +13,7 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings) {
 	if (settings.upload.behavior === FolderSettings.yaml) {
 		category = `${settings.upload.yamlFolderKey}: ${settings.upload.defaultName}\n`;
 	}
+	const shortRepo = settings.github.otherRepo.length > 0 ? "shortRepo: " + settings.github.otherRepo[0].smartKey +"\n" : "";
 	return `${settings.plugin.shareKey}: true\n` + category +
 	"links:\n" +
 	`  mdlinks: ${settings.conversion.links.wiki}\n` +
@@ -27,6 +28,7 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings) {
 	`  folder: ${settings.embed.folder}\n` +
 	`dataview: ${settings.conversion.dataview}\n` +
 	`hardBreak: ${settings.conversion.hardbreak}\n` +
+	shortRepo +
 	"repo:\n" +
 	`  owner: ${settings.github.user}\n` +
 	`  repo: ${settings.github.repo}\n` +
@@ -51,7 +53,10 @@ export function help(settings: GitHubPublisherSettings) {
 				cls: "code-title",
 			});
 			span.createEl("span", {
-				text: ` ${i18next.t("settings.help.frontmatter.share")}`,
+				text: `${i18next.t("settings.help.frontmatter.share.title")}`,
+			});
+			span.createEl("ul", null, (l) => {
+				l.createEl("span", {text: i18next.t("settings.help.frontmatter.share.other")});
 			});
 		});
 		span.createEl("li", null, (span) => {
@@ -160,6 +165,12 @@ export function help(settings: GitHubPublisherSettings) {
 				text: `: ${
 					i18next.t("settings.help.frontmatter.hardBreak")
 				}`,
+			});
+		});
+		span.createEl("li", null, (span) => {
+			span.createEl("code", { text: "shortRepo", cls: "code-title" });
+			span.createEl("span", {
+				text: `: ${i18next.t("settings.help.frontmatter.shortRepo")}`,
 			});
 		});
 		span.createEl("li", null, (span) => {

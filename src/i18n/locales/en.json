@@ -89,8 +89,8 @@
     "scanningRepo": "Scanning the repository, may take a while...",
     "sendMessage": "Upload {{- nbNotes}} notes to {{- repo.owner}}/{{- repo.repo}}",
     "startingClean": "Starting cleaning {{- repo.owner}}/{{- repo.repo}}",
-    "successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repo.owner}}/{{- repo.repo}}",
     "successPublishOneNote": "Successfully uploaded {{- file}} to {{- repo.owner}}/{{- repo.repo}}",
+    "successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repo.owner}}/{{- repo.repo}}",
     "waitingWorkflow": "Now, waiting for the workflow to be completed..."
   },
   "modals": {
@@ -305,7 +305,11 @@
           "owner": "Owner of the repo",
           "repo": "Name of the repo"
         },
-        "share": "This key is used to share a note with the plugin.",
+        "share": {
+          "other": "You could also use another shareKey based on the key set in « Manage other repo ». It allows you to separate your different repository. If the main and secondaries key are used, the main repo will be used.",
+          "title": "This key is used to share a note with the plugin."
+        },
+        "shortRepo": "Allow to use one of the repo set in other repo settings.",
         "title": "Frontmatter keys cheatsheet",
         "titleKey": "Change the title of the note."
       },
