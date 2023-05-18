@@ -2,6 +2,14 @@ import {App, FuzzySuggestModal } from "obsidian";
 import {FolderSettings, Repository} from "../interface";
 import GithubPublisherPlugin from "../../main";
 import i18next from "i18next";
+import {
+	createLinkOnActiveFile,
+	deleteCommands, repositoryValidityActiveFile, shareActiveFile,
+	shareEditedOnly,
+	uploadAllEditedNotes,
+	uploadAllNotes,
+	uploadNewNotes
+} from "../../commands/plugin_commands";
 
 interface GithubPublisherCommands {
 	commands: string;
@@ -92,28 +100,28 @@ export class CommandsModals extends FuzzySuggestModal<GithubPublisherCommands> {
 	onChooseItem(item: GithubPublisherCommands, evt: MouseEvent | KeyboardEvent): void {
 		switch (item.commands) {
 		case "shareAllMarkedNotes":
-			this.plugin.uploadAllNotes(this.repo, this.branchName);
+			uploadAllNotes(this.plugin, this.repo, this.branchName);
 			break;
 		case "deleteUnsharedDeletedNotes":
-			this.plugin.deleteCommands(this.repo, this.branchName);
+			deleteCommands(this.plugin, this.repo, this.branchName);
 			break;
 		case "shareNewNote":
-			this.plugin.uploadNewNotes(this.branchName, this.repo);
+			uploadNewNotes(this.plugin, this.branchName, this.repo);
 			break;
 		case "shareAllEditedNotes":
-			this.plugin.uploadAllEditedNotes(this.branchName, this.repo);
+			uploadAllEditedNotes(this.plugin, this.branchName, this.repo);
 			break;
 		case "shareOnlyEdited":
-			this.plugin.shareEditedOnly(this.branchName, this.repo);
+			shareEditedOnly(this.branchName, this.repo, this.plugin);
 			break;
 		case "shareOneNote":
-			this.plugin.shareActiveFile(this.repo, this.branchName);
+			shareActiveFile(this.plugin, this.repo, this.branchName);
 			break;
 		case "createLink":
-			this.plugin.createLinkOnActiveFile(this.branchName, this.repo);
+			createLinkOnActiveFile(this.branchName, this.repo, this.plugin);
 			break;
 		case "checkRepositoryValidity":
-			this.plugin.repositoryValidityActiveFile(this.branchName, this.repo);
+			repositoryValidityActiveFile(this.plugin, this.branchName, this.repo);
 			break;
 		}
 		console.log(`run command ${item.commands}`);

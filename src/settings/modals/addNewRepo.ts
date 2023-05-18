@@ -29,8 +29,9 @@ export class ModalAddingNewRepository extends Modal {
 
 		const {contentEl} = this;
 		contentEl.empty();
-		contentEl.createEl("h2", {text:"Add more repository"});
-		contentEl.createEl("p", {text: "With these, you can create commands to send files to other repositories. Without configured them in a file. You can also use them with \"shortRepo: smartkey\", in the frontmatter."});
+		contentEl.createEl("h2", {text: i18next.t("settings.github.smartRepo.modals.title")});
+		contentEl.createEl("p", {text: i18next.t("settings.github.smartRepo.modals.desc")});
+		contentEl.createEl("p", {text: i18next.t("settings.github.smartRepo.modals.frontmatterInfo")});
 
 		const repository: Repository[] = this.settings.github.otherRepo ? this.settings.github.otherRepo : [];
 
@@ -55,7 +56,7 @@ export class ModalAddingNewRepository extends Modal {
 			.addButton((button) => {
 				button
 
-					.setButtonText(i18next.t("common.add", {things: i18next.t("common.repository").toLowerCase()}))
+					.setButtonText(i18next.t("common.add", {things: i18next.t("settings.github.smartRepo.modals.newRepo").toLowerCase()}))
 					.onClick(() => {
 						repository.push(defaultRepository);
 						this.onOpen();
@@ -136,7 +137,7 @@ class ModalEditingRepository extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
-		contentEl.createEl("h2", {text: `Editing ${this.repository.smartKey}`});
+		contentEl.createEl("h2", {text: i18next.t("common.edit", {things: this.repository.smartKey})});
 
 		new Setting(contentEl)
 			.setName(i18next.t("settings.github.apiType.title") )
@@ -219,8 +220,8 @@ class ModalEditingRepository extends Modal {
 					})
 			);
 		new Setting(contentEl)
-			.setName("Shortcuts")
-			.setDesc("Create commands for this repository")
+			.setName(i18next.t("settings.github.smartRepo.modals.shortcuts.title"))
+			.setDesc(i18next.t("settings.github.smartRepo.modals.shortcuts.desc"))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.repository.createShortcuts)

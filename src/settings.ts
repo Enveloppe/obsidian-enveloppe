@@ -259,7 +259,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			)
 			.addButton((button) =>
 				button
-					.setButtonText("Add new repository")
+					.setButtonText(i18next.t("settings.github.smartRepo.button"))
 					.onClick(async () => {
 						this.plugin.settings.github.otherRepo ??= [];
 						new ModalAddingNewRepository(this.app, this.plugin.settings, this.branchName, this.plugin, (result => {

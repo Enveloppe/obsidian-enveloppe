@@ -264,7 +264,8 @@ export default class Publisher {
 				linkedFiles,
 				this.plugin,
 				this.vault,
-				repoFrontmatter
+				repoFrontmatter,
+				shortRepo
 			);
 			const path = getReceiptFolder(
 				file,
@@ -325,6 +326,7 @@ export default class Publisher {
 	 * @param {boolean} deepScan if the plugin must check the embed notes too.
 	 * @param {FilesManagement} shareFiles FilesManagement class
 	 * @param {boolean} autoclean If the autoclean must be done right after the file upload
+	 * @param shortRepo
 	 */
 
 	async uploadOnMultipleRepo(
@@ -365,7 +367,8 @@ export default class Publisher {
 				this.octokit,
 				branchName,
 				shareFiles,
-				repo
+				repo,
+				shortRepo
 			);
 		}
 		return {

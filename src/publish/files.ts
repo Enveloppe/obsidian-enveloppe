@@ -5,7 +5,7 @@ import {
 	LinkedNotes,
 	GitHubPublisherSettings,
 	FrontmatterConvert,
-	RepoFrontmatter,
+	RepoFrontmatter, Repository,
 } from "../settings/interface";
 import { Octokit } from "@octokit/core";
 import {
@@ -92,7 +92,7 @@ export class FilesManagement extends Publisher {
 	 * @return {ConvertedLink[]} The shared files
 	 */
 
-	getAllFileWithPath(): ConvertedLink[] {
+	getAllFileWithPath(repo: Repository | null): ConvertedLink[] {
 		const files = this.vault.getFiles();
 		const allFileWithPath: ConvertedLink[] = [];
 		const shareKey = this.settings.plugin.shareKey;
@@ -119,6 +119,7 @@ export class FilesManagement extends Publisher {
 						real: file.path,
 						repoFrontmatter: getRepoFrontmatter(
 							this.settings,
+							repo,
 							frontMatter
 						),
 					});

@@ -83,7 +83,8 @@ export async function shareAllMarkedNotes(
 				octokit,
 				branchName,
 				PublisherManager,
-				repoFrontmatter
+				repoFrontmatter,
+				shortRepo
 			);
 			
 			if (
@@ -143,7 +144,8 @@ export async function deleteUnsharedDeletedNotes(
 	settings: GitHubPublisherSettings,
 	octokit: Octokit,
 	branchName: string,
-	repoFrontmatter: RepoFrontmatter
+	repoFrontmatter: RepoFrontmatter,
+	otherRepo: Repository | null
 ) {
 	try {
 		new Notice(
@@ -158,7 +160,8 @@ export async function deleteUnsharedDeletedNotes(
 			octokit,
 			branchName,
 			PublisherManager,
-			repoFrontmatter
+			repoFrontmatter,
+			otherRepo
 		);
 		await PublisherManager.updateRepository(branchName, repoFrontmatter);
 		if (settings.plugin.displayModalRepoEditing) new ListChangedFiles(app, deleted).open();
@@ -279,7 +282,7 @@ export async function shareNewNote(
 ) {
 	const settings = plugin.settings;
 	new Notice(i18next.t("informations.scanningRepo") );
-	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
+	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(shortRepo);
 	// Get all file in the repo before the creation of the branch
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
 		repoFrontmatter.branch, // we need to take the master branch because the branch to create doesn't exist yet
@@ -340,7 +343,7 @@ export async function shareAllEditedNotes(
 ) {
 	const settings = plugin.settings;
 	new Notice(i18next.t("informations.scanningRepo") );
-	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
+	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(shortRepo);
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
 		repoFrontmatter.branch,
 		octokit,
@@ -407,7 +410,7 @@ export async function shareOnlyEdited(
 ) {
 	const settings = plugin.settings;
 	new Notice(i18next.t("informations.scanningRepo") );
-	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath();
+	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(shortRepo);
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
 		repoFrontmatter.branch,
 		octokit,

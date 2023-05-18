@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import {FolderSettings, RepoFrontmatter, Repository} from "../settings/interface";
+import {RepoFrontmatter, Repository} from "../settings/interface";
 import {checkRepositoryValidity, isShared} from "../src/data_validation_test";
 import {createLink, getRepoFrontmatter} from "../src/utils";
 import GithubPublisher from "../main";
@@ -56,7 +56,8 @@ export async function deleteCommands(plugin : GithubPublisher, repo: Repository,
 		plugin.settings,
 		publisher.octokit,
 		branchName,
-			repoFrontmatter as RepoFrontmatter,
+		repoFrontmatter as RepoFrontmatter,
+		repo
 	);
 }
 

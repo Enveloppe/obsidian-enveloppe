@@ -59,6 +59,7 @@ export async function deleteCommandsOnRepo(plugin: GithubPublisher, repo: Reposi
 						publisher.octokit,
 						branchName,
 						getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
+						repo
 					);
 				}
 				return true;

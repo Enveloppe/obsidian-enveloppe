@@ -1,4 +1,4 @@
-import {FolderSettings, GitHubPublisherSettings, GithubTiersVersion} from "../../plugin/settings/interface";
+import {FolderSettings, GitHubPublisherSettings, GithubTiersVersion} from "../../src/settings/interface";
 
 const settings: GitHubPublisherSettings = {
 	github: {
@@ -15,6 +15,7 @@ const settings: GitHubPublisherSettings = {
 			customCommitMsg: "",
 			workflowName: "",
 		},
+		otherRepo: [],
 	},
 	upload: {
 		behavior: FolderSettings.fixed,

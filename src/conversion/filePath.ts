@@ -10,7 +10,7 @@ import {
 	LinkedNotes,
 	GitHubPublisherSettings,
 	FrontmatterConvert,
-	RepoFrontmatter,
+	RepoFrontmatter, Repository,
 } from "../settings/interface";
 import {
 	getCategory,
@@ -71,6 +71,7 @@ export function getDataviewPath(
  * @param {FrontMatterCache | null} frontmatter FrontmatterCache or null
  * @param {RepoFrontmatter[] | RepoFrontmatter} sourceRepo The repoFrontmatter from the original file
  * @param {FrontmatterConvert} frontmatterSettings FrontmatterConvert
+ * @param shortRepo
  * @return {string} relative path
  */
 
@@ -82,12 +83,13 @@ export async function createRelativePath(
 	vault: Vault,
 	frontmatter: FrontMatterCache | null,
 	sourceRepo: RepoFrontmatter[] | RepoFrontmatter,
-	frontmatterSettings: FrontmatterConvert
+	frontmatterSettings: FrontmatterConvert,
+	shortRepo: Repository | null
 ): Promise<string> {
 	const sourcePath = getReceiptFolder(sourceFile, settings, metadata, vault);
 	const frontmatterTarget = await metadata.getFileCache(targetFile.linked)
 		.frontmatter;
-	const targetRepo = await getRepoFrontmatter(settings, frontmatterTarget);
+	const targetRepo = await getRepoFrontmatter(settings, shortRepo, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(sourceRepo, targetRepo);
 	const shared = isInternalShared(
 		settings.plugin.shareKey,
