@@ -4,16 +4,15 @@ import {
 	DEFAULT_SETTINGS,
 	GitHubPublisherSettings,
 	GithubTiersVersion,
-	RepoFrontmatter, Repository,
+	Repository,
 } from "./settings/interface";
 import { OldSettings } from "./settings/migrate";
-import { getRepoFrontmatter, verifyRateLimitAPI } from "./src/utils";
+import { verifyRateLimitAPI } from "./src/utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
 import {isShared} from "./src/data_validation_test";
 import {
 	shareOneNote,
-	shareOnlyEdited
 } from "./commands/commands";
 import i18next from "i18next";
 import {getTitleField, regexOnFileName} from "./conversion/filePath";
@@ -48,7 +47,7 @@ export default class GithubPublisher extends Plugin {
 
 	async chargeAllCommands(repo: Repository|null, plugin: GithubPublisher, branchName: string) {
 		if (plugin.settings.plugin.copyLink.addCmd) {
-			this.addCommand(createLinkCommands(repo, branchName, this));
+			this.addCommand(await createLinkCommands(repo, branchName, this));
 		}
 		this.addCommand(await publisherOneCall(repo, this, branchName));
 		this.addCommand(await deleteCommandsOnRepo(this, repo, branchName));
@@ -57,6 +56,58 @@ export default class GithubPublisher extends Plugin {
 		this.addCommand(await publisherUploadAllEditedNew(repo, branchName));
 		this.addCommand(await publisherUploadEdited(repo, branchName, this));
 		this.addCommand(await repositoryValidityCallback(this, repo, branchName));
+	}
+
+	cleanSpecificCommands(repo: Repository) {
+		//@ts-ignore
+		const allCommands = this.app.commands.listCommands();
+		for (const command of allCommands) {
+			if (command.id.startsWith("obsidian-mkdocs-publisher")) {
+				const publisherCMDsName = command.id.replace("obsidian-mkdocs-publisher:", "").split("-");
+				//repo will be the last element of the array
+				const repoCmd = publisherCMDsName[publisherCMDsName.length - 1];
+				if (repoCmd.startsWith("K")) {
+					if (repo.smartKey === repoCmd.replace("K", "")) {
+						//@ts-ignore
+						this.app.commands.removeCommand(command.id);
+					}
+				}
+			}
+		}
+	}
+
+	cleanOldCommands() {
+		const allRepo = this.settings.github.otherRepo;
+		//@ts-ignore
+		const allCommands = this.app.commands.listCommands();
+		for (const command of allCommands) {
+			if (command.id.startsWith("obsidian-mkdocs-publisher")) {
+				const publisherCMDsName = command.id.replace("obsidian-mkdocs-publisher:", "").split("-");
+				//repo will be the last element of the array
+				const repoCmd = publisherCMDsName[publisherCMDsName.length - 1];
+				if (repoCmd.startsWith("K")) {
+					const repoIndex = allRepo.findIndex((repo) => repo.smartKey === repoCmd.replace("K", ""));
+					if (repoIndex === -1) {
+						//@ts-ignore
+						this.app.commands.removeCommand(command.id);
+					}
+				}
+			}
+		}
+	}
+	
+	async reloadCommands(branchName: string) {
+		//compare old and new repo to delete old commands
+		console.log("Reloading commands");
+		const newRepo = this.settings.github.otherRepo;
+		this.cleanOldCommands();
+		for (const repo of newRepo) {
+			if (repo.createShortcuts) {
+				await this.chargeAllCommands(repo, this, branchName);
+			} else {
+				this.cleanSpecificCommands(repo);
+			}
+		}
 	}
 	
 	/**

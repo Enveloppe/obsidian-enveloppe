@@ -265,6 +265,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						new ModalAddingNewRepository(this.app, this.plugin.settings, this.branchName, this.plugin, (result => {
 							this.plugin.settings.github.otherRepo = result;
 							this.plugin.saveSettings();
+							this.plugin.reloadCommands(this.branchName);
 						})
 						).open();
 					}));
