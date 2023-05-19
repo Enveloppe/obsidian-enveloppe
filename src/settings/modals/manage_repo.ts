@@ -85,7 +85,6 @@ export class ModalAddingNewRepository extends Modal {
 							} else if (repo.smartKey === "default") {
 								text.inputEl.style.border = "1px solid red";
 								repo.smartKey = "";
-								// @ts-ignore WHY ?????
 								new Notice(i18next.t("settings.github.smartRepo.modals.default") as string);
 							} else {
 								text.inputEl.style.border = "0";

@@ -1,3 +1,8 @@
+/**
+ * @file src/commands/plugin_commands.ts
+ * @description Contains all the commands that are used by the plugin ; used in suggest_other_repo_command.ts
+ */
+
 import i18next from "i18next";
 import {RepoFrontmatter, Repository} from "../settings/interface";
 import {checkRepositoryValidity, isShared} from "../src/data_validation_test";
@@ -12,8 +17,15 @@ import {
 } from "./commands";
 import { Notice } from "obsidian";
 
-
-export async function createLinkOnActiveFile(branchName: string, repo: Repository, plugin: GithubPublisher) {
+/**
+ * Create the command to create a link to the note in the repo if a file is active ; else do nothing
+ * @call createLink
+ * @param {string} branchName
+ * @param {Repository} repo
+ * @param {GithubPublisher} plugin
+ * @return {Promise<void>}
+ */
+export async function createLinkOnActiveFile(branchName: string, repo: Repository, plugin: GithubPublisher): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	const frontmatter = file ? plugin.app.metadataCache.getFileCache(file).frontmatter : null;
 	if (
@@ -27,10 +39,20 @@ export async function createLinkOnActiveFile(branchName: string, repo: Repositor
 			plugin.settings,
 			repo
 		);
-		new Notice(i18next.t("settings.plugin.copyLink.command.onActivation"));
+		new Notice(i18next.t("commands.copyLink.onActivation"));
+	} else {
+		new Notice(i18next.t("commands.runOtherRepo.noFile"));
 	}
 }
 
+/**
+ * Command to shareTheActiveFile ; Return an error if no file is active
+ * @call shareOneNote
+ * @param {GithubPublisher} plugin
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
+ * @param {string} branchName
+ * @return {Promise<void>}
+ */
 export async function shareActiveFile(plugin: GithubPublisher, repo: Repository | null, branchName: string) {
 	const file = plugin.app.workspace.getActiveFile();
 	const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
@@ -45,10 +67,17 @@ export async function shareActiveFile(plugin: GithubPublisher, repo: Repository 
 			plugin.app.vault,
 		);
 	} else {
-		new Notice("No file is active or the file is not shared");
+		new Notice(i18next.t("commands.runOtherRepo.noFile"));
 	}
 }
 
+/**
+ * Command to delete the files
+ * @param {GithubPublisher} plugin
+ * @param {Repository} repo
+ * @param {string} branchName
+ * @return {Promise<void>}
+ */
 export async function deleteCommands(plugin : GithubPublisher, repo: Repository, branchName: string) {
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	const publisher = plugin.reloadOctokit();

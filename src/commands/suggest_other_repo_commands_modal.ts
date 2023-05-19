@@ -78,7 +78,7 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 		if (this.plugin.settings.plugin.copyLink) {
 			cmd.push({
 				commands: "createLink",
-				name: i18next.t("commands.copyLink"),
+				name: i18next.t("commands.copyLink.title"),
 			});
 		}
 		if (this.plugin.settings.upload.autoclean.enable && this.plugin.settings.upload.behavior !== FolderSettings.fixed) {
