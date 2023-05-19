@@ -1,6 +1,32 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [5.8.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.7.1...5.8.0-0) (2023-05-19)
+
+
+### Features
+
+* add a sharedKey for each repo ([dfb2f98](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/dfb2f98a31eb9667328de7843d4cb76ed56cd9fc))
+* add and delete commands with shortcuts ([c1382fc](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c1382fc89b2ec581909c799ecccdf5aa6d1401e1))
+* add custom copy link ([3eb1b14](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3eb1b14de792e61ab9d67bfc79084523bc0d1641))
+* add settings to copy links ([b81ecb6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b81ecb6fec54073fd4916accbc0cc760a9b4d818))
+* add shortcuts commands ([cdda13b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/cdda13b8f5acdee7dd826c189472cf099a9e5cd1))
+* allow using multiple shortkey in shortRepo ([5b53e7b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5b53e7be53a8e5f4c8d85fad87526131105d78df))
+* shortRepo key & config repo in settings ([9af7d8f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/9af7d8f672980734c8d5e507d36207d5f6628495))
+
+
+### Bug Fixes
+
+* add error if using default as shortRepo name ([1ff77c8](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1ff77c87dc3af2b9f2980808744d8d464f224682))
+* add repository to create links ([9c9fcc5](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/9c9fcc57e07deab8751dfa6f6bf8370c45e6e134))
+* don't create commands if no other repo is configured ([e4b0982](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e4b098216f6db63d81567f39be44bb134d1648c5))
+* everywhere otherRepo is needed ([30b2c76](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/30b2c76657c465b36b292902eddc4ebc94bf7a8d))
+* forgot translation command ([062d3f6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/062d3f61fbd57ea0a7a68f94f59f9fb49a5673ca))
+* getFrontmatter doesn't get shortRepo ([2143d3e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2143d3e7dbeaf8326ab066eb18013f009743753a))
+* remove duplicate ([f6d4fda](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f6d4fdabb811824752b20cffc8ea660b4bcd946e))
+* rename "shortkey" in "shortRepo" ([11cad59](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/11cad59aeddf5820b455f2ea8b9f131b1fbbba25))
+* shortRepo with frontmatter doesn't work ([307bf05](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/307bf051b367b138879ec7efe9f24fdd74b876c1))
 
 ## [5.6.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.6.0-1...5.6.0-2) (2023-04-02)
 
