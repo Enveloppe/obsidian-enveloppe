@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.0.0-1...6.0.0-2) (2023-05-19)
+
+
+### Bug Fixes
+
+* **import-export:** censor info about github in otherRepo too ([b393c6a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b393c6ab7610d1d408e9ad4129c7ff3d7bb9fb71))
+
 ## [6.0.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.0.0-0...6.0.0-1) (2023-05-19)
 
 ## [6.0.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.8.0-0...6.0.0-0) (2023-05-19)
