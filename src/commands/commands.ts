@@ -137,9 +137,10 @@ export async function shareAllMarkedNotes(
  * @param {Octokit} octokit
  * @param {string} branchName - The branch name created by the plugin
  * @param {RepoFrontmatter} repoFrontmatter
+ * @param otherRepo
  * @return {Promise<void>}
  */
-export async function deleteUnsharedDeletedNotes(
+export async function purgeNotesRemotes(
 	PublisherManager: GithubBranch,
 	settings: GitHubPublisherSettings,
 	octokit: Octokit,

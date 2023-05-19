@@ -1,14 +1,27 @@
+/**
+ * @file callback.ts
+ * @description Return the commands based on the fact it's for a specific repo or the default one
+ * The id is different if a repo is set, and the smartkey is used as a name, prepended by a K
+ */
+
 import {FolderSettings, RepoFrontmatter, Repository} from "../settings/interface";
 import GithubPublisher from "../main";
 import {checkRepositoryValidity, isShared} from "../src/data_validation_test";
 import {createLink, getRepoFrontmatter} from "../src/utils";
 import i18next from "i18next";
 import {Command, Notice } from "obsidian";
-import {deleteUnsharedDeletedNotes, shareOneNote} from "./commands";
+import {purgeNotesRemotes, shareOneNote} from "./commands";
 import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} from "./plugin_commands";
 
-
-export async function createLinkCommands(repo: Repository | null, branchName: string, plugin: GithubPublisher) {
+/**
+ * Create the command to create a link to the note in the repo
+ * @call createLink
+ * @param {Repository | null} repo
+ * @param {string} branchName
+ * @param {GithubPublisher} plugin
+ * @return {Promise<Command>}
+ */
+export async function createLinkCommand(repo: Repository | null, branchName: string, plugin: GithubPublisher) {
 	const id = repo ? `publisher-copy-link-K${repo.smartKey}` : "publisher-copy-link";
 	const common = i18next.t("common.repository");
 	let name = i18next.t("commands.copyLink");
@@ -41,7 +54,16 @@ export async function createLinkCommands(repo: Repository | null, branchName: st
 	} as Command;
 }
 
-export async function deleteCommandsOnRepo(plugin: GithubPublisher, repo: Repository | null, branchName: string) {
+
+/**
+ * Command to delete file on the repo
+ * @call purgeNotesRemotes
+ * @param {GithubPublisher} plugin
+ * @param {Repository | null} repo
+ * @param {string} branchName
+ * @return {Promise<Command>}
+ */
+export async function purgeNotesRemoteCommand(plugin: GithubPublisher, repo: Repository | null, branchName: string) {
 	const id = repo ? `publisher-delete-clean-K${repo.smartKey}` : "publisher-delete-clean";
 	let name = i18next.t("commands.publisherDeleteClean");
 	const common = i18next.t("common.repository");
@@ -54,7 +76,7 @@ export async function deleteCommandsOnRepo(plugin: GithubPublisher, repo: Reposi
 			if (plugin.settings.upload.autoclean.enable && plugin.settings.upload.behavior !== FolderSettings.fixed) {
 				if (!checking) {
 					const publisher = plugin.reloadOctokit();
-					deleteUnsharedDeletedNotes(
+					purgeNotesRemotes(
 						publisher,
 						plugin.settings,
 						publisher.octokit,
@@ -70,7 +92,15 @@ export async function deleteCommandsOnRepo(plugin: GithubPublisher, repo: Reposi
 	} as Command;
 }
 
-export async function publisherOneCall(repo: Repository|null, plugin: GithubPublisher, branchName: string) {
+/**
+ * Command to upload the active file ; use checkCallback to check if the file is shared and if they are a active file
+ * @call shareOneNote
+ * @param {Repository | null} repo
+ * @param {GithubPublisher} plugin
+ * @param {string} branchName
+ * @return {Promise<Command>}
+ */
+export async function shareOneNoteCommand(repo: Repository|null, plugin: GithubPublisher, branchName: string) {
 	const id = repo ? `publisher-one-K${repo.smartKey}` : "publisher-one";
 	let name = i18next.t("commands.shareActiveFile");
 	const common = i18next.t("common.repository");
@@ -103,7 +133,14 @@ export async function publisherOneCall(repo: Repository|null, plugin: GithubPubl
 	} as Command;
 }
 
-export async function publisherPublishAll(repo: Repository|null, branchName: string) {
+/**
+ * Upload all note
+ * @call uploadAllNotes
+ * @param {Repository | null} repo
+ * @param {string} branchName
+ * @return {Promise<Command>}
+ */
+export async function uploadAllNotesCommand(repo: Repository|null, branchName: string) {
 	const id = repo ? `publisher-publish-all-K${repo.smartKey}` : "publisher-publish-all";
 	let name = i18next.t("commands.uploadAllNotes");
 	const common = i18next.t("common.repository");
@@ -131,7 +168,14 @@ export async function publisherUploadNew(repo: Repository | null, branchName: st
 	} as Command;
 }
 
-export async function publisherUploadAllEditedNew(repo: Repository|null, branchName: string) {
+/**
+ * Share all edited note
+ * @call uploadAllEditedNotes
+ * @param {Repository | null} repo
+ * @param {string} branchName
+ * @return {Promise<Command>}
+ */
+export async function uploadAllEditedNoteCommand(repo: Repository|null, branchName: string) {
 	const id = repo ? `publisher-upload-all-edited-new-K${repo.smartKey}` : "publisher-upload-all-edited-new";
 	let name = i18next.t("commands.uploadAllNewEditedNote");
 	const common = i18next.t("common.repository");
@@ -145,7 +189,15 @@ export async function publisherUploadAllEditedNew(repo: Repository|null, branchN
 	} as Command;
 }
 
-export async function publisherUploadEdited(repo: Repository|null, branchName: string, plugin: GithubPublisher) {
+/**
+ * Share edited note only
+ * @call shareEditedOnly
+ * @param {Repository | null} repo
+ * @param {string} branchName
+ * @param {GithubPublisher} plugin
+ * @return {Promise<Command>}
+ */
+export async function shareEditedOnlyCommand(repo: Repository|null, branchName: string, plugin: GithubPublisher) {
 	const id = repo ? `publisher-upload-edited-K${repo.smartKey}` : "publisher-upload-edited";
 	let name = i18next.t("commands.uploadAllEditedNote");
 	const common = i18next.t("common.repository");
@@ -159,7 +211,15 @@ export async function publisherUploadEdited(repo: Repository|null, branchName: s
 	} as Command;
 }
 
-export async function repositoryValidityCallback(plugin: GithubPublisher, repo: Repository, branchName: string) {
+/**
+ * Check if the repository is valid
+ * @param {GithubPublisher} plugin
+ * @param {Repository} repo
+ * @param {string} branchName
+ * @return {Promise<Command>}
+ */
+
+export async function checkRepositoryValidityCommand(plugin: GithubPublisher, repo: Repository, branchName: string) {
 	const id = repo ? `check-plugin-repo-validy-K${repo.smartKey}` : "check-plugin-repo-validy";
 	let name = i18next.t("commands.checkValidity.title");
 	const common = i18next.t("common.repository");

@@ -4,7 +4,7 @@ import {checkRepositoryValidity, isShared} from "../src/data_validation_test";
 import {createLink, getRepoFrontmatter} from "../src/utils";
 import GithubPublisher from "../main";
 import {
-	deleteUnsharedDeletedNotes,
+	purgeNotesRemotes,
 	shareAllEditedNotes,
 	shareAllMarkedNotes,
 	shareNewNote,
@@ -51,7 +51,7 @@ export async function shareActiveFile(plugin: GithubPublisher, repo: Repository 
 export async function deleteCommands(plugin : GithubPublisher, repo: Repository, branchName: string) {
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	const publisher = plugin.reloadOctokit();
-	await deleteUnsharedDeletedNotes(
+	await purgeNotesRemotes(
 		publisher,
 		plugin.settings,
 		publisher.octokit,

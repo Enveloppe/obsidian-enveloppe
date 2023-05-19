@@ -20,11 +20,11 @@ import { resources, translationLanguage } from "./i18n/i18next";
 import {migrateSettings} from "./settings/migrate";
 import {ChooseWhichRepoToRun} from "./settings/modals/commandsModals";
 import {
-	createLinkCommands,
-	deleteCommandsOnRepo,
-	publisherOneCall,
-	publisherPublishAll, publisherUploadAllEditedNew, publisherUploadEdited,
-	publisherUploadNew, repositoryValidityCallback
+	createLinkCommand,
+	purgeNotesRemoteCommand,
+	shareOneNoteCommand,
+	uploadAllNotesCommand, uploadAllEditedNoteCommand, shareEditedOnlyCommand,
+	publisherUploadNew, checkRepositoryValidityCommand
 } from "./commands/callback";
 
 /**
@@ -47,15 +47,15 @@ export default class GithubPublisher extends Plugin {
 
 	async chargeAllCommands(repo: Repository|null, plugin: GithubPublisher, branchName: string) {
 		if (plugin.settings.plugin.copyLink.addCmd) {
-			this.addCommand(await createLinkCommands(repo, branchName, this));
+			this.addCommand(await createLinkCommand(repo, branchName, this));
 		}
-		this.addCommand(await publisherOneCall(repo, this, branchName));
-		this.addCommand(await deleteCommandsOnRepo(this, repo, branchName));
-		this.addCommand(await publisherPublishAll(repo, branchName));
+		this.addCommand(await shareOneNoteCommand(repo, this, branchName));
+		this.addCommand(await purgeNotesRemoteCommand(this, repo, branchName));
+		this.addCommand(await uploadAllNotesCommand(repo, branchName));
 		this.addCommand(await publisherUploadNew(repo, branchName));
-		this.addCommand(await publisherUploadAllEditedNew(repo, branchName));
-		this.addCommand(await publisherUploadEdited(repo, branchName, this));
-		this.addCommand(await repositoryValidityCallback(this, repo, branchName));
+		this.addCommand(await uploadAllEditedNoteCommand(repo, branchName));
+		this.addCommand(await shareEditedOnlyCommand(repo, branchName, this));
+		this.addCommand(await checkRepositoryValidityCommand(this, repo, branchName));
 	}
 
 	cleanSpecificCommands(repo: Repository) {

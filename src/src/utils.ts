@@ -378,7 +378,7 @@ export function getRepoFrontmatter(
 	frontmatter?: FrontMatterCache
 ) {
 	let github = repository ?? settings.github;
-	if (frontmatter && typeof frontmatter["shortRepo"] === "string") {
+	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"]!=="default") {
 		const smartKey = frontmatter.shortRepo.toLowerCase();
 		const allOtherRepo = settings.github.otherRepo;
 		const shortRepo = allOtherRepo.filter((repo) => {
@@ -509,21 +509,33 @@ function parseMultipleRepo(
 	);
 }
 
+/**
+ * Get the repoFrontmatter from the `shortRepo` string ;
+ * Using the `default` key will put the default repoFrontmatter in the list
+ * @param {FrontMatterCache} frontmatter - The frontmatter of the file
+ * @param {Repository[]} allRepo - The list of all repo from the settings
+ * @param {RepoFrontmatter} repoFrontmatter - The default repoFrontmatter (from the default settings)
+ * @return {RepoFrontmatter[] | RepoFrontmatter} - The repoFrontmatter from shortRepo
+ */
 function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository[], repoFrontmatter: RepoFrontmatter) {
 	if (frontmatter.shortRepo instanceof Array) {
 		const multipleRepo: RepoFrontmatter[] = [];
 		for (const repo of frontmatter.shortRepo) {
 			const smartKey = repo.toLowerCase();
-			const shortRepo = allRepo.filter((repo) => {
-				return repo.smartKey.toLowerCase() === smartKey;
-			})[0];
-			if (shortRepo) {
-				multipleRepo.push({
-					branch: shortRepo.branch,
-					repo: shortRepo.repo,
-					owner: shortRepo.user,
-					autoclean: false,
-				} as RepoFrontmatter);
+			if (smartKey !== "default") {
+				multipleRepo.push(repoFrontmatter);
+			} else {
+				const shortRepo = allRepo.filter((repo) => {
+					return repo.smartKey.toLowerCase() === smartKey;
+				})[0];
+				if (shortRepo) {
+					multipleRepo.push({
+						branch: shortRepo.branch,
+						repo: shortRepo.repo,
+						owner: shortRepo.user,
+						autoclean: false,
+					} as RepoFrontmatter);
+				}
 			}
 		}
 		return multipleRepo;
@@ -572,7 +584,13 @@ function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
 	return newRepo;
 }
 
-export function getCategory(frontmatter: FrontMatterCache, settings: GitHubPublisherSettings) {
+/**
+ * Get the category from the frontmatter
+ * @param {FrontMatterCache} frontmatter
+ * @param {GitHubPublisherSettings} settings
+ * @return {string} - The category or the default name
+ */
+export function getCategory(frontmatter: FrontMatterCache, settings: GitHubPublisherSettings):string {
 	const key = settings.upload.yamlFolderKey;
 	let category = frontmatter[key] ?? settings.upload.defaultName;
 	if (category instanceof Array) {
