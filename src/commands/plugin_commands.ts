@@ -21,11 +21,11 @@ import { Notice } from "obsidian";
  * Create the command to create a link to the note in the repo if a file is active ; else do nothing
  * @call createLink
  * @param {string} branchName
- * @param {Repository} repo
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {GithubPublisher} plugin
  * @return {Promise<void>}
  */
-export async function createLinkOnActiveFile(branchName: string, repo: Repository, plugin: GithubPublisher): Promise<void> {
+export async function createLinkOnActiveFile(branchName: string, repo: Repository | null, plugin: GithubPublisher): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	const frontmatter = file ? plugin.app.metadataCache.getFileCache(file).frontmatter : null;
 	if (
@@ -74,11 +74,11 @@ export async function shareActiveFile(plugin: GithubPublisher, repo: Repository 
 /**
  * Command to delete the files
  * @param {GithubPublisher} plugin
- * @param {Repository} repo
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {string} branchName
  * @return {Promise<void>}
  */
-export async function deleteCommands(plugin : GithubPublisher, repo: Repository, branchName: string) {
+export async function deleteCommands(plugin : GithubPublisher, repo: Repository | null, branchName: string) {
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	const publisher = plugin.reloadOctokit();
 	await purgeNotesRemote(
@@ -91,9 +91,16 @@ export async function deleteCommands(plugin : GithubPublisher, repo: Repository,
 	);
 }
 
+/**
+ * Command to share all the notes
+ * @call shareAllMarkedNotes
+ * @param {GithubPublisher} plugin
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
+ * @param {string} branchName
+ * @return {Promise<void>}
+ */
 
-
-export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository, branchName: string) {
+export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository | null, branchName: string) {
 	const statusBarItems = plugin.addStatusBarItem();
 	const publisher = plugin.reloadOctokit();
 	const sharedFiles = publisher.getSharedFiles();
@@ -111,6 +118,15 @@ export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository, 
 	);
 }
 
+/**
+ * Command to share the new notes
+ * @call shareNewNote
+ * @param {GithubPublisher} plugin
+ * @param {string} branchName
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
+ * @return {Promise<void>}
+ */
+
 export async function uploadNewNotes(plugin: GithubPublisher, branchName: string, repo: Repository|null) {
 	const publisher = plugin.reloadOctokit();
 	await shareNewNote(
@@ -124,7 +140,15 @@ export async function uploadNewNotes(plugin: GithubPublisher, branchName: string
 	);
 }
 
-export async function repositoryValidityActiveFile(plugin:GithubPublisher, branchName: string, repo: Repository) {
+/**
+ * Command to check the validity of the repository
+ * @call checkRepositoryValidity
+ * @param {GithubPublisher} plugin
+ * @param {string} branchName
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
+ * @return {Promise<void>}
+ */
+export async function repositoryValidityActiveFile(plugin:GithubPublisher, branchName: string, repo: Repository | null) {
 	const file = plugin.app.workspace.getActiveFile();
 	if (file) {
 		await checkRepositoryValidity(
@@ -139,6 +163,13 @@ export async function repositoryValidityActiveFile(plugin:GithubPublisher, branc
 	}
 }
 
+/**
+ * Upload all the edited notes (including the new ones)
+ * @param {GithubPublisher} plugin
+ * @param {string} branchName
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
+ * @return {Promise<void>}
+ */
 export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: string, repo: Repository|null=null) {
 	const publisher = plugin.reloadOctokit();
 	await shareAllEditedNotes(
@@ -152,6 +183,14 @@ export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: 
 	);
 }
 
+/**
+ * Share only the edited notes
+ * @call shareOnlyEdited
+ * @param {string} branchName
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
+ * @param {GithubPublisher} plugin
+ * @return {Promise<void>}
+ */
 export async function shareEditedOnly(branchName: string, repo: Repository|null, plugin: GithubPublisher) {
 	const publisher = this.reloadOctokit();
 	await shareOnlyEdited(

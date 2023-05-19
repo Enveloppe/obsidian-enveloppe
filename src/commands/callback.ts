@@ -16,7 +16,7 @@ import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} f
 /**
  * Create the command to create a link to the note in the repo
  * @call createLink
- * @param {Repository | null} repo
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {string} branchName
  * @param {GithubPublisher} plugin
  * @return {Promise<Command>}
@@ -59,7 +59,7 @@ export async function createLinkCallback(repo: Repository | null, branchName: st
  * Command to delete file on the repo
  * @call purgeNotesRemote
  * @param {GithubPublisher} plugin
- * @param {Repository | null} repo
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {string} branchName
  * @return {Promise<Command>}
  */
@@ -95,7 +95,7 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 /**
  * Command to upload the active file ; use checkCallback to check if the file is shared and if they are a active file
  * @call shareOneNote
- * @param {Repository | null} repo
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {GithubPublisher} plugin
  * @param {string} branchName
  * @return {Promise<Command>}
@@ -136,7 +136,7 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 /**
  * Upload all note
  * @call uploadAllNotes
- * @param {Repository | null} repo
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {string} branchName
  * @return {Promise<Command>}
  */
@@ -171,7 +171,7 @@ export async function uploadNewNotesCallback(repo: Repository | null, branchName
 /**
  * Share all edited note
  * @call uploadAllEditedNotes
- * @param {Repository | null} repo
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {string} branchName
  * @return {Promise<Command>}
  */
@@ -192,7 +192,7 @@ export async function uploadAllEditedNotesCallback(repo: Repository|null, branch
 /**
  * Share edited note only
  * @call shareEditedOnly
- * @param {Repository | null} repo
+ * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {string} branchName
  * @param {GithubPublisher} plugin
  * @return {Promise<Command>}

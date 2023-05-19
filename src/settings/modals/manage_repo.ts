@@ -4,6 +4,17 @@ import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../interf
 import {checkRepositoryValidity} from "../../src/data_validation_test";
 import GithubPublisherPlugin from "../../main";
 
+/**
+ * @description This class is used to add a new repo to the settings in the "otherRepo" in the github setting section
+ * It will list all the repo in the settings and allow the user to add a new one, edit or delete an existing one
+ * @extends Modal
+ * @param {App} app - the Obsidian App
+ * @param {GitHubPublisherSettings} settings - the plugin settings
+ * @param {string} branchName - the branch name
+ * @param {GithubPublisherPlugin} plugin - the plugin
+ * @param {Repository[]} repository - the list of repo in the settings
+ * @param {(result: Repository[]) => void} onSubmit - the function to call when the modal is submitted
+ */
 
 export class ModalAddingNewRepository extends Modal {
 	settings: GitHubPublisherSettings;
@@ -131,6 +142,15 @@ export class ModalAddingNewRepository extends Modal {
 	}
 }
 
+/**
+ * @description Called by the ModalAddingNewRepository class, this class is used to edit an existing repo
+ * @extends Modal
+ * @param {App} app - The Obsidian App instance
+ * @param {Repository} repository - The repository to edit
+ * @param {GithubPublisherPlugin} GithubPublisherPlugin - The GithubPublisherPlugin instance
+ * @param {string} brancheName - The name of the branch (for validation)
+ * @param {function} onSubmit - The function to call when the modal is closed (to save the changes)
+ */
 
 class ModalEditingRepository extends Modal {
 	repository: Repository;

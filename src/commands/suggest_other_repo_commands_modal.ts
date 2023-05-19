@@ -16,6 +16,14 @@ interface GithubPublisherCommands {
 	name: string;
 }
 
+/**
+ * @extends FuzzySuggestModal
+ * @category Command
+ * @category SuggestModal
+ * @category GithubPublisherPlugin
+ * @description This class is used to choose which repo to run the command on
+ */
+
 export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
 	plugin: GithubPublisherPlugin;
 	branchName: string;
@@ -37,6 +45,10 @@ export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
 	}
 }
 
+/**
+ * @description This class call the commands on the chosen repo
+ * @extends FuzzySuggestModal
+ */
 
 export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPublisherCommands> {
 	plugin: GithubPublisherPlugin;
