@@ -1,6 +1,6 @@
 import {App, FuzzySuggestModal } from "obsidian";
-import {FolderSettings, Repository} from "../interface";
-import GithubPublisherPlugin from "../../main";
+import {FolderSettings, Repository} from "../settings/interface";
+import GithubPublisherPlugin from "../main";
 import i18next from "i18next";
 import {
 	createLinkOnActiveFile,
@@ -9,7 +9,7 @@ import {
 	uploadAllEditedNotes,
 	uploadAllNotes,
 	uploadNewNotes
-} from "../../commands/plugin_commands";
+} from "./plugin_commands";
 
 interface GithubPublisherCommands {
 	commands: string;
@@ -33,12 +33,12 @@ export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
 		return item.smartKey;
 	}
 	onChooseItem(item: Repository, evt: MouseEvent | KeyboardEvent): void {
-		new Commands_modals(app, this.plugin, this.branchName, item).open();
+		new SuggestOtherRepoCommandsModal(app, this.plugin, this.branchName, item).open();
 	}
 }
 
 
-export class Commands_modals extends FuzzySuggestModal<GithubPublisherCommands> {
+export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPublisherCommands> {
 	plugin: GithubPublisherPlugin;
 	branchName: string;
 	repo: Repository;
