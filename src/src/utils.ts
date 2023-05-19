@@ -137,10 +137,10 @@ export async function createLink(
 	settings: GitHubPublisherSettings,
 	otherRepo: Repository | null
 ): Promise<void> {
-	//TODO : Use OtherRepo settings to generate links if otherRepo != null
-	const copyLink = settings.plugin.copyLink;
-	const github = settings.github;
-	if (!copyLink.enable) {
+
+	const copyLink = otherRepo ? otherRepo.copyLink : settings.plugin.copyLink;
+	const github = otherRepo ? otherRepo : settings.github;
+	if (!settings.plugin.copyLink.enable) {
 		return;
 	}
 	let filepath = getReceiptFolder(file, settings, metadataCache, vault, otherRepo);

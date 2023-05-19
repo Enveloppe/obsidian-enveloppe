@@ -235,6 +235,7 @@
           "duplicate": "Les smartKey doivent être uniques !",
           "frontmatterInfo": "L'utilisation de la clé frontmatter \"shortRepo\" avec la \"smartKey\" permet également d'utiliser ce dépôt dans un fichier sans avoir à écrire son chemin.",
           "newRepo": "un nouveau dépôt",
+          "otherConfig": "Autres paramètres",
           "shortcuts": {
             "desc": "Ajoute toutes les commandes de ce dépôt dans la palette de commandes",
             "title": "Raccourci"

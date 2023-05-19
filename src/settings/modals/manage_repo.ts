@@ -279,9 +279,11 @@ class ModalEditingRepository extends Modal {
 					});
 			});
 
+		contentEl.createEl("h3", { text: "settings.github.smartRepo.modals.otherConfig" });
+
 		new Setting(contentEl)
-			.setName(i18next.t("settings.plugin.shareKey.title") )
-			.setDesc(i18next.t("settings.plugin.shareKey.desc") )
+			.setName(i18next.t("settings.plugin.shareKey.title"))
+			.setDesc(i18next.t("settings.plugin.shareKey.desc"))
 			.addText((text) =>
 				text
 					.setPlaceholder("share")
@@ -291,7 +293,35 @@ class ModalEditingRepository extends Modal {
 						await this.plugin.saveSettings();
 					})
 			);
-		//TODO : Add links settings for generation links
+		if (this.plugin.settings.plugin.copyLink.enable) {
+			new Setting(contentEl)
+				.setName(i18next.t("settings.plugin.copyLink.baselink.title"))
+				.setDesc(i18next.t("settings.plugin.copyLink.baselink.desc"))
+				.setClass("github-publisher")
+				.addText((text) =>
+					text
+						.setPlaceholder(this.plugin.settings.plugin.copyLink.links)
+						.setValue(this.repository.copyLink.links)
+						.onChange(async (value) => {
+							this.repository.copyLink.links = value.trim();
+						})
+				);
+
+			new Setting(contentEl)
+				.setName(i18next.t("settings.plugin.copyLink.linkpathremover.title") )
+				.setDesc(
+					i18next.t("settings.plugin.copyLink.linkpathremover.desc")
+				)
+				.setClass("github-publisher")
+				.addText((text) => {
+					text.setPlaceholder("docs")
+						.setValue(this.repository.copyLink.removePart.join(", "))
+						.onChange(async (value) => {
+							this.repository.copyLink.removePart = value.split(/[,\n]\s*/).map((item) => item.trim()).filter((item) => item.length > 0);
+							await this.plugin.saveSettings();
+						});
+				});
+		}
 
 		new Setting(contentEl)
 			.addButton((button) =>
