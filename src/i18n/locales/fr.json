@@ -231,6 +231,7 @@
       "smartRepo": {
         "button": "Gérer plus de dépôt",
         "modals": {
+          "default": "Le nom \"default\" est réservé pour votre configuration principale.",
           "desc": "Ces \"autres dépôts\" vous permettent d'utiliser toutes les commandes sur les dépôts ajoutés ci-dessous.",
           "duplicate": "Les smartKey doivent être uniques !",
           "frontmatterInfo": "L'utilisation de la clé frontmatter \"shortRepo\" avec la \"smartKey\" permet également d'utiliser ce dépôt dans un fichier sans avoir à écrire son chemin.",

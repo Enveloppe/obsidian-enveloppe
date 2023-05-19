@@ -231,6 +231,7 @@
       "smartRepo": {
         "button": "Manage more repository",
         "modals": {
+          "default": "The name \"default\" is reserved for your primary configuration.",
           "desc": "These \"other repositories\" allow you to use all the commands on the repositories added below.",
           "duplicate": "Smartkey must be unique!",
           "frontmatterInfo": "Using the \"shortRepo\" frontmatter key with the \"smartKey\" also allows you to use this repository in a file without having to write its path.",

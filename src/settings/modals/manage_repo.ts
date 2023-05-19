@@ -82,6 +82,11 @@ export class ModalAddingNewRepository extends Modal {
 								new Notice(i18next.t("settings.github.smartRepo.modals.duplicate"));
 								text.inputEl.style.border = "1px solid red";
 								repo.smartKey = "";
+							} else if (repo.smartKey === "default") {
+								text.inputEl.style.border = "1px solid red";
+								repo.smartKey = "";
+								// @ts-ignore WHY ?????
+								new Notice(i18next.t("settings.github.smartRepo.modals.default") as string);
 							} else {
 								text.inputEl.style.border = "0";
 							}
@@ -153,8 +158,8 @@ class ModalEditingRepository extends Modal {
 		contentEl.createEl("h2", {text: i18next.t("common.edit", {things: this.repository.smartKey})});
 
 		new Setting(contentEl)
-			.setName(i18next.t("settings.github.apiType.title") )
-			.setDesc(i18next.t("settings.github.apiType.desc") )
+			.setName(i18next.t("settings.github.apiType.title"))
+			.setDesc(i18next.t("settings.github.apiType.desc"))
 			.addDropdown((dropdown) => {
 				dropdown
 					.addOption(GithubTiersVersion.free, i18next.t("settings.github.apiType.dropdown.free"))
@@ -167,8 +172,8 @@ class ModalEditingRepository extends Modal {
 			});
 		if (this.repository.api.tiersForApi === GithubTiersVersion.entreprise) {
 			new Setting(contentEl)
-				.setName(i18next.t("settings.github.apiType.hostname.title") )
-				.setDesc(i18next.t("settings.github.apiType.hostname.desc") )
+				.setName(i18next.t("settings.github.apiType.hostname.title"))
+				.setDesc(i18next.t("settings.github.apiType.hostname.desc"))
 				.addText((text) =>
 					text
 						.setPlaceholder("https://github.mycompany.com")
@@ -179,8 +184,8 @@ class ModalEditingRepository extends Modal {
 				);
 		}
 		new Setting(contentEl)
-			.setName(i18next.t("settings.github.repoName.title") )
-			.setDesc(i18next.t("settings.github.repoName.desc") )
+			.setName(i18next.t("settings.github.repoName.title"))
+			.setDesc(i18next.t("settings.github.repoName.desc"))
 			.addText((text) =>
 				text
 					.setPlaceholder(i18next.t("settings.github.repoName.placeholder"))
@@ -190,8 +195,8 @@ class ModalEditingRepository extends Modal {
 					})
 			);
 		new Setting(contentEl)
-			.setName(i18next.t("settings.github.username.title") )
-			.setDesc(i18next.t("settings.github.username.desc") )
+			.setName(i18next.t("settings.github.username.title"))
+			.setDesc(i18next.t("settings.github.username.desc"))
 			.addText((text) =>
 				text
 					.setPlaceholder(
@@ -203,8 +208,8 @@ class ModalEditingRepository extends Modal {
 					})
 			);
 		new Setting(contentEl)
-			.setName(i18next.t("settings.github.branch.title") )
-			.setDesc(i18next.t("settings.github.branch.desc") )
+			.setName(i18next.t("settings.github.branch.title"))
+			.setDesc(i18next.t("settings.github.branch.desc"))
 			.addText((text) =>
 				text
 					.setPlaceholder("main")
@@ -214,7 +219,7 @@ class ModalEditingRepository extends Modal {
 					})
 			);
 		new Setting(contentEl)
-			.setName(i18next.t("settings.github.automaticallyMergePR") )
+			.setName(i18next.t("settings.github.automaticallyMergePR"))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.repository.automaticallyMergePR)
@@ -226,7 +231,7 @@ class ModalEditingRepository extends Modal {
 			.setClass("github-publisher-no-display")
 			.addButton((button) =>
 				button
-					.setButtonText(i18next.t("settings.github.testConnection") )
+					.setButtonText(i18next.t("settings.github.testConnection"))
 					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
 						await checkRepositoryValidity(this.branchName, this.plugin.reloadOctokit(), this.plugin.settings, this.repository, null, this.app.metadataCache);
@@ -245,8 +250,8 @@ class ModalEditingRepository extends Modal {
 
 		contentEl.createEl("h3", { text: "Github Workflow" });
 		new Setting(contentEl)
-			.setName(i18next.t("settings.githubWorkflow.prRequest.title") )
-			.setDesc(i18next.t("settings.githubWorkflow.prRequest.desc") )
+			.setName(i18next.t("settings.githubWorkflow.prRequest.title"))
+			.setDesc(i18next.t("settings.githubWorkflow.prRequest.desc"))
 			.addText((text) =>
 				text
 					.setPlaceholder("[PUBLISHER] MERGE")
@@ -260,7 +265,7 @@ class ModalEditingRepository extends Modal {
 					})
 			);
 		new Setting(contentEl)
-			.setName(i18next.t("settings.githubWorkflow.githubAction.title") )
+			.setName(i18next.t("settings.githubWorkflow.githubAction.title"))
 			.setDesc(
 				i18next.t("settings.githubWorkflow.githubAction.desc")
 			)
@@ -308,7 +313,7 @@ class ModalEditingRepository extends Modal {
 				);
 
 			new Setting(contentEl)
-				.setName(i18next.t("settings.plugin.copyLink.linkpathremover.title") )
+				.setName(i18next.t("settings.plugin.copyLink.linkpathremover.title"))
 				.setDesc(
 					i18next.t("settings.plugin.copyLink.linkpathremover.desc")
 				)
