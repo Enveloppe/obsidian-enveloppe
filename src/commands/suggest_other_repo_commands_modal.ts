@@ -10,6 +10,7 @@ import {
 	uploadAllNotes,
 	uploadNewNotes
 } from "./plugin_commands";
+import {noticeLog} from "../src/utils";
 
 interface GithubPublisherCommands {
 	commands: string;
@@ -132,7 +133,7 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 			repositoryValidityActiveFile(this.plugin, this.branchName, this.repo);
 			break;
 		}
-		console.log(`run command ${item.commands}`);
+		noticeLog(`run command ${item.commands}`, this.plugin.settings);
 	}
 }
 

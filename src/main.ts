@@ -7,7 +7,7 @@ import {
 	Repository,
 } from "./settings/interface";
 import { OldSettings } from "./settings/migrate";
-import { verifyRateLimitAPI } from "./src/utils";
+import {noticeLog, verifyRateLimitAPI} from "./src/utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
 import {getRepoSharedKey, isShared} from "./src/data_validation_test";
@@ -98,7 +98,7 @@ export default class GithubPublisher extends Plugin {
 	
 	async reloadCommands(branchName: string) {
 		//compare old and new repo to delete old commands
-		console.log("Reloading commands");
+		noticeLog("Reloading commands", this.settings);
 		const newRepo = this.settings.github.otherRepo;
 		this.cleanOldCommands();
 		for (const repo of newRepo) {

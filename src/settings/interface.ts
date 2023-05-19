@@ -30,9 +30,9 @@ export interface Repository {
 		tiersForApi: GithubTiersVersion;
 		hostname: string;
 	}
-	worflow: {
-		customCommitMsg: string;
-		workflowName: string;
+	workflow: {
+		commitMessage: string;
+		name: string;
 	}
 	createShortcuts: boolean;
 	shareKey: string;
@@ -54,9 +54,9 @@ export interface GitHubPublisherSettings {
 			tiersForApi: GithubTiersVersion;
 			hostname: string;
 		}
-		worflow: {
-			customCommitMsg: string;
-			workflowName: string;
+		workflow: {
+			commitMessage: string;
+			name: string;
 		},
 		otherRepo: Repository[];
 	}
@@ -150,9 +150,9 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 			tiersForApi: GithubTiersVersion.free,
 			hostname: "",
 		},
-		worflow: {
-			customCommitMsg: "[PUBLISHER] Merge",
-			workflowName: "",
+		workflow: {
+			commitMessage: "[PUBLISHER] Merge",
+			name: "",
 		},
 		otherRepo: [],
 	},
@@ -266,6 +266,9 @@ export interface RepoFrontmatter {
 	repo: string;
 	owner: string;
 	autoclean: boolean;
+	workflowName: string;
+	commitMsg: string;
+	automaticallyMergePR: boolean;
 }
 
 export interface ListeEditedFiles {

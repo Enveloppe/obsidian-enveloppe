@@ -112,7 +112,8 @@ export class FilesManagement extends Publisher {
 						file,
 						this.settings,
 						this.metadataCache,
-						this.vault
+						this.vault,
+						repo
 					);
 					allFileWithPath.push({
 						converted: filepath,

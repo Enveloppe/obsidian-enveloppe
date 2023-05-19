@@ -11,9 +11,9 @@ const settings: GitHubPublisherSettings = {
 			tiersForApi: GithubTiersVersion.free,
 			hostname: "",
 		},
-		worflow: {
-			customCommitMsg: "",
-			workflowName: "",
+		workflow: {
+			commitMessage: "",
+			name: "",
 		},
 		otherRepo: [],
 	},

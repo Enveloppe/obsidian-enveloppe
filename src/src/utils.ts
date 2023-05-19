@@ -13,6 +13,7 @@ import Publisher from "../publish/upload";
 import {getReceiptFolder} from "../conversion/file_path";
 import i18next from "i18next";
 import {Octokit} from "@octokit/core";
+import settings from "../../tests/fixtures/githubPublisherSettings";
 
 
 /**
@@ -226,7 +227,7 @@ async function noticeMessageOneRepo(
 	} else {
 		successMsg = i18next.t("informations.successPublishOneNote", { file: noticeValue, repo: repo });
 	}
-	if (settings.github.worflow.workflowName.length > 0) {
+	if (settings.github.workflow.name.length > 0) {
 		const msg = i18next.t("informations.sendMessage", {nbNotes: noticeValue, repo: repo}) + ".\n" + i18next.t("informations.waitingWorkflow");
 		new Notice(msg);		
 		const successWorkflow = await PublisherManager.workflowGestion(repo);
@@ -384,12 +385,16 @@ export function getRepoFrontmatter(
 			return repo.smartKey.toLowerCase() === smartKey;
 		})[0];
 		github = shortRepo ?? github;
+		console.log(shortRepo);
 	}
 	let repoFrontmatter: RepoFrontmatter = {
 		branch: github.branch,
 		repo: github.repo,
 		owner: github.user,
 		autoclean: settings.upload.autoclean.enable,
+		workflowName: github.workflow.name,
+		commitMsg: github.workflow.commitMessage,
+		automaticallyMergePR: github.automaticallyMergePR
 	};
 	if (settings.upload.behavior === FolderSettings.fixed) {
 		repoFrontmatter.autoclean = false;
@@ -466,6 +471,9 @@ function parseMultipleRepo(
 					repo: repoFrontmatter.repo,
 					owner: repoFrontmatter.owner,
 					autoclean: false,
+					automaticallyMergePR: repoFrontmatter.automaticallyMergePR,
+					workflowName: repoFrontmatter.workflowName,
+					commitMsg: repoFrontmatter.commitMsg
 				};
 				if (repo.branch !== undefined) {
 					repository.branch = repo.branch;
@@ -488,6 +496,9 @@ function parseMultipleRepo(
 					repo: repoFrontmatter.repo,
 					owner: repoFrontmatter.owner,
 					autoclean: false,
+					automaticallyMergePR: repoFrontmatter.automaticallyMergePR,
+					workflowName: repoFrontmatter.workflowName,
+					commitMsg: repoFrontmatter.commitMsg
 				};
 				multipleRepo.push(
 					repositoryStringSlice(repoString, repository)
@@ -521,7 +532,7 @@ function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository
 		const multipleRepo: RepoFrontmatter[] = [];
 		for (const repo of frontmatter.shortRepo) {
 			const smartKey = repo.toLowerCase();
-			if (smartKey !== "default") {
+			if (smartKey === "default") {
 				multipleRepo.push(repoFrontmatter);
 			} else {
 				const shortRepo = allRepo.filter((repo) => {
@@ -532,7 +543,10 @@ function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository
 						branch: shortRepo.branch,
 						repo: shortRepo.repo,
 						owner: shortRepo.user,
-						autoclean: false,
+						autoclean: repoFrontmatter.autoclean,
+						automaticallyMergePR: shortRepo.automaticallyMergePR,
+						workflowName: shortRepo.workflow.name,
+						commitMsg: shortRepo.workflow.commitMessage
 					} as RepoFrontmatter);
 				}
 			}
@@ -563,6 +577,9 @@ function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
 		repo: repoFrontmatter.repo,
 		owner: repoFrontmatter.owner,
 		autoclean: false,
+		automaticallyMergePR: repoFrontmatter.automaticallyMergePR,
+		workflowName: repoFrontmatter.workflowName,
+		commitMsg: repoFrontmatter.commitMsg
 	};
 	if (repo.length >= 4) {
 		newRepo.branch = repo[2];

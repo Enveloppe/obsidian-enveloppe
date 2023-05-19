@@ -560,7 +560,7 @@ export default class Publisher {
 
 	async workflowGestion(repoFrontmatter: RepoFrontmatter): Promise<boolean> {
 		let finished = false;
-		if (this.settings.github.worflow.workflowName.length === 0) {
+		if (repoFrontmatter.workflowName.length === 0) {
 			return false;
 		} else {
 			const octokit = this.octokit;
@@ -569,7 +569,7 @@ export default class Publisher {
 				{
 					owner: repoFrontmatter.owner,
 					repo: repoFrontmatter.repo,
-					workflow_id: this.settings.github.worflow.workflowName,
+					workflow_id: repoFrontmatter.workflowName,
 					ref: repoFrontmatter.branch,
 				}
 			);
@@ -586,7 +586,7 @@ export default class Publisher {
 					const build = workflowGet.data.workflow_runs.find(
 						(run) =>
 							run.name ===
-							this.settings.github.worflow.workflowName.replace(".yml", "")
+							repoFrontmatter.workflowName.replace(".yml", "")
 					);
 					if (build.status === "completed") {
 						finished = true;

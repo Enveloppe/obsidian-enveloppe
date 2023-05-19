@@ -276,13 +276,13 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.addText((text) =>
 				text
 					.setPlaceholder("[PUBLISHER] MERGE")
-					.setValue(githubSettings.worflow.customCommitMsg)
+					.setValue(githubSettings.workflow.commitMessage)
 					.onChange(async (value) => {
 						if (value.trim().length === 0) {
 							value = "[PUBLISHER] MERGE";
 							new Notice(i18next.t("settings.githubWorkflow.prRequest.error"));
 						}
-						githubSettings.worflow.customCommitMsg = value;
+						githubSettings.workflow.commitMessage = value;
 						await this.plugin.saveSettings();
 					})
 			);
@@ -294,7 +294,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			)
 			.addText((text) => {
 				text.setPlaceholder("ci")
-					.setValue(githubSettings.worflow.workflowName)
+					.setValue(githubSettings.workflow.name)
 					.onChange(async (value) => {
 						if (value.length > 0) {
 							value = value.trim();
@@ -303,7 +303,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 								value += yamlEndings[0];
 							}
 						}
-						githubSettings.worflow.workflowName = value;
+						githubSettings.workflow.name = value;
 						await this.plugin.saveSettings();
 					});
 			});

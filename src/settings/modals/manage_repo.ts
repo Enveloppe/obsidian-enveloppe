@@ -56,9 +56,9 @@ export class ModalAddingNewRepository extends Modal {
 				tiersForApi: this.settings.github.api.tiersForApi,
 				hostname: this.settings.github.api.hostname,
 			},
-			worflow: {
-				customCommitMsg: this.settings.github.worflow.customCommitMsg,
-				workflowName: "",
+			workflow: {
+				commitMessage: this.settings.github.workflow.commitMessage,
+				name: "",
 			},
 			createShortcuts: false,
 			shareKey: this.settings.plugin.shareKey,
@@ -274,13 +274,13 @@ class ModalEditingRepository extends Modal {
 			.addText((text) =>
 				text
 					.setPlaceholder("[PUBLISHER] MERGE")
-					.setValue(this.repository.worflow.customCommitMsg)
+					.setValue(this.repository.workflow.commitMessage)
 					.onChange(async (value) => {
 						if (value.trim().length === 0) {
 							value = "[PUBLISHER] MERGE";
 							new Notice(i18next.t("settings.githubWorkflow.prRequest.error"));
 						}
-						this.repository.worflow.customCommitMsg = value;
+						this.repository.workflow.commitMessage = value;
 					})
 			);
 		new Setting(contentEl)
@@ -290,7 +290,7 @@ class ModalEditingRepository extends Modal {
 			)
 			.addText((text) => {
 				text.setPlaceholder("ci")
-					.setValue(this.repository.worflow.workflowName)
+					.setValue(this.repository.workflow.name)
 					.onChange(async (value) => {
 						if (value.length > 0) {
 							value = value.trim();
@@ -299,7 +299,7 @@ class ModalEditingRepository extends Modal {
 								value += yamlEndings[0];
 							}
 						}
-						this.repository.worflow.workflowName = value;
+						this.repository.workflow.name = value;
 					});
 			});
 
