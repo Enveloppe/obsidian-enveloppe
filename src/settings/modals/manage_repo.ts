@@ -44,6 +44,7 @@ export class ModalAddingNewRepository extends Modal {
 		contentEl.createEl("h2", {text: i18next.t("settings.github.smartRepo.modals.title")});
 		contentEl.createEl("p", {text: i18next.t("settings.github.smartRepo.modals.desc")});
 		contentEl.createEl("p", {text: i18next.t("settings.github.smartRepo.modals.frontmatterInfo")});
+		contentEl.createEl("p", {text: i18next.t("settings.plugin.shareKey.otherRepo")});
 
 
 		const defaultRepository: Repository = {

@@ -371,6 +371,7 @@
       },
       "shareKey": {
         "desc": "Clé de partage",
+        "otherRepo": "Vous pouvez également définir une clé de partage pour séparer avec des autres, sans utiliser la clé shortRepo.",
         "title": "La clé frontmatter pour publier la note sur le dépôt."
       },
       "title": "Paramètres du plugin"

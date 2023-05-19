@@ -371,6 +371,7 @@
       },
       "shareKey": {
         "desc": "The frontmatter key to publish your file on the website.",
+        "otherRepo": "You can also define a share key to separate with others, without using the shortRepo key.",
         "title": "Share Key"
       },
       "title": "Plugin Settings"
