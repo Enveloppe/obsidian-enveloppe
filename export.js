@@ -4,6 +4,9 @@ const fs = require("fs");
 const c = require("ansi-colors");
 const dotenv = require("dotenv");
 
+const manifest = require("./manifest.json");
+
+
 const env = dotenv.config();
 
 const VAULT = env.parsed.VAULT;
@@ -12,7 +15,7 @@ if (!VAULT || VAULT.trim().length === 0) {
 	process.exit(1);
 }
 
-const pluginDir = path.join(VAULT, ".obsidian", "plugins", "copy-reading-in-markdown");
+const pluginDir = path.join(VAULT, ".obsidian", "plugins", manifest["id"]);
 
 if (!fs.existsSync(pluginDir)) {
 	console.log(c.yellow.underline("Creating plugin directory"));
