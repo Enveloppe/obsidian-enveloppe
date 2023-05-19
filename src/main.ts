@@ -20,11 +20,11 @@ import { resources, translationLanguage } from "./i18n/i18next";
 import {migrateSettings} from "./settings/migrate";
 import {ChooseWhichRepoToRun} from "./commands/suggest_other_repo_commands_modal";
 import {
-	createLinkCommand,
-	purgeNotesRemoteCommand,
-	shareOneNoteCommand,
-	uploadAllNotesCommand, uploadAllEditedNoteCommand, shareEditedOnlyCommand,
-	publisherUploadNew, checkRepositoryValidityCommand
+	createLinkCallback,
+	purgeNotesRemoteCallback,
+	shareOneNoteCallback,
+	uploadAllNotesCallback, uploadAllEditedNotesCallback, shareEditedOnlyCallback,
+	uploadNewNotesCallback, checkRepositoryValidityCallback
 } from "./commands/callback";
 
 /**
@@ -47,15 +47,15 @@ export default class GithubPublisher extends Plugin {
 
 	async chargeAllCommands(repo: Repository|null, plugin: GithubPublisher, branchName: string) {
 		if (plugin.settings.plugin.copyLink.addCmd) {
-			this.addCommand(await createLinkCommand(repo, branchName, this));
+			this.addCommand(await createLinkCallback(repo, branchName, this));
 		}
-		this.addCommand(await shareOneNoteCommand(repo, this, branchName));
-		this.addCommand(await purgeNotesRemoteCommand(this, repo, branchName));
-		this.addCommand(await uploadAllNotesCommand(repo, branchName));
-		this.addCommand(await publisherUploadNew(repo, branchName));
-		this.addCommand(await uploadAllEditedNoteCommand(repo, branchName));
-		this.addCommand(await shareEditedOnlyCommand(repo, branchName, this));
-		this.addCommand(await checkRepositoryValidityCommand(this, repo, branchName));
+		this.addCommand(await shareOneNoteCallback(repo, this, branchName));
+		this.addCommand(await purgeNotesRemoteCallback(this, repo, branchName));
+		this.addCommand(await uploadAllNotesCallback(repo, branchName));
+		this.addCommand(await uploadNewNotesCallback(repo, branchName));
+		this.addCommand(await uploadAllEditedNotesCallback(repo, branchName));
+		this.addCommand(await shareEditedOnlyCallback(repo, branchName, this));
+		this.addCommand(await checkRepositoryValidityCallback(this, repo, branchName));
 	}
 
 	cleanSpecificCommands(repo: Repository) {
@@ -239,7 +239,7 @@ export default class GithubPublisher extends Plugin {
 		if (this.settings.github.otherRepo.length > 0) {
 			this.addCommand({
 				id: "run-cmd-for-repo",
-				name: i18next.t("commands.runOtherRepo"),
+				name: i18next.t("commands.runOtherRepo.title"),
 				callback: async () => {
 					new ChooseWhichRepoToRun(this.app, this, branchName).open();
 				}

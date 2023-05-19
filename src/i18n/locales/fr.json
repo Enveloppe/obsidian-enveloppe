@@ -19,9 +19,15 @@
       "success": "{{- repo.owner}}/{{- repo.repo}} semble valide !",
       "title": "Tester la connexion au dépôt configuré"
     },
-    "copyLink": "Créer un lien vers cette note",
+    "copyLink": {
+      "onActivation": "Lien copié dans le presse-papier !",
+      "title": "Créer un lien vers cette note"
+    },
     "publisherDeleteClean": "Purger les fichiers dépubliés et supprimés",
-    "runOtherRepo": "Lancer une commande pour un dépôt",
+    "runOtherRepo": {
+      "noFile": "Aucun fichier actif, ou le fichier n'est pas partagé.",
+      "title": "Lancer une commande pour un dépôt"
+    },
     "shareActiveFile": "Transférer la note active",
     "shareViewFiles": "Transférer {{- viewFile}} avec Github Publisher",
     "uploadAllEditedNote": "Rafraîchir toutes les notes publiées",
@@ -89,8 +95,8 @@
     "scanningRepo": "Scan du dépôt, veuillez patienter...",
     "sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
     "startingClean": "Début du nettoyage de {{- repo.owner}}/{{- repo.repo}}",
-    "successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repo.owner}}/{{- repo.repo}}",
     "successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
+    "successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repo.owner}}/{{- repo.repo}}",
     "waitingWorkflow": "Maintenant, attente de la fin du workflow..."
   },
   "modals": {
@@ -338,8 +344,7 @@
           "title": "Lien du dépôt/blog"
         },
         "command": {
-          "desc": "Ajouter une commande permettant de copier le lien de la note publiée dans le presse-papier (nécessite de recharger le plugin pour prendre effet)",
-          "onActivation": "Lien copié dans le presse-papier !"
+          "desc": "Ajouter une commande permettant de copier le lien de la note publiée dans le presse-papier (nécessite de recharger le plugin pour prendre effet)"
         },
         "desc": "Envoie d'un lien vers la note publiées dans votre presse-papier.",
         "linkpathremover": {

@@ -21,10 +21,10 @@ import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} f
  * @param {GithubPublisher} plugin
  * @return {Promise<Command>}
  */
-export async function createLinkCommand(repo: Repository | null, branchName: string, plugin: GithubPublisher) {
+export async function createLinkCallback(repo: Repository | null, branchName: string, plugin: GithubPublisher) {
 	const id = repo ? `publisher-copy-link-K${repo.smartKey}` : "publisher-copy-link";
 	const common = i18next.t("common.repository");
-	let name = i18next.t("commands.copyLink");
+	let name = i18next.t("commands.copyLink.title");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
 	return {
 		id: id,
@@ -45,7 +45,7 @@ export async function createLinkCommand(repo: Repository | null, branchName: str
 						plugin.settings,
 						repo
 					);
-					new Notice(i18next.t("settings.plugin.copyLink.command.onActivation"));
+					new Notice(i18next.t("commands.copyLink.onActivation"));
 				}
 				return true;
 			}
@@ -63,7 +63,7 @@ export async function createLinkCommand(repo: Repository | null, branchName: str
  * @param {string} branchName
  * @return {Promise<Command>}
  */
-export async function purgeNotesRemoteCommand(plugin: GithubPublisher, repo: Repository | null, branchName: string) {
+export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Repository | null, branchName: string) {
 	const id = repo ? `publisher-delete-clean-K${repo.smartKey}` : "publisher-delete-clean";
 	let name = i18next.t("commands.publisherDeleteClean");
 	const common = i18next.t("common.repository");
@@ -100,7 +100,7 @@ export async function purgeNotesRemoteCommand(plugin: GithubPublisher, repo: Rep
  * @param {string} branchName
  * @return {Promise<Command>}
  */
-export async function shareOneNoteCommand(repo: Repository|null, plugin: GithubPublisher, branchName: string) {
+export async function shareOneNoteCallback(repo: Repository|null, plugin: GithubPublisher, branchName: string) {
 	const id = repo ? `publisher-one-K${repo.smartKey}` : "publisher-one";
 	let name = i18next.t("commands.shareActiveFile");
 	const common = i18next.t("common.repository");
@@ -140,7 +140,7 @@ export async function shareOneNoteCommand(repo: Repository|null, plugin: GithubP
  * @param {string} branchName
  * @return {Promise<Command>}
  */
-export async function uploadAllNotesCommand(repo: Repository|null, branchName: string) {
+export async function uploadAllNotesCallback(repo: Repository|null, branchName: string) {
 	const id = repo ? `publisher-publish-all-K${repo.smartKey}` : "publisher-publish-all";
 	let name = i18next.t("commands.uploadAllNotes");
 	const common = i18next.t("common.repository");
@@ -154,7 +154,7 @@ export async function uploadAllNotesCommand(repo: Repository|null, branchName: s
 	} as Command;
 }
 
-export async function publisherUploadNew(repo: Repository | null, branchName: string) {
+export async function uploadNewNotesCallback(repo: Repository | null, branchName: string) {
 	const id = repo ? `publisher-upload-new-K${repo.smartKey}` : "publisher-upload-new";
 	let name = i18next.t("commands.uploadNewNotes");
 	const common = i18next.t("common.repository");
@@ -175,7 +175,7 @@ export async function publisherUploadNew(repo: Repository | null, branchName: st
  * @param {string} branchName
  * @return {Promise<Command>}
  */
-export async function uploadAllEditedNoteCommand(repo: Repository|null, branchName: string) {
+export async function uploadAllEditedNotesCallback(repo: Repository|null, branchName: string) {
 	const id = repo ? `publisher-upload-all-edited-new-K${repo.smartKey}` : "publisher-upload-all-edited-new";
 	let name = i18next.t("commands.uploadAllNewEditedNote");
 	const common = i18next.t("common.repository");
@@ -197,7 +197,7 @@ export async function uploadAllEditedNoteCommand(repo: Repository|null, branchNa
  * @param {GithubPublisher} plugin
  * @return {Promise<Command>}
  */
-export async function shareEditedOnlyCommand(repo: Repository|null, branchName: string, plugin: GithubPublisher) {
+export async function shareEditedOnlyCallback(repo: Repository|null, branchName: string, plugin: GithubPublisher) {
 	const id = repo ? `publisher-upload-edited-K${repo.smartKey}` : "publisher-upload-edited";
 	let name = i18next.t("commands.uploadAllEditedNote");
 	const common = i18next.t("common.repository");
@@ -219,7 +219,7 @@ export async function shareEditedOnlyCommand(repo: Repository|null, branchName: 
  * @return {Promise<Command>}
  */
 
-export async function checkRepositoryValidityCommand(plugin: GithubPublisher, repo: Repository, branchName: string) {
+export async function checkRepositoryValidityCallback(plugin: GithubPublisher, repo: Repository, branchName: string) {
 	const id = repo ? `check-plugin-repo-validy-K${repo.smartKey}` : "check-plugin-repo-validy";
 	let name = i18next.t("commands.checkValidity.title");
 	const common = i18next.t("common.repository");

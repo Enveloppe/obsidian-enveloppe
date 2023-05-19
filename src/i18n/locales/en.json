@@ -19,9 +19,15 @@
       "success": "{{- repo.owner}}/{{- repo.repo}} seems to be valid!",
       "title": "Test the connection to the configured repository"
     },
-    "copyLink": "Create a link to this note",
+    "copyLink": {
+      "onActivation": "Link copied to your clipboard",
+      "title": "Create a link to this note"
+    },
     "publisherDeleteClean": "Purge depublished and deleted files",
-    "runOtherRepo": "Run command for a repository",
+    "runOtherRepo": {
+      "noFile": "No file is active or the file is not shared",
+      "title": "Run command for a repository"
+    },
     "shareActiveFile": "Upload single current active note",
     "shareViewFiles": "Upload {{- viewFile}} with Github Publisher",
     "uploadAllEditedNote": "Refresh all published notes",
@@ -89,8 +95,8 @@
     "scanningRepo": "Scanning the repository, may take a while...",
     "sendMessage": "Upload {{- nbNotes}} notes to {{- repo.owner}}/{{- repo.repo}}",
     "startingClean": "Starting cleaning {{- repo.owner}}/{{- repo.repo}}",
-    "successPublishOneNote": "Successfully uploaded {{- file}} to {{- repo.owner}}/{{- repo.repo}}",
     "successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repo.owner}}/{{- repo.repo}}",
+    "successPublishOneNote": "Successfully uploaded {{- file}} to {{- repo.owner}}/{{- repo.repo}}",
     "waitingWorkflow": "Now, waiting for the workflow to be completed..."
   },
   "modals": {
@@ -338,8 +344,7 @@
           "title": "Base link"
         },
         "command": {
-          "desc": "Add a command to copy the link of the note (need reloading the plugin to take effect)",
-          "onActivation": "Link copied to your clipboard"
+          "desc": "Add a command to copy the link of the note (need reloading the plugin to take effect)"
         },
         "desc": "Send a link to your note in your clipboard",
         "linkpathremover": {

@@ -332,6 +332,7 @@ export async function shareNewNote(
  * @param {Vault} vault
  * @param {GithubPublisher} plugin
  * @param {RepoFrontmatter} repoFrontmatter
+ * @param {Repository | null} shortRepo - The repository object if needed (if the repo is from OtherRepo and not the default one)
  * @return {Promise<void>}
  */
 export async function shareAllEditedNotes(
