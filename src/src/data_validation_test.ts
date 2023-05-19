@@ -145,14 +145,14 @@ export function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoF
 	const isEmpty: boolean[]	= [];
 	if (settings.github.token.length === 0) {
 		isEmpty.push(true);
-		const whatIsEmpty = i18next.t("error.whatEmpty.ghToken") ;
+		const whatIsEmpty = i18next.t("common.ghToken") ;
 		new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 	}
 	if (settings.github.token.length != 0) {
 		for (const repo of repoFrontmatter) {
 			if (repo.repo.length === 0) {
 				isEmpty.push(true);
-				const whatIsEmpty = i18next.t("error.whatEmpty.repo") ;
+				const whatIsEmpty = i18next.t("common.repository") ;
 				new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 			} else if (repo.owner.length === 0) {
 				isEmpty.push(true);

@@ -46,6 +46,7 @@
     "edit": "Edit {{- things}}",
     "error": "Error",
     "files": "files",
+    "ghToken": "GitHub Token",
     "here": "here",
     "or": "or",
     "path": {
@@ -78,9 +79,7 @@
     "unablePublishNote": "Unable to upload note {{- file}}, skipping it",
     "whatEmpty": {
       "branch": "Branch",
-      "ghToken": "GitHub Token",
-      "owner": "Owner",
-      "repo": "Repository"
+      "owner": "Owner"
     }
   },
   "informations": {
@@ -95,8 +94,8 @@
     "scanningRepo": "Scanning the repository, may take a while...",
     "sendMessage": "Upload {{- nbNotes}} notes to {{- repo.owner}}/{{- repo.repo}}",
     "startingClean": "Starting cleaning {{- repo.owner}}/{{- repo.repo}}",
-    "successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repo.owner}}/{{- repo.repo}}",
     "successPublishOneNote": "Successfully uploaded {{- file}} to {{- repo.owner}}/{{- repo.repo}}",
+    "successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repo.owner}}/{{- repo.repo}}",
     "waitingWorkflow": "Now, waiting for the workflow to be completed..."
   },
   "modals": {
@@ -288,7 +287,6 @@
         },
         "autoclean": "Disable or enable autocleaning",
         "baselink": {
-          "base": "Base link",
           "desc": "Change the base link for the copy link command. Also disable the link replacer part. Can be used as an YAML object with the name ",
           "remove": "Remove part of the link. It must be a list!"
         },
@@ -310,8 +308,7 @@
         "repo": {
           "branch": "Branch of the repo",
           "desc": "Change the default repo for the note.",
-          "owner": "Owner of the repo",
-          "repo": "Name of the repo"
+          "owner": "Owner of the repo"
         },
         "share": {
           "other": "You could also use another shareKey based on the key set in « Manage other repo ». It allows you to separate your different repository. If the main and secondaries key are used, the main repo will be used.",
@@ -333,7 +330,6 @@
         "documentation": "Documentation",
         "issue": "Issue",
         "links": "https://obsidian-publisher.netlify.app/",
-        "repository": "Repository",
         "title": "Useful links"
       }
     },

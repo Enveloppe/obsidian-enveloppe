@@ -69,7 +69,8 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 					worflow: {
 						workflowName: old.workflowName,
 						customCommitMsg: old.customCommitMsg ?? plugin.settings.github.worflow.customCommitMsg ?? "[PUBLISHER] MERGE",
-					}
+					},
+					otherRepo: [],
 				},
 			upload: {
 				behavior: old.downloadedFolder as FolderSettings,

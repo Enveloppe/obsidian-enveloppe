@@ -188,7 +188,7 @@ export function help(settings: GitHubPublisherSettings) {
 				ul.createEl("li", null, (li) => {
 					li.createEl("code", { text: "repo" });
 					li.createEl("span", {
-						text: `: ${i18next.t("settings.help.frontmatter.repo.repo")}`,
+						text: `: ${i18next.t("settings.github.repoName.title")}`,
 					});
 				});
 				ul.createEl("li", null, (li) => {
@@ -226,7 +226,7 @@ export function help(settings: GitHubPublisherSettings) {
 				ul.createEl("li", null, (li) => {
 					li.createEl("code", { text: "base"});
 					li.createEl("span", {
-						text: `: ${i18next.t("settings.help.frontmatter.baselink.base")}`,
+						text: `: ${i18next.t("settings.plugin.copyLink.baselink.title")}`,
 					});
 				});
 				ul.createEl("li", null, (li) => {
@@ -256,7 +256,7 @@ export function usefullLinks(): DocumentFragment {
 		});
 		el.createEl("li", null, (el) => {
 			el.createEl("a", {
-				text: i18next.t("settings.help.usefulLinks.repository"),
+				text: i18next.t("common.repository"),
 				href: "https://github.com/ObsidianPublisher/obsidian-github-publisher",
 			});
 		});

@@ -303,7 +303,7 @@ class ModalEditingRepository extends Modal {
 					});
 			});
 
-		contentEl.createEl("h3", { text: "settings.github.smartRepo.modals.otherConfig" });
+		contentEl.createEl("h3", { text: i18next.t("settings.github.smartRepo.modals.otherConfig") });
 
 		new Setting(contentEl)
 			.setName(i18next.t("settings.plugin.shareKey.title"))
