@@ -18,7 +18,7 @@ import {
 	getRepoFrontmatter,
 } from "../src/utils";
 import {isInternalShared, checkIfRepoIsInAnother, isShared} from "../src/data_validation_test";
-import { createRegexFromText } from "./findAndReplaceText";
+import { createRegexFromText } from "./find_and_replace_text";
 
 /**
  * Get the dataview path from a markdown file

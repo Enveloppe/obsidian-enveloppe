@@ -10,7 +10,7 @@ import {checkRepositoryValidity, isShared} from "../src/data_validation_test";
 import {createLink, getRepoFrontmatter} from "../src/utils";
 import i18next from "i18next";
 import {Command, Notice } from "obsidian";
-import {purgeNotesRemotes, shareOneNote} from "./commands";
+import {purgeNotesRemote, shareOneNote} from "./commands";
 import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} from "./plugin_commands";
 
 /**
@@ -57,7 +57,7 @@ export async function createLinkCommand(repo: Repository | null, branchName: str
 
 /**
  * Command to delete file on the repo
- * @call purgeNotesRemotes
+ * @call purgeNotesRemote
  * @param {GithubPublisher} plugin
  * @param {Repository | null} repo
  * @param {string} branchName
@@ -76,7 +76,7 @@ export async function purgeNotesRemoteCommand(plugin: GithubPublisher, repo: Rep
 			if (plugin.settings.upload.autoclean.enable && plugin.settings.upload.behavior !== FolderSettings.fixed) {
 				if (!checking) {
 					const publisher = plugin.reloadOctokit();
-					purgeNotesRemotes(
+					purgeNotesRemote(
 						publisher,
 						plugin.settings,
 						publisher.octokit,

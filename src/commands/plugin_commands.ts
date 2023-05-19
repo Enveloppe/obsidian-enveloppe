@@ -4,7 +4,7 @@ import {checkRepositoryValidity, isShared} from "../src/data_validation_test";
 import {createLink, getRepoFrontmatter} from "../src/utils";
 import GithubPublisher from "../main";
 import {
-	purgeNotesRemotes,
+	purgeNotesRemote,
 	shareAllEditedNotes,
 	shareAllMarkedNotes,
 	shareNewNote,
@@ -24,7 +24,8 @@ export async function createLinkOnActiveFile(branchName: string, repo: Repositor
 			getRepoFrontmatter(plugin.settings, repo, frontmatter),
 			plugin.app.metadataCache,
 			plugin.app.vault,
-			plugin.settings
+			plugin.settings,
+			repo
 		);
 		new Notice(i18next.t("settings.plugin.copyLink.command.onActivation"));
 	}
@@ -51,7 +52,7 @@ export async function shareActiveFile(plugin: GithubPublisher, repo: Repository 
 export async function deleteCommands(plugin : GithubPublisher, repo: Repository, branchName: string) {
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	const publisher = plugin.reloadOctokit();
-	await purgeNotesRemotes(
+	await purgeNotesRemote(
 		publisher,
 		plugin.settings,
 		publisher.octokit,

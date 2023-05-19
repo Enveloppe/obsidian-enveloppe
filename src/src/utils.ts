@@ -10,7 +10,7 @@ import {
 	ListeEditedFiles, Repository
 } from "../settings/interface";
 import Publisher from "../publish/upload";
-import {getReceiptFolder} from "../conversion/filePath";
+import {getReceiptFolder} from "../conversion/file_path";
 import i18next from "i18next";
 import {Octokit} from "@octokit/core";
 import { type } from "os";

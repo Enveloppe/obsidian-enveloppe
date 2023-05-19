@@ -5,7 +5,7 @@ import {
 	LinkedNotes,
 	RepoFrontmatter, Repository,
 } from "../settings/interface";
-import { createRelativePath } from "./filePath";
+import { createRelativePath } from "./file_path";
 import {isAttachment, noTextConversion} from "../src/data_validation_test";
 import slugify from "slugify";
 

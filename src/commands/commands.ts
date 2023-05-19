@@ -140,7 +140,7 @@ export async function shareAllMarkedNotes(
  * @param otherRepo
  * @return {Promise<void>}
  */
-export async function purgeNotesRemotes(
+export async function purgeNotesRemote(
 	PublisherManager: GithubBranch,
 	settings: GitHubPublisherSettings,
 	octokit: Octokit,

@@ -15,10 +15,10 @@ import {
 	shareOneNote,
 } from "./commands/commands";
 import i18next from "i18next";
-import {getTitleField, regexOnFileName} from "./conversion/filePath";
+import {getTitleField, regexOnFileName} from "./conversion/file_path";
 import { resources, translationLanguage } from "./i18n/i18next";
 import {migrateSettings} from "./settings/migrate";
-import {ChooseWhichRepoToRun} from "./settings/modals/commandsModals";
+import {ChooseWhichRepoToRun} from "./settings/modals/commands_modals";
 import {
 	createLinkCommand,
 	purgeNotesRemoteCommand,

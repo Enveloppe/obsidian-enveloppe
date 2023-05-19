@@ -22,7 +22,7 @@ import { checkRepositoryValidity } from "./src/data_validation_test";
 import { ExportModal, ImportModal } from "./settings/modals/import_export";
 import i18next from "i18next";
 import { enumbSettingsTabId } from "./settings/interface";
-import {ModalAddingNewRepository} from "./settings/modals/addNewRepo";
+import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
 
 
 export class GithubPublisherSettingsTab extends PluginSettingTab {

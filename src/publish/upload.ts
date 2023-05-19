@@ -22,7 +22,7 @@ import i18next from "i18next";
 import {
 	getReceiptFolder,
 	getImageLinkOptions,
-} from "../conversion/filePath";
+} from "../conversion/file_path";
 import { ShareStatusBar } from "../src/status_bar";
 import GithubPublisherPlugin from "../main";
 import {
@@ -36,7 +36,7 @@ import {
 	getRepoFrontmatter,
 	noticeLog,
 } from "../src/utils";
-import { mainConverting } from "../conversion/convertText";
+import { mainConverting } from "../conversion/convert_text";
 
 /** Class to manage the branch
  * @extends FilesManagement

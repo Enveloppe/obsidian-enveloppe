@@ -33,12 +33,12 @@ export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
 		return item.smartKey;
 	}
 	onChooseItem(item: Repository, evt: MouseEvent | KeyboardEvent): void {
-		new CommandsModals(app, this.plugin, this.branchName, item).open();
+		new Commands_modals(app, this.plugin, this.branchName, item).open();
 	}
 }
 
 
-export class CommandsModals extends FuzzySuggestModal<GithubPublisherCommands> {
+export class Commands_modals extends FuzzySuggestModal<GithubPublisherCommands> {
 	plugin: GithubPublisherPlugin;
 	branchName: string;
 	repo: Repository;
