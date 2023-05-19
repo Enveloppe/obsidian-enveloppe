@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.8.0-0...6.0.0-0) (2023-05-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **repoFrontmatter:** the settings was renamed : worflow → workflow
+  migrating was updated accordingly
+
+### Features
+
+* **repoFrontmatter:** pass workflow in repoFrontmatter ([2d26df5](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2d26df5ae984f063456082e763ab66759db7ef49))
+
 ## [5.8.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.7.1...5.8.0-0) (2023-05-19)
 
 
