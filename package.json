@@ -4,11 +4,9 @@
     "description": "Github Publisher is a plugin that help you to send file in a configured Github Repository, based on a frontmatter entry state.",
     "main": "main.js",
     "scripts": {
-        "lint": "eslint --ext .ts src/",
         "lint:fix": "eslint --ext .ts,.js,.json src/ --fix",
-        "lint:json": "eslint --ext .json . --fix",
         "build": "obsidian-plugin build src/main.ts -S src/styles.css ",
-        "devprod": "node dev.js --prod",
+        "dev:prod": "node dev.js --prod",
         "dev": "node dev.js",
         "preexport": "pnpm run build",
         "export": "node export.js",
