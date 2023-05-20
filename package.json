@@ -4,7 +4,6 @@
     "description": "Github Publisher is a plugin that help you to send file in a configured Github Repository, based on a frontmatter entry state.",
     "main": "main.js",
     "scripts": {
-        "preinstall": "npx only-allow pnpm",
         "lint": "eslint --ext .ts src/",
         "lint:fix": "eslint --ext .ts,.js,.json src/ --fix",
         "lint:json": "eslint --ext .json . --fix",
