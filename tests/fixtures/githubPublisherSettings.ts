@@ -1,4 +1,4 @@
-import {FolderSettings, GitHubPublisherSettings, GithubTiersVersion} from "../../plugin/settings/interface";
+import {FolderSettings, GitHubPublisherSettings, GithubTiersVersion} from "../../src/settings/interface";
 
 const settings: GitHubPublisherSettings = {
 	github: {
@@ -11,10 +11,11 @@ const settings: GitHubPublisherSettings = {
 			tiersForApi: GithubTiersVersion.free,
 			hostname: "",
 		},
-		worflow: {
-			customCommitMsg: "",
-			workflowName: "",
+		workflow: {
+			commitMessage: "",
+			name: "",
 		},
+		otherRepo: [],
 	},
 	upload: {
 		behavior: FolderSettings.fixed,

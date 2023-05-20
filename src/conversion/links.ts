@@ -3,9 +3,9 @@ import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	LinkedNotes,
-	RepoFrontmatter,
+	RepoFrontmatter, Repository,
 } from "../settings/interface";
-import { createRelativePath } from "./filePath";
+import { createRelativePath } from "./file_path";
 import {isAttachment, noTextConversion} from "../src/data_validation_test";
 import slugify from "slugify";
 
@@ -203,6 +203,7 @@ function escapeRegex(filepath: string): string {
  * @param {FrontMatterCache} frontmatter The frontmatter cache
  * @param {RepoFrontmatter} sourceRepoFrontmatter The frontmatter of the source file
  * @param {FrontmatterConvert} frontmatterSettings The frontmatter settings
+ * @param shortRepo
  * @return {string} the file contents with converted internal links
  */
 
@@ -215,7 +216,8 @@ export async function convertLinkCitation(
 	vault: Vault,
 	frontmatter: FrontMatterCache,
 	sourceRepoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
-	frontmatterSettings: FrontmatterConvert
+	frontmatterSettings: FrontmatterConvert,
+	shortRepo: Repository | null
 ): Promise<string> {
 	if (!frontmatterSettings.convertInternalLinks) {
 		return fileContent;
@@ -229,7 +231,8 @@ export async function convertLinkCitation(
 			vault,
 			frontmatter,
 			sourceRepoFrontmatter,
-			frontmatterSettings
+			frontmatterSettings,
+			shortRepo
 		);
 		pathInGithub = pathInGithub.replace(".md", "");
 		let anchor = linkedFile.anchor ? linkedFile.anchor : "";

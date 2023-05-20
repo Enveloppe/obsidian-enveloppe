@@ -1,5 +1,5 @@
 import {FrontMatterCache, Notice, TFile, MetadataCache } from "obsidian";
-import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter} from "../settings/interface";
+import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter, Repository} from "../settings/interface";
 import {GithubBranch} from "../publish/branch";
 import {getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from "./utils";
 import i18next from "i18next";
@@ -22,24 +22,39 @@ export function isInternalShared(
 	return !shared && frontmatterSettings.convertInternalNonShared === true;
 }
 
+export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache): Repository | null{
+	const allOtherRepo = settings.github.otherRepo;
+	if (!frontmatter) return null;
+	//check all keys in the frontmatter
+	for (const repo of allOtherRepo) {
+		if (frontmatter[repo.shareKey]) {
+			return repo;
+		}
+	}
+	return null;
+}
+
 /**
  * Disable publishing if the file hasn't a valid frontmatter or if the file is in the folder list to ignore
  * @param {FrontMatterCache} meta the frontmatter of the file
  * @param {GitHubPublisherSettings} settings
  * @param {TFile} file
+ * @param otherRepo
  * @returns {boolean} the value of meta[settings.shareKey] or false if the file is in the ignore list/not valid
  */
 
 export function isShared(
 	meta: FrontMatterCache | null,
 	settings: GitHubPublisherSettings,
-	file: TFile
+	file: TFile,
+	otherRepo: Repository|null
 ): boolean {
 	if (!file || file.extension !== "md" || meta === null) {
 		return false;
 	}
 	const folderList = settings.plugin.excludedFolder;
-	if (meta === undefined || meta[settings.plugin.shareKey] === undefined) {
+	const shareKey = otherRepo ? otherRepo.shareKey : settings.plugin.shareKey;
+	if (meta === undefined || meta[shareKey] === undefined) {
 		return false;
 	} else if (folderList.length > 0) {
 		for (let i = 0; i < folderList.length; i++) {
@@ -50,7 +65,7 @@ export function isShared(
 			}
 		}
 	}
-	return meta[settings.plugin.shareKey];
+	return meta[shareKey];
 }
 
 
@@ -130,14 +145,14 @@ export function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoF
 	const isEmpty: boolean[]	= [];
 	if (settings.github.token.length === 0) {
 		isEmpty.push(true);
-		const whatIsEmpty = i18next.t("error.whatEmpty.ghToken") ;
+		const whatIsEmpty = i18next.t("common.ghToken") ;
 		new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 	}
 	if (settings.github.token.length != 0) {
 		for (const repo of repoFrontmatter) {
 			if (repo.repo.length === 0) {
 				isEmpty.push(true);
-				const whatIsEmpty = i18next.t("error.whatEmpty.repo") ;
+				const whatIsEmpty = i18next.t("common.repository") ;
 				new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 			} else if (repo.owner.length === 0) {
 				isEmpty.push(true);
@@ -174,6 +189,7 @@ export function noTextConversion(conditionConvert: FrontmatterConvert) {
  * @param {string} branchName The branch name created by the plugin
  * @param {GithubBranch} PublisherManager The class that manage the branch
  * @param {GitHubPublisherSettings} settings The settings of the plugin
+ * @param repository
  * @param { TFile | null} file The file to check if any
  * @param {MetadataCache} metadataCache The metadata cache of Obsidian
  * @return {Promise<void>}
@@ -182,11 +198,12 @@ export async function checkRepositoryValidity(
 	branchName: string,
 	PublisherManager: GithubBranch,
 	settings: GitHubPublisherSettings,
+	repository: Repository | null = null,
 	file: TFile | null,
 	metadataCache: MetadataCache): Promise<void> {
 	try {
 		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : null;
-		const repoFrontmatter = getRepoFrontmatter(settings, frontmatter);
+		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
 		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, settings);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, false);

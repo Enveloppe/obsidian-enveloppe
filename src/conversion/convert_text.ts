@@ -2,7 +2,7 @@ import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	LinkedNotes,
-	RepoFrontmatter,
+	RepoFrontmatter, Repository,
 } from "../settings/interface";
 import {
 	App,
@@ -15,11 +15,11 @@ import {
 	TFile,
 	Vault,
 } from "obsidian";
-import { getDataviewPath } from "./filePath";
+import { getDataviewPath } from "./file_path";
 import { getAPI, Link } from "obsidian-dataview";
 import { noticeLog } from "../src/utils";
 import { convertLinkCitation, convertWikilinks } from "./links";
-import findAndReplaceText from "./findAndReplaceText";
+import findAndReplaceText from "./find_and_replace_text";
 import GithubPublisher from "../main";
 import i18next from "i18next";
 
@@ -225,6 +225,7 @@ export async function convertInlineDataview(
  * @param {FrontMatterCache} frontmatter the frontmatter cache
  * @param {TFile} sourceFile the file to process
  * @param {RepoFrontmatter|RepoFrontmatter[]} sourceFrontmatter the frontmatter of the repo
+ * @param shortRepo
  * @return {Promise<string>} the converted text
  * @credits Ole Eskid Steensen
  */
@@ -238,7 +239,8 @@ export async function convertDataviewQueries(
 	frontmatterSettings: FrontmatterConvert,
 	frontmatter: FrontMatterCache,
 	sourceFile: TFile,
-	sourceFrontmatter: RepoFrontmatter | RepoFrontmatter[]
+	sourceFrontmatter: RepoFrontmatter | RepoFrontmatter[],
+	shortRepo: Repository | null
 ): Promise<string> {
 	// @ts-ignore
 	if (!app.plugins.enabledPlugins.has("dataview")) {
@@ -268,7 +270,8 @@ export async function convertDataviewQueries(
 				vault,
 				frontmatter,
 				sourceFrontmatter,
-				frontmatterSettings
+				frontmatterSettings,
+				shortRepo
 			);
 			md = convertWikilinks(
 				md,
@@ -299,6 +302,7 @@ export async function convertDataviewQueries(
  * @param {GitHubPublisherSettings} plugin GithubPublisher plugin
  * @param {RepoFrontmatter|RepoFrontmatter[]} sourceRepo the frontmatter of the repo
  * @param {Vault} vault app.vault
+ * @param shortRepo
  * @return {Promise<string>} the converted text
  */
 
@@ -313,7 +317,8 @@ export async function mainConverting(
 	linkedFiles: LinkedNotes[],
 	plugin: GithubPublisher,
 	vault: Vault,
-	sourceRepo: RepoFrontmatter | RepoFrontmatter[]
+	sourceRepo: RepoFrontmatter | RepoFrontmatter[],
+	shortRepo: Repository | null
 ): Promise<string> {
 	text = findAndReplaceText(text, settings, false);
 	text = await addInlineTags(
@@ -333,7 +338,8 @@ export async function mainConverting(
 		frontmatterSettings,
 		frontmatter,
 		file,
-		sourceRepo
+		sourceRepo,
+		shortRepo
 	);
 	text = await convertInlineDataview(text, settings, file, plugin.app);
 	text = addHardLineBreak(text, settings, frontmatterSettings);
@@ -346,7 +352,8 @@ export async function mainConverting(
 		vault,
 		frontmatter,
 		sourceRepo,
-		frontmatterSettings
+		frontmatterSettings,
+		shortRepo
 	);
 	text = convertWikilinks(text, frontmatterSettings, linkedFiles, settings);
 	text = findAndReplaceText(text, settings, true);

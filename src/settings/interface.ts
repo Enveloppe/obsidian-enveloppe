@@ -20,6 +20,29 @@ export interface RegexReplace {
 	type: TypeOfEditRegex;
 }
 
+export interface Repository {
+	smartKey: string;
+	user: string;
+	repo: string;
+	branch: string;
+	automaticallyMergePR: boolean;
+	api: {
+		tiersForApi: GithubTiersVersion;
+		hostname: string;
+	}
+	workflow: {
+		commitMessage: string;
+		name: string;
+	}
+	createShortcuts: boolean;
+	shareKey: string;
+	copyLink: {	
+		links: string;
+		removePart: string[];
+	}
+
+}
+
 export interface GitHubPublisherSettings {
 	github: {
 		user: string;
@@ -31,10 +54,11 @@ export interface GitHubPublisherSettings {
 			tiersForApi: GithubTiersVersion;
 			hostname: string;
 		}
-		worflow: {
-			customCommitMsg: string;
-			workflowName: string;
-		}
+		workflow: {
+			commitMessage: string;
+			name: string;
+		},
+		otherRepo: Repository[];
 	}
 	upload: {
 		behavior: FolderSettings;
@@ -96,6 +120,8 @@ export interface GitHubPublisherSettings {
 	}
 }
 
+
+
 /**
  * Allow to set a value for the folder settings
  * @enum FolderSettings
@@ -111,6 +137,8 @@ export enum GithubTiersVersion {
 	entreprise = "Enterprise",
 }
 
+
+
 export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	github: {
 		user: "",
@@ -122,10 +150,11 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 			tiersForApi: GithubTiersVersion.free,
 			hostname: "",
 		},
-		worflow: {
-			customCommitMsg: "[PUBLISHER] Merge",
-			workflowName: "",
+		workflow: {
+			commitMessage: "[PUBLISHER] Merge",
+			name: "",
 		},
+		otherRepo: [],
 	},
 	upload: {
 		behavior: FolderSettings.fixed,
@@ -237,6 +266,9 @@ export interface RepoFrontmatter {
 	repo: string;
 	owner: string;
 	autoclean: boolean;
+	workflowName: string;
+	commitMsg: string;
+	automaticallyMergePR: boolean;
 }
 
 export interface ListeEditedFiles {

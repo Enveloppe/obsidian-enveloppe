@@ -10,7 +10,7 @@ import {
 	LinkedNotes,
 	GitHubPublisherSettings,
 	FrontmatterConvert,
-	RepoFrontmatter,
+	RepoFrontmatter, Repository,
 } from "../settings/interface";
 import {
 	getCategory,
@@ -18,7 +18,7 @@ import {
 	getRepoFrontmatter,
 } from "../src/utils";
 import {isInternalShared, checkIfRepoIsInAnother, isShared} from "../src/data_validation_test";
-import { createRegexFromText } from "./findAndReplaceText";
+import { createRegexFromText } from "./find_and_replace_text";
 
 /**
  * Get the dataview path from a markdown file
@@ -71,6 +71,7 @@ export function getDataviewPath(
  * @param {FrontMatterCache | null} frontmatter FrontmatterCache or null
  * @param {RepoFrontmatter[] | RepoFrontmatter} sourceRepo The repoFrontmatter from the original file
  * @param {FrontmatterConvert} frontmatterSettings FrontmatterConvert
+ * @param shortRepo
  * @return {string} relative path
  */
 
@@ -82,15 +83,17 @@ export async function createRelativePath(
 	vault: Vault,
 	frontmatter: FrontMatterCache | null,
 	sourceRepo: RepoFrontmatter[] | RepoFrontmatter,
-	frontmatterSettings: FrontmatterConvert
+	frontmatterSettings: FrontmatterConvert,
+	shortRepo: Repository | null
 ): Promise<string> {
-	const sourcePath = getReceiptFolder(sourceFile, settings, metadata, vault);
+	const sourcePath = getReceiptFolder(sourceFile, settings, metadata, vault, shortRepo);
 	const frontmatterTarget = await metadata.getFileCache(targetFile.linked)
 		.frontmatter;
-	const targetRepo = await getRepoFrontmatter(settings, frontmatterTarget);
+	const targetRepo = await getRepoFrontmatter(settings, shortRepo, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(sourceRepo, targetRepo);
+	const shareKey = shortRepo ? shortRepo.shareKey : settings.plugin.shareKey;
 	const shared = isInternalShared(
-		settings.plugin.shareKey,
+		shareKey,
 		frontmatterTarget,
 		frontmatterSettings
 	);
@@ -100,14 +103,14 @@ export async function createRelativePath(
 		return targetFile.destinationFilePath ? targetFile.destinationFilePath: targetFile.linked.basename;
 	}
 	if (targetFile.linked.path === sourceFile.path) {
-		return getReceiptFolder(targetFile.linked, settings, metadata, vault)
+		return getReceiptFolder(targetFile.linked, settings, metadata, vault, shortRepo)
 			.split("/")
 			.at(-1);
 	}
 
 	const targetPath =
 		targetFile.linked.extension === "md"
-			? getReceiptFolder(targetFile.linked, settings, metadata, vault)
+			? getReceiptFolder(targetFile.linked, settings, metadata, vault, shortRepo)
 			: getImageLinkOptions(
 				targetFile.linked,
 				settings,
@@ -156,7 +159,8 @@ export async function createRelativePath(
 			targetFile.linked,
 			settings,
 			metadata,
-			vault
+			vault,
+			shortRepo
 		)
 			.split("/")
 			.at(-1);
@@ -370,6 +374,7 @@ export function getTitleField(
  * @param {GitHubPublisherSettings} settings Settings
  * @param {MetadataCache} metadataCache Metadata
  * @param {Vault} vault Vault
+ * @param otherRepo
  * @return {string} folder path
  */
 
@@ -377,7 +382,9 @@ export function getReceiptFolder(
 	file: TFile,
 	settings: GitHubPublisherSettings,
 	metadataCache: MetadataCache,
-	vault: Vault
+	vault: Vault,
+	otherRepo: Repository | null
+
 ): string {
 	if (file.extension === "md") {
 		const frontmatter = metadataCache.getCache(file.path)?.frontmatter;
@@ -386,7 +393,7 @@ export function getReceiptFolder(
 		const editedFileName = regexOnFileName(fileName, settings);
 
 		if (
-			!isShared(frontmatter, settings, file)
+			!isShared(frontmatter, settings, file, otherRepo)
 		) {
 			return fileName;
 		}

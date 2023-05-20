@@ -7,12 +7,13 @@ import {
 	MetadataExtractor,
 	RepoFrontmatter,
 	UploadedFiles,
-	ListeEditedFiles
+	ListeEditedFiles, Repository
 } from "../settings/interface";
 import Publisher from "../publish/upload";
-import {getReceiptFolder} from "../conversion/filePath";
+import {getReceiptFolder} from "../conversion/file_path";
 import i18next from "i18next";
 import {Octokit} from "@octokit/core";
+import settings from "../../tests/fixtures/githubPublisherSettings";
 
 
 /**
@@ -124,6 +125,7 @@ function checkSlash(link: string): string {
  * @param {MetadataCache} metadataCache
  * @param {Vault} vault
  * @param {GitHubPublisherSettings} settings
+ * @param otherRepo
  * @return {Promise<void>}
  */
 
@@ -132,14 +134,16 @@ export async function createLink(
 	repo: RepoFrontmatter | RepoFrontmatter[],
 	metadataCache: MetadataCache,
 	vault: Vault,
-	settings: GitHubPublisherSettings
+	settings: GitHubPublisherSettings,
+	otherRepo: Repository | null
 ): Promise<void> {
-	const copyLink = settings.plugin.copyLink;
-	const github = settings.github;
-	if (!copyLink.enable) {
+
+	const copyLink = otherRepo ? otherRepo.copyLink : settings.plugin.copyLink;
+	const github = otherRepo ? otherRepo : settings.github;
+	if (!settings.plugin.copyLink.enable) {
 		return;
 	}
-	let filepath = getReceiptFolder(file, settings, metadataCache, vault);
+	let filepath = getReceiptFolder(file, settings, metadataCache, vault, otherRepo);
 
 	let baseLink = copyLink.links;
 	if (baseLink.length === 0) {
@@ -223,7 +227,7 @@ async function noticeMessageOneRepo(
 	} else {
 		successMsg = i18next.t("informations.successPublishOneNote", { file: noticeValue, repo: repo });
 	}
-	if (settings.github.worflow.workflowName.length > 0) {
+	if (settings.github.workflow.name.length > 0) {
 		const msg = i18next.t("informations.sendMessage", {nbNotes: noticeValue, repo: repo}) + ".\n" + i18next.t("informations.waitingWorkflow");
 		new Notice(msg);		
 		const successWorkflow = await PublisherManager.workflowGestion(repo);
@@ -363,25 +367,39 @@ export function getFrontmatterCondition(
 /**
  * Get the frontmatter from the frontmatter
  * @param {GitHubPublisherSettings} settings
+ * @param repository
  * @param {FrontMatterCache} frontmatter
  * @return {RepoFrontmatter[] | RepoFrontmatter}
  */
 
 export function getRepoFrontmatter(
 	settings: GitHubPublisherSettings,
+	repository: Repository | null,
 	frontmatter?: FrontMatterCache
 ) {
-	const github = settings.github;
+	let github = repository ?? settings.github;
+	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"]!=="default") {
+		const smartKey = frontmatter.shortRepo.toLowerCase();
+		const allOtherRepo = settings.github.otherRepo;
+		const shortRepo = allOtherRepo.filter((repo) => {
+			return repo.smartKey.toLowerCase() === smartKey;
+		})[0];
+		github = shortRepo ?? github;
+		console.log(shortRepo);
+	}
 	let repoFrontmatter: RepoFrontmatter = {
 		branch: github.branch,
 		repo: github.repo,
 		owner: github.user,
 		autoclean: settings.upload.autoclean.enable,
+		workflowName: github.workflow.name,
+		commitMsg: github.workflow.commitMessage,
+		automaticallyMergePR: github.automaticallyMergePR
 	};
 	if (settings.upload.behavior === FolderSettings.fixed) {
 		repoFrontmatter.autoclean = false;
 	}
-	if (!frontmatter || (frontmatter.multipleRepo === undefined && frontmatter.repo === undefined)) {
+	if (!frontmatter || (frontmatter.multipleRepo === undefined && frontmatter.repo === undefined && frontmatter.shortRepo === undefined)) {
 		return repoFrontmatter;
 	}
 	let isFrontmatterAutoClean= null;
@@ -411,6 +429,8 @@ export function getRepoFrontmatter(
 			isFrontmatterAutoClean= repo.length > 4 ? true : null;
 			repoFrontmatter = repositoryStringSlice(repo, repoFrontmatter);
 		}
+	} else if (frontmatter.shortRepo instanceof Array) {
+		return multipleShortKeyRepo(frontmatter, settings.github.otherRepo, repoFrontmatter);
 	}
 	if (frontmatter.autoclean !== undefined && isFrontmatterAutoClean === null) {
 		repoFrontmatter.autoclean = frontmatter.autoclean;
@@ -451,6 +471,9 @@ function parseMultipleRepo(
 					repo: repoFrontmatter.repo,
 					owner: repoFrontmatter.owner,
 					autoclean: false,
+					automaticallyMergePR: repoFrontmatter.automaticallyMergePR,
+					workflowName: repoFrontmatter.workflowName,
+					commitMsg: repoFrontmatter.commitMsg
 				};
 				if (repo.branch !== undefined) {
 					repository.branch = repo.branch;
@@ -473,6 +496,9 @@ function parseMultipleRepo(
 					repo: repoFrontmatter.repo,
 					owner: repoFrontmatter.owner,
 					autoclean: false,
+					automaticallyMergePR: repoFrontmatter.automaticallyMergePR,
+					workflowName: repoFrontmatter.workflowName,
+					commitMsg: repoFrontmatter.commitMsg
 				};
 				multipleRepo.push(
 					repositoryStringSlice(repoString, repository)
@@ -491,6 +517,43 @@ function parseMultipleRepo(
 					t.autoclean === v.autoclean
 			) === i
 	);
+}
+
+/**
+ * Get the repoFrontmatter from the `shortRepo` string ;
+ * Using the `default` key will put the default repoFrontmatter in the list
+ * @param {FrontMatterCache} frontmatter - The frontmatter of the file
+ * @param {Repository[]} allRepo - The list of all repo from the settings
+ * @param {RepoFrontmatter} repoFrontmatter - The default repoFrontmatter (from the default settings)
+ * @return {RepoFrontmatter[] | RepoFrontmatter} - The repoFrontmatter from shortRepo
+ */
+function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository[], repoFrontmatter: RepoFrontmatter) {
+	if (frontmatter.shortRepo instanceof Array) {
+		const multipleRepo: RepoFrontmatter[] = [];
+		for (const repo of frontmatter.shortRepo) {
+			const smartKey = repo.toLowerCase();
+			if (smartKey === "default") {
+				multipleRepo.push(repoFrontmatter);
+			} else {
+				const shortRepo = allRepo.filter((repo) => {
+					return repo.smartKey.toLowerCase() === smartKey;
+				})[0];
+				if (shortRepo) {
+					multipleRepo.push({
+						branch: shortRepo.branch,
+						repo: shortRepo.repo,
+						owner: shortRepo.user,
+						autoclean: repoFrontmatter.autoclean,
+						automaticallyMergePR: shortRepo.automaticallyMergePR,
+						workflowName: shortRepo.workflow.name,
+						commitMsg: shortRepo.workflow.commitMessage
+					} as RepoFrontmatter);
+				}
+			}
+		}
+		return multipleRepo;
+	}
+	return repoFrontmatter;
 }
 
 /**
@@ -514,6 +577,9 @@ function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
 		repo: repoFrontmatter.repo,
 		owner: repoFrontmatter.owner,
 		autoclean: false,
+		automaticallyMergePR: repoFrontmatter.automaticallyMergePR,
+		workflowName: repoFrontmatter.workflowName,
+		commitMsg: repoFrontmatter.commitMsg
 	};
 	if (repo.length >= 4) {
 		newRepo.branch = repo[2];
@@ -534,7 +600,13 @@ function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
 	return newRepo;
 }
 
-export function getCategory(frontmatter: FrontMatterCache, settings: GitHubPublisherSettings) {
+/**
+ * Get the category from the frontmatter
+ * @param {FrontMatterCache} frontmatter
+ * @param {GitHubPublisherSettings} settings
+ * @return {string} - The category or the default name
+ */
+export function getCategory(frontmatter: FrontMatterCache, settings: GitHubPublisherSettings):string {
 	const key = settings.upload.yamlFolderKey;
 	let category = frontmatter[key] ?? settings.upload.defaultName;
 	if (category instanceof Array) {

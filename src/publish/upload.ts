@@ -10,7 +10,7 @@ import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	MetadataExtractor,
-	RepoFrontmatter,
+	RepoFrontmatter, Repository,
 	UploadedFiles,
 } from "../settings/interface";
 import { FilesManagement } from "./files";
@@ -22,7 +22,7 @@ import i18next from "i18next";
 import {
 	getReceiptFolder,
 	getImageLinkOptions,
-} from "../conversion/filePath";
+} from "../conversion/file_path";
 import { ShareStatusBar } from "../src/status_bar";
 import GithubPublisherPlugin from "../main";
 import {
@@ -36,7 +36,7 @@ import {
 	getRepoFrontmatter,
 	noticeLog,
 } from "../src/utils";
-import { mainConverting } from "../conversion/convertText";
+import { mainConverting } from "../conversion/convert_text";
 
 /** Class to manage the branch
  * @extends FilesManagement
@@ -80,6 +80,7 @@ export default class Publisher {
 	 * @param {boolean} deepScan starts the conversion+push of md file. If false, just sharing image
 	 * @param {FrontmatterConvert} sourceFrontmatter frontmatter settings
 	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 * @param shortRepo
 	 * @returns {Promise<TFile[]>}
 	 */
 	async statusBarForEmbed(
@@ -88,7 +89,8 @@ export default class Publisher {
 		branchName: string,
 		deepScan: boolean,
 		sourceFrontmatter: FrontmatterConvert,
-		repoFrontmatter: RepoFrontmatter
+		repoFrontmatter: RepoFrontmatter,
+		shortRepo: Repository | null
 	) {
 		const uploadedFile: UploadedFiles[] = [];
 		const fileError: string[] = [];
@@ -111,6 +113,7 @@ export default class Publisher {
 										false,
 										branchName,
 										repoFrontmatter,
+										shortRepo,
 										fileHistory,
 										true
 									);
@@ -162,6 +165,7 @@ export default class Publisher {
 							false,
 							branchName,
 							repoFrontmatter,
+							shortRepo,
 							fileHistory,
 							true
 						);
@@ -201,14 +205,16 @@ export default class Publisher {
 	 * @param {TFile[]} fileHistory File already sent during DeepScan
 	 * @param {boolean} deepScan if the plugin must check the embed notes too.
 	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 * @param shortRepo
 	 */
 	async publish(
 		file: TFile,
 		autoclean = false,
 		branchName: string,
 		repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter,
+		shortRepo: Repository | null,
 		fileHistory: TFile[] = [],
-		deepScan = false
+		deepScan = false,
 	) {
 		const shareFiles = new FilesManagement(
 			this.vault,
@@ -218,12 +224,12 @@ export default class Publisher {
 			this.plugin
 		);
 		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
-		const isNotEmpty = checkEmptyConfiguration(getRepoFrontmatter(this.settings, frontmatter), this.settings);
+		const isNotEmpty = checkEmptyConfiguration(getRepoFrontmatter(this.settings, shortRepo, frontmatter), this.settings);
 		if (
-			!isShared(frontmatter, this.settings, file) ||
+			!isShared(frontmatter, this.settings, file, shortRepo) ||
 			fileHistory.includes(file) ||
 			!checkIfRepoIsInAnother(
-				getRepoFrontmatter(this.settings, frontmatter),
+				getRepoFrontmatter(this.settings, shortRepo, frontmatter),
 				repoFrontmatter
 			) || !isNotEmpty
 		) {
@@ -259,13 +265,15 @@ export default class Publisher {
 				linkedFiles,
 				this.plugin,
 				this.vault,
-				repoFrontmatter
+				repoFrontmatter,
+				shortRepo
 			);
 			const path = getReceiptFolder(
 				file,
 				this.settings,
 				this.metadataCache,
-				this.vault
+				this.vault,
+				shortRepo
 			);
 			repoFrontmatter = Array.isArray(repoFrontmatter)
 				? repoFrontmatter
@@ -292,7 +300,8 @@ export default class Publisher {
 						fileHistory,
 						deepScan,
 						shareFiles,
-						autoclean
+						autoclean,
+						shortRepo
 					);
 				fileDeleted.push(deleted.deleted);
 				// convert to UploadedFiles[]
@@ -319,6 +328,7 @@ export default class Publisher {
 	 * @param {boolean} deepScan if the plugin must check the embed notes too.
 	 * @param {FilesManagement} shareFiles FilesManagement class
 	 * @param {boolean} autoclean If the autoclean must be done right after the file upload
+	 * @param shortRepo
 	 */
 
 	async uploadOnMultipleRepo(
@@ -332,7 +342,8 @@ export default class Publisher {
 		fileHistory: TFile[],
 		deepScan: boolean,
 		shareFiles: FilesManagement,
-		autoclean: boolean
+		autoclean: boolean,
+		shortRepo: Repository | null
 	) {
 		noticeLog(
 			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${branchName}`,
@@ -346,7 +357,8 @@ export default class Publisher {
 			branchName,
 			deepScan,
 			frontmatterSettings,
-			repo
+			repo,
+			shortRepo
 		);
 		const embeddedUploaded = embeded.uploaded;
 		embeddedUploaded.push(uploaded);
@@ -357,7 +369,8 @@ export default class Publisher {
 				this.octokit,
 				branchName,
 				shareFiles,
-				repo
+				repo,
+				shortRepo
 			);
 		}
 		return {
@@ -547,7 +560,7 @@ export default class Publisher {
 
 	async workflowGestion(repoFrontmatter: RepoFrontmatter): Promise<boolean> {
 		let finished = false;
-		if (this.settings.github.worflow.workflowName.length === 0) {
+		if (repoFrontmatter.workflowName.length === 0) {
 			return false;
 		} else {
 			const octokit = this.octokit;
@@ -556,7 +569,7 @@ export default class Publisher {
 				{
 					owner: repoFrontmatter.owner,
 					repo: repoFrontmatter.repo,
-					workflow_id: this.settings.github.worflow.workflowName,
+					workflow_id: repoFrontmatter.workflowName,
 					ref: repoFrontmatter.branch,
 				}
 			);
@@ -573,7 +586,7 @@ export default class Publisher {
 					const build = workflowGet.data.workflow_runs.find(
 						(run) =>
 							run.name ===
-							this.settings.github.worflow.workflowName.replace(".yml", "")
+							repoFrontmatter.workflowName.replace(".yml", "")
 					);
 					if (build.status === "completed") {
 						finished = true;

@@ -13,6 +13,7 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings) {
 	if (settings.upload.behavior === FolderSettings.yaml) {
 		category = `${settings.upload.yamlFolderKey}: ${settings.upload.defaultName}\n`;
 	}
+	const shortRepo = settings.github.otherRepo.length > 0 ? "shortRepo: " + settings.github.otherRepo[0].smartKey +"\n" : "";
 	return `${settings.plugin.shareKey}: true\n` + category +
 	"links:\n" +
 	`  mdlinks: ${settings.conversion.links.wiki}\n` +
@@ -27,6 +28,7 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings) {
 	`  folder: ${settings.embed.folder}\n` +
 	`dataview: ${settings.conversion.dataview}\n` +
 	`hardBreak: ${settings.conversion.hardbreak}\n` +
+	shortRepo +
 	"repo:\n" +
 	`  owner: ${settings.github.user}\n` +
 	`  repo: ${settings.github.repo}\n` +
@@ -51,7 +53,10 @@ export function help(settings: GitHubPublisherSettings) {
 				cls: "code-title",
 			});
 			span.createEl("span", {
-				text: ` ${i18next.t("settings.help.frontmatter.share")}`,
+				text: `${i18next.t("settings.help.frontmatter.share.title")}`,
+			});
+			span.createEl("ul", null, (l) => {
+				l.createEl("span", {text: i18next.t("settings.help.frontmatter.share.other")});
 			});
 		});
 		span.createEl("li", null, (span) => {
@@ -163,6 +168,12 @@ export function help(settings: GitHubPublisherSettings) {
 			});
 		});
 		span.createEl("li", null, (span) => {
+			span.createEl("code", { text: "shortRepo", cls: "code-title" });
+			span.createEl("span", {
+				text: `: ${i18next.t("settings.help.frontmatter.shortRepo")}`,
+			});
+		});
+		span.createEl("li", null, (span) => {
 			span.createEl("code", { text: "repo", cls: "code-title" });
 			span.createEl("span", {
 				text: `: ${i18next.t("settings.help.frontmatter.repo.desc")}`,
@@ -177,7 +188,7 @@ export function help(settings: GitHubPublisherSettings) {
 				ul.createEl("li", null, (li) => {
 					li.createEl("code", { text: "repo" });
 					li.createEl("span", {
-						text: `: ${i18next.t("settings.help.frontmatter.repo.repo")}`,
+						text: `: ${i18next.t("settings.github.repoName.title")}`,
 					});
 				});
 				ul.createEl("li", null, (li) => {
@@ -215,7 +226,7 @@ export function help(settings: GitHubPublisherSettings) {
 				ul.createEl("li", null, (li) => {
 					li.createEl("code", { text: "base"});
 					li.createEl("span", {
-						text: `: ${i18next.t("settings.help.frontmatter.baselink.base")}`,
+						text: `: ${i18next.t("settings.plugin.copyLink.baselink.title")}`,
 					});
 				});
 				ul.createEl("li", null, (li) => {
@@ -245,7 +256,7 @@ export function usefullLinks(): DocumentFragment {
 		});
 		el.createEl("li", null, (el) => {
 			el.createEl("a", {
-				text: i18next.t("settings.help.usefulLinks.repository"),
+				text: i18next.t("common.repository"),
 				href: "https://github.com/ObsidianPublisher/obsidian-github-publisher",
 			});
 		});

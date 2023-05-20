@@ -41,7 +41,7 @@ Before you begin, you will need to configure your GitHub repository.
 	---  
 	```  
 5. Now, run the command to publish: `Upload single current active note`  
-6. If everything is good, a PR will be created on your repository and will be automatically merged (this can be disabled if desired!).  
+6. If everything is good, a PR will be created in your repository and will be automatically merged (this can be disabled if desired!).  
   
 That's it! However, there are many options that a simple README cannot cover, so please refer to the documentation for more information. 💕.  
   
@@ -56,13 +56,14 @@ The plugin adds 8 commands in the palette, one of which is also available in the
 - `Purge depublished and deleted files`  
 - `Test the connection to the configured repository`  
 - `Check the rate limit of the GitHub API`   
+- `Run command for a repository`
   
-Each of the commands are explained [here](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/COMMANDS.md).  
+All commands are explained [here](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/COMMANDS.md).  
   
 ## 🤖 How it works  
 
 1. The plugin will create a branch named after your vault, where spaces are replaced by a `-`.  
-2. The plugin will perform all conversion (based on your settings) and push the note(s) into the branch.  
+2. The plugin will perform all conversions (based on your settings) and push the note(s) into the branch.  
 3. By default, the branch will be merged once all the notes (and their embedded files) have been processed.  
   
 > **Warning**  

@@ -29,6 +29,28 @@ export class ImportModal extends Modal {
 		this.settingsTab = settingsTab;
 	}
 
+	async censoreRepositoryData(actualSettings: GitHubPublisherSettings) {
+		this.plugin.settings.plugin = actualSettings.plugin;
+		this.plugin.settings.github.repo = actualSettings.github.repo;
+		this.plugin.settings.github.token = actualSettings.github.token;
+		this.plugin.settings.github.user = actualSettings.github.user;
+		for (const repo of actualSettings.github.otherRepo) {
+			//search the same repo in this.settings.github.otherRepo
+			const index = this.plugin.settings.github.otherRepo.findIndex((r) => r.smartKey === repo.smartKey);
+			console.log(index, this.plugin.settings.github.otherRepo[index]);
+			if (index !== -1) {
+				const found = this.plugin.settings.github.otherRepo[index];
+				found.repo = repo.repo;
+				found.user = repo.user;
+			} else {
+				repo.repo = "";
+				repo.user = "";
+			}
+		}
+		await this.plugin.saveSettings();
+
+	}
+
 	onOpen() {
 		const {contentEl} = this;
 
@@ -65,10 +87,7 @@ export class ImportModal extends Modal {
 								// @ts-ignore
 								this.plugin.settings[key] = value;
 							}
-							this.plugin.settings.plugin = actualSettings.plugin;
-							this.plugin.settings.github.repo = actualSettings.github.repo;
-							this.plugin.settings.github.token = actualSettings.github.token;
-							this.plugin.settings.github.user = actualSettings.github.user;
+							await this.censoreRepositoryData(actualSettings);
 							await this.plugin.saveSettings();
 						}
 						this.close();
@@ -166,6 +185,18 @@ export class ExportModal extends Modal {
 		this.plugin = plugin;
 	}
 
+	censoreGithubSettingsData(censuredSettings: GitHubPublisherSettings) {
+		delete censuredSettings.github.repo;
+		delete censuredSettings.github.token;
+		delete censuredSettings.github.user;
+		delete censuredSettings.plugin;
+		for (const repo of censuredSettings.github.otherRepo) {
+			delete repo.repo;
+			delete repo.user;
+		}
+		return censuredSettings;
+	}
+
 	onOpen() {
 		const {contentEl, modalEl} = this;
 		modalEl.addClass("modal-github-publisher");
@@ -174,11 +205,7 @@ export class ExportModal extends Modal {
 			.setDesc(i18next.t("modals.export.desc") )
 			.then((setting) => {
 				//create a copy of the settings object
-				const censuredSettings = clone(this.plugin.settings);
-				delete censuredSettings.github.repo;
-				delete censuredSettings.github.token;
-				delete censuredSettings.github.user;
-				delete censuredSettings.plugin;
+				const censuredSettings = this.censoreGithubSettingsData(clone(this.plugin.settings));
 				const output = JSON.stringify(censuredSettings, null, 2);
 				setting.controlEl.createEl("a",
 					{

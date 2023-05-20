@@ -5,7 +5,7 @@ import {
 	FolderSettings,
 	GitHubPublisherSettings,
 	GithubRepo,
-	RepoFrontmatter,
+	RepoFrontmatter, Repository,
 } from "../settings/interface";
 import { FilesManagement } from "./files";
 import { Base64 } from "js-base64";
@@ -21,6 +21,7 @@ import i18next from "i18next";
  * @param {string} branchName The name of the branch created by the plugin
  * @param {FilesManagement} filesManagement
  * @param {RepoFrontmatter[] | RepoFrontmatter} repoFrontmatter
+ * @param otherRepo
  * @return {Promise<void>}
  */
 export async function deleteFromGithub(
@@ -30,6 +31,7 @@ export async function deleteFromGithub(
 	branchName: string,
 	filesManagement: FilesManagement,
 	repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter,
+	otherRepo: Repository | null
 ): Promise<Deleted> {
 	repoFrontmatter = Array.isArray(repoFrontmatter)
 		? repoFrontmatter
@@ -43,6 +45,7 @@ export async function deleteFromGithub(
 			branchName,
 			filesManagement,
 			repo,
+			otherRepo
 		));
 	}
 	return deleted[0]; //needed only for main repo (not for repo in frontmatter)
@@ -56,6 +59,7 @@ export async function deleteFromGithub(
  * @param {string} branchName The branch where the file will be deleted
  * @param {FilesManagement} filesManagement
  * @param {RepoFrontmatter} repo
+ * @param otherRepo
  * @return {Promise<boolean>} : true if success
  */
 
@@ -65,7 +69,8 @@ async function deleteFromGithubOneRepo(
 	octokit: Octokit,
 	branchName: string,
 	filesManagement: FilesManagement,
-	repo: RepoFrontmatter
+	repo: RepoFrontmatter,
+	otherRepo: Repository | null
 ): Promise<Deleted> {
 	if (!repo.autoclean) return;
 	const getAllFile = await filesManagement.getAllFileFromRepo(
@@ -97,7 +102,7 @@ async function deleteFromGithubOneRepo(
 		}
 		return {success: false, deleted: [], undeleted: []};
 	}
-	const allSharedFiles = filesManagement.getAllFileWithPath();
+	const allSharedFiles = filesManagement.getAllFileWithPath(otherRepo);
 	const allSharedConverted = allSharedFiles.map((file) => {
 		return { converted: file.converted, repo: file.repoFrontmatter };
 	});
