@@ -493,7 +493,7 @@ export class FilesManagement extends Publisher {
 				const imageLink = this.metadataCache.getFirstLinkpathDest(
 					frontmatterSourceFile[field],
 					file.path
-				);
+				) ?? this.vault.getAbstractFileByPath(frontmatterSourceFile[field]);
 				if (imageLink !== null) {
 					embedFiles.push(
 						this.imageSharedOrNote(file, frontmatterSettings)
