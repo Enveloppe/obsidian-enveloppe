@@ -385,7 +385,6 @@ export function getRepoFrontmatter(
 			return repo.smartKey.toLowerCase() === smartKey;
 		})[0];
 		github = shortRepo ?? github;
-		console.log(shortRepo);
 	}
 	let repoFrontmatter: RepoFrontmatter = {
 		branch: github.branch,

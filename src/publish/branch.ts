@@ -216,7 +216,6 @@ export class GithubBranch extends FilesManagement {
 		pullRequestNumber: number,
 		repoFrontmatter: RepoFrontmatter
 	) {
-		console.log(repoFrontmatter);
 		const commitMsg = repoFrontmatter.commitMsg || repoFrontmatter.commitMsg.trim().length > 0 ? `${repoFrontmatter.commitMsg} #${pullRequestNumber}` : `[PUBLISHER] Merge #${pullRequestNumber}`;
 		try {
 			const branch = await this.octokit.request(

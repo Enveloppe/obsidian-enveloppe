@@ -37,7 +37,6 @@ export class ImportModal extends Modal {
 		for (const repo of actualSettings.github.otherRepo) {
 			//search the same repo in this.settings.github.otherRepo
 			const index = this.plugin.settings.github.otherRepo.findIndex((r) => r.smartKey === repo.smartKey);
-			console.log(index, this.plugin.settings.github.otherRepo[index]);
 			if (index !== -1) {
 				const found = this.plugin.settings.github.otherRepo[index];
 				found.repo = repo.repo;
