@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.7.1...6.0.0) (2023-06-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* **manageOtherRepo:** the settings was renamed : worflow → workflow
+migrating was updated accordingly
+
+### Features
+
+* **manageOtherRepo:** Allow to register other repo with github settings ([02d760e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/02d760ea8f213fb9786c36c8432738481f23112c))
+
+
+### Bug Fixes
+
+* use AbstractFileByPath in case of error with LinkPathDest ([11fe4cd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/11fe4cd13b79a8b9846ad3bfbc7fdfee98608329))
+
 ### [5.7.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.7.0...5.7.1) (2023-05-16)
 
 
