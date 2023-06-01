@@ -141,10 +141,8 @@ export default class GithubPublisher extends Plugin {
 	 * @return {Promise<void>}
 	 */
 	async onload() {
-		console.log(
-			`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`
-		);
-		i18next.init({
+		console.log(`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`);
+		await i18next.init({
 			lng: translationLanguage,
 			fallbackLng: "en",
 			resources: resources,
