@@ -4,78 +4,13 @@ name: Release
   push:
     tags:
       - "*"
-env:
-  PLUGIN_NAME: obsidian-mkdocs-publisher
-  STYLE: true
 permissions:
   contents: write
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Build
-        id: build
-        run: |
-          npm install
-          npm run build  -- --output-dir ${{ env.PLUGIN_NAME }}
-      - name: Get version
-        id: tags
-        run: |
-          echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
-          echo ${{ env. VERSION }}
-          echo "## Release ${{ env. VERSION }}" >> $GITHUB_STEP_SUMMARY
-      - name: Create zip
-        run: |
-          zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
-          echo "### Files" >> $GITHUB_STEP_SUMMARY
-          ls >> $GITHUB_STEP_SUMMARY
-      - name: Delete release if workflow dispatch
-        if: github.event_name == 'workflow_dispatch'
-        continue-on-error: true
-        run: gh release delete ${{ env.VERSION }} -R ${{ github.repository }} -y
-        env:
-          GH_TOKEN: ${{ github.token }}
-      - name: Create changelog
-        run: |
-          npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > CHANGELOG-LATEST.md
-          cat CHANGELOG-LATEST.md >> $GITHUB_STEP_SUMMARY
-      - name: Create Release with css
-        if: env.STYLE == 'true'
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          VERSION: "${{ env.VERSION }}"
-        with:
-          tag_name: "${{ env.VERSION }}"
-          name: "${{ env.VERSION }}"
-          body_path: CHANGELOG-LATEST.md
-          draft: false
-          prerelease: false
-          token: "${{ secrets.GITHUB_TOKEN }}"
-          files: |
-            ${{ env.PLUGIN_NAME }}.zip
-            ${{ env.PLUGIN_NAME }}/main.js
-            ${{ env.PLUGIN_NAME }}/manifest.json
-            ${{ env.PLUGIN_NAME }}/styles.css
-      - name: Create Release without css
-        if: env.STYLE == 'false'
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          VERSION: "${{ env.VERSION }}"
-        with:
-          tag_name: "${{ env.VERSION }}"
-          name: "${{ env.VERSION }}"
-          body_path: CHANGELOG-LATEST.md
-          draft: false
-          prerelease: false
-          token: "${{ secrets.GITHUB_TOKEN }}"
-          files: |
-            ${{ env.PLUGIN_NAME }}.zip
-            ${{ env.PLUGIN_NAME }}/main.js
-            ${{ env.PLUGIN_NAME }}/manifest.json
+  publish:
+    uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-publish.yaml@main
+    with:
+      PLUGIN_NAME: "obsidian-mkdocs-publisher"
+      STYLE: true
+    secrets: 
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,78 +1,13 @@
-name: Bump and release version
+name: Release
 on:
   workflow_dispatch:
-
-env:
-  PLUGIN_NAME: obsidian-mkdocs-publisher
-  STYLE: true
 permissions:
   contents: write
-  packages: write
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Install dependencies
-        run: npm install
-      - name: Bump version
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          npm run bump --ignore-scripts
-      - name: Get version number
-        run: |
-          echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
-          echo "### VERSION : ${{ env.VERSION }}" >> $GITHUB_STEP_SUMMARY
-          echo ${{ env.VERSION }}
-      - name: build
-        run: npm run build  -- --output-dir ${{ env.PLUGIN_NAME }}
-      - name: Zip files
-        run: |
-          zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
-          echo "### Files" >> $GITHUB_STEP_SUMMARY
-          ls >> $GITHUB_STEP_SUMMARY
-      - name: Create changelog
-        run: |
-          npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > CHANGELOG-LATEST.md
-          cat CHANGELOG-LATEST.md >> $GITHUB_STEP_SUMMARY
-      - name: Create Release with css
-        if: env.STYLE == 'true'
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          VERSION: "${{ env.VERSION }}"
-        with:
-          tag_name: "${{ env.VERSION }}"
-          name: "${{ env.VERSION }}"
-          body_path: CHANGELOG-LATEST.md
-          draft: false
-          prerelease: false
-          token: "${{ secrets.GITHUB_TOKEN }}"
-          files: |
-            ${{ env.PLUGIN_NAME }}.zip
-            ${{ env.PLUGIN_NAME }}/main.js
-            ${{ env.PLUGIN_NAME }}/manifest.json
-            ${{ env.PLUGIN_NAME }}/styles.css
-      - name: Create Release without css
-        if: env.STYLE == 'false'
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          VERSION: "${{ env.VERSION }}"
-        with:
-          tag_name: "${{ env.VERSION }}"
-          name: "${{ env.VERSION }}"
-          body_path: CHANGELOG-LATEST.md
-          draft: false
-          prerelease: false
-          token: "${{ secrets.GITHUB_TOKEN }}"
-          files: |
-            ${{ env.PLUGIN_NAME }}.zip
-            ${{ env.PLUGIN_NAME }}/main.js
-            ${{ env.PLUGIN_NAME }}/manifest.json
-      - name: Push updated changes
-        run: git push --follow-tags origin master
+  bump:
+    uses: lisandra-dev/reusable-workflows/.github/workflows/bump.yaml@main
+    with:
+      PLUGIN_NAME: obsidian-mkdocs-publisher
+      STYLE: true
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
