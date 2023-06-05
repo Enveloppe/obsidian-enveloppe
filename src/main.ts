@@ -51,9 +51,9 @@ export default class GithubPublisher extends Plugin {
 		}
 		this.addCommand(await shareOneNoteCallback(repo, this, branchName));
 		this.addCommand(await purgeNotesRemoteCallback(this, repo, branchName));
-		this.addCommand(await uploadAllNotesCallback(repo, branchName));
-		this.addCommand(await uploadNewNotesCallback(repo, branchName));
-		this.addCommand(await uploadAllEditedNotesCallback(repo, branchName));
+		this.addCommand(await uploadAllNotesCallback(this, repo, branchName));
+		this.addCommand(await uploadNewNotesCallback(this, repo, branchName));
+		this.addCommand(await uploadAllEditedNotesCallback(this, repo, branchName));
 		this.addCommand(await shareEditedOnlyCallback(repo, branchName, this));
 		this.addCommand(await checkRepositoryValidityCallback(this, repo, branchName));
 	}
