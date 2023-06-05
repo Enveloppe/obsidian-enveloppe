@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.0.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.0.0...6.0.1) (2023-06-05)
+
+
+### Bug Fixes
+
+* **cmds:** refactor not applied correctly ([5f7fc48](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5f7fc484d15ad64cfcc6770499a1440e2c07183b)), closes [#155](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/155)
+
 ## [6.0.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/5.7.1...6.0.0) (2023-06-01)
 
 
