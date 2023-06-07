@@ -1,4 +1,4 @@
-name: Release
+name: Publish Obsidian Plugin
 "on":
   workflow_dispatch:
   push:
