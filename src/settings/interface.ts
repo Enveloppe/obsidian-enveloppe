@@ -5,6 +5,8 @@ export enum TypeOfEditRegex {
 	title = "title",
 }
 
+
+
 export enum enumbSettingsTabId {
 	github = "github-configuration",
 	upload = "upload-configuration",

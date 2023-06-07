@@ -2,6 +2,7 @@ import {FolderSettings, GithubTiersVersion, TextCleaner, TypeOfEditRegex} from "
 import GithubPublisher from "../main";
 import {noticeLog} from "../src/utils";
 import i18next from "i18next";
+import { encrypt, isEncrypted } from "./crypto";
 
 export interface OldSettings {
 	githubRepo: string;
@@ -220,5 +221,10 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 			await plugin.saveSettings();
 		}
 	}
+	if (!isEncrypted(plugin.app, plugin.manifest)) {
+		const encryptedToken = await encrypt(plugin.settings.github.token, plugin.app, plugin.manifest);
+		plugin.settings.github.token = encryptedToken;
+	}
+
 	await plugin.saveSettings();
 }

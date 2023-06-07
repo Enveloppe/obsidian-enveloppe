@@ -23,6 +23,7 @@ import { ExportModal, ImportModal } from "./settings/modals/import_export";
 import i18next from "i18next";
 import { enumbSettingsTabId } from "./settings/interface";
 import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
+import { encrypt, decrypt } from "./settings/crypto";
 
 
 export class GithubPublisherSettingsTab extends PluginSettingTab {
@@ -144,7 +145,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		}
 	}
 
-	renderGithubConfiguration() {
+	async renderGithubConfiguration() {
 		const githubSettings = this.plugin.settings.github;
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.apiType.title"))
@@ -210,15 +211,16 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					"https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
 		});
+		const decryptedToken = await decrypt(githubSettings.token, this.app, this.plugin.manifest);
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.ghToken.title"))
 			.setDesc(desc_ghToken)
 			.addText((text) =>
 				text
-					.setPlaceholder("ghb-15457498545647987987112184")
-					.setValue(githubSettings.token)
+					.setPlaceholder("ghp_15457498545647987987112184")
+					.setValue(decryptedToken)
 					.onChange(async (value) => {
-						githubSettings.token = value.trim();
+						githubSettings.token = await encrypt(value.trim(), this.app, this.plugin.manifest);
 						await this.plugin.saveSettings();
 					})
 			);
