@@ -2,7 +2,6 @@ import {FolderSettings, GithubTiersVersion, TextCleaner, TypeOfEditRegex} from "
 import GithubPublisher from "../main";
 import {noticeLog} from "../src/utils";
 import i18next from "i18next";
-import settings from "../../tests/fixtures/githubPublisherSettings";
 
 export interface OldSettings {
 	githubRepo: string;
@@ -187,8 +186,8 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 		delete plugin.settings.github.worflow;
 		await plugin.saveSettings();
 	}
-	const otherRepo = plugin.settings.github.otherRepo ?? [];
-	for (const repo of plugin.settings.github.otherRepo) {
+	const otherRepo = plugin.settings.github?.otherRepo ?? [];
+	for (const repo of otherRepo) {
 		const workflow = {
 			//@ts-ignore
 			name: plugin.settings.github.worflow?.workflowName ?? plugin.settings.github.workflow.name,
@@ -221,4 +220,5 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 			await plugin.saveSettings();
 		}
 	}
+	await plugin.saveSettings();
 }
