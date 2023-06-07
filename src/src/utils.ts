@@ -26,7 +26,7 @@ export function noticeLog(message: string, settings: GitHubPublisherSettings) {
 	if (settings.plugin.noticeError) {
 		new Notice(message);
 	} else {
-		console.log(message);
+		console.log(`[GITHUB PUBLISHER] ${message}`);
 	}
 }
 
