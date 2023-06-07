@@ -77,7 +77,7 @@ export default class GithubPublisher extends Plugin {
 	}
 
 	cleanOldCommands() {
-		const allRepo = this.settings.github.otherRepo;
+		const allRepo:Repository[] = this.settings.github.otherRepo ?? [];
 		//@ts-ignore
 		const allCommands = this.app.commands.listCommands();
 		for (const command of allCommands) {
@@ -99,7 +99,7 @@ export default class GithubPublisher extends Plugin {
 	async reloadCommands(branchName: string) {
 		//compare old and new repo to delete old commands
 		noticeLog("Reloading commands", this.settings);
-		const newRepo = this.settings.github.otherRepo;
+		const newRepo:Repository[] = this.settings.github.otherRepo ?? [];
 		this.cleanOldCommands();
 		for (const repo of newRepo) {
 			if (repo.createShortcuts) {

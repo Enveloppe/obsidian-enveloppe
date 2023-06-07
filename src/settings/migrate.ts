@@ -187,6 +187,7 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 		delete plugin.settings.github.worflow;
 		await plugin.saveSettings();
 	}
+	const otherRepo = plugin.settings.github.otherRepo ?? [];
 	for (const repo of plugin.settings.github.otherRepo) {
 		const workflow = {
 			//@ts-ignore
