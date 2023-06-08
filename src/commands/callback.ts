@@ -68,6 +68,7 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 	let name = i18next.t("commands.publisherDeleteClean");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
+	//@ts-ignore
 	return {
 		id: id,
 		name: name,
@@ -107,6 +108,7 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 	let name = i18next.t("commands.shareActiveFile");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
+	//@ts-ignore
 	return {
 		id: id,
 		name: name,
@@ -230,6 +232,7 @@ export async function checkRepositoryValidityCallback(plugin: GithubPublisher, r
 	let name = i18next.t("commands.checkValidity.title");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
+	//@ts-ignore
 	return {
 		id: id,
 		name: name,
