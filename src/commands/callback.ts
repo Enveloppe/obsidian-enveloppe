@@ -72,7 +72,8 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 		id: id,
 		name: name,
 		hotkeys: [],
-		checkCallback: (checking) => {
+		//@ts-ignore
+		checkCallback: async (checking) => {
 			if (plugin.settings.upload.autoclean.enable && plugin.settings.upload.behavior !== FolderSettings.fixed) {
 				if (!checking) {
 					//@ts-ignore
@@ -110,7 +111,8 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 		id: id,
 		name: name,
 		hotkeys: [],
-		checkCallback: (checking) => {
+		//@ts-ignore
+		checkCallback: async (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
 			const frontmatter = file ? plugin.app.metadataCache.getFileCache(file).frontmatter : null;
 			if (
@@ -231,13 +233,13 @@ export async function checkRepositoryValidityCallback(plugin: GithubPublisher, r
 	return {
 		id: id,
 		name: name,
-		checkCallback: (checking) => {
+		//@ts-ignore
+		checkCallback: async (checking) => {
 			if (plugin.app.workspace.getActiveFile())
 			{
 				if (!checking) {
 					checkRepositoryValidity(
 						branchName,
-						//@ts-ignore
 						await plugin.reloadOctokit(),
 						plugin.settings,
 						repo,
