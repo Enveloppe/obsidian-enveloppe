@@ -212,6 +212,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 		});
 		const decryptedToken = githubSettings.token.length > 0 ? await decrypt(githubSettings.token, this.app, this.plugin.manifest) : "";
+		console.log(decryptedToken);
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.ghToken.title"))
 			.setDesc(desc_ghToken)
