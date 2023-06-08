@@ -51,7 +51,7 @@ async function loadKeyPair(app: App, manifest: PluginManifest): Promise<KeyPair>
 		}, 
 		true, 
 		["decrypt"]);
-	console.log("loaded key pair", publicKey, privateKey);
+	console.log("loaded key pair", publicKey.algorithm, privateKey.algorithm);
 	return {
 		publicKey,
 		privateKey,
