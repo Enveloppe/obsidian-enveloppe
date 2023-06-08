@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0-1](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.0-0...6.1.0-1) (2023-06-08)
+
+
+### Features
+
+* button to regenerate public/private keys & registerate the token ([ed1b2fb](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/ed1b2fb9a3091f6928c074b6e08ce9b1cb17a383))
+
 ## [6.1.0-0](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.0.1...6.1.0-0) (2023-06-08)
 
 
