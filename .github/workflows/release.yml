@@ -20,7 +20,6 @@ jobs:
     with:
       PLUGIN_NAME: "obsidian-mkdocs-publisher"
       STYLE: true
-      BRANCH: "main"
     secrets: 
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   bump:
@@ -29,5 +28,7 @@ jobs:
     with:
       PLUGIN_NAME: obsidian-mkdocs-publisher
       STYLE: true
+      BRANCH: "main"
+
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
