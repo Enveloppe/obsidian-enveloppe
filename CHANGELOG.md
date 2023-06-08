@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.1.1](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.0...6.1.1) (2023-06-08)
+
 ## [6.1.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.0.1...6.1.0) (2023-06-07)
 
 
