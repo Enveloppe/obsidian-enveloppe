@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.2.0-0](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.0.1...6.2.0-0) (2023-06-08)
+
+
+### Features
+
+* **crypto:** encrypt and decrypt github token ([3098493](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/309849310c3a984a8301921a726e47b7dad3871a))
+
+
+### Bug Fixes
+
+* skip wrongly formatted tags ([550a859](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/550a8598c9787d73cf67c2d522a341faaab26411))
+* TypeError: settings.github.otherRepo is not iterable ([5a2d248](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/5a2d2482a2d8284ec4267f33b341995c19acf848)), closes [#156](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/issues/156)
+
 ### [6.1.1-19](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-18...6.1.1-19) (2023-06-08)
 
 ### [6.1.1-18](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-17...6.1.1-18) (2023-06-08)
