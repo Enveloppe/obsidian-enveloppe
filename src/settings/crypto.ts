@@ -79,6 +79,7 @@ export async function encrypt(data: string, app: App, manifest: PluginManifest):
 
 export async function decrypt(data: string, app: App, manifest: PluginManifest): Promise<string> {
 	const dec = new TextDecoder();
+	console.log(dec);
 	const keyPair = await loadKeyPair(app, manifest);
 	const bufferData = base64ToArrayBuffer(data);
 	const decryptData = await window.crypto.subtle.decrypt({
