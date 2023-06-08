@@ -75,15 +75,16 @@ export async function encrypt(data: string, app: App, manifest: PluginManifest):
 
 export async function decrypt(data: string, app: App, manifest: PluginManifest): Promise<string> {
 	const dec = new TextDecoder();
-	console.log(dec);
 	const keyPair = await loadKeyPair(app, manifest);
 	const bufferData = base64ToArrayBuffer(data);
+	console.log('buffer data', bufferData);
 	const decryptData = await window.crypto.subtle.decrypt({
 		name: "RSA-OAEP"
 	},
 	keyPair.privateKey,
 	bufferData
 	);
+	console.log('decrypted data', dec.decode(decryptData));
 	return dec.decode(decryptData);
 }
 
