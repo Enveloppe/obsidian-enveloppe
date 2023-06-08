@@ -189,7 +189,6 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 	}
 	noticeLog("Migrating otherRepo key", plugin.settings);
 	const otherRepo = plugin.settings.github?.otherRepo ?? [];
-	console.log(otherRepo);
 	for (const repo of otherRepo) {
 		const workflow = {
 			//@ts-ignore
@@ -223,10 +222,8 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 			await plugin.saveSettings();
 		}
 	}
-	noticeLog("Encrypt token", plugin.settings);
 	const encrypted = await isEncrypted(plugin.app, plugin.manifest);
 	if (!encrypted && plugin.settings.github.token.length > 0) {
-		console.log("Not encrypted yet!");
 		const encryptedToken = await encrypt(plugin.settings.github.token, plugin.app, plugin.manifest);
 		plugin.settings.github.token = encryptedToken;
 	}
