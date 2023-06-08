@@ -215,13 +215,13 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("settings.github.ghToken.title"))
 			.setDesc(desc_ghToken)
 			.addText(async (text) => {
-				const decryptedToken = isEncrypted(this.app, this.plugin.manifest, this.plugin.settings) ? await decrypt(githubSettings.token, this.app, this.plugin.manifest) : githubSettings.token;
+				const decryptedToken = isEncrypted(this.app, this.plugin.manifest, this.plugin.settings) ? await decrypt(githubSettings.token, this.app, this.plugin.manifest, this.plugin.settings) : githubSettings.token;
 				text
 					.setPlaceholder("ghp_15457498545647987987112184")
 					.setValue(decryptedToken)
 					.onChange(async (value) => {
 						console.log("ENTERING TOKEN");
-						githubSettings.token = await encrypt(value.trim(), this.app, this.plugin.manifest);
+						githubSettings.token = await encrypt(value.trim(), this.app, this.plugin.manifest, this.plugin.settings);
 						console.log("encrypted token");
 						await this.plugin.saveSettings();
 					});

@@ -59,10 +59,10 @@ async function loadKeyPair(app: App, manifest: PluginManifest, settings: GitHubP
 	
 }
 
-export async function encrypt(data: string, app: App, manifest: PluginManifest):Promise<string> {
+export async function encrypt(data: string, app: App, manifest: PluginManifest, settings: GitHubPublisherSettings):Promise<string> {
 	console.log("Encrypting data", data);
 	const enc = new TextEncoder();
-	const keyPair = await loadKeyPair(app, manifest);
+	const keyPair = await loadKeyPair(app, manifest, settings);
 	console.log("key pair", keyPair);
 	const encodedData = enc.encode(data);
 	const {publicKey} = keyPair;
@@ -76,9 +76,9 @@ export async function encrypt(data: string, app: App, manifest: PluginManifest):
 	return arrayBufferToBase64(encryptedText);
 }
 
-export async function decrypt(data: string, app: App, manifest: PluginManifest): Promise<string> {
+export async function decrypt(data: string, app: App, manifest: PluginManifest, settings: GitHubPublisherSettings): Promise<string> {
 	const dec = new TextDecoder();
-	const keyPair = await loadKeyPair(app, manifest);
+	const keyPair = await loadKeyPair(app, manifest, settings);
 	const bufferData = base64ToArrayBuffer(data);
 	const decryptData = await window.crypto.subtle.decrypt({
 		name: "RSA-OAEP"
