@@ -59,29 +59,37 @@ export function addHardLineBreak(
  * @returns {Promise<string>} the converted text
  */
 
-async function addTagsToYAML(text: string, toAdd: string[]): Promise<string> {
+async function addTagsToYAML(text: string, toAdd: string[], settings: GitHubPublisherSettings): Promise<string> {
 	const yaml = text.split("---")[1];
 	const yamlObject = parseYaml(yaml);
 	if (yamlObject.tag) {
-		toAdd = [
-			...new Set([
-				...toAdd,
-				...yamlObject.tag.map((tag: string) =>
-					tag.replaceAll("/", "_")
-				),
-			]),
-		];
-		delete yamlObject.tag;
+		try {
+			toAdd = [
+				...new Set([
+					...toAdd,
+					...yamlObject.tag.map((tag: string) =>
+						tag.replaceAll("/", "_")
+					),
+				]),
+			];
+			delete yamlObject.tag;
+		} catch (e) {
+			noticeLog(e, settings);
+		}
 	}
 	if (yamlObject.tags) {
-		yamlObject.tags = [
-			...new Set([
-				...yamlObject.tags.map((tag: string) =>
-					tag.replaceAll("/", "_")
-				),
-				...toAdd,
-			]),
-		];
+		try {
+			yamlObject.tags = [
+				...new Set([
+					...yamlObject.tags.map((tag: string) =>
+						tag.replaceAll("/", "_")
+					),
+					...toAdd,
+				]),
+			];
+		} catch (e) {
+			noticeLog(e, settings);
+		}
 	} else {
 		yamlObject.tags = toAdd;
 	}
@@ -123,7 +131,7 @@ export async function addInlineTags(
 		: [];
 	const toAdd = [...new Set([...inlineTagsInText, ...yamlTags])];
 	if (toAdd.length > 0) {
-		return await addTagsToYAML(text, toAdd);
+		return await addTagsToYAML(text, toAdd, settings);
 	}
 	return text;
 }
@@ -207,8 +215,9 @@ export async function convertInlineDataview(
 		}
 	}
 	if (valueToAdd.length > 0) {
-		return await addTagsToYAML(text, valueToAdd.filter(Boolean));
+		return await addTagsToYAML(text, valueToAdd.filter(Boolean), settings);
 	}
+	return text;
 	return text;
 }
 
