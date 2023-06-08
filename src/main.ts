@@ -117,7 +117,7 @@ export default class GithubPublisher extends Plugin {
 	async reloadOctokit() {
 		let octokit: Octokit;
 		const apiSettings = this.settings.github.api;
-		const token = await decrypt(this.settings.github.token, this.app, this.manifest, this.settings);
+		const token = await decrypt(this.settings.github.token, this);
 		if (apiSettings.tiersForApi === GithubTiersVersion.entreprise && apiSettings.hostname.length > 0) {
 			octokit = new Octokit(
 				{

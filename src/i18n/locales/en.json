@@ -226,7 +226,13 @@
       },
       "ghToken": {
         "desc": "A GitHub token with repository permission. You can generate it ",
-        "title": "Github Token"
+        "encrypted" : "The token will be encrypted and stored as it in your settings.",
+        "title": "GitHub Token",
+        "button" : {
+          "title" : "Regenerate encrypted token",
+          "notice" : "Token regenerated!",
+          "tooltip" : "Will regenerate public and private key and save the new encrypted token in your settings."
+        }
       },
       "repoName": {
         "desc": "The name of the repository where you store your blog.",

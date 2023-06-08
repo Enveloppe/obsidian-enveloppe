@@ -2,63 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [6.2.0-0](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.0.1...6.2.0-0) (2023-06-08)
+## [6.1.0-1](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.0-0...6.1.0-1) (2023-06-08)
 
 
 ### Features
 
-* **crypto:** encrypt and decrypt github token ([3098493](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/309849310c3a984a8301921a726e47b7dad3871a))
+* button to regenerate public/private keys & registerate the token ([ed1b2fb](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/ed1b2fb9a3091f6928c074b6e08ce9b1cb17a383))
+
+## [6.1.0-0](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.0.1...6.1.0-0) (2023-06-08)
+
+
+### Features
+
+* **crypto:** crypto the github token ([543c8fe](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/543c8fe68f12ff83d6e7052a878001bea7715dcd)), closes [#160](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/issues/160)
 
 
 ### Bug Fixes
 
-* skip wrongly formatted tags ([550a859](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/550a8598c9787d73cf67c2d522a341faaab26411))
-* TypeError: settings.github.otherRepo is not iterable ([5a2d248](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/5a2d2482a2d8284ec4267f33b341995c19acf848)), closes [#156](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/issues/156)
-
-### [6.1.1-19](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-18...6.1.1-19) (2023-06-08)
-
-### [6.1.1-18](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-17...6.1.1-18) (2023-06-08)
-
-### [6.1.1-17](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-16...6.1.1-17) (2023-06-08)
-
-
-### Bug Fixes
-
-* skip wrongly formatted tags ([550a859](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/550a8598c9787d73cf67c2d522a341faaab26411))
-
-### [6.1.1-16](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-15...6.1.1-16) (2023-06-08)
-
-### [6.1.1-15](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-14...6.1.1-15) (2023-06-08)
-
-### [6.1.1-14](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-13...6.1.1-14) (2023-06-08)
-
-### [6.1.1-13](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1...6.1.1-13) (2023-06-08)
-
-### [6.1.1-12](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.17-11...6.1.1-12) (2023-06-08)
-
-### [6.1.17-11](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.17-10...6.1.17-11) (2023-06-08)
-
-### [6.1.17-10](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.17-9...6.1.17-10) (2023-06-08)
-
-### [6.1.17-9](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.17-8...6.1.17-9) (2023-06-08)
-
-### [6.1.17-8](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.17-7...6.1.17-8) (2023-06-08)
-
-### [6.1.17-7](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.17-6...6.1.17-7) (2023-06-08)
-
-### [6.1.17-6](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.17-5...6.1.17-6) (2023-06-08)
-
-### [6.1.17-5](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.17-4...6.1.17-5) (2023-06-08)
-
-### [6.1.17-4](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.17-3...6.1.17-4) (2023-06-08)
-
-### [6.1.17-3](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.17-2...6.1.17-3) (2023-06-08)
-
-### [6.1.17-2](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.17-1...6.1.17-2) (2023-06-08)
-
-### [6.1.17-1](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.17-0...6.1.17-1) (2023-06-08)
-
-### [6.1.17-0](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.16...6.1.17-0) (2023-06-08)
+* **migrate:** otherRepo not defined ([42acea0](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/42acea0151c707af4bdadc868717db3d8ee4a90a)), closes [#156](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/issues/156)
+* tag.map not iterable ([df46799](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/df46799cd9f8e2c55b785d0619d3c2c1a40bcd96)), closes [#159](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/issues/159)
 
 ## [6.0.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.0.0-1...6.0.0-2) (2023-05-19)
 

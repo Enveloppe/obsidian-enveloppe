@@ -13,8 +13,6 @@ import Publisher from "../publish/upload";
 import {getReceiptFolder} from "../conversion/file_path";
 import i18next from "i18next";
 import {Octokit} from "@octokit/core";
-import settings from "../../tests/fixtures/githubPublisherSettings";
-
 
 /**
  * Create a notice message for the log
