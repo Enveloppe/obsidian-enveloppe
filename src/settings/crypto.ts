@@ -85,8 +85,8 @@ export async function decrypt(data: string, app: App, manifest: PluginManifest):
 	return dec.decode(decryptData);
 }
 
-export function isEncrypted(app: App, manifest: PluginManifest) {
-	const keyPairFile = app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`);
+export async function isEncrypted(app: App, manifest: PluginManifest) {
+	const keyPairFile = await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`);
 	console.log(keyPairFile);
 	if (!keyPairFile) {
 		// No keypair file, so no encryption
