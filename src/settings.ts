@@ -216,6 +216,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setDesc(desc_ghToken)
 			.addText(async (text) => {
 				const decryptedToken = githubSettings.token.length > 0 ? await decrypt(githubSettings.token, this.app, this.plugin.manifest) : "";
+				console.log(decryptedToken);
 				text
 					.setPlaceholder("ghp_15457498545647987987112184")
 					.setValue(decryptedToken)
