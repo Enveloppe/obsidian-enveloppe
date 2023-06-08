@@ -30,7 +30,7 @@ export async function writeKeyPair(app: App, manifest: PluginManifest) {
 }
 
 async function loadKeyPair(app: App, manifest: PluginManifest): Promise<KeyPair> {
-	const keyPairFile = app.vault.getAbstractFileByPath(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`);
+	const keyPairFile = await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`);
 	if (!keyPairFile) {
 		await writeKeyPair(app, manifest);
 	}
@@ -86,11 +86,5 @@ export async function decrypt(data: string, app: App, manifest: PluginManifest):
 }
 
 export async function isEncrypted(app: App, manifest: PluginManifest) {
-	const keyPairFile = await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`);
-	console.log(keyPairFile);
-	if (!keyPairFile) {
-		// No keypair file, so no encryption
-		return false;
-	}
-	return true;
+	return await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`);
 }
