@@ -254,7 +254,13 @@ class ModalEditingRepository extends Modal {
 					.setButtonText(i18next.t("settings.github.testConnection"))
 					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
-						await checkRepositoryValidity(this.branchName, this.plugin.reloadOctokit(), this.plugin.settings, this.repository, null, this.app.metadataCache);
+						await checkRepositoryValidity(
+							this.branchName, 
+							await this.plugin.reloadOctokit(), 
+							this.plugin.settings, 
+							this.repository, 
+							null, 
+							this.app.metadataCache);
 					})
 			);
 		new Setting(contentEl)

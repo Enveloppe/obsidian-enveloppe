@@ -68,14 +68,17 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 	let name = i18next.t("commands.publisherDeleteClean");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
+	//@ts-ignore
 	return {
 		id: id,
 		name: name,
 		hotkeys: [],
-		checkCallback: (checking) => {
+		//@ts-ignore
+		checkCallback: async (checking) => {
 			if (plugin.settings.upload.autoclean.enable && plugin.settings.upload.behavior !== FolderSettings.fixed) {
 				if (!checking) {
-					const publisher = plugin.reloadOctokit();
+					//@ts-ignore
+					const publisher = await plugin.reloadOctokit();
 					purgeNotesRemote(
 						publisher,
 						plugin.settings,
@@ -105,11 +108,13 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 	let name = i18next.t("commands.shareActiveFile");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
+	//@ts-ignore
 	return {
 		id: id,
 		name: name,
 		hotkeys: [],
-		checkCallback: (checking) => {
+		//@ts-ignore
+		checkCallback: async (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
 			const frontmatter = file ? plugin.app.metadataCache.getFileCache(file).frontmatter : null;
 			if (
@@ -118,7 +123,8 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 				if (!checking) {
 					shareOneNote(
 						branchName,
-						plugin.reloadOctokit(),
+						//@ts-ignore
+						await plugin.reloadOctokit(),
 						plugin.settings,
 						file,
 						repo,
@@ -226,16 +232,18 @@ export async function checkRepositoryValidityCallback(plugin: GithubPublisher, r
 	let name = i18next.t("commands.checkValidity.title");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
+	//@ts-ignore
 	return {
 		id: id,
 		name: name,
-		checkCallback: (checking) => {
+		//@ts-ignore
+		checkCallback: async (checking) => {
 			if (plugin.app.workspace.getActiveFile())
 			{
 				if (!checking) {
 					checkRepositoryValidity(
 						branchName,
-						plugin.reloadOctokit(),
+						await plugin.reloadOctokit(),
 						plugin.settings,
 						repo,
 						plugin.app.workspace.getActiveFile(),
