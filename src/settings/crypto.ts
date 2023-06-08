@@ -19,7 +19,6 @@ async function generateKey(): Promise<KeyPair> {
 }
 
 export async function writeKeyPair(app: App, manifest: PluginManifest) {
-	console.log("writing key pair");
 	const keyPair = await generateKey();
 	const exportedPublicKey = await window.crypto.subtle.exportKey("jwk", keyPair.publicKey);
 	const exportedPrivateKey = await window.crypto.subtle.exportKey("jwk", keyPair.privateKey);
@@ -35,9 +34,7 @@ async function loadKeyPair(app: App, manifest: PluginManifest): Promise<KeyPair>
 	if (!keyPairFile) {
 		await writeKeyPair(app, manifest);
 	}
-	console.log("loading key pair with JSON")
 	const keys = JSON.parse(await app.vault.adapter.read(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`));
-	console.log(keys);
 	const publicKey = await window.crypto.subtle.importKey(
 		"jwk", 
 		keys.publicKey, { 
@@ -73,7 +70,6 @@ export async function encrypt(data: string, app: App, manifest: PluginManifest):
 	publicKey,
 	encodedData
 	);
-	console.log("encrypted data", arrayBufferToBase64(encryptedText));
 	return arrayBufferToBase64(encryptedText);
 }
 
@@ -88,14 +84,10 @@ export async function decrypt(data: string, app: App, manifest: PluginManifest):
 	keyPair.privateKey,
 	bufferData
 	);
-	console.log("decrypted ?");
-	console.log("decrypted data", dec.decode(decryptData));
 	return dec.decode(decryptData);
 }
 
 export async function isEncrypted(app: App, manifest: PluginManifest) {
-	console.log("checking if encrypted");
 	const isExist= await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`);
-	console.log("is encrypted", isExist);
 	return isExist;
 }

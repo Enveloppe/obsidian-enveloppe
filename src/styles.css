@@ -93,7 +93,7 @@ button.github-publisher-censor-flags:hover {
 	}
 
 	button.github-publisher-connect-button {
-		margin: 0;
+		margin: 0 !important;
 	} 
 }
 @media screen and (max-width: 1200px) {
@@ -105,6 +105,9 @@ button.github-publisher-censor-flags:hover {
 	}
 	.settings-tab-bar.github-publisher {
 		border-bottom: 0;
+	}
+	button.github-publisher-connect-button {
+		margin: 0 !important;
 	}
 }
 

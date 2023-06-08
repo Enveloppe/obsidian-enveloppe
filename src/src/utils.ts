@@ -18,15 +18,15 @@ import settings from "../../tests/fixtures/githubPublisherSettings";
 
 /**
  * Create a notice message for the log
- * @param {string} message the message to display
+ * @param {any} message the message to display
  * @param {GithubPublisher} settings to know if it should use the notice or the log
  */
 
-export function noticeLog(message: string, settings: GitHubPublisherSettings) {
+export function noticeLog(message: any, settings: GitHubPublisherSettings) {
 	if (settings.plugin.noticeError) {
 		new Notice(message);
 	} else {
-		console.log(`[GITHUB PUBLISHER] ${message}`);
+		console.log("[GITHUB PUBLISHER]" , message);
 	}
 }
 
