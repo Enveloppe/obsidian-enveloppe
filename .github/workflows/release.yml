@@ -1,16 +1,39 @@
-name: Release
+name: Publish Obsidian Plugin
 "on":
   workflow_dispatch:
+    inputs:
+      bump:
+        default: false
+        description: "Bump version"
+        type: boolean
+        required: false
   push:
     tags:
       - "*"
+
 permissions:
   contents: write
 jobs:
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        run: echo ${{ github.event.inputs.bump }}
   publish:
+    if: ${{ github.event.inputs.bump == false || github.event.inputs.bump == null || !github.event.inputs.bump}}
     uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-publish.yaml@main
     with:
       PLUGIN_NAME: "obsidian-mkdocs-publisher"
       STYLE: true
     secrets: 
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  bump:
+    if: ${{ github.event.inputs.bump == true }}
+    uses: lisandra-dev/reusable-workflows/.github/workflows/bump.yaml@main
+    with:
+      PLUGIN_NAME: obsidian-mkdocs-publisher
+      STYLE: true
+      BRANCH: "main"
+
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

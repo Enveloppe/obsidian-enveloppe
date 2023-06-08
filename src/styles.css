@@ -91,6 +91,10 @@ button.github-publisher-censor-flags:hover {
 	a.github-publisher-copy+button {
 		height: 10%;
 	}
+
+	button.github-publisher-connect-button {
+		margin: 0 !important;
+	} 
 }
 @media screen and (max-width: 1200px) {
 	.settings-tab-bar.github-publisher {
@@ -102,7 +106,15 @@ button.github-publisher-censor-flags:hover {
 	.settings-tab-bar.github-publisher {
 		border-bottom: 0;
 	}
+	button.github-publisher-connect-button {
+		margin: 0 !important;
+	}
 }
+
+button.github-publisher-connect-button {
+	margin: 0 50%;
+}
+
 .settings-tab-active.github-publisher {
 	background-color: var(--color-accent);
 	color: var(--text-on-accent);
@@ -145,9 +157,7 @@ code.code-title.github-publisher.list-changed,
 	width: 100%;
 }
 
-button.github-publisher-connect-button {
-	margin: 0 50%;
-}
+
 
 .setting-item.github-publisher-no-display > .setting-item-info {
 	display: none;

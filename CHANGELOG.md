@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.1.16](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.15...6.1.16) (2023-06-08)
+
+### [6.1.15](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.14...6.1.15) (2023-06-08)
+
+### [6.1.14](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.13...6.1.14) (2023-06-08)
+
+### [6.1.13](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.12...6.1.13) (2023-06-08)
+
+### [6.1.12](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.11...6.1.12) (2023-06-08)
+
+### [6.1.11](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.10...6.1.11) (2023-06-08)
+
+### [6.1.10](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.9...6.1.10) (2023-06-08)
+
+### [6.1.9](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.8...6.1.9) (2023-06-08)
+
+### [6.1.8](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.7...6.1.8) (2023-06-08)
+
+### [6.1.7](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.6...6.1.7) (2023-06-08)
+
+### [6.1.6](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.5...6.1.6) (2023-06-08)
+
+### [6.1.5](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.4...6.1.5) (2023-06-08)
+
+### [6.1.4](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.3...6.1.4) (2023-06-08)
+
+### [6.1.3](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.2...6.1.3) (2023-06-08)
+
+### [6.1.1](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.0...6.1.1) (2023-06-08)
+
+## [6.1.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.0.1...6.1.0) (2023-06-07)
+
+
+### Features
+
+* **crypto:** encrypt and decrypt github token ([3098493](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/309849310c3a984a8301921a726e47b7dad3871a))
+
+
+### Bug Fixes
+
+* TypeError: settings.github.otherRepo is not iterable ([5a2d248](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/5a2d2482a2d8284ec4267f33b341995c19acf848)), closes [#156](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/156)
+
 ### [6.0.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.0.0...6.0.1) (2023-06-05)
 
 
