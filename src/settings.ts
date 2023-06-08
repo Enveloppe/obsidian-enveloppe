@@ -222,7 +222,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setPlaceholder("ghp_15457498545647987987112184")
 					.setValue(decryptedToken)
 					.onChange(async (value) => {
+						console.log("ENTERING TOKEN");
 						githubSettings.token = await encrypt(value.trim(), this.app, this.plugin.manifest);
+						console.log("encrypted token");
 						await this.plugin.saveSettings();
 					});
 			});
