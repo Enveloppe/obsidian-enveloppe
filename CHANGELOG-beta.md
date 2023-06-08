@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0-4](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.0-3...6.1.0-4) (2023-06-08)
+
+
+### Bug Fixes
+
+* await can't be used in a non-async function ([68dbc85](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/68dbc8504eec2a2f0c38367b49a8870f66f4b3fc))
+
 ## [6.1.0-3](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.0-2...6.1.0-3) (2023-06-08)
 
 ## [6.1.0-2](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.0-1...6.1.0-2) (2023-06-08)
