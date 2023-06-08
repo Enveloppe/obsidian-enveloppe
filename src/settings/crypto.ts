@@ -1,4 +1,5 @@
 import { arrayBufferToBase64, base64ToArrayBuffer, App, PluginManifest } from "obsidian";
+import { GitHubPublisherSettings } from "./interface";
 
 interface KeyPair {
 	publicKey: CryptoKey;
@@ -29,8 +30,8 @@ export async function writeKeyPair(app: App, manifest: PluginManifest) {
 	await app.vault.adapter.write(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`, JSON.stringify(keyPairJson));
 }
 
-async function loadKeyPair(app: App, manifest: PluginManifest): Promise<KeyPair> {
-	const keyPairFile = await isEncrypted(app, manifest);
+async function loadKeyPair(app: App, manifest: PluginManifest, settings: GitHubPublisherSettings): Promise<KeyPair> {
+	const keyPairFile = await isEncrypted(app, manifest, settings);
 	if (!keyPairFile) {
 		await writeKeyPair(app, manifest);
 	}
@@ -88,7 +89,7 @@ export async function decrypt(data: string, app: App, manifest: PluginManifest):
 	return dec.decode(decryptData);
 }
 
-export async function isEncrypted(app: App, manifest: PluginManifest) {
-	const isExist= await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`);
+export async function isEncrypted(app: App, manifest: PluginManifest, settings: GitHubPublisherSettings) {
+	const isExist= await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`) && !settings.github.token.startsWith("ghp_");
 	return isExist;
 }

@@ -23,7 +23,7 @@ import { ExportModal, ImportModal } from "./settings/modals/import_export";
 import i18next from "i18next";
 import { enumbSettingsTabId } from "./settings/interface";
 import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
-import { encrypt, decrypt } from "./settings/crypto";
+import { encrypt, decrypt, isEncrypted } from "./settings/crypto";
 
 
 export class GithubPublisherSettingsTab extends PluginSettingTab {
@@ -215,9 +215,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("settings.github.ghToken.title"))
 			.setDesc(desc_ghToken)
 			.addText(async (text) => {
-				console.log("REGISTER TOKEN");
-				const decryptedToken = githubSettings.token.length > 0 ? await decrypt(githubSettings.token, this.app, this.plugin.manifest) : "";
-				console.log(decryptedToken);
+				const decryptedToken = isEncrypted(this.app, this.plugin.manifest, this.plugin.settings) ? await decrypt(githubSettings.token, this.app, this.plugin.manifest) : githubSettings.token;
 				text
 					.setPlaceholder("ghp_15457498545647987987112184")
 					.setValue(decryptedToken)
