@@ -187,6 +187,7 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 		delete plugin.settings.github.worflow;
 		await plugin.saveSettings();
 	}
+	noticeLog("Migrating otherRepo key", plugin.settings);
 	const otherRepo = plugin.settings.github?.otherRepo ?? [];
 	console.log(otherRepo);
 	for (const repo of otherRepo) {
@@ -222,6 +223,7 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 			await plugin.saveSettings();
 		}
 	}
+	noticeLog("Encrypt token", plugin.settings);
 	if (!isEncrypted(plugin.app, plugin.manifest)) {
 		const encryptedToken = await encrypt(plugin.settings.github.token, plugin.app, plugin.manifest);
 		plugin.settings.github.token = encryptedToken;
