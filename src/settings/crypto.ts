@@ -1,4 +1,5 @@
 import { arrayBufferToBase64, base64ToArrayBuffer, App, PluginManifest } from "obsidian";
+import { noticeLog } from "src/src/utils";
 
 interface KeyPair {
 	publicKey: CryptoKey;
@@ -19,6 +20,7 @@ async function generateKey(): Promise<KeyPair> {
 }
 
 export async function writeKeyPair(app: App, manifest: PluginManifest) {
+	console.log("writing key pair");
 	const keyPair = await generateKey();
 	const exportedPublicKey = await window.crypto.subtle.exportKey("jwk", keyPair.publicKey);
 	const exportedPrivateKey = await window.crypto.subtle.exportKey("jwk", keyPair.privateKey);
@@ -30,11 +32,13 @@ export async function writeKeyPair(app: App, manifest: PluginManifest) {
 }
 
 async function loadKeyPair(app: App, manifest: PluginManifest): Promise<KeyPair> {
-	const keyPairFile = await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`);
+	const keyPairFile = await isEncrypted(app, manifest);
 	if (!keyPairFile) {
 		await writeKeyPair(app, manifest);
 	}
+	console.log("loading key pair with JSON")
 	const keys = JSON.parse(await app.vault.adapter.read(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`));
+	console.log(keys);
 	const publicKey = await window.crypto.subtle.importKey(
 		"jwk", 
 		keys.publicKey, { 
@@ -51,6 +55,7 @@ async function loadKeyPair(app: App, manifest: PluginManifest): Promise<KeyPair>
 		}, 
 		true, 
 		["decrypt"]);
+	console.log("loaded key pair", publicKey, privateKey);
 	return {
 		publicKey,
 		privateKey,
@@ -74,19 +79,26 @@ export async function encrypt(data: string, app: App, manifest: PluginManifest):
 }
 
 export async function decrypt(data: string, app: App, manifest: PluginManifest): Promise<string> {
+	console.log("decrypting data: ", data);
 	const dec = new TextDecoder();
+	console.log("LOAD KEY PAIR");
 	const keyPair = await loadKeyPair(app, manifest);
 	const {privateKey} = keyPair;
+	console.log("decrypting data: ", base64ToArrayBuffer(data));
 	const decryptData = await window.crypto.subtle.decrypt({
 		name: "RSA-OAEP"
 	},
 	privateKey,
 	base64ToArrayBuffer(data)
 	);
+	console.log(dec);
 	console.log("decrypted data", dec.decode(decryptData));
 	return dec.decode(decryptData);
 }
 
 export async function isEncrypted(app: App, manifest: PluginManifest) {
-	return await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`);
+	console.log("checking if encrypted");
+	const isExist= await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`);
+	console.log("is encrypted", isExist);
+	return isExist;
 }
