@@ -63,25 +63,33 @@ async function addTagsToYAML(text: string, toAdd: string[]): Promise<string> {
 	const yaml = text.split("---")[1];
 	const yamlObject = parseYaml(yaml);
 	if (yamlObject.tag) {
-		toAdd = [
-			...new Set([
-				...toAdd,
-				...yamlObject.tag.map((tag: string) =>
-					tag.replaceAll("/", "_")
-				),
-			]),
-		];
-		delete yamlObject.tag;
+		try {
+			toAdd = [
+				...new Set([
+					...toAdd,
+					...yamlObject.tag.map((tag: string) =>
+						tag.replaceAll("/", "_")
+					),
+				]),
+			];
+			delete yamlObject.tag;
+		} catch (e) {
+			console.log(e);
+		}
 	}
 	if (yamlObject.tags) {
-		yamlObject.tags = [
-			...new Set([
-				...yamlObject.tags.map((tag: string) =>
-					tag.replaceAll("/", "_")
-				),
-				...toAdd,
-			]),
-		];
+		try {
+			yamlObject.tags = [
+				...new Set([
+					...yamlObject.tags.map((tag: string) =>
+						tag.replaceAll("/", "_")
+					),
+					...toAdd,
+				]),
+			];
+		} catch (e) {
+			console.log(e);
+		}
 	} else {
 		yamlObject.tags = toAdd;
 	}
