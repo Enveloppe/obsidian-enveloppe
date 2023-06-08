@@ -60,10 +60,8 @@ async function loadKeyPair(app: App, manifest: PluginManifest, settings: GitHubP
 }
 
 export async function encrypt(data: string, app: App, manifest: PluginManifest, settings: GitHubPublisherSettings):Promise<string> {
-	console.log("Encrypting data", data);
 	const enc = new TextEncoder();
 	const keyPair = await loadKeyPair(app, manifest, settings);
-	console.log("key pair", keyPair);
 	const encodedData = enc.encode(data);
 	const {publicKey} = keyPair;
 	const encryptedText = await window.crypto.subtle.encrypt({
@@ -72,7 +70,6 @@ export async function encrypt(data: string, app: App, manifest: PluginManifest, 
 	publicKey,
 	encodedData
 	);
-	console.log("encrypted text", encryptedText);
 	return arrayBufferToBase64(encryptedText);
 }
 
@@ -90,8 +87,6 @@ export async function decrypt(data: string, app: App, manifest: PluginManifest, 
 }
 
 export async function isEncrypted(app: App, manifest: PluginManifest, settings: GitHubPublisherSettings) {
-	console.log(settings.github.token);
-	console.log(settings.github.token.startsWith("ghp"));
-	const isExist= await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`) && !settings.github.token.startsWith("ghp");
+	const isExist= await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`) && settings.github.token.length > 0 && !settings.github.token.startsWith("ghp");
 	return isExist;
 }

@@ -220,9 +220,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setPlaceholder("ghp_15457498545647987987112184")
 					.setValue(decryptedToken)
 					.onChange(async (value) => {
-						console.log("ENTERING TOKEN");
 						githubSettings.token = await encrypt(value.trim(), this.app, this.plugin.manifest, this.plugin.settings);
-						console.log("encrypted token");
 						await this.plugin.saveSettings();
 					});
 			});
@@ -258,7 +256,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setButtonText(i18next.t("settings.github.testConnection"))
 					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
-						await checkRepositoryValidity(this.branchName, this.plugin.reloadOctokit(), this.plugin.settings, null,null, this.app.metadataCache);
+						const octokit = await this.plugin.reloadOctokit();
+						await checkRepositoryValidity(this.branchName, octokit, this.plugin.settings, null,null, this.app.metadataCache);
 					})
 			)
 			.addButton((button) =>
