@@ -225,7 +225,7 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 	}
 	noticeLog("Encrypt token", plugin.settings);
 	if (!(await isEncrypted(plugin.app, plugin.manifest)) && plugin.settings.github.token.length > 0) {
-		console.log("Not encrypted yet!")
+		console.log("Not encrypted yet!");
 		const encryptedToken = await encrypt(plugin.settings.github.token, plugin.app, plugin.manifest);
 		plugin.settings.github.token = encryptedToken;
 	}

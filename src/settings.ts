@@ -37,7 +37,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		this.branchName = branchName;
 	}
 
-	display(): void {
+	async display(): Promise<void> {
 		const { containerEl } = this;
 		containerEl.empty();
 		
@@ -106,26 +106,26 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			if (tabID === "github-configuration")
 				tabEl.addClass("settings-tab-active");
 
-			tabEl.addEventListener("click", () => {
+			tabEl.addEventListener("click", async () => {
 				// @ts-ignore
 				for (const tabEl of tabBar.children)
 					tabEl.removeClass("settings-tab-active");
 
 				tabEl.addClass("settings-tab-active");
-				this.renderSettingsPage(tabID);
+				await this.renderSettingsPage(tabID);
 			});
 		}
 		this.settingsPage = containerEl.createEl("div", {
 			cls: "settings-tab-page github-publisher",
 		});
-		this.renderSettingsPage("github-configuration");
+		await this.renderSettingsPage("github-configuration");
 	}
 
-	renderSettingsPage(tabId: string) {
+	async renderSettingsPage(tabId: string) {
 		this.settingsPage.empty();
 		switch (tabId) {
 		case "github-configuration":
-			this.renderGithubConfiguration();
+			await this.renderGithubConfiguration();
 			break;
 		case "upload-configuration":
 			this.renderUploadConfiguration();
@@ -211,6 +211,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					"https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
 		});
+		console.log("Charging github token");
 		const decryptedToken = githubSettings.token.length > 0 ? await decrypt(githubSettings.token, this.app, this.plugin.manifest) : "";
 		console.log(decryptedToken);
 		new Setting(this.settingsPage)
