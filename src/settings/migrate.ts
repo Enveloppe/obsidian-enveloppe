@@ -223,7 +223,7 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 		}
 	}
 	const encrypted = await isEncrypted(plugin.app, plugin.manifest);
-	if (!encrypted && plugin.settings.github.token.length > 0) {
+	if (!encrypted && plugin.settings.github.token.length > 0 || plugin.settings.github.token.startsWith("ghp_")) {
 		const encryptedToken = await encrypt(plugin.settings.github.token, plugin.app, plugin.manifest);
 		plugin.settings.github.token = encryptedToken;
 	}
