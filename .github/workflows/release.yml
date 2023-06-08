@@ -18,9 +18,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Echo
-        run: echo ${{ github.event.inputs.bump }}
+        run: |
+          echo "${{ github.event.inputs.bump }}"
+          echo "${{ github.event_name }}"
   publish:
-    if: ${{ github.event.inputs.bump == false || github.event.inputs.bump == null || !github.event.inputs.bump}}
+    if: ${{ !github.event.inputs.bump || github.event_name == "push" }}
     uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-publish.yaml@main
     with:
       PLUGIN_NAME: "obsidian-mkdocs-publisher"
