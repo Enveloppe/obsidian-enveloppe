@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.1.1-17](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-16...6.1.1-17) (2023-06-08)
+
+
+### Bug Fixes
+
+* skip wrongly formatted tags ([550a859](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/550a8598c9787d73cf67c2d522a341faaab26411))
+
 ### [6.1.1-16](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-15...6.1.1-16) (2023-06-08)
 
 ### [6.1.1-15](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-14...6.1.1-15) (2023-06-08)
