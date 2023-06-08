@@ -37,7 +37,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		this.branchName = branchName;
 	}
 
-	async display(): Promise<void> {
+	display(): void{
 		const { containerEl } = this;
 		containerEl.empty();
 		
@@ -112,20 +112,20 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					tabEl.removeClass("settings-tab-active");
 
 				tabEl.addClass("settings-tab-active");
-				await this.renderSettingsPage(tabID);
+				this.renderSettingsPage(tabID);
 			});
 		}
 		this.settingsPage = containerEl.createEl("div", {
 			cls: "settings-tab-page github-publisher",
 		});
-		await this.renderSettingsPage("github-configuration");
+		this.renderSettingsPage("github-configuration");
 	}
 
-	async renderSettingsPage(tabId: string) {
+	renderSettingsPage(tabId: string) {
 		this.settingsPage.empty();
 		switch (tabId) {
 		case "github-configuration":
-			await this.renderGithubConfiguration();
+			this.renderGithubConfiguration();
 			break;
 		case "upload-configuration":
 			this.renderUploadConfiguration();
@@ -145,7 +145,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		}
 	}
 
-	async renderGithubConfiguration() {
+	renderGithubConfiguration() {
 		const githubSettings = this.plugin.settings.github;
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.apiType.title"))
@@ -211,21 +211,20 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					"https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
 		});
-		console.log("Charging github token");
-		const decryptedToken = githubSettings.token.length > 0 ? await decrypt(githubSettings.token, this.app, this.plugin.manifest) : "";
-		console.log(decryptedToken);
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.ghToken.title"))
 			.setDesc(desc_ghToken)
-			.addText((text) =>
+			.addText(async (text) => {
+				const decryptedToken = githubSettings.token.length > 0 ? await decrypt(githubSettings.token, this.app, this.plugin.manifest) : "";
+
 				text
 					.setPlaceholder("ghp_15457498545647987987112184")
 					.setValue(decryptedToken)
 					.onChange(async (value) => {
 						githubSettings.token = await encrypt(value.trim(), this.app, this.plugin.manifest);
 						await this.plugin.saveSettings();
-					})
-			);
+					});
+			});
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.branch.title"))
