@@ -22,7 +22,7 @@ jobs:
           echo "${{ github.event.inputs.bump }}"
           echo "${{ github.event_name }}"
   publish:
-    if: ${{ !github.event.inputs.bump || github.event_name == "push" }}
+    if: ${{ !github.event.inputs.bump }}
     uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-publish.yaml@main
     with:
       PLUGIN_NAME: "obsidian-mkdocs-publisher"
