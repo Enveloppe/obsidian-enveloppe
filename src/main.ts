@@ -152,7 +152,11 @@ export default class GithubPublisher extends Plugin {
 		await this.loadSettings();
 		
 		const oldSettings = this.settings;
-		await migrateSettings(oldSettings as unknown as OldSettings, this);
+		try {
+			await migrateSettings(oldSettings as unknown as OldSettings, this);
+		} catch (e) {
+			console.error(e);
+		}
 		const branchName =
 			app.vault.getName().replaceAll(" ", "-").replaceAll(".", "-") +
 			"-" +
