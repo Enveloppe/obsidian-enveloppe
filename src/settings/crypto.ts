@@ -1,5 +1,6 @@
-import { arrayBufferToBase64, base64ToArrayBuffer, App, PluginManifest } from "obsidian";
-import { GitHubPublisherSettings } from "./interface";
+import { arrayBufferToBase64, base64ToArrayBuffer} from "obsidian";
+import GithubPublisher from "src/main";
+import { noticeLog } from "src/src/utils";
 
 interface KeyPair {
 	publicKey: CryptoKey;
@@ -19,7 +20,8 @@ async function generateKey(): Promise<KeyPair> {
 	);
 }
 
-export async function writeKeyPair(app: App, manifest: PluginManifest) {
+export async function writeKeyPair(plugin: GithubPublisher) {
+	const manifest = plugin.manifest;
 	const keyPair = await generateKey();
 	const exportedPublicKey = await window.crypto.subtle.exportKey("jwk", keyPair.publicKey);
 	const exportedPrivateKey = await window.crypto.subtle.exportKey("jwk", keyPair.privateKey);
@@ -30,11 +32,12 @@ export async function writeKeyPair(app: App, manifest: PluginManifest) {
 	await app.vault.adapter.write(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`, JSON.stringify(keyPairJson));
 }
 
-async function loadKeyPair(app: App, manifest: PluginManifest, settings: GitHubPublisherSettings): Promise<KeyPair> {
-	const keyPairFile = await isEncrypted(app, manifest, settings);
+async function loadKeyPair(plugin: GithubPublisher): Promise<KeyPair> {
+	const keyPairFile = await isEncrypted(plugin);
 	if (!keyPairFile) {
-		await writeKeyPair(app, manifest);
+		await writeKeyPair(plugin);
 	}
+	const manifest = plugin.manifest;
 	const keys = JSON.parse(await app.vault.adapter.read(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`));
 	const publicKey = await window.crypto.subtle.importKey(
 		"jwk", 
@@ -59,23 +62,29 @@ async function loadKeyPair(app: App, manifest: PluginManifest, settings: GitHubP
 	
 }
 
-export async function encrypt(data: string, app: App, manifest: PluginManifest, settings: GitHubPublisherSettings):Promise<string> {
-	const enc = new TextEncoder();
-	const keyPair = await loadKeyPair(app, manifest, settings);
-	const encodedData = enc.encode(data);
-	const {publicKey} = keyPair;
-	const encryptedText = await window.crypto.subtle.encrypt({
-		name: "RSA-OAEP"
-	},
-	publicKey,
-	encodedData
-	);
-	return arrayBufferToBase64(encryptedText);
+export async function encrypt(data: string, plugin: GithubPublisher):Promise<string> {
+	if (data.length === 0) return data;
+	try {
+		const enc = new TextEncoder();
+		const keyPair = await loadKeyPair(plugin);
+		const encodedData = enc.encode(data);
+		const {publicKey} = keyPair;
+		const encryptedText = await window.crypto.subtle.encrypt({
+			name: "RSA-OAEP"
+		},
+		publicKey,
+		encodedData
+		);
+		return arrayBufferToBase64(encryptedText);
+	} catch (e) {
+		noticeLog(e, plugin.settings);
+		return "";
+	}
 }
 
-export async function decrypt(data: string, app: App, manifest: PluginManifest, settings: GitHubPublisherSettings): Promise<string> {
+export async function decrypt(data: string, plugin: GithubPublisher): Promise<string> {
 	const dec = new TextDecoder();
-	const keyPair = await loadKeyPair(app, manifest, settings);
+	const keyPair = await loadKeyPair(plugin);
 	const bufferData = base64ToArrayBuffer(data);
 	const decryptData = await window.crypto.subtle.decrypt({
 		name: "RSA-OAEP"
@@ -86,7 +95,19 @@ export async function decrypt(data: string, app: App, manifest: PluginManifest, 
 	return dec.decode(decryptData);
 }
 
-export async function isEncrypted(app: App, manifest: PluginManifest, settings: GitHubPublisherSettings) {
+export async function isEncrypted(plugin: GithubPublisher): Promise<boolean> {
+	const {manifest, settings} = plugin;
 	const isExist= await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`) && settings.github.token.length > 0 && !settings.github.token.startsWith("ghp");
 	return isExist;
+}
+
+export async function regenerateTokenKeyPair(plugin: GithubPublisher) {
+	noticeLog("Regenerating token key pair", plugin.settings);
+	const settings = plugin.settings;
+	const token = await decrypt(settings.github.token, plugin);
+	await writeKeyPair(plugin);
+	const encryptedToken = await encrypt(token, plugin);
+	settings.github.token = encryptedToken;
+	await plugin.saveSettings();
+	noticeLog("Regenerated token key pair", plugin.settings);
 }

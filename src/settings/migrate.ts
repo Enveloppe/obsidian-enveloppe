@@ -122,10 +122,10 @@ async function migrateWorFlow(plugin: GithubPublisher) {
 }
 
 async function migrateEncryptToken(plugin: GithubPublisher) {
-	const encrypted = await isEncrypted(plugin.app, plugin.manifest, plugin.settings);
+	const encrypted = await isEncrypted(plugin);
 	if (!encrypted) {
 		noticeLog("Encrypting token", plugin.settings);
-		const encryptedToken = await encrypt(plugin.settings.github.token, plugin.app, plugin.manifest, plugin.settings);
+		const encryptedToken = await encrypt(plugin.settings.github.token, plugin);
 		plugin.settings.github.token = encryptedToken;
 	}
 	await plugin.saveSettings();

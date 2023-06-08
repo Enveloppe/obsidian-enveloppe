@@ -23,6 +23,7 @@ import { ExportModal, ImportModal } from "./settings/modals/import_export";
 import i18next from "i18next";
 import { enumbSettingsTabId } from "./settings/interface";
 import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
+import { encrypt, decrypt, isEncrypted, regenerateTokenKeyPair } from "./settings/crypto";
 
 
 export class GithubPublisherSettingsTab extends PluginSettingTab {
@@ -36,7 +37,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		this.branchName = branchName;
 	}
 
-	display(): void {
+	display(): void{
 		const { containerEl } = this;
 		containerEl.empty();
 		
@@ -105,7 +106,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			if (tabID === "github-configuration")
 				tabEl.addClass("settings-tab-active");
 
-			tabEl.addEventListener("click", () => {
+			tabEl.addEventListener("click", async () => {
 				// @ts-ignore
 				for (const tabEl of tabBar.children)
 					tabEl.removeClass("settings-tab-active");
@@ -205,23 +206,35 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		desc_ghToken.createEl("span", null, (span) => {
 			span.innerText = i18next.t("settings.github.ghToken.desc") ;
 			span.createEl("a", null, (link) => {
-				link.innerText = i18next.t("common.here") ;
+				link.innerText = i18next.t("common.here") + "." ;
 				link.href =
 					"https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
+			span.createEl("div", null, (p) => p.innerText = i18next.t("settings.github.ghToken.encrypted"));
 		});
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.ghToken.title"))
 			.setDesc(desc_ghToken)
-			.addText((text) =>
+			.addText(async (text) => {
+				const decryptedToken = isEncrypted(this.plugin) ? await decrypt(githubSettings.token, this.plugin) : githubSettings.token;
 				text
-					.setPlaceholder("ghb-15457498545647987987112184")
-					.setValue(githubSettings.token)
+					.setPlaceholder("ghp_15457498545647987987112184")
+					.setValue(decryptedToken)
 					.onChange(async (value) => {
-						githubSettings.token = value.trim();
+						githubSettings.token = await encrypt(value.trim(), this.plugin);
 						await this.plugin.saveSettings();
-					})
-			);
+					});
+			})
+			.addButton((button) => {
+				button
+					.setButtonText(i18next.t("settings.github.ghToken.button.title"))
+					.setTooltip(i18next.t("settings.github.ghToken.button.tooltip"))
+					.onClick(async () => {
+						await regenerateTokenKeyPair(this.plugin);
+						new Notice(i18next.t("settings.github.ghToken.button.notice"));
+						this.renderGithubConfiguration();
+					});
+			});
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.branch.title"))
@@ -254,14 +267,15 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setButtonText(i18next.t("settings.github.testConnection"))
 					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
-						await checkRepositoryValidity(this.branchName, this.plugin.reloadOctokit(), this.plugin.settings, null,null, this.app.metadataCache);
+						const octokit = await this.plugin.reloadOctokit();
+						await checkRepositoryValidity(this.branchName, octokit, this.plugin.settings, null,null, this.app.metadataCache);
 					})
 			)
 			.addButton((button) =>
 				button
 					.setButtonText(i18next.t("settings.github.smartRepo.button"))
 					.onClick(async () => {
-						const repository: Repository[] = this.plugin.settings.github.otherRepo ? this.plugin.settings.github.otherRepo : [];
+						const repository: Repository[] = this.plugin.settings.github?.otherRepo ?? [];
 						new ModalAddingNewRepository(this.app, this.plugin.settings, this.branchName, this.plugin, repository, (result => {
 							this.plugin.settings.github.otherRepo = result;
 							this.plugin.saveSettings();
