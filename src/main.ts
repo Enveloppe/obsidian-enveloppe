@@ -26,6 +26,7 @@ import {
 	uploadAllNotesCallback, uploadAllEditedNotesCallback, shareEditedOnlyCallback,
 	uploadNewNotesCallback, checkRepositoryValidityCallback
 } from "./commands/callback";
+import { decrypt } from "./settings/crypto";
 
 /**
  * Main class of the plugin
@@ -77,7 +78,7 @@ export default class GithubPublisher extends Plugin {
 	}
 
 	cleanOldCommands() {
-		const allRepo = this.settings.github.otherRepo;
+		const allRepo:Repository[] = this.settings.github?.otherRepo ?? [];
 		//@ts-ignore
 		const allCommands = this.app.commands.listCommands();
 		for (const command of allCommands) {
@@ -99,7 +100,7 @@ export default class GithubPublisher extends Plugin {
 	async reloadCommands(branchName: string) {
 		//compare old and new repo to delete old commands
 		noticeLog("Reloading commands", this.settings);
-		const newRepo = this.settings.github.otherRepo;
+		const newRepo:Repository[] = this.settings.github?.otherRepo ?? [];
 		this.cleanOldCommands();
 		for (const repo of newRepo) {
 			if (repo.createShortcuts) {
@@ -113,17 +114,18 @@ export default class GithubPublisher extends Plugin {
 	/**
 	 * Create a new instance of Octokit to load a new instance of GithubBranch 
 	*/
-	reloadOctokit() {
+	async reloadOctokit() {
 		let octokit: Octokit;
 		const apiSettings = this.settings.github.api;
+		const token = await decrypt(this.settings.github.token, this.app, this.manifest, this.settings);
 		if (apiSettings.tiersForApi === GithubTiersVersion.entreprise && apiSettings.hostname.length > 0) {
 			octokit = new Octokit(
 				{
 					baseUrl: `${apiSettings.hostname}/api/v3`,
-					auth: this.settings.github.token,
+					auth: token,
 				});
 		} else {
-			octokit = new Octokit({auth: this.settings.github.token});
+			octokit = new Octokit({auth: token});
 		}
 		return new GithubBranch(
 			this.settings,
@@ -141,7 +143,7 @@ export default class GithubPublisher extends Plugin {
 	 * @return {Promise<void>}
 	 */
 	async onload() {
-		console.log(`Github Publisher v.${this.manifest.version} (lang: ${translationLanguage}) loaded`);
+		console.log(`[GITHUB PUBLISHER] v.${this.manifest.version} (lang: ${translationLanguage}) loaded`);
 		await i18next.init({
 			lng: translationLanguage,
 			fallbackLng: "en",
@@ -153,6 +155,7 @@ export default class GithubPublisher extends Plugin {
 		
 		const oldSettings = this.settings;
 		await migrateSettings(oldSettings as unknown as OldSettings, this);
+		
 		const branchName =
 			app.vault.getName().replaceAll(" ", "-").replaceAll(".", "-") +
 			"-" +
@@ -176,7 +179,7 @@ export default class GithubPublisher extends Plugin {
 							.onClick(async () => {
 								await shareOneNote(
 									branchName,
-									this.reloadOctokit(),
+									await this.reloadOctokit(),
 									this.settings,
 									file,
 									getSharedKey,
@@ -211,7 +214,7 @@ export default class GithubPublisher extends Plugin {
 							.onClick(async () => {
 								await shareOneNote(
 									branchName,
-									this.reloadOctokit(),
+									await this.reloadOctokit(),
 									this.settings,
 									view.file,
 									otherRepo,
@@ -229,7 +232,8 @@ export default class GithubPublisher extends Plugin {
 			id: "check-rate-limit",
 			name: i18next.t("commands.checkValidity.rateLimit.command"),
 			callback: async () => {
-				await verifyRateLimitAPI(this.reloadOctokit().octokit, this.settings);
+				const octokit = await this.reloadOctokit();
+				await verifyRateLimitAPI(octokit.octokit, this.settings);
 			}
 		});
 
@@ -254,7 +258,7 @@ export default class GithubPublisher extends Plugin {
 	 * Called when the plugin is disabled
 	 */
 	onunload() {
-		console.log("Github Publisher unloaded");
+		console.log("[Github Publisher] unloaded");
 	}
 
 	/**
