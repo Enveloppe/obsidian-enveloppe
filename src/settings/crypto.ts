@@ -90,6 +90,7 @@ export async function decrypt(data: string, app: App, manifest: PluginManifest, 
 }
 
 export async function isEncrypted(app: App, manifest: PluginManifest, settings: GitHubPublisherSettings) {
+	console.log(settings.github.token.startsWith("ghp_"));
 	const isExist= await app.vault.adapter.exists(`${app.vault.configDir}/plugins/${manifest.id}/keyPair.json`) && !settings.github.token.startsWith("ghp_");
 	return isExist;
 }
