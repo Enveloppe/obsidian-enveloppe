@@ -14,8 +14,13 @@ name: Publish Obsidian Plugin
 permissions:
   contents: write
 jobs:
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        run: echo ${{ github.event.inputs.bump }}
   publish:
-    if: ${{ github.event.inputs.bump == false}}
+    if: ${{ github.event.inputs.bump == false || github.event.inputs.bump == null || !github.event.inputs.bump}}
     uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-publish.yaml@main
     with:
       PLUGIN_NAME: "obsidian-mkdocs-publisher"
