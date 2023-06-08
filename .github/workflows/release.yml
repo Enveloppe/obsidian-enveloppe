@@ -15,15 +15,16 @@ permissions:
   contents: write
 jobs:
   publish:
-    if: ${{ !github.event.inputs.bump }}
+    if: ${{ !github.event.inputs.bump || github.event.inputs.bump == false}}
     uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-publish.yaml@main
     with:
       PLUGIN_NAME: "obsidian-mkdocs-publisher"
       STYLE: true
+      BRANCH: "main"
     secrets: 
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   bump:
-    if: github.event.inputs.bump
+    if: ${{ github.event.inputs.bump == true }}
     uses: lisandra-dev/reusable-workflows/.github/workflows/bump.yaml@main
     with:
       PLUGIN_NAME: obsidian-mkdocs-publisher
