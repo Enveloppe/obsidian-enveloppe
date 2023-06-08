@@ -60,8 +60,10 @@ async function loadKeyPair(app: App, manifest: PluginManifest): Promise<KeyPair>
 }
 
 export async function encrypt(data: string, app: App, manifest: PluginManifest):Promise<string> {
+	console.log("Encrypting data", data);
 	const enc = new TextEncoder();
 	const keyPair = await loadKeyPair(app, manifest);
+	console.log("key pair", keyPair);
 	const encodedData = enc.encode(data);
 	const {publicKey} = keyPair;
 	const encryptedText = await window.crypto.subtle.encrypt({
@@ -70,6 +72,7 @@ export async function encrypt(data: string, app: App, manifest: PluginManifest):
 	publicKey,
 	encodedData
 	);
+	console.log("encrypted text", encryptedText);
 	return arrayBufferToBase64(encryptedText);
 }
 
