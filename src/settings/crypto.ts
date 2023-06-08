@@ -69,6 +69,7 @@ export async function encrypt(data: string, app: App, manifest: PluginManifest):
 	publicKey,
 	encodedData
 	);
+	console.log("encrypted data", arrayBufferToBase64(encryptedText));
 	return arrayBufferToBase64(encryptedText);
 }
 
@@ -82,6 +83,7 @@ export async function decrypt(data: string, app: App, manifest: PluginManifest):
 	privateKey,
 	base64ToArrayBuffer(data)
 	);
+	console.log("decrypted data", dec.decode(decryptData));
 	return dec.decode(decryptData);
 }
 
