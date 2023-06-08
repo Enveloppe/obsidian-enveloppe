@@ -75,7 +75,8 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 		checkCallback: (checking) => {
 			if (plugin.settings.upload.autoclean.enable && plugin.settings.upload.behavior !== FolderSettings.fixed) {
 				if (!checking) {
-					const publisher = plugin.reloadOctokit();
+					//@ts-ignore
+					const publisher = await plugin.reloadOctokit();
 					purgeNotesRemote(
 						publisher,
 						plugin.settings,
@@ -118,7 +119,8 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 				if (!checking) {
 					shareOneNote(
 						branchName,
-						plugin.reloadOctokit(),
+						//@ts-ignore
+						await plugin.reloadOctokit(),
 						plugin.settings,
 						file,
 						repo,
@@ -235,7 +237,8 @@ export async function checkRepositoryValidityCallback(plugin: GithubPublisher, r
 				if (!checking) {
 					checkRepositoryValidity(
 						branchName,
-						plugin.reloadOctokit(),
+						//@ts-ignore
+						await plugin.reloadOctokit(),
 						plugin.settings,
 						repo,
 						plugin.app.workspace.getActiveFile(),
