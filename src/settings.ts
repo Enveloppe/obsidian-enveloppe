@@ -215,6 +215,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("settings.github.ghToken.title"))
 			.setDesc(desc_ghToken)
 			.addText(async (text) => {
+				console.log("REGISTER TOKEN");
 				const decryptedToken = githubSettings.token.length > 0 ? await decrypt(githubSettings.token, this.app, this.plugin.manifest) : "";
 				console.log(decryptedToken);
 				text
