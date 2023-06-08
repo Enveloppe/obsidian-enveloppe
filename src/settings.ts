@@ -211,7 +211,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					"https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
 		});
-		const decryptedToken = await decrypt(githubSettings.token, this.app, this.plugin.manifest);
+		const decryptedToken = githubSettings.token.length > 0 ? await decrypt(githubSettings.token, this.app, this.plugin.manifest) : "";
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.ghToken.title"))
 			.setDesc(desc_ghToken)
