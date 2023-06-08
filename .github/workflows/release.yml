@@ -15,7 +15,7 @@ permissions:
   contents: write
 jobs:
   publish:
-    if: ${{ !github.event.inputs.bump || github.event.inputs.bump == false}}
+    if: ${{ github.event.inputs.bump == false}}
     uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-publish.yaml@main
     with:
       PLUGIN_NAME: "obsidian-mkdocs-publisher"
