@@ -2,7 +2,6 @@ import {FolderSettings, GithubTiersVersion, TextCleaner, TypeOfEditRegex} from "
 import GithubPublisher from "../main";
 import {noticeLog} from "../src/utils";
 import i18next from "i18next";
-import { encrypt, isEncrypted } from "./crypto";
 
 export interface OldSettings {
 	githubRepo: string;
@@ -58,7 +57,7 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 	await migrateSubFolder(plugin);
 	await migrateCensor(plugin);
 	await migrateWorFlow(plugin);
-	await migrateEncryptToken(plugin);
+	await migrateToken(plugin);
 	await migrateOtherRepository(plugin);
 }
 
@@ -121,15 +120,24 @@ async function migrateWorFlow(plugin: GithubPublisher) {
 	}
 }
 
-async function migrateEncryptToken(plugin: GithubPublisher) {
-	const encrypted = await isEncrypted(plugin);
-	if (!encrypted) {
-		noticeLog("Encrypting token", plugin.settings);
-		const encryptedToken = await encrypt(plugin.settings.github.token, plugin);
-		plugin.settings.github.token = encryptedToken;
+export async function migrateToken(plugin: GithubPublisher, token?: string) {
+	//@ts-ignore
+	if (plugin.settings.github.token && !token) {
+		noticeLog("migrating token in settings", plugin.settings);
+		//@ts-ignore
+		token = plugin.settings.github.token;
+		//@ts-ignore
+		delete plugin.settings.github.token;
+		await plugin.saveSettings();
 	}
-	await plugin.saveSettings();
+	noticeLog("migrating token in another file", plugin.settings);
+	if (token === undefined) {
+		token = "";
+	}
+	const envToken = `GITHUB_TOKEN=${token}`;
+	await plugin.app.vault.adapter.write(`${plugin.app.vault.configDir}/plugins/${plugin.manifest.id}/env`, envToken);
 }
+
 
 async function migrateOtherRepository(plugin: GithubPublisher) {
 	noticeLog("Configuring other repositories", plugin.settings);
@@ -177,7 +185,6 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 				{
 					user: old.githubName ? old.githubName : plugin.settings.github.user ? plugin.settings.github.user : "",
 					repo: old.githubRepo ? old.githubRepo : plugin.settings.github.repo ? plugin.settings.github.repo : "",
-					token: old.GhToken ? old.GhToken : plugin.settings.github.token ? plugin.settings.github.token : "",
 					branch: old.githubBranch,
 					automaticallyMergePR: old.automaticallyMergePR,
 					api: {
@@ -258,6 +265,9 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 				displayModalRepoEditing: false
 			}
 		};
+		//@ts-ignore
+		const token = old.GhToken ? old.GhToken : plugin.settings.github.token ? plugin.settings.github.token : "";
+		await migrateToken(plugin, token);
 		await plugin.saveSettings();
 	}
 }

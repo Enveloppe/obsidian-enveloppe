@@ -26,7 +26,6 @@ import {
 	uploadAllNotesCallback, uploadAllEditedNotesCallback, shareEditedOnlyCallback,
 	uploadNewNotesCallback, checkRepositoryValidityCallback
 } from "./commands/callback";
-import { decrypt } from "./settings/crypto";
 
 /**
  * Main class of the plugin
@@ -110,14 +109,31 @@ export default class GithubPublisher extends Plugin {
 			}
 		}
 	}
+
+	/**
+	 * Read the env file to get the token of the plugin
+	 * Form of the file:
+	 * ```
+	 * GITHUB_TOKEN=token
+	 * ```
+	 * @returns {Promise<string>} - The token of the plugin
+	 */
 	
+	async loadToken(): Promise<string> {
+		const tokenFile = await this.app.vault.adapter.read(`${this.app.vault.configDir}/plugins/${this.manifest.id}/env`);
+		if (tokenFile) {
+			return tokenFile.split("=")[1]; 
+		}
+		return "";
+	}
+
 	/**
 	 * Create a new instance of Octokit to load a new instance of GithubBranch 
 	*/
 	async reloadOctokit() {
 		let octokit: Octokit;
 		const apiSettings = this.settings.github.api;
-		const token = await decrypt(this.settings.github.token, this);
+		const token = await this.loadToken();
 		if (apiSettings.tiersForApi === GithubTiersVersion.entreprise && apiSettings.hostname.length > 0) {
 			octokit = new Octokit(
 				{

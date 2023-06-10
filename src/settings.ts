@@ -23,7 +23,7 @@ import { ExportModal, ImportModal } from "./settings/modals/import_export";
 import i18next from "i18next";
 import { enumbSettingsTabId } from "./settings/interface";
 import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
-import { encrypt, decrypt, isEncrypted, regenerateTokenKeyPair } from "./settings/crypto";
+import { migrateToken } from "./settings/migrate";
 
 
 export class GithubPublisherSettingsTab extends PluginSettingTab {
@@ -212,30 +212,25 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 			span.createEl("div", null, (p) => p.innerText = i18next.t("settings.github.ghToken.encrypted"));
 		});
-		new Setting(this.settingsPage)
+		const tokenSettings = new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.ghToken.title"))
 			.setDesc(desc_ghToken)
 			.addText(async (text) => {
-				const decryptedToken = isEncrypted(this.plugin) ? await decrypt(githubSettings.token, this.plugin) : githubSettings.token;
+				const decryptedToken:string = await this.plugin.loadToken();
 				text
 					.setPlaceholder("ghp_15457498545647987987112184")
 					.setValue(decryptedToken)
 					.onChange(async (value) => {
-						githubSettings.token = await encrypt(value.trim(), this.plugin);
+						if (value.trim().length === 0 ) {
+							tokenSettings.controlEl.querySelector("input").style.border = "1px solid red";
+							new Notice(i18next.t("settings.github.ghToken.error"));
+						} else {
+							tokenSettings.controlEl.querySelector("input").style.border = "";
+							await migrateToken(this.plugin, value.trim());
+						}
 						await this.plugin.saveSettings();
 					});
-			})
-			.addButton((button) => {
-				button
-					.setButtonText(i18next.t("settings.github.ghToken.button.title"))
-					.setTooltip(i18next.t("settings.github.ghToken.button.tooltip"))
-					.onClick(async () => {
-						await regenerateTokenKeyPair(this.plugin);
-						new Notice(i18next.t("settings.github.ghToken.button.notice"));
-						this.renderGithubConfiguration();
-					});
 			});
-
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.branch.title"))
 			.setDesc(i18next.t("settings.github.branch.desc"))
@@ -268,7 +263,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
 						const octokit = await this.plugin.reloadOctokit();
-						await checkRepositoryValidity(this.branchName, octokit, this.plugin.settings, null,null, this.app.metadataCache);
+						await checkRepositoryValidity(octokit, this.plugin.settings, null,null, this.app.metadataCache);
 					})
 			)
 			.addButton((button) =>
