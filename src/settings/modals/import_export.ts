@@ -32,7 +32,6 @@ export class ImportModal extends Modal {
 	async censoreRepositoryData(actualSettings: GitHubPublisherSettings) {
 		this.plugin.settings.plugin = actualSettings.plugin;
 		this.plugin.settings.github.repo = actualSettings.github.repo;
-		this.plugin.settings.github.token = actualSettings.github.token;
 		this.plugin.settings.github.user = actualSettings.github.user;
 		for (const repo of actualSettings.github.otherRepo) {
 			//search the same repo in this.settings.github.otherRepo
@@ -186,7 +185,6 @@ export class ExportModal extends Modal {
 
 	censoreGithubSettingsData(censuredSettings: GitHubPublisherSettings) {
 		delete censuredSettings.github.repo;
-		delete censuredSettings.github.token;
 		delete censuredSettings.github.user;
 		delete censuredSettings.plugin;
 		for (const repo of censuredSettings.github.otherRepo) {

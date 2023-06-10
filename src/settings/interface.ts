@@ -50,7 +50,6 @@ export interface GitHubPublisherSettings {
 		user: string;
 		repo: string;
 		branch: string;
-		token: string;
 		automaticallyMergePR: boolean;
 		api: {
 			tiersForApi: GithubTiersVersion;
@@ -146,7 +145,6 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 		user: "",
 		repo: "",
 		branch: "main",
-		token: "",
 		automaticallyMergePR: true,
 		api: {
 			tiersForApi: GithubTiersVersion.free,

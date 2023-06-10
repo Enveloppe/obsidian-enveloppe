@@ -226,12 +226,9 @@
 			},
 			"ghToken": {
 				"button": {
-					"notice": "Le token chiffré a été regénéré !",
-					"title": "Regénérer le token chiffré",
-					"tooltip": "Régénérera la clé publique et privée et enregistrera le nouveau jeton crypté dans vos paramètres."
 				},
 				"desc": "Un token GitHub avec autorisation de dépôt. Vous pouvez le générer ",
-				"encrypted": "Le jeton sera enregistré crypté dans vos paramètres.",
+				"encrypted": "Le token sera enregistré dans le fichier \"env\".",
 				"title": "Token Github"
 			},
 			"repoName": {

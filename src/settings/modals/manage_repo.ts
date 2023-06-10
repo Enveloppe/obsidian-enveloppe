@@ -255,7 +255,6 @@ class ModalEditingRepository extends Modal {
 					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
 						await checkRepositoryValidity(
-							this.branchName, 
 							await this.plugin.reloadOctokit(), 
 							this.plugin.settings, 
 							this.repository, 

@@ -3,6 +3,7 @@ import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter, Repository
 import {GithubBranch} from "../publish/branch";
 import {getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from "./utils";
 import i18next from "i18next";
+import GithubPublisher from "src/main";
 
 /**
  *  Check if the file is a valid file to publish
@@ -138,17 +139,18 @@ export function checkIfRepoIsInAnother(
 }
 
 
-export function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoFrontmatter[], settings: GitHubPublisherSettings) {
+export async function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoFrontmatter[], plugin: GithubPublisher) {
 	repoFrontmatter = Array.isArray(repoFrontmatter)
 		? repoFrontmatter
 		: [repoFrontmatter];
-	const isEmpty: boolean[]	= [];
-	if (settings.github.token.length === 0) {
+	const isEmpty: boolean[] = [];
+	const token = await plugin.loadToken();
+	if (token.length === 0) {
 		isEmpty.push(true);
 		const whatIsEmpty = i18next.t("common.ghToken") ;
 		new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 	}
-	if (settings.github.token.length != 0) {
+	else {
 		for (const repo of repoFrontmatter) {
 			if (repo.repo.length === 0) {
 				isEmpty.push(true);
@@ -195,7 +197,6 @@ export function noTextConversion(conditionConvert: FrontmatterConvert) {
  * @return {Promise<void>}
  */
 export async function checkRepositoryValidity(
-	branchName: string,
 	PublisherManager: GithubBranch,
 	settings: GitHubPublisherSettings,
 	repository: Repository | null = null,
@@ -204,7 +205,7 @@ export async function checkRepositoryValidity(
 	try {
 		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : null;
 		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
-		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, settings);
+		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, false);
 		}
@@ -221,7 +222,7 @@ export async function checkRepositoryValidityWithRepoFrontmatter(
 	numberOfFile=1
 ): Promise<boolean> {
 	try {
-		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, settings);
+		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, true);
 			return await verifyRateLimitAPI(PublisherManager.octokit, settings, false, numberOfFile);
