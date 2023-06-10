@@ -229,6 +229,7 @@
 				},
 				"desc": "A GitHub token with repository permission. You can generate it ",
 				"encrypted": "The token will be registered in the env file.",
+				"error": "The token mustn't be empty!",
 				"title": "GitHub Token"
 			},
 			"repoName": {

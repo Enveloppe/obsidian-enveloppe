@@ -212,7 +212,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 			span.createEl("div", null, (p) => p.innerText = i18next.t("settings.github.ghToken.encrypted"));
 		});
-		new Setting(this.settingsPage)
+		const tokenSettings = new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.ghToken.title"))
 			.setDesc(desc_ghToken)
 			.addText(async (text) => {
@@ -221,7 +221,13 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setPlaceholder("ghp_15457498545647987987112184")
 					.setValue(decryptedToken)
 					.onChange(async (value) => {
-						await migrateToken(this.plugin, value.trim());
+						if (value.trim().length === 0 ) {
+							tokenSettings.controlEl.querySelector("input").style.border = "1px solid red";
+							new Notice(i18next.t("settings.github.ghToken.error"));
+						} else {
+							tokenSettings.controlEl.querySelector("input").style.border = "";
+							await migrateToken(this.plugin, value.trim());
+						}
 						await this.plugin.saveSettings();
 					});
 			});

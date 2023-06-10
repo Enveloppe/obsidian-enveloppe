@@ -130,11 +130,12 @@ export async function migrateToken(plugin: GithubPublisher, token?: string) {
 		delete plugin.settings.github.token;
 		await plugin.saveSettings();
 	}
-	if (token) {
-		noticeLog("migrating token in another file", plugin.settings);
-		const envToken = `GITHUB_TOKEN=${token}`;
-		await plugin.app.vault.adapter.write(`${plugin.app.vault.configDir}/plugins/${plugin.manifest.id}/env`, envToken);
+	noticeLog("migrating token in another file", plugin.settings);
+	if (token === undefined) {
+		token = "";
 	}
+	const envToken = `GITHUB_TOKEN=${token}`;
+	await plugin.app.vault.adapter.write(`${plugin.app.vault.configDir}/plugins/${plugin.manifest.id}/env`, envToken);
 }
 
 
