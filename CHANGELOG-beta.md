@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0-6](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.1.0-5...6.1.0-6) (2023-06-10)
+
+
+### Bug Fixes
+
+* crypto doesn't work the way I want ([#163](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/163)) ([8ccfbdc](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/8ccfbdcf4314bb10264774b607b359b0ef0f7c1a))
+
 ## [6.1.0-5](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.1.0-4...6.1.0-5) (2023-06-08)
 
 ## [6.1.0-4](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.0-3...6.1.0-4) (2023-06-08)
