@@ -75,6 +75,7 @@
 		"errorPublish": "Erreur lors de la publication sur {{- repo.owner}}/{{- repo.repo}}:{{- repo.branch}}",
 		"isEmpty": "{{- what}} est vide.",
 		"mergeconflic": "La Pull-Request n'est pas fusionnale, vous avez besoin de le faire manuellement.",
+		"reading-token-file": "Erreur : Le chemin est incorrect.",
 		"unablePublishMultiNotes": "Impossible de transférer plusieurs notes, quelque chose s'est mal passé.",
 		"unablePublishNote": "Impossible de transférer {{- file}}, le fichier a été ignoré.",
 		"whatEmpty": {

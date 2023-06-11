@@ -75,6 +75,7 @@
 		"errorPublish": "Error during upload to {{- repo.owner}}/{{- repo.repo}}",
 		"isEmpty": "{{- what}} is empty.",
 		"mergeconflic": "Pull-request is not mergeable, you need to do it manually.",
+		"reading-token-file": "Error: the path seems incorrect.",
 		"unablePublishMultiNotes": "Unable to upload multiple notes, something went wrong.",
 		"unablePublishNote": "Unable to upload note {{- file}}, skipping it",
 		"whatEmpty": {

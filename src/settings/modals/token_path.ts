@@ -1,4 +1,4 @@
-import { Modal, App, Setting, normalizePath } from "obsidian";
+import { Modal, App, Setting, Notice } from "obsidian";
 import GithubPublisher from "src/main";
 import i18next from "i18next";
 import { TOKEN_PATH } from "../interface";
@@ -8,17 +8,19 @@ import { migrateToken } from "../migrate";
 export class TokenEditPath extends Modal {
 	plugin: GithubPublisher;
 	token: string;
+	tokenPath: string;
 
 	constructor(app: App, plugin: GithubPublisher, token: string) {
 		super(app);
 		this.plugin = plugin;
 		this.token = token;
+		this.tokenPath = "";
 	}
 
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
-
+	
 		const defaultPath = createTokenPath(this.plugin, TOKEN_PATH);
 		const desc = contentEl.createEl("p", null, (p) => {
 			p.appendText(i18next.t("settings.github.ghToken.button.description"));
@@ -64,25 +66,34 @@ export class TokenEditPath extends Modal {
 		const input = new Setting(contentEl)
 			.addText((text) => {
 				const path = this.plugin.settings.github.tokenPath.trim().length === 0 ? defaultPath : this.plugin.settings.github.tokenPath;
-				text.setPlaceholder(defaultPath)
+				text
+					.setPlaceholder(defaultPath)
 					.setValue(path)
 					.onChange(async (value) => {
-						let path = normalizePath(value.trim());
-						if (value.trim().length === 0) {
-							path = normalizePath(TOKEN_PATH);
+						let path = value.trim();
+						if (path.length === 0) {
+							path = defaultPath;
 						}
 						this.plugin.settings.github.tokenPath = path;
+						this.tokenPath = path;
 					});
 			});
 		input.infoEl.style.display = "none";
 		input.controlEl.querySelector("input").style.width = "100%";
 
-
 		new Setting(contentEl)
 			.addButton((button) => {
 				button.setButtonText(i18next.t("common.save"))
 					.onClick(async () => {
-						this.close();
+						try {
+							await this.plugin.saveSettings();
+							await migrateToken(this.plugin, this.token);
+							this.close();
+						} catch (e) {
+							input.controlEl.querySelector("input").style.border = "1px solid red";
+							new Notice(i18next.t("error.reading-token-file"));
+							this.tokenPath="error";
+						}
 					});
 			});
 	}
@@ -90,8 +101,10 @@ export class TokenEditPath extends Modal {
 	async onClose() {
 		const {contentEl} = this;
 		contentEl.empty();
-		await this.plugin.saveSettings();
-		await migrateToken(this.plugin, this.token);
+		if (this.tokenPath === "error") {
+			this.plugin.settings.github.tokenPath = TOKEN_PATH;
+			await this.plugin.saveSettings();
+			await migrateToken(this.plugin, this.token);
+		}
 	}
-
 }

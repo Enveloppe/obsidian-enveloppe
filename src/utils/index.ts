@@ -1,4 +1,4 @@
-import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, Vault,} from "obsidian";
+import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, Vault, normalizePath,} from "obsidian";
 import {
 	Deleted,
 	FolderSettings,

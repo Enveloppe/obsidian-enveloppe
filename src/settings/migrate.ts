@@ -121,6 +121,7 @@ async function migrateWorFlow(plugin: GithubPublisher) {
 }
 
 export async function migrateToken(plugin: GithubPublisher, token?: string) {
+	console.log("migrating token");
 	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
 	//@ts-ignore
 	if (plugin.settings.github.token && !token) {

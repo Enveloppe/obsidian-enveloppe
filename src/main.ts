@@ -1,4 +1,4 @@
-import {FrontMatterCache, Menu, Plugin, TFile} from "obsidian";
+import {FrontMatterCache, Menu, Notice, Plugin, TFile} from "obsidian";
 import {GithubPublisherSettingsTab} from "./settings";
 import {
 	DEFAULT_SETTINGS,
@@ -121,11 +121,19 @@ export default class GithubPublisher extends Plugin {
 	
 	async loadToken(): Promise<string> {
 		const tokenPath = createTokenPath(this, this.settings.github.tokenPath);
-		const tokenFile = await this.app.vault.adapter.read(`${tokenPath}`);
-		if (tokenFile) {
-			return tokenFile.split("=")[1]; 
+
+		const tokenFileExists = await this.app.vault.adapter.exists(`${tokenPath}`);
+		if (!tokenFileExists) {
+			return "";
 		}
-		return "";
+		try {
+			const tokenFile = await this.app.vault.adapter.read(`${tokenPath}`);
+			if (tokenFile) {
+				return tokenFile.split("=")[1]; 
+			}
+		} catch (e) {
+			return "";
+		}
 	}
 
 	/**
