@@ -94,8 +94,8 @@
 		"scanningRepo": "Scan du dépôt, veuillez patienter...",
 		"sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
 		"startingClean": "Début du nettoyage de {{- repo.owner}}/{{- repo.repo}}",
-		"successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
 		"successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repo.owner}}/{{- repo.repo}}",
+		"successfullPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
 		"waitingWorkflow": "Maintenant, attente de la fin du workflow..."
 	},
 	"modals": {
@@ -226,9 +226,15 @@
 			},
 			"ghToken": {
 				"button": {
+					"configDir": " : Le dossier de configuration d'Obsidian",
+					"default": "Par défaut, il sera dans :",
+					"description": "Vous pouvez éditer le chemin du fichier dans lequel sera stocké le token.",
+					"name": "Chemin du fichier",
+					"pluginID": " : L'ID du plugin",
+					"tooltip": "Modifier le chemin du fichier contenant le token",
+					"variables": "Vous pouvez utiliser les variables suivantes :"
 				},
 				"desc": "Un token GitHub avec autorisation de dépôt. Vous pouvez le générer ",
-				"encrypted": "Le token sera enregistré dans le fichier \"env\".",
 				"error": "Le token ne doit pas être vide !",
 				"title": "Token Github"
 			},

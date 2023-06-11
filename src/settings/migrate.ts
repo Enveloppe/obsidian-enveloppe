@@ -121,21 +121,21 @@ async function migrateWorFlow(plugin: GithubPublisher) {
 }
 
 export async function migrateToken(plugin: GithubPublisher, token?: string) {
+	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
 	//@ts-ignore
 	if (plugin.settings.github.token && !token) {
-		noticeLog("migrating token in settings", plugin.settings);
+		noticeLog(`Moving the GitHub Token in the file : ${tokenPath}`, plugin.settings);
 		//@ts-ignore
 		token = plugin.settings.github.token;
 		//@ts-ignore
 		delete plugin.settings.github.token;
 		await plugin.saveSettings();
 	}
-	noticeLog("migrating token in another file", plugin.settings);
 	if (token === undefined) {
-		token = "";
+		return;
 	}
+	noticeLog(`Moving the GitHub Token in the file : ${tokenPath}`, plugin.settings);
 	const envToken = `GITHUB_TOKEN=${token}`;
-	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
 	await plugin.app.vault.adapter.write(tokenPath, envToken);
 }
 
