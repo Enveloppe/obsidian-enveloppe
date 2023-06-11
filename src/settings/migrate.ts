@@ -1,6 +1,6 @@
 import {FolderSettings, GithubTiersVersion, TextCleaner, TypeOfEditRegex} from "./interface";
 import GithubPublisher from "../main";
-import {noticeLog} from "../utils/utils";
+import {noticeLog} from "../utils";
 import i18next from "i18next";
 
 export interface OldSettings {

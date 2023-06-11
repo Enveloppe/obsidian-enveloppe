@@ -6,7 +6,7 @@
 import i18next from "i18next";
 import {RepoFrontmatter, Repository} from "../settings/interface";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
-import {createLink, getRepoFrontmatter} from "../utils/utils";
+import {createLink, getRepoFrontmatter} from "../utils";
 import GithubPublisher from "../main";
 import {
 	purgeNotesRemote,

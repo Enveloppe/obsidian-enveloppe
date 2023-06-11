@@ -7,7 +7,7 @@ import {
 	Repository,
 } from "./settings/interface";
 import { OldSettings } from "./settings/migrate";
-import {noticeLog, verifyRateLimitAPI} from "./utils/utils";
+import {noticeLog, verifyRateLimitAPI} from "./utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
 import {getRepoSharedKey, isShared} from "./utils/data_validation_test";

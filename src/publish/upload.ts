@@ -35,7 +35,7 @@ import {
 	getFrontmatterCondition,
 	getRepoFrontmatter,
 	noticeLog,
-} from "../utils/utils";
+} from "../utils";
 import { mainConverting } from "../conversion/convert_text";
 
 /** Class to manage the branch

@@ -6,7 +6,7 @@ import {
 	noticeLog,
 	getSettingsOfMetadataExtractor,
 	createListEdited
-} from "../utils/utils";
+} from "../utils";
 import {checkRepositoryValidityWithRepoFrontmatter} from "../utils/data_validation_test";
 import {GitHubPublisherSettings, RepoFrontmatter, Repository, UploadedFiles} from "../settings/interface";
 import { deleteFromGithub } from "../publish/delete";

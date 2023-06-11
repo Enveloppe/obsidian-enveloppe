@@ -9,7 +9,7 @@ import {
 } from "../settings/interface";
 import { FilesManagement } from "./files";
 import { Base64 } from "js-base64";
-import {noticeLog, trimObject, verifyRateLimitAPI } from "../utils/utils";
+import {noticeLog, trimObject, verifyRateLimitAPI } from "../utils";
 import {isAttachment} from "../utils/data_validation_test";
 import i18next from "i18next";
 
