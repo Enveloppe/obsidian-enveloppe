@@ -4,7 +4,7 @@ import {GithubPublisherSettingsTab} from "../../settings";
 import i18next from "i18next";
 import {GitHubPublisherSettings} from "../interface";
 import { OldSettings } from "../migrate";
-import { noticeLog } from "../../src/utils";
+import { noticeLog } from "../../utils";
 import {migrateSettings} from "../migrate";
 
 export type SettingValue = number | string | boolean | unknown;

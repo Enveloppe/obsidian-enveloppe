@@ -6,7 +6,7 @@ import {
 import { FilesManagement } from "./files";
 import { MetadataCache, Notice, Vault } from "obsidian";
 import GithubPublisherPlugin from "../main";
-import { noticeLog } from "../src/utils";
+import { noticeLog } from "../utils";
 import i18next from "i18next";
 
 /**

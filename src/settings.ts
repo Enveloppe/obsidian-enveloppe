@@ -18,12 +18,13 @@ import {
 	KeyBasedOnSettings
 } from "./settings/help";
 import "i18next";
-import { checkRepositoryValidity } from "./src/data_validation_test";
+import { checkRepositoryValidity } from "./utils/data_validation_test";
 import { ExportModal, ImportModal } from "./settings/modals/import_export";
 import i18next from "i18next";
 import { enumbSettingsTabId } from "./settings/interface";
 import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
 import { migrateToken } from "./settings/migrate";
+import { TokenEditPath } from "./settings/modals/token_path";
 
 
 export class GithubPublisherSettingsTab extends PluginSettingTab {
@@ -210,7 +211,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				link.href =
 					"https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
-			span.createEl("div", null, (p) => p.innerText = i18next.t("settings.github.ghToken.encrypted"));
 		});
 		const tokenSettings = new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.ghToken.title"))
@@ -229,6 +229,15 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							await migrateToken(this.plugin, value.trim());
 						}
 						await this.plugin.saveSettings();
+					});
+			})
+			.addExtraButton((button) => {
+				button
+					.setIcon("edit")
+					.setTooltip(i18next.t("settings.github.ghToken.button.tooltip"))
+					.onClick(async () => {
+						const token = await this.plugin.loadToken();
+						new TokenEditPath(this.app, this.plugin, token).open();
 					});
 			});
 		new Setting(this.settingsPage)

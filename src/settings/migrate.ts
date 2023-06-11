@@ -1,6 +1,6 @@
-import {FolderSettings, GithubTiersVersion, TextCleaner, TypeOfEditRegex} from "./interface";
+import {FolderSettings, GithubTiersVersion, TOKEN_PATH, TextCleaner, TypeOfEditRegex} from "./interface";
 import GithubPublisher from "../main";
-import {noticeLog} from "../src/utils";
+import {createTokenPath, noticeLog} from "../utils";
 import i18next from "i18next";
 
 export interface OldSettings {
@@ -103,7 +103,7 @@ async function migrateCensor(plugin: GithubPublisher) {
 }
 
 async function migrateWorFlow(plugin: GithubPublisher) {
-	noticeLog("migrateing workflow", plugin.settings);
+	noticeLog("migrating workflow", plugin.settings);
 	//@ts-ignore
 	if (plugin.settings.github.worflow) {
 		//@ts-ignore
@@ -121,21 +121,23 @@ async function migrateWorFlow(plugin: GithubPublisher) {
 }
 
 export async function migrateToken(plugin: GithubPublisher, token?: string) {
+	console.log("migrating token");
+	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
 	//@ts-ignore
 	if (plugin.settings.github.token && !token) {
-		noticeLog("migrating token in settings", plugin.settings);
+		noticeLog(`Moving the GitHub Token in the file : ${tokenPath}`, plugin.settings);
 		//@ts-ignore
 		token = plugin.settings.github.token;
 		//@ts-ignore
 		delete plugin.settings.github.token;
 		await plugin.saveSettings();
 	}
-	noticeLog("migrating token in another file", plugin.settings);
 	if (token === undefined) {
-		token = "";
+		return;
 	}
+	noticeLog(`Moving the GitHub Token in the file : ${tokenPath}`, plugin.settings);
 	const envToken = `GITHUB_TOKEN=${token}`;
-	await plugin.app.vault.adapter.write(`${plugin.app.vault.configDir}/plugins/${plugin.manifest.id}/env`, envToken);
+	await plugin.app.vault.adapter.write(tokenPath, envToken);
 }
 
 
@@ -187,6 +189,7 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 					repo: old.githubRepo ? old.githubRepo : plugin.settings.github.repo ? plugin.settings.github.repo : "",
 					branch: old.githubBranch,
 					automaticallyMergePR: old.automaticallyMergePR,
+					tokenPath: TOKEN_PATH,
 					api: {
 						tiersForApi: old.tiersForApi,
 						hostname: old.hostname,

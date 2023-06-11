@@ -1,4 +1,4 @@
-import {FrontMatterCache, Menu, Plugin, TFile} from "obsidian";
+import {FrontMatterCache, Menu, Notice, Plugin, TFile} from "obsidian";
 import {GithubPublisherSettingsTab} from "./settings";
 import {
 	DEFAULT_SETTINGS,
@@ -7,10 +7,10 @@ import {
 	Repository,
 } from "./settings/interface";
 import { OldSettings } from "./settings/migrate";
-import {noticeLog, verifyRateLimitAPI} from "./src/utils";
+import {createTokenPath, noticeLog, verifyRateLimitAPI} from "./utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
-import {getRepoSharedKey, isShared} from "./src/data_validation_test";
+import {getRepoSharedKey, isShared} from "./utils/data_validation_test";
 import {
 	shareOneNote,
 } from "./commands/commands";
@@ -120,11 +120,20 @@ export default class GithubPublisher extends Plugin {
 	 */
 	
 	async loadToken(): Promise<string> {
-		const tokenFile = await this.app.vault.adapter.read(`${this.app.vault.configDir}/plugins/${this.manifest.id}/env`);
-		if (tokenFile) {
-			return tokenFile.split("=")[1]; 
+		const tokenPath = createTokenPath(this, this.settings.github.tokenPath);
+
+		const tokenFileExists = await this.app.vault.adapter.exists(`${tokenPath}`);
+		if (!tokenFileExists) {
+			return "";
 		}
-		return "";
+		try {
+			const tokenFile = await this.app.vault.adapter.read(`${tokenPath}`);
+			if (tokenFile) {
+				return tokenFile.split("=")[1]; 
+			}
+		} catch (e) {
+			return "";
+		}
 	}
 
 	/**

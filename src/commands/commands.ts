@@ -1,4 +1,4 @@
-import { ShareStatusBar } from "../src/status_bar";
+import { ShareStatusBar } from "../utils/status_bar";
 import {
 	createLink,
 	noticeMessage,
@@ -6,8 +6,8 @@ import {
 	noticeLog,
 	getSettingsOfMetadataExtractor,
 	createListEdited
-} from "../src/utils";
-import {checkRepositoryValidityWithRepoFrontmatter} from "../src/data_validation_test";
+} from "../utils";
+import {checkRepositoryValidityWithRepoFrontmatter} from "../utils/data_validation_test";
 import {GitHubPublisherSettings, RepoFrontmatter, Repository, UploadedFiles} from "../settings/interface";
 import { deleteFromGithub } from "../publish/delete";
 import { GithubBranch } from "../publish/branch";

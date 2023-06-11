@@ -16,8 +16,8 @@ import {
 	getCategory,
 	getFrontmatterCondition,
 	getRepoFrontmatter,
-} from "../src/utils";
-import {isInternalShared, checkIfRepoIsInAnother, isShared} from "../src/data_validation_test";
+} from "../utils";
+import {isInternalShared, checkIfRepoIsInAnother, isShared} from "../utils/data_validation_test";
 import { createRegexFromText } from "./find_and_replace_text";
 
 /**

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "@jest/globals";
 import settingsFixture from "../fixtures/githubPublisherSettings";
-import { GitHubPublisherSettings } from "../../src/settings/interface";
-import findAndReplaceText from "../../src/conversion/find_and_replace_text";
+import { GitHubPublisherSettings } from "../../utils/settings/interface";
+import findAndReplaceText from "../../utils/conversion/find_and_replace_text";
 
 let settings: GitHubPublisherSettings;
 

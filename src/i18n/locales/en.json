@@ -75,6 +75,7 @@
 		"errorPublish": "Error during upload to {{- repo.owner}}/{{- repo.repo}}",
 		"isEmpty": "{{- what}} is empty.",
 		"mergeconflic": "Pull-request is not mergeable, you need to do it manually.",
+		"reading-token-file": "Error: the path seems incorrect.",
 		"unablePublishMultiNotes": "Unable to upload multiple notes, something went wrong.",
 		"unablePublishNote": "Unable to upload note {{- file}}, skipping it",
 		"whatEmpty": {
@@ -226,9 +227,15 @@
 			},
 			"ghToken": {
 				"button": {
+					"configDir": ": The configuration folder of Obsidian",
+					"default": "By default, it will be in:",
+					"description": "You can edit the file path where the token will be stored.",
+					"name": "File path",
+					"pluginID": ": The plugin ID",
+					"tooltip": "Modify the path of the file containing the token",
+					"variables": "You can use the following variables:"
 				},
 				"desc": "A GitHub token with repository permission. You can generate it ",
-				"encrypted": "The token will be registered in the env file.",
 				"error": "The token mustn't be empty!",
 				"title": "GitHub Token"
 			},

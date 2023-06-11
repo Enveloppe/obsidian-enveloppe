@@ -1,7 +1,7 @@
 import {FrontMatterCache, Notice, TFile, MetadataCache } from "obsidian";
 import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter, Repository} from "../settings/interface";
 import {GithubBranch} from "../publish/branch";
-import {getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from "./utils";
+import {getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from ".";
 import i18next from "i18next";
 import GithubPublisher from "src/main";
 

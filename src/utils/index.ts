@@ -1,4 +1,4 @@
-import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, Vault,} from "obsidian";
+import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, Vault, normalizePath,} from "obsidian";
 import {
 	Deleted,
 	FolderSettings,
@@ -7,12 +7,13 @@ import {
 	MetadataExtractor,
 	RepoFrontmatter,
 	UploadedFiles,
-	ListeEditedFiles, Repository
+	ListEditedFiles, Repository, TOKEN_PATH
 } from "../settings/interface";
 import Publisher from "../publish/upload";
 import {getReceiptFolder} from "../conversion/file_path";
 import i18next from "i18next";
 import {Octokit} from "@octokit/core";
+import GithubPublisher from "src/main";
 
 /**
  * Create a notice message for the log
@@ -29,7 +30,7 @@ export function noticeLog(message: any, settings: GitHubPublisherSettings) {
 }
 
 export function createListEdited(listUploaded: UploadedFiles[], deleted: Deleted, fileError: string[]) {
-	const listEdited: ListeEditedFiles = {
+	const listEdited: ListEditedFiles = {
 		added: [],
 		edited: [],
 		deleted: [],
@@ -640,4 +641,15 @@ export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPubli
 		}));
 	}
 	return true;
+}
+
+
+export function createTokenPath(plugin: GithubPublisher, tokenPath?: string) {
+	const vault = plugin.app.vault;
+	if (!tokenPath) {
+		tokenPath = TOKEN_PATH;
+	}
+	tokenPath = tokenPath.replace("%configDir%", vault.configDir);
+	tokenPath = tokenPath.replace("%pluginID%", plugin.manifest.id);
+	return tokenPath;
 }
