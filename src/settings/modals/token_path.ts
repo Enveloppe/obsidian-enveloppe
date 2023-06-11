@@ -65,7 +65,7 @@ export class TokenEditPath extends Modal {
 			
 		const input = new Setting(contentEl)
 			.addText((text) => {
-				const path = this.plugin.settings.github.tokenPath.trim().length === 0 ? defaultPath : this.plugin.settings.github.tokenPath;
+				const path = this.plugin.settings.github.tokenPath ?? defaultPath;
 				text
 					.setPlaceholder(defaultPath)
 					.setValue(path)
