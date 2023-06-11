@@ -23,19 +23,19 @@ import {
 	getReceiptFolder,
 	getImageLinkOptions,
 } from "../conversion/file_path";
-import { ShareStatusBar } from "../src/status_bar";
+import { ShareStatusBar } from "../utils/status_bar";
 import GithubPublisherPlugin from "../main";
 import {
 	checkEmptyConfiguration,
 	checkIfRepoIsInAnother,
 	isShared,
 	isAttachment,
-} from "../src/data_validation_test";
+} from "../utils/data_validation_test";
 import {
 	getFrontmatterCondition,
 	getRepoFrontmatter,
 	noticeLog,
-} from "../src/utils";
+} from "../utils/utils";
 import { mainConverting } from "../conversion/convert_text";
 
 /** Class to manage the branch

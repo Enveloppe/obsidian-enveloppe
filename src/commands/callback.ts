@@ -6,8 +6,8 @@
 
 import {FolderSettings, RepoFrontmatter, Repository} from "../settings/interface";
 import GithubPublisher from "../main";
-import {checkRepositoryValidity, isShared} from "../src/data_validation_test";
-import {createLink, getRepoFrontmatter} from "../src/utils";
+import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
+import {createLink, getRepoFrontmatter} from "../utils/utils";
 import i18next from "i18next";
 import {Command, Notice } from "obsidian";
 import {purgeNotesRemote, shareOneNote} from "./commands";

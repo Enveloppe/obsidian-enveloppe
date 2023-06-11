@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import {App, Modal, Notice, Setting} from "obsidian";
 import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../interface";
-import {checkRepositoryValidity} from "../../src/data_validation_test";
+import {checkRepositoryValidity} from "../../utils/data_validation_test";
 import GithubPublisherPlugin from "../../main";
 
 /**

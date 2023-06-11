@@ -18,7 +18,7 @@ import {
 	KeyBasedOnSettings
 } from "./settings/help";
 import "i18next";
-import { checkRepositoryValidity } from "./src/data_validation_test";
+import { checkRepositoryValidity } from "./utils/data_validation_test";
 import { ExportModal, ImportModal } from "./settings/modals/import_export";
 import i18next from "i18next";
 import { enumbSettingsTabId } from "./settings/interface";

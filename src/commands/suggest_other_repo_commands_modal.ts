@@ -10,7 +10,7 @@ import {
 	uploadAllNotes,
 	uploadNewNotes
 } from "./plugin_commands";
-import {noticeLog} from "../src/utils";
+import {noticeLog} from "../utils/utils";
 
 interface GithubPublisherCommands {
 	commands: string;

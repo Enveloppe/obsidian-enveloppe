@@ -271,7 +271,7 @@ export interface RepoFrontmatter {
 	automaticallyMergePR: boolean;
 }
 
-export interface ListeEditedFiles {
+export interface ListEditedFiles {
 	edited: string[];
 	deleted: string[];
 	added: string[];

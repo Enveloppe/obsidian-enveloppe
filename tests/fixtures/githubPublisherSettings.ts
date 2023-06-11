@@ -1,4 +1,4 @@
-import {FolderSettings, GitHubPublisherSettings, GithubTiersVersion} from "../../src/settings/interface";
+import {FolderSettings, GitHubPublisherSettings, GithubTiersVersion} from "../../utils/settings/interface";
 
 const settings: GitHubPublisherSettings = {
 	github: {

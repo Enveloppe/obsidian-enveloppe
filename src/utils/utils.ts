@@ -7,7 +7,7 @@ import {
 	MetadataExtractor,
 	RepoFrontmatter,
 	UploadedFiles,
-	ListeEditedFiles, Repository
+	ListEditedFiles, Repository
 } from "../settings/interface";
 import Publisher from "../publish/upload";
 import {getReceiptFolder} from "../conversion/file_path";
@@ -29,7 +29,7 @@ export function noticeLog(message: any, settings: GitHubPublisherSettings) {
 }
 
 export function createListEdited(listUploaded: UploadedFiles[], deleted: Deleted, fileError: string[]) {
-	const listEdited: ListeEditedFiles = {
+	const listEdited: ListEditedFiles = {
 		added: [],
 		edited: [],
 		deleted: [],

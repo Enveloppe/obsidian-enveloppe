@@ -1,11 +1,11 @@
 import { Modal, App } from "obsidian";
-import { Deleted, ListeEditedFiles } from "../interface";
+import { Deleted, ListEditedFiles } from "../interface";
 import i18next from "i18next";
 
 
 export class ListChangedFiles extends Modal {
-	listChanged: ListeEditedFiles | Deleted;
-	constructor(app: App, listChanged: ListeEditedFiles | Deleted) {
+	listChanged: ListEditedFiles | Deleted;
+	constructor(app: App, listChanged: ListEditedFiles | Deleted) {
 		super(app);
 		this.listChanged = listChanged ;
 	}
@@ -45,7 +45,7 @@ export class ListChangedFiles extends Modal {
 		contentEl.empty();
 		contentEl.createEl("h2", { text: i18next.t("modals.listChangedFiles.title"), cls: "github-publisher title"});
 		if (Object.keys(this.listChanged).contains("edited")) {
-			this.listChanged = this.listChanged as ListeEditedFiles;
+			this.listChanged = this.listChanged as ListEditedFiles;
 			contentEl.createEl("h3", { text: `📤 ${i18next.t("modals.listChangedFiles.added")}`});
 			this.displayListOfFile(this.listChanged.added, contentEl);
 			contentEl.createEl("h3", { text: `✒️ ${i18next.t("modals.listChangedFiles.edited")}`});

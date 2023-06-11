@@ -17,7 +17,7 @@ import {
 } from "obsidian";
 import { getDataviewPath } from "./file_path";
 import { getAPI, Link } from "obsidian-dataview";
-import { noticeLog } from "../src/utils";
+import { noticeLog } from "../utils/utils";
 import { convertLinkCitation, convertWikilinks } from "./links";
 import findAndReplaceText from "./find_and_replace_text";
 import GithubPublisher from "../main";

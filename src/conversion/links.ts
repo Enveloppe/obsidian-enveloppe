@@ -6,7 +6,7 @@ import {
 	RepoFrontmatter, Repository,
 } from "../settings/interface";
 import { createRelativePath } from "./file_path";
-import {isAttachment, noTextConversion} from "../src/data_validation_test";
+import {isAttachment, noTextConversion} from "../utils/data_validation_test";
 import slugify from "slugify";
 
 /**
