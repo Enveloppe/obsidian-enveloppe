@@ -11,7 +11,7 @@
         "preexport": "pnpm run build",
         "export": "node export.js",
         "bump": "node commit-and-tag-version.js",
-        "postbump": "git push --follow-tags origin main",
+        "postbump": "git push --follow-tags origin master",
         "predeploy": "pnpm run bump",
         "deploy": "pnpm run export",
         "test": "jest"
