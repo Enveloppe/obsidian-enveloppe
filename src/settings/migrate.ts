@@ -1,6 +1,6 @@
-import {FolderSettings, GithubTiersVersion, TextCleaner, TypeOfEditRegex} from "./interface";
+import {FolderSettings, GithubTiersVersion, TOKEN_PATH, TextCleaner, TypeOfEditRegex} from "./interface";
 import GithubPublisher from "../main";
-import {noticeLog} from "../utils";
+import {createTokenPath, noticeLog} from "../utils";
 import i18next from "i18next";
 
 export interface OldSettings {
@@ -103,7 +103,7 @@ async function migrateCensor(plugin: GithubPublisher) {
 }
 
 async function migrateWorFlow(plugin: GithubPublisher) {
-	noticeLog("migrateing workflow", plugin.settings);
+	noticeLog("migrating workflow", plugin.settings);
 	//@ts-ignore
 	if (plugin.settings.github.worflow) {
 		//@ts-ignore
@@ -135,7 +135,8 @@ export async function migrateToken(plugin: GithubPublisher, token?: string) {
 		token = "";
 	}
 	const envToken = `GITHUB_TOKEN=${token}`;
-	await plugin.app.vault.adapter.write(`${plugin.app.vault.configDir}/plugins/${plugin.manifest.id}/env`, envToken);
+	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
+	await plugin.app.vault.adapter.write(tokenPath, envToken);
 }
 
 
@@ -187,6 +188,7 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 					repo: old.githubRepo ? old.githubRepo : plugin.settings.github.repo ? plugin.settings.github.repo : "",
 					branch: old.githubBranch,
 					automaticallyMergePR: old.automaticallyMergePR,
+					tokenPath: TOKEN_PATH,
 					api: {
 						tiersForApi: old.tiersForApi,
 						hostname: old.hostname,

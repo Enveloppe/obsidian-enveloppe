@@ -7,7 +7,7 @@ import {
 	Repository,
 } from "./settings/interface";
 import { OldSettings } from "./settings/migrate";
-import {noticeLog, verifyRateLimitAPI} from "./utils";
+import {createTokenPath, noticeLog, verifyRateLimitAPI} from "./utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
 import {getRepoSharedKey, isShared} from "./utils/data_validation_test";
@@ -120,7 +120,8 @@ export default class GithubPublisher extends Plugin {
 	 */
 	
 	async loadToken(): Promise<string> {
-		const tokenFile = await this.app.vault.adapter.read(`${this.app.vault.configDir}/plugins/${this.manifest.id}/env`);
+		const tokenPath = createTokenPath(this, this.settings.github.tokenPath);
+		const tokenFile = await this.app.vault.adapter.read(`${tokenPath}`);
 		if (tokenFile) {
 			return tokenFile.split("=")[1]; 
 		}

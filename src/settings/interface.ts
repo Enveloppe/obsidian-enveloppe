@@ -28,6 +28,7 @@ export interface Repository {
 	repo: string;
 	branch: string;
 	automaticallyMergePR: boolean;
+	tokenPath: string;
 	api: {
 		tiersForApi: GithubTiersVersion;
 		hostname: string;
@@ -50,6 +51,7 @@ export interface GitHubPublisherSettings {
 		user: string;
 		repo: string;
 		branch: string;
+		tokenPath: string;
 		automaticallyMergePR: boolean;
 		api: {
 			tiersForApi: GithubTiersVersion;
@@ -138,6 +140,7 @@ export enum GithubTiersVersion {
 	entreprise = "Enterprise",
 }
 
+export const TOKEN_PATH = "%configDir%/plugins/%pluginID%/env";
 
 
 export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
@@ -146,6 +149,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 		repo: "",
 		branch: "main",
 		automaticallyMergePR: true,
+		tokenPath: TOKEN_PATH,
 		api: {
 			tiersForApi: GithubTiersVersion.free,
 			hostname: "",
