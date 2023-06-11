@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0-7](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.1.0-6...6.1.0-7) (2023-06-11)
+
+
+### Bug Fixes
+
+* allow moving the env file in the vault ([#164](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/164)) ([17f9c5c](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/17f9c5c844160f22c35981bbe02178a4e87fc128))
+
 ## [6.1.0-6](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.1.0-5...6.1.0-6) (2023-06-10)
 
 
