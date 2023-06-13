@@ -212,7 +212,6 @@ export class GithubBranch extends FilesManagement {
 	 */
 
 	async mergePullRequestOnRepo(
-		branchName: string,
 		pullRequestNumber: number,
 		repoFrontmatter: RepoFrontmatter
 	) {
@@ -274,7 +273,6 @@ export class GithubBranch extends FilesManagement {
 			);
 			if (repoFrontmatter.automaticallyMergePR && pullRequest !== 0) {
 				const PRSuccess = await this.mergePullRequestOnRepo(
-					branchName,
 					pullRequest,
 					repoFrontmatter
 				);

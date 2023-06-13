@@ -227,7 +227,7 @@ export async function shareEditedOnlyCallback(repo: Repository|null, branchName:
  * @return {Promise<Command>}
  */
 
-export async function checkRepositoryValidityCallback(plugin: GithubPublisher, repo: Repository, branchName: string) {
+export async function checkRepositoryValidityCallback(plugin: GithubPublisher, repo: Repository) {
 	const id = repo ? `check-plugin-repo-validy-K${repo.smartKey}` : "check-plugin-repo-validy";
 	let name = i18next.t("commands.checkValidity.title");
 	const common = i18next.t("common.repository");
@@ -242,7 +242,6 @@ export async function checkRepositoryValidityCallback(plugin: GithubPublisher, r
 			{
 				if (!checking) {
 					checkRepositoryValidity(
-						branchName,
 						await plugin.reloadOctokit(),
 						plugin.settings,
 						repo,

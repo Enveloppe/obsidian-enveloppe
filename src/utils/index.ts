@@ -1,4 +1,4 @@
-import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, Vault, normalizePath,} from "obsidian";
+import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, Vault} from "obsidian";
 import {
 	Deleted,
 	FolderSettings,
@@ -20,7 +20,7 @@ import GithubPublisher from "src/main";
  * @param {any} message the message to display
  * @param {GithubPublisher} settings to know if it should use the notice or the log
  */
-
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function noticeLog(message: any, settings: GitHubPublisherSettings) {
 	if (settings.plugin.noticeError) {
 		new Notice(message);

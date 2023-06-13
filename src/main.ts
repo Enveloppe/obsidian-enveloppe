@@ -1,4 +1,4 @@
-import {FrontMatterCache, Menu, Notice, Plugin, TFile} from "obsidian";
+import {FrontMatterCache, Menu, Plugin, TFile} from "obsidian";
 import {GithubPublisherSettingsTab} from "./settings";
 import {
 	DEFAULT_SETTINGS,
@@ -55,7 +55,7 @@ export default class GithubPublisher extends Plugin {
 		this.addCommand(await uploadNewNotesCallback(this, repo, branchName));
 		this.addCommand(await uploadAllEditedNotesCallback(this, repo, branchName));
 		this.addCommand(await shareEditedOnlyCallback(repo, branchName, this));
-		this.addCommand(await checkRepositoryValidityCallback(this, repo, branchName));
+		this.addCommand(await checkRepositoryValidityCallback(this, repo));
 	}
 
 	cleanSpecificCommands(repo: Repository) {

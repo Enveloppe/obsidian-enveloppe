@@ -28,7 +28,6 @@ export interface Repository {
 	repo: string;
 	branch: string;
 	automaticallyMergePR: boolean;
-	tokenPath: string;
 	api: {
 		tiersForApi: GithubTiersVersion;
 		hostname: string;
