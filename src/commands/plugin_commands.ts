@@ -103,7 +103,7 @@ export async function deleteCommands(plugin : GithubPublisher, repo: Repository 
 export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository | null, branchName: string) {
 	const statusBarItems = plugin.addStatusBarItem();
 	const publisher = await plugin.reloadOctokit();
-	const sharedFiles = publisher.getSharedFiles();
+	const sharedFiles = publisher.getSharedFiles(repo);
 	await shareAllMarkedNotes(
 		publisher,
 		plugin.settings,
@@ -152,7 +152,6 @@ export async function repositoryValidityActiveFile(plugin:GithubPublisher, branc
 	const file = plugin.app.workspace.getActiveFile();
 	if (file) {
 		await checkRepositoryValidity(
-			branchName,
 			await plugin.reloadOctokit(),
 			plugin.settings,
 			repo,

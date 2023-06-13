@@ -15,7 +15,7 @@ import {
 import Publisher from "./upload";
 import GithubPublisher from "../main";
 import { getRepoFrontmatter, noticeLog } from "../utils";
-import { isAttachment } from "../utils/data_validation_test";
+import { isAttachment, isShared } from "../utils/data_validation_test";
 import { getAPI, Link } from "obsidian-dataview";
 
 /**
@@ -68,16 +68,15 @@ export class FilesManagement extends Publisher {
 	 * @return {TFile[]} The shared files
 	 */
 
-	getSharedFiles(): TFile[] {
+	getSharedFiles(repo: Repository | null): TFile[] {
 		const files = this.vault.getMarkdownFiles();
 		const shared_File: TFile[] = [];
-		const sharedkey = this.settings.plugin.shareKey;
 		for (const file of files) {
 			try {
 				const frontMatter = this.metadataCache.getCache(
 					file.path
 				).frontmatter;
-				if (frontMatter && frontMatter[sharedkey] === true) {
+				if (isShared(frontMatter, this.settings, file, repo)) {
 					shared_File.push(file);
 				}
 			} catch {
@@ -95,7 +94,6 @@ export class FilesManagement extends Publisher {
 	getAllFileWithPath(repo: Repository | null): ConvertedLink[] {
 		const files = this.vault.getFiles();
 		const allFileWithPath: ConvertedLink[] = [];
-		const shareKey = this.settings.plugin.shareKey;
 		for (const file of files) {
 			if (isAttachment(file.extension)) {
 				const filepath = getImageLinkOptions(file, this.settings, null);
@@ -107,7 +105,7 @@ export class FilesManagement extends Publisher {
 				const frontMatter = this.metadataCache.getCache(
 					file.path
 				).frontmatter;
-				if (frontMatter && frontMatter[shareKey] === true) {
+				if (isShared(frontMatter, this.settings, file, repo)) {
 					const filepath = getReceiptFolder(
 						file,
 						this.settings,
@@ -286,30 +284,6 @@ export class FilesManagement extends Publisher {
 		}
 		return [];
 	}
-
-	/**
-	 * Check if the file is in the excluded folder by checking the settings
-	 * @param {TFile} file The file shared
-	 * @return {boolean} true if the file is in the excluded folder
-	 */
-	checkExcludedFolder(file: TFile): boolean {
-		const excludedFolder = this.settings.plugin.excludedFolder;
-		if (excludedFolder.length > 0) {
-			for (let i = 0; i < excludedFolder.length; i++) {
-				const isRegex = excludedFolder[i].match(/^\/(.*)\/[igmsuy]*$/);
-				const regex = isRegex
-					? new RegExp(isRegex[1], isRegex[2])
-					: null;
-				if (regex && regex.test(file.path)) {
-					return true;
-				} else if (file.path.contains(excludedFolder[i].trim())) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	/**
 	 * Get the last time the file from the github Repo was edited
 	 * @param {Octokit} octokit
