@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0-8](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.1.0-7...6.1.0-8) (2023-06-13)
+
+
+### Bug Fixes
+
+* **files:** forgot that sharedKey is now in the Repo interface ([fad79cb](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/fad79cb0d3621a86490cc85b1bdca9d267f2cf50))
+
 ## [6.1.0-7](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.1.0-6...6.1.0-7) (2023-06-11)
 
 
