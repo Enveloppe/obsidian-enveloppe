@@ -95,8 +95,8 @@
 		"scanningRepo": "Scanning the repository, may take a while...",
 		"sendMessage": "Upload {{- nbNotes}} notes to {{- repo.owner}}/{{- repo.repo}}",
 		"startingClean": "Starting cleaning {{- repo.owner}}/{{- repo.repo}}",
-		"successPublishOneNote": "Successfully uploaded {{- file}} to {{- repo.owner}}/{{- repo.repo}}",
 		"successfullPublish": "Successfully uploaded {{- nbNotes}} to {{- repo.owner}}/{{- repo.repo}}",
+		"successPublishOneNote": "Successfully uploaded {{- file}} to {{- repo.owner}}/{{- repo.repo}}",
 		"waitingWorkflow": "Now, waiting for the workflow to be completed..."
 	},
 	"modals": {
