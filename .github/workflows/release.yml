@@ -4,7 +4,7 @@ name: Publish Obsidian Plugin
     inputs:
       bump:
         default: false
-        description: "Bump version"
+        description: "Bump version number based on semantic release"
         type: boolean
         required: false
       beta:
@@ -32,7 +32,7 @@ jobs:
     with:
       PLUGIN_NAME: "obsidian-mkdocs-publisher"
       STYLE: true
-      BETA: ${{ github.event.inputs.beta }}
+      BETA: ${{ inputs.beta }}
     secrets: 
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   bump:
@@ -42,6 +42,6 @@ jobs:
       PLUGIN_NAME: obsidian-mkdocs-publisher
       STYLE: true
       BRANCH: "main"
-      BETA: ${{ github.event.inputs.beta }}
+      BETA: ${{ inputs.beta }}
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
