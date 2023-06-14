@@ -23,7 +23,7 @@ jobs:
           echo "${{ github.event_name }}"
   publish:
     if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && inputs.bump == false)
-    uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-publish.yaml@main
+    uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-release.yaml@main
     with:
       PLUGIN_NAME: "obsidian-mkdocs-publisher"
       STYLE: true
@@ -31,7 +31,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   bump:
     if: ${{ github.event.inputs.bump == true }}
-    uses: lisandra-dev/reusable-workflows/.github/workflows/bump.yaml@main
+    uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-bump-version.yaml@main
     with:
       PLUGIN_NAME: obsidian-mkdocs-publisher
       STYLE: true
