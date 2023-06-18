@@ -1,11 +1,21 @@
 import GithubPublisher from "../../main";
-import { App, Modal, Setting, TextAreaComponent, ButtonComponent, Platform } from "obsidian";
+import {
+	App,
+	Modal,
+	Setting,
+	TextAreaComponent,
+	ButtonComponent,
+	Platform,
+	FuzzySuggestModal,
+	Notice
+} from "obsidian";
 import {GithubPublisherSettingsTab} from "../../settings";
 import i18next from "i18next";
-import {GitHubPublisherSettings} from "../interface";
+import {GitHubPublisherSettings, Preset} from "../interface";
 import { OldSettings } from "../migrate";
-import { noticeLog } from "../../utils";
+import {log, noticeLog} from "../../utils";
 import {migrateSettings} from "../migrate";
+import {Octokit} from "@octokit/core";
 
 export type SettingValue = number | string | boolean | unknown;
 
@@ -29,24 +39,13 @@ export class ImportModal extends Modal {
 		this.settingsTab = settingsTab;
 	}
 
-	async censoreRepositoryData(actualSettings: GitHubPublisherSettings) {
-		this.plugin.settings.plugin = actualSettings.plugin;
-		this.plugin.settings.github.repo = actualSettings.github.repo;
-		this.plugin.settings.github.user = actualSettings.github.user;
-		for (const repo of actualSettings.github.otherRepo) {
-			//search the same repo in this.settings.github.otherRepo
-			const index = this.plugin.settings.github.otherRepo.findIndex((r) => r.smartKey === repo.smartKey);
-			if (index !== -1) {
-				const found = this.plugin.settings.github.otherRepo[index];
-				found.repo = repo.repo;
-				found.user = repo.user;
-			} else {
-				repo.repo = "";
-				repo.user = "";
-			}
-		}
+	async censorRepositoryData(original: GitHubPublisherSettings) {
+		log("original settings", original);
+		this.plugin.settings.plugin = original.plugin;
+		this.plugin.settings.github.repo = original.github.repo;
+		this.plugin.settings.github.user = original.github.user;
+		this.plugin.settings.github.otherRepo = original.github.otherRepo;
 		await this.plugin.saveSettings();
-
 	}
 
 	onOpen() {
@@ -85,7 +84,7 @@ export class ImportModal extends Modal {
 								// @ts-ignore
 								this.plugin.settings[key] = value;
 							}
-							await this.censoreRepositoryData(actualSettings);
+							await this.censorRepositoryData(actualSettings);
 							await this.plugin.saveSettings();
 						}
 						this.close();
@@ -183,14 +182,11 @@ export class ExportModal extends Modal {
 		this.plugin = plugin;
 	}
 
-	censoreGithubSettingsData(censuredSettings: GitHubPublisherSettings) {
+	censorGithubSettingsData(censuredSettings: GitHubPublisherSettings) {
 		delete censuredSettings.github.repo;
 		delete censuredSettings.github.user;
 		delete censuredSettings.plugin;
-		for (const repo of censuredSettings.github.otherRepo) {
-			delete repo.repo;
-			delete repo.user;
-		}
+		delete censuredSettings.github.otherRepo;
 		return censuredSettings;
 	}
 
@@ -202,7 +198,7 @@ export class ExportModal extends Modal {
 			.setDesc(i18next.t("modals.export.desc") )
 			.then((setting) => {
 				//create a copy of the settings object
-				const censuredSettings = this.censoreGithubSettingsData(clone(this.plugin.settings));
+				const censuredSettings = this.censorGithubSettingsData(clone(this.plugin.settings));
 				const output = JSON.stringify(censuredSettings, null, 2);
 				setting.controlEl.createEl("a",
 					{
@@ -267,4 +263,98 @@ export class ExportModal extends Modal {
 		const {contentEl} = this;
 		contentEl.empty();
 	}
+}
+
+
+export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
+	octokit: Octokit;
+	plugin: GithubPublisher;
+	presetList: Preset[];
+	page: GithubPublisherSettingsTab;
+
+
+	constructor(app: App, plugin: GithubPublisher, presetList: Preset[], octokit: Octokit, page: GithubPublisherSettingsTab) {
+		super(app);
+		this.plugin = plugin;
+		this.presetList = presetList;
+		this.octokit = octokit;
+		this.page = page;
+	}
+
+	getItems(): Preset[] {
+		return this.presetList;
+	}
+
+	getItemText(item: Preset): string {
+		return item.name;
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	onChooseItem(item: Preset, evt: MouseEvent | KeyboardEvent): void {
+		const presetSettings = item.settings;
+		log("onChooseItem", presetSettings);
+		try {
+			const original = clone(this.plugin.settings);
+			if (!(presetSettings.upload.replaceTitle instanceof Array)) {
+				presetSettings.upload.replaceTitle = [presetSettings.upload.replaceTitle];
+			}
+
+			for (const [key, value] of Object.entries(presetSettings)) {
+				// @ts-ignore
+				this.plugin.settings[key] = value;
+			}
+			this.plugin.settings.plugin = original.plugin;
+			this.plugin.settings.github.repo = original.github.repo;
+			this.plugin.settings.github.user = original.github.user;
+			this.plugin.settings.github.otherRepo = original.github.otherRepo;
+			this.plugin.saveSettings();
+			this.page.renderSettingsPage("github-configuration");
+
+		} catch (e) {
+			new Notice(i18next.t("modals.import.error.span") + e);
+			log("onChooseItem", e);
+		}
+	}
+}
+
+export async function loadAllPresets(octokit: Octokit, plugin: GithubPublisher): Promise<Preset[]> {
+	//load from gitHub repository
+
+	const githubPreset = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+		owner: "ObsidianPublisher",
+		repo: "plugin-presets",
+		path: "presets",
+	});
+
+	//create a list
+	const presetList: Preset[] = [];
+	if (!Array.isArray(githubPreset.data)) {
+		return presetList;
+	}
+	log("LoadAllPreset", githubPreset);
+	for (const preset of githubPreset.data) {
+		if (preset.name.endsWith(".json")) {
+			const presetName = preset.name.replace(".json", "");
+			presetList.push({
+				name: presetName,
+				settings: await loadPresetContent(preset.path, octokit, plugin),
+			});
+		}
+	}
+	return presetList;
+}
+
+export async function loadPresetContent(path: string, octokit: Octokit, plugin: GithubPublisher): Promise<GitHubPublisherSettings> {
+	const presetContent = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+		owner: "ObsidianPublisher",
+		repo: "plugin-presets",
+		path: path,
+	});
+		// @ts-ignore
+	if (!presetContent.data?.content) {
+		return plugin.settings;
+	}
+	// @ts-ignore
+	const presetContentDecoded = atob(presetContent.data.content);
+	return JSON.parse(presetContentDecoded) as unknown as GitHubPublisherSettings;
 }
