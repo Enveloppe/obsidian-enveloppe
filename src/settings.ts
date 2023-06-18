@@ -19,7 +19,7 @@ import {
 } from "./settings/help";
 import "i18next";
 import { checkRepositoryValidity } from "./utils/data_validation_test";
-import { ExportModal, ImportModal } from "./settings/modals/import_export";
+import {ExportModal, ImportLoadPreset, ImportModal, loadAllPresets} from "./settings/modals/import_export";
 import i18next from "i18next";
 import { enumbSettingsTabId } from "./settings/interface";
 import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
@@ -84,6 +84,17 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setClass("github-publisher-import")
 					.onClick(() => {
 						new ImportModal(this.app, this.plugin, this.settingsPage, this).open();
+					});
+			})
+			.addButton((button) => {
+				button
+					.setButtonText(i18next.t("modals.import.presets.title"))
+					.setTooltip(i18next.t("modals.import.presets.desc"))
+					.setClass("github-publisher-add-new-repository")
+					.onClick(async () => {
+						const octokit = await this.plugin.reloadOctokit();
+						const presetLists = await loadAllPresets(octokit.octokit, this.plugin);
+						new ImportLoadPreset(this.app, this.plugin, presetLists, octokit.octokit, this).open();
 					});
 			});
 		const tabBar = containerEl.createEl("nav", {
@@ -213,7 +224,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 		});
 		const tokenSettings = new Setting(this.settingsPage)
-			.setName(i18next.t("settings.github.ghToken.title"))
+			.setName(i18next.t("common.ghToken"))
 			.setDesc(desc_ghToken)
 			.addText(async (text) => {
 				const decryptedToken:string = await this.plugin.loadToken();
@@ -238,6 +249,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.onClick(async () => {
 						const token = await this.plugin.loadToken();
 						new TokenEditPath(this.app, this.plugin, token).open();
+						await this.plugin.saveSettings();
+
 					});
 			});
 		new Setting(this.settingsPage)

@@ -26,5 +26,6 @@ data.json
 
 desktop.ini
 .env
+env
 dist/
 .hotreload

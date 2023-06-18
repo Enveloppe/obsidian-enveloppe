@@ -29,6 +29,15 @@ export function noticeLog(message: any, settings: GitHubPublisherSettings) {
 	}
 }
 
+export function log(...args: unknown[]) {
+	let callFunction = new Error().stack?.split("\n")[2].trim();
+	callFunction = callFunction?.substring(callFunction.indexOf("at ") + 3, callFunction.lastIndexOf(" ("));
+	callFunction = callFunction.replace("Object.callback", "");
+	callFunction = callFunction.length > 0 ? callFunction : "main";
+	const date = new Date().toISOString().slice(11, 23);
+	console.log(`[${date}](${callFunction}):\n`, ...args);
+}
+
 export function createListEdited(listUploaded: UploadedFiles[], deleted: Deleted, fileError: string[]) {
 	const listEdited: ListEditedFiles = {
 		added: [],

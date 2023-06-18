@@ -97,10 +97,6 @@ if (opt.beta) {
 			type: "json",
 		},
 		{
-			filename: "package-lock.json",
-			type: "json",
-		},
-		{
 			filename: "manifest.json",
 			type: "json",
 		}

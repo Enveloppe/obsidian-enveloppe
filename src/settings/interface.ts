@@ -293,3 +293,7 @@ export interface Deleted {
 	undeleted: string[];
 }
 
+export interface Preset {
+	name: string;
+	settings: GitHubPublisherSettings;
+}
