@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.1.0-8...6.1.0) (2023-06-18)
+
+
+### Features
+
+* presets ([49a19c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/49a19c63fd6f0d30c26dd9defa42d153a2daea01))
+
 ### [6.1.16](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.15...6.1.16) (2023-06-08)
 
 ### [6.1.15](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.14...6.1.15) (2023-06-08)
