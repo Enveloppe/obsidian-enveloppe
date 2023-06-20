@@ -1,10 +1,10 @@
-name: Publish Obsidian Plugin
-"on":
+name: Release obsidian plugin
+on:
   workflow_dispatch:
     inputs:
       bump:
         default: false
-        description: "Bump version number based on semantic release"
+        description: "Bump version based on semantic release"
         type: boolean
         required: false
       beta:
@@ -15,33 +15,35 @@ name: Publish Obsidian Plugin
   push:
     tags:
       - "*"
-
 permissions:
   contents: write
 jobs:
   echo:
+    if: ${{ github.env.ACT }}
     runs-on: ubuntu-latest
     steps:
-      - name: Echo
+      - name: echo
         run: |
-          echo "${{ github.event.inputs.bump }}"
-          echo "${{ github.event_name }}"
-  publish:
-    if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && inputs.bump == false)
+          echo ${{ github.event_name }}
+          echo ${{ inputs.beta }}
+          echo ${{ inputs.bump }}
+
+  release:
+    if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && !inputs.bump)
     uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-release.yaml@main
     with:
-      PLUGIN_NAME: "obsidian-mkdocs-publisher"
-      STYLE: true
-      BETA: ${{ inputs.beta }}
+        PLUGIN_NAME: "obsidian-mkdocs-publisher"
+        STYLE: true
+        BETA: ${{ inputs.beta }}
     secrets: 
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  bump:
-    if: ${{ github.event.inputs.bump == true }}
+  bump-version:
+    if: ${{ inputs.bump }}
     uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-bump-version.yaml@main
     with:
-      PLUGIN_NAME: obsidian-mkdocs-publisher
-      STYLE: true
-      BRANCH: "main"
-      BETA: ${{ inputs.beta }}
-    secrets:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PLUGIN_NAME: "obsidian-mkdocs-publisher"
+        STYLE: true
+        BETA: ${{ inputs.beta }}
+    secrets: 
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
