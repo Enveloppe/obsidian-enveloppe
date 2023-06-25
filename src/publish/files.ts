@@ -1,4 +1,4 @@
-import { FrontMatterCache, MetadataCache, TFile, Vault } from "obsidian";
+import {FrontMatterCache, MetadataCache, TFile, TFolder, Vault} from "obsidian";
 import {
 	ConvertedLink,
 	GithubRepo,
@@ -84,6 +84,29 @@ export class FilesManagement extends Publisher {
 			}
 		}
 		return shared_File;
+	}
+	
+	getSharedFileOfFolder(folder: TFolder, repo: Repository | null): TFile[] {
+		const files: TFile[] = [];
+		for (const file of folder.children) {
+			if (file instanceof TFolder) {
+				files.push(... this.getSharedFileOfFolder(file, repo));
+			} else {
+				try {
+					const frontMatter = this.metadataCache.getCache(
+						file.path
+					).frontmatter;
+					if (isShared(frontMatter, this.settings, file as TFile, repo)) {
+						files.push(file as TFile);
+					}
+				} catch {
+					// ignore
+				}
+			}
+		}
+
+		console.log("FILES FOUND : ", files);
+		return files;
 	}
 
 	/**

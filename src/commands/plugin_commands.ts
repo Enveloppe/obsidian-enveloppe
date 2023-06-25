@@ -6,7 +6,7 @@
 import i18next from "i18next";
 import {RepoFrontmatter, Repository} from "../settings/interface";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
-import {createLink, getRepoFrontmatter} from "../utils";
+import {createLink, getAllFilesOfFolder, getRepoFrontmatter} from "../utils";
 import GithubPublisher from "../main";
 import {
 	purgeNotesRemote,
@@ -71,6 +71,7 @@ export async function shareActiveFile(plugin: GithubPublisher, repo: Repository 
 	}
 }
 
+
 /**
  * Command to delete the files
  * @param {GithubPublisher} plugin
@@ -110,11 +111,11 @@ export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository |
 		publisher.octokit,
 		statusBarItems,
 		branchName,
-			getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
-			sharedFiles,
-			true,
-			plugin,
-			repo
+		getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
+		sharedFiles,
+		true,
+		plugin,
+		repo
 	);
 }
 

@@ -47,6 +47,37 @@ export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
 }
 
 /**
+ * Just return the repo data
+ */
+export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
+	plugin: GithubPublisherPlugin;
+	branchName: string;
+	keyToFind: string | null;
+	onSubmit: (item: Repository) => void;
+
+	constructor(app: App, plugin: GithubPublisherPlugin, keyToFind: null|string = null, branchName: string, onSubmit: (item: Repository) => void) {
+		super(app);
+		this.plugin = plugin;
+		this.branchName = branchName;
+		this.keyToFind = keyToFind;
+		this.onSubmit = onSubmit;
+	}
+
+	getItems(): Repository[] {
+		if (this.keyToFind) {
+			return this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.smartKey.includes(this.keyToFind));
+		}
+		return this.plugin.settings.github.otherRepo;
+	}
+	getItemText(item: Repository): string {
+		return item.smartKey;
+	}
+	onChooseItem(item: Repository, evt: MouseEvent | KeyboardEvent): void {
+		this.onSubmit(item);
+	}
+}
+
+/**
  * @description This class call the commands on the chosen repo
  * @extends FuzzySuggestModal
  */

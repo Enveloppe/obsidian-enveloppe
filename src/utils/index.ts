@@ -1,4 +1,4 @@
-import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, Vault} from "obsidian";
+import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, TFolder, Vault} from "obsidian";
 import {
 	Deleted,
 	FolderSettings,
@@ -662,3 +662,4 @@ export function createTokenPath(plugin: GithubPublisher, tokenPath?: string) {
 	tokenPath = tokenPath.replace("%pluginID%", plugin.manifest.id);
 	return tokenPath;
 }
+

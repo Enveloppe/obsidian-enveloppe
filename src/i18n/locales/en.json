@@ -29,7 +29,17 @@
       "title": "Run command for a repository"
     },
     "shareActiveFile": "Upload single current active note",
-    "shareViewFiles": "Upload {{- viewFile}} with Github Publisher",
+    "shareFolder": {
+      "default": "Share {{- folderName}} on {{- user}}/{{- repo}}",
+      "other": "Share {{- folderName}} to selected repo…"
+    },
+    "shareViewFiles": {
+      "default": "Upload {{- viewFile}} with Github Publisher",
+      "multiple": {
+        "on": "Upload {{- viewFile}} on {{- user}}/{{- repo}}",
+        "other": "Upload {{- viewFile}} on selected repo…"
+      }
+    },
     "uploadAllEditedNote": "Refresh all published notes",
     "uploadAllNewEditedNote": "Refresh published and upload new notes",
     "uploadAllNotes": "Upload all shared notes",
