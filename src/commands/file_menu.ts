@@ -1,13 +1,20 @@
 import GithubPublisher from "../main";
 import {Menu, MenuItem, TFile, TFolder} from "obsidian";
-import {ChooseRepoToRun, ChooseWhichRepoToRun} from "./suggest_other_repo_commands_modal";
+import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 import {RepoFrontmatter, Repository} from "../settings/interface";
 import {getRepoSharedKey, isShared} from "../utils/data_validation_test";
 import {shareAllMarkedNotes, shareOneNote} from "./commands";
 import {getRepoFrontmatter} from "../utils";
 import i18next from "i18next";
 
-
+/**
+ * Share the shared file of a folder to a repository
+ * @param {GithubPublisher} plugin - The plugin instance
+ * @param {TFolder} folder - The folder to share
+ * @param {string} branchName - The branch name for the repository
+ * @param {Repository} repo - The repository to share to
+ * @return {Promise<void>}
+ */
 export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchName: string, repo: Repository) {
 	const publisher = await plugin.reloadOctokit();
 	const statusBarItems = plugin.addStatusBarItem();
@@ -25,6 +32,14 @@ export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, 
 	);
 }
 
+/**
+ * Create a submenu if multiple repository are set up
+ * @param {GithubPublisher} plugin - The plugin instance
+ * @param {MenuItem} item - The item to add the submenu to
+ * @param {TFolder} folder - The folder to share
+ * @param {string} branchName - The branch name for the repository
+ * @return {Menu} - The submenu created
+ */
 export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem, folder: TFolder, branchName: string) {
 	//@ts-ignore
 	const subMenu = item.setSubmenu() as Menu;
@@ -63,6 +78,13 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
 	return subMenu;
 }
 
+/**
+ * Create a menu for a shared file
+ * @param {GithubPublisher} plugin - The plugin instance
+ * @param {TFile} file - The file to share
+ * @param {string} branchName - The branch name for the repository
+ * @param {Menu} menu - The menu to add the item to
+ */
 export function fileEditorMenu(plugin: GithubPublisher, file: TFile, branchName: string, menu: Menu) {
 	const frontmatter = file instanceof TFile ? plugin.app.metadataCache.getFileCache(file).frontmatter : null;
 	const getSharedKey = getRepoSharedKey(plugin.settings, frontmatter);
@@ -109,6 +131,15 @@ export function fileEditorMenu(plugin: GithubPublisher, file: TFile, branchName:
 	}
 }
 
+/**
+ * Create a subMenu if multiple repository are set up
+ * @param {GithubPublisher} plugin - The plugin instance
+ * @param {MenuItem} item - The item to add the submenu to
+ * @param {TFile} file - The file to share
+ * @param {string} branchName - The branch name for the repository
+ * @param {Repository} repo - The data repository found in the file
+ * @return {Menu} - The submenu created
+ */
 export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository) {
 	const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file).frontmatter).replace(".md", "");
 	//@ts-ignore
