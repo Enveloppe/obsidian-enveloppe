@@ -1,17 +1,18 @@
-import {FrontMatterCache, Menu, Plugin, TFile} from "obsidian";
+import {FrontMatterCache, Menu, Plugin, TAbstractFile, TFile, TFolder} from "obsidian";
 import {GithubPublisherSettingsTab} from "./settings";
 import {
 	DEFAULT_SETTINGS,
 	GitHubPublisherSettings,
-	GithubTiersVersion,
+	GithubTiersVersion, RepoFrontmatter,
 	Repository,
 } from "./settings/interface";
 import { OldSettings } from "./settings/migrate";
-import {createTokenPath, noticeLog, verifyRateLimitAPI} from "./utils";
+import {createTokenPath, getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from "./utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
 import {getRepoSharedKey, isShared} from "./utils/data_validation_test";
 import {
+	shareAllMarkedNotes,
 	shareOneNote,
 } from "./commands/commands";
 import i18next from "i18next";
@@ -26,6 +27,7 @@ import {
 	uploadAllNotesCallback, uploadAllEditedNotesCallback, shareEditedOnlyCallback,
 	uploadNewNotesCallback, checkRepositoryValidityCallback
 } from "./commands/callback";
+import {addSubMenuCommandsFolder, fileEditorMenu, shareFolderRepo} from "./commands/file_menu";
 
 /**
  * Main class of the plugin
@@ -189,66 +191,49 @@ export default class GithubPublisher extends Plugin {
 		
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
-				const frontmatter = file instanceof TFile ? this.app.metadataCache.getFileCache(file).frontmatter : null;
-				const getSharedKey = getRepoSharedKey(this.settings, frontmatter);
-				if (
-					isShared(frontmatter, this.settings, file, getSharedKey) &&
-					this.settings.plugin.fileMenu
-				) {
-					const fileName = this.getTitleFieldForCommand(file, this.app.metadataCache.getFileCache(file).frontmatter).replace(".md", "");
+				fileEditorMenu(this, file, branchName, menu);
+			})
+		);
+
+
+
+		this.registerEvent(
+			this.app.workspace.on("file-menu", (menu: Menu, folder: TFolder) => {
+				if (this.settings.plugin.fileMenu && folder instanceof TFolder) {
+					menu.addSeparator();
 					menu.addItem((item) => {
-						item.setSection("action");
-						item.setTitle(
-							(i18next.t("commands.shareViewFiles", {viewFile: fileName})))
-							.setIcon("share")
-							.onClick(async () => {
-								await shareOneNote(
-									branchName,
-									await this.reloadOctokit(),
-									this.settings,
-									file,
-									getSharedKey,
-									this.app.metadataCache,
-									this.app.vault
-								);
-							});
+						/**
+						 * Create a submenu if multiple repo exists in the settings
+						 */
+						const areTheyMultipleRepo = this.settings.github?.otherRepo?.length > 0;
+						if (areTheyMultipleRepo) {
+							item.setTitle("Obsidian Publisher");
+							item.setIcon("upload-cloud");
+							item.setSection("action");
+							addSubMenuCommandsFolder(
+								this,
+								item,
+								folder,
+								branchName
+							);
+						} else {
+							item.setSection("action");
+							item.setTitle(i18next.t("commands.shareFolder.default", {user: this.settings.github.user, repo: this.settings.github.repo}))
+								.setIcon("share")
+								.onClick(async () => {
+									const repo = getRepoSharedKey(this.settings, null);
+									await shareFolderRepo(this, folder, branchName, repo);
+								});
+						}
 					});
 					menu.addSeparator();
 				}
-				
 			})
 		);
 		
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor, view) => {
-				const frontmatter = view.file instanceof TFile ? this.app.metadataCache.getFileCache(view.file).frontmatter : null;
-				const otherRepo = getRepoSharedKey(this.settings, frontmatter);
-				if (
-					frontmatter && 
-					isShared(frontmatter, this.settings, view.file, otherRepo) &&
-					this.settings.plugin.editorMenu
-				) {
-					const fileName = this.getTitleFieldForCommand(view.file,this.app.metadataCache.getFileCache(view.file).frontmatter).replace(".md", "");
-					menu.addSeparator();
-					menu.addItem((item) => {
-						item.setSection("mkdocs-publisher");
-						item.setTitle(
-							(i18next.t("commands.shareViewFiles", {viewFile: fileName}))
-						)
-							.setIcon("share")
-							.onClick(async () => {
-								await shareOneNote(
-									branchName,
-									await this.reloadOctokit(),
-									this.settings,
-									view.file,
-									otherRepo,
-									this.app.metadataCache,
-									this.app.vault
-								);
-							});
-					});
-				}
+				fileEditorMenu(this, view.file, branchName, menu);
 			})
 		);
 		await this.chargeAllCommands(null, this, branchName);
