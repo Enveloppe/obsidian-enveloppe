@@ -41,6 +41,7 @@ export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
 	getItemText(item: Repository): string {
 		return item.smartKey;
 	}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	onChooseItem(item: Repository, evt: MouseEvent | KeyboardEvent): void {
 		new SuggestOtherRepoCommandsModal(app, this.plugin, this.branchName, item).open();
 	}
@@ -65,13 +66,14 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 
 	getItems(): Repository[] {
 		if (this.keyToFind) {
-			return this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.smartKey.includes(this.keyToFind));
+			return this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.shareKey == this.keyToFind);
 		}
 		return this.plugin.settings.github.otherRepo;
 	}
 	getItemText(item: Repository): string {
 		return item.smartKey;
 	}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	onChooseItem(item: Repository, evt: MouseEvent | KeyboardEvent): void {
 		this.onSubmit(item);
 	}
@@ -137,6 +139,7 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 	getItemText(item: GithubPublisherCommands): string {
 		return item.name;
 	}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	onChooseItem(item: GithubPublisherCommands, evt: MouseEvent | KeyboardEvent): void {
 		switch (item.commands) {
 		case "shareAllMarkedNotes":

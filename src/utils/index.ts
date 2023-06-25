@@ -1,4 +1,4 @@
-import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, TFolder, Vault} from "obsidian";
+import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, Vault} from "obsidian";
 import {
 	Deleted,
 	FolderSettings,
@@ -29,6 +29,11 @@ export function noticeLog(message: any, settings: GitHubPublisherSettings) {
 	}
 }
 
+/**
+ * Create a debug message for the log
+ * Only display if debug is enabled
+ * @param {unknown[]} args
+ */
 export function log(...args: unknown[]) {
 	let callFunction = new Error().stack?.split("\n")[2].trim();
 	callFunction = callFunction?.substring(callFunction.indexOf("at ") + 3, callFunction.lastIndexOf(" ("));
@@ -38,6 +43,13 @@ export function log(...args: unknown[]) {
 	console.log(`[${date}](${callFunction}):\n`, ...args);
 }
 
+/**
+ * Create the differents list of the modals opened after the upload
+ * @param {UploadedFiles[]} listUploaded
+ * @param {Deleted} deleted
+ * @param {string[]} fileError
+ * @return {ListEditedFiles}
+ */
 export function createListEdited(listUploaded: UploadedFiles[], deleted: Deleted, fileError: string[]) {
 	const listEdited: ListEditedFiles = {
 		added: [],
@@ -231,7 +243,7 @@ async function noticeMessageOneRepo(
 		file instanceof TFile ? "\"" + file.basename + "\"" : file;
 	let successMsg = "";
 	if (file instanceof String) {
-		successMsg = i18next.t("informations.successfullPublish", { nbNotes: noticeValue, repo: repo });
+		successMsg = i18next.t("informations.successfulPublish", { nbNotes: noticeValue, repo: repo });
 	} else {
 		successMsg = i18next.t("informations.successPublishOneNote", { file: noticeValue, repo: repo });
 	}
@@ -653,6 +665,14 @@ export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPubli
 }
 
 
+/**
+ * Convert the variable to their final value:
+ * - %configDir% -> The config directory of the vault
+ * - %pluginID% -> The ID of the plugin
+ * @param {GithubPublisher} plugin - The plugin
+ * @param {string} tokenPath - The path of the token as entered by the user
+ * @return {string} - The final path of the token
+ */
 export function createTokenPath(plugin: GithubPublisher, tokenPath?: string) {
 	const vault = plugin.app.vault;
 	if (!tokenPath) {
