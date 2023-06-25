@@ -1,20 +1,16 @@
-import {FrontMatterCache, Menu, Plugin, TAbstractFile, TFile, TFolder} from "obsidian";
+import {FrontMatterCache, Menu, Plugin, TFile, TFolder} from "obsidian";
 import {GithubPublisherSettingsTab} from "./settings";
 import {
 	DEFAULT_SETTINGS,
 	GitHubPublisherSettings,
-	GithubTiersVersion, RepoFrontmatter,
+	GithubTiersVersion,
 	Repository,
 } from "./settings/interface";
 import { OldSettings } from "./settings/migrate";
-import {createTokenPath, getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from "./utils";
+import {createTokenPath, noticeLog, verifyRateLimitAPI} from "./utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
-import {getRepoSharedKey, isShared} from "./utils/data_validation_test";
-import {
-	shareAllMarkedNotes,
-	shareOneNote,
-} from "./commands/commands";
+import {getRepoSharedKey} from "./utils/data_validation_test";
 import i18next from "i18next";
 import {getTitleField, regexOnFileName} from "./conversion/file_path";
 import { resources, translationLanguage } from "./i18n/i18next";
