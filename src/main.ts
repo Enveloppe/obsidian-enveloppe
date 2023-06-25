@@ -214,7 +214,7 @@ export default class GithubPublisher extends Plugin {
 							);
 						} else {
 							item.setSection("action");
-							item.setTitle(i18next.t("commands.shareFolder.default", {user: this.settings.github.user, repo: this.settings.github.repo}))
+							item.setTitle(i18next.t("commands.shareFolder.default", {user: this.settings.github.user, repo: this.settings.github.repo, folderName: folder.name}))
 								.setIcon("share")
 								.onClick(async () => {
 									const repo = getRepoSharedKey(this.settings, null);
