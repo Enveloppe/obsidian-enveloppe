@@ -133,6 +133,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		this.renderSettingsPage("github-configuration");
 	}
 
+	/**
+	 * Render the settings tab
+	 * @param {string} tabId - to know which tab to render
+	 */
 	renderSettingsPage(tabId: string) {
 		this.settingsPage.empty();
 		switch (tabId) {
@@ -157,6 +161,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		}
 	}
 
+	/**
+	 * Render the github configuration tab
+	 * @returns {void}
+	 */
 	renderGithubConfiguration() {
 		const githubSettings = this.plugin.settings.github;
 		new Setting(this.settingsPage)
@@ -342,6 +350,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 	}
 
+	/**
+	 * Render the settings tab for the upload configuration
+	 */
 	renderUploadConfiguration() {
 		const uploadSettings = this.plugin.settings.upload;
 		new Setting(this.settingsPage)
@@ -583,6 +594,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 	}
 
+	/**
+	 * Render the settings page for the text conversion parameters
+	 * @returns {void}
+	 */
 	renderTextConversion() {
 		const textSettings = this.plugin.settings.conversion;
 		this.settingsPage.createEl("p", {
@@ -750,6 +765,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		}
 	}
 
+	/**
+	 * Render the settings page for the embeds settings
+	 */
 	renderEmbedConfiguration() {
 		const embedSettings = this.plugin.settings.embed;
 		new Setting(this.settingsPage)
@@ -813,6 +831,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		
 	}
 
+	/**
+	 * Render the settings page for the plugin settings (general settings, as shareKey)
+	 */
 	renderPluginSettings() {
 		const pluginSettings = this.plugin.settings.plugin;
 		new Setting(this.settingsPage)
@@ -940,6 +961,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					})
 			);
 	}
+
+	/**
+	 * Render the help page
+	 */
 	renderHelp() {
 		this.settingsPage.createEl("h2", {
 			text: i18next.t("settings.help.usefulLinks.title") ,

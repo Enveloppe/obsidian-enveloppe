@@ -98,7 +98,12 @@ export function isAttachment(filename: string) {
 	);
 }
 
-
+/**
+ * Check if a target Repository === source Repository
+ * @param {RepoFrontmatter | RepoFrontmatter[]} source
+ * @param {RepoFrontmatter | RepoFrontmatter[]} target
+ * @return {boolean} if they are the same
+ */
 export function checkIfRepoIsInAnother(
 	source: RepoFrontmatter | RepoFrontmatter[],
 	target: RepoFrontmatter | RepoFrontmatter[]
@@ -138,7 +143,13 @@ export function checkIfRepoIsInAnother(
 	return false;
 }
 
-
+/**
+ * Verify if the Repository configuration is not empty
+ * Permit to send a special notice for each empty configuration
+ * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter the repoFrontmatter to check
+ * @param {GithubPublisher} plugin the plugin instance
+ * @return {Promise<boolean>}
+ */
 export async function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoFrontmatter[], plugin: GithubPublisher) {
 	repoFrontmatter = Array.isArray(repoFrontmatter)
 		? repoFrontmatter
@@ -173,6 +184,11 @@ export async function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter |
 	return !allInvalid;
 }
 
+/**
+ * Verify if the text need to bee converted or not
+ * @param {FrontmatterConvert} conditionConvert The frontmatter option to check
+ * @return {boolean} if the text need to be converted
+ */
 export function noTextConversion(conditionConvert: FrontmatterConvert) {
 	const convertWikilink = conditionConvert.convertWiki;
 	const imageSettings = conditionConvert.attachment;
@@ -215,6 +231,14 @@ export async function checkRepositoryValidity(
 	}
 }
 
+/**
+ * Check the validity of the repository settings, from the frontmatter of the file or from the settings of the plugin
+ * @param {GithubBranch} PublisherManager
+ * @param {GitHubPublisherSettings} settings
+ * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter
+ * @param {number} numberOfFile
+ * @return {Promise<boolean>}
+ */
 export async function checkRepositoryValidityWithRepoFrontmatter(
 	PublisherManager: GithubBranch,
 	settings: GitHubPublisherSettings,

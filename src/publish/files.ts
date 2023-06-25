@@ -14,7 +14,7 @@ import {
 } from "../conversion/file_path";
 import Publisher from "./upload";
 import GithubPublisher from "../main";
-import { getRepoFrontmatter, noticeLog } from "../utils";
+import {getRepoFrontmatter, log, noticeLog} from "../utils";
 import { isAttachment, isShared } from "../utils/data_validation_test";
 import { getAPI, Link } from "obsidian-dataview";
 
@@ -85,7 +85,13 @@ export class FilesManagement extends Publisher {
 		}
 		return shared_File;
 	}
-	
+
+	/**
+	 * Get all shared files in a specified TFolder
+	 * @param {TFolder} folder The folder to scan
+	 * @param {Repository | null} repo The repository
+	 * @return {TFile[]} The shared files
+	 */
 	getSharedFileOfFolder(folder: TFolder, repo: Repository | null): TFile[] {
 		const files: TFile[] = [];
 		for (const file of folder.children) {
@@ -105,7 +111,7 @@ export class FilesManagement extends Publisher {
 			}
 		}
 
-		console.log("FILES FOUND : ", files);
+		log(files);
 		return files;
 	}
 
