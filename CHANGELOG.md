@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.2.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.1.0...6.2.0) (2023-06-25)
+
+
+### Features
+
+* share a folder ([effceec](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/effceec2aceb0ff5a92e3d0c36a4c4ae7683c74b))
+* subMenu if multiple repo ([f5861e3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f5861e3fb2fb75de2bf9454c1a05a0aca63e3f99))
+
+
+### Bug Fixes
+
+* **menu:** forgot one key in translation ([f6935d7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f6935d7c41b5df1e170a439f68440b5d64c59e02))
+* remove deleted function ([e9a89c4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e9a89c48b2ef304a92e2be548a9940c7130e5dd7))
+* **subMenuFile:** wrong key set ([023ada4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/023ada4fd7315f9a041f60810eea9d54c04ae094))
+
 ## [6.1.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.1.0-8...6.1.0) (2023-06-18)
 
 
