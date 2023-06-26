@@ -27,14 +27,33 @@ jobs:
           echo ${{ github.event_name }}
           echo ${{ inputs.beta }}
           echo ${{ inputs.bump }}
-
+  get-version:
+    runs-on: ubuntu-latest
+    if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && !inputs.bump)
+    outputs:
+      beta: ${{ steps.get-beta.outputs.beta }}
+    steps:
+      - name: Node init
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Get version
+        id: get-beta
+        run: |
+          $version = $(node -p "require('./package.json').version")
+          if [[ $version == *"-"* ]]; then
+            echo "beta=true" >> $GITHUB_OUTPUT
+          else
+            echo "beta=false" >> $GITHUB_OUTPUT
+          fi
   release:
     if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && !inputs.bump)
+    needs: get-version
     uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-release.yaml@main
     with:
         PLUGIN_NAME: "obsidian-mkdocs-publisher"
         STYLE: true
-        BETA: ${{ inputs.beta }}
+        BETA: ${{ needs.get-version.outputs.beta }}
     secrets: 
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   bump-version-and-release:
