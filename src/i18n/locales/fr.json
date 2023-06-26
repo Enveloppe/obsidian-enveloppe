@@ -29,15 +29,11 @@
       "title": "Lancer une commande pour un dépôt"
     },
     "shareActiveFile": "Transférer la note active",
-    "shareFolder": {
-      "default": "Transférer {{- folderName}} sur {{- user}}/{{- repo}}",
-      "other": "Transférer {{- folderName}} dans le dépôt sélectionné…"
-    },
     "shareViewFiles": {
       "default": "Transférer {{- viewFile}} avec Github Publisher",
       "multiple": {
-        "on": "Transférer {{- viewFile}} sur on {{- user}}/{{- repo}}",
-        "other": "Transférer {{- viewFile}} dans le dépôt sélectionné…"
+        "on": "Transférer {{- viewFile}} dans {{- user}}/{{- repo}}",
+        "other": "Transférer {{- viewFile}} dans…"
       }
     },
     "uploadAllEditedNote": "Rafraîchir toutes les notes publiées",

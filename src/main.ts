@@ -191,12 +191,9 @@ export default class GithubPublisher extends Plugin {
 			})
 		);
 
-
-
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, folder: TFolder) => {
 				if (this.settings.plugin.fileMenu && folder instanceof TFolder) {
-					menu.addSeparator();
 					menu.addItem((item) => {
 						/**
 						 * Create a submenu if multiple repo exists in the settings
@@ -214,15 +211,14 @@ export default class GithubPublisher extends Plugin {
 							);
 						} else {
 							item.setSection("action");
-							item.setTitle(i18next.t("commands.shareFolder.default", {user: this.settings.github.user, repo: this.settings.github.repo, folderName: folder.name}))
-								.setIcon("share")
+							item.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {user: this.settings.github.user, repo: this.settings.github.repo, viewFile: folder.name}))
+								.setIcon("folder-up")
 								.onClick(async () => {
 									const repo = getRepoSharedKey(this.settings, null);
 									await shareFolderRepo(this, folder, branchName, repo);
 								});
 						}
 					});
-					menu.addSeparator();
 				}
 			})
 		);
