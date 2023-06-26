@@ -32,7 +32,7 @@
 		"shareViewFiles": {
 			"default": "Github Publisher: Upload {{- viewFile}}",
 			"multiple": {
-				"on": "Upload to {{- smartKey }}",
+				"on": "Upload {{- doc}} to {{- smartKey }}",
 				"other": "Upload to…"
 			}
 		},
