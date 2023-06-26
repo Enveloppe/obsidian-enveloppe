@@ -23,7 +23,7 @@ import {
 	uploadAllNotesCallback, uploadAllEditedNotesCallback, shareEditedOnlyCallback,
 	uploadNewNotesCallback, checkRepositoryValidityCallback
 } from "./commands/callback";
-import {addSubMenuCommandsFolder, fileEditorMenu, shareFolderRepo} from "./commands/file_menu";
+import {addSubMenuCommandsFolder, addMenuFile, shareFolderRepo, addMenuFolder} from "./commands/file_menu";
 
 /**
  * Main class of the plugin
@@ -187,45 +187,21 @@ export default class GithubPublisher extends Plugin {
 		
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
-				fileEditorMenu(this, file, branchName, menu);
+				addMenuFile(this, file, branchName, menu);
 			})
 		);
 
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, folder: TFolder) => {
 				if (this.settings.plugin.fileMenu && folder instanceof TFolder) {
-					menu.addItem((item) => {
-						/**
-						 * Create a submenu if multiple repo exists in the settings
-						 */
-						const areTheyMultipleRepo = this.settings.github?.otherRepo?.length > 0;
-						if (areTheyMultipleRepo) {
-							item.setTitle("Obsidian Publisher");
-							item.setIcon("upload-cloud");
-							item.setSection("action");
-							addSubMenuCommandsFolder(
-								this,
-								item,
-								folder,
-								branchName
-							);
-						} else {
-							item.setSection("action");
-							item.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {user: this.settings.github.user, repo: this.settings.github.repo, viewFile: folder.name}))
-								.setIcon("folder-up")
-								.onClick(async () => {
-									const repo = getRepoSharedKey(this.settings, null);
-									await shareFolderRepo(this, folder, branchName, repo);
-								});
-						}
-					});
+					addMenuFolder(menu, folder, branchName, this);
 				}
 			})
 		);
 		
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor, view) => {
-				fileEditorMenu(this, view.file, branchName, menu);
+				addMenuFile(this, view.file, branchName, menu);
 			})
 		);
 		await this.chargeAllCommands(null, this, branchName);

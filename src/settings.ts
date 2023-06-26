@@ -913,9 +913,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						});
 				});
 			new Setting(this.settingsPage)
-				.setName(i18next.t("settings.plugin.copyLink.linkpathremover.title"))
+				.setName(i18next.t("settings.plugin.copyLink.linkPathRemover.title"))
 				.setDesc(
-					i18next.t("settings.plugin.copyLink.linkpathremover.desc") 
+					i18next.t("settings.plugin.copyLink.linkPathRemover.desc") 
 				)
 				.setClass("github-publisher")
 				.addText((text) => {
