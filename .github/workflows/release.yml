@@ -19,14 +19,14 @@ permissions:
   contents: write
 jobs:
   echo:
-    if: ${{ github.env.ACT }}
+    if: ${{ github.event.ACT }}
     runs-on: ubuntu-latest
     steps:
       - name: echo
         run: |
-          echo ${{ github.event_name }}
-          echo ${{ inputs.beta }}
-          echo ${{ inputs.bump }}
+          echo EVENT NAME =  ${{ github.event_name }}
+          echo BETA = ${{ inputs.beta || false}}
+          echo BUMP = ${{ inputs.bump || false}}
   release:
     if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && !inputs.bump)
     uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-release.yaml@main
