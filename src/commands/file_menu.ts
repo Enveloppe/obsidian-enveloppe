@@ -106,7 +106,6 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 			if (plugin.settings.github?.otherRepo?.length > 0) {
 				item
 					.setTitle("Github Publisher")
-					.setSection("action")
 					.setIcon("upload-cloud");
 				subMenuCommandsFile(
 					plugin,
@@ -118,7 +117,6 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 			} else {
 				const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file).frontmatter).replace(".md", "");
 				item
-					.setSection("action")
 					.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
 						doc: fileName,
 						smartKey: i18next.t("common.default").toUpperCase()
@@ -231,7 +229,6 @@ export async function addMenuFolder(menu: Menu, folder: TFolder, branchName: str
 		if (areTheyMultipleRepo) {
 			item.setTitle("Github Publisher");
 			item.setIcon("upload-cloud");
-			item.setSection("action");
 			addSubMenuCommandsFolder(
 				plugin,
 				item,
