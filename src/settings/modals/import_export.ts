@@ -187,6 +187,7 @@ export class ExportModal extends Modal {
 		delete censuredSettings.github.user;
 		delete censuredSettings.plugin;
 		delete censuredSettings.github.otherRepo;
+		delete censuredSettings.github.rateLimit;
 		return censuredSettings;
 	}
 
@@ -307,6 +308,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 			this.plugin.settings.github.repo = original.github.repo;
 			this.plugin.settings.github.user = original.github.user;
 			this.plugin.settings.github.otherRepo = original.github.otherRepo;
+			this.plugin.settings.github.rateLimit = original.github.rateLimit;
 			this.plugin.saveSettings();
 			this.page.renderSettingsPage("github-configuration");
 
