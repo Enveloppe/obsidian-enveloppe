@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.2.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.2.3...6.2.4) (2023-07-01)
+
+
+### Bug Fixes
+
+* **rateLimit:** check ratelimit only on command or if number file > 25 ([7590eeb](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7590eebd8cfa394367fff68ab6680aafc00a87d9))
+
 ### [6.2.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.2.2...6.2.3) (2023-07-01)
 
 
