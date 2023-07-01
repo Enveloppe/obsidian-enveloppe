@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.2.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.2.2...6.2.3) (2023-07-01)
+
+
+### Bug Fixes
+
+* **regex:** Backslash for regex patterns rejection ([283b67e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/283b67e294d0aedccd63609a9ef7599988ce1ce1)), closes [#172](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/172)
+* **title:** the file.basename was used instead of title field, leading to confusion ([d351d14](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d351d146baba562032f74309a2ea129f484b663c))
+
 ### [6.2.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.2.1...6.2.2) (2023-06-26)
 
 ### [6.2.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.2.0...6.2.1) (2023-06-26)
