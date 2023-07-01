@@ -445,7 +445,7 @@ export default class Publisher {
 			}
 		} catch {
 			noticeLog(
-				"The 404 error is normal ! It means that the file does not exist yet. Don't worry ❤️.",
+				i18next.t("error.normal"),
 				this.settings
 			);
 		}

@@ -3,6 +3,7 @@ import {App, Modal, Notice, Setting} from "obsidian";
 import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../interface";
 import {checkRepositoryValidity} from "../../utils/data_validation_test";
 import GithubPublisherPlugin from "../../main";
+import {verifyRateLimitAPI} from "../../utils";
 
 /**
  * @description This class is used to add a new repo to the settings in the "otherRepo" in the github setting section
@@ -254,12 +255,14 @@ class ModalEditingRepository extends Modal {
 					.setButtonText(i18next.t("settings.github.testConnection"))
 					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
-						await checkRepositoryValidity(
-							await this.plugin.reloadOctokit(), 
+						const octokit = await this.plugin.reloadOctokit();
+						this.repository.verifiedRepo = await checkRepositoryValidity(
+							octokit,
 							this.plugin.settings, 
 							this.repository, 
 							null, 
 							this.app.metadataCache);
+						this.plugin.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.plugin.settings);
 					})
 			);
 		new Setting(contentEl)
@@ -338,9 +341,9 @@ class ModalEditingRepository extends Modal {
 				);
 
 			new Setting(contentEl)
-				.setName(i18next.t("settings.plugin.copyLink.linkpathremover.title"))
+				.setName(i18next.t("settings.plugin.copyLink.linkPathRemover.title"))
 				.setDesc(
-					i18next.t("settings.plugin.copyLink.linkpathremover.desc")
+					i18next.t("settings.plugin.copyLink.linkPathRemover.desc")
 				)
 				.setClass("github-publisher")
 				.addText((text) => {

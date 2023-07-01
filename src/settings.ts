@@ -25,6 +25,7 @@ import { enumbSettingsTabId } from "./settings/interface";
 import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
 import { migrateToken } from "./settings/migrate";
 import { TokenEditPath } from "./settings/modals/token_path";
+import {verifyRateLimitAPI} from "./utils";
 
 
 export class GithubPublisherSettingsTab extends PluginSettingTab {
@@ -293,7 +294,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
 						const octokit = await this.plugin.reloadOctokit();
-						await checkRepositoryValidity(octokit, this.plugin.settings, null,null, this.app.metadataCache);
+						this.plugin.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, this.plugin.settings, null,null, this.app.metadataCache);
+						this.plugin.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.plugin.settings);
+						await this.plugin.saveSettings();
 					})
 			)
 			.addButton((button) =>

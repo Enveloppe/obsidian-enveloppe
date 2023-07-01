@@ -413,7 +413,8 @@ export function getRepoFrontmatter(
 		autoclean: settings.upload.autoclean.enable,
 		workflowName: github.workflow.name,
 		commitMsg: github.workflow.commitMessage,
-		automaticallyMergePR: github.automaticallyMergePR
+		automaticallyMergePR: github.automaticallyMergePR,
+		verifiedRepo: github.verifiedRepo ?? false,
 	};
 	if (settings.upload.behavior === FolderSettings.fixed) {
 		repoFrontmatter.autoclean = false;
@@ -640,7 +641,7 @@ export function getCategory(frontmatter: FrontMatterCache, settings: GitHubPubli
 	 * If the user is over the limit, the function will display a message to the user.
 	 * It also calculate the time remaining before the limit is reset.
 	 */
-export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPublisherSettings, commands=false, numberOfFile=1): Promise<boolean> {
+export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPublisherSettings, commands=false, numberOfFile=1): Promise<number> {
 	const rateLimit = await octokit.request("GET /rate_limit");
 	const remaining = rateLimit.data.resources.core.remaining;
 	const reset = rateLimit.data.resources.core.reset;
@@ -648,7 +649,7 @@ export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPubli
 	const time = date.toLocaleTimeString();
 	if (remaining <= numberOfFile) {
 		new Notice(i18next.t("commands.checkValidity.rateLimit.limited", {resetTime: time}));
-		return false;
+		return 0;
 	}
 	if (!commands) {
 		noticeLog(i18next.t("commands.checkValidity.rateLimit.notLimited", {
@@ -661,7 +662,7 @@ export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPubli
 			resetTime: time
 		}));
 	}
-	return true;
+	return remaining;
 }
 
 

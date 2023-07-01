@@ -28,6 +28,7 @@ export interface Repository {
 	repo: string;
 	branch: string;
 	automaticallyMergePR: boolean;
+	verifiedRepo?: boolean;
 	api: {
 		tiersForApi: GithubTiersVersion;
 		hostname: string;
@@ -61,6 +62,8 @@ export interface GitHubPublisherSettings {
 			name: string;
 		},
 		otherRepo: Repository[];
+		verifiedRepo?: boolean;
+		rateLimit: number;
 	}
 	upload: {
 		behavior: FolderSettings;
@@ -158,6 +161,8 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 			name: "",
 		},
 		otherRepo: [],
+		verifiedRepo: false,
+		rateLimit: 0,
 	},
 	upload: {
 		behavior: FolderSettings.fixed,
@@ -272,6 +277,7 @@ export interface RepoFrontmatter {
 	workflowName: string;
 	commitMsg: string;
 	automaticallyMergePR: boolean;
+	verifiedRepo?: boolean;
 }
 
 export interface ListEditedFiles {

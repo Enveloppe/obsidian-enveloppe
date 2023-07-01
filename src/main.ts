@@ -211,7 +211,7 @@ export default class GithubPublisher extends Plugin {
 			name: i18next.t("commands.checkValidity.rateLimit.command"),
 			callback: async () => {
 				const octokit = await this.reloadOctokit();
-				await verifyRateLimitAPI(octokit.octokit, this.settings);
+				this.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.settings);
 			}
 		});
 

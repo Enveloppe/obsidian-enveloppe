@@ -217,17 +217,19 @@ export async function checkRepositoryValidity(
 	settings: GitHubPublisherSettings,
 	repository: Repository | null = null,
 	file: TFile | null,
-	metadataCache: MetadataCache): Promise<void> {
+	metadataCache: MetadataCache): Promise<boolean> {
 	try {
 		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : null;
 		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
 		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, false);
+			return true;
 		}
 	}
 	catch (e) {
 		noticeLog(e, settings);
+		return false;
 	}
 }
 
@@ -246,10 +248,25 @@ export async function checkRepositoryValidityWithRepoFrontmatter(
 	numberOfFile=1
 ): Promise<boolean> {
 	try {
+		/**
+		 * verify for each repoFrontmatter if verifiedRepo is true
+		 */
+		let verified = false;
+		if (repoFrontmatter instanceof Array) {
+			verified = repoFrontmatter.every((repo) => {
+				return repo.verifiedRepo;
+			});
+		} else if (repoFrontmatter.verifiedRepo) {
+			verified = true;
+		}
+		if (verified && settings.github.rateLimit > 0) return true;
 		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, true);
-			return await verifyRateLimitAPI(PublisherManager.octokit, settings, false, numberOfFile);
+			if (settings.github.rateLimit === 0 || numberOfFile > 20) {
+				return await verifyRateLimitAPI(PublisherManager.octokit, settings, false, numberOfFile) > 0;
+			}
+			return true;
 		}
 	}
 	catch (e) {
