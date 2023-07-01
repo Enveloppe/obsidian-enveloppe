@@ -130,7 +130,8 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 							file,
 							getSharedKey,
 							plugin.app.metadataCache,
-							plugin.app.vault
+							plugin.app.vault,
+							fileName
 						);
 					});
 			}
@@ -168,7 +169,8 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 						file,
 						repo,
 						plugin.app.metadataCache,
-						plugin.app.vault
+						plugin.app.vault,
+						fileName
 					);
 				});
 		});
@@ -192,7 +194,8 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 								file,
 								otherRepo,
 								plugin.app.metadataCache,
-								plugin.app.vault
+								plugin.app.vault,
+								fileName
 							);
 						});
 				});
@@ -212,7 +215,8 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 						file,
 						item,
 						plugin.app.metadataCache,
-						plugin.app.vault
+						plugin.app.vault,
+						fileName
 					);
 				}).open();
 			});

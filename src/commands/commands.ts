@@ -180,6 +180,7 @@ export async function purgeNotesRemote(
  * @param repository
  * @param {MetadataCache} metadataCache
  * @param {Vault} vault
+ * @param {string} title The title from frontmatter + regex (if any)
  * @return {Promise<void>}
  */
 export async function shareOneNote(
@@ -189,7 +190,8 @@ export async function shareOneNote(
 	file: TFile,
 	repository: Repository | null = null,
 	metadataCache: MetadataCache,
-	vault: Vault
+	vault: Vault,
+	title?: string,
 ) {
 	try {
 		const frontmatter = metadataCache.getFileCache(file).frontmatter;
@@ -230,7 +232,7 @@ export async function shareOneNote(
 			if (update) {
 				await noticeMessage(
 					PublisherManager,
-					file,
+					title,
 					settings,
 					repoFrontmatter
 				);
