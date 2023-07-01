@@ -28,6 +28,7 @@ export class ModalRegexFilePathName extends Modal {
 	}
 
 	forbiddenValue(value: string, type: TypeOfEditRegex): (string|boolean)[] {
+		const regexSpecialDontExclude = /\/(.*)(\\[dwstrnvfb0cxup])(.*)\//i;
 		let onWhat = type === TypeOfEditRegex.path ? i18next.t("common.path.folder") : i18next.t("common.path.file");
 		onWhat = onWhat.toLowerCase();
 		let isForbidden = false;
@@ -37,7 +38,7 @@ export class ModalRegexFilePathName extends Modal {
 			isForbidden = true;
 		}
 		else if (
-			(value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)) && (type === TypeOfEditRegex.title)
+			(value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)) && (type === TypeOfEditRegex.title) && !(value.match(regexSpecialDontExclude))
 		) {
 			new Notice(i18next.t("settings.regexReplacing.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)[0]}));
 			value = "";
@@ -47,7 +48,7 @@ export class ModalRegexFilePathName extends Modal {
 				new Notice(i18next.t("settings.regexReplacing.forbiddenValue", { what: onWhat, forbiddenChar: value.match(/[\\><:"|?*]/)[0]}));
 				value = "";
 				isForbidden = true;
-			} else if (value.match(/(^\w+\/\w+)|(\\\/)/)) {
+			} else if (value.match(/(^\w+\/\w+)|(\\\/)/) && !(value.match(regexSpecialDontExclude))) {
 				new Notice(i18next.t("settings.regexReplacing.warningPath"));
 			}
 		}
