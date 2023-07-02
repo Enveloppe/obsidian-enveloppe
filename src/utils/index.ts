@@ -60,9 +60,9 @@ export function createListEdited(listUploaded: UploadedFiles[], deleted: Deleted
 	};
 	listUploaded.forEach((file) => {
 		if (file.isUpdated) {
-			listEdited.added.push(file.file);
-		} else {
 			listEdited.edited.push(file.file);
+		} else {
+			listEdited.added.push(file.file);
 		}
 	});
 	listEdited.unpublished = fileError;
