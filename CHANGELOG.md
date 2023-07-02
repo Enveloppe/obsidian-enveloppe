@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.2.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.2.4...6.2.5) (2023-07-02)
+
+
+### Bug Fixes
+
+* **listChanged:** wrong display of changed file ([2bf3c9e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2bf3c9e261a3bd5264936b1ff9e0d25d3b6798a2)), closes [#173](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/173)
+
 ### [6.2.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.2.3...6.2.4) (2023-07-01)
 
 
