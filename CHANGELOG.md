@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.3.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.2.5...6.3.0) (2023-07-07)
+
+
+### Features
+
+* Add repository validity check and rate limit verification ([f0e60d2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f0e60d27032cad9427822397b109afccf45a3da1))
+
 ### [6.2.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.2.4...6.2.5) (2023-07-02)
 
 
