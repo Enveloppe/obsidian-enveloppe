@@ -249,7 +249,7 @@ async function noticeMessageOneRepo(
 	}
 	if (settings.github.workflow.name.length > 0) {
 		const msg = i18next.t("informations.sendMessage", {nbNotes: noticeValue, repo: repo}) + ".\n" + i18next.t("informations.waitingWorkflow");
-		new Notice(msg);		
+		new Notice(msg);
 		const successWorkflow = await PublisherManager.workflowGestion(repo);
 		if (successWorkflow) {
 			new Notice(successMsg);

@@ -196,7 +196,7 @@ export async function shareOneNote(
 	try {
 		const frontmatter = metadataCache.getFileCache(file).frontmatter;
 		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
-		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, settings, repoFrontmatter);
+		const isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, settings, repoFrontmatter);
 		if (!isValid) return false;
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
 		const publishSuccess = await PublisherManager.publish(

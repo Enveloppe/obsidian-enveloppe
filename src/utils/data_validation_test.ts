@@ -1,7 +1,7 @@
 import {FrontMatterCache, Notice, TFile, MetadataCache } from "obsidian";
 import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter, Repository} from "../settings/interface";
 import {GithubBranch} from "../publish/branch";
-import {getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from ".";
+import {getRepoFrontmatter, log, noticeLog, verifyRateLimitAPI} from ".";
 import i18next from "i18next";
 import GithubPublisher from "src/main";
 
@@ -150,7 +150,7 @@ export function checkIfRepoIsInAnother(
  * @param {GithubPublisher} plugin the plugin instance
  * @return {Promise<boolean>}
  */
-export async function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoFrontmatter[], plugin: GithubPublisher) {
+export async function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoFrontmatter[], plugin: GithubPublisher): Promise<boolean> {
 	repoFrontmatter = Array.isArray(repoFrontmatter)
 		? repoFrontmatter
 		: [repoFrontmatter];
@@ -260,7 +260,7 @@ export async function checkRepositoryValidityWithRepoFrontmatter(
 			verified = true;
 		}
 		if (verified && settings.github.rateLimit > 0) return true;
-		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin);
+		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, true);
 			if (settings.github.rateLimit === 0 || numberOfFile > 20) {

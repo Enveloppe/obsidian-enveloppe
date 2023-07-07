@@ -241,7 +241,7 @@ export async function checkRepositoryValidityCallback(plugin: GithubPublisher, r
 			if (plugin.app.workspace.getActiveFile())
 			{
 				if (!checking) {
-					checkRepositoryValidity(
+					await checkRepositoryValidity(
 						await plugin.reloadOctokit(),
 						plugin.settings,
 						repo,

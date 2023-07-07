@@ -9,7 +9,7 @@ import {
 } from "../settings/interface";
 import { FilesManagement } from "./files";
 import { Base64 } from "js-base64";
-import {noticeLog, trimObject, verifyRateLimitAPI } from "../utils";
+import {log, noticeLog, trimObject, verifyRateLimitAPI} from "../utils";
 import {isAttachment} from "../utils/data_validation_test";
 import i18next from "i18next";
 
@@ -80,7 +80,7 @@ async function deleteFromGithubOneRepo(
 		repo
 	);
 	const filesInRepo = await filterGithubFile(getAllFile, settings);
-	if (settings.github.rateLimit === 0 || filesInRepo.length > 25) {
+	if (settings.github.rateLimit === 0 || filesInRepo.length > settings.github.rateLimit) {
 		if (await verifyRateLimitAPI(octokit, settings, false, filesInRepo.length) === 0) {
 			return {success: false, deleted: [], undeleted: []};
 		}

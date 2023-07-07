@@ -128,7 +128,7 @@ export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository |
  * @return {Promise<void>}
  */
 
-export async function uploadNewNotes(plugin: GithubPublisher, branchName: string, repo: Repository|null) {
+export async function uploadNewNotes(plugin: GithubPublisher, branchName: string, repo: Repository|null): Promise<void> {
 	const publisher = await plugin.reloadOctokit();
 	await shareNewNote(
 		publisher,
@@ -149,7 +149,7 @@ export async function uploadNewNotes(plugin: GithubPublisher, branchName: string
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @return {Promise<void>}
  */
-export async function repositoryValidityActiveFile(plugin:GithubPublisher, branchName: string, repo: Repository | null) {
+export async function repositoryValidityActiveFile(plugin:GithubPublisher, branchName: string, repo: Repository | null): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	if (file) {
 		await checkRepositoryValidity(
