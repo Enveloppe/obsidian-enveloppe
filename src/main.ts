@@ -10,7 +10,7 @@ import { OldSettings } from "./settings/migrate";
 import {createTokenPath, noticeLog, verifyRateLimitAPI} from "./utils";
 import {GithubBranch} from "./publish/branch";
 import {Octokit} from "@octokit/core";
-import {getRepoSharedKey} from "./utils/data_validation_test";
+import {checkRepositoryValidity, getRepoSharedKey} from "./utils/data_validation_test";
 import i18next from "i18next";
 import {getTitleField, regexOnFileName} from "./conversion/file_path";
 import { resources, translationLanguage } from "./i18n/i18next";
@@ -175,6 +175,7 @@ export default class GithubPublisher extends Plugin {
 		});
 		
 		await this.loadSettings();
+
 		
 		const oldSettings = this.settings;
 		await migrateSettings(oldSettings as unknown as OldSettings, this);
@@ -184,7 +185,13 @@ export default class GithubPublisher extends Plugin {
 			"-" +
 			new Date().toLocaleDateString("en-US").replace(/\//g, "-");
 		this.addSettingTab(new GithubPublisherSettingsTab(this.app, this, branchName));
-		
+		// verify rate limit
+		const octokit = await this.reloadOctokit();
+		if (!this.settings.github.verifiedRepo) {
+			this.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, this.settings, null, null, this.app.metadataCache);
+			this.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.settings);
+			await this.saveSettings();
+		}
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
 				addMenuFile(this, file, branchName, menu);
@@ -212,6 +219,7 @@ export default class GithubPublisher extends Plugin {
 			callback: async () => {
 				const octokit = await this.reloadOctokit();
 				this.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.settings);
+				await this.saveSettings();
 			}
 		});
 
