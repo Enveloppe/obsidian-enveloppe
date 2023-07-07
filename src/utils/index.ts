@@ -245,6 +245,7 @@ async function noticeMessageOneRepo(
 	if (file instanceof String) {
 		successMsg = i18next.t("informations.successfulPublish", { nbNotes: noticeValue, repo: repo });
 	} else {
+		log("file published :", noticeValue);
 		successMsg = i18next.t("informations.successPublishOneNote", { file: noticeValue, repo: repo });
 	}
 	if (settings.github.workflow.name.length > 0) {
