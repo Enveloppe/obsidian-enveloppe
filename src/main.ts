@@ -186,10 +186,11 @@ export default class GithubPublisher extends Plugin {
 			new Date().toLocaleDateString("en-US").replace(/\//g, "-");
 		this.addSettingTab(new GithubPublisherSettingsTab(this.app, this, branchName));
 		// verify rate limit
-		const octokit = await this.reloadOctokit();
-		if (!this.settings.github.verifiedRepo) {
-			this.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, this.settings, null, null, this.app.metadataCache);
-			this.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.settings);
+
+		if (!this.settings.github.verifiedRepo && (await this.loadToken()) !== "") {
+			const octokit = await this.reloadOctokit();
+			this.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, this.settings, null, null, this.app.metadataCache, true);
+			this.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.settings, false);
 			await this.saveSettings();
 		}
 		this.registerEvent(

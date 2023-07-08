@@ -148,9 +148,10 @@ export function checkIfRepoIsInAnother(
  * Permit to send a special notice for each empty configuration
  * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter the repoFrontmatter to check
  * @param {GithubPublisher} plugin the plugin instance
+ * @param silent
  * @return {Promise<boolean>}
  */
-export async function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoFrontmatter[], plugin: GithubPublisher): Promise<boolean> {
+export async function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoFrontmatter[], plugin: GithubPublisher, silent= false): Promise<boolean> {
 	repoFrontmatter = Array.isArray(repoFrontmatter)
 		? repoFrontmatter
 		: [repoFrontmatter];
@@ -159,22 +160,22 @@ export async function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter |
 	if (token.length === 0) {
 		isEmpty.push(true);
 		const whatIsEmpty = i18next.t("common.ghToken") ;
-		new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
+		if (!silent) new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 	}
 	else {
 		for (const repo of repoFrontmatter) {
 			if (repo.repo.length === 0) {
 				isEmpty.push(true);
 				const whatIsEmpty = i18next.t("common.repository") ;
-				new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
+				if (!silent) new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 			} else if (repo.owner.length === 0) {
 				isEmpty.push(true);
 				const whatIsEmpty = i18next.t("error.whatEmpty.owner") ;
-				new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
+				if (!silent) new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 			} else if (repo.branch.length === 0) {
 				isEmpty.push(true);
 				const whatIsEmpty = i18next.t("error.whatEmpty.branch") ;
-				new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
+				if (!silent) new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 			} else {
 				isEmpty.push(false);
 			}
@@ -204,12 +205,12 @@ export function noTextConversion(conditionConvert: FrontmatterConvert) {
 /**
  * Check the validity of the repository settings, from the frontmatter of the file or from the settings of the plugin
  * It doesn't check if the repository allow to creating and merging branch, only if the repository and the main branch exists
- * @param {string} branchName The branch name created by the plugin
  * @param {GithubBranch} PublisherManager The class that manage the branch
  * @param {GitHubPublisherSettings} settings The settings of the plugin
  * @param repository
  * @param { TFile | null} file The file to check if any
  * @param {MetadataCache} metadataCache The metadata cache of Obsidian
+ * @param silent
  * @return {Promise<void>}
  */
 export async function checkRepositoryValidity(
@@ -217,13 +218,14 @@ export async function checkRepositoryValidity(
 	settings: GitHubPublisherSettings,
 	repository: Repository | null = null,
 	file: TFile | null,
-	metadataCache: MetadataCache): Promise<boolean> {
+	metadataCache: MetadataCache,
+	silent=false): Promise<boolean> {
 	try {
 		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : null;
 		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
-		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin);
+		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin, silent);
 		if (isNotEmpty) {
-			await PublisherManager.checkRepository(repoFrontmatter, false);
+			await PublisherManager.checkRepository(repoFrontmatter, silent);
 			return true;
 		}
 	}
