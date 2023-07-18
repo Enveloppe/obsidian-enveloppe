@@ -199,6 +199,8 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 						commitMessage: old.customCommitMsg ?? plugin.settings.github.workflow.commitMessage ?? "[PUBLISHER] MERGE",
 					},
 					otherRepo: [],
+					rateLimit: 0,
+					verifiedRepo: false
 				},
 			upload: {
 				behavior: old.downloadedFolder as FolderSettings,
