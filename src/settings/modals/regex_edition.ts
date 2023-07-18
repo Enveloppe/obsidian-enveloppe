@@ -1,5 +1,5 @@
-import {App, Notice, Modal, Setting} from "obsidian";
-import { FolderSettings, GitHubPublisherSettings, RegexReplace, TextCleaner, TypeOfEditRegex } from "../interface";
+import {App, Modal, Notice, Setting} from "obsidian";
+import {FolderSettings, GitHubPublisherSettings, RegexReplace, TextCleaner, TypeOfEditRegex} from "../interface";
 import i18next from "i18next";
 
 export class ModalRegexFilePathName extends Modal {
@@ -218,7 +218,6 @@ export class ModalRegexOnContents extends Modal {
 						.onChange(async (value) => {
 							censorText.replace = value;
 						});
-                
 				})
 				
 				.addExtraButton((btn) => {
@@ -255,6 +254,7 @@ export class ModalRegexOnContents extends Modal {
 						const censorText: TextCleaner = {
 							entry: "",
 							replace: "",
+							flags: "",
 							after: false,
 						};
 						this.settings.conversion.censorText.push(censorText);
