@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.3.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.3.1...6.3.2) (2023-07-18)
+
+
+### Bug Fixes
+
+* **conversion:regex:** enhance regex match condition ([7ddd210](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7ddd2105a2d22011d16a5ef4f68388a5bab83585)), closes [#180](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/180)
+* **migrate:settings:** add rateLimit and verifiedRepo fields ([4f078bd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4f078bd8721f8bc33cc1edc97a99bcb3d468d4a0))
+
 ### [6.3.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.3.0...6.3.1) (2023-07-08)
 
 ## [6.3.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.2.5...6.3.0) (2023-07-07)
