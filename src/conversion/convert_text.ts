@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import {
 	App,
 	Component,
@@ -275,6 +276,7 @@ export async function convertDataviewQueries(
 		log("No dataview queries found");
 		return replacedText;
 	}
+	const error = i18next.t("error.dataview");
 
 	//Code block queries
 	for (const queryBlock of matches) {
@@ -285,7 +287,7 @@ export async function convertDataviewQueries(
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
 			console.log(e);
-			new Notice("Unable to render dataview query. Please update the dataview plugin to the latest version.");
+			new Notice(error);
 			return queryBlock[0];
 		}
 	}
@@ -303,7 +305,7 @@ export async function convertDataviewQueries(
 			replacedText = replacedText.replace(block, div.innerHTML);
 		} catch (e) {
 			console.log(e);
-			new Notice("Unable to render dataviewjs query. Please update the dataview plugin to the latest version.");
+			new Notice(error);
 			return queryBlock[0];
 		}
 	}
@@ -321,7 +323,7 @@ export async function convertDataviewQueries(
 			}
 		} catch (e) {
 			console.log(e);
-			new Notice("Unable to render inline dataview query. Please update the dataview plugin to the latest version.");
+			new Notice(error);
 			return inlineQuery[0];
 		}
 	}
@@ -340,7 +342,7 @@ export async function convertDataviewQueries(
 
 		} catch (e) {
 			console.log(e);
-			new Notice("Unable to render inline dataviewjs query. Please update the dataview plugin to the latest version.");
+			new Notice(error);
 			return inlineJsQuery[0];
 		}
 	}
