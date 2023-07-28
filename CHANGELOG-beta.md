@@ -1,6 +1,13 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+## [6.4.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.3.2...6.4.0-0) (2023-07-28)
+
+
+### Features
+
+* **convertText:dataview:** now support inlineDQL, dataviewJS, inline dataviewJS! ([9631126](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/9631126109980f1c71f5849db69d4df54090cd52)), closes [#184](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/184)
 
 ## [6.1.0-8](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.1.0-7...6.1.0-8) (2023-06-13)
 
