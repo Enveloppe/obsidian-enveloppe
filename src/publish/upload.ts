@@ -1,3 +1,6 @@
+import { Octokit } from "@octokit/core";
+import i18next from "i18next";
+import { Base64 } from "js-base64";
 import {
 	arrayBufferToBase64,
 	MetadataCache,
@@ -5,6 +8,13 @@ import {
 	TFile,
 	Vault,
 } from "obsidian";
+
+import { mainConverting } from "../conversion/convert_text";
+import {
+	getImageLinkOptions,
+	getReceiptFolder,
+} from "../conversion/file_path";
+import GithubPublisherPlugin from "../main";
 import {
 	Deleted,
 	FrontmatterConvert,
@@ -13,30 +23,20 @@ import {
 	RepoFrontmatter, Repository,
 	UploadedFiles,
 } from "../settings/interface";
-import { FilesManagement } from "./files";
-import { Octokit } from "@octokit/core";
-import { Base64 } from "js-base64";
-import { deleteFromGithub } from "./delete";
-import i18next from "i18next";
-
-import {
-	getReceiptFolder,
-	getImageLinkOptions,
-} from "../conversion/file_path";
-import { ShareStatusBar } from "../utils/status_bar";
-import GithubPublisherPlugin from "../main";
-import {
-	checkEmptyConfiguration,
-	checkIfRepoIsInAnother,
-	isShared,
-	isAttachment,
-} from "../utils/data_validation_test";
 import {
 	getFrontmatterCondition,
 	getRepoFrontmatter,
 	noticeLog,
 } from "../utils";
-import { mainConverting } from "../conversion/convert_text";
+import {
+	checkEmptyConfiguration,
+	checkIfRepoIsInAnother,
+	isAttachment,
+	isShared,
+} from "../utils/data_validation_test";
+import { ShareStatusBar } from "../utils/status_bar";
+import { deleteFromGithub } from "./delete";
+import { FilesManagement } from "./files";
 
 /** Class to manage the branch
  * @extends FilesManagement

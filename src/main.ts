@@ -1,4 +1,19 @@
+import {Octokit} from "@octokit/core";
+import i18next from "i18next";
 import {FrontMatterCache, Menu, Plugin, TFile, TFolder} from "obsidian";
+
+import {
+	checkRepositoryValidityCallback,
+	createLinkCallback,
+	purgeNotesRemoteCallback,
+	shareEditedOnlyCallback,
+	shareOneNoteCallback,
+	uploadAllEditedNotesCallback, 	uploadAllNotesCallback, 	uploadNewNotesCallback} from "./commands/callback";
+import {addMenuFile, addMenuFolder} from "./commands/file_menu";
+import {ChooseWhichRepoToRun} from "./commands/suggest_other_repo_commands_modal";
+import {getTitleField, regexOnFileName} from "./conversion/file_path";
+import { resources, translationLanguage } from "./i18n/i18next";
+import {GithubBranch} from "./publish/branch";
 import {GithubPublisherSettingsTab} from "./settings";
 import {
 	DEFAULT_SETTINGS,
@@ -6,24 +21,9 @@ import {
 	GithubTiersVersion,
 	Repository,
 } from "./settings/interface";
-import { OldSettings } from "./settings/migrate";
+import { migrateSettings,OldSettings } from "./settings/migrate";
 import {createTokenPath, noticeLog, verifyRateLimitAPI} from "./utils";
-import {GithubBranch} from "./publish/branch";
-import {Octokit} from "@octokit/core";
-import {checkRepositoryValidity, getRepoSharedKey} from "./utils/data_validation_test";
-import i18next from "i18next";
-import {getTitleField, regexOnFileName} from "./conversion/file_path";
-import { resources, translationLanguage } from "./i18n/i18next";
-import {migrateSettings} from "./settings/migrate";
-import {ChooseWhichRepoToRun} from "./commands/suggest_other_repo_commands_modal";
-import {
-	createLinkCallback,
-	purgeNotesRemoteCallback,
-	shareOneNoteCallback,
-	uploadAllNotesCallback, uploadAllEditedNotesCallback, shareEditedOnlyCallback,
-	uploadNewNotesCallback, checkRepositoryValidityCallback
-} from "./commands/callback";
-import {addSubMenuCommandsFolder, addMenuFile, shareFolderRepo, addMenuFolder} from "./commands/file_menu";
+import {checkRepositoryValidity} from "./utils/data_validation_test";
 
 /**
  * Main class of the plugin

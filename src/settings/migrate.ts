@@ -1,7 +1,8 @@
-import {FolderSettings, GithubTiersVersion, TOKEN_PATH, TextCleaner, TypeOfEditRegex} from "./interface";
+import i18next from "i18next";
+
 import GithubPublisher from "../main";
 import {createTokenPath, noticeLog} from "../utils";
-import i18next from "i18next";
+import {FolderSettings, GithubTiersVersion, TextCleaner, TOKEN_PATH, TypeOfEditRegex} from "./interface";
 
 export interface OldSettings {
 	githubRepo: string;

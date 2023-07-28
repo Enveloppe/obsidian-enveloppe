@@ -1,6 +1,7 @@
-import {App, Modal, Notice, Setting} from "obsidian";
-import {FolderSettings, GitHubPublisherSettings, RegexReplace, TextCleaner, TypeOfEditRegex} from "../interface";
 import i18next from "i18next";
+import {App, Modal, Notice, Setting} from "obsidian";
+
+import {FolderSettings, GitHubPublisherSettings, RegexReplace, TextCleaner, TypeOfEditRegex} from "../interface";
 
 export class ModalRegexFilePathName extends Modal {
 	settings: GitHubPublisherSettings;

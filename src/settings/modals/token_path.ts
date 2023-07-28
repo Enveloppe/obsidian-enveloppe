@@ -1,8 +1,9 @@
-import { Modal, App, Setting, Notice } from "obsidian";
-import GithubPublisher from "src/main";
 import i18next from "i18next";
-import { TOKEN_PATH } from "../interface";
+import { App, Modal, Notice,Setting } from "obsidian";
+import GithubPublisher from "src/main";
 import { createTokenPath } from "src/utils";
+
+import { TOKEN_PATH } from "../interface";
 import { migrateToken } from "../migrate";
 
 export class TokenEditPath extends Modal {

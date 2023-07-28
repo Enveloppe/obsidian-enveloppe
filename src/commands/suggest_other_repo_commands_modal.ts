@@ -1,7 +1,9 @@
-import {App, FuzzySuggestModal } from "obsidian";
-import {FolderSettings, Repository} from "../settings/interface";
-import GithubPublisherPlugin from "../main";
 import i18next from "i18next";
+import {App, FuzzySuggestModal } from "obsidian";
+
+import GithubPublisherPlugin from "../main";
+import {FolderSettings, Repository} from "../settings/interface";
+import {noticeLog} from "../utils";
 import {
 	createLinkOnActiveFile,
 	deleteCommands, repositoryValidityActiveFile, shareActiveFile,
@@ -10,7 +12,6 @@ import {
 	uploadAllNotes,
 	uploadNewNotes
 } from "./plugin_commands";
-import {noticeLog} from "../utils";
 
 interface GithubPublisherCommands {
 	commands: string;

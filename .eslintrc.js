@@ -23,7 +23,10 @@ module.exports = {
 		"sourceType": "module"
 	},
 	"plugins": [
-		"@typescript-eslint"
+		"@typescript-eslint",
+		"unused-imports",
+		"simple-import-sort",
+		"import"
 	],
 	"rules": {
 		"indent": [
@@ -49,6 +52,12 @@ module.exports = {
 				"natural": false
 			}
 		],
-		"@typescript-eslint/ban-ts-comment": "off"
+		"@typescript-eslint/ban-ts-comment": "off",
+		"unused-imports/no-unused-imports": "error",
+		"simple-import-sort/imports": "error",
+		"simple-import-sort/exports": "error",
+		"import/first": "error",
+		"import/newline-after-import": "error",
+		"import/no-duplicates": "error"
 	}
 };

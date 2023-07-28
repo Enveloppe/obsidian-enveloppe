@@ -1,9 +1,10 @@
-import {FrontMatterCache, Notice, TFile, MetadataCache } from "obsidian";
-import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter, Repository} from "../settings/interface";
-import {GithubBranch} from "../publish/branch";
-import {getRepoFrontmatter, log, noticeLog, verifyRateLimitAPI} from ".";
 import i18next from "i18next";
+import {FrontMatterCache, MetadataCache,Notice, TFile } from "obsidian";
 import GithubPublisher from "src/main";
+
+import {GithubBranch} from "../publish/branch";
+import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter, Repository} from "../settings/interface";
+import {getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from ".";
 
 /**
  *  Check if the file is a valid file to publish

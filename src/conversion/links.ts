@@ -1,13 +1,14 @@
 import { FrontMatterCache, MetadataCache, TFile, Vault } from "obsidian";
+import slugify from "slugify";
+
 import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	LinkedNotes,
 	RepoFrontmatter, Repository,
 } from "../settings/interface";
-import { createRelativePath } from "./file_path";
 import {isAttachment, noTextConversion} from "../utils/data_validation_test";
-import slugify from "slugify";
+import { createRelativePath } from "./file_path";
 
 /**
  * Convert wikilinks to markdown
@@ -188,7 +189,7 @@ function addAltText(link: string, linkedFile: LinkedNotes): string {
  * @return {string} The escaped string
  */
 
-function escapeRegex(filepath: string): string {
+export function escapeRegex(filepath: string): string {
 	return filepath.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
 }
 

@@ -1,19 +1,19 @@
+import {Octokit} from "@octokit/core";
+import i18next from "i18next";
 import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, Vault} from "obsidian";
+import GithubPublisher from "src/main";
+
+import {getReceiptFolder} from "../conversion/file_path";
+import Publisher from "../publish/upload";
 import {
 	Deleted,
 	FolderSettings,
 	FrontmatterConvert,
 	GitHubPublisherSettings,
-	MetadataExtractor,
+	ListEditedFiles, 	MetadataExtractor,
 	RepoFrontmatter,
-	UploadedFiles,
-	ListEditedFiles, Repository, TOKEN_PATH
-} from "../settings/interface";
-import Publisher from "../publish/upload";
-import {getReceiptFolder} from "../conversion/file_path";
-import i18next from "i18next";
-import {Octokit} from "@octokit/core";
-import GithubPublisher from "src/main";
+	Repository, TOKEN_PATH,
+	UploadedFiles} from "../settings/interface";
 
 /**
  * Create a notice message for the log

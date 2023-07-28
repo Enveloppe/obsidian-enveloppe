@@ -1,9 +1,10 @@
 import i18next from "i18next";
 import {App, Modal, Notice, Setting} from "obsidian";
-import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../interface";
-import {checkRepositoryValidity} from "../../utils/data_validation_test";
+
 import GithubPublisherPlugin from "../../main";
 import {verifyRateLimitAPI} from "../../utils";
+import {checkRepositoryValidity} from "../../utils/data_validation_test";
+import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../interface";
 
 /**
  * @description This class is used to add a new repo to the settings in the "otherRepo" in the github setting section

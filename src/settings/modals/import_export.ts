@@ -1,21 +1,21 @@
-import GithubPublisher from "../../main";
+import {Octokit} from "@octokit/core";
+import i18next from "i18next";
 import {
 	App,
-	Modal,
-	Setting,
-	TextAreaComponent,
 	ButtonComponent,
-	Platform,
 	FuzzySuggestModal,
-	Notice
-} from "obsidian";
+	Modal,
+	Notice,
+	Platform,
+	Setting,
+	TextAreaComponent} from "obsidian";
+
+import GithubPublisher from "../../main";
 import {GithubPublisherSettingsTab} from "../../settings";
-import i18next from "i18next";
-import {GitHubPublisherSettings, Preset} from "../interface";
-import { OldSettings } from "../migrate";
 import {log, noticeLog} from "../../utils";
-import {migrateSettings} from "../migrate";
-import {Octokit} from "@octokit/core";
+import {GitHubPublisherSettings, Preset} from "../interface";
+import { migrateSettings,OldSettings } from "../migrate";
+
 
 export type SettingValue = number | string | boolean | unknown;
 

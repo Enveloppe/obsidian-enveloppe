@@ -1,4 +1,5 @@
 import { Setting } from "obsidian";
+
 import GithubPublisherPlugin from "../main";
 import {FolderSettings, GitHubPublisherSettings} from "./interface";
 /**

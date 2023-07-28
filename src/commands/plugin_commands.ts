@@ -4,10 +4,12 @@
  */
 
 import i18next from "i18next";
-import {RepoFrontmatter, Repository} from "../settings/interface";
-import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
-import {createLink, getRepoFrontmatter} from "../utils";
+import { Notice } from "obsidian";
+
 import GithubPublisher from "../main";
+import {RepoFrontmatter, Repository} from "../settings/interface";
+import {createLink, getRepoFrontmatter} from "../utils";
+import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
 import {
 	purgeNotesRemote,
 	shareAllEditedNotes,
@@ -15,7 +17,6 @@ import {
 	shareNewNote,
 	shareOneNote, shareOnlyEdited
 } from "./commands";
-import { Notice } from "obsidian";
 
 /**
  * Create the command to create a link to the note in the repo if a file is active ; else do nothing

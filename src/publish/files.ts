@@ -1,22 +1,23 @@
-import {FrontMatterCache, MetadataCache, TFile, TFolder, Vault} from "obsidian";
-import {
-	ConvertedLink,
-	GithubRepo,
-	LinkedNotes,
-	GitHubPublisherSettings,
-	FrontmatterConvert,
-	RepoFrontmatter, Repository,
-} from "../settings/interface";
 import { Octokit } from "@octokit/core";
+import {FrontMatterCache, MetadataCache, TFile, TFolder, Vault} from "obsidian";
+import { getAPI, Link } from "obsidian-dataview";
+
 import {
 	getImageLinkOptions,
 	getReceiptFolder,
 } from "../conversion/file_path";
-import Publisher from "./upload";
 import GithubPublisher from "../main";
+import {
+	ConvertedLink,
+	FrontmatterConvert,
+	GitHubPublisherSettings,
+	GithubRepo,
+	LinkedNotes,
+	RepoFrontmatter, Repository,
+} from "../settings/interface";
 import {getRepoFrontmatter, log, noticeLog} from "../utils";
 import { isAttachment, isShared } from "../utils/data_validation_test";
-import { getAPI, Link } from "obsidian-dataview";
+import Publisher from "./upload";
 
 /**
  * Manage files in the repo and the vault.

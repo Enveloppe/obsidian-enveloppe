@@ -1,15 +1,16 @@
 import {
+	FrontMatterCache,
 	MetadataCache,
 	TFile,
-	Vault,
 	TFolder,
-	FrontMatterCache,
+	Vault,
 } from "obsidian";
+
 import {
 	FolderSettings,
-	LinkedNotes,
-	GitHubPublisherSettings,
 	FrontmatterConvert,
+	GitHubPublisherSettings,
+	LinkedNotes,
 	RepoFrontmatter, Repository,
 } from "../settings/interface";
 import {
@@ -17,7 +18,7 @@ import {
 	getFrontmatterCondition,
 	getRepoFrontmatter,
 } from "../utils";
-import {isInternalShared, checkIfRepoIsInAnother, isShared} from "../utils/data_validation_test";
+import {checkIfRepoIsInAnother, isInternalShared, isShared} from "../utils/data_validation_test";
 import { createRegexFromText } from "./find_and_replace_text";
 
 /**

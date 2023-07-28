@@ -1,11 +1,12 @@
-import GithubPublisher from "../main";
+import i18next from "i18next";
 import {Menu, MenuItem, TFile, TFolder} from "obsidian";
-import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
+
+import GithubPublisher from "../main";
 import {RepoFrontmatter, Repository} from "../settings/interface";
+import {getRepoFrontmatter} from "../utils";
 import {getRepoSharedKey, isShared} from "../utils/data_validation_test";
 import {shareAllMarkedNotes, shareOneNote} from "./commands";
-import {getRepoFrontmatter} from "../utils";
-import i18next from "i18next";
+import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 
 /**
  * Share the shared file of a folder to a repository

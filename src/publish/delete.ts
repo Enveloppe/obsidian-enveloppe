@@ -1,5 +1,8 @@
 import { Octokit } from "@octokit/core";
+import i18next from "i18next";
+import { Base64 } from "js-base64";
 import { Notice, parseYaml } from "obsidian";
+
 import {
 	Deleted,
 	FolderSettings,
@@ -7,11 +10,9 @@ import {
 	GithubRepo,
 	RepoFrontmatter, Repository,
 } from "../settings/interface";
-import { FilesManagement } from "./files";
-import { Base64 } from "js-base64";
-import {log, noticeLog, trimObject, verifyRateLimitAPI} from "../utils";
+import { noticeLog, trimObject, verifyRateLimitAPI} from "../utils";
 import {isAttachment} from "../utils/data_validation_test";
-import i18next from "i18next";
+import { FilesManagement } from "./files";
 
 /**
  * Delete file from github, based on a list of file in the original vault

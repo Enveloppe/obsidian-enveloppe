@@ -1,5 +1,6 @@
-import {FolderSettings, GitHubPublisherSettings} from "./interface";
 import i18next from "i18next";
+
+import {FolderSettings, GitHubPublisherSettings} from "./interface";
 
 
 /**

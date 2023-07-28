@@ -4,12 +4,13 @@
  * The id is different if a repo is set, and the smartkey is used as a name, prepended by a K
  */
 
-import {FolderSettings, RepoFrontmatter, Repository} from "../settings/interface";
-import GithubPublisher from "../main";
-import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
-import {createLink, getRepoFrontmatter} from "../utils";
 import i18next from "i18next";
 import {Command, Notice } from "obsidian";
+
+import GithubPublisher from "../main";
+import {FolderSettings, RepoFrontmatter, Repository} from "../settings/interface";
+import {createLink, getRepoFrontmatter} from "../utils";
+import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
 import {purgeNotesRemote, shareOneNote} from "./commands";
 import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} from "./plugin_commands";
 

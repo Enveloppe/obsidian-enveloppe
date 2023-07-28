@@ -1,31 +1,28 @@
+import i18next from "i18next";
 import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
+
 import GithubPublisherPlugin from "./main";
-import { ModalRegexFilePathName, ModalRegexOnContents } from "./settings/modals/regex_edition";
-import {
-	autoCleanCondition,
-	folderHideShowSettings,
-	autoCleanUpSettingsOnCondition,
-	shortcutsHideShow, showHideBasedOnFolder,
-} from "./settings/style";
-import {
-	FolderSettings, GithubTiersVersion, Repository,
-} from "./settings/interface";
 import {
 	help,
+	KeyBasedOnSettings,
 	multipleRepoExplained,
 	supportMe,
-	usefullLinks,
-	KeyBasedOnSettings
-} from "./settings/help";
-import "i18next";
-import { checkRepositoryValidity } from "./utils/data_validation_test";
-import {ExportModal, ImportLoadPreset, ImportModal, loadAllPresets} from "./settings/modals/import_export";
-import i18next from "i18next";
-import { enumbSettingsTabId } from "./settings/interface";
-import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
+	usefullLinks} from "./settings/help";
+import {
+	enumbSettingsTabId,	FolderSettings, GithubTiersVersion, Repository } from "./settings/interface";
 import { migrateToken } from "./settings/migrate";
+import {ExportModal, ImportLoadPreset, ImportModal, loadAllPresets} from "./settings/modals/import_export";
+import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
+import { ModalRegexFilePathName, ModalRegexOnContents } from "./settings/modals/regex_edition";
 import { TokenEditPath } from "./settings/modals/token_path";
+import {
+	autoCleanCondition,
+	autoCleanUpSettingsOnCondition,
+	folderHideShowSettings,
+	shortcutsHideShow, showHideBasedOnFolder,
+} from "./settings/style";
 import {verifyRateLimitAPI} from "./utils";
+import { checkRepositoryValidity } from "./utils/data_validation_test";
 
 
 export class GithubPublisherSettingsTab extends PluginSettingTab {

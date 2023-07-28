@@ -1,13 +1,14 @@
 import { Octokit } from "@octokit/core";
+import i18next from "i18next";
+import { MetadataCache, Notice, Vault } from "obsidian";
+
+import GithubPublisherPlugin from "../main";
 import {
 	GitHubPublisherSettings,
 	RepoFrontmatter,
 } from "../settings/interface";
-import { FilesManagement } from "./files";
-import { MetadataCache, Notice, Vault } from "obsidian";
-import GithubPublisherPlugin from "../main";
 import { noticeLog } from "../utils";
-import i18next from "i18next";
+import { FilesManagement } from "./files";
 
 /**
  * Class to manage the branch
