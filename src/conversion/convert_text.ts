@@ -1,11 +1,6 @@
 import {
-	FrontmatterConvert,
-	GitHubPublisherSettings,
-	LinkedNotes,
-	RepoFrontmatter, Repository,
-} from "../settings/interface";
-import {
 	App,
+	Component,
 	FrontMatterCache,
 	MetadataCache,
 	Notice,
@@ -13,15 +8,23 @@ import {
 	parseYaml,
 	stringifyYaml,
 	TFile,
-	Vault,
+	Vault
 } from "obsidian";
-import { getDataviewPath } from "./file_path";
-import { getAPI, Link } from "obsidian-dataview";
-import { noticeLog } from "../utils";
-import { convertLinkCitation, convertWikilinks } from "./links";
-import findAndReplaceText from "./find_and_replace_text";
+import {getAPI, Link} from "obsidian-dataview";
+
 import GithubPublisher from "../main";
-import i18next from "i18next";
+import {
+	FrontmatterConvert,
+	GitHubPublisherSettings,
+	LinkedNotes,
+	RepoFrontmatter,
+	Repository,
+} from "../settings/interface";
+import {log, noticeLog} from "../utils";
+import {getDataviewPath} from "./file_path";
+import findAndReplaceText from "./find_and_replace_text";
+import {convertLinkCitation, convertWikilinks, escapeRegex} from "./links";
+
 
 /**
  * Convert soft line breaks to hard line breaks, adding two space at the end of the line.
@@ -56,6 +59,7 @@ export function addHardLineBreak(
  * If the tags key does not exist, it will be created
  * @param {string} text the text to convert
  * @param {string[]} toAdd the list of tags to add
+ * @param settings
  * @returns {Promise<string>} the converted text
  */
 
@@ -104,7 +108,6 @@ async function addTagsToYAML(text: string, toAdd: string[], settings: GitHubPubl
  * @param {GitHubPublisherSettings} settings the global settings
  * @param {TFile} file the file to process
  * @param {MetadataCache} metadataCache the metadataCache
- * @param {App} app obsidian app
  * @param {FrontMatterCache} frontmatter the frontmatter cache
  * @param {string} text the text to convert
  * @return {Promise<string>} the converted text
@@ -113,7 +116,6 @@ export async function addInlineTags(
 	settings: GitHubPublisherSettings,
 	file: TFile,
 	metadataCache: MetadataCache,
-	app: App,
 	frontmatter: FrontMatterCache,
 	text: string
 ): Promise<string> {
@@ -185,7 +187,7 @@ export async function convertInlineDataview(
 		return text;
 	}
 	const dvApi = getAPI();
-	const dataviewLinks = await dvApi.page(sourceFile.path);
+	const dataviewLinks = dvApi.page(sourceFile.path);
 	const valueToAdd: string[] = [];
 	for (const field of settings.conversion.tags.fields) {
 		const fieldValue = dataviewLinks[field];
@@ -218,7 +220,6 @@ export async function convertInlineDataview(
 		return await addTagsToYAML(text, valueToAdd.filter(Boolean), settings);
 	}
 	return text;
-	return text;
 }
 
 /**
@@ -237,6 +238,7 @@ export async function convertInlineDataview(
  * @param shortRepo
  * @return {Promise<string>} the converted text
  * @credits Ole Eskid Steensen
+ * @source https://github.com/oleeskild/obsidian-digital-garden/blob/4cdf2791e24b2a0c2a30e7d39965b7b9b50e2ab0/src/Publisher.ts#L297
  */
 
 export async function convertDataviewQueries(
@@ -250,52 +252,130 @@ export async function convertDataviewQueries(
 	sourceFile: TFile,
 	sourceFrontmatter: RepoFrontmatter | RepoFrontmatter[],
 	shortRepo: Repository | null
-): Promise<string> {
-	// @ts-ignore
-	if (!app.plugins.enabledPlugins.has("dataview")) {
-		return text;
-	}
-	const vault = app.vault;
+) {
 	let replacedText = text;
-	const dataviewRegex = /```dataview(.+?)```/gms;
+	const dataViewRegex = /```dataview\s(.+?)```/gsm;
 	const dvApi = getAPI();
-	const matches = text.matchAll(dataviewRegex);
-	if (!matches) return;
-	const settingsDataview = frontmatterSettings.dataview;
+	if (!dvApi) return replacedText;
+	const matches = text.matchAll(dataViewRegex);
+
+	const dataviewJsPrefix = dvApi.settings.dataviewJsKeyword;
+	const dataViewJsRegex = new RegExp("```" + escapeRegex(dataviewJsPrefix) + "\\s(.+?)```", "gsm");
+	const dataviewJsMatches = text.matchAll(dataViewJsRegex);
+
+	const inlineQueryPrefix = dvApi.settings.inlineQueryPrefix;
+	const inlineDataViewRegex = new RegExp("`" + escapeRegex(inlineQueryPrefix) + "(.+?)`", "gsm");
+	const inlineMatches = text.matchAll(inlineDataViewRegex);
+
+	const inlineJsQueryPrefix = dvApi.settings.inlineJsQueryPrefix;
+	const inlineJsDataViewRegex = new RegExp("`" + escapeRegex(inlineJsQueryPrefix) + "(.+?)`", "gsm");
+	const inlineJsMatches = text.matchAll(inlineJsDataViewRegex);
+
+	if (!matches && !inlineMatches && !dataviewJsMatches && !inlineJsMatches) return;
+
+	//Code block queries
 	for (const queryBlock of matches) {
 		try {
 			const block = queryBlock[0];
 			const query = queryBlock[1];
-			let md = settingsDataview
-				? await dvApi.tryQueryMarkdown(query, path)
-				: "";
-			const dataviewPath = getDataviewPath(md, settings, vault);
-			md = await convertLinkCitation(
-				md,
-				settings,
-				dataviewPath,
-				metadataCache,
-				sourceFile,
-				vault,
-				frontmatter,
-				sourceFrontmatter,
-				frontmatterSettings,
-				shortRepo
-			);
-			md = convertWikilinks(
-				md,
-				frontmatterSettings,
-				dataviewPath,
-				settings
-			);
-			replacedText = replacedText.replace(block, md);
+			const markdown = await dvApi.tryQueryMarkdown(query, path) as string;
+			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
-			noticeLog(e, settings);
-			if (!queryBlock[1].match("js")) new Notice(i18next.t("error.dataview"));
-			return text;
+			console.log(e);
+			new Notice("Unable to render dataview query. Please update the dataview plugin to the latest version.");
+			return queryBlock[0];
 		}
 	}
-	return replacedText;
+
+	for (const queryBlock of dataviewJsMatches) {
+		try {
+			const block = queryBlock[0];
+			const query = queryBlock[1];
+
+			const div = createEl("div");
+			const component = new Component();
+			await dvApi.executeJs(query, div, component, path);
+			component.load();
+
+			replacedText = replacedText.replace(block, div.innerHTML);
+		} catch (e) {
+			console.log(e);
+			new Notice("Unable to render dataviewjs query. Please update the dataview plugin to the latest version.");
+			return queryBlock[0];
+		}
+	}
+
+	//Inline queries
+	for (const inlineQuery of inlineMatches) {
+		try {
+			const code = inlineQuery[0];
+			const query = inlineQuery[1].trim();
+			const dataviewResult = dvApi.tryEvaluate(query, { this: dvApi.page(path, sourceFile.path) });
+			log(dvApi.tryEvaluate("this.file.name", { this: dvApi.page(path, sourceFile.path) }));
+			if (dataviewResult) {
+				replacedText = replacedText.replace(code, dataviewResult.toString());
+			}
+		} catch (e) {
+			console.log(e);
+			new Notice("Unable to render inline dataview query. Please update the dataview plugin to the latest version.");
+			return inlineQuery[0];
+		}
+	}
+
+	for (const inlineJsQuery of inlineJsMatches) {
+		try {
+			const code = inlineJsQuery[0];
+			const query = inlineJsQuery[1].trim();
+
+			const div = createEl("div");
+			const component = new Component();
+			await dvApi.executeJs(query, div, component, path);
+			component.load();
+
+			replacedText = replacedText.replace(code, div.innerHTML);
+
+		} catch (e) {
+			console.log(e);
+			new Notice("Unable to render inline dataviewjs query. Please update the dataview plugin to the latest version.");
+			return inlineJsQuery[0];
+		}
+	}
+	return await convertDataviewLinks(replacedText, app.vault, settings, metadataCache, frontmatterSettings, frontmatter, sourceFile, sourceFrontmatter, shortRepo);
+}
+
+/**
+ * Wrapper to prevent writing 15 lines of code every time
+ */
+async function convertDataviewLinks(
+	md:string,
+	vault: Vault,
+	settings: GitHubPublisherSettings,
+	metadataCache: MetadataCache,
+	frontmatterSettings: FrontmatterConvert,
+	frontmatter: FrontMatterCache,
+	sourceFile: TFile,
+	sourceFrontmatter: RepoFrontmatter | RepoFrontmatter[],
+	shortRepo: Repository | null) {
+	const dataviewPath = getDataviewPath(md, settings, vault);
+	md = await convertLinkCitation(
+		md,
+		settings,
+		dataviewPath,
+		metadataCache,
+		sourceFile,
+		vault,
+		frontmatter,
+		sourceFrontmatter,
+		frontmatterSettings,
+		shortRepo
+	);
+	md = convertWikilinks(
+		md,
+		frontmatterSettings,
+		dataviewPath,
+		settings
+	);
+	return md;
 }
 
 /**
@@ -330,14 +410,7 @@ export async function mainConverting(
 	shortRepo: Repository | null
 ): Promise<string> {
 	text = findAndReplaceText(text, settings, false);
-	text = await addInlineTags(
-		settings,
-		file,
-		metadataCache,
-		plugin.app,
-		frontmatter,
-		text
-	);
+	text = await addInlineTags(settings, file, metadataCache, frontmatter, text);
 	text = await convertDataviewQueries(
 		text,
 		file.path,
