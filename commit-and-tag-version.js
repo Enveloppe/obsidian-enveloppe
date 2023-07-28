@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { Command, Option } = require("commander");
 const { readFileSync, writeFileSync } = require("fs");
-const commitAndTagVersion = require("standard-version");
+const commitAndTagVersion = require("commit-and-tag-version");
 const dedent = require("dedent");
 const c = require("ansi-colors");
+
 const program = new Command();
 
 c.theme({
