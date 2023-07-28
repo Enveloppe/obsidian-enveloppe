@@ -226,9 +226,10 @@ export async function convertInlineDataview(
  * Convert dataview queries to markdown
  * Empty the block if settings.convertDataview is false or if the frontmatter key dataview is false
  * The global settings can be overrides by the frontmatter key dataview
+ * Also convert links using convertDataviewLinks
  * @param {string} text the text to convert
  * @param {string} path the path of the file to convert
- * @param {GitHubPublisherSettings} settings the global settings
+ * @param {@link GitHubPublisherSettings} settings the global settings
  * @param {App} app obsidian app
  * @param {MetadataCache} metadataCache the metadataCache
  * @param {FrontmatterConvert} frontmatterSettings the frontmatter settings
@@ -270,8 +271,10 @@ export async function convertDataviewQueries(
 	const inlineJsQueryPrefix = dvApi.settings.inlineJsQueryPrefix;
 	const inlineJsDataViewRegex = new RegExp("`" + escapeRegex(inlineJsQueryPrefix) + "(.+?)`", "gsm");
 	const inlineJsMatches = text.matchAll(inlineJsDataViewRegex);
-
-	if (!matches && !inlineMatches && !dataviewJsMatches && !inlineJsMatches) return;
+	if (!matches && !inlineMatches && !dataviewJsMatches && !inlineJsMatches) {
+		log("No dataview queries found");
+		return replacedText;
+	}
 
 	//Code block queries
 	for (const queryBlock of matches) {
@@ -311,9 +314,10 @@ export async function convertDataviewQueries(
 			const code = inlineQuery[0];
 			const query = inlineQuery[1].trim();
 			const dataviewResult = dvApi.tryEvaluate(query, { this: dvApi.page(path, sourceFile.path) });
-			log(dvApi.tryEvaluate("this.file.name", { this: dvApi.page(path, sourceFile.path) }));
 			if (dataviewResult) {
 				replacedText = replacedText.replace(code, dataviewResult.toString());
+			} else {
+				replacedText = replacedText.replace(code, dvApi.settings.renderNullAs);
 			}
 		} catch (e) {
 			console.log(e);
