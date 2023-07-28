@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.4.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.4.0-0...6.4.0-1) (2023-07-28)
+
+
+### Bug Fixes
+
+* **convertText:dataview:** render null using dataview settings "render null as" ([4a55ca3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4a55ca3c862cdd5dd0c348c3cb7ff710055d567d))
+
 ## [6.4.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.3.2...6.4.0-0) (2023-07-28)
 
 
