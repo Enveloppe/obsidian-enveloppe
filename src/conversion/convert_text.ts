@@ -283,7 +283,7 @@ export async function convertDataviewQueries(
 		try {
 			const block = queryBlock[0];
 			const query = queryBlock[1];
-			const markdown = await dvApi.tryQueryMarkdown(query, path) as string;
+			const markdown = removeDataviewQueries(await dvApi.tryQueryMarkdown(query, path) as string, frontmatterSettings);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
 			console.log(e);
@@ -301,8 +301,8 @@ export async function convertDataviewQueries(
 			const component = new Component();
 			await dvApi.executeJs(query, div, component, path);
 			component.load();
-
-			replacedText = replacedText.replace(block, div.innerHTML);
+			const markdown = removeDataviewQueries(div.innerHTML, frontmatterSettings);
+			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
 			console.log(e);
 			new Notice(error);
@@ -317,9 +317,9 @@ export async function convertDataviewQueries(
 			const query = inlineQuery[1].trim();
 			const dataviewResult = dvApi.tryEvaluate(query, { this: dvApi.page(path, sourceFile.path) });
 			if (dataviewResult) {
-				replacedText = replacedText.replace(code, dataviewResult.toString());
+				replacedText = replacedText.replace(code, removeDataviewQueries(dataviewResult.toString(), frontmatterSettings));
 			} else {
-				replacedText = replacedText.replace(code, dvApi.settings.renderNullAs);
+				replacedText = replacedText.replace(code, removeDataviewQueries(dvApi.settings.renderNullAs, frontmatterSettings));
 			}
 		} catch (e) {
 			console.log(e);
@@ -337,8 +337,8 @@ export async function convertDataviewQueries(
 			const component = new Component();
 			await dvApi.executeJs(query, div, component, path);
 			component.load();
-
-			replacedText = replacedText.replace(code, div.innerHTML);
+			const markdown = removeDataviewQueries(div.innerHTML, frontmatterSettings);
+			replacedText = replacedText.replace(code, markdown);
 
 		} catch (e) {
 			console.log(e);
@@ -347,6 +347,18 @@ export async function convertDataviewQueries(
 		}
 	}
 	return await convertDataviewLinks(replacedText, app.vault, settings, metadataCache, frontmatterSettings, frontmatter, sourceFile, sourceFrontmatter, shortRepo);
+}
+
+/**
+ * Remove dataview queries from text
+ * @param dataviewMarkdown {string}: the dataview converted in markdown
+ * @param {FrontmatterConvert} frontmatterSettings the settings
+ * @return {string} the text without dataview queries or the dataview queries in markdown
+ */
+function removeDataviewQueries(dataviewMarkdown: string, frontmatterSettings: FrontmatterConvert): string {
+	const settingsDataview = frontmatterSettings.dataview;
+	if (!settingsDataview) return "";
+	else return dataviewMarkdown;
 }
 
 /**
