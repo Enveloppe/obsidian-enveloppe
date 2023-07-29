@@ -16,7 +16,7 @@ Here, you will only get a quick setup!
 - Linking to other notes and updating the links according to your settings  
 - Cleaning the repo by removing depublished and deleted files  
 - Folder notes (renaming them to a specific name, like `index.md`)  
-- Simple Dataview queries (not DataviewJs)  
+- All dataview queries are supported (including `dataviewjs`, inline DQL and inline `dataviewJS`.)
 - Supporting any markdown syntax supported by your template, as well as other formats like Mermaid or Latex  
 - And many more :sparkles:  
   
