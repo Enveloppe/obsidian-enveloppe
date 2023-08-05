@@ -351,8 +351,8 @@ export async function convertDataviewQueries(
 
 /**
  * Remove dataview queries from text
- * @param dataviewMarkdown {string}: the dataview converted in markdown
- * @param {FrontmatterConvert} frontmatterSettings the settings
+ * @param dataviewMarkdown : string the dataview converted in markdown
+ * @param {@link FrontmatterConvert} frontmatterSettings the settings
  * @return {string} the text without dataview queries or the dataview queries in markdown
  */
 function removeDataviewQueries(dataviewMarkdown: string, frontmatterSettings: FrontmatterConvert): string {
@@ -363,6 +363,16 @@ function removeDataviewQueries(dataviewMarkdown: string, frontmatterSettings: Fr
 
 /**
  * Wrapper to prevent writing 15 lines of code every time
+ * @param {string} md the markdown to convert
+ * @param {Vault} vault the vault
+ * @param {@link GitHubPublisherSettings} settings the settings
+ * @param {MetadataCache} metadataCache the metadata cache
+ * @param {FrontmatterConvert} frontmatterSettings the frontmatter settings
+ * @param {FrontMatterCache} frontmatter the frontmatter cache
+ * @param {TFile} sourceFile the source file
+ * @param {RepoFrontmatter | RepoFrontmatter[]} sourceFrontmatter the source frontmatter
+ * @param {Repository | null} shortRepo the short repo
+ * @return {Promise<string>} the converted markdown
  */
 async function convertDataviewLinks(
 	md:string,
@@ -373,7 +383,7 @@ async function convertDataviewLinks(
 	frontmatter: FrontMatterCache,
 	sourceFile: TFile,
 	sourceFrontmatter: RepoFrontmatter | RepoFrontmatter[],
-	shortRepo: Repository | null) {
+	shortRepo: Repository | null): Promise<string> {
 	const dataviewPath = getDataviewPath(md, settings, vault);
 	md = await convertLinkCitation(
 		md,

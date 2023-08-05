@@ -46,6 +46,10 @@ export interface Repository {
 
 }
 
+/**
+ * @interface GitHubPublisherSettings
+ * @description Interface for the settings of the plugin
+ */
 export interface GitHubPublisherSettings {
 	github: {
 		user: string;
@@ -137,14 +141,26 @@ export enum FolderSettings {
 	fixed = "fixed",
 }
 
+/**
+ * @enum GithubTiersVersion
+ * @description Allow to set a value for the github tiers
+ */
 export enum GithubTiersVersion {
 	free = "Github Free/Pro/Team (default)",
 	entreprise = "Enterprise",
 }
 
-export const TOKEN_PATH = "%configDir%/plugins/%pluginID%/env";
 
+/**
+ * Just a constant for the token path
+ * @type {string} TOKEN_PATH
+ */
+export const TOKEN_PATH:string = "%configDir%/plugins/%pluginID%/env";
 
+/**
+ * Default settings for the plugin
+ * @type {{github: {verifiedRepo: boolean, otherRepo: any[], tokenPath: string, rateLimit: number, workflow: {commitMessage: string, name: string}, automaticallyMergePR: boolean, repo: string, api: {hostname: string, tiersForApi: GithubTiersVersion}, user: string, branch: string}, plugin: {displayModalRepoEditing: boolean, editorMenu: boolean, excludedFolder: any[], shareKey: string, copyLink: {enable: boolean, links: string, addCmd: boolean, removePart: any[]}, fileMenu: boolean, noticeError: boolean}, upload: {autoclean: {excluded: any[], enable: boolean}, folderNote: {rename: string, enable: boolean}, yamlFolderKey: string, rootFolder: string, replaceTitle: any[], frontmatterTitle: {enable: boolean, key: string}, replacePath: any[], metadataExtractorPath: string, behavior: FolderSettings, defaultName: string}, embed: {attachments: boolean, notes: boolean, folder: string, keySendFile: any[]}, conversion: {hardbreak: boolean, links: {internal: boolean, unshared: boolean, wiki: boolean, slugify: boolean}, censorText: any[], dataview: boolean, tags: {inline: boolean, exclude: any[], fields: any[]}}}}
+ */
 export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	github: {
 		user: "",
@@ -223,12 +239,21 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	}
 };
 
+/**
+ * @interface MetadataExtractor
+ * @description Interface for the metadata extractor plugin
+ */
 export interface MetadataExtractor {
 	allExceptMdFile: string | null;
 	metadataFile: string | null;
 	tagsFile: string | null;
 }
 
+
+/**
+ * @interface LinkedNotes
+ * @description Interface for the linked notes, with the file, the link from, the alt text and the destination file path
+ */
 export interface LinkedNotes {
 	linked: TFile;
 	linkFrom: string;
