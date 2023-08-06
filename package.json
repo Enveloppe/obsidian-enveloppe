@@ -6,7 +6,7 @@
     "scripts": {
         "lint:fix": "eslint --ext .ts,.js,.json src/ --fix",
         "build": "obsidian-plugin build src/main.ts -S src/styles.css ",
-        "dev:prod": "node dev.js --prod",
+        "dev:prod": "cross-env BUILD_ENV=development node dev.js --prod",
         "dev": "cross-env BUILD_ENV=development node dev.js",
         "preexport": "pnpm run build",
         "export": "node export.js",
