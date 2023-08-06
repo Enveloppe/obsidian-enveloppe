@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.4.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.4.0-2...6.4.0-3) (2023-08-06)
+
+
+### Bug Fixes
+
+* **logs:** remove uncessary log for production ([4d6bc6a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4d6bc6af1f2e72ac50c523db7beab1a995558c93))
+
 ## [6.4.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.4.0-1...6.4.0-2) (2023-07-29)
 
 
