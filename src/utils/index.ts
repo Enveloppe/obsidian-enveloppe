@@ -35,7 +35,7 @@ export function noticeLog(message: any, settings: GitHubPublisherSettings) {
  * @param {unknown[]} args
  */
 export function log(...args: unknown[]) {
-	if (process.env.BUILD_ENV === "development" && Platform.isDesktop) {
+	if (process.env.BUILD_ENV && process.env.BUILD_ENV==="development" && Platform.isDesktop) {
 		let callFunction = new Error().stack?.split("\n")[2].trim();
 		callFunction = callFunction?.substring(callFunction.indexOf("at ") + 3, callFunction.lastIndexOf(" ("));
 		callFunction = callFunction.replace("Object.callback", "");
