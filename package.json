@@ -6,8 +6,8 @@
     "scripts": {
         "lint:fix": "eslint --ext .ts,.js,.json src/ --fix",
         "build": "obsidian-plugin build src/main.ts -S src/styles.css ",
-        "dev:prod": "node dev.js --prod",
-        "dev": "node dev.js",
+        "dev:prod": "cross-env BUILD_ENV=development node dev.js --prod",
+        "dev": "cross-env BUILD_ENV=development node dev.js",
         "preexport": "pnpm run build",
         "export": "node export.js",
         "bump": "node commit-and-tag-version.js",
@@ -35,6 +35,7 @@
         "builtin-modules": "^3.3.0",
         "commander": "^10.0.1",
         "commit-and-tag-version": "latest",
+        "cross-env": "^7.0.3",
         "detect-indent": "^7.0.1",
         "detect-newline": "^4.0.0",
         "dotenv": "^16.1.4",
