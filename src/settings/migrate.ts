@@ -1,7 +1,7 @@
 import i18next from "i18next";
 
 import GithubPublisher from "../main";
-import {createTokenPath, noticeLog} from "../utils";
+import {createTokenPath, log, noticeLog} from "../utils";
 import {FolderSettings, GithubTiersVersion, TextCleaner, TOKEN_PATH, TypeOfEditRegex} from "./interface";
 
 export interface OldSettings {
@@ -104,7 +104,7 @@ async function migrateCensor(plugin: GithubPublisher) {
 }
 
 async function migrateWorFlow(plugin: GithubPublisher) {
-	noticeLog("migrating workflow", plugin.settings);
+	log("Migrating workflow");
 	//@ts-ignore
 	if (plugin.settings.github.worflow) {
 		//@ts-ignore
@@ -122,7 +122,7 @@ async function migrateWorFlow(plugin: GithubPublisher) {
 }
 
 export async function migrateToken(plugin: GithubPublisher, token?: string) {
-	console.log("migrating token");
+	log("migrating token");
 	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
 	//@ts-ignore
 	if (plugin.settings.github.token && !token) {
@@ -143,7 +143,7 @@ export async function migrateToken(plugin: GithubPublisher, token?: string) {
 
 
 async function migrateOtherRepository(plugin: GithubPublisher) {
-	noticeLog("Configuring other repositories", plugin.settings);
+	log("Configuring other repositories");
 	const otherRepo = plugin.settings.github?.otherRepo ?? [];
 	for (const repo of otherRepo) {
 		const workflow = {
