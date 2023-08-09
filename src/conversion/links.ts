@@ -83,6 +83,9 @@ export function convertWikilinks(
 							linkedFile.altText.length > 0
 								? linkedFile.altText
 								: linkedFile.linked.basename;
+						altText = altText
+							.replace("#", " > ")
+							.replace(/ > \^\w*/, "");
 					}
 					const removeEmbed =
 						conditionConvert.removeEmbed === "remove" &&
@@ -106,7 +109,10 @@ export function convertWikilinks(
 							.replace("#", " > ")
 							.replace(/ > \^\w*/, "");
 						linkCreator = createMarkdownLinks(fileName, isEmbed, altLink, settings);
-					} 
+					} else {
+						const altMatch = wikiMatch.match(/(\|).*(]])/);
+						linkCreator = addAltForWikilinks(altMatch, linkCreator);
+					}
 					if (
 						linkedFile.linked.extension === "md" &&
 						!convertLinks &&
@@ -146,7 +152,9 @@ export function convertWikilinks(
 					}
 					if (convertWikilink) {
 						linkCreator = createMarkdownLinks(fileName, isEmbed, altLink, settings);
-					} 
+					} else {
+						linkCreator = addAltForWikilinks(altMatch, linkCreator);
+					}
 					if (
 						!isAttachment(fileName.trim()) &&
 						!convertLinks &&
@@ -168,7 +176,23 @@ export function convertWikilinks(
 	return fileContent;
 }
 
-
+/**
+ * If there are no altText (aka (.*)|), we create one based on the content in [[.*]], but we replace the # with >.
+ * @param {RegExpMatchArray} altMatch - The match for the altText if any
+ * @param {string} linkCreator - The links to edit
+ */
+function addAltForWikilinks(altMatch: RegExpMatchArray, linkCreator: string) {
+	if (!altMatch) {
+		const link = linkCreator.match(/\[{2}(.*)\]{2}/);
+		/** need group 1 because group 0 is the whole match */
+		const altText = link ? link[1]
+			.replace("#", " > ")
+			.replace(/ > \^\w*/, "")
+			: "";
+		return linkCreator.replace(/\[{2}(.*)\]{2}/, `[[$1|${altText}]]`);
+	}
+	return linkCreator;
+}
 
 
 function createMarkdownLinks(fileName: string, isEmbed: string, altLink: string, settings: GitHubPublisherSettings) {
