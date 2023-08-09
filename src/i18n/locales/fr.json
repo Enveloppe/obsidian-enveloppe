@@ -331,7 +331,13 @@
         "dataview": "Convertit les requêtes dataview en markdown.",
         "desc": "Il existe quelques clés YAML qui peuvent vous êtes utile. Le code ci-dessous montre les paramètres par défaut, mais n'hésitez pas à le modifier selon vos besoins pour chaque note !",
         "embed": {
-          "remove": "Supprime les notes intégrées du fichier partagés en ne laissant qu'une ligne vide.",
+          "char": "Permet de modifier le \"!\" des embeds. Utilisé uniquement si vous avez mis la clé \"remove\" sur \"links\".",
+          "remove": {
+            "desc": "Modifie l'aspect des liens des notes transcluent. Peut prendre les valeurs suivantes :",
+            "keep": "Laisse comme dans Obsidian",
+            "links": "Convertit l'embed en lien simple (supprime ou modifie le \"!\")",
+            "remove": "Supprime le lien complètement et laisse une ligne vide"
+          },
           "send": "Envoie les notes intégrées de la note publiées dans le dépôt. Seules les notes partagées seront envoyées !"
         },
         "hardBreak": "Convertit tous les sauts de lignes en \"hard break\" markdown.",

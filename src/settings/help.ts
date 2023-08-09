@@ -23,7 +23,8 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings) {
 	`  nonShared: ${settings.conversion.links.unshared}\n` +
 	"embed:\n" +
 	`  send: ${settings.embed.notes}\n` +
-	"  remove: false\n" +
+	`  remove: ${settings.embed.convertEmbedToLinks}\n` +
+	`  char: ${settings.embed.charConvert}\n` +
 	"attachment:\n" +
 	`  send: ${settings.embed.attachments}\n` +
 	`  folder: ${settings.embed.folder}\n` +
@@ -126,8 +127,37 @@ export function help(settings: GitHubPublisherSettings) {
 				p.createEl("code", { text: "remove" });
 				p.createEl("span", {
 					text: `: ${
-						i18next.t("settings.help.frontmatter.embed.remove")
+						i18next.t("settings.help.frontmatter.embed.remove.desc")
 					}`,
+				});
+				p.createEl("ul", null, (ul) => {
+					ul.createEl("li", null, (li) => {
+						li.createEl("code", {text: "remove | true"});
+						li.createEl("span", {
+							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.remove")}`
+						},
+						);
+					});
+					ul.createEl("li", null, (li) => {
+						li.createEl("code", {text: "keep | false"});
+						li.createEl("span", {
+							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.keep")}`
+						},
+						);
+					});
+					ul.createEl("li", null, (li) => {
+						li.createEl("code", {text: "links"});
+						li.createEl("span", {
+							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.links")}`
+						},
+						);
+					});
+				});
+			});
+			l.createEl("li", null, (p) => {
+				p.createEl("code", { text: "char" });
+				p.createEl("span", {
+					text: `: ${i18next.t("settings.help.frontmatter.embed.char")}`,
 				});
 			});
 		});
