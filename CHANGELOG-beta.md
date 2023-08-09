@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.4.0-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.4.0-5...6.4.0-6) (2023-08-09)
+
+
+### Features
+
+* **embed:** allow to convert embed to links ([f28d6cd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f28d6cd888a0dd4b58871130f4e0121b2a601a49))
+
+
+### Bug Fixes
+
+* **embed:help:** add info on how to edit embed markup (+ translation ([47074d5](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/47074d5eb8978c9296e8d05484b34d0fa2c4b32c))
+* **link:anchor:** update the alt of links ([8ff06ec](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8ff06ec4cb014b37f3700beaedf501fbe34c1261))
+
 ## [6.4.0-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.4.0-4...6.4.0-5) (2023-08-06)
 
 ## [6.4.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.4.0-3...6.4.0-4) (2023-08-06)
