@@ -202,7 +202,7 @@
     },
     "embed": {
       "char": {
-        "desc": "Caractère à utiliser pour remplacer le ! des embeds",
+        "desc": "Caractère(s) à ajouter devant le lien.",
         "title": "Caractère d'embed"
       },
       "defaultImageFolder": {
@@ -331,7 +331,7 @@
         "dataview": "Convertit les requêtes dataview en markdown.",
         "desc": "Il existe quelques clés YAML qui peuvent vous êtes utile. Le code ci-dessous montre les paramètres par défaut, mais n'hésitez pas à le modifier selon vos besoins pour chaque note !",
         "embed": {
-          "char": "Permet de modifier le \"!\" des embeds. Utilisé uniquement si vous avez mis la clé \"remove\" sur \"links\".",
+          "char": "Ajoutez un ou plusieurs caractères avant les liens. Utiliser uniquement si vous avez fixé \"remove\" à \"links\".",
           "remove": {
             "desc": "Modifie l'aspect des liens des notes transcluent. Peut prendre les valeurs suivantes :",
             "keep": "Laisse comme dans Obsidian",

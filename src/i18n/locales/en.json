@@ -202,7 +202,7 @@
     },
     "embed": {
       "char": {
-        "desc": "Character(s) to use to replace the ! of the embeds",
+        "desc": "Character(s) to add before the link.",
         "title": "Embed characters"
       },
       "defaultImageFolder": {
@@ -331,9 +331,9 @@
         "dataview": "Convert dataview queries to markdown.",
         "desc": "Moreover, there are some frontmatter YAML keys that can be usefull for your workflow. The YAML code below show the default settings, but feel free to change it to your needs in each notes!",
         "embed": {
-          "char": "Edit the \"!\" for embed. Used only if you set the \"remove\" key to \"links\".",
+          "char": "Add a character(s) before the embedded links. Used only if you set \"remove\" to \"links\".",
           "remove": {
-            "desc": "Modify the aspect of the embeded files. Can take the followed value:",
+            "desc": "Modify the aspect of the embeded files link. Can take the followed value:",
             "keep": "Leave as in Obsidian",
             "links": "Convert to links (delete or edit the \"!\")",
             "remove": "Delete the citation completely and leave an empty line"
