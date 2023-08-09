@@ -165,8 +165,8 @@ export default class GithubPublisher extends Plugin {
 	 * Function called when the plugin is loaded
 	 * @return {Promise<void>}
 	 */
-	async onload() {
-		console.log(`[GITHUB PUBLISHER] v.${this.manifest.version} (lang: ${translationLanguage}) loaded`);
+	async onload(): Promise<void> {
+		console.info(`[GITHUB PUBLISHER] v.${this.manifest.version} (lang: ${translationLanguage}) loaded`);
 		await i18next.init({
 			lng: translationLanguage,
 			fallbackLng: "en",
@@ -245,7 +245,7 @@ export default class GithubPublisher extends Plugin {
 	 * Called when the plugin is disabled
 	 */
 	onunload() {
-		console.log("[Github Publisher] unloaded");
+		console.info("[Github Publisher] unloaded");
 	}
 
 	/**
