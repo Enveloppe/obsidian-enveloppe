@@ -255,6 +255,8 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 				keySendFile: old.metadataFileFields,
 				notes: old.embedNotes,
 				folder: old.defaultImageFolder,
+				charConvert: "->",
+				convertEmbedToLinks: "keep"
 			},
 			plugin: {
 				shareKey: old.shareKey,

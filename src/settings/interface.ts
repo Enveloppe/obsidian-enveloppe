@@ -7,7 +7,7 @@ export enum TypeOfEditRegex {
 
 
 
-export enum enumbSettingsTabId {
+export enum EnumbSettingsTabId {
 	github = "github-configuration",
 	upload = "upload-configuration",
 	text = "text-conversion",
@@ -111,6 +111,8 @@ export interface GitHubPublisherSettings {
 		keySendFile: string[];
 		notes: boolean;
 		folder: string;
+		convertEmbedToLinks: "links" | "remove" | "keep";
+		charConvert: string;
 	}
 	plugin:
 	{
@@ -222,6 +224,8 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 		keySendFile: [],
 		notes: false,
 		folder: "",
+		convertEmbedToLinks: "keep",
+		charConvert: "->",
 	},
 	plugin: {
 		shareKey: "share",
@@ -287,7 +291,8 @@ export interface FrontmatterConvert {
 	embed: boolean;
 	attachmentLinks: string;
 	convertWiki: boolean;
-	removeEmbed: boolean;
+	removeEmbed: "keep" | "remove" | "links";
+	charEmbedLinks: string;
 	dataview: boolean;
 	hardbreak: boolean;
 	convertInternalNonShared: boolean;

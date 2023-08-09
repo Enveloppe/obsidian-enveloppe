@@ -310,7 +310,8 @@ export function getFrontmatterCondition(
 		embed: settings.embed.notes,
 		attachmentLinks: imageDefaultFolder,
 		links: true,
-		removeEmbed: false,
+		removeEmbed: settings.embed.convertEmbedToLinks,
+		charEmbedLinks: settings.embed.charConvert,
 		dataview: settings.conversion.dataview,
 		hardbreak: settings.conversion.hardbreak,
 		convertInternalNonShared: settings.conversion.links.unshared,
@@ -342,7 +343,10 @@ export function getFrontmatterCondition(
 				settingsConversion.embed = frontmatter.embed.send;
 			}
 			if (frontmatter.embed.remove !== undefined) {
-				settingsConversion.removeEmbed = frontmatter.embed.remove;
+				settingsConversion.removeEmbed = translateBooleanForRemoveEmbed(frontmatter.embed.remove);
+			}
+			if (frontmatter.embed.char !== undefined) {
+				settingsConversion.charEmbedLinks = frontmatter.embed.char;
 			}
 		} else {
 			settingsConversion.embed = frontmatter.embed;
@@ -370,7 +374,7 @@ export function getFrontmatterCondition(
 		settingsConversion.convertWiki = frontmatter.mdlinks;
 	}
 	if (frontmatter.removeEmbed !== undefined) {
-		settingsConversion.removeEmbed = frontmatter.removeEmbed;
+		settingsConversion.removeEmbed = translateBooleanForRemoveEmbed(frontmatter.removeEmbed);
 	}
 	if (frontmatter.dataview !== undefined) {
 		settingsConversion.dataview = frontmatter.dataview;
@@ -385,6 +389,16 @@ export function getFrontmatterCondition(
 		settingsConversion.convertInternalNonShared = frontmatter.nonShared;
 	}
 	return settingsConversion;
+}
+
+function translateBooleanForRemoveEmbed(removeEmbed: unknown) {
+	if (removeEmbed === "true") {
+		return "keep";
+	} else if (removeEmbed === "false") {
+		return "remove";
+	} else if (removeEmbed === "links") {
+		return "links";
+	} else return "keep";
 }
 
 /**

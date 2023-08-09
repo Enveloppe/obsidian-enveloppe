@@ -103,8 +103,8 @@
     "scanningRepo": "Scan du dépôt, veuillez patienter...",
     "sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
     "startingClean": "Début du nettoyage de {{- repo.owner}}/{{- repo.repo}}",
-    "successfulPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
     "successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repo.owner}}/{{- repo.repo}}",
+    "successfulPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
     "waitingWorkflow": "Maintenant, attente de la fin du workflow..."
   },
   "modals": {
@@ -201,9 +201,22 @@
       "title": "Conversion du contenu"
     },
     "embed": {
+      "char": {
+        "desc": "Caractère à utiliser pour remplacer le ! des embeds",
+        "title": "Caractère d'embed"
+      },
       "defaultImageFolder": {
         "desc": "Pour utiliser un dossier différent de celui par défaut pour les pièces-jointes.",
         "title": "Dossier de pièces-jointes par défaut"
+      },
+      "links": {
+        "desc": "Permet d'éditer les liens des embeds, en supprimant entièrement la citation, ou en la transformant en un simple lien.",
+        "dp": {
+          "keep": "Pas de changement",
+          "links": "Transformer en lien simple",
+          "remove": "Supprimer le lien complètement"
+        },
+        "title": "Changer les balises d'embed"
       },
       "title": "Embed",
       "transferImage": {

@@ -9,7 +9,7 @@ import {
 	supportMe,
 	usefullLinks} from "./settings/help";
 import {
-	enumbSettingsTabId,	FolderSettings, GithubTiersVersion, Repository } from "./settings/interface";
+	EnumbSettingsTabId,	FolderSettings, GithubTiersVersion, Repository } from "./settings/interface";
 import { migrateToken } from "./settings/migrate";
 import {ExportModal, ImportLoadPreset, ImportModal, loadAllPresets} from "./settings/modals/import_export";
 import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
@@ -176,7 +176,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						githubSettings.api.tiersForApi = value as GithubTiersVersion;
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(enumbSettingsTabId.github);
+						this.renderSettingsPage(EnumbSettingsTabId.github);
 					});
 			});
 		if (githubSettings.api.tiersForApi === GithubTiersVersion.entreprise) {
@@ -377,7 +377,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							value,
 							this.plugin);
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(enumbSettingsTabId.upload);
+						this.renderSettingsPage(EnumbSettingsTabId.upload);
 					});
 			});
 
@@ -447,7 +447,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						uploadSettings.frontmatterTitle.enable = value;
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(enumbSettingsTabId.upload);
+						this.renderSettingsPage(EnumbSettingsTabId.upload);
 					});
 			});
 		if (uploadSettings.frontmatterTitle.enable) {
@@ -519,7 +519,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 
 		//@ts-ignore
-		if (app.plugins.enabledPlugins.has("metadata-extractor")) {
+		if (this.app.plugins.enabledPlugins.has("metadata-extractor")) {
 			new Setting(this.settingsPage)
 				.setName(
 					i18next.t("settings.githubWorkflow.useMetadataExtractor.title") 
@@ -553,7 +553,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						uploadSettings.autoclean.enable = value;
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(enumbSettingsTabId.upload);
+						this.renderSettingsPage(EnumbSettingsTabId.upload);
 					});
 			});
 		if (uploadSettings.autoclean.enable) {
@@ -769,6 +769,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	 * Render the settings page for the embeds settings
 	 */
 	renderEmbedConfiguration() {
+		this.settingsPage.empty();
 		const embedSettings = this.plugin.settings.embed;
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.embed.transferImage.title"))
@@ -825,10 +826,42 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						embedSettings.notes = value;
 						await this.plugin.saveSettings();
+						this.renderEmbedConfiguration();
 					});
 			});
 
-		
+		if (embedSettings.notes) {
+			//@TODO translate this
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.embed.links.title"))
+				.setDesc(i18next.t("settings.embed.links.desc"))
+				.addDropdown((dropdown) => {
+					dropdown
+						.addOption("keep", i18next.t("settings.embed.links.dp.keep"))
+						.addOption("remove", i18next.t("settings.embed.links.dp.remove"))
+						.addOption("links", i18next.t("settings.embed.links.dp.links"))
+						.setValue(embedSettings.convertEmbedToLinks ?? "keep")
+						.onChange(async (value) => {
+							embedSettings.convertEmbedToLinks = value as "keep" | "remove" | "links";
+							await this.plugin.saveSettings();
+							this.renderEmbedConfiguration();
+						});
+				});
+
+			if (embedSettings.convertEmbedToLinks === "links") {
+				new Setting(this.settingsPage)
+					.setName(i18next.t("settings.embed.char.title"))
+					.setDesc(i18next.t("settings.embed.char.desc"))
+					.addText((text) => {
+						text.setPlaceholder("->")
+							.setValue(embedSettings.charConvert ?? "->")
+							.onChange(async (value) => {
+								embedSettings.charConvert = value;
+								await this.plugin.saveSettings();
+							});
+					});
+			}
+		}
 	}
 
 	/**
@@ -895,7 +928,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						pluginSettings.copyLink.enable = value;
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(enumbSettingsTabId.plugin);
+						this.renderSettingsPage(EnumbSettingsTabId.plugin);
 						
 					})
 			);

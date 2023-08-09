@@ -39,7 +39,7 @@ export function convertWikilinks(
 		const fileRegex = /(\[\[).*?([\]|])/;
 		for (const wikiMatch of wikiMatches) {
 			const fileMatch = wikiMatch.match(fileRegex);
-			const isEmbed = wikiMatch.startsWith("!") ? "!" : "";
+			let isEmbed = wikiMatch.startsWith("!") ? "!" : "";
 			const isEmbedBool = wikiMatch.startsWith("!");
 			if (fileMatch) {
 				// @ts-ignore
@@ -85,21 +85,28 @@ export function convertWikilinks(
 								: linkedFile.linked.basename;
 					}
 					const removeEmbed =
-						conditionConvert.removeEmbed &&
+						conditionConvert.removeEmbed === "remove" &&
 						isEmbedBool &&
 						linkedFile.linked.extension === "md";
+					if (isEmbedBool && linkedFile.linked.extension === "md" && conditionConvert.removeEmbed === "links") {
+						isEmbed = conditionConvert.charEmbedLinks + " ";
+						linkCreator = linkCreator.replace("!", isEmbed);
+					}
 					if (convertWikilink) {
 						const altMatch = wikiMatch.match(/(\|).*(]])/);
 						const altCreator = fileName.split("/");
-						const altLink = creatorAltLink(
+						let altLink = creatorAltLink(
 							altMatch,
 							altCreator,
 							fileName.split(".").at(-1),
 							fileName
 						);
-						linkCreator = createMarkdownLinks(fileName, isEmbed, altLink, settings);
-					}
 
+						altLink = altLink
+							.replace("#", " > ")
+							.replace(/ > \^\w*/, "");
+						linkCreator = createMarkdownLinks(fileName, isEmbed, altLink, settings);
+					} 
 					if (
 						linkedFile.linked.extension === "md" &&
 						!convertLinks &&
@@ -115,23 +122,31 @@ export function convertWikilinks(
 						linkCreator = "";
 					}
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
+
 				} else if (!fileName.startsWith("http")) {
 					const altMatch = wikiMatch.match(/(\|).*(]])/);
 					const altCreator = fileName.split("/");
 
-					const altLink = creatorAltLink(
+					let altLink = creatorAltLink(
 						altMatch,
 						altCreator,
 						fileName.split(".").at(-1),
 						fileName
 					);
+					altLink = altLink
+						.replace("#", " > ")
+						.replace(/ > \^\w*/, "");
 					const removeEmbed =
 						!isAttachment(fileName.trim()) &&
-						conditionConvert.removeEmbed &&
+						conditionConvert.removeEmbed === "remove" &&
 						isEmbedBool;
+					if (isEmbedBool && conditionConvert.removeEmbed === "links" && !isAttachment(fileName.trim())) {
+						isEmbed = conditionConvert.charEmbedLinks + " ";
+						linkCreator = linkCreator.replace("!", isEmbed);
+					}
 					if (convertWikilink) {
 						linkCreator = createMarkdownLinks(fileName, isEmbed, altLink, settings);
-					}
+					} 
 					if (
 						!isAttachment(fileName.trim()) &&
 						!convertLinks &&
@@ -145,7 +160,6 @@ export function convertWikilinks(
 					) {
 						linkCreator = "";
 					}
-
 					fileContent = fileContent.replace(wikiMatch, linkCreator);
 				}
 			}
@@ -153,6 +167,8 @@ export function convertWikilinks(
 	}
 	return fileContent;
 }
+
+
 
 
 function createMarkdownLinks(fileName: string, isEmbed: string, altLink: string, settings: GitHubPublisherSettings) {
