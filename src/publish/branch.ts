@@ -23,9 +23,10 @@ import { FilesManagement } from "./files";
 export class GithubBranch extends FilesManagement {
 	settings: GitHubPublisherSettings;
 	octokit: Octokit;
-	vault: Vault;
-	metadataCache: MetadataCache;
+	vault!: Vault;
+	metadataCache!: MetadataCache;
 	plugin: GithubPublisherPlugin;
+
 
 	/**
 	 * Manage the branch

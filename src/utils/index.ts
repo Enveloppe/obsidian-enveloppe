@@ -38,8 +38,8 @@ export function log(...args: unknown[]) {
 	if (process.env.BUILD_ENV && process.env.BUILD_ENV==="development" && Platform.isDesktop) {
 		let callFunction = new Error().stack?.split("\n")[2].trim();
 		callFunction = callFunction?.substring(callFunction.indexOf("at ") + 3, callFunction.lastIndexOf(" ("));
-		callFunction = callFunction.replace("Object.callback", "");
-		callFunction = callFunction.length > 0 ? callFunction : "main";
+		callFunction = callFunction?.replace("Object.callback", "");
+		callFunction = callFunction ? callFunction : "main";
 		const date = new Date().toISOString().slice(11, 23);
 		console.log(`[${date}](${callFunction}):\n`, ...args);
 	}
@@ -132,7 +132,7 @@ export async function getSettingsOfMetadataExtractor(
 
 function checkSlash(link: string): string {
 	const slash = link.match(/\/*$/);
-	if (slash[0].length != 1) {
+	if (slash && slash[0].length != 1) {
 		link = link.replace(/\/*$/, "") + "/";
 	}
 	return link;
@@ -175,7 +175,7 @@ export async function createLink(
 			baseLink = `https://${repo.owner}.github.io/${repo.repo}/`;
 		}
 	}
-	const frontmatter = metadataCache.getFileCache(file)?.frontmatter;
+	const frontmatter = metadataCache.getFileCache(file)!.frontmatter as FrontMatterCache;
 	const keyRepo = frontmatter["baselink"];
 	let removePart = copyLink.removePart;
 	if (frontmatter["baselink"] !== undefined) {
@@ -211,7 +211,7 @@ export async function createLink(
 
 export async function noticeMessage(
 	PublisherManager: Publisher,
-	file: TFile | string,
+	file: TFile | string | undefined,
 	settings: GitHubPublisherSettings,
 	repo: RepoFrontmatter | RepoFrontmatter[]
 ) {
@@ -237,7 +237,7 @@ export async function noticeMessage(
 
 async function noticeMessageOneRepo(
 	PublisherManager: Publisher,
-	file: TFile | string,
+	file: TFile | string | undefined,
 	settings: GitHubPublisherSettings,
 	repo: RepoFrontmatter
 ): Promise<void> {
@@ -298,7 +298,7 @@ export function getFrontmatterCondition(
 	frontmatter: FrontMatterCache,
 	settings: GitHubPublisherSettings
 ) {
-	let imageDefaultFolder = null;
+	let imageDefaultFolder: string = "";
 	if (settings.embed.folder.length > 0) {
 		imageDefaultFolder = settings.embed.folder;
 	} else if (settings.upload.defaultName.length > 0) {

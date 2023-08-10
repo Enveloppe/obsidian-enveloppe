@@ -41,12 +41,12 @@ export class ModalRegexFilePathName extends Modal {
 		else if (
 			(value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)) && (type === TypeOfEditRegex.title) && !(value.match(regexSpecialDontExclude))
 		) {
-			new Notice(i18next.t("settings.regexReplacing.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)[0]}));
+			new Notice(i18next.t("settings.regexReplacing.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)![0]}));
 			value = "";
 			isForbidden = true;
 		} else if (type === TypeOfEditRegex.path) {
 			if (value.match(/[\\><:"|?*]/)){
-				new Notice(i18next.t("settings.regexReplacing.forbiddenValue", { what: onWhat, forbiddenChar: value.match(/[\\><:"|?*]/)[0]}));
+				new Notice(i18next.t("settings.regexReplacing.forbiddenValue", { what: onWhat, forbiddenChar: value.match(/[\\><:"|?*]/)![0]}));
 				value = "";
 				isForbidden = true;
 			} else if (value.match(/(^\w+\/\w+)|(\\\/)/) && !(value.match(regexSpecialDontExclude))) {

@@ -16,7 +16,7 @@ export class ListChangedFiles extends Modal {
 		const ul = contentEl.createEl("ul");
 		toDisplay.forEach((file) => {
 			let emoji = "❓";
-			const ext = file.split(".").pop();
+			const ext = file.split(".").pop() ?? "";
 			if (["md"].includes(ext)) {
 				emoji = "🗒️";
 			} else if ([".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"].includes(`.${ext}`)) {

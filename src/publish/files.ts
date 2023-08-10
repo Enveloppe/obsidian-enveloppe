@@ -76,7 +76,7 @@ export class FilesManagement extends Publisher {
 			try {
 				const frontMatter = this.metadataCache.getCache(
 					file.path
-				).frontmatter;
+				)?.frontmatter;
 				if (isShared(frontMatter, this.settings, file, repo)) {
 					shared_File.push(file);
 				}
@@ -100,9 +100,7 @@ export class FilesManagement extends Publisher {
 				files.push(... this.getSharedFileOfFolder(file, repo));
 			} else {
 				try {
-					const frontMatter = this.metadataCache.getCache(
-						file.path
-					).frontmatter;
+					const frontMatter = this.metadataCache.getCache(file.path)?.frontmatter;
 					if (isShared(frontMatter, this.settings, file as TFile, repo)) {
 						files.push(file as TFile);
 					}
@@ -132,9 +130,7 @@ export class FilesManagement extends Publisher {
 					real: file.path,
 				});
 			} else if (file.extension == "md") {
-				const frontMatter = this.metadataCache.getCache(
-					file.path
-				).frontmatter;
+				const frontMatter = this.metadataCache.getCache(file.path)?.frontmatter as FrontMatterCache;
 				if (isShared(frontMatter, this.settings, file, repo)) {
 					const filepath = getReceiptFolder(
 						file,
@@ -166,7 +162,7 @@ export class FilesManagement extends Publisher {
 	 */
 	getLinkedByEmbedding(file: TFile): LinkedNotes[] {
 		const linkedFiles: LinkedNotes[] = this.getLinkedFiles(file);
-		const imageEmbedded = this.metadataCache.getFileCache(file).embeds;
+		const imageEmbedded = this.metadataCache.getFileCache(file)?.embeds;
 		if (imageEmbedded != undefined) {
 			for (const image of imageEmbedded) {
 				try {
@@ -179,9 +175,7 @@ export class FilesManagement extends Publisher {
 						let frontmatterDestinationFilePath;
 
 						if (this.settings.upload.frontmatterTitle.enable) {
-							const frontmatter = this.metadataCache.getCache(
-								imageLink.path
-							).frontmatter;
+							const frontmatter = this.metadataCache.getCache(imageLink.path)?.frontmatter;
 
 							/**
 							 * In case there's a frontmatter configuration, pass along
@@ -197,7 +191,7 @@ export class FilesManagement extends Publisher {
 						const thisLinkedFile: LinkedNotes = {
 							linked: imageLink, //TFile found
 							linkFrom: image.link, //path of the founded file
-							altText: altText, //alt text if exists, filename otherwise
+							altText, //alt text if exists, filename otherwise
 							destinationFilePath: frontmatterDestinationFilePath,
 						};
 						if (image.link.includes("#")) {
@@ -220,7 +214,7 @@ export class FilesManagement extends Publisher {
 	 * @return {LinkedNotes[]} the file linked (TFile), the path to it, and the alt text if exists
 	 */
 	getLinkedFiles(file: TFile): LinkedNotes[] {
-		const embedCaches = this.metadataCache.getCache(file.path).links;
+		const embedCaches = this.metadataCache.getCache(file.path)?.links;
 		const embedList: LinkedNotes[] = [];
 		if (embedCaches != undefined) {
 			for (const embedCache of embedCaches) {
@@ -232,14 +226,12 @@ export class FilesManagement extends Publisher {
 					if (linkedFile) {
 						let altText = embedCache.displayText !== linkedFile.path.replace(".md", "") ? embedCache.displayText : linkedFile.basename;
 						if (embedCache.original.match(/\[.*\]\(.*\)/)) {
-							altText = embedCache.original.match(/\[(.*)\]/)[1];
+							altText = embedCache.original!.match(/\[(.*)\]/)![1];
 						}
 						let frontmatterDestinationFilePath;
 
 						if (this.settings.upload.frontmatterTitle.enable) {
-							const frontmatter = this.metadataCache.getCache(
-								linkedFile.path
-							).frontmatter;
+							const frontmatter = this.metadataCache.getCache(linkedFile.path)?.frontmatter;
 
 							/**
 							 * In case there's a frontmatter configuration, pass along
@@ -255,7 +247,7 @@ export class FilesManagement extends Publisher {
 						const thisEmbed: LinkedNotes = {
 							linked: linkedFile,
 							linkFrom: embedCache.link,
-							altText: altText,
+							altText,
 							destinationFilePath: frontmatterDestinationFilePath,
 						};
 						if (embedCache.link.includes("#")) {
@@ -288,7 +280,7 @@ export class FilesManagement extends Publisher {
 		file: TFile,
 		frontmatterSourceFile: FrontmatterConvert
 	): TFile[] {
-		const embedCaches = this.metadataCache.getCache(file.path).embeds;
+		const embedCaches = this.metadataCache.getCache(file.path)?.embeds;
 		const imageList: TFile[] = [];
 
 		if (embedCaches != undefined) {
@@ -298,10 +290,7 @@ export class FilesManagement extends Publisher {
 						embed.link.replace(/#(.*)/, ""),
 						file.path
 					);
-
-					imageList.push(
-						this.imageSharedOrNote(imageLink, frontmatterSourceFile)
-					);
+					if (imageLink) imageList.push(this.imageSharedOrNote(imageLink as TFile, frontmatterSourceFile) as TFile);
 				} catch (e) {
 					noticeLog(e, this.settings);
 					noticeLog(
@@ -326,7 +315,7 @@ export class FilesManagement extends Publisher {
 		octokit: Octokit,
 		githubRepo: GithubRepo,
 		settings: GitHubPublisherSettings
-	): Promise<Date> {
+	): Promise<Date | null> {
 		const commits = await octokit.request(
 			"GET /repos/{owner}/{repo}/commits",
 			{
@@ -336,6 +325,9 @@ export class FilesManagement extends Publisher {
 			}
 		);
 		const lastCommittedFile = commits.data[0];
+		if (!lastCommittedFile || !lastCommittedFile.commit || !lastCommittedFile.commit.committer || !lastCommittedFile.commit.committer.date) {
+			return null;
+		}
 		return new Date(lastCommittedFile.commit.committer.date);
 	}
 
@@ -370,7 +362,7 @@ export class FilesManagement extends Publisher {
 				const files = repoContents.data.tree;
 				for (const file of files) {
 					const basename = (name: string) =>
-						/([^/\\.]*)(\..*)?$/.exec(name)[1]; //don't delete file starting with .
+						/([^/\\.]*)(\..*)?$/.exec(name)![1]; //don't delete file starting with .
 					if (
 						file.type === "blob" &&
 						basename(file.path).length > 0
@@ -436,7 +428,7 @@ export class FilesManagement extends Publisher {
 		path: Link | string,
 		field: Link | string,
 		frontmatterSourceFile: FrontmatterConvert
-	): TFile {
+	): TFile | undefined {
 		if (field.constructor.name === "Link") {
 			// @ts-ignore
 			field = field.path;
@@ -447,10 +439,10 @@ export class FilesManagement extends Publisher {
 		}
 		// @ts-ignore
 		const imageLink = this.metadataCache.getFirstLinkpathDest(field, path);
-		if (imageLink !== null) {
-			return this.imageSharedOrNote(imageLink, frontmatterSourceFile);
+		if (imageLink) {
+			return this.imageSharedOrNote(imageLink as TFile, frontmatterSourceFile) as TFile;
 		}
-		return null;
+		return undefined;
 	}
 
 	/**
@@ -474,7 +466,7 @@ export class FilesManagement extends Publisher {
 		) {
 			return file;
 		}
-		return null;
+		return undefined;
 	}
 
 	/**
@@ -500,7 +492,7 @@ export class FilesManagement extends Publisher {
 				) ?? this.vault.getAbstractFileByPath(frontmatterSourceFile[field]);
 				if (imageLink !== null) {
 					embedFiles.push(
-						this.imageSharedOrNote(file, frontmatterSettings)
+						this.imageSharedOrNote(file, frontmatterSettings) as TFile
 					);
 				}
 			}
@@ -508,29 +500,30 @@ export class FilesManagement extends Publisher {
 		// @ts-ignore
 		if (this.plugin.app.plugins.enabledPlugins.has("dataview")) {
 			const dvApi = getAPI();
+			if (!dvApi) return embedFiles;
 			const dataviewMetadata = await dvApi.page(file.path);
+			if (!dataviewMetadata) return embedFiles;
 			for (const field of this.settings.embed.keySendFile) {
 				const fieldValue = dataviewMetadata[field];
 
 				if (fieldValue != undefined) {
 					if (fieldValue.constructor.name === "Array") {
 						for (const value of fieldValue) {
-							embedFiles.push(
-								this.getImageByPath(
-									value,
-									fieldValue,
-									frontmatterSettings
-								)
-							);
-						}
-					} else {
-						embedFiles.push(
-							this.getImageByPath(
-								fieldValue,
+							const path = this.getImageByPath(
+								value,
 								fieldValue,
 								frontmatterSettings
-							)
+							);
+							if (path) embedFiles.push(path);
+						}
+					} else {
+						const path = this.getImageByPath(
+							fieldValue,
+							fieldValue,
+							frontmatterSettings
 						);
+						if (path)
+							embedFiles.push(path);
 					}
 				}
 			}
@@ -561,6 +554,7 @@ export class FilesManagement extends Publisher {
 				const githubSharedFile = githubSharedFiles.find(
 					(x) => x.file === file.converted.trim()
 				);
+				if (!githubSharedFile) continue;
 				const repoEditedTime = await this.getLastEditedTimeRepo(
 					this.octokit,
 					githubSharedFile,
@@ -575,7 +569,7 @@ export class FilesManagement extends Publisher {
 					fileInVault.extension === "md"
 				) {
 					const vaultEditedTime = new Date(fileInVault.stat.mtime);
-					if (vaultEditedTime > repoEditedTime) {
+					if (repoEditedTime && vaultEditedTime > repoEditedTime) {
 						noticeLog(
 							`edited file : ${fileInVault.path} / ${vaultEditedTime} vs ${repoEditedTime}`,
 							this.settings

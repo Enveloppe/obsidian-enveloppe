@@ -88,8 +88,7 @@ export async function createRelativePath(
 	shortRepo: Repository | null
 ): Promise<string> {
 	const sourcePath = getReceiptFolder(sourceFile, settings, metadata, vault, shortRepo);
-	const frontmatterTarget = await metadata.getFileCache(targetFile.linked)
-		.frontmatter;
+	const frontmatterTarget = metadata.getFileCache(targetFile.linked)!.frontmatter as FrontMatterCache;
 	const targetRepo = await getRepoFrontmatter(settings, shortRepo, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(sourceRepo, targetRepo);
 	const shareKey = shortRepo ? shortRepo.shareKey : settings.plugin.shareKey;
@@ -104,9 +103,7 @@ export async function createRelativePath(
 		return targetFile.destinationFilePath ? targetFile.destinationFilePath: targetFile.linked.basename;
 	}
 	if (targetFile.linked.path === sourceFile.path) {
-		return getReceiptFolder(targetFile.linked, settings, metadata, vault, shortRepo)
-			.split("/")
-			.at(-1);
+		return getReceiptFolder(targetFile.linked, settings, metadata, vault, shortRepo).split("/").at(-1) as string;
 	}
 
 	const targetPath =
@@ -115,7 +112,7 @@ export async function createRelativePath(
 			: getImageLinkOptions(
 				targetFile.linked,
 				settings,
-				getFrontmatterCondition(frontmatter, settings)
+				getFrontmatterCondition(frontmatter as FrontMatterCache, settings)
 			);
 	const sourceList = sourcePath.split("/");
 	const targetList = targetPath.split("/");
@@ -162,9 +159,7 @@ export async function createRelativePath(
 			metadata,
 			vault,
 			shortRepo
-		)
-			.split("/")
-			.at(-1);
+		).split("/").at(-1) as string;
 	}
 	return relative;
 }
@@ -186,11 +181,11 @@ function folderNoteIndexOBS(
 	fileName: string
 ): string {
 	const index = settings.upload.folderNote.rename;
-	const folderParent = file.parent.path !== "/" ? `/${file.parent.path}/` : "/" ;
+	const folderParent = file.parent ? `/${file.parent.path}/` : "/" ;
 	const defaultPath = `${folderParent}${regexOnFileName(fileName, settings)}`;
 	if (!settings.upload.folderNote.enable) return defaultPath;
-	const parentFolderName = file.parent.name;
-	if (fileName.replace(".md", "") === parentFolderName) return `/${file.parent.path}/${index}`;
+	const parentFolderName = file.parent ? file.parent.name : "";
+	if (fileName.replace(".md", "") === parentFolderName) return `/${file.parent!.path}/${index}`;
 	const outsideFolder = vault.getAbstractFileByPath(
 		file.path.replace(".md", "")
 	);
@@ -219,7 +214,7 @@ function createObsidianPath(
 	//remove last word from path splitted with /
 	let pathWithoutEnd = path.split("/").slice(0, -1).join("/");
 	//get file name only
-	const fileNameOnly = path.split("/").at(-1);
+	const fileNameOnly = path.split("/").at(-1) ?? "";
 	pathWithoutEnd = regexOnPath(pathWithoutEnd, settings);
 	if (pathWithoutEnd.trim().length === 0) return fileNameOnly;
 	return (pathWithoutEnd + "/" + fileNameOnly).replace(/^\//, "");
@@ -239,13 +234,13 @@ function folderNoteIndexYAML(
 	settings: GitHubPublisherSettings
 ): string {
 	const category = getCategory(frontmatter, settings);
-	const parentCatFolder = !category.endsWith("/")
-		? category.split("/").at(-1)
-		: category.split("/").at(-2);
+	const catSplit = category.split("/");
+	const parentCatFolder = !category.endsWith("/") ? catSplit.at(-1) as string : catSplit.at(-2) as string;
+	
 	if (!settings.upload.folderNote.enable) return regexOnFileName(fileName, settings);
 	if (
 		fileName.replace(".md", "").toLowerCase() ===
-		parentCatFolder.toLowerCase()
+		parentCatFolder?.toLowerCase()
 	)
 		return settings.upload.folderNote.rename;
 	return regexOnFileName(fileName, settings);
@@ -385,10 +380,9 @@ export function getReceiptFolder(
 	metadataCache: MetadataCache,
 	vault: Vault,
 	otherRepo: Repository | null
-
 ): string {
 	if (file.extension === "md") {
-		const frontmatter = metadataCache.getCache(file.path)?.frontmatter;
+		const frontmatter = metadataCache.getCache(file.path)?.frontmatter as FrontMatterCache;
 
 		const fileName = getTitleField(frontmatter, file, settings);
 		const editedFileName = regexOnFileName(fileName, settings);
@@ -415,6 +409,7 @@ export function getReceiptFolder(
 				: editedFileName;
 		}
 	}
+	return file.path;
 }
 
 /**

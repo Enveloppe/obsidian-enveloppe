@@ -75,12 +75,12 @@ export function convertWikilinks(
 					let altText: string;
 					if (linkedFile.linked.extension !== "md") {
 						altText =
-							linkedFile.altText.length > 0
+							linkedFile.altText
 								? linkedFile.altText
 								: "";
 					} else {
 						altText =
-							linkedFile.altText.length > 0
+							linkedFile.altText
 								? linkedFile.altText
 								: linkedFile.linked.basename;
 						altText = altText
@@ -99,9 +99,9 @@ export function convertWikilinks(
 						const altMatch = wikiMatch.match(/(\|).*(]])/);
 						const altCreator = fileName.split("/");
 						let altLink = creatorAltLink(
-							altMatch,
+							altMatch as RegExpMatchArray,
 							altCreator,
-							fileName.split(".").at(-1),
+							fileName.split(".").at(-1) as string,
 							fileName
 						);
 
@@ -111,7 +111,7 @@ export function convertWikilinks(
 						linkCreator = createMarkdownLinks(fileName, isEmbed, altLink, settings);
 					} else {
 						const altMatch = wikiMatch.match(/(\|).*(]])/);
-						linkCreator = addAltForWikilinks(altMatch, linkCreator);
+						linkCreator = addAltForWikilinks(altMatch as RegExpMatchArray, linkCreator);
 					}
 					if (
 						linkedFile.linked.extension === "md" &&
@@ -134,9 +134,9 @@ export function convertWikilinks(
 					const altCreator = fileName.split("/");
 
 					let altLink = creatorAltLink(
-						altMatch,
+						altMatch as RegExpMatchArray,
 						altCreator,
-						fileName.split(".").at(-1),
+						fileName.split(".").at(-1) as string,
 						fileName
 					);
 					altLink = altLink
@@ -153,7 +153,7 @@ export function convertWikilinks(
 					if (convertWikilink) {
 						linkCreator = createMarkdownLinks(fileName, isEmbed, altLink, settings);
 					} else {
-						linkCreator = addAltForWikilinks(altMatch, linkCreator);
+						linkCreator = addAltForWikilinks(altMatch as RegExpMatchArray, linkCreator);
 					}
 					if (
 						!isAttachment(fileName.trim()) &&
@@ -199,10 +199,10 @@ function createMarkdownLinks(fileName: string, isEmbed: string, altLink: string,
 	const markdownName = !isAttachment(fileName.trim())
 		? fileName.replace(/#.*/, "").trim() + ".md"
 		: fileName.trim();
-	let anchor = fileName.match(/(#.*)/) ? fileName.match(/(#.*)/)[0].replaceAll(" ", "%20") : "";
+	let anchor = fileName.match(/(#.*)/) ? fileName.match(/(#.*)/)![0]!.replaceAll(" ", "%20") : "";
 	const encodedURI = encodeURI(markdownName);
 	if (settings.conversion.links.slugify) {
-		anchor = fileName.match(/(#.*)/) ? slugify(fileName.match(/(#.*)/)[0], { lower: true, strict: true }) : "";
+		anchor = fileName.match(/(#.*)/) ? slugify(fileName.match(/(#.*)/)![0], { lower: true, strict: true }) : "";
 		anchor = `#${anchor}`;
 	}
 	return `${isEmbed}[${altLink}](${encodedURI}${anchor})`;
@@ -277,7 +277,7 @@ export async function convertLinkCitation(
 		);
 		pathInGithub = pathInGithub.replace(".md", "");
 		let anchor = linkedFile.anchor ? linkedFile.anchor : "";
-		let linkInMarkdown = escapeRegex(linkedFile.linkFrom.replace(linkedFile.anchor, "")).replaceAll(" ", "%20") + anchor.replace("^", "\\^");
+		let linkInMarkdown = escapeRegex(linkedFile.linkFrom.replace(anchor, "")).replaceAll(" ", "%20") + anchor.replace("^", "\\^");
 		linkInMarkdown = linkInMarkdown.replaceAll(" ", "%20");
 		const escapedLinkedFile = escapeRegex(linkedFile.linkFrom);
 
@@ -306,7 +306,7 @@ export async function convertLinkCitation(
 							pathInGithub + ".md"
 							: pathInGithub;
 					}
-					const altText = link.match(/\[(.*)\]/)[1];
+					const altText = link.match(/\[(.*)\]/)![1];
 					newLink = `[${altText}](${pathInGithub})`;
 				}
 				newLink = addAltText(newLink, linkedFile);
@@ -341,5 +341,5 @@ export function creatorAltLink(
 			? altCreator[altCreator.length - 1]
 			: altCreator[0]; //alt text based on filename for markdown files
 	}
-	return match.split("/").at(-1); //alt text based on filename for other files
+	return match.split("/").at(-1) as string; //alt text based on filename for other files
 }

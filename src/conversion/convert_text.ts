@@ -148,7 +148,7 @@ export async function addInlineTags(
  * @return {string | null} the display text by dataview
  */
 function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings) {
-	const basename = (name: string) => /([^/\\.]*)(\..*)?$/.exec(name)[1];
+	const basename = (name: string) => /([^/\\.]*)(\..*)?$/.exec(name)![1];
 	const filename = basename(fieldValue.path).toString();
 	const display = fieldValue.display
 		? fieldValue.display.toString()
@@ -188,14 +188,20 @@ export async function convertInlineDataview(
 		return text;
 	}
 	const dvApi = getAPI();
+	if (!dvApi) {
+		return text;
+	}
 	const dataviewLinks = dvApi.page(sourceFile.path);
+	if (!dataviewLinks) {
+		return text;
+	}
 	const valueToAdd: string[] = [];
 	for (const field of settings.conversion.tags.fields) {
 		const fieldValue = dataviewLinks[field];
 		if (fieldValue) {
 			if (fieldValue.constructor.name === "Link") {
 				const stringifyField = dataviewExtract(fieldValue, settings);
-				valueToAdd.push(stringifyField);
+				if (stringifyField) valueToAdd.push(stringifyField);
 			} else if (fieldValue.constructor.name === "Array") {
 				for (const item of fieldValue) {
 					let stringifyField = item;

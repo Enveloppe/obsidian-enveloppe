@@ -3,6 +3,7 @@ import i18next from "i18next";
 import { Base64 } from "js-base64";
 import {
 	arrayBufferToBase64,
+	FrontMatterCache,
 	MetadataCache,
 	Notice,
 	TFile,
@@ -223,7 +224,7 @@ export default class Publisher {
 			this.octokit,
 			this.plugin
 		);
-		const frontmatter = this.metadataCache.getFileCache(file).frontmatter;
+		const frontmatter = this.metadataCache.getFileCache(file)?.frontmatter;
 		const isNotEmpty = checkEmptyConfiguration(getRepoFrontmatter(this.settings, shortRepo, frontmatter), this.plugin);
 		if (
 			!isShared(frontmatter, this.settings, file, shortRepo) ||
@@ -239,7 +240,7 @@ export default class Publisher {
 			noticeLog("Publishing file: " + file.path, this.settings);
 			fileHistory.push(file);
 			const frontmatterSettings = getFrontmatterCondition(
-				frontmatter,
+				frontmatter as FrontMatterCache,
 				this.settings
 			);
 			let embedFiles = shareFiles.getSharedEmbed(
@@ -249,19 +250,19 @@ export default class Publisher {
 			embedFiles = await shareFiles.getMetadataLinks(
 				file,
 				embedFiles,
-				frontmatter,
+				frontmatter as FrontMatterCache,
 				frontmatterSettings
 			);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
-			let text = await app.vault.cachedRead(file);
+			let text = await this.vault.cachedRead(file);
 			text = await mainConverting(
 				text,
 				this.settings,
 				frontmatterSettings,
 				file,
-				app,
+				this.plugin.app,
 				this.metadataCache,
-				frontmatter,
+				frontmatter as FrontMatterCache,
 				linkedFiles,
 				this.plugin,
 				this.vault,
@@ -348,9 +349,19 @@ export default class Publisher {
 		noticeLog(
 			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${branchName}`,
 			this.settings
-		);
-		const uploaded: UploadedFiles = await this.uploadText(text, path, file.name, branchName, repo);
-		let deleted: Deleted; 
+		);let deleted: Deleted = {
+			success: false,
+			deleted: [],
+			undeleted: [],
+		};
+		const uploaded: UploadedFiles | undefined = await this.uploadText(text, path, file.name, branchName, repo);
+		if (!uploaded) {
+			return {
+				deleted: deleted,
+				uploaded: [],
+				error: [`Error while uploading ${file.name} to ${repo.owner}/${repo.repo}/${repo.branch}`]
+			};
+		}
 		const embeded = await this.statusBarForEmbed(
 			embedFiles,
 			fileHistory,
@@ -360,6 +371,7 @@ export default class Publisher {
 			repo,
 			shortRepo
 		);
+
 		const embeddedUploaded = embeded.uploaded;
 		embeddedUploaded.push(uploaded);
 		if (autoclean && repo.autoclean) {
@@ -374,7 +386,7 @@ export default class Publisher {
 			);
 		}
 		return {
-			deleted: deleted,
+			deleted,
 			uploaded: embeddedUploaded,
 			error: embeded.error
 		};
@@ -530,7 +542,7 @@ export default class Publisher {
 		if (metadataExtractor) {
 			for (const file of Object.values(metadataExtractor)) {
 				if (file) {
-					const contents = await app.vault.adapter.read(file);
+					const contents = await this.vault.adapter.read(file);
 					const path =
 						this.settings.upload.metadataExtractorPath +
 						"/" +
@@ -588,12 +600,13 @@ export default class Publisher {
 							run.name ===
 							repoFrontmatter.workflowName.replace(".yml", "")
 					);
-					if (build.status === "completed") {
+					if (build && build.status === "completed") {
 						finished = true;
 						return true;
 					}
 				}
 			}
 		}
+		return false;
 	}
 }

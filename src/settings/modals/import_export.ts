@@ -114,10 +114,10 @@ export class ImportModal extends Modal {
 						const reader = new FileReader();
 
 						reader.onload = async (e: ProgressEvent<FileReader>) => {
-							await importAndClose(e.target.result.toString().trim());
+							await importAndClose(e.target!.result!.toString().trim());
 						};
 
-						reader.readAsText((e.target as HTMLInputElement).files[0]);
+						reader.readAsText((e.target as HTMLInputElement).files![0]);
 					});
 				}
 			);
@@ -183,12 +183,17 @@ export class ExportModal extends Modal {
 	}
 
 	censorGithubSettingsData(censuredSettings: GitHubPublisherSettings) {
-		delete censuredSettings.github.repo;
-		delete censuredSettings.github.user;
-		delete censuredSettings.plugin;
-		delete censuredSettings.github.otherRepo;
-		delete censuredSettings.github.rateLimit;
-		return censuredSettings;
+		const cloneCensored = Object(censuredSettings);
+		const { github } = cloneCensored;
+		
+		if (github) {
+			delete github.repo;
+			delete github.user;
+			delete github.otherRepo;
+			delete github.rateLimit;
+		}
+		delete cloneCensored.plugin;
+		return cloneCensored;
 	}
 
 	onOpen() {

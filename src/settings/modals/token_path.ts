@@ -23,7 +23,7 @@ export class TokenEditPath extends Modal {
 		contentEl.empty();
 	
 		const defaultPath = createTokenPath(this.plugin, TOKEN_PATH);
-		const desc = contentEl.createEl("p", null, (p) => {
+		const desc = contentEl.createEl("p", undefined, (p) => {
 			p.appendText(i18next.t("settings.github.ghToken.button.description"));
 			const div = p.createDiv({text: i18next.t("settings.github.ghToken.button.default")});
 			div.createEl("code", {text: ` ${defaultPath}`}, (code) => {
@@ -33,13 +33,13 @@ export class TokenEditPath extends Modal {
 		});
 		desc.createEl("br");
 		desc.createEl("p", {text: i18next.t("settings.github.ghToken.button.variables")});
-		desc.createEl("ul", null, (span) => {
-			span.createEl("li", null, (li) => {
+		desc.createEl("ul", undefined, (span) => {
+			span.createEl("li", undefined, (li) => {
 				li.createEl("code", {text: "%configDir%"}, (code) => {
 					code.classList.add("cm-inline-code");
 					code.style.fontFamily = "var(--font-monospace)";
 				});
-				li.createEl("span", null, (e) => {
+				li.createEl("span", undefined, (e) => {
 					e.appendText(`${i18next.t("settings.github.ghToken.button.configDir")} (`);
 					e.createEl("code", {text: this.app.vault.configDir}, (code) => {
 						code.classList.add("cm-inline-code");
@@ -48,12 +48,12 @@ export class TokenEditPath extends Modal {
 					e.appendText(")");
 				});
 			});
-			span.createEl("li", null, (li) => {
+			span.createEl("li", undefined, (li) => {
 				li.createEl("code", {text: "%pluginID%"}, (code) => {
 					code.classList.add("cm-inline-code");
 					code.style.fontFamily = "var(--font-monospace)";
 				});
-				li.createEl("span", null, (e) => {
+				li.createEl("span", undefined, (e) => {
 					e.appendText(`${i18next.t("settings.github.ghToken.button.pluginID")} (`);
 					e.createEl("code", {text: this.plugin.manifest.id}, (code) => {
 						code.classList.add("cm-inline-code");
@@ -80,7 +80,7 @@ export class TokenEditPath extends Modal {
 					});
 			});
 		input.infoEl.style.display = "none";
-		input.controlEl.querySelector("input").style.width = "100%";
+		input.controlEl.querySelector("input")!.style.width = "100%";
 
 		new Setting(contentEl)
 			.addButton((button) => {
@@ -91,7 +91,7 @@ export class TokenEditPath extends Modal {
 							await migrateToken(this.plugin, this.token);
 							this.close();
 						} catch (e) {
-							input.controlEl.querySelector("input").style.border = "1px solid red";
+							input.controlEl.querySelector("input")!.style.border = "1px solid red";
 							new Notice(i18next.t("error.reading-token-file"));
 							this.tokenPath="error";
 						}

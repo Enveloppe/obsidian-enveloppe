@@ -31,7 +31,7 @@ import {checkRepositoryValidity} from "./utils/data_validation_test";
  */
 
 export default class GithubPublisher extends Plugin {
-	settings: GitHubPublisherSettings;
+	settings!: GitHubPublisherSettings;
 
 	/**
 	 * Get the title field of a file
@@ -132,6 +132,7 @@ export default class GithubPublisher extends Plugin {
 		} catch (e) {
 			return "";
 		}
+		return "";
 	}
 
 	/**
@@ -194,12 +195,14 @@ export default class GithubPublisher extends Plugin {
 			await this.saveSettings();
 		}
 		this.registerEvent(
+			//@ts-ignore
 			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
 				addMenuFile(this, file, branchName, menu);
 			})
 		);
 
 		this.registerEvent(
+			//@ts-ignore
 			this.app.workspace.on("file-menu", (menu: Menu, folder: TFolder) => {
 				if (this.settings.plugin.fileMenu && folder instanceof TFolder) {
 					addMenuFolder(menu, folder, branchName, this);
@@ -209,7 +212,7 @@ export default class GithubPublisher extends Plugin {
 		
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor, view) => {
-				addMenuFile(this, view.file, branchName, menu);
+				if (view.file) addMenuFile(this, view.file, branchName, menu);
 			})
 		);
 		await this.chargeAllCommands(null, this, branchName);
