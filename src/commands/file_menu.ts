@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import {Menu, MenuItem, TFile, TFolder} from "obsidian";
+import {FrontMatterCache, Menu, MenuItem, TFile, TFolder} from "obsidian";
 
 import GithubPublisher from "../main";
 import {RepoFrontmatter, Repository} from "../settings/interface";
@@ -16,7 +16,7 @@ import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
  * @param {Repository} repo - The repository to share to
  * @return {Promise<void>}
  */
-export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchName: string, repo: Repository) {
+export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchName: string, repo: Repository | null) {
 	const publisher = await plugin.reloadOctokit();
 	const statusBarItems = plugin.addStatusBarItem();
 	await shareAllMarkedNotes(
@@ -52,7 +52,7 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
 			}))
 			.setIcon("folder-up")
 			.onClick(async () => {
-				const repo = getRepoSharedKey(plugin.settings, null);
+				const repo = getRepoSharedKey(plugin.settings, undefined);
 				await shareFolderRepo(plugin, folder, branchName, repo);
 			});
 	});
@@ -94,7 +94,7 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
  * @param {Menu} menu - The menu to add the item to
  */
 export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: string, menu: Menu) {
-	const frontmatter = file instanceof TFile ? plugin.app.metadataCache.getFileCache(file).frontmatter : null;
+	const frontmatter = file instanceof TFile ? plugin.app.metadataCache.getFileCache(file)!.frontmatter : undefined;
 	const getSharedKey = getRepoSharedKey(plugin.settings, frontmatter);
 	if (
 		isShared(frontmatter, plugin.settings, file, getSharedKey) && 
@@ -116,7 +116,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 					getSharedKey
 				);
 			} else {
-				const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file).frontmatter).replace(".md", "");
+				const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file)?.frontmatter as FrontMatterCache).replace(".md", "");
 				item
 					.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
 						doc: fileName,
@@ -149,11 +149,11 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
  * @param {Repository} repo - The data repository found in the file
  * @return {Menu} - The submenu created
  */
-export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository) {
-	const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file).frontmatter).replace(".md", "");
+export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository | null) {
+	const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file)?.frontmatter as FrontMatterCache).replace(".md", "");
 	//@ts-ignore
 	const subMenu = item.setSubmenu() as Menu;
-	if (repo.shareKey === plugin.settings.plugin.shareKey) {
+	if (repo?.shareKey === plugin.settings.plugin.shareKey) {
 		subMenu.addItem((subItem) => {
 			subItem
 				.setTitle(
@@ -179,7 +179,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 	const activatedRepoCommands = plugin.settings.github.otherRepo.filter((repo) => repo.createShortcuts);
 	if (activatedRepoCommands.length > 0) {
 		activatedRepoCommands.forEach((otherRepo) => {
-			if (otherRepo.shareKey === repo.shareKey) {
+			if (otherRepo.shareKey === repo?.shareKey) {
 				subMenu.addItem((item) => {
 					item
 						.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
@@ -208,7 +208,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 			.setTitle(i18next.t("commands.shareViewFiles.multiple.other"))
 			.setIcon("file-input")
 			.onClick(async () => {
-				new ChooseRepoToRun(plugin.app, plugin, repo.shareKey, branchName, async (item: Repository) => {
+				new ChooseRepoToRun(plugin.app, plugin, repo?.shareKey, branchName, async (item: Repository) => {
 					await shareOneNote(
 						branchName,
 						await plugin.reloadOctokit(),
@@ -249,7 +249,7 @@ export async function addMenuFolder(menu: Menu, folder: TFolder, branchName: str
 				}))
 				.setIcon("folder-up")
 				.onClick(async () => {
-					const repo = getRepoSharedKey(plugin.settings, null);
+					const repo = getRepoSharedKey(plugin.settings, undefined);
 					await shareFolderRepo(plugin, folder, branchName, repo);
 				});
 		}

@@ -194,7 +194,7 @@ export async function shareOneNote(
 	title?: string,
 ) {
 	try {
-		const frontmatter = metadataCache.getFileCache(file).frontmatter;
+		const frontmatter = metadataCache.getFileCache(file)?.frontmatter;
 		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
 		const isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, settings, repoFrontmatter);
 		if (!isValid) return false;
@@ -258,7 +258,7 @@ export async function shareOneNote(
 		if (!(error instanceof DOMException)) {
 			noticeLog(error, settings);
 			new Notice(
-				(i18next.t("error.errorPublish", {repo: getRepoFrontmatter(settings, repository, metadataCache.getFileCache(file).frontmatter)}))
+				(i18next.t("error.errorPublish", {repo: getRepoFrontmatter(settings, repository, metadataCache.getFileCache(file)?.frontmatter)}))
 			);
 		}
 	}
@@ -282,7 +282,7 @@ export async function shareNewNote(
 	vault: Vault,
 	plugin: GithubPublisher,
 	repoFrontmatter: RepoFrontmatter,
-	shortRepo: Repository
+	shortRepo: Repository | null
 ) {
 	const settings = plugin.settings;
 	new Notice(i18next.t("informations.scanningRepo") );

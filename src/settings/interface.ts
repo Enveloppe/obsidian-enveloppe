@@ -261,7 +261,7 @@ export interface MetadataExtractor {
 export interface LinkedNotes {
 	linked: TFile;
 	linkFrom: string;
-	altText: string;
+	altText?: string;
 	destinationFilePath?: string;
 	anchor?: string;
 }

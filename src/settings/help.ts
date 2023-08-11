@@ -48,8 +48,8 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings) {
  */
 export function help(settings: GitHubPublisherSettings) {
 	const explanation = document.createDocumentFragment();
-	explanation.createEl("ul", null, (span) => {
-		span.createEl("li", null, (span) => {
+	explanation.createEl("ul", undefined, (span) => {
+		span.createEl("li", undefined, (span) => {
 			span.createEl("code", {
 				text: `${settings.plugin.shareKey}:`,
 				cls: "code-title",
@@ -57,11 +57,11 @@ export function help(settings: GitHubPublisherSettings) {
 			span.createEl("span", {
 				text: `${i18next.t("settings.help.frontmatter.share.title")}`,
 			});
-			span.createEl("ul", null, (l) => {
+			span.createEl("ul", undefined, (l) => {
 				l.createEl("span", {text: i18next.t("settings.help.frontmatter.share.other")});
 			});
 		});
-		span.createEl("li", null, (span) => {
+		span.createEl("li", undefined, (span) => {
 			span.createEl("code", {
 				text: "path:",
 				cls: "code-title",
@@ -70,11 +70,11 @@ export function help(settings: GitHubPublisherSettings) {
 				text: ` ${i18next.t("settings.help.frontmatter.path")}`,
 			});
 		});
-		span.createEl("li", null, (span) => {
+		span.createEl("li", undefined, (span) => {
 			span.createEl("code", { text: "links:", cls: "code-title" });
 		});
-		span.createEl("ul", null, (l) => {
-			l.createEl("li", null, (p) => {
+		span.createEl("ul", undefined, (l) => {
+			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "mdlinks" });
 				p.createEl("span", {
 					text: `: ${
@@ -82,9 +82,9 @@ export function help(settings: GitHubPublisherSettings) {
 					}`,
 				});
 			});
-			l.createEl("li", null, (p) => {
+			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "convert" });
-				p.createEl("span", null, (span) => {
+				p.createEl("span", undefined, (span) => {
 					span.createEl("span", {
 						text: `: ${
 							i18next.t(
@@ -102,20 +102,20 @@ export function help(settings: GitHubPublisherSettings) {
 					});
 				});
 			});
-			l.createEl("li", null, (p) => {
+			l.createEl("li", undefined, (p) => {
 				p.createEl("code", {text: "internals"});
 				p.createEl("span", {
 					text: `: ${i18next.t("settings.help.frontmatter.internals")}`
 				});
 			});
-			l.createEl("li", null, (p) => {
+			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "nonShared" });
 				p.createEl("span", { text: `: ${i18next.t("settings.help.frontmatter.nonShared")}` });
 			});
 		});
 		span.createEl("li", { text: "embed:", cls: "code code-title" });
-		span.createEl("ul", null, (l) => {
-			l.createEl("li", null, (p) => {
+		span.createEl("ul", undefined, (l) => {
+			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "send" });
 				p.createEl("span", {
 					text: `: ${
@@ -123,29 +123,29 @@ export function help(settings: GitHubPublisherSettings) {
 					}`,
 				});
 			});
-			l.createEl("li", null, (p) => {
+			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "remove" });
 				p.createEl("span", {
 					text: `: ${
 						i18next.t("settings.help.frontmatter.embed.remove.desc")
 					}`,
 				});
-				p.createEl("ul", null, (ul) => {
-					ul.createEl("li", null, (li) => {
+				p.createEl("ul", undefined, (ul) => {
+					ul.createEl("li", undefined, (li) => {
 						li.createEl("code", {text: "remove | true"});
 						li.createEl("span", {
 							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.remove")}`
 						},
 						);
 					});
-					ul.createEl("li", null, (li) => {
+					ul.createEl("li", undefined, (li) => {
 						li.createEl("code", {text: "keep | false"});
 						li.createEl("span", {
 							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.keep")}`
 						},
 						);
 					});
-					ul.createEl("li", null, (li) => {
+					ul.createEl("li", undefined, (li) => {
 						li.createEl("code", {text: "links"});
 						li.createEl("span", {
 							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.links")}`
@@ -154,7 +154,7 @@ export function help(settings: GitHubPublisherSettings) {
 					});
 				});
 			});
-			l.createEl("li", null, (p) => {
+			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "char" });
 				p.createEl("span", {
 					text: `: ${i18next.t("settings.help.frontmatter.embed.char")}`,
@@ -162,8 +162,8 @@ export function help(settings: GitHubPublisherSettings) {
 			});
 		});
 		span.createEl("li", { text: "attachment:", cls: "code code-title" });
-		span.createEl("ul", null, (l) => {
-			l.createEl("li", null, (span) => {
+		span.createEl("ul", undefined, (l) => {
+			l.createEl("li", undefined, (span) => {
 				span.createEl("code", { text: "send" });
 				span.createEl("span", {
 					text: `: ${
@@ -173,7 +173,7 @@ export function help(settings: GitHubPublisherSettings) {
 					}`,
 				});
 			});
-			l.createEl("li", null, (p) => {
+			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "folder" });
 				p.createEl("span", {
 					text: `: ${
@@ -184,13 +184,13 @@ export function help(settings: GitHubPublisherSettings) {
 				});
 			});
 		});
-		span.createEl("li", null, (span) => {
+		span.createEl("li", undefined, (span) => {
 			span.createEl("code", { text: "dataview", cls: "code-title" });
 			span.createEl("span", {
 				text: `: ${i18next.t("settings.help.frontmatter.dataview")}`,
 			});
 		});
-		span.createEl("li", null, (span) => {
+		span.createEl("li", undefined, (span) => {
 			span.createEl("code", { text: "hardbreak", cls: "code-title" });
 			span.createEl("span", {
 				text: `: ${
@@ -198,31 +198,31 @@ export function help(settings: GitHubPublisherSettings) {
 				}`,
 			});
 		});
-		span.createEl("li", null, (span) => {
+		span.createEl("li", undefined, (span) => {
 			span.createEl("code", { text: "shortRepo", cls: "code-title" });
 			span.createEl("span", {
 				text: `: ${i18next.t("settings.help.frontmatter.shortRepo")}`,
 			});
 		});
-		span.createEl("li", null, (span) => {
+		span.createEl("li", undefined, (span) => {
 			span.createEl("code", { text: "repo", cls: "code-title" });
 			span.createEl("span", {
 				text: `: ${i18next.t("settings.help.frontmatter.repo.desc")}`,
 			});
-			span.createEl("ul", null, (ul) => {
-				ul.createEl("li", null, (li) => {
+			span.createEl("ul", undefined, (ul) => {
+				ul.createEl("li", undefined, (li) => {
 					li.createEl("code", { text: "owner" });
 					li.createEl("span", {
 						text: `: ${i18next.t("settings.help.frontmatter.repo.owner")}`,
 					});
 				});
-				ul.createEl("li", null, (li) => {
+				ul.createEl("li", undefined, (li) => {
 					li.createEl("code", { text: "repo" });
 					li.createEl("span", {
 						text: `: ${i18next.t("settings.github.repoName.title")}`,
 					});
 				});
-				ul.createEl("li", null, (li) => {
+				ul.createEl("li", undefined, (li) => {
 					li.createEl("code", { text: "branch" });
 					li.createEl("span", {
 						text: `: ${i18next.t(
@@ -230,7 +230,7 @@ export function help(settings: GitHubPublisherSettings) {
 						)}`,
 					});
 				});
-				ul.createEl("li", null, (li) => {
+				ul.createEl("li", undefined, (li) => {
 					li.createEl("code", { text: "autoclean"});
 					li.createEl("span", {
 						text: `: ${i18next.t("settings.help.frontmatter.autoclean")}`,
@@ -238,7 +238,7 @@ export function help(settings: GitHubPublisherSettings) {
 				});
 			});
 		});
-		span.createEl("li", null, (span) => {
+		span.createEl("li", undefined, (span) => {
 			span.createEl("code", {
 				text: `${settings.upload.frontmatterTitle.key}`,
 				cls: "code-title",
@@ -247,20 +247,20 @@ export function help(settings: GitHubPublisherSettings) {
 				text: `: ${i18next.t("settings.help.frontmatter.titleKey")}`,
 			});
 		});
-		span.createEl("li", null, (span) => {
+		span.createEl("li", undefined, (span) => {
 			span.createEl("code", { text: "baseLink", cls: "code-title" });
 			span.createEl("span", {
 				text: `: ${i18next.t("settings.help.frontmatter.baselink.desc")}`,
 			});
 			span.createEl("code", {text: "copylink:", cls: "code-title"});
-			span.createEl("ul", null, (ul) => {
-				ul.createEl("li", null, (li) => {
+			span.createEl("ul", undefined, (ul) => {
+				ul.createEl("li", undefined, (li) => {
 					li.createEl("code", { text: "base"});
 					li.createEl("span", {
 						text: `: ${i18next.t("settings.plugin.copyLink.baselink.title")}`,
 					});
 				});
-				ul.createEl("li", null, (li) => {
+				ul.createEl("li", undefined, (li) => {
 					li.createEl("code", { text: "remove"});
 					li.createEl("span", {
 						text: `: ${i18next.t("settings.help.frontmatter.baselink.remove")}`,
@@ -278,26 +278,26 @@ export function help(settings: GitHubPublisherSettings) {
  */
 export function usefullLinks(): DocumentFragment {
 	const usefullLinks = document.createDocumentFragment();
-	usefullLinks.createEl("ul", null, (el) => {
-		el.createEl("li", null, (el) => {
+	usefullLinks.createEl("ul", undefined, (el) => {
+		el.createEl("li", undefined, (el) => {
 			el.createEl("a", {
 				text: i18next.t("settings.help.usefulLinks.documentation"),
 				href: i18next.t("settings.help.usefulLinks.links"),
 			});
 		});
-		el.createEl("li", null, (el) => {
+		el.createEl("li", undefined, (el) => {
 			el.createEl("a", {
 				text: i18next.t("common.repository"),
 				href: "https://github.com/ObsidianPublisher/obsidian-github-publisher",
 			});
 		});
-		el.createEl("li", null, (el) => {
+		el.createEl("li", undefined, (el) => {
 			el.createEl("a", {
 				text: i18next.t("settings.help.usefulLinks.issue"),
 				href: "https://github.com/ObsidianPublisher/obsidian-github-publisher/issues",
 			});
 		});
-		el.createEl("li", null, (el) => {
+		el.createEl("li", undefined, (el) => {
 			el.createEl("a", {
 				text: i18next.t("settings.help.usefulLinks.discussion"),
 				href: "https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions",
@@ -316,7 +316,7 @@ export function multipleRepoExplained(
 	settings: GitHubPublisherSettings
 ): DocumentFragment {
 	const multipleRepoExplained = document.createDocumentFragment();
-	multipleRepoExplained.createEl("p", null, (el) => {
+	multipleRepoExplained.createEl("p", undefined, (el) => {
 		el.createEl("span", {
 			text: i18next.t("settings.help.multiRepoHelp.desc"),
 		});
@@ -324,7 +324,7 @@ export function multipleRepoExplained(
 		el.createEl("span", {
 			text: ` ${i18next.t("settings.help.multiRepoHelp.desc2")}:`,
 		});
-		el.createEl("ul", null, (el) => {
+		el.createEl("ul", undefined, (el) => {
 			el.createEl("li", { text: "owner" }).addClass("code");
 			el.createEl("li", { text: "repo" }).addClass("code");
 			el.createEl("li", { text: "branch" }).addClass("code");
@@ -350,9 +350,9 @@ export function multipleRepoExplained(
 
 export function supportMe(): DocumentFragment {
 	const supportMe = document.createDocumentFragment();
-	supportMe.createEl("p", null, (el) => {
-		el.createEl("a", null, (el) => {
-			el.createEl("img", null, (img) => {
+	supportMe.createEl("p", undefined, (el) => {
+		el.createEl("a", undefined, (el) => {
+			el.createEl("img", undefined, (img) => {
 				img.setAttr(
 					"src",
 					"https://storage.ko-fi.com/cdn/kofi2.png?v=3"

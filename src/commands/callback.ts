@@ -33,7 +33,7 @@ export async function createLinkCallback(repo: Repository | null, branchName: st
 		hotkeys: [],
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
-			const frontmatter = file ? plugin.app.metadataCache.getFileCache(file).frontmatter : null;
+			const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
 			if (
 				file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 			) {
@@ -117,7 +117,7 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 		//@ts-ignore
 		checkCallback: async (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
-			const frontmatter = file ? plugin.app.metadataCache.getFileCache(file).frontmatter : null;
+			const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
 			if (
 				file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 			) {
@@ -228,7 +228,7 @@ export async function shareEditedOnlyCallback(repo: Repository|null, branchName:
  * @return {Promise<Command>}
  */
 
-export async function checkRepositoryValidityCallback(plugin: GithubPublisher, repo: Repository) {
+export async function checkRepositoryValidityCallback(plugin: GithubPublisher, repo: Repository | null) {
 	const id = repo ? `check-plugin-repo-validy-K${repo.smartKey}` : "check-plugin-repo-validy";
 	let name = i18next.t("commands.checkValidity.title");
 	const common = i18next.t("common.repository");

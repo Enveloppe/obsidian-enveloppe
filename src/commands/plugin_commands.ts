@@ -28,7 +28,7 @@ import {
  */
 export async function createLinkOnActiveFile(branchName: string, repo: Repository | null, plugin: GithubPublisher): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
-	const frontmatter = file ? plugin.app.metadataCache.getFileCache(file).frontmatter : null;
+	const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
 	if (
 		file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 	) {

@@ -46,7 +46,7 @@ export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?
  */
 
 export function isShared(
-	meta: FrontMatterCache | null,
+	meta: FrontMatterCache | undefined | null,
 	settings: GitHubPublisherSettings,
 	file: TFile,
 	otherRepo: Repository|null
@@ -222,9 +222,9 @@ export async function checkRepositoryValidity(
 	metadataCache: MetadataCache,
 	silent=false): Promise<boolean> {
 	try {
-		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : null;
+		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : undefined;
 		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
-		const isNotEmpty = checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin, silent);
+		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin, silent);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, silent);
 			return true;
@@ -234,6 +234,7 @@ export async function checkRepositoryValidity(
 		noticeLog(e, settings);
 		return false;
 	}
+	return false;
 }
 
 /**
@@ -276,4 +277,5 @@ export async function checkRepositoryValidityWithRepoFrontmatter(
 		noticeLog(e, settings);
 		return false;
 	}
+	return false;
 }

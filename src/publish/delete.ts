@@ -73,7 +73,7 @@ async function deleteFromGithubOneRepo(
 	repo: RepoFrontmatter,
 	otherRepo: Repository | null
 ): Promise<Deleted> {
-	if (!repo.autoclean) return;
+	if (!repo.autoclean) return {success: false, deleted: [], undeleted: []};
 	const getAllFile = await filesManagement.getAllFileFromRepo(
 		branchName,
 		octokit,
@@ -232,7 +232,7 @@ export async function filterGithubFile(
 				root.length === 0) ||
 			defaultName.length === 0 || behavior === FolderSettings.fixed
 		) {
-			return null;
+			return [];
 		}
 		if (
 			(file.file.includes(defaultName) ||
@@ -311,4 +311,5 @@ async function checkIndexFiles(
 			return false;
 		}
 	}
+	return false;
 }

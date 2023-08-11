@@ -27,7 +27,7 @@ import { checkRepositoryValidity } from "./utils/data_validation_test";
 
 export class GithubPublisherSettingsTab extends PluginSettingTab {
 	plugin: GithubPublisherPlugin;
-	settingsPage: HTMLElement;
+	settingsPage!: HTMLElement;
 	branchName: string;
 
 	constructor(app: App, plugin: GithubPublisherPlugin, branchName: string) {
@@ -221,9 +221,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					})
 			);
 		const desc_ghToken = document.createDocumentFragment();
-		desc_ghToken.createEl("span", null, (span) => {
+		desc_ghToken.createEl("span", undefined, (span) => {
 			span.innerText = i18next.t("settings.github.ghToken.desc") ;
-			span.createEl("a", null, (link) => {
+			span.createEl("a", undefined, (link) => {
 				link.innerText = i18next.t("common.here") + "." ;
 				link.href =
 					"https://github.com/settings/tokens/new?scopes=repo,workflow";
@@ -239,10 +239,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setValue(decryptedToken)
 					.onChange(async (value) => {
 						if (value.trim().length === 0 ) {
-							tokenSettings.controlEl.querySelector("input").style.border = "1px solid red";
+							tokenSettings.controlEl.querySelector("input")!.style.border = "1px solid red";
 							new Notice(i18next.t("settings.github.ghToken.error"));
 						} else {
-							tokenSettings.controlEl.querySelector("input").style.border = "";
+							tokenSettings.controlEl.querySelector("input")!.style.border = "";
 							await migrateToken(this.plugin, value.trim());
 						}
 						await this.plugin.saveSettings();
