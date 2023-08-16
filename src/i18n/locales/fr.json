@@ -103,8 +103,8 @@
     "scanningRepo": "Scan du dépôt, veuillez patienter...",
     "sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
     "startingClean": "Début du nettoyage de {{- repo.owner}}/{{- repo.repo}}",
-    "successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repo.owner}}/{{- repo.repo}}",
     "successfulPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
+    "successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repo.owner}}/{{- repo.repo}}",
     "waitingWorkflow": "Maintenant, attente de la fin du workflow..."
   },
   "modals": {
