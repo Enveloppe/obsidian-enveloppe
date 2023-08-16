@@ -26,6 +26,7 @@
         "@babel/core": "^7.22.1",
         "@babel/preset-env": "^7.22.4",
         "@babel/preset-typescript": "^7.21.5",
+        "@lisandra-dev/eslint-config": "^1.1.4",
         "@octokit/core": "^4.2.1",
         "@types/node": "^18.16.16",
         "@typescript-eslint/eslint-plugin": "^6.2.0",
