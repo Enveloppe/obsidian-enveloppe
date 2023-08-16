@@ -162,7 +162,7 @@
         "title": "Markdown hard line break"
       },
       "links": {
-        "desc": "You can prevent links to be converted and keep the alt text (or filename) by using the frontmatter key \"links\" with the value \"false\".",
+        "desc": "You can prevent links to be converted and keep the alt text (or filename) by using the properties key \"links\" with the value \"false\".",
         "folderNote": {
           "desc": "Rename files to a specified name (default: index.md) if it has the same name as their parent folder/category (also works if the note is outside of the folder).",
           "title": "Folder note"
@@ -187,16 +187,16 @@
       },
       "sectionTitle": "Main text",
       "tags": {
-        "desc": "This will convert any frontmatter or dataview inline field into frontmatter tags. Separate fields with a comma.",
+        "desc": "This will convert any properties or dataview inline field into properties tags. Separate fields with a comma.",
         "exclude": {
           "desc": "This will exclude value from being converted. Separate fields with a comma.",
           "title": "Exclude value from conversion"
         },
         "inlineTags": {
-          "desc": "Add your inline tags in your frontmatter tags field and converting nested tags with replacing \"/\" with \"_\"",
+          "desc": "Add your inline tags in your properties tags field and converting nested tags with replacing \"/\" with \"_\"",
           "title": "Inline tags"
         },
-        "title": "Convert frontmatter/dataview field into tags"
+        "title": "Convert properties/dataview fields into tags"
       },
       "title": "Content's conversion"
     },
@@ -273,7 +273,7 @@
           "default": "The name \"default\" is reserved for your primary configuration.",
           "desc": "These \"other repositories\" allow you to use all the commands on the repositories added below.",
           "duplicate": "Smartkey must be unique!",
-          "frontmatterInfo": "Using the \"shortRepo\" frontmatter key with the \"smartKey\" also allows you to use this repository in a file without having to write its path.",
+          "frontmatterInfo": "Using the \"shortRepo\" properties key with the \"smartKey\" also allows you to use this repository in a file without having to write its path.",
           "newRepo": "a new repository",
           "otherConfig": "Other settings",
           "shortcuts": {
@@ -321,7 +321,7 @@
         },
         "autoclean": "Disable or enable autocleaning",
         "baselink": {
-          "desc": "Change the base link for the copy link command. Also disable the link replacer part. Can be used as an YAML object with the name ",
+          "desc": "Change the base link for the copy link command. Also disable the link replacer part. Can be used as an properties object with the name ",
           "remove": "Remove part of the link. It must be a list!"
         },
         "convert": {
@@ -329,11 +329,11 @@
           "syntax": "syntax, while keeping the file name or the alternative text."
         },
         "dataview": "Convert dataview queries to markdown.",
-        "desc": "Moreover, there are some frontmatter YAML keys that can be usefull for your workflow. The YAML code below show the default settings, but feel free to change it to your needs in each notes!",
+        "desc": "Moreover, there are some properties keys that can be useful for your workflow. The code below show the default settings, but feel free to change it to your needs in each notes!",
         "embed": {
           "char": "Add a character(s) before the embedded links. Used only if you set \"remove\" to \"links\".",
           "remove": {
-            "desc": "Modify the aspect of the embeded files link. Can take the followed value:",
+            "desc": "Modify the aspect of the embedded files link. Can take the followed value:",
             "keep": "Leave as in Obsidian",
             "links": "Convert to links (delete or edit the \"!\")",
             "remove": "Delete the citation completely and leave an empty line"
@@ -355,13 +355,13 @@
           "title": "This key is used to share a note with the plugin."
         },
         "shortRepo": "Allow to use one of the repo set in other repo settings.",
-        "title": "Frontmatter keys cheatsheet",
+        "title": "Properties keys cheatsheet",
         "titleKey": "Change the title of the note."
       },
       "multiRepoHelp": {
         "desc": "If you want to send your notes to multiple repository, you can use the ",
-        "desc2": "key in your frontmatter. The value of this key must be a list of repository. Each repository must have the following keys ",
-        "exampleDesc": "The YAML code below show an example based on your settings.",
+        "desc2": "key in your properties. The value of this key must be a list of repository. Each repository must have the following keys ",
+        "exampleDesc": "The code below show an example based on your settings.",
         "title": "Send to multiple repository"
       },
       "title": "Help",
@@ -410,7 +410,7 @@
         "title": "Notice every error"
       },
       "shareKey": {
-        "desc": "The frontmatter key to publish your file on the website.",
+        "desc": "The properties key to publish your file on the website.",
         "otherRepo": "You can also define a share key to separate with others, without using the shortRepo key.",
         "title": "Share Key"
       },
@@ -437,16 +437,16 @@
         "title": "Default Folder"
       },
       "folderBehavior": {
-        "desc": "Choose the file tree in the repository, with using a frontmatter key, a fixed folder or your Obsidian file tree.",
+        "desc": "Choose the file tree in the repository, with using a properties key, a fixed folder or your Obsidian file tree.",
         "fixedFolder": "Fixed Folder",
         "obsidianPath": "Obsidian Path",
         "title": "File tree in repository",
-        "yaml": "YAML frontmatter"
+        "yaml": "Properties key"
       },
       "frontmatterKey": {
         "desc": "Set the key where to get the folder's value.",
         "placeholder": "category",
-        "title": "Frontmatter key"
+        "title": "Properties key"
       },
       "regexFilePathTitle": {
         "desc": "If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string.",
@@ -456,12 +456,12 @@
         }
       },
       "rootFolder": {
-        "desc": "Append this path to the folder set by the frontmatter key",
+        "desc": "Append this path to the folder set by the properties key",
         "title": "Root folder"
       },
       "title": "Upload configuration",
       "useFrontmatterTitle": {
-        "desc": "Use a frontmatter value to generate the filename. By default, \"title\" is used. ",
+        "desc": "Use a properties value to generate the filename. By default, \"title\" is used. ",
         "title": "Set the key where to get the value of the filename"
       }
     }
