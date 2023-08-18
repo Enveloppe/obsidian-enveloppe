@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { Command, Option } = require("commander");
-const { readFileSync, writeFileSync } = require("fs");
 const commitAndTagVersion = require("commit-and-tag-version");
 const dedent = require("dedent");
 const c = require("ansi-colors");
@@ -98,6 +97,10 @@ if (opt.beta) {
 			type: "json",
 		},
 		{
+			filename: "package-lock.json",
+			type: "json",
+		},
+		{
 			filename: "manifest.json",
 			type: "json",
 		}
@@ -109,6 +112,7 @@ if (opt.beta) {
 		bumpFiles: bumpFiles,
 		dryRun: opt.dryRun,
 		tagPrefix: "",
+		releaseAs: opt.releaseAs,
 	})
 		.then(() => {
 			console.log("Done");
