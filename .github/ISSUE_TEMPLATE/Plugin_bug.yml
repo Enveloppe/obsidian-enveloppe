@@ -102,6 +102,7 @@ body:
     attributes:
       label: Minimal Reproducible Example
       description: Please provide a minimal reproducible example. You need, at last, one note, with the frontmatter and the content.
+      render: markdown
     validations:
       required: true
   - type: textarea
