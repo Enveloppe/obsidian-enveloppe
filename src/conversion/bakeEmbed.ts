@@ -155,8 +155,8 @@ export async function bakeEmbeds(
 		if (resolvedSubPath) {
 			text = extractSubpath(text, resolvedSubPath, cache);
 		}
-	} else if (!original && !subpath) {
-		const yaml = cache.frontmatter ? `---\n${stringifyYaml(cache.frontmatter)}---` : "";
+	} else if (!original && !subpath && cache.frontmatter) {
+		const yaml = `---\n${stringifyYaml(cache.frontmatter)}---`;
 		text = text.replace(yaml, "");
 	}
 	const embeds = cache.embeds;
