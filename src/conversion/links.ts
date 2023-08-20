@@ -88,7 +88,7 @@ export function convertWikilinks(
 							.replace(/ > \^\w*/, "");
 					}
 					const removeEmbed =
-						conditionConvert.removeEmbed === "remove" &&
+						(conditionConvert.removeEmbed === "remove" || conditionConvert.removeEmbed === "bake") &&
 						isEmbedBool &&
 						linkedFile.linked.extension === "md";
 					if (isEmbedBool && linkedFile.linked.extension === "md" && conditionConvert.removeEmbed === "links") {

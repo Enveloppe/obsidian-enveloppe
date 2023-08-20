@@ -103,8 +103,8 @@
     "scanningRepo": "Scanning the repository, may take a while...",
     "sendMessage": "Upload {{- nbNotes}} notes to {{- repo.owner}}/{{- repo.repo}}",
     "startingClean": "Starting cleaning {{- repo.owner}}/{{- repo.repo}}",
-    "successfulPublish": "Successfully uploaded {{- nbNotes}} to {{- repo.owner}}/{{- repo.repo}}",
     "successPublishOneNote": "Successfully uploaded {{- file}} to {{- repo.owner}}/{{- repo.repo}}",
+    "successfulPublish": "Successfully uploaded {{- nbNotes}} to {{- repo.owner}}/{{- repo.repo}}",
     "waitingWorkflow": "Now, waiting for the workflow to be completed..."
   },
   "modals": {
@@ -212,6 +212,7 @@
       "links": {
         "desc": "Allow to edit the links of the embeds, removing entirely the citation, or transform to a simple link",
         "dp": {
+          "bake": "Include embed contents",
           "keep": "No change",
           "links": "Transform to link",
           "remove": "Remove link completely"

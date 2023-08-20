@@ -22,10 +22,10 @@ import {
 	Repository,
 } from "../settings/interface";
 import {log, noticeLog} from "../utils";
+import {bakeEmbeds} from "./bakeEmbed";
 import {getDataviewPath} from "./file_path";
 import findAndReplaceText from "./find_and_replace_text";
 import {convertLinkCitation, convertWikilinks, escapeRegex} from "./links";
-
 
 /**
  * Convert soft line breaks to hard line breaks, adding two space at the end of the line.
@@ -412,6 +412,8 @@ async function convertDataviewLinks(
 	return md;
 }
 
+
+
 /**
  * Main function to convert the text
  * @param {string} text the text to convert
@@ -443,6 +445,8 @@ export async function mainConverting(
 	sourceRepo: RepoFrontmatter | RepoFrontmatter[],
 	shortRepo: Repository | null
 ): Promise<string> {
+	if (settings.embed.convertEmbedToLinks === "bake")
+		text = await bakeEmbeds(file, new Set(), app, shortRepo, settings, null, true);
 	text = findAndReplaceText(text, settings, false);
 	text = await addInlineTags(settings, file, metadataCache, frontmatter, text);
 	text = await convertDataviewQueries(

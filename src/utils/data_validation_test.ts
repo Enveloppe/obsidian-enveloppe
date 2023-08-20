@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import {FrontMatterCache, MetadataCache,Notice, TFile } from "obsidian";
+import {FrontMatterCache, MetadataCache, Notice, TFile} from "obsidian";
 import GithubPublisher from "src/main";
 
 import {GithubBranch} from "../publish/branch";
@@ -21,7 +21,7 @@ export function isInternalShared(
 	const shared =
 		frontmatter && frontmatter[sharekey] ? frontmatter[sharekey] : false;
 	if (shared) return true;
-	return !shared && frontmatterSettings.convertInternalNonShared === true;
+	return !shared && frontmatterSettings.convertInternalNonShared;
 }
 
 export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache): Repository | null{

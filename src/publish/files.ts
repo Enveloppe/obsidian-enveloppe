@@ -193,6 +193,11 @@ export class FilesManagement extends Publisher {
 							linkFrom: image.link, //path of the founded file
 							altText, //alt text if exists, filename otherwise
 							destinationFilePath: frontmatterDestinationFilePath,
+							type: "embed",
+							position: {
+								start: image.position.start.offset,
+								end: image.position.end.offset,
+							}
 						};
 						if (image.link.includes("#")) {
 							thisLinkedFile.anchor = "#" + image.link.split("#")[1];
@@ -249,6 +254,7 @@ export class FilesManagement extends Publisher {
 							linkFrom: embedCache.link,
 							altText,
 							destinationFilePath: frontmatterDestinationFilePath,
+							type: "link",
 						};
 						if (embedCache.link.includes("#")) {
 							thisEmbed.anchor = "#" + embedCache.link.split("#")[1];

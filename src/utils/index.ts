@@ -398,6 +398,8 @@ function translateBooleanForRemoveEmbed(removeEmbed: unknown) {
 		return "remove";
 	} else if (removeEmbed === "links") {
 		return "links";
+	} else if (removeEmbed === "bake" || removeEmbed === "include") {
+		return "bake";
 	} else return "keep";
 }
 
