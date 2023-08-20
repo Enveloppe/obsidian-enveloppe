@@ -817,7 +817,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					});
 			});
 
-		new Setting(this.settingsPage)
+		const embedNote = new Setting(this.settingsPage)
 			.setName(i18next.t("settings.embed.transferNotes.title"))
 			.setDesc(i18next.t("settings.embed.transferNotes.desc"))
 			.addToggle((toggle) => {
@@ -831,7 +831,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 
 		if (embedSettings.notes) {
-			//@TODO translate this
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.embed.links.title"))
 				.setDesc(i18next.t("settings.embed.links.desc"))
@@ -840,9 +839,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						.addOption("keep", i18next.t("settings.embed.links.dp.keep"))
 						.addOption("remove", i18next.t("settings.embed.links.dp.remove"))
 						.addOption("links", i18next.t("settings.embed.links.dp.links"))
+						.addOption("bake", i18next.t("settings.embed.links.dp.bake"))
 						.setValue(embedSettings.convertEmbedToLinks ?? "keep")
 						.onChange(async (value) => {
-							embedSettings.convertEmbedToLinks = value as "keep" | "remove" | "links";
+							embedSettings.convertEmbedToLinks = value as "keep" | "remove" | "links" | "bake";
 							await this.plugin.saveSettings();
 							this.renderEmbedConfiguration();
 						});

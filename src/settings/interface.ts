@@ -111,7 +111,7 @@ export interface GitHubPublisherSettings {
 		keySendFile: string[];
 		notes: boolean;
 		folder: string;
-		convertEmbedToLinks: "links" | "remove" | "keep";
+		convertEmbedToLinks: "links" | "remove" | "keep" | "bake";
 		charConvert: string;
 	}
 	plugin:
@@ -264,6 +264,11 @@ export interface LinkedNotes {
 	altText?: string;
 	destinationFilePath?: string;
 	anchor?: string;
+	type: "embed" | "link";
+	position?: {
+		start: number;
+		end: number;
+	}
 }
 
 export interface ConvertedLink {
@@ -291,7 +296,7 @@ export interface FrontmatterConvert {
 	embed: boolean;
 	attachmentLinks: string;
 	convertWiki: boolean;
-	removeEmbed: "keep" | "remove" | "links";
+	removeEmbed: "keep" | "remove" | "links" | "bake";
 	charEmbedLinks: string;
 	dataview: boolean;
 	hardbreak: boolean;

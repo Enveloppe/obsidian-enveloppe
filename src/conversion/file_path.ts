@@ -54,6 +54,7 @@ export function getDataviewPath(
 					linked: linked,
 					linkFrom: linkFrom,
 					altText: altText,
+					type: "link"
 				});
 			}
 		}
@@ -98,7 +99,7 @@ export async function createRelativePath(
 		frontmatterSettings
 	);
 	if (
-		targetFile.linked.extension === "md" && (isFromAnotherRepo === false || shared === false)
+		targetFile.linked.extension === "md" && (!isFromAnotherRepo || !shared)
 	) {
 		return targetFile.destinationFilePath ? targetFile.destinationFilePath: targetFile.linked.basename;
 	}
