@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.4.1-0...6.5.0-0) (2023-08-20)
+
+
+### Features
+
+* **embed:** introduce "bake embed" ([#201](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/201)) ([f61bf04](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f61bf042dd3b45cb8bbf9601671d3e1fec37da6a))
+
 ## [6.4.1-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.4.0...6.4.1-0) (2023-08-11)
 
 ## [6.4.0-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.4.0-5...6.4.0-6) (2023-08-09)
