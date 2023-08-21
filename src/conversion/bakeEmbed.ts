@@ -10,10 +10,10 @@ import {
 	App,
 	BlockSubpathResult,
 	CachedMetadata,
+	FrontMatterCache,
 	HeadingSubpathResult,
 	parseLinktext,
 	resolveSubpath,
-	stringifyYaml,
 	TFile} from "obsidian";
 
 import {GitHubPublisherSettings, Repository} from "../settings/interface";
@@ -47,19 +47,19 @@ function stripFirstBullet(text: string) {
  * Dedent the string
  * @credit mgmeyers - easy bake plugin
  * @source https://github.com/mgmeyers/obsidian-easy-bake/blob/master/src/util.ts
- * @param {string} str
+ * @param {string} text
  * @return {string}
  */
-function dedent(str: string) {
-	const firstIndent = str.match(/^([ \t]*)/);
+function dedent(text: string) {
+	const firstIndent = text.match(/^([ \t]*)/);
 	if (firstIndent) {
-		return str.replace(
+		return text.replace(
 			// Escape tab chars
 			new RegExp(`^${firstIndent[0].replace(/\\/g, "\\$&")}`, "gm"),
 			""
 		);
 	}
-	return str;
+	return text;
 }
 
 /**
@@ -71,6 +71,17 @@ function dedent(str: string) {
  */
 function stripBlockId(str: string) {
 	return str.replace(/ +\^[^ \n\r]+$/gm, "");
+}
+
+
+function stripFrontmatter(text: string, frontmatter?: FrontMatterCache) {
+	if (!text) return text;
+	if (!frontmatter) return text;
+	return text.replace(`---\n${frontmatter}---`, "");
+}
+
+function sanitizeBakedContent(text: string, frontmatter?: FrontMatterCache) {
+	return stripBlockId(stripFrontmatter(text, frontmatter));
 }
 
 /**
@@ -133,7 +144,6 @@ function extractSubpath(
  * @param repo {Repository | null}
  * @param settings {GitHubPublisherSettings} the global settings
  * @param subpath {string|null} the subpath to extract, if any
- * @param original
  * @return {string} the converted text
  */
 export async function bakeEmbeds(
@@ -142,22 +152,16 @@ export async function bakeEmbeds(
 	app: App,
 	repo: Repository | null,
 	settings: GitHubPublisherSettings,
-	subpath: string|null,
-	original: boolean = true): Promise<string> {
+	subpath: string|null): Promise<string> {
 	const { vault, metadataCache } = app;
 	let text = await vault.cachedRead(originalFile);
 	//remove frontmatter from text
 
 	const cache = metadataCache.getFileCache(originalFile);
 	if (!cache) return text;
-	if (subpath) {
-		const resolvedSubPath = resolveSubpath(cache, subpath);
-		if (resolvedSubPath) {
-			text = extractSubpath(text, resolvedSubPath, cache);
-		}
-	} else if (!original && !subpath && cache.frontmatter) {
-		const yaml = `---\n${stringifyYaml(cache.frontmatter)}---`;
-		text = text.replace(yaml, "");
+	const resolvedSubpath = subpath ? resolveSubpath(cache, subpath) : null;
+	if (resolvedSubpath) {
+		text = extractSubpath(text, resolvedSubpath, cache);
 	}
 	const embeds = cache.embeds;
 	if (!embeds || embeds.length === 0) return text;
@@ -189,7 +193,7 @@ export async function bakeEmbeds(
 			replaceTarget(embed.displayText || path);
 			continue;
 		}
-		const baked = await bakeEmbeds(linked, newAncestors, app, repo, settings, subpath, false);
+		const baked = sanitizeBakedContent(await bakeEmbeds(linked, newAncestors, app, repo, settings, subpath), cache.frontmatter);
 		replaceTarget(
 			listMatch ? applyIndent(stripFirstBullet(baked), listMatch[1]) : baked);
 	}
