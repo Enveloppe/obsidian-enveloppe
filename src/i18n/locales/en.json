@@ -334,6 +334,7 @@
         "embed": {
           "char": "Add a character(s) before the embedded links. Used only if you set \"remove\" to \"links\".",
           "remove": {
+            "bake": "Include the content of the embed (support blocks, heading and entire file)",
             "desc": "Modify the aspect of the embedded files link. Can take the followed value:",
             "keep": "Leave as in Obsidian",
             "links": "Convert to links (delete or edit the \"!\")",

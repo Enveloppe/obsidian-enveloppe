@@ -334,6 +334,7 @@
         "embed": {
           "char": "Ajoutez un ou plusieurs caractères avant les liens. Utiliser uniquement si vous avez fixé \"remove\" à \"links\".",
           "remove": {
+            "bake": "Inclure le contenu des embeds (blocs de support, titre et fichier entier)",
             "desc": "Modifie l'aspect des liens des notes incorporées. Peut prendre les valeurs suivantes :",
             "keep": "Laisse comme dans Obsidian",
             "links": "Convertit le lien vers la note incorporée en lien simple",

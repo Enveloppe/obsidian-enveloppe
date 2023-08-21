@@ -152,6 +152,13 @@ export function help(settings: GitHubPublisherSettings) {
 						},
 						);
 					});
+					ul.createEl("li", undefined, (li) => {
+						li.createEl("code", {text: "bake"});
+						li.createEl("span", {
+							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.bake")}`
+						},
+						);
+					});
 				});
 			});
 			l.createEl("li", undefined, (p) => {
