@@ -190,7 +190,7 @@ export async function bakeEmbeds(
 		const shared = isShared(frontmatter, settings, linked, repo);
 		const listMatch = before.match(/(?:^|\n)([ \t]*)(?:[-*+]|[0-9]+[.)]) +$/);
 		if (newAncestors.has(linked) || !shared) {
-			replaceTarget(embed.displayText || path);
+			//do nothing
 			continue;
 		}
 		const baked = sanitizeBakedContent(await bakeEmbeds(linked, newAncestors, app, repo, settings, subpath), cache.frontmatter);
