@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-3...6.5.0-4) (2023-08-22)
+
+
+### Bug Fixes
+
+* **bakeEmbed:** better handling frontmatter ([f438eb0](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f438eb08adfe278fc9ec41f5a48f417b2ef836ef))
+* **bakeEmbed:** keep link if not corresponding repo ([62c7913](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/62c79139462aa10bc653e128eaa5ea2fc7066d01))
+* **menu:** better handling submenu (again) ([60cc04d](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/60cc04d3420435161e750e1be7899c8de4c8406b))
+* **subMenu:** add default repo in submenu when multiple repo exists ([03a9aaf](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/03a9aaf55ee5cf6a6b7e4a540306877fc3e7ce7a))
+* **submenu:** better handled menu when keys are used ([8cbcaa7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8cbcaa7767fa744aa46944eb8ccf0541b6e3a572))
+
 ## [6.5.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-2...6.5.0-3) (2023-08-21)
 
 
