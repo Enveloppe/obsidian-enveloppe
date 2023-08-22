@@ -92,6 +92,21 @@ export function isShared(
 	return meta[shareKey];
 }
 
+/**
+ * Allow to get all sharedKey from one file to count them
+ */
+export function multipleSharedKey(frontmatter: FrontMatterCache | undefined, settings: GitHubPublisherSettings) {
+	if (!frontmatter) return [];
+	const allKey = settings.github.otherRepo.map((repo) => repo.shareKey);
+	allKey.push(settings.plugin.shareKey);
+	const keysInFile: string[] = [];
+	for (const key of allKey) {
+		if (frontmatter[key]) {
+			keysInFile.push(key);
+		}
+	}
+	return keysInFile;
+}
 
 /**
  * Check if the file is an attachment file and return the regexMatchArray

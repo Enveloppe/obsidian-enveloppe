@@ -4,7 +4,7 @@ import {FrontMatterCache, Menu, MenuItem, TFile, TFolder} from "obsidian";
 import GithubPublisher from "../main";
 import {RepoFrontmatter, Repository} from "../settings/interface";
 import {getRepoFrontmatter} from "../utils";
-import {getRepoSharedKey, isShared} from "../utils/data_validation_test";
+import {getRepoSharedKey, isShared, multipleSharedKey} from "../utils/data_validation_test";
 import {shareAllMarkedNotes, shareOneNote} from "./commands";
 import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 
@@ -96,6 +96,7 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
 export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: string, menu: Menu) {
 	const frontmatter = file instanceof TFile ? plugin.app.metadataCache.getFileCache(file)!.frontmatter : undefined;
 	const getSharedKey = getRepoSharedKey(plugin.settings, frontmatter);
+	const allKeysFromFile = multipleSharedKey(frontmatter, plugin.settings);
 	if (
 		isShared(frontmatter, plugin.settings, file, getSharedKey) && 
 		plugin.settings.plugin.fileMenu
@@ -104,7 +105,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 			/**
 			 * Create a submenu if multiple repo exists in the settings
 			 */
-			if (plugin.settings.github?.otherRepo?.length > 0) {
+			if (allKeysFromFile.length > 1) {
 				item
 					.setTitle("Github Publisher")
 					.setIcon("upload-cloud");
