@@ -121,7 +121,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 				item
 					.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
 						doc: fileName,
-						smartKey: i18next.t("common.default").toUpperCase()
+						smartKey: getSharedKey?.smartKey.toUpperCase() ?? i18next.t("common.default").toUpperCase()
 					}))
 					.setIcon("file-up")
 					.onClick(async () => {
