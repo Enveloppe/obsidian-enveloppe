@@ -150,10 +150,11 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
  * @return {Menu} - The submenu created
  */
 export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository | null) {
-	const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file)?.frontmatter as FrontMatterCache).replace(".md", "");
+	const frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter as FrontMatterCache;
+	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	//@ts-ignore
 	const subMenu = item.setSubmenu() as Menu;
-	if (repo?.shareKey === plugin.settings.plugin.shareKey) {
+	if (repo?.shareKey === plugin.settings.plugin.shareKey || frontmatter[plugin.settings.plugin.shareKey]) {
 		subMenu.addItem((subItem) => {
 			subItem
 				.setTitle(
@@ -177,9 +178,10 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 		});
 	}
 	const activatedRepoCommands = plugin.settings.github.otherRepo.filter((repo) => repo.createShortcuts);
+
 	if (activatedRepoCommands.length > 0) {
 		activatedRepoCommands.forEach((otherRepo) => {
-			if (otherRepo.shareKey === repo?.shareKey) {
+			if (otherRepo.shareKey === repo?.shareKey || frontmatter[otherRepo.shareKey]) {
 				subMenu.addItem((item) => {
 					item
 						.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
