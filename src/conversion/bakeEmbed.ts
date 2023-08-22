@@ -10,7 +10,6 @@ import {
 	App,
 	BlockSubpathResult,
 	CachedMetadata,
-	FrontMatterCache,
 	HeadingSubpathResult,
 	parseLinktext,
 	resolveSubpath,
@@ -74,14 +73,13 @@ function stripBlockId(str: string) {
 }
 
 
-function stripFrontmatter(text: string, frontmatter?: FrontMatterCache) {
+function stripFrontmatter(text: string) {
 	if (!text) return text;
-	if (!frontmatter) return text;
-	return text.replace(`---\n${frontmatter}---`, "");
+	return text.replace(/^---[\s\S]+?\r?\n---(?:\r?\n\s*|$)/, "");
 }
 
-function sanitizeBakedContent(text: string, frontmatter?: FrontMatterCache) {
-	return stripBlockId(stripFrontmatter(text, frontmatter));
+function sanitizeBakedContent(text: string) {
+	return stripBlockId(stripFrontmatter(text));
 }
 
 /**
@@ -155,7 +153,6 @@ export async function bakeEmbeds(
 	subpath: string|null): Promise<string> {
 	const { vault, metadataCache } = app;
 	let text = await vault.cachedRead(originalFile);
-	//remove frontmatter from text
 
 	const cache = metadataCache.getFileCache(originalFile);
 	if (!cache) return text;
@@ -193,7 +190,7 @@ export async function bakeEmbeds(
 			//do nothing
 			continue;
 		}
-		const baked = sanitizeBakedContent(await bakeEmbeds(linked, newAncestors, app, repo, settings, subpath), cache.frontmatter);
+		const baked = sanitizeBakedContent(await bakeEmbeds(linked, newAncestors, app, repo, settings, subpath));
 		replaceTarget(
 			listMatch ? applyIndent(stripFirstBullet(baked), listMatch[1]) : baked);
 	}
