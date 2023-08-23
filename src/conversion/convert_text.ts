@@ -9,7 +9,6 @@ import {
 	parseYaml,
 	stringifyYaml,
 	TFile,
-	Vault
 } from "obsidian";
 import {getAPI, Link} from "obsidian-dataview";
 
@@ -18,8 +17,7 @@ import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	LinkedNotes,
-	RepoFrontmatter,
-	Repository,
+	MultiProperties,
 } from "../settings/interface";
 import {log, noticeLog} from "../utils";
 import {bakeEmbeds} from "./bakeEmbed";
@@ -252,14 +250,10 @@ export async function convertInlineDataview(
 export async function convertDataviewQueries(
 	text: string,
 	path: string,
-	settings: GitHubPublisherSettings,
 	app: App,
-	metadataCache: MetadataCache,
-	frontmatterSettings: FrontmatterConvert,
 	frontmatter: FrontMatterCache,
 	sourceFile: TFile,
-	sourceFrontmatter: RepoFrontmatter | RepoFrontmatter[],
-	shortRepo: Repository | null
+	properties: MultiProperties,
 ) {
 	let replacedText = text;
 	const dataViewRegex = /```dataview\s(.+?)```/gsm;
@@ -289,7 +283,7 @@ export async function convertDataviewQueries(
 		try {
 			const block = queryBlock[0];
 			const query = queryBlock[1];
-			const markdown = removeDataviewQueries(await dvApi.tryQueryMarkdown(query, path) as string, frontmatterSettings);
+			const markdown = removeDataviewQueries(await dvApi.tryQueryMarkdown(query, path) as string, properties.frontmatter.general);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
 			console.log(e);
@@ -307,7 +301,7 @@ export async function convertDataviewQueries(
 			const component = new Component();
 			await dvApi.executeJs(query, div, component, path);
 			component.load();
-			const markdown = removeDataviewQueries(div.innerHTML, frontmatterSettings);
+			const markdown = removeDataviewQueries(div.innerHTML, properties.frontmatter.general);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
 			console.log(e);
@@ -323,9 +317,9 @@ export async function convertDataviewQueries(
 			const query = inlineQuery[1].trim();
 			const dataviewResult = dvApi.tryEvaluate(query, { this: dvApi.page(path, sourceFile.path) });
 			if (dataviewResult) {
-				replacedText = replacedText.replace(code, removeDataviewQueries(dataviewResult.toString(), frontmatterSettings));
+				replacedText = replacedText.replace(code, removeDataviewQueries(dataviewResult.toString(), properties.frontmatter.general));
 			} else {
-				replacedText = replacedText.replace(code, removeDataviewQueries(dvApi.settings.renderNullAs, frontmatterSettings));
+				replacedText = replacedText.replace(code, removeDataviewQueries(dvApi.settings.renderNullAs, properties.frontmatter.general));
 			}
 		} catch (e) {
 			console.log(e);
@@ -343,7 +337,7 @@ export async function convertDataviewQueries(
 			const component = new Component();
 			await dvApi.executeJs(query, div, component, path);
 			component.load();
-			const markdown = removeDataviewQueries(div.innerHTML, frontmatterSettings);
+			const markdown = removeDataviewQueries(div.innerHTML, properties.frontmatter.general);
 			replacedText = replacedText.replace(code, markdown);
 
 		} catch (e) {
@@ -352,7 +346,7 @@ export async function convertDataviewQueries(
 			return inlineJsQuery[0];
 		}
 	}
-	return await convertDataviewLinks(replacedText, app.vault, settings, metadataCache, frontmatterSettings, frontmatter, sourceFile, sourceFrontmatter, shortRepo);
+	return await convertDataviewLinks(replacedText, frontmatter, sourceFile, app, properties);
 }
 
 /**
@@ -382,32 +376,24 @@ function removeDataviewQueries(dataviewMarkdown: string, frontmatterSettings: Fr
  */
 async function convertDataviewLinks(
 	md:string,
-	vault: Vault,
-	settings: GitHubPublisherSettings,
-	metadataCache: MetadataCache,
-	frontmatterSettings: FrontmatterConvert,
 	frontmatter: FrontMatterCache,
 	sourceFile: TFile,
-	sourceFrontmatter: RepoFrontmatter | RepoFrontmatter[],
-	shortRepo: Repository | null): Promise<string> {
-	const dataviewPath = getDataviewPath(md, settings, vault);
+	app: App,
+	properties: MultiProperties): Promise<string> {
+	const dataviewPath = getDataviewPath(md, properties.settings, app.vault);
 	md = await convertLinkCitation(
 		md,
-		settings,
 		dataviewPath,
-		metadataCache,
 		sourceFile,
-		vault,
+		app,
 		frontmatter,
-		sourceFrontmatter,
-		frontmatterSettings,
-		shortRepo
+		properties
 	);
 	md = convertWikilinks(
 		md,
-		frontmatterSettings,
+		properties.frontmatter.general,
 		dataviewPath,
-		settings
+		properties.settings
 	);
 	return md;
 }
@@ -416,67 +402,42 @@ async function convertDataviewLinks(
 
 /**
  * Main function to convert the text
- * @param {string} text the text to convert
- * @param {GitHubPublisherSettings} settings the global settings
- * @param {FrontmatterConvert} frontmatterSettings the frontmatter settings
- * @param {TFile} file the file to convert
- * @param {App} app obsidian app
- * @param {MetadataCache} metadataCache the metadataCache
- * @param {FrontMatterCache} frontmatter the frontmatter cache
- * @param {LinkedNotes[]} linkedFiles the linked files
- * @param {GitHubPublisherSettings} plugin GithubPublisher plugin
- * @param {RepoFrontmatter|RepoFrontmatter[]} sourceRepo the frontmatter of the repo
- * @param {Vault} vault app.vault
- * @param shortRepo
- * @return {Promise<string>} the converted text
- */
+*/
 
 export async function mainConverting(
 	text: string,
-	settings: GitHubPublisherSettings,
-	frontmatterSettings: FrontmatterConvert,
 	file: TFile,
 	app: App,
-	metadataCache: MetadataCache,
 	frontmatter: FrontMatterCache,
 	linkedFiles: LinkedNotes[],
 	plugin: GithubPublisher,
-	vault: Vault,
-	sourceRepo: RepoFrontmatter | RepoFrontmatter[],
-	shortRepo: Repository | null
+	properties: MultiProperties,
+
 ): Promise<string> {
-	if (settings.embed.convertEmbedToLinks === "bake")
-		text = await bakeEmbeds(file, new Set(), app, shortRepo, settings, null, true);
-	text = findAndReplaceText(text, settings, false);
-	text = await addInlineTags(settings, file, metadataCache, frontmatter, text);
+	if (properties.settings.embed.convertEmbedToLinks === "bake")
+		text = await bakeEmbeds(file, new Set(), app, properties, null);
+	text = findAndReplaceText(text, properties.settings, false);
+	text = await addInlineTags(properties.settings, file, plugin.app.metadataCache, frontmatter, text);
 	text = await convertDataviewQueries(
 		text,
 		file.path,
-		settings,
 		plugin.app,
-		metadataCache,
-		frontmatterSettings,
 		frontmatter,
 		file,
-		sourceRepo,
-		shortRepo
+		properties
 	);
-	text = await convertInlineDataview(text, settings, file, plugin.app);
-	text = addHardLineBreak(text, settings, frontmatterSettings);
+	text = await convertInlineDataview(text, properties.settings, file, plugin.app);
+	text = addHardLineBreak(text, properties.settings, properties.frontmatter.general);
 	text = await convertLinkCitation(
 		text,
-		settings,
 		linkedFiles,
-		metadataCache,
 		file,
-		vault,
+		app,
 		frontmatter,
-		sourceRepo,
-		frontmatterSettings,
-		shortRepo
+		properties
 	);
-	text = convertWikilinks(text, frontmatterSettings, linkedFiles, settings);
-	text = findAndReplaceText(text, settings, true);
+	text = convertWikilinks(text, properties.frontmatter.general, linkedFiles, properties.settings);
+	text = findAndReplaceText(text, properties.settings, true);
 
 	return text;
 }

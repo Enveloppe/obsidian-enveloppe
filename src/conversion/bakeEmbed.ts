@@ -16,8 +16,7 @@ import {
 	TFile} from "obsidian";
 
 import {
-	GitHubPublisherSettings,
-	Repository
+	MultiProperties,
 } from "../settings/interface";
 import {isShared} from "../utils/data_validation_test";
 
@@ -154,8 +153,7 @@ export async function bakeEmbeds(
 	originalFile: TFile,
 	ancestor: Set<TFile>,
 	app: App,
-	repo: Repository | null,
-	settings: GitHubPublisherSettings,
+	properties: MultiProperties,
 	subpath: string|null): Promise<string> {
 	const { vault, metadataCache } = app;
 	let text = await vault.cachedRead(originalFile);
@@ -190,13 +188,13 @@ export async function bakeEmbeds(
 		};
 
 		const frontmatter = metadataCache.getFileCache(linked)?.frontmatter;
-		const shared = isShared(frontmatter, settings, linked, repo);
+		const shared = isShared(frontmatter, properties.settings, linked, properties.repository);
 		const listMatch = before.match(/(?:^|\n)([ \t]*)(?:[-*+]|[0-9]+[.)]) +$/);
 		if (newAncestors.has(linked) || !shared) {
 			//do nothing
 			continue;
 		}
-		const baked = sanitizeBakedContent(await bakeEmbeds(linked, newAncestors, app, repo, settings, subpath));
+		const baked = sanitizeBakedContent(await bakeEmbeds(linked, newAncestors, app, properties, subpath));
 		replaceTarget(
 			listMatch ? applyIndent(stripFirstBullet(baked), listMatch[1]) : baked);
 	}

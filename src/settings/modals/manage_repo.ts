@@ -259,10 +259,8 @@ class ModalEditingRepository extends Modal {
 						const octokit = await this.plugin.reloadOctokit();
 						this.repository.verifiedRepo = await checkRepositoryValidity(
 							octokit,
-							this.plugin.settings, 
 							this.repository, 
-							null, 
-							this.app.metadataCache);
+							null);
 						this.plugin.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.plugin.settings);
 					})
 			);

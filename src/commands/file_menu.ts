@@ -2,7 +2,7 @@ import i18next from "i18next";
 import {FrontMatterCache, Menu, MenuItem, TFile, TFolder} from "obsidian";
 
 import GithubPublisher from "../main";
-import {RepoFrontmatter, Repository} from "../settings/interface";
+import {MonoRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
 import {getRepoFrontmatter} from "../utils";
 import {defaultRepo, getRepoSharedKey, isShared, multipleSharedKey} from "../utils/data_validation_test";
 import {shareAllMarkedNotes, shareOneNote} from "./commands";
@@ -10,26 +10,21 @@ import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 
 /**
  * Share the shared file of a folder to a repository
- * @param {GithubPublisher} plugin - The plugin instance
- * @param {TFolder} folder - The folder to share
- * @param {string} branchName - The branch name for the repository
- * @param {Repository} repo - The repository to share to
- * @return {Promise<void>}
  */
 export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchName: string, repo: Repository | null) {
 	const publisher = await plugin.reloadOctokit();
 	const statusBarItems = plugin.addStatusBarItem();
+	const monoProperties: MonoRepoProperties = {
+		frontmatter: getRepoFrontmatter(plugin.settings, repo, undefined) as RepoFrontmatter,
+		repo,
+	};
 	await shareAllMarkedNotes(
 		publisher,
-		plugin.settings,
-		publisher.octokit,
 		statusBarItems,
 		branchName,
-		getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
+		monoProperties,
 		publisher.getSharedFileOfFolder(folder, repo),
 		true,
-		plugin,
-		repo
 	);
 }
 
@@ -128,11 +123,8 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 						await shareOneNote(
 							branchName,
 							await plugin.reloadOctokit(),
-							plugin.settings,
 							file,
 							getSharedKey,
-							plugin.app.metadataCache,
-							plugin.app.vault,
 							fileName
 						);
 					});
@@ -171,11 +163,8 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 					await shareOneNote(
 						branchName,
 						await plugin.reloadOctokit(),
-						plugin.settings,
 						file,
 						defaultRepo(plugin.settings),
-						plugin.app.metadataCache,
-						plugin.app.vault,
 						fileName
 					);
 				});
@@ -197,11 +186,8 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 							await shareOneNote(
 								branchName,
 								await plugin.reloadOctokit(),
-								plugin.settings,
 								file,
 								otherRepo,
-								plugin.app.metadataCache,
-								plugin.app.vault,
 								fileName
 							);
 						});
@@ -218,11 +204,8 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 					await shareOneNote(
 						branchName,
 						await plugin.reloadOctokit(),
-						plugin.settings,
 						file,
 						item,
-						plugin.app.metadataCache,
-						plugin.app.vault,
 						fileName
 					);
 				}).open();

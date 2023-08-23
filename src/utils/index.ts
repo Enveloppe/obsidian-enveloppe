@@ -1,6 +1,6 @@
 import {Octokit} from "@octokit/core";
 import i18next from "i18next";
-import {App, FrontMatterCache, MetadataCache, Notice, Platform, TFile, Vault} from "obsidian";
+import {App, FrontMatterCache, Notice, Platform, TFile} from "obsidian";
 import GithubPublisher from "src/main";
 
 import {getReceiptFolder} from "../conversion/file_path";
@@ -11,6 +11,7 @@ import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	ListEditedFiles, 	MetadataExtractor,
+	MultiRepoProperties,
 	RepoFrontmatter,
 	Repository, TOKEN_PATH,
 	UploadedFiles} from "../settings/interface";
@@ -133,7 +134,7 @@ export async function getSettingsOfMetadataExtractor(
 function checkSlash(link: string): string {
 	const slash = link.match(/\/*$/);
 	if (slash && slash[0].length != 1) {
-		link = link.replace(/\/*$/, "") + "/";
+		return link.replace(/\/*$/, "") + "/";
 	}
 	return link;
 }
@@ -142,40 +143,28 @@ function checkSlash(link: string): string {
  * Create the link for the file and add it to the clipboard
  * The path is based with the receipt folder but part can be removed using settings.
  * By default, use a github.io page for the link.
- * @param {TFile} file
- * @param {RepoFrontmatter | RepoFrontmatter[]} repo
- * @param {MetadataCache} metadataCache
- * @param {Vault} vault
- * @param {GitHubPublisherSettings} settings
- * @param otherRepo
- * @return {Promise<void>}
  */
 
 export async function createLink(
 	file: TFile,
-	repo: RepoFrontmatter | RepoFrontmatter[],
-	metadataCache: MetadataCache,
-	vault: Vault,
+	multiRepo: MultiRepoProperties,
 	settings: GitHubPublisherSettings,
-	otherRepo: Repository | null
+	app:App
 ): Promise<void> {
-
+	const otherRepo = multiRepo.repo;
+	const repo = multiRepo.frontmatter;
 	const copyLink = otherRepo ? otherRepo.copyLink : settings.plugin.copyLink;
 	const github = otherRepo ? otherRepo : settings.github;
 	if (!settings.plugin.copyLink.enable) {
 		return;
 	}
-	let filepath = getReceiptFolder(file, settings, metadataCache, vault, otherRepo);
+	let filepath = getReceiptFolder(file, settings, otherRepo, app);
 
 	let baseLink = copyLink.links;
 	if (baseLink.length === 0) {
-		if (repo instanceof Array) {
-			baseLink = `https://${github.user}.github.io/${settings.github.repo}/`;
-		} else {
-			baseLink = `https://${repo.owner}.github.io/${repo.repo}/`;
-		}
+		baseLink = repo instanceof Array ? `https://${github.user}.github.io/${settings.github.repo}/` : `https://${repo.owner}.github.io/${repo.repo}/`;
 	}
-	const frontmatter = metadataCache.getFileCache(file)!.frontmatter as FrontMatterCache;
+	const frontmatter = app.metadataCache.getFileCache(file)!.frontmatter as FrontMatterCache;
 	const keyRepo = frontmatter["baselink"];
 	let removePart = copyLink.removePart;
 	if (frontmatter["baselink"] !== undefined) {

@@ -1,8 +1,8 @@
 import i18next from "i18next";
-import {FrontMatterCache, MetadataCache, Notice, TFile} from "obsidian";
+import {FrontMatterCache, Notice, TFile} from "obsidian";
 import GithubPublisher from "src/main";
 
-import {GithubBranch} from "../publish/branch";
+import {GithubBranch} from "../class/branch";
 import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter, Repository} from "../settings/interface";
 import {getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from ".";
 
@@ -231,11 +231,11 @@ export function noTextConversion(conditionConvert: FrontmatterConvert) {
  */
 export async function checkRepositoryValidity(
 	PublisherManager: GithubBranch,
-	settings: GitHubPublisherSettings,
 	repository: Repository | null = null,
 	file: TFile | null,
-	metadataCache: MetadataCache,
 	silent=false): Promise<boolean> {
+	const settings = PublisherManager.settings;
+	const metadataCache = PublisherManager.plugin.app.metadataCache;
 	try {
 		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : undefined;
 		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
@@ -262,10 +262,10 @@ export async function checkRepositoryValidity(
  */
 export async function checkRepositoryValidityWithRepoFrontmatter(
 	PublisherManager: GithubBranch,
-	settings: GitHubPublisherSettings,
 	repoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
 	numberOfFile=1
 ): Promise<boolean> {
+	const settings = PublisherManager.settings;
 	try {
 		/**
 		 * verify for each repoFrontmatter if verifiedRepo is true
