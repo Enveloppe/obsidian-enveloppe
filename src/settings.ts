@@ -768,7 +768,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	/**
 	 * Render the settings page for the embeds settings
 	 */
-	renderEmbedConfiguration() {
+	async renderEmbedConfiguration() {
 		this.settingsPage.empty();
 		const embedSettings = this.plugin.settings.embed;
 		new Setting(this.settingsPage)
@@ -817,7 +817,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					});
 			});
 
-		const embedNote = new Setting(this.settingsPage)
+		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.embed.transferNotes.title"))
 			.setDesc(i18next.t("settings.embed.transferNotes.desc"))
 			.addToggle((toggle) => {
@@ -826,7 +826,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						embedSettings.notes = value;
 						await this.plugin.saveSettings();
-						this.renderEmbedConfiguration();
+						await this.renderEmbedConfiguration();
 					});
 			});
 
@@ -844,7 +844,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						.onChange(async (value) => {
 							embedSettings.convertEmbedToLinks = value as "keep" | "remove" | "links" | "bake";
 							await this.plugin.saveSettings();
-							this.renderEmbedConfiguration();
+							await this.renderEmbedConfiguration();
 						});
 				});
 
@@ -857,6 +857,62 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							.setValue(embedSettings.charConvert ?? "->")
 							.onChange(async (value) => {
 								embedSettings.charConvert = value;
+								await this.plugin.saveSettings();
+							});
+					});
+			} else if (embedSettings.convertEmbedToLinks === "bake") {
+				if (!embedSettings.bake) {
+					embedSettings.bake = {
+						textBefore: "",
+						textAfter: ""
+					};
+					await this.plugin.saveSettings();
+				}
+				await this.plugin.saveSettings();
+				this.settingsPage.createEl("h4", {text: i18next.t("settings.embed.bake.title")});
+				this.settingsPage.createEl("p", {text: i18next.t("settings.embed.bake.text")});
+				this.settingsPage.createEl("p", undefined, (el) => {
+					el.createEl("span", {
+						text: i18next.t("settings.embed.bake.variable.desc"),
+						cls: ["github-publisher", "bake"]
+					})
+						.createEl("ul", undefined, (ul) => {
+							ul.createEl("li", undefined, (li) => {
+								li.createEl("code", {text: "{{title}}"});
+								li.createEl("span", {text: i18next.t("settings.embed.bake.variable.title")});
+							});
+							ul.createEl("li", undefined, (li) => {
+								li.createEl("code", {text: "{{url}}"});
+								li.createEl("span", {text: i18next.t("settings.embed.bake.variable.url")});
+							});
+						});
+				});
+
+				this.settingsPage.createEl("p", {
+					text: `⚠️ ${i18next.t("settings.embed.bake.warning")}`,
+					cls: ["warning", "github-publisher", "embed"]
+				});
+
+				new Setting(this.settingsPage)
+					.setName(i18next.t("settings.embed.bake.textBefore.title"))
+					.setClass("github-publisher-textarea")
+					.addTextArea((text) => {
+						text
+							.setValue(embedSettings.bake?.textBefore ?? "")
+							.onChange(async (value) => {
+								embedSettings.bake!.textBefore = value;
+								await this.plugin.saveSettings();
+							});
+					});
+
+				new Setting(this.settingsPage)
+					.setName(i18next.t("settings.embed.bake.textAfter.title"))
+					.setClass("github-publisher-textarea")
+					.addTextArea((text) => {
+						text
+							.setValue(embedSettings.bake?.textAfter ?? "")
+							.onChange(async (value) => {
+								embedSettings.bake!.textAfter = value;
 								await this.plugin.saveSettings();
 							});
 					});

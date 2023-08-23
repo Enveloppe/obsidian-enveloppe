@@ -278,3 +278,14 @@ h2.github-publisher.title.error {
 	color: var(--text-error);
 	font-weight: bold;
 }
+
+.github-publisher.warning.embed {
+	color: var(--color-orange);
+	font-weight: bold;
+	border-left: 3px solid var(--color-orange);
+	padding-left: 5px;
+}
+
+.github-publisher .bake ul {
+	margin-top: 0;
+}

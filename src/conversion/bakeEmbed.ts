@@ -15,7 +15,10 @@ import {
 	resolveSubpath,
 	TFile} from "obsidian";
 
-import {GitHubPublisherSettings, Repository} from "../settings/interface";
+import {
+	GitHubPublisherSettings,
+	Repository
+} from "../settings/interface";
 import {isShared} from "../utils/data_validation_test";
 
 /**
@@ -142,6 +145,9 @@ function extractSubpath(
  * @param repo {Repository | null}
  * @param settings {GitHubPublisherSettings} the global settings
  * @param subpath {string|null} the subpath to extract, if any
+ * @param sourceRepo
+ * @param frontmatterSettings
+ * @param linkedNotes
  * @return {string} the converted text
  */
 export async function bakeEmbeds(

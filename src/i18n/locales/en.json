@@ -201,6 +201,22 @@
       "title": "Content's conversion"
     },
     "embed": {
+      "bake": {
+        "text": "Allow you to add text before and after each embed, for example adding HTML or stylize the block with markdown.",
+        "textAfter": {
+          "title": "Text after the block"
+        },
+        "textBefore": {
+          "title": "Text before the block"
+        },
+        "title": "Include embed settings",
+        "variable": {
+          "desc": "It is possible to use the following variable:",
+          "title": ": note embedded title",
+          "url": ": path to the embedded note"
+        },
+        "warning": "If you use HTML, depending of your host settings, the markdown will broke."
+      },
       "char": {
         "desc": "Character(s) to add before the link.",
         "title": "Embed characters"
