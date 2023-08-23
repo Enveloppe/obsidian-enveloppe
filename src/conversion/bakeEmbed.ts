@@ -16,9 +16,12 @@ import {
 	TFile} from "obsidian";
 
 import {
-	MultiProperties,
-} from "../settings/interface";
+	GitHubPublisherSettings,
+	LinkedNotes,
+	MultiProperties} from "../settings/interface";
 import {isShared} from "../utils/data_validation_test";
+import { createRelativePath, getTitleField, regexOnFileName } from "./file_path";
+
 
 /**
  * Apply the indent to the text
@@ -154,7 +157,8 @@ export async function bakeEmbeds(
 	ancestor: Set<TFile>,
 	app: App,
 	properties: MultiProperties,
-	subpath: string|null): Promise<string> {
+	subpath: string|null,
+	linkedNotes: LinkedNotes[]): Promise<string> {
 	const { vault, metadataCache } = app;
 	let text = await vault.cachedRead(originalFile);
 
@@ -182,7 +186,19 @@ export async function bakeEmbeds(
 		const before = text.substring(0, start);
 		const after = text.substring(end);
 
-		const replaceTarget = (replacement: string) => {
+		const replaceTarget = async (replacement: string) => {
+			console.log(replacement);
+			if (properties.settings.embed.bake?.textAfter) {
+				let textAfter = await changeURL(properties.settings.embed.bake?.textAfter, properties, linked, originalFile, app, linkedNotes);
+				textAfter = changeTitle(textAfter, linked, app, properties.settings);
+				const newLine = replacement.match(/[\s\n]/g) ? "" : "\n";
+				replacement = `${replacement}${newLine}${textAfter}`;
+			}
+			if (properties.settings.embed.bake?.textBefore) {
+				let textBefore = await changeURL(properties.settings.embed.bake?.textBefore, properties, linked, originalFile, app, linkedNotes);
+				textBefore = changeTitle(textBefore, linked, app, properties.settings);
+				replacement = `${textBefore}\n${replacement}`;
+			}
 			text = before + replacement + after;
 			posOffset += replacement.length - prevLen;
 		};
@@ -194,9 +210,31 @@ export async function bakeEmbeds(
 			//do nothing
 			continue;
 		}
-		const baked = sanitizeBakedContent(await bakeEmbeds(linked, newAncestors, app, properties, subpath));
-		replaceTarget(
+		const baked = sanitizeBakedContent(await bakeEmbeds(linked, newAncestors, app, properties, subpath, linkedNotes));
+		await replaceTarget(
 			listMatch ? applyIndent(stripFirstBullet(baked), listMatch[1]) : baked);
 	}
 	return text;
+}
+
+async function changeURL(replacement: string, properties: MultiProperties, linked: TFile, sourceFile: TFile, app: App, linkedNotes: LinkedNotes[]) {
+	const frontmatter = app.metadataCache.getFileCache(linked)?.frontmatter;
+	if (!frontmatter) return replacement;
+	const linkedNote = linkedNotes.find((note) => note.linked === linked);
+	if (!linkedNote) return replacement;
+	if (properties.frontmatter.general.convertInternalLinks) {
+		const relativePath = await createRelativePath(sourceFile, linkedNote, frontmatter, app, properties);
+		return replacement.replace(/\{{2}url\}{2}/gmi, relativePath);
+	} else {
+		return replacement.replace(/\{{2}url\}{2}/gmi, linkedNote.linked.path);
+	}
+}
+
+
+function changeTitle(replacement: string, linked: TFile, app: App, settings: GitHubPublisherSettings) {
+	const title = linked.basename;
+	const frontmatter = app.metadataCache.getFileCache(linked)?.frontmatter;
+	if (!frontmatter) return replacement.replace(/\{{2}title\}{2}/gmi, title);
+	const getTitle = regexOnFileName(getTitleField(frontmatter, linked, settings), settings).replace(".md", "");
+	return replacement.replace(/\{{2}title\}{2}/gmi, getTitle);
 }
