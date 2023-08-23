@@ -19,9 +19,11 @@ import GithubPublisherPlugin from "../main";
 import {
 	Deleted,
 	GitHubPublisherSettings,
-	MetadataExtractor, MonoProperties, Properties,
-	RepoFrontmatter, RepoProperties,
-	UploadedFiles,
+	MetadataExtractor, MonoProperties,
+	MonoRepoProperties,
+	MultiProperties,
+	MultiRepoProperties,
+	RepoFrontmatter, UploadedFiles,
 } from "../settings/interface";
 import {
 	getFrontmatterCondition,
@@ -91,7 +93,11 @@ export default class Publisher {
 					linkedFiles.length,
 					true
 				);
-				const repoFrontmatter = properties.repository.frontmatter;
+				const repoFrontmatter = properties.frontmatter.repo;
+				const repoProperties: MonoRepoProperties = {
+					frontmatter: properties.frontmatter.repo,
+					repo: properties.repository,
+				};
 				try {
 					for (const file of linkedFiles) {
 						try {
@@ -101,7 +107,7 @@ export default class Publisher {
 										file,
 										false,
 										branchName,
-										properties.repository,
+										repoProperties,
 										fileHistory,
 										true
 									);
@@ -110,7 +116,7 @@ export default class Publisher {
 									}
 								} else if (
 									isAttachment(file.extension) &&
-									properties.converter.attachment
+									properties.frontmatter.general.attachment
 								) {
 									const published = await this.uploadImage(
 										file,
@@ -147,11 +153,15 @@ export default class Publisher {
 				const embed = linkedFiles[0];
 				if (!fileHistory.includes(embed)) {
 					if (embed.extension === "md" && deepScan) {
+						const multi: MultiRepoProperties = {
+							frontmatter: properties.frontmatter.repo,
+							repo: properties.repository,
+						};
 						const published = await this.publish(
 							embed,
 							false,
 							branchName,
-							properties.repository,
+							multi,
 							fileHistory,
 							true
 						);
@@ -160,7 +170,7 @@ export default class Publisher {
 						}
 					} else if (
 						isAttachment(embed.extension) &&
-						properties.converter.attachment
+						properties.frontmatter.general.attachment
 					) {
 						const published = await this.uploadImage(
 							embed,
@@ -195,7 +205,7 @@ export default class Publisher {
 		file: TFile,
 		autoclean: boolean = false,
 		branchName: string,
-		repo: RepoProperties,
+		repo: MultiRepoProperties | MonoRepoProperties,
 		fileHistory: TFile[] = [],
 		deepScan: boolean = false,
 	) {
@@ -204,12 +214,12 @@ export default class Publisher {
 			this.plugin
 		);
 		const frontmatter = this.metadataCache.getFileCache(file)?.frontmatter;
-		const isNotEmpty = checkEmptyConfiguration(getRepoFrontmatter(this.settings, repo.shortRepo, frontmatter), this.plugin);
+		const isNotEmpty = checkEmptyConfiguration(getRepoFrontmatter(this.settings, repo.repo, frontmatter), this.plugin);
 		if (
-			!isShared(frontmatter, this.settings, file, repo.shortRepo) ||
+			!isShared(frontmatter, this.settings, file, repo.repo) ||
 			fileHistory.includes(file) ||
 			!checkIfRepoIsInAnother(
-				getRepoFrontmatter(this.settings, repo.shortRepo, frontmatter),
+				getRepoFrontmatter(this.settings, repo.repo, frontmatter),
 				repo.frontmatter
 			) || !isNotEmpty
 		) {
@@ -234,16 +244,16 @@ export default class Publisher {
 			);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
 			let text = await this.vault.cachedRead(file);
-			const properties: Properties = {
-				settings: this.settings,
-				converter: frontmatterSettings,
-				repository: {
-					shortRepo: repo.shortRepo,
-					frontmatter: repo.frontmatter,
-				}
+			const multiProperties: MultiProperties = {
+				settings: this.settings,			
+				frontmatter: {
+					general: frontmatterSettings,
+					repo: repo.frontmatter,
+				},
+				repository: repo.repo
 			};
-			text = await mainConverting(text, file, frontmatter as FrontMatterCache, linkedFiles, this.plugin, properties);
-			const path = getReceiptFolder(file, this.settings, repo.shortRepo, this.plugin.app);
+			text = await mainConverting(text, file, this.plugin.app, frontmatter as FrontMatterCache, linkedFiles, this.plugin, multiProperties);
+			const path = getReceiptFolder(file, this.settings, repo.repo, this.plugin.app);
 			const repoFrontmatter = Array.isArray(repo.frontmatter)
 				? repo.frontmatter
 				: [repo.frontmatter];
@@ -256,15 +266,14 @@ export default class Publisher {
 			const fileDeleted: Deleted[] = [];
 			const updated: UploadedFiles[][] = [];
 			const fileError: string[] = [];
-			const shortRepo = repo.shortRepo;
 			for (const repo of repoFrontmatter) {
 				const monoProperties: MonoProperties = {
 					settings: this.settings,
-					converter: frontmatterSettings,
-					repository: {
-						shortRepo,
-						frontmatter: repo,
-					}
+					frontmatter: {
+						general: frontmatterSettings,
+						repo
+					},
+					repository: multiProperties.repository
 				};
 				const deleted = 
 					await this.uploadOnMultipleRepo(
@@ -317,7 +326,7 @@ export default class Publisher {
 		autoclean: boolean,
 		properties: MonoProperties,
 	) {
-		const repo = properties.repository.frontmatter as RepoFrontmatter;
+		const repo = properties.frontmatter.repo;
 		noticeLog(
 			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${branchName}`,
 			this.settings
@@ -350,7 +359,10 @@ export default class Publisher {
 				true,
 				branchName,
 				shareFiles,
-				properties.repository
+				{
+					frontmatter: repo,
+					repo: properties.repository,
+				} as MonoRepoProperties
 			);
 		}
 		return {
@@ -452,9 +464,9 @@ export default class Publisher {
 		const path = getImageLinkOptions(
 			imageFile,
 			this.settings,
-			properties.converter
+			properties.frontmatter.general
 		);
-		return await this.upload(image64, path, "", branchName, properties.repository.frontmatter);
+		return await this.upload(image64, path, "", branchName, properties.frontmatter.repo);
 	}
 
 	/**

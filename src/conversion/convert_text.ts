@@ -414,7 +414,7 @@ export async function mainConverting(
 	properties: MultiProperties,
 
 ): Promise<string> {
-	if (properties.settings.embed.convertEmbedToLinks === "bake")
+	if (properties.frontmatter.general.removeEmbed === "bake")
 		text = await bakeEmbeds(file, new Set(), app, properties, null);
 	text = findAndReplaceText(text, properties.settings, false);
 	text = await addInlineTags(properties.settings, file, plugin.app.metadataCache, frontmatter, text);

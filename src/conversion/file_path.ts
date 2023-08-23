@@ -350,14 +350,14 @@ export function getTitleField(
 	file: TFile,
 	settings: GitHubPublisherSettings
 ): string {
-	let fileName = file.name;
+	const fileName = file.name;
 	if (
 		frontmatter &&
 		settings.upload.frontmatterTitle.enable &&
 		frontmatter[settings.upload.frontmatterTitle.key] &&
-		frontmatter[settings.upload.frontmatterTitle.key] !== file.name
+		frontmatter[settings.upload.frontmatterTitle.key] !== fileName
 	) {
-		fileName= frontmatter[settings.upload.frontmatterTitle.key] + ".md";
+		return `${frontmatter[settings.upload.frontmatterTitle.key]}.md`;
 	}
 	return fileName;
 }
