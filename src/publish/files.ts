@@ -1,5 +1,5 @@
 import { Octokit } from "@octokit/core";
-import {FrontMatterCache, MetadataCache, TFile, TFolder, Vault} from "obsidian";
+import {FrontMatterCache, TFile, TFolder} from "obsidian";
 import { getAPI, Link } from "obsidian-dataview";
 
 import {
@@ -10,7 +10,6 @@ import GithubPublisher from "../main";
 import {
 	ConvertedLink,
 	FrontmatterConvert,
-	GitHubPublisherSettings,
 	GithubRepo,
 	LinkedNotes,
 	RepoFrontmatter, Repository,
@@ -19,47 +18,23 @@ import {getRepoFrontmatter, log, noticeLog} from "../utils";
 import { isAttachment, isShared } from "../utils/data_validation_test";
 import Publisher from "./upload";
 
-/**
- * Manage files in the repo and the vault.
- * @extends Publisher
- *
- * @method getSharedFiles - Get the shared files
- * @method getAllFileWithPath - Get all files with path
- * @method getLinkedByEmbedding - Get the linked files by embedding
- * @method getLinkedFiles - Get the linked files (linked by [[link]] or by []())
- * @method getSharedEmbed - Get the shared embed (share: true)
- * @method checkExcludedFolder - Check if the file is in an excluded folder
- * @method getLastEditedTimeRepo - Get the last edited time of a file in the repo (used for commands to send only edited file/new file)
- * @credits https://github.com/oleeskild/obsidian-digital-garden @oleeskild
- */
-
 export class FilesManagement extends Publisher {
-	vault: Vault;
-	metadataCache: MetadataCache;
-	settings: GitHubPublisherSettings;
 	octokit: Octokit;
 	plugin: GithubPublisher;
 
 	/**
-	 *
-	 * @param {Vault} vault Obsidian Vault API
-	 * @param {MetadataCache} metadataCache Obsidian MetadataCache API
-	 * @param {GitHubPublisherSettings} settings The settings
 	 * @param {Octokit} octokit The octokit instance
 	 * @param {GitHubPublisherSettings} plugin The plugin
 	 */
 
 	constructor(
-		vault: Vault,
-		metadataCache: MetadataCache,
-		settings: GitHubPublisherSettings,
 		octokit: Octokit,
 		plugin: GithubPublisher
 	) {
-		super(vault, metadataCache, settings, octokit, plugin);
-		this.vault = vault;
-		this.metadataCache = metadataCache;
-		this.settings = settings;
+		super(octokit, plugin);
+		this.vault = plugin.app.vault;
+		this.metadataCache = plugin.app.metadataCache;
+		this.settings = plugin.settings;
 		this.octokit = octokit;
 		this.plugin = plugin;
 	}
@@ -132,13 +107,7 @@ export class FilesManagement extends Publisher {
 			} else if (file.extension == "md") {
 				const frontMatter = this.metadataCache.getCache(file.path)?.frontmatter as FrontMatterCache;
 				if (isShared(frontMatter, this.settings, file, repo)) {
-					const filepath = getReceiptFolder(
-						file,
-						this.settings,
-						this.metadataCache,
-						this.vault,
-						repo
-					);
+					const filepath = getReceiptFolder(file, this.settings, repo, this.plugin.app);
 					allFileWithPath.push({
 						converted: filepath,
 						real: file.path,
@@ -257,14 +226,14 @@ export class FilesManagement extends Publisher {
 							type: "link",
 						};
 						if (embedCache.link.includes("#")) {
-							thisEmbed.anchor = "#" + embedCache.link.split("#")[1];
+							thisEmbed.anchor = `#${embedCache.link.split("#")[1]}`;
 						}
 						embedList.push(thisEmbed);
 					}
 				} catch (e) {
 					noticeLog(e, this.settings);
 					noticeLog(
-						"Error with this links : " + embedCache.link,
+						`Error with this links : ${embedCache.link}`,
 						this.settings
 					);
 				}
@@ -313,20 +282,17 @@ export class FilesManagement extends Publisher {
 	 * Get the last time the file from the github Repo was edited
 	 * @param {Octokit} octokit
 	 * @param {GithubRepo} githubRepo
-	 * @param {GitHubPublisherSettings} settings
 	 * @return {Promise<Date>}
 	 */
 
 	async getLastEditedTimeRepo(
-		octokit: Octokit,
 		githubRepo: GithubRepo,
-		settings: GitHubPublisherSettings
 	): Promise<Date | null> {
-		const commits = await octokit.request(
+		const commits = await this.octokit.request(
 			"GET /repos/{owner}/{repo}/commits",
 			{
-				owner: settings.github.user,
-				repo: settings.github.repo,
+				owner: this.settings.github.user,
+				repo: this.settings.github.repo,
 				path: githubRepo.file,
 			}
 		);
@@ -348,14 +314,12 @@ export class FilesManagement extends Publisher {
 
 	async getAllFileFromRepo(
 		branchToScan: string,
-		octokit: Octokit,
-		settings: GitHubPublisherSettings,
 		repo: RepoFrontmatter
 	): Promise<GithubRepo[]> {
 		const filesInRepo: GithubRepo[] = [];
 		try {
-			const repoContents = await octokit.request(
-				"GET" + " /repos/{owner}/{repo}/git/trees/{tree_sha}",
+			const repoContents = await this.octokit.request(
+				"GET /repos/{owner}/{repo}/git/trees/{tree_sha}",
 				{
 					owner: repo.owner,
 					repo: repo.repo,
@@ -367,6 +331,7 @@ export class FilesManagement extends Publisher {
 			if (repoContents.status === 200) {
 				const files = repoContents.data.tree;
 				for (const file of files) {
+					if (!file.path || !file.sha) continue;
 					const basename = (name: string) =>
 						/([^/\\.]*)(\..*)?$/.exec(name)![1]; //don't delete file starting with .
 					if (
@@ -381,7 +346,7 @@ export class FilesManagement extends Publisher {
 				}
 			}
 		} catch (e) {
-			noticeLog(e, settings);
+			noticeLog(e, this.settings);
 		}
 		return filesInRepo;
 	}
@@ -391,14 +356,12 @@ export class FilesManagement extends Publisher {
 	 * Always push in the list if the file doesn't exist in the github repo
 	 * @param {ConvertedLink[]} allFileWithPath
 	 * @param {GithubRepo[]} githubSharedFiles
-	 * @param {Vault} vault
 	 * @return {TFile[]}
 	 */
 
 	getNewFiles(
 		allFileWithPath: ConvertedLink[],
 		githubSharedFiles: GithubRepo[],
-		vault: Vault
 	): TFile[] {
 		const newFiles: TFile[] = []; //new file : present in allFileswithPath but not in githubSharedFiles
 
@@ -407,7 +370,7 @@ export class FilesManagement extends Publisher {
 				!githubSharedFiles.some((x) => x.file === file.converted.trim())
 			) {
 				//get TFile from file
-				const fileInVault = vault.getAbstractFileByPath(
+				const fileInVault = this.vault.getAbstractFileByPath(
 					file.real.trim()
 				);
 				if (
@@ -463,7 +426,7 @@ export class FilesManagement extends Publisher {
 	private imageSharedOrNote(
 		file: TFile,
 		settingsConversion: FrontmatterConvert
-	) {
+	): undefined | TFile {
 		const transferImage = settingsConversion.attachment;
 		const transferEmbeds = settingsConversion.embed;
 		if (
@@ -489,7 +452,7 @@ export class FilesManagement extends Publisher {
 		embedFiles: TFile[],
 		frontmatterSourceFile: FrontMatterCache,
 		frontmatterSettings: FrontmatterConvert
-	) {
+	): Promise<TFile[]> {
 		for (const field of this.settings.embed.keySendFile) {
 			if (frontmatterSourceFile[field] != undefined) {
 				const imageLink = this.metadataCache.getFirstLinkpathDest(
@@ -550,7 +513,6 @@ export class FilesManagement extends Publisher {
 	async getEditedFiles(
 		allFileWithPath: ConvertedLink[],
 		githubSharedFiles: GithubRepo[],
-		vault: Vault,
 		newFiles: TFile[]
 	): Promise<TFile[]> {
 		for (const file of allFileWithPath) {
@@ -561,12 +523,8 @@ export class FilesManagement extends Publisher {
 					(x) => x.file === file.converted.trim()
 				);
 				if (!githubSharedFile) continue;
-				const repoEditedTime = await this.getLastEditedTimeRepo(
-					this.octokit,
-					githubSharedFile,
-					this.settings
-				);
-				const fileInVault = vault.getAbstractFileByPath(
+				const repoEditedTime = await this.getLastEditedTimeRepo(githubSharedFile);
+				const fileInVault = this.vault.getAbstractFileByPath(
 					file.real.trim()
 				);
 				if (
