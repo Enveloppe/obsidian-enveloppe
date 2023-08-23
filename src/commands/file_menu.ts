@@ -4,7 +4,7 @@ import {FrontMatterCache, Menu, MenuItem, TFile, TFolder} from "obsidian";
 import GithubPublisher from "../main";
 import {RepoFrontmatter, Repository} from "../settings/interface";
 import {getRepoFrontmatter} from "../utils";
-import {getRepoSharedKey, isShared, multipleSharedKey} from "../utils/data_validation_test";
+import {defaultRepo, getRepoSharedKey, isShared, multipleSharedKey} from "../utils/data_validation_test";
 import {shareAllMarkedNotes, shareOneNote} from "./commands";
 import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 
@@ -173,7 +173,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 						await plugin.reloadOctokit(),
 						plugin.settings,
 						file,
-						plugin.defaultRepo(),
+						defaultRepo(plugin.settings),
 						plugin.app.metadataCache,
 						plugin.app.vault,
 						fileName

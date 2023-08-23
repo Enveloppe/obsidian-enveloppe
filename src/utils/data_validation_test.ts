@@ -26,28 +26,6 @@ export function isInternalShared(
 
 export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache): Repository | null{
 	const allOtherRepo = settings.github.otherRepo;
-	const defaultRepo: Repository = {
-		smartKey: "default",
-		user: settings.github.user,
-		repo: settings.github.repo,
-		branch: settings.github.branch,
-		automaticallyMergePR: settings.github.automaticallyMergePR,
-		verifiedRepo: settings.github.verifiedRepo,
-		api: {
-			tiersForApi: settings.github.api.tiersForApi,
-			hostname: settings.github.api.hostname,
-		},
-		workflow: {
-			commitMessage: settings.github.workflow.commitMessage,
-			name: settings.github.workflow.name,
-		},
-		createShortcuts: false,
-		shareKey: settings.plugin.shareKey,
-		copyLink: {
-			links: settings.plugin.copyLink.links,
-			removePart: settings.plugin.copyLink.removePart,
-		},
-	};
 	if (!frontmatter) return null;
 	//check all keys in the frontmatter
 	for (const repo of allOtherRepo) {
@@ -55,7 +33,7 @@ export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?
 			return repo;
 		}
 	}
-	return defaultRepo;
+	return defaultRepo(settings);
 }
 
 /**
@@ -315,4 +293,29 @@ export async function checkRepositoryValidityWithRepoFrontmatter(
 		return false;
 	}
 	return false;
+}
+
+export function defaultRepo(settings: GitHubPublisherSettings): Repository {
+	return {
+		smartKey: "default",
+		user: settings.github.user,
+		repo: settings.github.repo,
+		branch: settings.github.branch,
+		automaticallyMergePR: settings.github.automaticallyMergePR,
+		verifiedRepo: settings.github.verifiedRepo,
+		api: {
+			tiersForApi: settings.github.api.tiersForApi,
+			hostname: settings.github.api.hostname,
+		},
+		workflow: {
+			commitMessage: settings.github.workflow.commitMessage,
+			name: settings.github.workflow.name,
+		},
+		createShortcuts: false,
+		shareKey: settings.plugin.shareKey,
+		copyLink: {
+			links: settings.plugin.copyLink.links,
+			removePart: settings.plugin.copyLink.removePart,
+		},
+	};
 }
