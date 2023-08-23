@@ -270,4 +270,29 @@ export default class GithubPublisher extends Plugin {
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}
+	
+	defaultRepo(): Repository {
+		return {
+			smartKey: "default",
+			user: this.settings.github.user,
+			repo: this.settings.github.repo,
+			branch: this.settings.github.branch,
+			automaticallyMergePR: this.settings.github.automaticallyMergePR,
+			verifiedRepo: this.settings.github.verifiedRepo,
+			api: {
+				tiersForApi: this.settings.github.api.tiersForApi,
+				hostname: this.settings.github.api.hostname,
+			},
+			workflow: {
+				commitMessage: this.settings.github.workflow.commitMessage,
+				name: this.settings.github.workflow.name,
+			},
+			createShortcuts: false,
+			shareKey: this.settings.plugin.shareKey,
+			copyLink: {
+				links: this.settings.plugin.copyLink.links,
+				removePart: this.settings.plugin.copyLink.removePart,
+			},
+		};
+	}
 }

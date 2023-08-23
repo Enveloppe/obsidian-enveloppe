@@ -155,6 +155,9 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	//@ts-ignore
 	const subMenu = item.setSubmenu() as Menu;
+	/**
+	 * default repo
+	 */
 	if (repo?.shareKey === plugin.settings.plugin.shareKey || frontmatter[plugin.settings.plugin.shareKey]) {
 		subMenu.addItem((subItem) => {
 			subItem
@@ -170,7 +173,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 						await plugin.reloadOctokit(),
 						plugin.settings,
 						file,
-						repo,
+						plugin.defaultRepo(),
 						plugin.app.metadataCache,
 						plugin.app.vault,
 						fileName
