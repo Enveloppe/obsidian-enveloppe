@@ -291,7 +291,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setClass("github-publisher-connect-button")
 					.onClick(async () => {
 						const octokit = await this.plugin.reloadOctokit();
-						this.plugin.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, this.plugin.settings, null,null, this.app.metadataCache);
+						this.plugin.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, null,null);
 						this.plugin.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.plugin.settings);
 						await this.plugin.saveSettings();
 					})

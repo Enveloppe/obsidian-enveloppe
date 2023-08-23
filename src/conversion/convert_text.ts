@@ -415,7 +415,7 @@ export async function mainConverting(
 
 ): Promise<string> {
 	if (properties.frontmatter.general.removeEmbed === "bake")
-		text = await bakeEmbeds(file, new Set(), app, properties, null);
+		text = await bakeEmbeds(file, new Set(), app, properties, null, linkedFiles);
 	text = findAndReplaceText(text, properties.settings, false);
 	text = await addInlineTags(properties.settings, file, plugin.app.metadataCache, frontmatter, text);
 	text = await convertDataviewQueries(

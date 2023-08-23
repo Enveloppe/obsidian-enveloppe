@@ -113,6 +113,10 @@ export interface GitHubPublisherSettings {
 		folder: string;
 		convertEmbedToLinks: "links" | "remove" | "keep" | "bake";
 		charConvert: string;
+		bake?: {
+			textBefore: string;
+			textAfter: string;
+		};
 	}
 	plugin:
 	{
