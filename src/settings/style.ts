@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { Notice, Setting } from "obsidian";
 
 import GithubPublisherPlugin from "../main";
@@ -66,7 +67,7 @@ export async function autoCleanCondition(
 ) {
 	const settings = plugin.settings.upload;
 	if (value.length === 0 && settings.defaultName) {
-		new Notice("The default folder is empty, the autoclean settings will be disabled");
+		new Notice(i18next.t("error.autoClean"));
 		settings.autoclean.enable = false;
 		await plugin.saveSettings();
 		autoCleanSetting.setDisabled(true);
@@ -78,7 +79,7 @@ export async function autoCleanCondition(
 		value.length === 0 &&
 		settings.behavior !== FolderSettings.yaml
 	) {
-		new Notice("The default folder is empty, the autoclean settings will be disabled");
+		new Notice(i18next.t("error.autoClean"));
 		settings.autoclean.enable = false;
 		autoCleanSetting.setDisabled(true);
 		// @ts-ignore

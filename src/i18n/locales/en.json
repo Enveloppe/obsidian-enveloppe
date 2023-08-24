@@ -77,6 +77,7 @@
     "success": "Successfully deleted {{- nb}} files."
   },
   "error": {
+    "autoClean": "The default folder is empty, auto-cleaning will be disabled.",
     "dataview": "Unable to render dataview query. Please update the dataview plugin to the last version.",
     "errorConfig": "Error configuring {{- repo.owner}}/{{- repo.repo}}. Please check your settings.",
     "errorPublish": "Error during upload to {{- repo.owner}}/{{- repo.repo}}",

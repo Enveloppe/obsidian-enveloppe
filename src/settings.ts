@@ -431,7 +431,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							this.plugin
 						);
 						await this.plugin.saveSettings();
-						this.renderUploadConfiguration();
+						this.renderSettingsPage(EnumbSettingsTabId.upload);
 					});
 			});
 		const frontmatterTitleSet = new Setting(this.settingsPage)
@@ -500,7 +500,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						uploadSettings.folderNote.enable = value;
 						await this.plugin.saveSettings();
-						this.renderSettingsPage("upload-configuration");
+						this.renderSettingsPage(EnumbSettingsTabId.upload);
 					});
 			});
 
