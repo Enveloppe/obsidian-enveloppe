@@ -45,7 +45,7 @@ export class ModalRegexFilePathName extends Modal {
 			value = "";
 			isForbidden = true;
 		} else if (type === TypeOfEditRegex.path) {
-			if (value.match(/[\\><:"|?*]/)){
+			if (value.match(/[\\><:"|?*]/) && !value.match(/^\/(.*)\/[gmisuvdy]*$/)){
 				new Notice(i18next.t("settings.regexReplacing.forbiddenValue", { what: onWhat, forbiddenChar: value.match(/[\\><:"|?*]/)![0]}));
 				value = "";
 				isForbidden = true;
