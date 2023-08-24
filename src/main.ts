@@ -2,7 +2,7 @@ import {Octokit} from "@octokit/core";
 import i18next from "i18next";
 import {FrontMatterCache, Menu, Plugin, TFile, TFolder} from "obsidian";
 
-import {GithubBranch} from "./class/branch";
+import {GithubBranch} from "./GitHub/branch";
 import {
 	checkRepositoryValidityCallback,
 	createLinkCallback,

@@ -3,7 +3,7 @@ import i18next from "i18next";
 import {App, FrontMatterCache, Notice, Platform, TFile} from "obsidian";
 import GithubPublisher from "src/main";
 
-import Publisher from "../class/upload";
+import Publisher from "../GitHub/upload";
 import {getReceiptFolder} from "../conversion/file_path";
 import {
 	Deleted,

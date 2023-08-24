@@ -1,8 +1,8 @@
 import i18next from "i18next";
 import { Notice, Platform, TFile } from "obsidian";
 
-import { GithubBranch } from "../class/branch";
-import { deleteFromGithub } from "../class/delete";
+import { GithubBranch } from "../GitHub/branch";
+import { deleteFromGithub } from "../GitHub/delete";
 import { MonoRepoProperties, MultiRepoProperties, Repository, UploadedFiles} from "../settings/interface";
 import { ListChangedFiles } from "../settings/modals/list_changed";
 import {
