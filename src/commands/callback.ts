@@ -217,8 +217,8 @@ export async function shareEditedOnlyCallback(repo: Repository|null, branchName:
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
 	return {
-		id: id,
-		name: name,
+		id,
+		name,
 		callback: async () => {
 			await shareEditedOnly(branchName, repo, plugin);
 		},
