@@ -38,12 +38,11 @@ export async function shareAllMarkedNotes(
 				if (!isValid) return false;
 				await PublisherManager.newBranch(branchName, repoFrontmatter);
 			}
-			for (let files = 0; files < sharedFiles.length; files++) {
+			for (const sharedFile of sharedFiles) {
 				try {
-					const file = sharedFiles[files];
 					statusBar.increment();
 					const uploaded = await PublisherManager.publish(
-						file,
+						sharedFile,
 						false,
 						branchName,
 						monoRepo
@@ -51,11 +50,11 @@ export async function shareAllMarkedNotes(
 					if (uploaded) {
 						listStateUploaded.push(...uploaded.uploaded);
 					}
-				} catch {
+				} catch  {
 					errorCount++;
-					fileError.push(sharedFiles[files].name);
+					fileError.push(sharedFile.name);
 					new Notice(
-						(i18next.t("error.unablePublishNote", {file: sharedFiles[files].name})));
+						(i18next.t("error.unablePublishNote", {file: sharedFile.name})));
 				}
 			}
 			statusBar.finish(8000);
@@ -124,7 +123,7 @@ export async function purgeNotesRemote(
 	PublisherManager: GithubBranch,
 	branchName: string,
 	monoRepo: MonoRepoProperties,
-) {
+): Promise<void|boolean> {
 	try {
 		new Notice(
 			(i18next.t("informations.startingClean", {repo: monoRepo.frontmatter}))
@@ -332,9 +331,9 @@ export async function shareAllEditedNotes(
 			newlySharedNotes,
 			false,
 		);
-	} else {
-		new Notice(i18next.t("informations.noNewNote") );
+		return;
 	}
+	new Notice(i18next.t("informations.noNewNote") );
 }
 
 /**
