@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.0-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-5...6.5.0-6) (2023-08-24)
+
+
+### Bug Fixes
+
+* **filepath:** GitHub Api error with file path "//" (or more) ([b2121ad](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b2121ad1642a2ccac9fc5f6ae68a710d33f87606)), closes [#206](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/206)
+* **fileregex:** escaping special characters in regex ([64b2c01](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/64b2c018306f05c2131f6abfb81fbb6fdf179c7b)), closes [#206](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/206)
+
 ## [6.5.0-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-4...6.5.0-5) (2023-08-24)
 
 
