@@ -21,9 +21,8 @@ import {
 /**
  * Create the command to create a link to the note in the repo if a file is active ; else do nothing
  * @call createLink
- * @param {string} branchName
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
- * @param {GithubPublisher} plugin
+ * @param {GithubPublisher} plugin - The plugin instance
  * @return {Promise<void>}
  */
 export async function createLinkOnActiveFile(repo: Repository | null, plugin: GithubPublisher): Promise<void> {

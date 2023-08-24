@@ -145,7 +145,7 @@ export async function addInlineTags(
  * @param {GitHubPublisherSettings} settings the global settings
  * @return {string | null} the display text by dataview
  */
-function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings) {
+function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings): string | null {
 	const basename = (name: string) => /([^/\\.]*)(\..*)?$/.exec(name)![1];
 	const filename = basename(fieldValue.path).toString();
 	const display = fieldValue.display
@@ -176,7 +176,7 @@ export async function convertInlineDataview(
 	settings: GitHubPublisherSettings,
 	sourceFile: TFile,
 	app: App
-) {
+): Promise<string> {
 	// @ts-ignore
 	if (
 		settings.conversion.tags.fields.length === 0 ||
@@ -234,17 +234,13 @@ export async function convertInlineDataview(
  * Also convert links using convertDataviewLinks
  * @param {string} text the text to convert
  * @param {string} path the path of the file to convert
- * @param {@link GitHubPublisherSettings} settings the global settings
  * @param {App} app obsidian app
- * @param {MetadataCache} metadataCache the metadataCache
- * @param {FrontmatterConvert} frontmatterSettings the frontmatter settings
  * @param {FrontMatterCache} frontmatter the frontmatter cache
  * @param {TFile} sourceFile the file to process
- * @param {RepoFrontmatter|RepoFrontmatter[]} sourceFrontmatter the frontmatter of the repo
- * @param shortRepo
- * @return {Promise<string>} the converted text
- * @credits Ole Eskid Steensen
- * @source https://github.com/oleeskild/obsidian-digital-garden/blob/4cdf2791e24b2a0c2a30e7d39965b7b9b50e2ab0/src/Publisher.ts#L297
+ * @param {MultiProperties} properties the properties of the plugins (settings, repository, frontmatter)
+ * @returns {Promise<string>} the converted text
+ * @author Ole Eskid Steensen
+ * @link https://github.com/oleeskild/obsidian-digital-garden/blob/4cdf2791e24b2a0c2a30e7d39965b7b9b50e2ab0/src/Publisher.ts#L297
  */
 
 export async function convertDataviewQueries(
@@ -254,7 +250,7 @@ export async function convertDataviewQueries(
 	frontmatter: FrontMatterCache,
 	sourceFile: TFile,
 	properties: MultiProperties,
-) {
+): Promise<string> {
 	let replacedText = text;
 	const dataViewRegex = /```dataview\s(.+?)```/gsm;
 	const dvApi = getAPI();
@@ -262,15 +258,15 @@ export async function convertDataviewQueries(
 	const matches = text.matchAll(dataViewRegex);
 
 	const dataviewJsPrefix = dvApi.settings.dataviewJsKeyword;
-	const dataViewJsRegex = new RegExp("```" + escapeRegex(dataviewJsPrefix) + "\\s(.+?)```", "gsm");
+	const dataViewJsRegex = new RegExp(`\`\`\`${escapeRegex(dataviewJsPrefix)}\\s(.+?)\`\`\``, "gsm");
 	const dataviewJsMatches = text.matchAll(dataViewJsRegex);
 
 	const inlineQueryPrefix = dvApi.settings.inlineQueryPrefix;
-	const inlineDataViewRegex = new RegExp("`" + escapeRegex(inlineQueryPrefix) + "(.+?)`", "gsm");
+	const inlineDataViewRegex = new RegExp(`\`${escapeRegex(inlineQueryPrefix)}(.+?)\``, "gsm");
 	const inlineMatches = text.matchAll(inlineDataViewRegex);
 
 	const inlineJsQueryPrefix = dvApi.settings.inlineJsQueryPrefix;
-	const inlineJsDataViewRegex = new RegExp("`" + escapeRegex(inlineJsQueryPrefix) + "(.+?)`", "gsm");
+	const inlineJsDataViewRegex = new RegExp(`\`${escapeRegex(inlineJsQueryPrefix)}(.+?)\``, "gsm");
 	const inlineJsMatches = text.matchAll(inlineJsDataViewRegex);
 	if (!matches && !inlineMatches && !dataviewJsMatches && !inlineJsMatches) {
 		log("No dataview queries found");
@@ -286,7 +282,7 @@ export async function convertDataviewQueries(
 			const markdown = removeDataviewQueries(await dvApi.tryQueryMarkdown(query, path) as string, properties.frontmatter.general);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 			new Notice(error);
 			return queryBlock[0];
 		}
@@ -304,7 +300,7 @@ export async function convertDataviewQueries(
 			const markdown = removeDataviewQueries(div.innerHTML, properties.frontmatter.general);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 			new Notice(error);
 			return queryBlock[0];
 		}
@@ -316,13 +312,9 @@ export async function convertDataviewQueries(
 			const code = inlineQuery[0];
 			const query = inlineQuery[1].trim();
 			const dataviewResult = dvApi.tryEvaluate(query, { this: dvApi.page(path, sourceFile.path) });
-			if (dataviewResult) {
-				replacedText = replacedText.replace(code, removeDataviewQueries(dataviewResult.toString(), properties.frontmatter.general));
-			} else {
-				replacedText = replacedText.replace(code, removeDataviewQueries(dvApi.settings.renderNullAs, properties.frontmatter.general));
-			}
+			replacedText = dataviewResult ? replacedText.replace(code, removeDataviewQueries(dataviewResult.toString(), properties.frontmatter.general)) : replacedText.replace(code, removeDataviewQueries(dvApi.settings.renderNullAs, properties.frontmatter.general));
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 			new Notice(error);
 			return inlineQuery[0];
 		}
@@ -341,7 +333,7 @@ export async function convertDataviewQueries(
 			replacedText = replacedText.replace(code, markdown);
 
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 			new Notice(error);
 			return inlineJsQuery[0];
 		}
@@ -356,9 +348,7 @@ export async function convertDataviewQueries(
  * @return {string} the text without dataview queries or the dataview queries in markdown
  */
 function removeDataviewQueries(dataviewMarkdown: string, frontmatterSettings: FrontmatterConvert): string {
-	const settingsDataview = frontmatterSettings.dataview;
-	if (!settingsDataview) return "";
-	else return dataviewMarkdown;
+	return frontmatterSettings.dataview ? dataviewMarkdown : "";
 }
 
 /**
@@ -427,7 +417,5 @@ export async function mainConverting(
 	text = await convertInlineDataview(text, properties.settings, file, plugin.app);
 	text = addHardLineBreak(text, properties.settings, properties.frontmatter.general);
 
-	text = findAndReplaceText(text, properties.settings, true);
-
-	return text;
+	return findAndReplaceText(text, properties.settings, true);
 }
