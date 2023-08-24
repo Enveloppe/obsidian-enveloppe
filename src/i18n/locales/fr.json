@@ -49,6 +49,7 @@
     "cancel": "Annuler",
     "close": "Fermer",
     "default": "défaut",
+    "defaultName": "dossier par défaut",
     "delete": "Supprimer {{- things}}",
     "edit": "Éditer {{- things}}",
     "error": "Erreur",
@@ -64,6 +65,7 @@
     "published": "publiés",
     "regex": "regex",
     "repository": "Dépôt",
+    "rootFolder": "dossier racine",
     "save": "Sauvegarder",
     "shared": "partagés",
     "text": "texte",
@@ -77,7 +79,7 @@
     "success": "Suppression réussie de {{- nb}} fichiers."
   },
   "error": {
-    "autoClean": "Le dossier par défaut est vide, l'auto-nettoyage sera désactivée.",
+    "autoClean": "Le {{- what}} étant vide, l'auto-nettoyage est désactivée.",
     "dataview": "Impossible de convertir la requête Dataview. Veuillez mettre à jour le module Dataview à la dernière version;",
     "errorConfig": "Erreur de configuration pour {{- repo.owner}}/{{- repo.repo}}:{{- repo.branch}}. Merci de vérifier vos paramètres.",
     "errorPublish": "Erreur lors de la publication sur {{- repo.owner}}/{{- repo.repo}}:{{- repo.branch}}",

@@ -1,8 +1,9 @@
 import i18next from "i18next";
 import { Notice, Setting } from "obsidian";
+import { GithubPublisherSettingsTab } from "src/settings";
 
 import GithubPublisherPlugin from "../main";
-import {FolderSettings, GitHubPublisherSettings} from "./interface";
+import {EnumbSettingsTabId, FolderSettings, GitHubPublisherSettings} from "./interface";
 /**
  * show a settings
  * @param {Setting} containerEl setting to show
@@ -63,28 +64,33 @@ export function showHideBasedOnFolder(settings: GitHubPublisherSettings, frontma
 export async function autoCleanCondition(
 	value: string,
 	autoCleanSetting: Setting,
-	plugin: GithubPublisherPlugin
+	plugin: GithubPublisherPlugin,
+	what: "rootFolder" | "defaultName" = "defaultName",
+	settingsTab: GithubPublisherSettingsTab
 ) {
 	const settings = plugin.settings.upload;
+	const translation = what === "rootFolder" ? i18next.t("common.rootFolder") : i18next.t("common.defaultName");
 	if (value.length === 0 && settings.defaultName) {
-		new Notice(i18next.t("error.autoClean"));
+		if (settings.autoclean.enable)
+			new Notice(i18next.t("error.autoClean", {what: translation}));
 		settings.autoclean.enable = false;
 		await plugin.saveSettings();
 		autoCleanSetting.setDisabled(true);
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
-		return;
+		settingsTab.renderSettingsPage(EnumbSettingsTabId.upload);
 	}
 	if (
 		value.length === 0 &&
 		settings.behavior !== FolderSettings.yaml
 	) {
-		new Notice(i18next.t("error.autoClean"));
+		if (settings.autoclean.enable)
+			new Notice(i18next.t("error.autoClean", {what: i18next.t("common.defaultName")}),);
 		settings.autoclean.enable = false;
 		autoCleanSetting.setDisabled(true);
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
-		return;
+		settingsTab.renderSettingsPage(EnumbSettingsTabId.upload);
 	}
 	autoCleanSetting.setDisabled(false);
 	if (settings.autoclean.enable) {
@@ -123,11 +129,6 @@ export async function folderHideShowSettings(
 	if (value === FolderSettings.yaml) {
 		showSettings(frontmatterKeySettings);
 		showSettings(rootFolderSettings);
-		autoCleanCondition(
-			settings.rootFolder,
-			autoCleanSetting,
-			plugin
-		).then();
 	} else {
 		if (settings.defaultName.length > 0) {
 			autoCleanSetting.setDisabled(false);

@@ -49,6 +49,7 @@
     "cancel": "Cancel",
     "close": "Close",
     "default": "default",
+    "defaultName": "default folder",
     "delete": "Delete {{- things}}",
     "edit": "Edit {{- things}}",
     "error": "Error",
@@ -64,6 +65,7 @@
     "published": "Published",
     "regex": "regex",
     "repository": "Repository",
+    "rootFolder": "root folder",
     "save": "Save",
     "shared": "Shared",
     "text": "text",
@@ -77,7 +79,7 @@
     "success": "Successfully deleted {{- nb}} files."
   },
   "error": {
-    "autoClean": "The default folder is empty, auto-cleaning will be disabled.",
+    "autoClean": "Since {{- what}} is empty, auto-cleaning is disabled.",
     "dataview": "Unable to render dataview query. Please update the dataview plugin to the last version.",
     "errorConfig": "Error configuring {{- repo.owner}}/{{- repo.repo}}. Please check your settings.",
     "errorPublish": "Error during upload to {{- repo.owner}}/{{- repo.repo}}",

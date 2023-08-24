@@ -395,7 +395,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await autoCleanCondition(
 							value,
 							autoCleanSetting,
-							this.plugin
+							this.plugin,
+							"defaultName",
+							this
 						);
 						await this.plugin.saveSettings();
 					});
@@ -428,10 +430,11 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await autoCleanCondition(
 							value,
 							autoCleanSetting,
-							this.plugin
+							this.plugin,
+							"rootFolder",
+							this
 						);
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.upload);
 					});
 			});
 		const frontmatterTitleSet = new Setting(this.settingsPage)
@@ -462,10 +465,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 		}
 
-		let desc = i18next.t("settings.upload.regexFilePathTitle.title.FolderPathTitle") ;
-		if (uploadSettings.behavior === FolderSettings.fixed) {
-			desc = i18next.t("settings.upload.regexFilePathTitle.title.titleOnly");
-		}
+		const desc = uploadSettings.behavior === FolderSettings.fixed ? i18next.t("settings.upload.regexFilePathTitle.title.titleOnly") : i18next.t("settings.upload.regexFilePathTitle.title.FolderPathTitle") ;
 
 		new Setting(this.settingsPage)
 			.setName(desc)
@@ -518,9 +518,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 		showHideBasedOnFolder(this.plugin.settings, frontmatterKeySettings, rootFolderSettings, folderNoteSettings);
 
-
 		//@ts-ignore
-		if (this.app.plugins.enabledPlugins.has("metadata-extractor")) {
+		if (this.app.plugins.manifests["metadata-extractor"]) {
 			new Setting(this.settingsPage)
 				.setName(
 					i18next.t("settings.githubWorkflow.useMetadataExtractor.title") 
