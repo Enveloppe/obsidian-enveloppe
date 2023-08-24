@@ -96,11 +96,12 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 		isShared(frontmatter, plugin.settings, file, getSharedKey) && 
 		plugin.settings.plugin.fileMenu
 	) {
+		const repoFrontmatter = getRepoFrontmatter(plugin.settings, getSharedKey, frontmatter);
 		menu.addItem((item) => {
 			/**
 			 * Create a submenu if multiple repo exists in the settings
 			 */
-			if (allKeysFromFile.length > 1) {
+			if (allKeysFromFile.length > 1 || (repoFrontmatter instanceof Array && repoFrontmatter.length > 1)) {
 				item
 					.setTitle("Github Publisher")
 					.setIcon("upload-cloud");
@@ -113,10 +114,11 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 				);
 			} else {
 				const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file)?.frontmatter as FrontMatterCache).replace(".md", "");
+				const repoName = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
 				item
 					.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
 						doc: fileName,
-						smartKey: getSharedKey?.smartKey.toUpperCase() ?? i18next.t("common.default").toUpperCase()
+						smartKey: repoName[0].repo || getSharedKey?.smartKey.toUpperCase() || i18next.t("common.default").toUpperCase()
 					}))
 					.setIcon("file-up")
 					.onClick(async () => {
@@ -147,10 +149,13 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	//@ts-ignore
 	const subMenu = item.setSubmenu() as Menu;
+	let repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, frontmatter);
+	repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
 	/**
 	 * default repo
 	 */
-	if (repo?.shareKey === plugin.settings.plugin.shareKey || frontmatter[plugin.settings.plugin.shareKey]) {
+	console.log(!frontmatter!.repo || !frontmatter!.multipleRepo);
+	if ((repo?.shareKey === plugin.settings.plugin.shareKey || frontmatter[plugin.settings.plugin.shareKey]) && (!frontmatter!.repo || !frontmatter!.multipleRepo)) {
 		subMenu.addItem((subItem) => {
 			subItem
 				.setTitle(
@@ -195,6 +200,28 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 			}
 		});
 	}
+	if (repoFrontmatter.length > 1) {
+		repoFrontmatter.forEach((repoFront) => {
+			subMenu.addItem((item) => {
+				item
+					.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
+						smartKey: repoFront.repo.toUpperCase(),
+						doc: fileName
+					}))
+					.setIcon("file-up")
+					.onClick(async () => {
+						await shareOneNote(
+							branchName,
+							await plugin.reloadOctokit(),
+							file,
+							repo,
+							fileName
+						);
+					});
+			});
+		});
+	}
+
 	subMenu.addItem((subItem) => {
 		subItem
 			.setTitle(i18next.t("commands.shareViewFiles.multiple.other"))
