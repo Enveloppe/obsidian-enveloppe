@@ -431,6 +431,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							this.plugin
 						);
 						await this.plugin.saveSettings();
+						this.renderUploadConfiguration();
 					});
 			});
 		const frontmatterTitleSet = new Setting(this.settingsPage)
@@ -541,7 +542,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		const condition =
 			(uploadSettings.behavior === FolderSettings.yaml &&
 				uploadSettings.rootFolder.length === 0) ||
-			uploadSettings.defaultName.length === 0;
+				uploadSettings.defaultName.length === 0;
 
 		const autoCleanSetting = new Setting(this.settingsPage)
 			.setName(i18next.t("settings.githubWorkflow.autoCleanUp.title"))
@@ -556,7 +557,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						this.renderSettingsPage(EnumbSettingsTabId.upload);
 					});
 			});
-		if (uploadSettings.autoclean.enable) {
+		if (uploadSettings.autoclean.enable && !condition) {
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.githubWorkflow.excludedFiles.title"))
 				.setDesc(i18next.t("settings.githubWorkflow.excludedFiles.desc"))

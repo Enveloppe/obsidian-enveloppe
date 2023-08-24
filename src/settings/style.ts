@@ -1,4 +1,4 @@
-import { Setting } from "obsidian";
+import { Notice, Setting } from "obsidian";
 
 import GithubPublisherPlugin from "../main";
 import {FolderSettings, GitHubPublisherSettings} from "./interface";
@@ -66,25 +66,29 @@ export async function autoCleanCondition(
 ) {
 	const settings = plugin.settings.upload;
 	if (value.length === 0 && settings.defaultName) {
+		new Notice("The default folder is empty, the autoclean settings will be disabled");
 		settings.autoclean.enable = false;
 		await plugin.saveSettings();
 		autoCleanSetting.setDisabled(true);
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
-	} else if (
+		return;
+	}
+	if (
 		value.length === 0 &&
 		settings.behavior !== FolderSettings.yaml
 	) {
+		new Notice("The default folder is empty, the autoclean settings will be disabled");
 		settings.autoclean.enable = false;
 		autoCleanSetting.setDisabled(true);
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
-	} else {
-		autoCleanSetting.setDisabled(false);
-		if (settings.autoclean.enable) {
-			// @ts-ignore
-			autoCleanSetting.components[0].toggleEl.classList.add("is-enabled");
-		}
+		return;
+	}
+	autoCleanSetting.setDisabled(false);
+	if (settings.autoclean.enable) {
+		// @ts-ignore
+		autoCleanSetting.components[0].toggleEl.classList.add("is-enabled");
 	}
 }
 
