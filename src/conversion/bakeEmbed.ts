@@ -187,7 +187,6 @@ export async function bakeEmbeds(
 		const after = text.substring(end);
 
 		const replaceTarget = async (replacement: string) => {
-			console.log(replacement);
 			if (properties.settings.embed.bake?.textAfter) {
 				let textAfter = await changeURL(properties.settings.embed.bake?.textAfter, properties, linked, originalFile, app, linkedNotes);
 				textAfter = changeTitle(textAfter, linked, app, properties.settings);
