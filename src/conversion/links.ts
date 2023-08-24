@@ -92,7 +92,7 @@ export function convertWikilinks(
 						isEmbedBool &&
 						linkedFile.linked.extension === "md";
 					if (isEmbedBool && linkedFile.linked.extension === "md" && conditionConvert.removeEmbed === "links") {
-						isEmbed = conditionConvert.charEmbedLinks + " ";
+						isEmbed = `${conditionConvert.charEmbedLinks} `;
 						linkCreator = linkCreator.replace("!", isEmbed);
 					}
 					if (convertWikilink) {
@@ -250,6 +250,7 @@ export async function convertLinkCitation(
 	if (!frontmatterSettings.convertInternalLinks) {
 		return fileContent;
 	}
+	console.log("converting links of", sourceFile.basename);
 	for (const linkedFile of linkedFiles) {
 		let pathInGithub = await createRelativePath(
 			sourceFile,
@@ -263,8 +264,6 @@ export async function convertLinkCitation(
 		let linkInMarkdown = escapeRegex(linkedFile.linkFrom.replace(anchor, "")).replaceAll(" ", "%20") + anchor.replace("^", "\\^");
 		linkInMarkdown = linkInMarkdown.replaceAll(" ", "%20");
 		const escapedLinkedFile = escapeRegex(linkedFile.linkFrom);
-
-
 		const regexToReplace = new RegExp(
 			`(\\[{2}${escapedLinkedFile}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\((${escapedLinkedFile}|${linkInMarkdown})\\))`,
 			"g"
@@ -282,11 +281,11 @@ export async function convertLinkCitation(
 				if (link.match(/\[.*\]\(.*\)/)) {
 					if (linkedFile.linked.extension === "md") {
 						anchor =  settings.conversion.links.slugify ? slugify(anchor, { lower: true, strict: true }) : anchor;
-						pathInGithub = pathInGithub.replaceAll(" ", "%20") + ".md#" + anchor;
+						pathInGithub = `${pathInGithub.replaceAll(" ", "%20")}.md#${anchor}`;
 						//probably useless
 						// pathInGithub = pathInGithub.replace(/(\.md)?(#.*)/, ".md$2");
 						pathInGithub = !pathInGithub.match(/(#.*)/) && !pathInGithub.endsWith(".md") ?
-							pathInGithub + ".md"
+							`${pathInGithub}.md`
 							: pathInGithub;
 					}
 					const altText = link.match(/\[(.*)\]/)![1];
