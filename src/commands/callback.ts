@@ -16,9 +16,7 @@ import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} f
 
 /**
  * Create the command to create a link to the note in the repo
- * @call createLink
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
- * @param {string} branchName
  * @param {GithubPublisher} plugin
  * @return {Promise<Command>}
  */
@@ -61,9 +59,9 @@ export async function createLinkCallback(repo: Repository | null, plugin: Github
 /**
  * Command to delete file on the repo
  * @call purgeNotesRemote
- * @param {GithubPublisher} plugin
+ * @param {GithubPublisher} plugin - The plugin instance
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
- * @param {string} branchName
+ * @param {string} branchName - The branch name to delete the file
  * @return {Promise<Command>}
  */
 export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Repository | null, branchName: string): Promise<Command> {
@@ -103,11 +101,11 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
  * Command to upload the active file ; use checkCallback to check if the file is shared and if they are a active file
  * @call shareOneNote
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
- * @param {GithubPublisher} plugin
- * @param {string} branchName
+ * @param {GithubPublisher} plugin - The plugin instance
+ * @param {string} branchName - The branch name to upload the file
  * @return {Promise<Command>}
  */
-export async function shareOneNoteCallback(repo: Repository|null, plugin: GithubPublisher, branchName: string) {
+export async function shareOneNoteCallback(repo: Repository|null, plugin: GithubPublisher, branchName: string): Promise<Command> {
 	const id = repo ? `publisher-one-K${repo.smartKey}` : "publisher-one";
 	let name = i18next.t("commands.shareActiveFile");
 	const common = i18next.t("common.repository");
@@ -143,33 +141,40 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 /**
  * Upload all note
  * @call uploadAllNotes
- * @param plugin
+ * @param plugin {GithubPublisher} - The plugin instance
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
- * @param {string} branchName
+ * @param {string} branchName - The branch name to upload the file
  * @return {Promise<Command>}
  */
-export async function uploadAllNotesCallback(plugin: GithubPublisher, repo: Repository|null, branchName: string) {
+export async function uploadAllNotesCallback(plugin: GithubPublisher, repo: Repository|null, branchName: string): Promise<Command> {
 	const id = repo ? `publisher-publish-all-K${repo.smartKey}` : "publisher-publish-all";
 	let name = i18next.t("commands.uploadAllNotes");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
 	return {
-		id: id,
-		name: name,
+		id,
+		name,
 		callback: async () => {
 			await uploadAllNotes(plugin,repo, branchName);
 		},
 	} as Command;
 }
 
-export async function uploadNewNotesCallback(plugin: GithubPublisher, repo: Repository | null, branchName: string) {
+/**
+ * Upload all new notes only
+ * @param plugin {GithubPublisher} - The plugin instance
+ * @param repo {Repository | null} - Other repo if the command is called from the suggest_other_repo_command.ts
+ * @param branchName {string} - The branch name to upload the file
+ * @returns {Promise<Command>}
+ */
+export async function uploadNewNotesCallback(plugin: GithubPublisher, repo: Repository | null, branchName: string): Promise<Command> {
 	const id = repo ? `publisher-upload-new-K${repo.smartKey}` : "publisher-upload-new";
 	let name = i18next.t("commands.uploadNewNotes");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
 	return {
-		id: id,
-		name:name,
+		id,
+		name,
 		callback: async () => {
 			await uploadNewNotes(plugin,branchName, repo);
 		},
@@ -184,7 +189,7 @@ export async function uploadNewNotesCallback(plugin: GithubPublisher, repo: Repo
  * @param {string} branchName
  * @return {Promise<Command>}
  */
-export async function uploadAllEditedNotesCallback(plugin: GithubPublisher, repo: Repository|null, branchName: string) {
+export async function uploadAllEditedNotesCallback(plugin: GithubPublisher, repo: Repository|null, branchName: string): Promise<Command> {
 	const id = repo ? `publisher-upload-all-edited-new-K${repo.smartKey}` : "publisher-upload-all-edited-new";
 	let name = i18next.t("commands.uploadAllNewEditedNote");
 	const common = i18next.t("common.repository");
@@ -206,7 +211,7 @@ export async function uploadAllEditedNotesCallback(plugin: GithubPublisher, repo
  * @param {GithubPublisher} plugin
  * @return {Promise<Command>}
  */
-export async function shareEditedOnlyCallback(repo: Repository|null, branchName: string, plugin: GithubPublisher) {
+export async function shareEditedOnlyCallback(repo: Repository|null, branchName: string, plugin: GithubPublisher): Promise<Command> {
 	const id = repo ? `publisher-upload-edited-K${repo.smartKey}` : "publisher-upload-edited";
 	let name = i18next.t("commands.uploadAllEditedNote");
 	const common = i18next.t("common.repository");
