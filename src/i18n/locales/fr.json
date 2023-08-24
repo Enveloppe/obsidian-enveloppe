@@ -419,7 +419,7 @@
         "title": "Afficher les éditions sur le dépôt"
       },
       "excludedFolder": {
-        "desc": "Les fichiers dans ses dossiers ne seront jamais publiés, quelle que soit l'état de la clé de partage. Séparez les noms de dossier par une virgule.",
+        "desc": "Les fichiers dans ses dossiers ne seront jamais publiés, quelle que soit l'état de la clé de partage. Séparez les noms de dossier par une virgule. Les regex sont supportés en les encadrant par \"//\"",
         "title": "Dossiers exclus"
       },
       "fileMenu": {

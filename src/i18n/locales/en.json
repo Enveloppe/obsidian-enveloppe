@@ -419,7 +419,7 @@
         "title": "Allows to display the list of edited, added, deleted files... From the main repository (in a modal)."
       },
       "excludedFolder": {
-        "desc": "Never publish file in these folder, regardless of the share key. Separate folder name by comma.",
+        "desc": "Never publish file in these folder, regardless of the share key. Separate folder name by comma. Regex are supported by surrounding them with \"//\"",
         "title": "Excluded Folder"
       },
       "fileMenu": {
