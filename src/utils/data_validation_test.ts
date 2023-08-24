@@ -1,8 +1,8 @@
 import i18next from "i18next";
-import {FrontMatterCache, MetadataCache, Notice, TFile} from "obsidian";
+import {FrontMatterCache, Notice, TFile} from "obsidian";
 import GithubPublisher from "src/main";
 
-import {GithubBranch} from "../publish/branch";
+import {GithubBranch} from "../GitHub/branch";
 import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter, Repository} from "../settings/interface";
 import {getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from ".";
 
@@ -26,28 +26,6 @@ export function isInternalShared(
 
 export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache): Repository | null{
 	const allOtherRepo = settings.github.otherRepo;
-	const defaultRepo: Repository = {
-		smartKey: "default",
-		user: settings.github.user,
-		repo: settings.github.repo,
-		branch: settings.github.branch,
-		automaticallyMergePR: settings.github.automaticallyMergePR,
-		verifiedRepo: settings.github.verifiedRepo,
-		api: {
-			tiersForApi: settings.github.api.tiersForApi,
-			hostname: settings.github.api.hostname,
-		},
-		workflow: {
-			commitMessage: settings.github.workflow.commitMessage,
-			name: settings.github.workflow.name,
-		},
-		createShortcuts: false,
-		shareKey: settings.plugin.shareKey,
-		copyLink: {
-			links: settings.plugin.copyLink.links,
-			removePart: settings.plugin.copyLink.removePart,
-		},
-	};
 	if (!frontmatter) return null;
 	//check all keys in the frontmatter
 	for (const repo of allOtherRepo) {
@@ -55,7 +33,7 @@ export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?
 			return repo;
 		}
 	}
-	return defaultRepo;
+	return defaultRepo(settings);
 }
 
 /**
@@ -253,11 +231,11 @@ export function noTextConversion(conditionConvert: FrontmatterConvert) {
  */
 export async function checkRepositoryValidity(
 	PublisherManager: GithubBranch,
-	settings: GitHubPublisherSettings,
 	repository: Repository | null = null,
 	file: TFile | null,
-	metadataCache: MetadataCache,
 	silent=false): Promise<boolean> {
+	const settings = PublisherManager.settings;
+	const metadataCache = PublisherManager.plugin.app.metadataCache;
 	try {
 		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : undefined;
 		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
@@ -284,10 +262,10 @@ export async function checkRepositoryValidity(
  */
 export async function checkRepositoryValidityWithRepoFrontmatter(
 	PublisherManager: GithubBranch,
-	settings: GitHubPublisherSettings,
 	repoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
 	numberOfFile=1
 ): Promise<boolean> {
+	const settings = PublisherManager.settings;
 	try {
 		/**
 		 * verify for each repoFrontmatter if verifiedRepo is true
@@ -315,4 +293,29 @@ export async function checkRepositoryValidityWithRepoFrontmatter(
 		return false;
 	}
 	return false;
+}
+
+export function defaultRepo(settings: GitHubPublisherSettings): Repository {
+	return {
+		smartKey: "default",
+		user: settings.github.user,
+		repo: settings.github.repo,
+		branch: settings.github.branch,
+		automaticallyMergePR: settings.github.automaticallyMergePR,
+		verifiedRepo: settings.github.verifiedRepo,
+		api: {
+			tiersForApi: settings.github.api.tiersForApi,
+			hostname: settings.github.api.hostname,
+		},
+		workflow: {
+			commitMessage: settings.github.workflow.commitMessage,
+			name: settings.github.workflow.name,
+		},
+		createShortcuts: false,
+		shareKey: settings.plugin.shareKey,
+		copyLink: {
+			links: settings.plugin.copyLink.links,
+			removePart: settings.plugin.copyLink.removePart,
+		},
+	};
 }

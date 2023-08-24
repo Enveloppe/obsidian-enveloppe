@@ -1,11 +1,9 @@
-import { Octokit } from "@octokit/core";
 import i18next from "i18next";
-import { MetadataCache, Notice, Platform, TFile, Vault } from "obsidian";
+import { Notice, Platform, TFile } from "obsidian";
 
-import GithubPublisher from "../main";
-import { GithubBranch } from "../publish/branch";
-import { deleteFromGithub } from "../publish/delete";
-import {GitHubPublisherSettings, RepoFrontmatter, Repository, UploadedFiles} from "../settings/interface";
+import { GithubBranch } from "../GitHub/branch";
+import { deleteFromGithub } from "../GitHub/delete";
+import { MonoRepoProperties, MultiRepoProperties, Repository, UploadedFiles} from "../settings/interface";
 import { ListChangedFiles } from "../settings/modals/list_changed";
 import {
 	createLink,
@@ -16,33 +14,27 @@ import {
 	noticeMessage} from "../utils";
 import {checkRepositoryValidityWithRepoFrontmatter} from "../utils/data_validation_test";
 import { ShareStatusBar } from "../utils/status_bar";
+
+
 /**
  * Share all marked note (share: true) from Obsidian to GitHub
  * @param {GithubBranch} PublisherManager
- * @param {GitHubPublisherSettings} settings
- * @param {Octokit} octokit
- * @param {HTMLElement} statusBarItems - The status bar items
+ * @param {HTMLElement} statusBarItems - The status bar element
  * @param {string} branchName - The branch name created by the plugin
- * @param {RepoFrontmatter} repoFrontmatter
- * @param {TFile[]} sharedFiles - The files marked as shared
- * @param {boolean} createGithubBranch - If the branch has to be created
- * @param plugin
- * @param shortRepo
- * @return {Promise<void>}
+ * @param {MonoRepoProperties} monoRepo - The repo where to share the files
+ * @param {TFile[]} sharedFiles - The files to share
+ * @param {boolean} createGithubBranch - If true, create the branch before sharing the files
  */
 export async function shareAllMarkedNotes(
 	PublisherManager: GithubBranch,
-	settings: GitHubPublisherSettings,
-	octokit: Octokit,
 	statusBarItems: HTMLElement,
 	branchName: string,
-	repoFrontmatter: RepoFrontmatter,
+	monoRepo: MonoRepoProperties,
 	sharedFiles: TFile[],
-	createGithubBranch = true,
-	plugin: GithubPublisher,
-	shortRepo: Repository | null
+	createGithubBranch: boolean = true,
 ) {
 	const statusBar = new ShareStatusBar(statusBarItems, sharedFiles.length);
+	const repoFrontmatter = monoRepo.frontmatter;
 	try {
 		let errorCount = 0;
 		const fileError : string[] = [];
@@ -50,49 +42,44 @@ export async function shareAllMarkedNotes(
 		if (sharedFiles.length > 0) {
 			const publishedFiles = sharedFiles.map((file) => file.name);
 			if (createGithubBranch) {
-				const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, settings, repoFrontmatter, sharedFiles.length);
+				const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter, sharedFiles.length);
 				if (!isValid) return false;
 				await PublisherManager.newBranch(branchName, repoFrontmatter);
 			}
-			for (let files = 0; files < sharedFiles.length; files++) {
+			for (const sharedFile of sharedFiles) {
 				try {
-					const file = sharedFiles[files];
 					statusBar.increment();
 					const uploaded = await PublisherManager.publish(
-						file,
+						sharedFile,
 						false,
 						branchName,
-						repoFrontmatter,
-						shortRepo
+						monoRepo
 					) ;
 					if (uploaded) {
 						listStateUploaded.push(...uploaded.uploaded);
 					}
-				} catch {
+				} catch  {
 					errorCount++;
-					fileError.push(sharedFiles[files].name);
+					fileError.push(sharedFile.name);
 					new Notice(
-						(i18next.t("error.unablePublishNote", {file: sharedFiles[files].name})));
+						(i18next.t("error.unablePublishNote", {file: sharedFile.name})));
 				}
 			}
 			statusBar.finish(8000);
 			const noticeValue = `${publishedFiles.length - errorCount} notes`;
 			const deleted = await deleteFromGithub(
 				true,
-				settings,
-				octokit,
 				branchName,
 				PublisherManager,
-				repoFrontmatter,
-				shortRepo
+				monoRepo
 			);
-			
+			const settings = PublisherManager.settings;
 			if (
 				settings.upload.metadataExtractorPath.length > 0 &&
 				Platform.isDesktop
 			) {
 				const metadataExtractor = await getSettingsOfMetadataExtractor(
-					app,
+					PublisherManager.plugin.app,
 					settings
 				);
 				if (metadataExtractor) {
@@ -116,7 +103,7 @@ export async function shareAllMarkedNotes(
 				);
 				if (settings.plugin.displayModalRepoEditing) {
 					const listEdited = createListEdited(listStateUploaded, deleted, fileError);
-					new ListChangedFiles(plugin.app, listEdited).open();
+					new ListChangedFiles(PublisherManager.plugin.app, listEdited).open();
 				}
 			} else {
 				new Notice(
@@ -133,39 +120,30 @@ export async function shareAllMarkedNotes(
 /**
  * Delete unshared/deleted in the repo
  * @param {GithubBranch} PublisherManager
- * @param {GitHubPublisherSettings} settings
- * @param {Octokit} octokit
  * @param {string} branchName - The branch name created by the plugin
- * @param {RepoFrontmatter} repoFrontmatter
- * @param otherRepo
- * @return {Promise<void>}
+ * @param {MonoRepoProperties} monoRepo - The repo where to delete the files
+ * @returns {Promise<void>}
  */
 export async function purgeNotesRemote(
 	PublisherManager: GithubBranch,
-	settings: GitHubPublisherSettings,
-	octokit: Octokit,
 	branchName: string,
-	repoFrontmatter: RepoFrontmatter,
-	otherRepo: Repository | null
-) {
+	monoRepo: MonoRepoProperties,
+): Promise<void|boolean> {
 	try {
 		new Notice(
-			(i18next.t("informations.startingClean", {repo: repoFrontmatter}))
+			(i18next.t("informations.startingClean", {repo: monoRepo.frontmatter}))
 		);
-		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, settings, repoFrontmatter);
+		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, monoRepo.frontmatter);
 		if (!isValid) return false;
-		await PublisherManager.newBranch(branchName, repoFrontmatter);
+		await PublisherManager.newBranch(branchName, monoRepo.frontmatter);
 		const deleted = await deleteFromGithub(
 			false,
-			settings,
-			octokit,
 			branchName,
 			PublisherManager,
-			repoFrontmatter,
-			otherRepo
+			monoRepo
 		);
-		await PublisherManager.updateRepository(branchName, repoFrontmatter);
-		if (settings.plugin.displayModalRepoEditing) new ListChangedFiles(app, deleted).open();
+		await PublisherManager.updateRepository(branchName, monoRepo.frontmatter);
+		if (PublisherManager.settings.plugin.displayModalRepoEditing) new ListChangedFiles(PublisherManager.plugin.app, deleted).open();
 	} catch (e) {
 		console.error(e);
 	}
@@ -175,36 +153,36 @@ export async function purgeNotesRemote(
  * Share only **one** note and their embedded contents, including note and attachments
  * @param {string} branchName - The branch name created by the plugin
  * @param {GithubBranch} PublisherManager
- * @param {GitHubPublisherSettings} settings
  * @param {TFile} file - The file to share
- * @param repository
- * @param {MetadataCache} metadataCache
- * @param {Vault} vault
+ * @param {Repository|null} repository
  * @param {string} title The title from frontmatter + regex (if any)
- * @return {Promise<void>}
+ * @returns {Promise<void>}
  */
 export async function shareOneNote(
 	branchName: string,
 	PublisherManager: GithubBranch,
-	settings: GitHubPublisherSettings,
 	file: TFile,
 	repository: Repository | null = null,
-	metadataCache: MetadataCache,
-	vault: Vault,
 	title?: string,
-) {
+): Promise<void|false> {		
+	const settings = PublisherManager.settings;
+	const app = PublisherManager.plugin.app;
+	const metadataCache = app.metadataCache;
 	try {
 		const frontmatter = metadataCache.getFileCache(file)?.frontmatter;
 		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
-		const isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, settings, repoFrontmatter);
+		const isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter);
+		const multiRepo: MultiRepoProperties = {
+			frontmatter: repoFrontmatter,
+			repo: repository
+		};
 		if (!isValid) return false;
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
 		const publishSuccess = await PublisherManager.publish(
 			file,
 			true,
 			branchName,
-			repoFrontmatter,
-			repository,
+			multiRepo,
 			[],
 			true
 		);
@@ -238,11 +216,9 @@ export async function shareOneNote(
 				);
 				await createLink(
 					file,
-					repoFrontmatter,
-					metadataCache,
-					vault,
+					multiRepo,
 					settings,
-					repository
+					app
 				);
 				if (settings.plugin.displayModalRepoEditing) {
 					const listEdited = createListEdited(publishSuccess.uploaded, publishSuccess.deleted, publishSuccess.error);
@@ -267,37 +243,26 @@ export async function shareOneNote(
 /**
  * Deep scan the repository and send only the note that not exist in the repository
  * @param {GithubBranch} PublisherManager
- * @param {Octokit} octokit
  * @param {string} branchName - The branch name created by the plugin
- * @param {Vault} vault
- * @param {GithubPublisher} plugin
- * @param {RepoFrontmatter} repoFrontmatter
- * @param shortRepo
- * @return {Promise<void>}
+ * @param {MonoRepoProperties} monoRepo - The repo 
+ * @returns {Promise<void>}
  */
 export async function shareNewNote(
 	PublisherManager: GithubBranch,
-	octokit: Octokit,
 	branchName: string,
-	vault: Vault,
-	plugin: GithubPublisher,
-	repoFrontmatter: RepoFrontmatter,
-	shortRepo: Repository | null
-) {
-	const settings = plugin.settings;
+	monoRepo: MonoRepoProperties,
+): Promise<void|boolean> {
+	const plugin = PublisherManager.plugin;
 	new Notice(i18next.t("informations.scanningRepo") );
-	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(shortRepo);
+	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(monoRepo.repo);
 	// Get all file in the repo before the creation of the branch
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
-		repoFrontmatter.branch, // we need to take the master branch because the branch to create doesn't exist yet
-		octokit,
-		settings,
-		repoFrontmatter
+		monoRepo.frontmatter.branch, // we need to take the master branch because the branch to create doesn't exist yet
+		monoRepo.frontmatter
 	);
 	const newlySharedNotes = PublisherManager.getNewFiles(
 		sharedFilesWithPaths,
 		githubSharedNotes,
-		vault
 	);
 	if (newlySharedNotes.length > 0) {
 		new Notice(
@@ -306,64 +271,47 @@ export async function shareNewNote(
 		);
 
 		const statusBarElement = plugin.addStatusBarItem();
-		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, settings, repoFrontmatter, newlySharedNotes.length);
+		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, monoRepo.frontmatter, newlySharedNotes.length);
 		if (!isValid) return false;
-		await PublisherManager.newBranch(branchName, repoFrontmatter);
+		await PublisherManager.newBranch(branchName, monoRepo.frontmatter);
 		await shareAllMarkedNotes(
 			PublisherManager,
-			plugin.settings,
-			octokit,
 			statusBarElement,
 			branchName,
-			repoFrontmatter,
+			monoRepo,
 			newlySharedNotes,
 			false,
-			plugin,
-			shortRepo
 		);
-	} else {
-		new Notice(i18next.t("informations.noNewNote") );
+		return;
 	}
+	new Notice(i18next.t("informations.noNewNote") );
 }
 
 /**
  * Share edited notes : they exist on the repo, BUT the last edited time in Obsidian is after the last upload. Also share new notes.
  * @param {GithubBranch} PublisherManager
- * @param {Octokit} octokit
  * @param {string} branchName - The branch name created by the plugin
- * @param {Vault} vault
- * @param {GithubPublisher} plugin
- * @param {RepoFrontmatter} repoFrontmatter
- * @param {Repository | null} shortRepo - The repository object if needed (if the repo is from OtherRepo and not the default one)
- * @return {Promise<void>}
+ * @param {MonoRepoProperties} monoRepo - The repo
  */
 export async function shareAllEditedNotes(
 	PublisherManager: GithubBranch,
-	octokit: Octokit,
 	branchName: string,
-	vault: Vault,
-	plugin: GithubPublisher,
-	repoFrontmatter: RepoFrontmatter,
-	shortRepo: Repository | null
+	monoRepo: MonoRepoProperties,
 ) {
-	const settings = plugin.settings;
+	const plugin = PublisherManager.plugin;
 	new Notice(i18next.t("informations.scanningRepo") );
-	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(shortRepo);
+	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(monoRepo.repo);
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
-		repoFrontmatter.branch,
-		octokit,
-		settings,
-		repoFrontmatter
+		monoRepo.frontmatter.branch,
+		monoRepo.frontmatter
 	);
 	const newSharedFiles = PublisherManager.getNewFiles(
 		sharedFilesWithPaths,
 		githubSharedNotes,
-		vault
 	);
 	const newlySharedNotes = await PublisherManager.getEditedFiles(
 		sharedFilesWithPaths,
 		githubSharedNotes,
-		vault,
 		newSharedFiles
 	);
 	if (newlySharedNotes.length > 0) {
@@ -373,85 +321,66 @@ export async function shareAllEditedNotes(
 		);
 
 		const statusBarElement = plugin.addStatusBarItem();
-		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, settings, repoFrontmatter, newlySharedNotes.length);
+		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, monoRepo.frontmatter, newlySharedNotes.length);
 		if (!isValid) return false;
-		await PublisherManager.newBranch(branchName, repoFrontmatter);
+		await PublisherManager.newBranch(branchName, monoRepo.frontmatter);
 		await shareAllMarkedNotes(
 			PublisherManager,
-			settings,
-			octokit,
 			statusBarElement,
 			branchName,
-			repoFrontmatter,
+			monoRepo,
 			newlySharedNotes,
 			false,
-			plugin,
-			shortRepo
 		);
-	} else {
-		new Notice(i18next.t("informations.noNewNote") );
+		return;
 	}
+	new Notice(i18next.t("informations.noNewNote") );
 }
 
 /**
  * share **only** edited notes : they exist on the repo, but the last edited time is after the last upload.
  * @param {GithubBranch} PublisherManager
- * @param {Octokit} octokit
  * @param {string} branchName - The branch name created by the plugin
- * @param {Vault} vault
- * @param {GithubPublisher} plugin
- * @param {RepoFrontmatter} repoFrontmatter
- * @param shortRepo
- * @return {Promise<void>}
+ * @param {MonoRepoProperties} monoRepo - The repo
  */
 export async function shareOnlyEdited(
 	PublisherManager: GithubBranch,
-	octokit: Octokit,
 	branchName: string,
-	vault: Vault,
-	plugin: GithubPublisher,
-	repoFrontmatter: RepoFrontmatter,
-	shortRepo: Repository | null
+	monoRepo: MonoRepoProperties,
 ) {
-	const settings = plugin.settings;
+	const shortRepo = monoRepo.repo;
+	const repoFrontmatter = monoRepo.frontmatter;
 	new Notice(i18next.t("informations.scanningRepo") );
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(shortRepo);
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
 		repoFrontmatter.branch,
-		octokit,
-		settings,
 		repoFrontmatter
 	);
 	const newSharedFiles: TFile[] = [];
 	const newlySharedNotes = await PublisherManager.getEditedFiles(
 		sharedFilesWithPaths,
 		githubSharedNotes,
-		vault,
 		newSharedFiles
 	);
 	if (newlySharedNotes.length > 0) {
 		new Notice(
 			(i18next.t("informations.foundNoteToSend", {nbNotes: newlySharedNotes.length}))
 		);
-		const statusBarElement = plugin.addStatusBarItem();
-		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, settings, repoFrontmatter, newlySharedNotes.length);
+		const statusBarElement = PublisherManager.plugin.addStatusBarItem();
+		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter, newlySharedNotes.length);
 		if (!isValid) return false;
 		await PublisherManager.newBranch(branchName, repoFrontmatter);
 		await shareAllMarkedNotes(
 			PublisherManager,
-			settings,
-			octokit,
 			statusBarElement,
 			branchName,
-			repoFrontmatter,
+			monoRepo,
 			newlySharedNotes,
 			false,
-			plugin,
-			shortRepo
 		);
-	} else {
-		new Notice(i18next.t("informations.noNewNote") );
+		return;
 	}
+	new Notice(i18next.t("informations.noNewNote") );
 }
 
 

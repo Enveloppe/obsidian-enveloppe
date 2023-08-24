@@ -9,7 +9,6 @@ import {
 	parseYaml,
 	stringifyYaml,
 	TFile,
-	Vault
 } from "obsidian";
 import {getAPI, Link} from "obsidian-dataview";
 
@@ -18,8 +17,7 @@ import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	LinkedNotes,
-	RepoFrontmatter,
-	Repository,
+	MultiProperties,
 } from "../settings/interface";
 import {log, noticeLog} from "../utils";
 import {bakeEmbeds} from "./bakeEmbed";
@@ -147,7 +145,7 @@ export async function addInlineTags(
  * @param {GitHubPublisherSettings} settings the global settings
  * @return {string | null} the display text by dataview
  */
-function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings) {
+function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings): string | null {
 	const basename = (name: string) => /([^/\\.]*)(\..*)?$/.exec(name)![1];
 	const filename = basename(fieldValue.path).toString();
 	const display = fieldValue.display
@@ -178,7 +176,7 @@ export async function convertInlineDataview(
 	settings: GitHubPublisherSettings,
 	sourceFile: TFile,
 	app: App
-) {
+): Promise<string> {
 	// @ts-ignore
 	if (
 		settings.conversion.tags.fields.length === 0 ||
@@ -236,31 +234,23 @@ export async function convertInlineDataview(
  * Also convert links using convertDataviewLinks
  * @param {string} text the text to convert
  * @param {string} path the path of the file to convert
- * @param {@link GitHubPublisherSettings} settings the global settings
  * @param {App} app obsidian app
- * @param {MetadataCache} metadataCache the metadataCache
- * @param {FrontmatterConvert} frontmatterSettings the frontmatter settings
  * @param {FrontMatterCache} frontmatter the frontmatter cache
  * @param {TFile} sourceFile the file to process
- * @param {RepoFrontmatter|RepoFrontmatter[]} sourceFrontmatter the frontmatter of the repo
- * @param shortRepo
- * @return {Promise<string>} the converted text
- * @credits Ole Eskid Steensen
- * @source https://github.com/oleeskild/obsidian-digital-garden/blob/4cdf2791e24b2a0c2a30e7d39965b7b9b50e2ab0/src/Publisher.ts#L297
+ * @param {MultiProperties} properties the properties of the plugins (settings, repository, frontmatter)
+ * @returns {Promise<string>} the converted text
+ * @author Ole Eskid Steensen
+ * @link https://github.com/oleeskild/obsidian-digital-garden/blob/4cdf2791e24b2a0c2a30e7d39965b7b9b50e2ab0/src/Publisher.ts#L297
  */
 
 export async function convertDataviewQueries(
 	text: string,
 	path: string,
-	settings: GitHubPublisherSettings,
 	app: App,
-	metadataCache: MetadataCache,
-	frontmatterSettings: FrontmatterConvert,
 	frontmatter: FrontMatterCache,
 	sourceFile: TFile,
-	sourceFrontmatter: RepoFrontmatter | RepoFrontmatter[],
-	shortRepo: Repository | null
-) {
+	properties: MultiProperties,
+): Promise<string> {
 	let replacedText = text;
 	const dataViewRegex = /```dataview\s(.+?)```/gsm;
 	const dvApi = getAPI();
@@ -268,15 +258,15 @@ export async function convertDataviewQueries(
 	const matches = text.matchAll(dataViewRegex);
 
 	const dataviewJsPrefix = dvApi.settings.dataviewJsKeyword;
-	const dataViewJsRegex = new RegExp("```" + escapeRegex(dataviewJsPrefix) + "\\s(.+?)```", "gsm");
+	const dataViewJsRegex = new RegExp(`\`\`\`${escapeRegex(dataviewJsPrefix)}\\s(.+?)\`\`\``, "gsm");
 	const dataviewJsMatches = text.matchAll(dataViewJsRegex);
 
 	const inlineQueryPrefix = dvApi.settings.inlineQueryPrefix;
-	const inlineDataViewRegex = new RegExp("`" + escapeRegex(inlineQueryPrefix) + "(.+?)`", "gsm");
+	const inlineDataViewRegex = new RegExp(`\`${escapeRegex(inlineQueryPrefix)}(.+?)\``, "gsm");
 	const inlineMatches = text.matchAll(inlineDataViewRegex);
 
 	const inlineJsQueryPrefix = dvApi.settings.inlineJsQueryPrefix;
-	const inlineJsDataViewRegex = new RegExp("`" + escapeRegex(inlineJsQueryPrefix) + "(.+?)`", "gsm");
+	const inlineJsDataViewRegex = new RegExp(`\`${escapeRegex(inlineJsQueryPrefix)}(.+?)\``, "gsm");
 	const inlineJsMatches = text.matchAll(inlineJsDataViewRegex);
 	if (!matches && !inlineMatches && !dataviewJsMatches && !inlineJsMatches) {
 		log("No dataview queries found");
@@ -289,10 +279,10 @@ export async function convertDataviewQueries(
 		try {
 			const block = queryBlock[0];
 			const query = queryBlock[1];
-			const markdown = removeDataviewQueries(await dvApi.tryQueryMarkdown(query, path) as string, frontmatterSettings);
+			const markdown = removeDataviewQueries(await dvApi.tryQueryMarkdown(query, path) as string, properties.frontmatter.general);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 			new Notice(error);
 			return queryBlock[0];
 		}
@@ -307,10 +297,10 @@ export async function convertDataviewQueries(
 			const component = new Component();
 			await dvApi.executeJs(query, div, component, path);
 			component.load();
-			const markdown = removeDataviewQueries(div.innerHTML, frontmatterSettings);
+			const markdown = removeDataviewQueries(div.innerHTML, properties.frontmatter.general);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 			new Notice(error);
 			return queryBlock[0];
 		}
@@ -322,13 +312,9 @@ export async function convertDataviewQueries(
 			const code = inlineQuery[0];
 			const query = inlineQuery[1].trim();
 			const dataviewResult = dvApi.tryEvaluate(query, { this: dvApi.page(path, sourceFile.path) });
-			if (dataviewResult) {
-				replacedText = replacedText.replace(code, removeDataviewQueries(dataviewResult.toString(), frontmatterSettings));
-			} else {
-				replacedText = replacedText.replace(code, removeDataviewQueries(dvApi.settings.renderNullAs, frontmatterSettings));
-			}
+			replacedText = dataviewResult ? replacedText.replace(code, removeDataviewQueries(dataviewResult.toString(), properties.frontmatter.general)) : replacedText.replace(code, removeDataviewQueries(dvApi.settings.renderNullAs, properties.frontmatter.general));
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 			new Notice(error);
 			return inlineQuery[0];
 		}
@@ -343,16 +329,16 @@ export async function convertDataviewQueries(
 			const component = new Component();
 			await dvApi.executeJs(query, div, component, path);
 			component.load();
-			const markdown = removeDataviewQueries(div.innerHTML, frontmatterSettings);
+			const markdown = removeDataviewQueries(div.innerHTML, properties.frontmatter.general);
 			replacedText = replacedText.replace(code, markdown);
 
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 			new Notice(error);
 			return inlineJsQuery[0];
 		}
 	}
-	return await convertDataviewLinks(replacedText, app.vault, settings, metadataCache, frontmatterSettings, frontmatter, sourceFile, sourceFrontmatter, shortRepo);
+	return await convertDataviewLinks(replacedText, frontmatter, sourceFile, app, properties);
 }
 
 /**
@@ -362,121 +348,74 @@ export async function convertDataviewQueries(
  * @return {string} the text without dataview queries or the dataview queries in markdown
  */
 function removeDataviewQueries(dataviewMarkdown: string, frontmatterSettings: FrontmatterConvert): string {
-	const settingsDataview = frontmatterSettings.dataview;
-	if (!settingsDataview) return "";
-	else return dataviewMarkdown;
+	return frontmatterSettings.dataview ? dataviewMarkdown : "";
 }
 
 /**
  * Wrapper to prevent writing 15 lines of code every time
- * @param {string} md the markdown to convert
- * @param {Vault} vault the vault
- * @param {@link GitHubPublisherSettings} settings the settings
- * @param {MetadataCache} metadataCache the metadata cache
- * @param {FrontmatterConvert} frontmatterSettings the frontmatter settings
- * @param {FrontMatterCache} frontmatter the frontmatter cache
- * @param {TFile} sourceFile the source file
- * @param {RepoFrontmatter | RepoFrontmatter[]} sourceFrontmatter the source frontmatter
- * @param {Repository | null} shortRepo the short repo
- * @return {Promise<string>} the converted markdown
  */
 async function convertDataviewLinks(
 	md:string,
-	vault: Vault,
-	settings: GitHubPublisherSettings,
-	metadataCache: MetadataCache,
-	frontmatterSettings: FrontmatterConvert,
 	frontmatter: FrontMatterCache,
 	sourceFile: TFile,
-	sourceFrontmatter: RepoFrontmatter | RepoFrontmatter[],
-	shortRepo: Repository | null): Promise<string> {
-	const dataviewPath = getDataviewPath(md, settings, vault);
+	app: App,
+	properties: MultiProperties): Promise<string> {
+	const dataviewPath = getDataviewPath(md, properties.settings, app.vault);
 	md = await convertLinkCitation(
 		md,
-		settings,
 		dataviewPath,
-		metadataCache,
 		sourceFile,
-		vault,
+		app,
 		frontmatter,
-		sourceFrontmatter,
-		frontmatterSettings,
-		shortRepo
+		properties
 	);
-	md = convertWikilinks(
+	return convertWikilinks(
 		md,
-		frontmatterSettings,
+		properties.frontmatter.general,
 		dataviewPath,
-		settings
+		properties.settings
 	);
-	return md;
 }
 
 
 
 /**
  * Main function to convert the text
- * @param {string} text the text to convert
- * @param {GitHubPublisherSettings} settings the global settings
- * @param {FrontmatterConvert} frontmatterSettings the frontmatter settings
- * @param {TFile} file the file to convert
- * @param {App} app obsidian app
- * @param {MetadataCache} metadataCache the metadataCache
- * @param {FrontMatterCache} frontmatter the frontmatter cache
- * @param {LinkedNotes[]} linkedFiles the linked files
- * @param {GitHubPublisherSettings} plugin GithubPublisher plugin
- * @param {RepoFrontmatter|RepoFrontmatter[]} sourceRepo the frontmatter of the repo
- * @param {Vault} vault app.vault
- * @param shortRepo
- * @return {Promise<string>} the converted text
- */
+*/
 
 export async function mainConverting(
 	text: string,
-	settings: GitHubPublisherSettings,
-	frontmatterSettings: FrontmatterConvert,
 	file: TFile,
 	app: App,
-	metadataCache: MetadataCache,
 	frontmatter: FrontMatterCache,
 	linkedFiles: LinkedNotes[],
 	plugin: GithubPublisher,
-	vault: Vault,
-	sourceRepo: RepoFrontmatter | RepoFrontmatter[],
-	shortRepo: Repository | null
+	properties: MultiProperties,
+
 ): Promise<string> {
-	if (settings.embed.convertEmbedToLinks === "bake")
-		text = await bakeEmbeds(file, new Set(), app, shortRepo, settings, null, true);
-	text = findAndReplaceText(text, settings, false);
-	text = await addInlineTags(settings, file, metadataCache, frontmatter, text);
+	if (properties.frontmatter.general.removeEmbed === "bake")
+		text = await bakeEmbeds(file, new Set(), app, properties, null, linkedFiles);
+	text = findAndReplaceText(text, properties.settings, false);
+	text = await addInlineTags(properties.settings, file, plugin.app.metadataCache, frontmatter, text);
+	text = await convertLinkCitation(
+		text,
+		linkedFiles,
+		file,
+		app,
+		frontmatter,
+		properties
+	);
+	text = convertWikilinks(text, properties.frontmatter.general, linkedFiles, properties.settings);
 	text = await convertDataviewQueries(
 		text,
 		file.path,
-		settings,
 		plugin.app,
-		metadataCache,
-		frontmatterSettings,
 		frontmatter,
 		file,
-		sourceRepo,
-		shortRepo
+		properties
 	);
-	text = await convertInlineDataview(text, settings, file, plugin.app);
-	text = addHardLineBreak(text, settings, frontmatterSettings);
-	text = await convertLinkCitation(
-		text,
-		settings,
-		linkedFiles,
-		metadataCache,
-		file,
-		vault,
-		frontmatter,
-		sourceRepo,
-		frontmatterSettings,
-		shortRepo
-	);
-	text = convertWikilinks(text, frontmatterSettings, linkedFiles, settings);
-	text = findAndReplaceText(text, settings, true);
+	text = await convertInlineDataview(text, properties.settings, file, plugin.app);
+	text = addHardLineBreak(text, properties.settings, properties.frontmatter.general);
 
-	return text;
+	return findAndReplaceText(text, properties.settings, true);
 }

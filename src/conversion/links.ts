@@ -1,11 +1,11 @@
-import { FrontMatterCache, MetadataCache, TFile, Vault } from "obsidian";
+import { App, FrontMatterCache, TFile } from "obsidian";
 import slugify from "slugify";
 
 import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	LinkedNotes,
-	RepoFrontmatter, Repository,
+	MultiProperties,
 } from "../settings/interface";
 import {isAttachment, noTextConversion} from "../utils/data_validation_test";
 import { createRelativePath } from "./file_path";
@@ -92,7 +92,7 @@ export function convertWikilinks(
 						isEmbedBool &&
 						linkedFile.linked.extension === "md";
 					if (isEmbedBool && linkedFile.linked.extension === "md" && conditionConvert.removeEmbed === "links") {
-						isEmbed = conditionConvert.charEmbedLinks + " ";
+						isEmbed = `${conditionConvert.charEmbedLinks} `;
 						linkCreator = linkCreator.replace("!", isEmbed);
 					}
 					if (convertWikilink) {
@@ -235,53 +235,35 @@ export function escapeRegex(filepath: string): string {
 
 /**
  * Convert internal links with changing the path to the relative path in the github repository
- * @param {string} fileContent The file content
- * @param {GitHubPublisherSettings} settings Settings of the plugins
- * @param {LinkedNotes[]} linkedFiles A list of linked files including the linked file in TFile format and the linked file (string) including the alt text
- * @param {MetadataCache} metadataCache The metadata cache of the vault
- * @param {TFile} sourceFile The source file
- * @param {Vault} vault The vault
- * @param {FrontMatterCache} frontmatter The frontmatter cache
- * @param {RepoFrontmatter} sourceRepoFrontmatter The frontmatter of the source file
- * @param {FrontmatterConvert} frontmatterSettings The frontmatter settings
- * @param shortRepo
- * @return {string} the file contents with converted internal links
  */
 
 export async function convertLinkCitation(
 	fileContent: string,
-	settings: GitHubPublisherSettings,
 	linkedFiles: LinkedNotes[],
-	metadataCache: MetadataCache,
 	sourceFile: TFile,
-	vault: Vault,
+	app: App,
 	frontmatter: FrontMatterCache,
-	sourceRepoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
-	frontmatterSettings: FrontmatterConvert,
-	shortRepo: Repository | null
+	properties: MultiProperties,
 ): Promise<string> {
+	const frontmatterSettings = properties.frontmatter.general;
+	const settings = properties.settings;
 	if (!frontmatterSettings.convertInternalLinks) {
 		return fileContent;
 	}
+	console.log("converting links of", sourceFile.basename);
 	for (const linkedFile of linkedFiles) {
 		let pathInGithub = await createRelativePath(
 			sourceFile,
 			linkedFile,
-			metadataCache,
-			settings,
-			vault,
 			frontmatter,
-			sourceRepoFrontmatter,
-			frontmatterSettings,
-			shortRepo
+			app,
+			properties,
 		);
 		pathInGithub = pathInGithub.replace(".md", "");
 		let anchor = linkedFile.anchor ? linkedFile.anchor : "";
 		let linkInMarkdown = escapeRegex(linkedFile.linkFrom.replace(anchor, "")).replaceAll(" ", "%20") + anchor.replace("^", "\\^");
 		linkInMarkdown = linkInMarkdown.replaceAll(" ", "%20");
 		const escapedLinkedFile = escapeRegex(linkedFile.linkFrom);
-
-
 		const regexToReplace = new RegExp(
 			`(\\[{2}${escapedLinkedFile}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\((${escapedLinkedFile}|${linkInMarkdown})\\))`,
 			"g"
@@ -299,11 +281,11 @@ export async function convertLinkCitation(
 				if (link.match(/\[.*\]\(.*\)/)) {
 					if (linkedFile.linked.extension === "md") {
 						anchor =  settings.conversion.links.slugify ? slugify(anchor, { lower: true, strict: true }) : anchor;
-						pathInGithub = pathInGithub.replaceAll(" ", "%20") + ".md#" + anchor;
+						pathInGithub = `${pathInGithub.replaceAll(" ", "%20")}.md#${anchor}`;
 						//probably useless
 						// pathInGithub = pathInGithub.replace(/(\.md)?(#.*)/, ".md$2");
 						pathInGithub = !pathInGithub.match(/(#.*)/) && !pathInGithub.endsWith(".md") ?
-							pathInGithub + ".md"
+							`${pathInGithub}.md`
 							: pathInGithub;
 					}
 					const altText = link.match(/\[(.*)\]/)![1];

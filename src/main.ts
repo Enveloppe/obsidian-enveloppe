@@ -2,6 +2,7 @@ import {Octokit} from "@octokit/core";
 import i18next from "i18next";
 import {FrontMatterCache, Menu, Plugin, TFile, TFolder} from "obsidian";
 
+import {GithubBranch} from "./GitHub/branch";
 import {
 	checkRepositoryValidityCallback,
 	createLinkCallback,
@@ -13,7 +14,6 @@ import {addMenuFile, addMenuFolder} from "./commands/file_menu";
 import {ChooseWhichRepoToRun} from "./commands/suggest_other_repo_commands_modal";
 import {getTitleField, regexOnFileName} from "./conversion/file_path";
 import { resources, translationLanguage } from "./i18n/i18next";
-import {GithubBranch} from "./publish/branch";
 import {GithubPublisherSettingsTab} from "./settings";
 import {
 	DEFAULT_SETTINGS,
@@ -45,7 +45,7 @@ export default class GithubPublisher extends Plugin {
 
 	async chargeAllCommands(repo: Repository|null, plugin: GithubPublisher, branchName: string) {
 		if (plugin.settings.plugin.copyLink.addCmd) {
-			this.addCommand(await createLinkCallback(repo, branchName, this));
+			this.addCommand(await createLinkCallback(repo, this));
 		}
 		this.addCommand(await shareOneNoteCallback(repo, this, branchName));
 		this.addCommand(await purgeNotesRemoteCallback(this, repo, branchName));
@@ -152,10 +152,7 @@ export default class GithubPublisher extends Plugin {
 			octokit = new Octokit({auth: token});
 		}
 		return new GithubBranch(
-			this.settings,
 			octokit,
-			this.app.vault,
-			this.app.metadataCache,
 			this
 		);
 	}
@@ -190,7 +187,7 @@ export default class GithubPublisher extends Plugin {
 
 		if (!this.settings.github.verifiedRepo && (await this.loadToken()) !== "") {
 			const octokit = await this.reloadOctokit();
-			this.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, this.settings, null, null, this.app.metadataCache, true);
+			this.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, null, null, true);
 			this.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.settings, false);
 			await this.saveSettings();
 		}

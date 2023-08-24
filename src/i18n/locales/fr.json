@@ -49,6 +49,7 @@
     "cancel": "Annuler",
     "close": "Fermer",
     "default": "défaut",
+    "defaultName": "dossier par défaut",
     "delete": "Supprimer {{- things}}",
     "edit": "Éditer {{- things}}",
     "error": "Erreur",
@@ -64,6 +65,7 @@
     "published": "publiés",
     "regex": "regex",
     "repository": "Dépôt",
+    "rootFolder": "dossier racine",
     "save": "Sauvegarder",
     "shared": "partagés",
     "text": "texte",
@@ -77,6 +79,7 @@
     "success": "Suppression réussie de {{- nb}} fichiers."
   },
   "error": {
+    "autoClean": "Le {{- what}} étant vide, l'auto-nettoyage est désactivée.",
     "dataview": "Impossible de convertir la requête Dataview. Veuillez mettre à jour le module Dataview à la dernière version;",
     "errorConfig": "Erreur de configuration pour {{- repo.owner}}/{{- repo.repo}}:{{- repo.branch}}. Merci de vérifier vos paramètres.",
     "errorPublish": "Erreur lors de la publication sur {{- repo.owner}}/{{- repo.repo}}:{{- repo.branch}}",
@@ -201,6 +204,22 @@
       "title": "Conversion du contenu"
     },
     "embed": {
+      "bake": {
+        "text": "Permet d'ajouter du texte avant et après chaque intégration, par exemple en ajoutant du HTML ou en stylisant le bloc avec du markdown.",
+        "textAfter": {
+          "title": "Texte après le block"
+        },
+        "textBefore": {
+          "title": "Texte à ajouter avant le block"
+        },
+        "title": "Paramètres pour l'inclusion des embeds",
+        "variable": {
+          "desc": "Il est possible d'utiliser les variables suivantes :",
+          "title": " : Titre de la note inclue",
+          "url": " : Chemin vers la note inclue"
+        },
+        "warning": "Si vous utilisez du HTML, selon les paramètres de votre hébergeur, le Markdown sera cassé."
+      },
       "char": {
         "desc": "Caractère(s) à ajouter devant le lien.",
         "title": "Caractère d'embed"

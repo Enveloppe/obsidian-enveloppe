@@ -162,7 +162,7 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 			shareActiveFile(this.plugin, this.repo, this.branchName);
 			break;
 		case "createLink":
-			createLinkOnActiveFile(this.branchName, this.repo, this.plugin);
+			createLinkOnActiveFile(this.repo, this.plugin);
 			break;
 		case "checkRepositoryValidity":
 			repositoryValidityActiveFile(this.plugin, this.branchName, this.repo);

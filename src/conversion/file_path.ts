@@ -1,6 +1,6 @@
 import {
+	App,
 	FrontMatterCache,
-	MetadataCache,
 	TFile,
 	TFolder,
 	Vault,
@@ -11,7 +11,8 @@ import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	LinkedNotes,
-	RepoFrontmatter, Repository,
+	MultiProperties,
+	Repository,
 } from "../settings/interface";
 import {
 	getCategory,
@@ -51,9 +52,9 @@ export function getDataviewPath(
 					: null;
 			if (linked) {
 				linkedFiles.push({
-					linked: linked,
-					linkFrom: linkFrom,
-					altText: altText,
+					linked,
+					linkFrom,
+					altText,
 					type: "link"
 				});
 			}
@@ -80,23 +81,22 @@ export function getDataviewPath(
 export async function createRelativePath(
 	sourceFile: TFile,
 	targetFile: LinkedNotes,
-	metadata: MetadataCache,
-	settings: GitHubPublisherSettings,
-	vault: Vault,
 	frontmatter: FrontMatterCache | null,
-	sourceRepo: RepoFrontmatter[] | RepoFrontmatter,
-	frontmatterSettings: FrontmatterConvert,
-	shortRepo: Repository | null
+	app: App,
+	properties: MultiProperties,
 ): Promise<string> {
-	const sourcePath = getReceiptFolder(sourceFile, settings, metadata, vault, shortRepo);
-	const frontmatterTarget = metadata.getFileCache(targetFile.linked)!.frontmatter as FrontMatterCache;
-	const targetRepo = await getRepoFrontmatter(settings, shortRepo, frontmatterTarget);
-	const isFromAnotherRepo = checkIfRepoIsInAnother(sourceRepo, targetRepo);
+	const { metadataCache } = app;
+	const settings = properties.settings;
+	const shortRepo = properties.repository;
+	const sourcePath = getReceiptFolder(sourceFile, settings, shortRepo, app);
+	const frontmatterTarget = metadataCache.getFileCache(targetFile.linked)!.frontmatter as FrontMatterCache;
+	const targetRepo = getRepoFrontmatter(settings, shortRepo, frontmatterTarget);
+	const isFromAnotherRepo = checkIfRepoIsInAnother(properties.frontmatter.repo, targetRepo);
 	const shareKey = shortRepo ? shortRepo.shareKey : settings.plugin.shareKey;
 	const shared = isInternalShared(
 		shareKey,
 		frontmatterTarget,
-		frontmatterSettings
+		properties.frontmatter.general
 	);
 	if (
 		targetFile.linked.extension === "md" && (!isFromAnotherRepo || !shared)
@@ -104,12 +104,12 @@ export async function createRelativePath(
 		return targetFile.destinationFilePath ? targetFile.destinationFilePath: targetFile.linked.basename;
 	}
 	if (targetFile.linked.path === sourceFile.path) {
-		return getReceiptFolder(targetFile.linked, settings, metadata, vault, shortRepo).split("/").at(-1) as string;
+		return getReceiptFolder(targetFile.linked, settings, shortRepo, app).split("/").at(-1) as string;
 	}
 
 	const targetPath =
 		targetFile.linked.extension === "md"
-			? getReceiptFolder(targetFile.linked, settings, metadata, vault, shortRepo)
+			? getReceiptFolder(targetFile.linked, settings, shortRepo, app)
 			: getImageLinkOptions(
 				targetFile.linked,
 				settings,
@@ -151,15 +151,14 @@ export async function createRelativePath(
 	if (relativePath.length === 0) {
 		relativePath.push(".");
 	}
-	let relative = relativePath.concat(diffTargetPath).join("/");
+	const relative = relativePath.concat(diffTargetPath).join("/");
 	if (relative.trim() === "." || relative.trim() === "") {
 		//in case of errors
-		relative = getReceiptFolder(
+		return getReceiptFolder(
 			targetFile.linked,
 			settings,
-			metadata,
-			vault,
-			shortRepo
+			shortRepo,
+			app
 		).split("/").at(-1) as string;
 	}
 	return relative;
@@ -351,14 +350,14 @@ export function getTitleField(
 	file: TFile,
 	settings: GitHubPublisherSettings
 ): string {
-	let fileName = file.name;
+	const fileName = file.name;
 	if (
 		frontmatter &&
 		settings.upload.frontmatterTitle.enable &&
 		frontmatter[settings.upload.frontmatterTitle.key] &&
-		frontmatter[settings.upload.frontmatterTitle.key] !== file.name
+		frontmatter[settings.upload.frontmatterTitle.key] !== fileName
 	) {
-		fileName= frontmatter[settings.upload.frontmatterTitle.key] + ".md";
+		return `${frontmatter[settings.upload.frontmatterTitle.key]}.md`;
 	}
 	return fileName;
 }
@@ -367,21 +366,16 @@ export function getTitleField(
 
 /**
  * Get the path where the file will be saved in the github repository
- * @param {TFile} file Source file
- * @param {GitHubPublisherSettings} settings Settings
- * @param {MetadataCache} metadataCache Metadata
- * @param {Vault} vault Vault
- * @param otherRepo
- * @return {string} folder path
  */
 
 export function getReceiptFolder(
 	file: TFile,
 	settings: GitHubPublisherSettings,
-	metadataCache: MetadataCache,
-	vault: Vault,
-	otherRepo: Repository | null
+	otherRepo: Repository | null,
+	app: App,
 ): string {
+	const { vault, metadataCache } = app;
+	
 	if (file.extension === "md") {
 		const frontmatter = metadataCache.getCache(file.path)?.frontmatter as FrontMatterCache;
 

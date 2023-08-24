@@ -113,6 +113,10 @@ export interface GitHubPublisherSettings {
 		folder: string;
 		convertEmbedToLinks: "links" | "remove" | "keep" | "bake";
 		charConvert: string;
+		bake?: {
+			textBefore: string;
+			textAfter: string;
+		};
 	}
 	plugin:
 	{
@@ -152,6 +156,34 @@ export enum GithubTiersVersion {
 	entreprise = "Enterprise",
 }
 
+export interface MultiProperties {
+	settings: GitHubPublisherSettings;
+	frontmatter: {
+		general: FrontmatterConvert;
+		repo: RepoFrontmatter | RepoFrontmatter[];
+	},
+	repository: Repository | null;
+}
+
+export interface MonoProperties {
+	settings: GitHubPublisherSettings;
+	frontmatter: {
+		general: FrontmatterConvert;
+		repo: RepoFrontmatter
+	},
+	repository: Repository | null;
+}
+
+export interface MonoRepoProperties {
+	frontmatter: RepoFrontmatter;
+	repo: Repository | null;
+}
+
+export interface MultiRepoProperties {
+	frontmatter: RepoFrontmatter[] | RepoFrontmatter;
+	repo: Repository | null;
+}
+
 
 /**
  * Just a constant for the token path
@@ -159,10 +191,6 @@ export enum GithubTiersVersion {
  */
 export const TOKEN_PATH:string = "%configDir%/plugins/%pluginID%/env";
 
-/**
- * Default settings for the plugin
- * @type {{github: {verifiedRepo: boolean, otherRepo: any[], tokenPath: string, rateLimit: number, workflow: {commitMessage: string, name: string}, automaticallyMergePR: boolean, repo: string, api: {hostname: string, tiersForApi: GithubTiersVersion}, user: string, branch: string}, plugin: {displayModalRepoEditing: boolean, editorMenu: boolean, excludedFolder: any[], shareKey: string, copyLink: {enable: boolean, links: string, addCmd: boolean, removePart: any[]}, fileMenu: boolean, noticeError: boolean}, upload: {autoclean: {excluded: any[], enable: boolean}, folderNote: {rename: string, enable: boolean}, yamlFolderKey: string, rootFolder: string, replaceTitle: any[], frontmatterTitle: {enable: boolean, key: string}, replacePath: any[], metadataExtractorPath: string, behavior: FolderSettings, defaultName: string}, embed: {attachments: boolean, notes: boolean, folder: string, keySendFile: any[]}, conversion: {hardbreak: boolean, links: {internal: boolean, unshared: boolean, wiki: boolean, slugify: boolean}, censorText: any[], dataview: boolean, tags: {inline: boolean, exclude: any[], fields: any[]}}}}
- */
 export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	github: {
 		user: "",

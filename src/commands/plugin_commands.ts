@@ -7,7 +7,7 @@ import i18next from "i18next";
 import { Notice } from "obsidian";
 
 import GithubPublisher from "../main";
-import {RepoFrontmatter, Repository} from "../settings/interface";
+import {MonoRepoProperties, MultiRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
 import {createLink, getRepoFrontmatter} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
 import {
@@ -21,29 +21,30 @@ import {
 /**
  * Create the command to create a link to the note in the repo if a file is active ; else do nothing
  * @call createLink
- * @param {string} branchName
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
- * @param {GithubPublisher} plugin
+ * @param {GithubPublisher} plugin - The plugin instance
  * @return {Promise<void>}
  */
-export async function createLinkOnActiveFile(branchName: string, repo: Repository | null, plugin: GithubPublisher): Promise<void> {
+export async function createLinkOnActiveFile(repo: Repository | null, plugin: GithubPublisher): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
 	if (
 		file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 	) {
+		const multiRepo: MultiRepoProperties = {
+			frontmatter: getRepoFrontmatter(plugin.settings, repo, frontmatter),
+			repo
+		};
 		await createLink(
 			file,
-			getRepoFrontmatter(plugin.settings, repo, frontmatter),
-			plugin.app.metadataCache,
-			plugin.app.vault,
+			multiRepo,
 			plugin.settings,
-			repo
+			plugin.app
 		);
 		new Notice(i18next.t("commands.copyLink.onActivation"));
-	} else {
-		new Notice(i18next.t("commands.runOtherRepo.noFile"));
+		return;
 	}
+	new Notice(i18next.t("commands.runOtherRepo.noFile"));
 }
 
 /**
@@ -54,18 +55,15 @@ export async function createLinkOnActiveFile(branchName: string, repo: Repositor
  * @param {string} branchName
  * @return {Promise<void>}
  */
-export async function shareActiveFile(plugin: GithubPublisher, repo: Repository | null, branchName: string) {
+export async function shareActiveFile(plugin: GithubPublisher, repo: Repository | null, branchName: string): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
 	if (file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)) {
 		await shareOneNote(
 			branchName,
 			await plugin.reloadOctokit(),
-			plugin.settings,
 			file,
 			repo,
-			plugin.app.metadataCache,
-			plugin.app.vault,
 		);
 	} else {
 		new Notice(i18next.t("commands.runOtherRepo.noFile"));
@@ -80,16 +78,17 @@ export async function shareActiveFile(plugin: GithubPublisher, repo: Repository 
  * @param {string} branchName
  * @return {Promise<void>}
  */
-export async function deleteCommands(plugin : GithubPublisher, repo: Repository | null, branchName: string) {
+export async function deleteCommands(plugin : GithubPublisher, repo: Repository | null, branchName: string): Promise<void> {
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	const publisher = await plugin.reloadOctokit();
+	const mono: MonoRepoProperties = {
+		frontmatter: repoFrontmatter as RepoFrontmatter,
+		repo
+	};
 	await purgeNotesRemote(
 		publisher,
-		plugin.settings,
-		publisher.octokit,
 		branchName,
-		repoFrontmatter as RepoFrontmatter,
-		repo
+		mono
 	);
 }
 
@@ -106,17 +105,17 @@ export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository |
 	const statusBarItems = plugin.addStatusBarItem();
 	const publisher = await plugin.reloadOctokit();
 	const sharedFiles = publisher.getSharedFiles(repo);
+	const mono: MonoRepoProperties = {
+		frontmatter: getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
+		repo
+	};
 	await shareAllMarkedNotes(
 		publisher,
-		plugin.settings,
-		publisher.octokit,
 		statusBarItems,
 		branchName,
-		getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
+		mono,
 		sharedFiles,
 		true,
-		plugin,
-		repo
 	);
 }
 
@@ -133,12 +132,11 @@ export async function uploadNewNotes(plugin: GithubPublisher, branchName: string
 	const publisher = await plugin.reloadOctokit();
 	await shareNewNote(
 		publisher,
-		publisher.octokit,
 		branchName,
-		plugin.app.vault,
-		plugin,
-			getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
+		{
+			frontmatter: getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
 			repo
+		} as MonoRepoProperties,
 	);
 }
 
@@ -155,10 +153,9 @@ export async function repositoryValidityActiveFile(plugin:GithubPublisher, branc
 	if (file) {
 		await checkRepositoryValidity(
 			await plugin.reloadOctokit(),
-			plugin.settings,
 			repo,
 			file,
-			plugin.app.metadataCache);
+		);
 	} else {
 		new Notice("No file is active");
 	}
@@ -171,16 +168,15 @@ export async function repositoryValidityActiveFile(plugin:GithubPublisher, branc
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @return {Promise<void>}
  */
-export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: string, repo: Repository|null=null) {
+export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: string, repo: Repository|null=null): Promise<void> {
 	const publisher = await plugin.reloadOctokit();
 	await shareAllEditedNotes(
 		publisher,
-		publisher.octokit,
 		branchName,
-		plugin.app.vault,
-		plugin,
-		getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
-		repo
+		{
+			frontmatter: getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
+			repo
+		} as MonoRepoProperties,
 	);
 }
 
@@ -196,11 +192,10 @@ export async function shareEditedOnly(branchName: string, repo: Repository|null,
 	const publisher = await plugin.reloadOctokit();
 	await shareOnlyEdited(
 		publisher,
-		publisher.octokit,
 		branchName,
-		plugin.app.vault,
-		plugin,
-		getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
-		repo
+		{
+			frontmatter: getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
+			repo
+		} as MonoRepoProperties,
 	);
 }

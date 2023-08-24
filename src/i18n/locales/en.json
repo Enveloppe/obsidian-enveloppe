@@ -49,6 +49,7 @@
     "cancel": "Cancel",
     "close": "Close",
     "default": "default",
+    "defaultName": "default folder",
     "delete": "Delete {{- things}}",
     "edit": "Edit {{- things}}",
     "error": "Error",
@@ -64,6 +65,7 @@
     "published": "Published",
     "regex": "regex",
     "repository": "Repository",
+    "rootFolder": "root folder",
     "save": "Save",
     "shared": "Shared",
     "text": "text",
@@ -77,6 +79,7 @@
     "success": "Successfully deleted {{- nb}} files."
   },
   "error": {
+    "autoClean": "Since {{- what}} is empty, auto-cleaning is disabled.",
     "dataview": "Unable to render dataview query. Please update the dataview plugin to the last version.",
     "errorConfig": "Error configuring {{- repo.owner}}/{{- repo.repo}}. Please check your settings.",
     "errorPublish": "Error during upload to {{- repo.owner}}/{{- repo.repo}}",
@@ -201,6 +204,22 @@
       "title": "Content's conversion"
     },
     "embed": {
+      "bake": {
+        "text": "Allow you to add text before and after each embed, for example adding HTML or stylize the block with markdown.",
+        "textAfter": {
+          "title": "Text after the block"
+        },
+        "textBefore": {
+          "title": "Text before the block"
+        },
+        "title": "Include embed settings",
+        "variable": {
+          "desc": "It is possible to use the following variable:",
+          "title": ": note embedded title",
+          "url": ": path to the embedded note"
+        },
+        "warning": "If you use HTML, depending of your host settings, the markdown will broke."
+      },
       "char": {
         "desc": "Character(s) to add before the link.",
         "title": "Embed characters"
