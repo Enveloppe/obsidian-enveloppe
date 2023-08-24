@@ -217,7 +217,7 @@ function createObsidianPath(
 	const fileNameOnly = path.split("/").at(-1) ?? "";
 	pathWithoutEnd = regexOnPath(pathWithoutEnd, settings);
 	if (pathWithoutEnd.trim().length === 0) return fileNameOnly;
-	return (pathWithoutEnd + "/" + fileNameOnly).replace(/^\//, "");
+	return (`${pathWithoutEnd}/${fileNameOnly}`).replace(/^\//, "");
 }
 
 /**
@@ -263,14 +263,11 @@ function createFrontmatterPath(
 	const uploadSettings = settings.upload;
 	const folderCategory = getCategory(frontmatter, settings);
 	const folderNote = folderNoteIndexYAML(fileName, frontmatter, settings);
-	let folderRoot = "";
-	if (uploadSettings.rootFolder.length > 0 && !folderCategory.includes(uploadSettings.rootFolder)) {
-		folderRoot = uploadSettings.rootFolder + "/";
-	}
+	const folderRoot = uploadSettings.rootFolder.length > 0 && !folderCategory.includes(uploadSettings.rootFolder) ? `${uploadSettings.rootFolder}/` : "";
 	if (folderCategory.trim().length === 0) return folderNote;
 	const folderRegex = regexOnPath(folderRoot + folderCategory, settings);
 	if (folderRegex.trim().length === 0) return folderNote;
-	return (folderRegex + "/" + folderNote).replace(/^\//, "");
+	return (`${folderRegex}/${folderNote}`).replace(/^\//, "");
 }
 
 /**
@@ -302,7 +299,7 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 			}
 		}
 	}
-	return fileName + ".md";
+	return `${fileName}.md`;
 }
 
 
@@ -389,18 +386,18 @@ export function getReceiptFolder(
 		}
 
 		if (frontmatter.path) {
-			const frontmatterPath = frontmatter["path"] instanceof Array ? frontmatter["path"].join("/") : frontmatter["path"];
+			const frontmatterPath = frontmatter.path instanceof Array ? frontmatter.path.join("/") : frontmatter.path;
 			if (frontmatterPath == "" || frontmatterPath == "/") {
 				return editedFileName;
 			}
-			return frontmatterPath + "/" + editedFileName;
+			return `${frontmatterPath}/${editedFileName}`;
 		} else if (settings.upload.behavior === FolderSettings.yaml) {
-			return createFrontmatterPath(settings, frontmatter, fileName);
+			return createFrontmatterPath(settings, frontmatter, fileName).replace(/\/{2,}/, "/");
 		} else if (settings.upload.behavior === FolderSettings.obsidian) {
-			return createObsidianPath(file, settings, vault, fileName);
+			return createObsidianPath(file, settings, vault, fileName).replace(/\/{2,}/, "/");
 		} else {
 			return settings.upload.defaultName.length > 0
-				? settings.upload.defaultName + "/" + editedFileName
+				? `${settings.upload.defaultName}/${editedFileName}`
 				: editedFileName;
 		}
 	}
