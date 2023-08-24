@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.0-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-4...6.5.0-5) (2023-08-24)
+
+
+### Features
+
+* **embed:** allow to add text before /after embeds ([8d4cc45](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8d4cc45b57bbb9fa2265dece4b2a1035027f3d2b))
+* **embed:** convert variable in before/after Text ([dc56821](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/dc56821597627e68e98a482db024c248f51c9c28))
+
+
+### Bug Fixes
+
+* **links:** conflict between convert link citation and datavie ([f2fd30c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f2fd30c20660a16a943a4a0a53ed704357637041))
+* **menu:** error if two repo keys are used ([b940793](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b9407933d43fd2dc91ea00e66dd591804718b79f))
+* **menu:** optimize file menu with repoFrontmatter ([e201d3d](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e201d3d1af7db2b920f19a01a4bdd345a8e27a65))
+* **settings:** better handling autoclean ([6ce665e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6ce665ec3d1a27c3dbef3564e9cb207d28ce8f04))
+* **settings:** fix graphical bugs with yaml settings and add translation for error ([ca14104](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ca14104d740a89e256ec7741923e2800986bebb9))
+* **settings:** graphical bug with disabling autocleaning ([d05a5de](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d05a5de27f34e3eb51f9a0a8bed073b0633fcfc3))
+
 ## [6.5.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-3...6.5.0-4) (2023-08-22)
 
 
