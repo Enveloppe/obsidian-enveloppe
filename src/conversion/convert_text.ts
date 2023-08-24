@@ -363,16 +363,6 @@ function removeDataviewQueries(dataviewMarkdown: string, frontmatterSettings: Fr
 
 /**
  * Wrapper to prevent writing 15 lines of code every time
- * @param {string} md the markdown to convert
- * @param {Vault} vault the vault
- * @param {@link GitHubPublisherSettings} settings the settings
- * @param {MetadataCache} metadataCache the metadata cache
- * @param {FrontmatterConvert} frontmatterSettings the frontmatter settings
- * @param {FrontMatterCache} frontmatter the frontmatter cache
- * @param {TFile} sourceFile the source file
- * @param {RepoFrontmatter | RepoFrontmatter[]} sourceFrontmatter the source frontmatter
- * @param {Repository | null} shortRepo the short repo
- * @return {Promise<string>} the converted markdown
  */
 async function convertDataviewLinks(
 	md:string,
@@ -389,13 +379,12 @@ async function convertDataviewLinks(
 		frontmatter,
 		properties
 	);
-	md = convertWikilinks(
+	return convertWikilinks(
 		md,
 		properties.frontmatter.general,
 		dataviewPath,
 		properties.settings
 	);
-	return md;
 }
 
 
@@ -418,6 +407,15 @@ export async function mainConverting(
 		text = await bakeEmbeds(file, new Set(), app, properties, null, linkedFiles);
 	text = findAndReplaceText(text, properties.settings, false);
 	text = await addInlineTags(properties.settings, file, plugin.app.metadataCache, frontmatter, text);
+	text = await convertLinkCitation(
+		text,
+		linkedFiles,
+		file,
+		app,
+		frontmatter,
+		properties
+	);
+	text = convertWikilinks(text, properties.frontmatter.general, linkedFiles, properties.settings);
 	text = await convertDataviewQueries(
 		text,
 		file.path,
@@ -428,15 +426,7 @@ export async function mainConverting(
 	);
 	text = await convertInlineDataview(text, properties.settings, file, plugin.app);
 	text = addHardLineBreak(text, properties.settings, properties.frontmatter.general);
-	text = await convertLinkCitation(
-		text,
-		linkedFiles,
-		file,
-		app,
-		frontmatter,
-		properties
-	);
-	text = convertWikilinks(text, properties.frontmatter.general, linkedFiles, properties.settings);
+
 	text = findAndReplaceText(text, properties.settings, true);
 
 	return text;
