@@ -39,7 +39,10 @@ export interface Repository {
 	}
 	createShortcuts: boolean;
 	shareKey: string;
-
+	shareAll?: {
+		enable: boolean;
+		excludedFileName: string;
+	}
 	copyLink: {	
 		links: string;
 		removePart: string[];

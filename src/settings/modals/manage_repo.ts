@@ -275,7 +275,7 @@ class ModalEditingRepository extends Modal {
 					})
 			);
 
-		contentEl.createEl("h3", { text: "Github Workflow" });
+		contentEl.createEl("h3", { text: "GitHub Workflow" });
 		new Setting(contentEl)
 			.setName(i18next.t("settings.githubWorkflow.prRequest.title"))
 			.setDesc(i18next.t("settings.githubWorkflow.prRequest.desc"))
@@ -314,18 +314,45 @@ class ModalEditingRepository extends Modal {
 		contentEl.createEl("h3", { text: i18next.t("settings.github.smartRepo.modals.otherConfig") });
 
 		new Setting(contentEl)
-			.setName(i18next.t("settings.plugin.shareKey.title"))
-			.setDesc(i18next.t("settings.plugin.shareKey.desc"))
-			.addText((text) =>
-				text
-					.setPlaceholder("share")
-					.setValue(this.repository.shareKey)
+			.setName(i18next.t("settings.plugin.shareKey.all.title"))
+			.setDesc(i18next.t("settings.plugin.shareKey.all.desc"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.repository.shareAll?.enable ?? false)
 					.onChange(async (value) => {
-						this.repository.shareKey = value.trim();
-						await this.plugin.saveSettings();
+						this.repository.shareAll = {
+							enable: value,
+							excludedFileName: this.plugin.settings.plugin.shareAll?.excludedFileName ?? "DRAFT"
+						};
+						this.onOpen();
 					})
 			);
-		
+		if (!this.repository.shareAll || !this.repository.shareAll.enable) {
+			new Setting(contentEl)
+				.setName(i18next.t("settings.plugin.shareKey.title"))
+				.setDesc(i18next.t("settings.plugin.shareKey.desc"))
+				.addText((text) =>
+					text
+						.setPlaceholder("share")
+						.setValue(this.repository.shareKey)
+						.onChange(async (value) => {
+							this.repository.shareKey = value.trim();
+							await this.plugin.saveSettings();
+						})
+				);
+		} else {
+			new Setting(contentEl)
+				.setName(i18next.t("settings.plugin.shareKey.excludedFileName.title"))
+				.addText((text) =>
+					text
+						.setPlaceholder("DRAFT")
+						.setValue(this.repository.shareAll?.excludedFileName ?? this.plugin.settings.plugin.shareAll?.excludedFileName ?? "DRAFT")
+						.onChange(async (value) => {
+							this.repository.shareAll!.excludedFileName = value.trim();
+						})
+				);
+		}
+
 		if (this.plugin.settings.plugin.copyLink.enable) {
 			new Setting(contentEl)
 				.setName(i18next.t("settings.plugin.copyLink.baselink.title"))

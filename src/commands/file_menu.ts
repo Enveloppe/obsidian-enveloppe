@@ -76,7 +76,7 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
 			.setTitle(i18next.t("commands.shareViewFiles.multiple.other"))
 			.setIcon("folder-symlink")
 			.onClick(async () => {
-				new ChooseRepoToRun(plugin.app, plugin, null, branchName, async (item: Repository) => {
+				new ChooseRepoToRun(plugin.app, plugin, null, branchName, "folder", async (item: Repository) => {
 					await shareFolderRepo(plugin, folder, branchName, item);
 				}).open();
 
@@ -230,7 +230,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 			.setTitle(i18next.t("commands.shareViewFiles.multiple.other"))
 			.setIcon("file-input")
 			.onClick(async () => {
-				new ChooseRepoToRun(plugin.app, plugin, repo?.shareKey, branchName, async (item: Repository) => {
+				new ChooseRepoToRun(plugin.app, plugin, repo?.shareKey, branchName, "file", async (item: Repository) => {
 					await shareOneNote(
 						branchName,
 						await plugin.reloadOctokit(),

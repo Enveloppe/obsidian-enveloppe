@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import {App, FuzzySuggestModal } from "obsidian";
+import { defaultRepo } from "src/utils/data_validation_test";
 
 import GithubPublisherPlugin from "../main";
 import {FolderSettings, Repository} from "../settings/interface";
@@ -44,7 +45,7 @@ export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
 	}
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	onChooseItem(item: Repository, evt: MouseEvent | KeyboardEvent): void {
-		new SuggestOtherRepoCommandsModal(app, this.plugin, this.branchName, item).open();
+		new SuggestOtherRepoCommandsModal(this.plugin.app, this.plugin, this.branchName, item).open();
 	}
 }
 
@@ -55,21 +56,38 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 	plugin: GithubPublisherPlugin;
 	branchName: string;
 	keyToFind: string | null;
+	type: "folder" | "file";
 	onSubmit: (item: Repository) => void;
 
-	constructor(app: App, plugin: GithubPublisherPlugin, keyToFind: null|string = null, branchName: string, onSubmit: (item: Repository) => void) {
+	constructor(app: App, plugin: GithubPublisherPlugin, keyToFind: null|string = null, branchName: string, type:"folder"|"file", onSubmit: (item: Repository) => void) {
 		super(app);
 		this.plugin = plugin;
 		this.branchName = branchName;
 		this.keyToFind = keyToFind;
 		this.onSubmit = onSubmit;
+		this.type = type;
 	}
 
 	getItems(): Repository[] {
-		if (this.keyToFind) {
-			return this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.shareKey == this.keyToFind);
+		let repoFound: Repository[] = [];
+		const defRepo = defaultRepo(this.plugin.settings);
+		if (this.type === "file") {
+			if (this.plugin.settings.plugin.shareAll?.enable) {
+				repoFound.push(defRepo);
+			}
+			if (this.keyToFind) {
+				repoFound=repoFound.concat(this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.shareKey == this.keyToFind));
+				if (this.keyToFind === defRepo.shareKey) {
+					repoFound.push(defRepo);
+				}
+			}
 		}
-		return this.plugin.settings.github.otherRepo;
+		repoFound=repoFound.concat(this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.shareAll?.enable));
+		repoFound.push(defRepo);
+		repoFound=[...new Set(repoFound)];
+		if (repoFound.length === 0) 
+			return this.plugin.settings.github.otherRepo;
+		return repoFound;
 	}
 	getItemText(item: Repository): string {
 		return item.smartKey;

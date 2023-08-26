@@ -95,15 +95,26 @@ function isExcludedPath(settings: GitHubPublisherSettings, file: TFile):boolean 
  * Allow to get all sharedKey from one file to count them
  */
 export function multipleSharedKey(frontmatter: FrontMatterCache | undefined, settings: GitHubPublisherSettings) {
-	if (!frontmatter) return [];
+	const keysInFile: string[] = [];
+	if (settings.plugin.shareAll?.enable)
+		keysInFile.push("share"); //add a key to count the shareAll
+	
+	const otherRepoWithShareAll = settings.github.otherRepo.filter((repo) => repo.shareAll);
+	if (otherRepoWithShareAll.length > 0) {
+		for (const repo of otherRepoWithShareAll) {
+			keysInFile.push(repo.smartKey);
+		}
+	}
+	if (!frontmatter) return keysInFile;
 	const allKey = settings.github.otherRepo.map((repo) => repo.shareKey);
 	allKey.push(settings.plugin.shareKey);
-	const keysInFile: string[] = [];
+	
 	for (const key of allKey) {
 		if (frontmatter[key]) {
 			keysInFile.push(key);
 		}
 	}
+
 	return keysInFile;
 }
 
