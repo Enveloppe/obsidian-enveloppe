@@ -76,7 +76,7 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
 			.setTitle(i18next.t("commands.shareViewFiles.multiple.other"))
 			.setIcon("folder-symlink")
 			.onClick(async () => {
-				new ChooseRepoToRun(plugin.app, plugin, null, branchName, "folder", async (item: Repository) => {
+				new ChooseRepoToRun(plugin.app, plugin, null, branchName, "folder", null, async (item: Repository) => {
 					await shareFolderRepo(plugin, folder, branchName, item);
 				}).open();
 
@@ -94,7 +94,7 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
  */
 export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: string, menu: Menu) {
 	const frontmatter = file instanceof TFile ? plugin.app.metadataCache.getFileCache(file)!.frontmatter : undefined;
-	const getSharedKey = getRepoSharedKey(plugin.settings, frontmatter);
+	let getSharedKey = getRepoSharedKey(plugin.settings, frontmatter);
 	const allKeysFromFile = multipleSharedKey(frontmatter, plugin.settings);
 	if (
 		isShared(frontmatter, plugin.settings, file, getSharedKey) && 
@@ -105,6 +105,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 			/**
 			 * Create a submenu if multiple repo exists in the settings
 			 */
+
 			if (allKeysFromFile.length > 1 || (repoFrontmatter instanceof Array && repoFrontmatter.length > 1)) {
 				item
 					.setTitle("Github Publisher")
@@ -119,11 +120,18 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 				return;
 			}
 			const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file)?.frontmatter).replace(".md", "");
-			const repoName = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
+			
+			if (!frontmatter || !frontmatter[plugin.settings.plugin.shareKey]) {
+				const otherRepo = plugin.settings.github.otherRepo.find((repo) => repo.shareAll?.enable);
+				if (otherRepo) getSharedKey = otherRepo;
+				else if (plugin.settings.plugin.shareAll?.enable) getSharedKey = defaultRepo(plugin.settings);
+			} else if (frontmatter[plugin.settings.plugin.shareKey]) {
+				getSharedKey = defaultRepo(plugin.settings);
+			}
 			item
 				.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
 					doc: fileName,
-					smartKey: repoName[0].repo || getSharedKey?.smartKey.toUpperCase() || i18next.t("common.default").toUpperCase()
+					smartKey: getSharedKey?.smartKey.toUpperCase() || i18next.t("common.default").toUpperCase()
 				}))
 				.setIcon("file-up")
 				.onClick(async () => {
@@ -230,7 +238,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 			.setTitle(i18next.t("commands.shareViewFiles.multiple.other"))
 			.setIcon("file-input")
 			.onClick(async () => {
-				new ChooseRepoToRun(plugin.app, plugin, repo?.shareKey, branchName, "file", async (item: Repository) => {
+				new ChooseRepoToRun(plugin.app, plugin, repo?.shareKey, branchName, "file", file.basename, async (item: Repository) => {
 					await shareOneNote(
 						branchName,
 						await plugin.reloadOctokit(),

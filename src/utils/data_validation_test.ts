@@ -59,14 +59,16 @@ export function isShared(
 	if (!file || file.extension !== "md") {
 		return false;
 	}
-	if (!settings.plugin.shareAll || !settings.plugin.shareAll?.enable) {
+	const otherRepoWithShareAll = settings.github.otherRepo.filter((repo) => repo.shareAll?.enable);
+	if (!settings.plugin.shareAll?.enable && otherRepoWithShareAll.length === 0) {
 		const shareKey = otherRepo ? otherRepo.shareKey : settings.plugin.shareKey;
 		if ( meta == null || meta[shareKey] === undefined || isExcludedPath(settings, file)) {
 			return false;
 		} return meta[shareKey];
-	} else if (settings.plugin.shareAll!.enable) {
-		const excludedFileName = settings.plugin.shareAll!.excludedFileName;
-		if (!file.basename.startsWith(excludedFileName) && !isExcludedPath(settings, file)) {
+	} else if (settings.plugin.shareAll?.enable || otherRepoWithShareAll.length > 0) {
+		const allExcludedFileName = otherRepoWithShareAll.map((repo) => repo.shareAll!.excludedFileName);
+		allExcludedFileName.push(settings.plugin.shareAll!.excludedFileName);
+		if (allExcludedFileName.some(prefix => !file.basename.startsWith(prefix)) && !isExcludedPath(settings, file)) {
 			return true;
 		}
 	}

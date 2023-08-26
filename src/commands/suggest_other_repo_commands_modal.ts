@@ -57,14 +57,16 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 	branchName: string;
 	keyToFind: string | null;
 	type: "folder" | "file";
+	fileName: string | null;
 	onSubmit: (item: Repository) => void;
 
-	constructor(app: App, plugin: GithubPublisherPlugin, keyToFind: null|string = null, branchName: string, type:"folder"|"file", onSubmit: (item: Repository) => void) {
+	constructor(app: App, plugin: GithubPublisherPlugin, keyToFind: null|string = null, branchName: string, type:"folder"|"file", fileName: string | null, onSubmit: (item: Repository) => void) {
 		super(app);
 		this.plugin = plugin;
 		this.branchName = branchName;
 		this.keyToFind = keyToFind;
 		this.onSubmit = onSubmit;
+		this.fileName = fileName;
 		this.type = type;
 	}
 
@@ -72,7 +74,7 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 		let repoFound: Repository[] = [];
 		const defRepo = defaultRepo(this.plugin.settings);
 		if (this.type === "file") {
-			if (this.plugin.settings.plugin.shareAll?.enable) {
+			if (this.plugin.settings.plugin.shareAll?.enable && !this.fileName?.startsWith(this.plugin.settings.plugin.shareAll?.excludedFileName)) {
 				repoFound.push(defRepo);
 			}
 			if (this.keyToFind) {
@@ -82,7 +84,7 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 				}
 			}
 		}
-		repoFound=repoFound.concat(this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.shareAll?.enable));
+		repoFound=repoFound.concat(this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.shareAll?.enable && !this.fileName?.startsWith(repo.shareAll?.excludedFileName)));
 		repoFound.push(defRepo);
 		repoFound=[...new Set(repoFound)];
 		if (repoFound.length === 0) 
