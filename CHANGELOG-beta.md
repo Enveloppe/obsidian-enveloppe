@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.0-8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-7...6.5.0-8) (2023-08-26)
+
+
+### Features
+
+* **shareAll:** allow otherRepo to use the option too ([056cde9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/056cde9f15beccc0bf2a72e2ca849d72ed130dbc))
+
 ## [6.5.0-7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-6...6.5.0-7) (2023-08-26)
 
 
