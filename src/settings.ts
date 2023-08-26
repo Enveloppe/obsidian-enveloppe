@@ -925,18 +925,50 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	 */
 	renderPluginSettings() {
 		const pluginSettings = this.plugin.settings.plugin;
+		
+		
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.shareKey.title"))
-			.setDesc(i18next.t("settings.plugin.shareKey.desc"))
-			.addText((text) =>
-				text
-					.setPlaceholder("share")
-					.setValue(pluginSettings.shareKey)
+			.setName(i18next.t("settings.plugin.shareKey.all.title"))
+			.setDesc(i18next.t("settings.plugin.shareKey.all.desc"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(pluginSettings.shareAll?.enable ?? false)
 					.onChange(async (value) => {
-						pluginSettings.shareKey = value.trim();
+						pluginSettings.shareAll = {
+							enable: value,
+							excludedFileName: pluginSettings.shareAll?.excludedFileName ?? "DRAFT",
+						};
 						await this.plugin.saveSettings();
+						this.renderSettingsPage(EnumbSettingsTabId.plugin);
 					})
 			);
+		if (!pluginSettings.shareAll || !pluginSettings.shareAll.enable) {
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.plugin.shareKey.title"))
+				.setDesc(i18next.t("settings.plugin.shareKey.desc"))
+				.addText((text) =>
+					text
+						.setPlaceholder("share")
+						.setValue(pluginSettings.shareKey)
+						.onChange(async (value) => {
+							pluginSettings.shareKey = value.trim();
+							await this.plugin.saveSettings();
+						})
+				);
+		} else {
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.plugin.shareKey.excludedFileName.title"))
+				.addText((text) =>
+					text
+						.setPlaceholder("DRAFT")
+						.setValue(pluginSettings.shareAll?.excludedFileName ?? "DRAFT")
+						.onChange(async (value) => {
+							pluginSettings.shareAll!.excludedFileName = value.trim();
+							await this.plugin.saveSettings();
+						})
+				);
+		}
+		
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.excludedFolder.title"))
 			.setDesc(i18next.t("settings.plugin.excludedFolder.desc"))

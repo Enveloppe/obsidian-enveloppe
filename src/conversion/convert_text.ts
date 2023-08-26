@@ -115,7 +115,7 @@ export async function addInlineTags(
 	settings: GitHubPublisherSettings,
 	file: TFile,
 	metadataCache: MetadataCache,
-	frontmatter: FrontMatterCache,
+	frontmatter: FrontMatterCache | undefined | null,
 	text: string
 ): Promise<string> {
 	if (!settings.conversion.tags.inline) {
@@ -247,7 +247,7 @@ export async function convertDataviewQueries(
 	text: string,
 	path: string,
 	app: App,
-	frontmatter: FrontMatterCache,
+	frontmatter: FrontMatterCache | undefined | null,
 	sourceFile: TFile,
 	properties: MultiProperties,
 ): Promise<string> {
@@ -356,7 +356,7 @@ function removeDataviewQueries(dataviewMarkdown: string, frontmatterSettings: Fr
  */
 async function convertDataviewLinks(
 	md:string,
-	frontmatter: FrontMatterCache,
+	frontmatter: FrontMatterCache | undefined | null,
 	sourceFile: TFile,
 	app: App,
 	properties: MultiProperties): Promise<string> {
@@ -387,7 +387,7 @@ export async function mainConverting(
 	text: string,
 	file: TFile,
 	app: App,
-	frontmatter: FrontMatterCache,
+	frontmatter: FrontMatterCache | undefined | null,
 	linkedFiles: LinkedNotes[],
 	plugin: GithubPublisher,
 	properties: MultiProperties,

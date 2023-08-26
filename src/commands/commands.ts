@@ -131,7 +131,7 @@ export async function purgeNotesRemote(
 ): Promise<void|boolean> {
 	try {
 		new Notice(
-			(i18next.t("informations.startingClean", {repo: monoRepo.frontmatter}))
+			i18next.t("informations.startingClean", {repo: monoRepo.frontmatter})
 		);
 		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, monoRepo.frontmatter);
 		if (!isValid) return false;
@@ -164,7 +164,7 @@ export async function shareOneNote(
 	file: TFile,
 	repository: Repository | null = null,
 	title?: string,
-): Promise<void|false> {		
+): Promise<void|false> {
 	const settings = PublisherManager.settings;
 	const app = PublisherManager.plugin.app;
 	const metadataCache = app.metadataCache;

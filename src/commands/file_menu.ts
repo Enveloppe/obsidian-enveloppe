@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import {FrontMatterCache, Menu, MenuItem, TFile, TFolder} from "obsidian";
+import { Menu, MenuItem, TFile, TFolder} from "obsidian";
 
 import GithubPublisher from "../main";
 import {MonoRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
@@ -118,7 +118,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 				);
 				return;
 			}
-			const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file)?.frontmatter as FrontMatterCache).replace(".md", "");
+			const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file)?.frontmatter).replace(".md", "");
 			const repoName = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
 			item
 				.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
@@ -149,7 +149,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
  * @return {Menu} - The submenu created
  */
 export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository | null): Menu {
-	const frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter as FrontMatterCache;
+	const frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	//@ts-ignore
 	const subMenu = item.setSubmenu() as Menu;
@@ -158,7 +158,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 	/**
 	 * default repo
 	 */
-	if ((repo?.shareKey === plugin.settings.plugin.shareKey || frontmatter[plugin.settings.plugin.shareKey]) && (!frontmatter!.repo || !frontmatter!.multipleRepo)) {
+	if ((repo?.shareKey === plugin.settings.plugin.shareKey || (frontmatter?.[plugin.settings.plugin.shareKey])) && (!frontmatter!.repo || !frontmatter!.multipleRepo)) {
 		subMenu.addItem((subItem) => {
 			subItem
 				.setTitle(
@@ -182,7 +182,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 
 	if (activatedRepoCommands.length > 0) {
 		activatedRepoCommands.forEach((otherRepo) => {
-			if (otherRepo.shareKey === repo?.shareKey || frontmatter[otherRepo.shareKey]) {
+			if (otherRepo.shareKey === repo?.shareKey || (frontmatter?.[otherRepo.shareKey])) {
 				subMenu.addItem((item) => {
 					item
 						.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {

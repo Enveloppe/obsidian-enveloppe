@@ -325,6 +325,7 @@ class ModalEditingRepository extends Modal {
 						await this.plugin.saveSettings();
 					})
 			);
+		
 		if (this.plugin.settings.plugin.copyLink.enable) {
 			new Setting(contentEl)
 				.setName(i18next.t("settings.plugin.copyLink.baselink.title"))

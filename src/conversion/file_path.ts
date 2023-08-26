@@ -68,20 +68,16 @@ export function getDataviewPath(
  * Create relative path from a sourceFile to a targetPath. If the target file is a note, only share if the frontmatter sharekey is present and true
  * @param {TFile} sourceFile the shared file containing all links, embed etc
  * @param {LinkedNotes} targetFile The target file
- * @param {GitHubPublisherSettings} settings Settings
- * @param {MetadataCache} metadata metadataCache
- * @param {Vault} vault Vault
  * @param {FrontMatterCache | null} frontmatter FrontmatterCache or null
- * @param {RepoFrontmatter[] | RepoFrontmatter} sourceRepo The repoFrontmatter from the original file
- * @param {FrontmatterConvert} frontmatterSettings FrontmatterConvert
- * @param shortRepo
+ * @param app
+ * @param properties
  * @return {string} relative path
  */
 
 export async function createRelativePath(
 	sourceFile: TFile,
 	targetFile: LinkedNotes,
-	frontmatter: FrontMatterCache | null,
+	frontmatter: FrontMatterCache | null | undefined,
 	app: App,
 	properties: MultiProperties,
 ): Promise<string> {
@@ -89,10 +85,11 @@ export async function createRelativePath(
 	const settings = properties.settings;
 	const shortRepo = properties.repository;
 	const sourcePath = getReceiptFolder(sourceFile, settings, shortRepo, app);
-	const frontmatterTarget = metadataCache.getFileCache(targetFile.linked)!.frontmatter as FrontMatterCache;
+	const frontmatterTarget = metadataCache.getFileCache(targetFile.linked)!.frontmatter;
 	const targetRepo = getRepoFrontmatter(settings, shortRepo, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(properties.frontmatter.repo, targetRepo);
-	const shareKey = shortRepo ? shortRepo.shareKey : settings.plugin.shareKey;
+	const defaultShareKey = settings.plugin.shareAll?.enable ? undefined : settings.plugin.shareKey;
+	const shareKey = shortRepo ? shortRepo.shareKey : defaultShareKey;
 	const shared = isInternalShared(
 		shareKey,
 		frontmatterTarget,
@@ -113,7 +110,7 @@ export async function createRelativePath(
 			: getImageLinkOptions(
 				targetFile.linked,
 				settings,
-				getFrontmatterCondition(frontmatter as FrontMatterCache, settings)
+				getFrontmatterCondition(frontmatter, settings)
 			);
 	const sourceList = sourcePath.split("/");
 	const targetList = targetPath.split("/");
@@ -230,7 +227,7 @@ function createObsidianPath(
 
 function folderNoteIndexYAML(
 	fileName: string,
-	frontmatter: FrontMatterCache,
+	frontmatter: FrontMatterCache | undefined | null,
 	settings: GitHubPublisherSettings
 ): string {
 	const category = getCategory(frontmatter, settings);
@@ -256,7 +253,7 @@ function folderNoteIndexYAML(
 
 function createFrontmatterPath(
 	settings: GitHubPublisherSettings,
-	frontmatter: FrontMatterCache,
+	frontmatter: FrontMatterCache | null | undefined,
 	fileName: string
 ): string {
 	
@@ -343,7 +340,7 @@ function regexOnPath(path: string, settings: GitHubPublisherSettings) {
  * @returns {string} title
  */
 export function getTitleField(
-	frontmatter: FrontMatterCache,
+	frontmatter: FrontMatterCache | undefined | null,
 	file: TFile,
 	settings: GitHubPublisherSettings
 ): string {
@@ -374,7 +371,7 @@ export function getReceiptFolder(
 	const { vault, metadataCache } = app;
 	
 	if (file.extension === "md") {
-		const frontmatter = metadataCache.getCache(file.path)?.frontmatter as FrontMatterCache;
+		const frontmatter = metadataCache.getCache(file.path)?.frontmatter;
 
 		const fileName = getTitleField(frontmatter, file, settings);
 		const editedFileName = regexOnFileName(fileName, settings);
@@ -385,7 +382,7 @@ export function getReceiptFolder(
 			return fileName;
 		}
 
-		if (frontmatter.path) {
+		if (frontmatter && frontmatter.path) {
 			const frontmatterPath = frontmatter.path instanceof Array ? frontmatter.path.join("/") : frontmatter.path;
 			if (frontmatterPath == "" || frontmatterPath == "/") {
 				return editedFileName;

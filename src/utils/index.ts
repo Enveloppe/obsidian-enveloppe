@@ -3,8 +3,8 @@ import i18next from "i18next";
 import {App, FrontMatterCache, Notice, Platform, TFile} from "obsidian";
 import GithubPublisher from "src/main";
 
-import Publisher from "../GitHub/upload";
 import {getReceiptFolder} from "../conversion/file_path";
+import Publisher from "../GitHub/upload";
 import {
 	Deleted,
 	FolderSettings,
@@ -164,15 +164,16 @@ export async function createLink(
 	if (baseLink.length === 0) {
 		baseLink = repo instanceof Array ? `https://${github.user}.github.io/${settings.github.repo}/` : `https://${repo.owner}.github.io/${repo.repo}/`;
 	}
-	const frontmatter = app.metadataCache.getFileCache(file)!.frontmatter as FrontMatterCache;
-	const keyRepo = frontmatter["baselink"];
+	const frontmatter = app.metadataCache.getFileCache(file)!.frontmatter;
 	let removePart = copyLink.removePart;
-	if (frontmatter["baselink"] !== undefined) {
-		baseLink = keyRepo;
-		removePart = [];
-	} else if (frontmatter["copylink"] && typeof frontmatter["copylink"]==="object") {
-		baseLink = frontmatter["copylink"].base;
-		removePart = frontmatter["copylink"].remove ?? [];
+	if (frontmatter) {
+		if (frontmatter["baselink"] !== undefined) {
+			baseLink = frontmatter["baselink"];
+			removePart = [];
+		} else if (frontmatter["copylink"] && typeof frontmatter["copylink"]==="object") {
+			baseLink = frontmatter["copylink"].base;
+			removePart = frontmatter["copylink"].remove ?? [];
+		}
 	}
 	baseLink = checkSlash(baseLink);
 	if (removePart.length > 0) {
@@ -284,7 +285,7 @@ export function trimObject(obj: { [p: string]: string }) {
  */
 
 export function getFrontmatterCondition(
-	frontmatter: FrontMatterCache,
+	frontmatter: FrontMatterCache | undefined | null,
 	settings: GitHubPublisherSettings
 ) {
 	let imageDefaultFolder: string = "";
@@ -306,6 +307,7 @@ export function getFrontmatterCondition(
 		convertInternalNonShared: settings.conversion.links.unshared,
 		convertInternalLinks: settings.conversion.links.internal,
 	};
+	if (!frontmatter) return settingsConversion;
 	if (frontmatter.links !== undefined) {
 		if (typeof frontmatter.links === "object") {
 			if (frontmatter.links.convert !== undefined) {
@@ -634,11 +636,13 @@ function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
  * @param {GitHubPublisherSettings} settings
  * @return {string} - The category or the default name
  */
-export function getCategory(frontmatter: FrontMatterCache, settings: GitHubPublisherSettings):string {
+export function getCategory(
+	frontmatter: FrontMatterCache | null | undefined, 
+	settings: GitHubPublisherSettings):string {
 	const key = settings.upload.yamlFolderKey;
-	let category = frontmatter[key] ?? settings.upload.defaultName;
+	const category = frontmatter ? frontmatter[key] : settings.upload.defaultName;
 	if (category instanceof Array) {
-		category = category.join("/");
+		return category.join("/");
 	}
 	return category;
 }

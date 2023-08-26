@@ -431,7 +431,14 @@
         "title": "Notice every error"
       },
       "shareKey": {
+        "all": {
+          "desc": "Allow to share all file and ignore the share key state",
+          "title": "Share all files without sharing key"
+        },
         "desc": "The properties key to publish your file on the website.",
+        "excludedFileName": {
+          "title": "Exclude files with names starting with ..."
+        },
         "otherRepo": "You can also define a share key to separate with others, without using the shortRepo key.",
         "title": "Share Key"
       },

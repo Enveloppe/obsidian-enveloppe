@@ -2,7 +2,6 @@ import {Octokit} from "@octokit/core";
 import i18next from "i18next";
 import {FrontMatterCache, Menu, Plugin, TFile, TFolder} from "obsidian";
 
-import {GithubBranch} from "./GitHub/branch";
 import {
 	checkRepositoryValidityCallback,
 	createLinkCallback,
@@ -13,6 +12,7 @@ import {
 import {addMenuFile, addMenuFolder} from "./commands/file_menu";
 import {ChooseWhichRepoToRun} from "./commands/suggest_other_repo_commands_modal";
 import {getTitleField, regexOnFileName} from "./conversion/file_path";
+import {GithubBranch} from "./GitHub/branch";
 import { resources, translationLanguage } from "./i18n/i18next";
 import {GithubPublisherSettingsTab} from "./settings";
 import {
@@ -39,7 +39,7 @@ export default class GithubPublisher extends Plugin {
 	 * @param {FrontMatterCache} frontmatter - The frontmatter of the file
 	 * @return {string} - The title field of the file
 	 */
-	getTitleFieldForCommand(file:TFile, frontmatter: FrontMatterCache): string {
+	getTitleFieldForCommand(file:TFile, frontmatter: FrontMatterCache | undefined | null): string {
 		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
 	}
 

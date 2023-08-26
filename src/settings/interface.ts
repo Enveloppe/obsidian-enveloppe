@@ -39,6 +39,7 @@ export interface Repository {
 	}
 	createShortcuts: boolean;
 	shareKey: string;
+
 	copyLink: {	
 		links: string;
 		removePart: string[];
@@ -121,6 +122,10 @@ export interface GitHubPublisherSettings {
 	plugin:
 	{
 		shareKey: string;
+		shareAll?: {
+			enable: boolean;
+			excludedFileName: string;
+		}
 		fileMenu: boolean;
 		editorMenu: boolean;
 		excludedFolder: string[];

@@ -242,7 +242,7 @@ export async function convertLinkCitation(
 	linkedFiles: LinkedNotes[],
 	sourceFile: TFile,
 	app: App,
-	frontmatter: FrontMatterCache,
+	frontmatter: FrontMatterCache | undefined | null,
 	properties: MultiProperties,
 ): Promise<string> {
 	const frontmatterSettings = properties.frontmatter.general;

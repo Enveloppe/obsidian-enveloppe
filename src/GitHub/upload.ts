@@ -3,7 +3,6 @@ import i18next from "i18next";
 import { Base64 } from "js-base64";
 import {
 	arrayBufferToBase64,
-	FrontMatterCache,
 	MetadataCache,
 	Notice,
 	TFile,
@@ -229,7 +228,7 @@ export default class Publisher {
 			noticeLog("Publishing file: " + file.path, this.settings);
 			fileHistory.push(file);
 			const frontmatterSettings = getFrontmatterCondition(
-				frontmatter as FrontMatterCache,
+				frontmatter,
 				this.settings
 			);
 			let embedFiles = shareFiles.getSharedEmbed(
@@ -239,7 +238,7 @@ export default class Publisher {
 			embedFiles = await shareFiles.getMetadataLinks(
 				file,
 				embedFiles,
-				frontmatter as FrontMatterCache,
+				frontmatter,
 				frontmatterSettings
 			);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
@@ -252,7 +251,7 @@ export default class Publisher {
 				},
 				repository: repo.repo
 			};
-			text = await mainConverting(text, file, this.plugin.app, frontmatter as FrontMatterCache, linkedFiles, this.plugin, multiProperties);
+			text = await mainConverting(text, file, this.plugin.app, frontmatter, linkedFiles, this.plugin, multiProperties);
 			const path = getReceiptFolder(file, this.settings, repo.repo, this.plugin.app);
 			const repoFrontmatter = Array.isArray(repo.frontmatter)
 				? repo.frontmatter

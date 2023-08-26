@@ -105,7 +105,7 @@ export class FilesManagement extends Publisher {
 					real: file.path,
 				});
 			} else if (file.extension == "md") {
-				const frontMatter = this.metadataCache.getCache(file.path)?.frontmatter as FrontMatterCache;
+				const frontMatter = this.metadataCache.getCache(file.path)?.frontmatter;
 				if (isShared(frontMatter, this.settings, file, repo)) {
 					const filepath = getReceiptFolder(file, this.settings, repo, this.plugin.app);
 					allFileWithPath.push({
@@ -441,11 +441,11 @@ export class FilesManagement extends Publisher {
 	async getMetadataLinks(
 		file: TFile,
 		embedFiles: TFile[],
-		frontmatterSourceFile: FrontMatterCache,
+		frontmatterSourceFile: FrontMatterCache | undefined | null,
 		frontmatterSettings: FrontmatterConvert
 	): Promise<TFile[]> {
 		for (const field of this.settings.embed.keySendFile) {
-			if (frontmatterSourceFile[field] != undefined) {
+			if (frontmatterSourceFile&&frontmatterSourceFile[field] != undefined) {
 				const imageLink = this.metadataCache.getFirstLinkpathDest(
 					frontmatterSourceFile[field],
 					file.path

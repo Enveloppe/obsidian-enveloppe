@@ -14,19 +14,24 @@ import {getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from ".";
  * @returns {boolean} true if the file can be published
  */
 export function isInternalShared(
-	sharekey: string,
-	frontmatter: FrontMatterCache,
+	sharekey: string | undefined,
+	frontmatter: FrontMatterCache | undefined | null,
 	frontmatterSettings: FrontmatterConvert
 ): boolean {
+	if (!frontmatterSettings.convertInternalNonShared) return false;
+	if (sharekey === undefined) return true;
+	
 	const shared =
-		frontmatter && frontmatter[sharekey] ? frontmatter[sharekey] : false;
+		frontmatter?.[sharekey] ? frontmatter[sharekey] : false;
 	if (shared) return true;
-	return !shared && frontmatterSettings.convertInternalNonShared;
+	return !shared;
 }
 
 export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache): Repository | null{
 	const allOtherRepo = settings.github.otherRepo;
-	if (!frontmatter) return null;
+	if (settings.plugin.shareAll!.enable && !frontmatter) {
+		return defaultRepo(settings);
+	} else if (!frontmatter) return null;
 	//check all keys in the frontmatter
 	for (const repo of allOtherRepo) {
 		if (frontmatter[repo.shareKey]) {
@@ -51,24 +56,40 @@ export function isShared(
 	file: TFile,
 	otherRepo: Repository|null
 ): boolean {
-	if (!file || file.extension !== "md" || meta === null) {
+	if (!file || file.extension !== "md") {
 		return false;
 	}
-	const folderList = settings.plugin.excludedFolder;
-	const shareKey = otherRepo ? otherRepo.shareKey : settings.plugin.shareKey;
-	if (meta === undefined || meta[shareKey] === undefined) {
-		return false;
-	} else if (folderList.length > 0) {
-		for (let i = 0; i < folderList.length; i++) {
-			const isRegex = folderList[i].match(/^\/(.*)\/[igmsuy]*$/);
-			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
-			if ((regex && regex.test(file.path)) || file.path.contains(folderList[i].trim())) {
-				return false;
-			}
+	if (!settings.plugin.shareAll || !settings.plugin.shareAll?.enable) {
+		const shareKey = otherRepo ? otherRepo.shareKey : settings.plugin.shareKey;
+		if ( meta == null || meta[shareKey] === undefined || isExcludedPath(settings, file)) {
+			return false;
+		} return meta[shareKey];
+	} else if (settings.plugin.shareAll!.enable) {
+		const excludedFileName = settings.plugin.shareAll!.excludedFileName;
+		if (!file.basename.startsWith(excludedFileName) && !isExcludedPath(settings, file)) {
+			return true;
 		}
 	}
-	return meta[shareKey];
+	return false;
 }
+/**
+ * Check if a file is in an excluded folder
+ * @param settings {GitHubPublisherSettings}
+ * @param file {TFile}
+ * @returns boolean
+ */
+function isExcludedPath(settings: GitHubPublisherSettings, file: TFile):boolean {
+	const excludedFolder = settings.plugin.excludedFolder;
+	for (const folder of excludedFolder) {
+		const isRegex = folder.match(/^\/(.*)\/[igmsuy]*$/);
+		const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
+		if ((regex && regex.test(file.path)) || file.path.contains(folder.trim())) {
+			return true;
+		}
+	}
+	return false;
+}
+
 
 /**
  * Allow to get all sharedKey from one file to count them
@@ -312,7 +333,7 @@ export function defaultRepo(settings: GitHubPublisherSettings): Repository {
 			name: settings.github.workflow.name,
 		},
 		createShortcuts: false,
-		shareKey: settings.plugin.shareKey,
+		shareKey: settings.plugin.shareKey.length > 0 ? settings.plugin.shareKey : "share",
 		copyLink: {
 			links: settings.plugin.copyLink.links,
 			removePart: settings.plugin.copyLink.removePart,

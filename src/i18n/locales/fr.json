@@ -431,7 +431,14 @@
         "title": "Notifier toutes les erreurs"
       },
       "shareKey": {
+        "all": {
+          "desc": "Allow to share all file and ignore the share key state",
+          "title": "Partager tous les fichiers sans clé de partage"
+        },
         "desc": "Clé de partage",
+        "excludedFileName": {
+          "title": "Exclure les fichiers dont le nom commence par ..."
+        },
         "otherRepo": "Vous pouvez également définir une clé de partage pour séparer avec des autres, sans utiliser la clé shortRepo.",
         "title": "La clé de propriété pour publier la note sur le dépôt."
       },
