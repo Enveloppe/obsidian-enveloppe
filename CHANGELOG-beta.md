@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.0-7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-6...6.5.0-7) (2023-08-26)
+
+
+### Features
+
+* **sharing:** allow to share all by default, without needing a frontmatter & key. ([ff3b777](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ff3b77724a5188b5910b91007a36b8b3553cb492)), closes [#210](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/210)
+
 ## [6.5.0-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-5...6.5.0-6) (2023-08-24)
 
 
