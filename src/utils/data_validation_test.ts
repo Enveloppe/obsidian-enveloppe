@@ -54,15 +54,18 @@ export function isShared(
 	if (!file || file.extension !== "md" || meta === null) {
 		return false;
 	}
-	const folderList = settings.plugin.excludedFolder;
+	const excludedFolderList = settings.plugin.excludedFolder;
 	const shareKey = otherRepo ? otherRepo.shareKey : settings.plugin.shareKey;
+	if (shareKey === "" && !file.basename.startsWith("DRAFT")) {
+		return true;
+	}
 	if (meta === undefined || meta[shareKey] === undefined) {
 		return false;
-	} else if (folderList.length > 0) {
-		for (let i = 0; i < folderList.length; i++) {
-			const isRegex = folderList[i].match(/^\/(.*)\/[igmsuy]*$/);
+	} else if (excludedFolderList.length > 0) {
+		for (let i = 0; i < excludedFolderList.length; i++) {
+			const isRegex = excludedFolderList[i].match(/^\/(.*)\/[igmsuy]*$/);
 			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
-			if ((regex && regex.test(file.path)) || file.path.contains(folderList[i].trim())) {
+			if ((regex && regex.test(file.path)) || file.path.contains(excludedFolderList[i].trim())) {
 				return false;
 			}
 		}

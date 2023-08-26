@@ -431,7 +431,7 @@
         "title": "Notice every error"
       },
       "shareKey": {
-        "desc": "The properties key to publish your file on the website.",
+        "desc": "The properties key to publish your file on the website. (If left empty, all files not starting with 'DRAFT' or in excludedFolders will be published)",
         "otherRepo": "You can also define a share key to separate with others, without using the shortRepo key.",
         "title": "Share Key"
       },
