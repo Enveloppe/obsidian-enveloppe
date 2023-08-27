@@ -16,7 +16,7 @@ import {
 } from "../settings/interface";
 import {
 	getCategory,
-	getFrontmatterCondition,
+	getFrontmatterSettings,
 	getRepoFrontmatter,
 } from "../utils";
 import {checkIfRepoIsInAnother, isInternalShared, isShared} from "../utils/data_validation_test";
@@ -88,12 +88,10 @@ export async function createRelativePath(
 	const frontmatterTarget = metadataCache.getFileCache(targetFile.linked)!.frontmatter;
 	const targetRepo = getRepoFrontmatter(settings, shortRepo, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(properties.frontmatter.repo, targetRepo);
-	const defaultShareKey = settings.plugin.shareAll?.enable ? undefined : settings.plugin.shareKey;
-	const shareKey = shortRepo ? shortRepo.shareKey : defaultShareKey;
 	const shared = isInternalShared(
-		shareKey,
-		frontmatterTarget,
-		properties.frontmatter.general
+		frontmatter,
+		properties,
+		targetFile.linked,
 	);
 	if (
 		targetFile.linked.extension === "md" && (!isFromAnotherRepo || !shared)
@@ -110,7 +108,7 @@ export async function createRelativePath(
 			: getImageLinkOptions(
 				targetFile.linked,
 				settings,
-				getFrontmatterCondition(frontmatter, settings)
+				getFrontmatterSettings(frontmatter, settings)
 			);
 	const sourceList = sourcePath.split("/");
 	const targetList = targetPath.split("/");
