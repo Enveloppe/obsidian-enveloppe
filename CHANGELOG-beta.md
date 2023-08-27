@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.0-9](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-8...6.5.0-9) (2023-08-27)
+
+
+### Bug Fixes
+
+* add info about convert internal unshared ([077b0d4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/077b0d43bcd5180c8fa78c04a6b11ac64f3c3d4d))
+* **isInternalShared:** rewrite internal function ([9577bb9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/9577bb9fd807480f367abeac5a26fab6da72a0de))
+* **menu:** better submenu manager with shareAll options ([fbc6015](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/fbc6015e3dcb7e856ee82b9ecd8cdc94b05f368d))
+* **menu:** cannot read properties of undefined ([2e95e1c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2e95e1ce4add8f9d3dc02240c188819432157f5f))
+
 ## [6.5.0-8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-7...6.5.0-8) (2023-08-26)
 
 
