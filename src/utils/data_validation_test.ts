@@ -3,28 +3,35 @@ import {FrontMatterCache, Notice, TFile} from "obsidian";
 import GithubPublisher from "src/main";
 
 import {GithubBranch} from "../GitHub/branch";
-import {FrontmatterConvert, GitHubPublisherSettings, RepoFrontmatter, Repository} from "../settings/interface";
+import {FrontmatterConvert, GitHubPublisherSettings, MultiProperties, RepoFrontmatter, Repository} from "../settings/interface";
 import {getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from ".";
 
 /**
- *  Check if the file is a valid file to publish
- * @param {string}  sharekey the key to check if the file is shared
+ * Check if the file is a valid file to publish
+ * Check also the path from the excluded folder list
+ * Always return false if the internalNonShared is not enabled
  * @param {FrontMatterCache} frontmatter
- * @param {FrontmatterConvert} frontmatterSettings
+ * @param {MultiProperties} properties
+ * @param {TFile} file (for the excluded file name & filepath)
  * @returns {boolean} true if the file can be published
  */
 export function isInternalShared(
-	sharekey: string | undefined,
 	frontmatter: FrontMatterCache | undefined | null,
-	frontmatterSettings: FrontmatterConvert
+	properties: MultiProperties,
+	file: TFile,
 ): boolean {
-	if (!frontmatterSettings.convertInternalNonShared) return false;
-	if (sharekey === undefined) return true;
+	const frontmatterSettings = properties.frontmatter.general;
 	
-	const shared =
-		frontmatter?.[sharekey] ? frontmatter[sharekey] : false;
-	if (shared) return true;
-	return !shared;
+	if (!frontmatterSettings.convertInternalNonShared) return false;
+	if (properties.repository?.shareAll?.enable) {
+		const excludedFileName = properties.repository.shareAll.excludedFileName;
+		return !file.basename.startsWith(excludedFileName);
+	}
+	if (!frontmatter) return true;
+	if (isExcludedPath(properties.settings, file)) return false;
+	const shareKey = properties.repository?.shareKey || properties.settings.plugin.shareKey;
+	if (frontmatter[shareKey] === undefined) return true;
+	return frontmatter[shareKey];
 }
 
 export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache): Repository | null{
