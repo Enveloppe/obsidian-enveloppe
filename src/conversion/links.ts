@@ -250,7 +250,6 @@ export async function convertLinkCitation(
 	if (!frontmatterSettings.convertInternalLinks) {
 		return fileContent;
 	}
-	console.log("converting links of", sourceFile.basename);
 	for (const linkedFile of linkedFiles) {
 		let pathInGithub = await createRelativePath(
 			sourceFile,
