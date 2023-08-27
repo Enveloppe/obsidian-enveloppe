@@ -166,7 +166,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 	/**
 	 * default repo
 	 */
-	if ((repo?.shareKey === plugin.settings.plugin.shareKey || (frontmatter?.[plugin.settings.plugin.shareKey])) && (!frontmatter!.repo || !frontmatter!.multipleRepo)) {
+	if ((repo?.shareKey === plugin.settings.plugin.shareKey || (frontmatter?.[plugin.settings.plugin.shareKey])) && (!frontmatter?.repo || !frontmatter?.multipleRepo)) {
 		subMenu.addItem((subItem) => {
 			subItem
 				.setTitle(
