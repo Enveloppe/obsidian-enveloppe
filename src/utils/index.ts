@@ -271,20 +271,10 @@ export function trimObject(obj: { [p: string]: string }) {
 
 /**
  * Get all condition from the frontmatter
- * Condition can be set :
- * - imageDefaultFolder
- * - convertWikiLinks
- * - attachment
- * - convert internal links
- * - remove Embed
- * - convert dataview
- * - hard break
- * @param {FrontMatterCache} frontmatter
- * @param {GitHubPublisherSettings} settings
- * @return {FrontmatterConvert}
+ * See docs for all the condition
  */
 
-export function getFrontmatterCondition(
+export function getFrontmatterSettings(
 	frontmatter: FrontMatterCache | undefined | null,
 	settings: GitHubPublisherSettings
 ) {
@@ -307,6 +297,12 @@ export function getFrontmatterCondition(
 		convertInternalNonShared: settings.conversion.links.unshared,
 		convertInternalLinks: settings.conversion.links.internal,
 	};
+
+	if (settings.plugin.shareAll?.enable) {
+		settingsConversion.shareAll = settings.plugin.shareAll;
+		settingsConversion.convertInternalNonShared = true;
+	}
+
 	if (!frontmatter) return settingsConversion;
 	if (frontmatter.links !== undefined) {
 		if (typeof frontmatter.links === "object") {

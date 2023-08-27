@@ -25,7 +25,7 @@ import {
 	RepoFrontmatter, UploadedFiles,
 } from "../settings/interface";
 import {
-	getFrontmatterCondition,
+	getFrontmatterSettings,
 	getRepoFrontmatter,
 	noticeLog,
 } from "../utils";
@@ -227,7 +227,7 @@ export default class Publisher {
 		try {
 			noticeLog("Publishing file: " + file.path, this.settings);
 			fileHistory.push(file);
-			const frontmatterSettings = getFrontmatterCondition(
+			const frontmatterSettings = getFrontmatterSettings(
 				frontmatter,
 				this.settings
 			);
