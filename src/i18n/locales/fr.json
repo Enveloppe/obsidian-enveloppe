@@ -172,6 +172,7 @@
         },
         "internals": {
           "desc": "Convertir les liens internes pointant vers les notes publiées vers leur homologue dans le dépôt, sous forme de chemin relatif.",
+          "shareAll": "Inclut tous les liens pour les paramètres \"partager tout\", car il est impossible sans frontmatter de connaître l'état de partage d'un fichier.",
           "title": "Liens internes"
         },
         "nonShared": {
@@ -201,7 +202,7 @@
         },
         "title": "Convertir des champs dataview ou propriétés en tags"
       },
-      "title": "Conversion du contenu"
+      "title": "Texte & liens"
     },
     "embed": {
       "bake": {
