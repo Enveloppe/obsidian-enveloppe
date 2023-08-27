@@ -108,7 +108,7 @@ export async function createRelativePath(
 			: getImageLinkOptions(
 				targetFile.linked,
 				settings,
-				getFrontmatterSettings(frontmatter, settings)
+				getFrontmatterSettings(frontmatter, settings, shortRepo)
 			);
 	const sourceList = sourcePath.split("/");
 	const targetList = targetPath.split("/");

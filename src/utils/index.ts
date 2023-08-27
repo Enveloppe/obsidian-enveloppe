@@ -276,7 +276,8 @@ export function trimObject(obj: { [p: string]: string }) {
 
 export function getFrontmatterSettings(
 	frontmatter: FrontMatterCache | undefined | null,
-	settings: GitHubPublisherSettings
+	settings: GitHubPublisherSettings,
+	repo: Repository | null
 ) {
 	let imageDefaultFolder: string = "";
 	if (settings.embed.folder.length > 0) {
@@ -297,9 +298,9 @@ export function getFrontmatterSettings(
 		convertInternalNonShared: settings.conversion.links.unshared,
 		convertInternalLinks: settings.conversion.links.internal,
 	};
-
-	if (settings.plugin.shareAll?.enable) {
-		settingsConversion.shareAll = settings.plugin.shareAll;
+	
+	const shareAll = repo ? repo.shareAll?.enable : settings.plugin.shareAll?.enable;
+	if (shareAll) {
 		settingsConversion.convertInternalNonShared = true;
 	}
 

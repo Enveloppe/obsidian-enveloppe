@@ -229,7 +229,8 @@ export default class Publisher {
 			fileHistory.push(file);
 			const frontmatterSettings = getFrontmatterSettings(
 				frontmatter,
-				this.settings
+				this.settings,
+				repo.repo
 			);
 			let embedFiles = shareFiles.getSharedEmbed(
 				file,

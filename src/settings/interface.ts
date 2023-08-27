@@ -338,10 +338,6 @@ export interface FrontmatterConvert {
 	hardbreak: boolean;
 	convertInternalNonShared: boolean;
 	convertInternalLinks: boolean;
-	shareAll?: {
-		enable: boolean;
-		excludedFileName: string;
-	}
 }
 
 export interface RepoFrontmatter {
