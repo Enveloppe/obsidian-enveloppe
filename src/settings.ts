@@ -194,18 +194,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				);
 		}
 
-		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.github.repoName.title"))
-			.setDesc(i18next.t("settings.github.repoName.desc"))
-			.addText((text) =>
-				text
-					.setPlaceholder(i18next.t("settings.github.repoName.placeholder"))
-					.setValue(githubSettings.repo)
-					.onChange(async (value) => {
-						githubSettings.repo = value.trim();
-						await this.plugin.saveSettings();
-					})
-			);
+
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.username.title"))
 			.setDesc(i18next.t("settings.github.username.desc"))
@@ -217,6 +206,19 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setValue(githubSettings.user)
 					.onChange(async (value) => {
 						githubSettings.user = value.trim();
+						await this.plugin.saveSettings();
+					})
+			);
+
+		new Setting(this.settingsPage)
+			.setName(i18next.t("settings.github.repoName.title"))
+			.setDesc(i18next.t("settings.github.repoName.desc"))
+			.addText((text) =>
+				text
+					.setPlaceholder(i18next.t("settings.github.repoName.placeholder"))
+					.setValue(githubSettings.repo)
+					.onChange(async (value) => {
+						githubSettings.repo = value.trim();
 						await this.plugin.saveSettings();
 					})
 			);
@@ -596,13 +598,89 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 	/**
 	 * Render the settings page for the text conversion parameters
-	 * @returns {void}
 	 */
 	renderTextConversion() {
 		const textSettings = this.plugin.settings.conversion;
 		this.settingsPage.createEl("p", {
 			text: i18next.t("settings.conversion.desc") ,
 		});
+
+		this.settingsPage.createEl("h5", {
+			text: i18next.t("settings.conversion.links.title") ,
+		});
+		this.settingsPage.createEl("p", {
+			text: i18next.t("settings.conversion.links.desc") ,
+		});
+
+		const shareAll= this.plugin.settings.plugin.shareAll?.enable ? ` ${i18next.t("settings.conversion.links.internals.shareAll")}` : "";
+
+		new Setting(this.settingsPage)
+			.setName(i18next.t("settings.conversion.links.internals.title"))
+			.setDesc(
+				i18next.t("settings.conversion.links.internals.desc") + shareAll
+			)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(textSettings.links.internal)
+					.onChange(async (value) => {
+						textSettings.links.internal = value;
+						if (this.plugin.settings.plugin.shareAll?.enable) {
+							textSettings.links.unshared = true;
+						}
+						await this.plugin.saveSettings();
+						this.renderSettingsPage("text-conversion");
+					});
+			});
+
+		if (textSettings.links.internal && !this.plugin.settings.plugin.shareAll?.enable) {
+			new Setting(this.settingsPage)
+				.setName(
+					i18next.t("settings.conversion.links.nonShared.title") 
+				)
+				.setDesc(
+					i18next.t("settings.conversion.links.nonShared.desc") 
+				)
+				.addToggle((toggle) => {
+					toggle
+						.setValue(textSettings.links.unshared)
+						.onChange(async (value) => {
+							textSettings.links.unshared =
+								value;
+							await this.plugin.saveSettings();
+						});
+				});
+		}
+
+		new Setting(this.settingsPage)
+			.setName(i18next.t("settings.conversion.links.wikilinks.title"))
+			.setDesc(
+				i18next.t("settings.conversion.links.wikilinks.desc") 
+			)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(textSettings.links.wiki)
+					.onChange(async (value) => {
+						textSettings.links.wiki = value;
+						await this.plugin.saveSettings();
+						this.renderSettingsPage("text-conversion");
+					});
+			});
+
+		if (textSettings.links.wiki || textSettings.links.internal) {
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.conversion.links.slugify.title"))
+				.setDesc(i18next.t("settings.conversion.links.slugify.desc"))
+				.addToggle((toggle) => {
+					toggle
+						.setValue(textSettings.links.slugify)
+						.onChange(async (value) => {
+							textSettings.links.slugify = value;
+							await this.plugin.saveSettings();
+						});
+				});
+		}
+
+
 		this.settingsPage.createEl("h5", {
 			text: i18next.t("settings.conversion.sectionTitle") ,
 		});
@@ -694,75 +772,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					});
 			});
 
-		this.settingsPage.createEl("h5", {
-			text: i18next.t("settings.conversion.links.title") ,
-		});
-		this.settingsPage.createEl("p", {
-			text: i18next.t("settings.conversion.links.desc") ,
-		});
-
-		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.conversion.links.internals.title"))
-			.setDesc(
-				i18next.t("settings.conversion.links.internals.desc") 
-			)
-			.addToggle((toggle) => {
-				toggle
-					.setValue(textSettings.links.internal)
-					.onChange(async (value) => {
-						textSettings.links.internal = value;
-						await this.plugin.saveSettings();
-						this.renderSettingsPage("text-conversion");
-					});
-			});
-
-		if (textSettings.links.internal) {
-			new Setting(this.settingsPage)
-				.setName(
-					i18next.t("settings.conversion.links.nonShared.title") 
-				)
-				.setDesc(
-					i18next.t("settings.conversion.links.nonShared.desc") 
-				)
-				.addToggle((toggle) => {
-					toggle
-						.setValue(textSettings.links.unshared)
-						.onChange(async (value) => {
-							textSettings.links.unshared =
-								value;
-							await this.plugin.saveSettings();
-						});
-				});
-		}
-
-		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.conversion.links.wikilinks.title"))
-			.setDesc(
-				i18next.t("settings.conversion.links.wikilinks.desc") 
-			)
-			.addToggle((toggle) => {
-				toggle
-					.setValue(textSettings.links.wiki)
-					.onChange(async (value) => {
-						textSettings.links.wiki = value;
-						await this.plugin.saveSettings();
-						this.renderSettingsPage("text-conversion");
-					});
-			});
-
-		if (textSettings.links.wiki || textSettings.links.internal) {
-			new Setting(this.settingsPage)
-				.setName(i18next.t("settings.conversion.links.slugify.title"))
-				.setDesc(i18next.t("settings.conversion.links.slugify.desc"))
-				.addToggle((toggle) => {
-					toggle
-						.setValue(textSettings.links.slugify)
-						.onChange(async (value) => {
-							textSettings.links.slugify = value;
-							await this.plugin.saveSettings();
-						});
-				});
-		}
+		
 	}
 
 	/**
@@ -938,6 +948,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							enable: value,
 							excludedFileName: pluginSettings.shareAll?.excludedFileName ?? "DRAFT",
 						};
+						if (value) this.plugin.settings.conversion.links.internal = true;
 						await this.plugin.saveSettings();
 						this.renderSettingsPage(EnumbSettingsTabId.plugin);
 					})

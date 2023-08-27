@@ -205,17 +205,7 @@ class ModalEditingRepository extends Modal {
 						})
 				);
 		}
-		new Setting(contentEl)
-			.setName(i18next.t("settings.github.repoName.title"))
-			.setDesc(i18next.t("settings.github.repoName.desc"))
-			.addText((text) =>
-				text
-					.setPlaceholder(i18next.t("settings.github.repoName.placeholder"))
-					.setValue(this.repository.repo)
-					.onChange(async (value) => {
-						this.repository.repo = value.trim();
-					})
-			);
+		
 		new Setting(contentEl)
 			.setName(i18next.t("settings.github.username.title"))
 			.setDesc(i18next.t("settings.github.username.desc"))
@@ -229,6 +219,19 @@ class ModalEditingRepository extends Modal {
 						this.repository.user = value.trim();
 					})
 			);
+		
+		new Setting(contentEl)
+			.setName(i18next.t("settings.github.repoName.title"))
+			.setDesc(i18next.t("settings.github.repoName.desc"))
+			.addText((text) =>
+				text
+					.setPlaceholder(i18next.t("settings.github.repoName.placeholder"))
+					.setValue(this.repository.repo)
+					.onChange(async (value) => {
+						this.repository.repo = value.trim();
+					})
+			);
+				
 		new Setting(contentEl)
 			.setName(i18next.t("settings.github.branch.title"))
 			.setDesc(i18next.t("settings.github.branch.desc"))
