@@ -936,7 +936,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	renderPluginSettings() {
 		const pluginSettings = this.plugin.settings.plugin;
 		
-		this.settingsPage.createEl("h3", i18next.t("settings.plugin.head.share"));
+		this.settingsPage.createEl("h3", {text: i18next.t("settings.plugin.head.share")});
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.shareKey.all.title"))
 			.setDesc(i18next.t("settings.plugin.shareKey.all.desc"))
@@ -997,7 +997,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					})
 			);
 
-		this.settingsPage.createEl("h3", i18next.t("settings.plugin.head.menu"));
+		this.settingsPage.createEl("h3", {text: i18next.t("settings.plugin.head.menu")});
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.fileMenu.title"))
@@ -1021,6 +1021,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+		this.settingsPage.createEl("h3", {text: i18next.t("settings.plugin.head.copyLinks")});
+	
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.copyLink.title"))
 			.setDesc(i18next.t("settings.plugin.copyLink.desc"))
@@ -1034,8 +1036,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						
 					})
 			);
-		
-		this.settingsPage.createEl("h3", i18next.t("settings.plugin.head.copyLinks"));
 
 		if (pluginSettings.copyLink.enable) {
 			new Setting(this.settingsPage)
@@ -1077,7 +1077,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				);
 		}
 
-		this.settingsPage.createEl("h3", i18next.t("settings.plugin.head.other"));
+		this.settingsPage.createEl("h3", {text: i18next.t("settings.plugin.head.other")});
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.embedEditRepo.title"))
@@ -1091,7 +1091,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					})
 			);
 			
-		this.settingsPage.createEl("h4", i18next.t("settings.plugin.head.log"));	
+		this.settingsPage.createEl("h4", {text: i18next.t("settings.plugin.head.log")});	
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.logNoticeHeader.title"))
