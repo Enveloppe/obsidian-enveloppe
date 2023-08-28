@@ -27,6 +27,7 @@ import {
 import {
 	getFrontmatterSettings,
 	getRepoFrontmatter,
+	logs,
 	noticeLog,
 } from "../utils";
 import {
@@ -141,7 +142,7 @@ export default class Publisher {
 					}
 					statusBar.finish(8000);
 				} catch (e) {
-					noticeLog(e, this.settings);
+					logs(this.settings, e);
 					new Notice(
 						(i18next.t("error.errorPublish", {repo: repoFrontmatter}))
 					);
@@ -225,7 +226,7 @@ export default class Publisher {
 			return false;
 		}
 		try {
-			noticeLog("Publishing file: " + file.path, this.settings);
+			noticeLog(this.settings, `Publishing file: ${file.path}`);
 			fileHistory.push(file);
 			const frontmatterSettings = getFrontmatterSettings(
 				frontmatter,
@@ -262,7 +263,7 @@ export default class Publisher {
 				multiRepMsg += `[${repo.owner}/${repo.repo}/${repo.branch}] `;
 			}
 			const msg = `Publishing ${file.name} to ${multiRepMsg}`;
-			noticeLog(msg, this.settings);
+			noticeLog(this.settings, msg);
 			const fileDeleted: Deleted[] = [];
 			const updated: UploadedFiles[][] = [];
 			const fileError: string[] = [];
@@ -295,7 +296,7 @@ export default class Publisher {
 			}
 			return {deleted: fileDeleted[0], uploaded: updated[0], error: fileError};
 		} catch (e) {
-			noticeLog(e, this.settings);
+			logs(this.settings, e);
 			return false;
 		}
 	}
@@ -328,8 +329,8 @@ export default class Publisher {
 	) {
 		const repo = properties.frontmatter.repo;
 		noticeLog(
-			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${branchName}`,
-			this.settings
+			this.settings,
+			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${branchName}`
 		);
 		let deleted: Deleted = {
 			success: false,
@@ -437,8 +438,8 @@ export default class Publisher {
 			}
 		} catch {
 			noticeLog(
-				i18next.t("error.normal"),
-				this.settings
+				this.settings,
+				i18next.t("error.normal")
 			);
 		}
 

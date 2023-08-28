@@ -411,6 +411,10 @@
         },
         "title": "Copy link"
       },
+      "dev": {
+        "desc": "Advanced user only. \nWill display as \"Notice\" according to the previous setting.",
+        "title": "Display developper logs"
+      },
       "editorMenu": {
         "desc": "Add a sharing commands in the right-click menu",
         "title": "Editor Menu"
@@ -426,6 +430,13 @@
       "fileMenu": {
         "desc": "Add an sharing commands in the file menu",
         "title": "File Menu"
+      },
+      "head": {
+        "copyLinks": "Link building & copy",
+        "log": "Logs",
+        "menu": "Menu",
+        "other": "Others",
+        "share": "Share & sharing key"
       },
       "logNoticeHeader": {
         "desc": "On mobile, it can be hard to debug the plugin. Enable this option to log every error in a Notice.",

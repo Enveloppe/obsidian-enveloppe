@@ -936,7 +936,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	renderPluginSettings() {
 		const pluginSettings = this.plugin.settings.plugin;
 		
-		
+		this.settingsPage.createEl("h3", i18next.t("settings.plugin.head.share"));
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.shareKey.all.title"))
 			.setDesc(i18next.t("settings.plugin.shareKey.all.desc"))
@@ -996,6 +996,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+
+		this.settingsPage.createEl("h3", i18next.t("settings.plugin.head.menu"));
+
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.fileMenu.title"))
 			.setDesc(i18next.t("settings.plugin.fileMenu.desc"))
@@ -1031,6 +1034,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						
 					})
 			);
+		
+		this.settingsPage.createEl("h3", i18next.t("settings.plugin.head.copyLinks"));
+
 		if (pluginSettings.copyLink.enable) {
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.plugin.copyLink.baselink.title"))
@@ -1070,6 +1076,23 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						})
 				);
 		}
+
+		this.settingsPage.createEl("h3", i18next.t("settings.plugin.head.other"));
+
+		new Setting(this.settingsPage)
+			.setName(i18next.t("settings.plugin.embedEditRepo.title"))
+			.setDesc(i18next.t("settings.plugin.embedEditRepo.desc"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(pluginSettings.displayModalRepoEditing)
+					.onChange(async (value) => {
+						pluginSettings.displayModalRepoEditing = value;
+						await this.plugin.saveSettings();
+					})
+			);
+			
+		this.settingsPage.createEl("h4", i18next.t("settings.plugin.head.log"));	
+
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.logNoticeHeader.title"))
 			.setDesc(i18next.t("settings.plugin.logNoticeHeader.desc"))
@@ -1081,14 +1104,15 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+		
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.plugin.embedEditRepo.title"))
-			.setDesc(i18next.t("settings.plugin.embedEditRepo.desc"))
+			.setName(i18next.t("settings.plugin.dev.title"))
+			.setDesc(i18next.t("settings.plugin.dev.desc"))
 			.addToggle((toggle) =>
 				toggle
-					.setValue(pluginSettings.displayModalRepoEditing)
+					.setValue(pluginSettings.dev ?? false)
 					.onChange(async (value) => {
-						pluginSettings.displayModalRepoEditing = value;
+						pluginSettings.dev = value;
 						await this.plugin.saveSettings();
 					})
 			);

@@ -10,6 +10,7 @@ import {
 	createListEdited,
 	getRepoFrontmatter,
 	getSettingsOfMetadataExtractor,
+	logs,
 	noticeLog,
 	noticeMessage} from "../utils";
 import {checkRepositoryValidityWithRepoFrontmatter} from "../utils/data_validation_test";
@@ -232,7 +233,7 @@ export async function shareOneNote(
 		}
 	} catch (error) {
 		if (!(error instanceof DOMException)) {
-			noticeLog(error, settings);
+			logs(settings, error);
 			new Notice(
 				(i18next.t("error.errorPublish", {repo: getRepoFrontmatter(settings, repository, metadataCache.getFileCache(file)?.frontmatter)}))
 			);

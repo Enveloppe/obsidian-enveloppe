@@ -7,7 +7,7 @@ import {
 	GitHubPublisherSettings,
 	RepoFrontmatter,
 } from "../settings/interface";
-import { noticeLog } from "../utils";
+import { logs, noticeLog } from "../utils";
 import { FilesManagement } from "./files";
 
 
@@ -79,14 +79,15 @@ export class GithubBranch extends FilesManagement {
 					sha: shaMainBranch,
 				}
 			);
-			noticeLog(i18next.t("publish.branch.success", {branchStatus: branch.status, repo: repoFrontmatter}),
-				this.settings
+			noticeLog(
+				this.settings,
+				i18next.t("publish.branch.success", {branchStatus: branch.status, repo: repoFrontmatter})
 			);
 			return branch.status === 201;
 		} catch (e) {
 			// catch the old branch
 			try {
-				noticeLog(e, this.settings);
+				logs(this.settings, e);
 				const allBranch = await this.octokit.request(
 					"GET /repos/{owner}/{repo}/branches",
 					{
@@ -97,10 +98,10 @@ export class GithubBranch extends FilesManagement {
 				const mainBranch = allBranch.data.find(
 					(branch: { name: string }) => branch.name === branchName
 				);
-				noticeLog(i18next.t("publish.branch.alreadyExists", {branchName, repo: repoFrontmatter}), this.settings);
+				noticeLog(this.settings, i18next.t("publish.branch.alreadyExists", {branchName, repo: repoFrontmatter}));
 				return !!mainBranch;
 			} catch (e) {
-				noticeLog(e, this.settings);
+				logs(this.settings, e);
 				return false;
 			}
 		}
@@ -132,10 +133,10 @@ export class GithubBranch extends FilesManagement {
 			);
 			return PR.data.number;
 		} catch (e) {
-			noticeLog(e, this.settings);
+			logs(this.settings, e);
 			try {
 				const PR = await this.octokit.request(
-					"GET" + " /repos/{owner}/{repo}/pulls",
+					"GET /repos/{owner}/{repo}/pulls",
 					{
 						owner: repoFrontmatter.owner,
 						repo: repoFrontmatter.repo,
@@ -145,9 +146,10 @@ export class GithubBranch extends FilesManagement {
 				return PR.data[0].number;
 			} catch (e) {
 				noticeLog(
-					i18next.t("publish.branch.error", {error: e, repo: repoFrontmatter}),
-					this.settings
+					this.settings,
+					i18next.t("publish.branch.error", {error: e, repo: repoFrontmatter})
 				);
+				logs(this.settings, e);
 				return 0;
 			}
 		}
@@ -207,7 +209,7 @@ export class GithubBranch extends FilesManagement {
 			);
 			return branch.status === 200;
 		} catch (e) {
-			noticeLog(e, this.settings);
+			logs(this.settings, e);
 			new Notice(i18next.t("error.mergeconflic"));
 			return false;
 		}
@@ -262,7 +264,7 @@ export class GithubBranch extends FilesManagement {
 			}
 			return true;
 		} catch (e) {
-			noticeLog(e, this.settings);
+			logs(this.settings, e);
 			new Notice(i18next.t("error.errorConfig", {repo: repoFrontmatter})
 			);
 			return false;
@@ -311,7 +313,7 @@ export class GithubBranch extends FilesManagement {
 				});
 				//@ts-ignore
 				if (repoExist.status === 200) {
-					noticeLog(i18next.t("commands.checkValidity.repoExistsTestBranch", {repo: repo}), this.settings);
+					noticeLog(this.settings, i18next.t("commands.checkValidity.repoExistsTestBranch", {repo}));
 
 					const branchExist = await this.octokit.request("GET /repos/{owner}/{repo}/branches/{branch}", {
 						owner: repo.owner,

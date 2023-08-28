@@ -19,7 +19,7 @@ import {
 	LinkedNotes,
 	MultiProperties,
 } from "../settings/interface";
-import {log, noticeLog} from "../utils";
+import {logs} from "../utils";
 import {bakeEmbeds} from "./bakeEmbed";
 import {getDataviewPath} from "./file_path";
 import findAndReplaceText from "./find_and_replace_text";
@@ -48,7 +48,7 @@ export function addHardLineBreak(
 		}
 		return text;
 	} catch (e) {
-		noticeLog(e, settings);
+		logs(settings, e);
 		return text;
 	}
 }
@@ -77,7 +77,7 @@ async function addTagsToYAML(text: string, toAdd: string[], settings: GitHubPubl
 			];
 			delete yamlObject.tag;
 		} catch (e) {
-			noticeLog(e, settings);
+			logs(settings, e);
 		}
 	}
 	if (yamlObject.tags) {
@@ -91,7 +91,7 @@ async function addTagsToYAML(text: string, toAdd: string[], settings: GitHubPubl
 				]),
 			];
 		} catch (e) {
-			noticeLog(e, settings);
+			logs(settings, e);
 		}
 	} else {
 		yamlObject.tags = toAdd;
@@ -269,7 +269,7 @@ export async function convertDataviewQueries(
 	const inlineJsDataViewRegex = new RegExp(`\`${escapeRegex(inlineJsQueryPrefix)}(.+?)\``, "gsm");
 	const inlineJsMatches = text.matchAll(inlineJsDataViewRegex);
 	if (!matches && !inlineMatches && !dataviewJsMatches && !inlineJsMatches) {
-		log("No dataview queries found");
+		logs(properties.settings, "No dataview queries found");
 		return replacedText;
 	}
 	const error = i18next.t("error.dataview");

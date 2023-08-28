@@ -12,7 +12,7 @@ import {
 
 import GithubPublisher from "../../main";
 import {GithubPublisherSettingsTab} from "../../settings";
-import {log, noticeLog} from "../../utils";
+import {logs} from "../../utils";
 import {GitHubPublisherSettings, Preset} from "../interface";
 import { migrateSettings,OldSettings } from "../migrate";
 
@@ -40,7 +40,7 @@ export class ImportModal extends Modal {
 	}
 
 	async censorRepositoryData(original: GitHubPublisherSettings) {
-		log("original settings", original);
+		logs(original, "original settings:", original);
 		this.plugin.settings.plugin = original.plugin;
 		this.plugin.settings.github.repo = original.github.repo;
 		this.plugin.settings.github.user = original.github.user;
@@ -70,9 +70,9 @@ export class ImportModal extends Modal {
 							//need to convert old settings to new settings
 							const oldSettings = importedSettings as unknown as OldSettings;
 							await migrateSettings(oldSettings, this.plugin);
-							noticeLog(i18next.t("informations.migrating.oldSettings"), this.plugin.settings);
+							logs(this.plugin.settings, i18next.t("informations.migrating.oldSettings"));
 						} else {
-							noticeLog(i18next.t("informations.migrating.normalFormat"), this.plugin.settings);
+							logs(this.plugin.settings, i18next.t("informations.migrating.normalFormat"));
 							importedSettings = importedSettings as unknown as GitHubPublisherSettings;
 							//create a copy of actual settings
 							const actualSettings = clone(this.plugin.settings);
@@ -298,7 +298,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	onChooseItem(item: Preset, evt: MouseEvent | KeyboardEvent): void {
 		const presetSettings = item.settings;
-		log("onChooseItem", presetSettings);
+		logs(presetSettings,"onChooseItem");
 		try {
 			const original = clone(this.plugin.settings);
 			if (!(presetSettings.upload.replaceTitle instanceof Array)) {
@@ -319,7 +319,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 
 		} catch (e) {
 			new Notice(i18next.t("modals.import.error.span") + e);
-			log("onChooseItem", e);
+			logs(this.plugin.settings, "onChooseItem", e);
 		}
 	}
 }
@@ -338,7 +338,7 @@ export async function loadAllPresets(octokit: Octokit, plugin: GithubPublisher):
 	if (!Array.isArray(githubPreset.data)) {
 		return presetList;
 	}
-	log("LoadAllPreset", githubPreset);
+	logs(plugin.settings, "LoadAllPreset", githubPreset);
 	for (const preset of githubPreset.data) {
 		if (preset.name.endsWith(".json")) {
 			const presetName = preset.name.replace(".json", "");

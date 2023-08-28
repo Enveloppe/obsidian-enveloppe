@@ -1,7 +1,7 @@
 import i18next from "i18next";
 
 import GithubPublisher from "../main";
-import {createTokenPath, log, noticeLog} from "../utils";
+import {createTokenPath, logs, noticeLog} from "../utils";
 import {FolderSettings, GithubTiersVersion, TextCleaner, TOKEN_PATH, TypeOfEditRegex} from "./interface";
 
 export interface OldSettings {
@@ -64,7 +64,7 @@ export async function migrateSettings(old: OldSettings, plugin: GithubPublisher)
 
 async function migrateReplaceTitle(plugin: GithubPublisher) {
 	if (!(plugin.settings.upload.replaceTitle instanceof Array)) {
-		noticeLog(i18next.t("informations.migrating.fileReplace"), plugin.settings);
+		noticeLog(plugin.settings, i18next.t("informations.migrating.fileReplace"));
 		plugin.settings.upload.replaceTitle = [plugin.settings.upload.replaceTitle];
 		await plugin.saveSettings();
 	}
@@ -73,7 +73,7 @@ async function migrateReplaceTitle(plugin: GithubPublisher) {
 async function migrateSubFolder(plugin: GithubPublisher) {
 	//@ts-ignore
 	if (plugin.settings.upload.subFolder && (!plugin.settings.upload.replacePath.find((e) => e.regex === "/" + plugin.settings.upload.subFolder))) {
-		noticeLog(i18next.t("informations.migrating.subFolder"), plugin.settings);
+		noticeLog(plugin.settings, i18next.t("informations.migrating.subFolder"));
 		//@ts-ignore
 		if (plugin.settings.upload.subFolder.length > 0) {
 			plugin.settings.upload.replacePath.push({
@@ -104,7 +104,7 @@ async function migrateCensor(plugin: GithubPublisher) {
 }
 
 async function migrateWorFlow(plugin: GithubPublisher) {
-	log("Migrating workflow");
+	logs(plugin.settings, "Migrating workflow");
 	//@ts-ignore
 	if (plugin.settings.github.worflow) {
 		//@ts-ignore
@@ -122,11 +122,11 @@ async function migrateWorFlow(plugin: GithubPublisher) {
 }
 
 export async function migrateToken(plugin: GithubPublisher, token?: string) {
-	log("migrating token");
+	logs(plugin.settings, "migrating token");
 	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
 	//@ts-ignore
 	if (plugin.settings.github.token && !token) {
-		noticeLog(`Moving the GitHub Token in the file : ${tokenPath}`, plugin.settings);
+		logs(plugin.settings, `Moving the GitHub Token in the file : ${tokenPath}`);
 		//@ts-ignore
 		token = plugin.settings.github.token;
 		//@ts-ignore
@@ -136,14 +136,14 @@ export async function migrateToken(plugin: GithubPublisher, token?: string) {
 	if (token === undefined) {
 		return;
 	}
-	noticeLog(`Moving the GitHub Token in the file : ${tokenPath}`, plugin.settings);
+	logs(plugin.settings, `Moving the GitHub Token in the file : ${tokenPath}`);
 	const envToken = `GITHUB_TOKEN=${token}`;
 	await plugin.app.vault.adapter.write(tokenPath, envToken);
 }
 
 
 async function migrateOtherRepository(plugin: GithubPublisher) {
-	log("Configuring other repositories");
+	logs(plugin.settings, "Configuring other repositories");
 	const otherRepo = plugin.settings.github?.otherRepo ?? [];
 	for (const repo of otherRepo) {
 		const workflow = {
@@ -182,7 +182,7 @@ async function migrateOtherRepository(plugin: GithubPublisher) {
 
 async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 	if (Object.keys(old).includes("editorMenu")) {
-		noticeLog(i18next.t("informations.migrating.oldSettings"), plugin.settings);
+		noticeLog(plugin.settings, i18next.t("informations.migrating.oldSettings"));
 		plugin.settings = {
 			github:
 				{

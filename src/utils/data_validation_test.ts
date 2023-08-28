@@ -4,7 +4,7 @@ import GithubPublisher from "src/main";
 
 import {GithubBranch} from "../GitHub/branch";
 import {FrontmatterConvert, GitHubPublisherSettings, MultiProperties, RepoFrontmatter, Repository} from "../settings/interface";
-import {getRepoFrontmatter, noticeLog, verifyRateLimitAPI} from ".";
+import {getRepoFrontmatter, logs, verifyRateLimitAPI} from ".";
 
 /**
  * Check if the file is a valid file to publish
@@ -287,7 +287,7 @@ export async function checkRepositoryValidity(
 		}
 	}
 	catch (e) {
-		noticeLog(e, settings);
+		logs(settings, e);
 		return false;
 	}
 	return false;
@@ -330,7 +330,7 @@ export async function checkRepositoryValidityWithRepoFrontmatter(
 		}
 	}
 	catch (e) {
-		noticeLog(e, settings);
+		logs(settings, e);
 		return false;
 	}
 	return false;

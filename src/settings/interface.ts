@@ -139,6 +139,7 @@ export interface GitHubPublisherSettings {
 			addCmd: boolean;
 		}
 		noticeError: boolean;
+		dev?: boolean;
 		displayModalRepoEditing: boolean;
 	}
 }

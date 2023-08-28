@@ -22,7 +22,7 @@ import {
 	Repository,
 } from "./settings/interface";
 import { migrateSettings,OldSettings } from "./settings/migrate";
-import {createTokenPath, noticeLog, verifyRateLimitAPI} from "./utils";
+import {createTokenPath, logs, verifyRateLimitAPI} from "./utils";
 import {checkRepositoryValidity} from "./utils/data_validation_test";
 
 /**
@@ -96,7 +96,7 @@ export default class GithubPublisher extends Plugin {
 	
 	async reloadCommands(branchName: string) {
 		//compare old and new repo to delete old commands
-		noticeLog("Reloading commands", this.settings);
+		logs(this.settings, "Reloading commands");
 		const newRepo:Repository[] = this.settings.github?.otherRepo ?? [];
 		this.cleanOldCommands();
 		for (const repo of newRepo) {

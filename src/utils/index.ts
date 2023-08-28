@@ -22,27 +22,28 @@ import {
  * @param {GithubPublisher} settings to know if it should use the notice or the log
  */
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function noticeLog(message: any, settings: GitHubPublisherSettings) {
+export function noticeLog(settings: GitHubPublisherSettings, ...messages: unknown[]) {
 	if (settings.plugin.noticeError) {
-		new Notice(message);
-	} else {
-		console.log("[GITHUB PUBLISHER]" , message);
+		new Notice(messages.join(" "));
+		return;
 	}
+	let callFunction = new Error().stack?.split("\n")[2].trim();
+	callFunction = callFunction?.substring(callFunction.indexOf("at ") + 3, callFunction.lastIndexOf(" ("));
+	callFunction = callFunction?.replace("Object.callback", "");
+	callFunction = callFunction ? callFunction : "main";
+	const date = new Date().toISOString().slice(11, 23);
+	console.log(`[${date}](${callFunction}):\n`, ...messages);
 }
 
 /**
- * Create a debug message for the log
- * Only display if debug is enabled
- * @param {unknown[]} args
+ * Add a new option in settings "dev"
+ * Will make appear ALL the logs in the console
+ * Not just the logs for normal process
+ * For advanced users only
  */
-export function log(...args: unknown[]) {
-	if (process.env.BUILD_ENV && process.env.BUILD_ENV==="development" && Platform.isDesktop) {
-		let callFunction = new Error().stack?.split("\n")[2].trim();
-		callFunction = callFunction?.substring(callFunction.indexOf("at ") + 3, callFunction.lastIndexOf(" ("));
-		callFunction = callFunction?.replace("Object.callback", "");
-		callFunction = callFunction ? callFunction : "main";
-		const date = new Date().toISOString().slice(11, 23);
-		console.log(`[${date}](${callFunction}):\n`, ...args);
+export function logs(settings: GitHubPublisherSettings, ...messages: unknown[]) {
+	if (settings.plugin?.dev) {
+		noticeLog(settings, ...messages);
 	}
 }
 
@@ -53,7 +54,7 @@ export function log(...args: unknown[]) {
  * @param {string[]} fileError
  * @return {ListEditedFiles}
  */
-export function createListEdited(listUploaded: UploadedFiles[], deleted: Deleted, fileError: string[]) {
+export function createListEdited(listUploaded: UploadedFiles[], deleted: Deleted, fileError: string[]): ListEditedFiles {
 	const listEdited: ListEditedFiles = {
 		added: [],
 		edited: [],
@@ -237,7 +238,7 @@ async function noticeMessageOneRepo(
 	if (file instanceof String) {
 		successMsg = i18next.t("informations.successfulPublish", { nbNotes: noticeValue, repo: repo });
 	} else {
-		log("file published :", noticeValue);
+		logs(settings, "file published :", noticeValue);
 		successMsg = i18next.t("informations.successPublishOneNote", { file: noticeValue, repo: repo });
 	}
 	if (settings.github.workflow.name.length > 0) {
@@ -661,10 +662,10 @@ export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPubli
 		return 0;
 	}
 	if (!commands) {
-		noticeLog(i18next.t("commands.checkValidity.rateLimit.notLimited", {
+		noticeLog(settings, i18next.t("commands.checkValidity.rateLimit.notLimited", {
 			remaining: remaining,
 			resetTime: time
-		}), settings);
+		}));
 	} else {
 		new Notice(i18next.t("commands.checkValidity.rateLimit.notLimited", {
 			remaining: remaining,

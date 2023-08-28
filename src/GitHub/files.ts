@@ -14,7 +14,7 @@ import {
 	LinkedNotes,
 	RepoFrontmatter, Repository,
 } from "../settings/interface";
-import {getRepoFrontmatter, log, noticeLog} from "../utils";
+import {getRepoFrontmatter, logs} from "../utils";
 import { isAttachment, isShared } from "../utils/data_validation_test";
 import Publisher from "./upload";
 
@@ -85,7 +85,7 @@ export class FilesManagement extends Publisher {
 			}
 		}
 
-		log(files);
+		logs(this.settings, files);
 		return files;
 	}
 
@@ -228,10 +228,10 @@ export class FilesManagement extends Publisher {
 						embedList.push(thisEmbed);
 					}
 				} catch (e) {
-					noticeLog(e, this.settings);
-					noticeLog(
-						`Error with this links : ${embedCache.link}`,
-						this.settings
+					logs(this.settings, e);
+					logs(
+						this.settings,
+						`Error with this links : ${embedCache.link}`
 					);
 				}
 			}
@@ -264,10 +264,10 @@ export class FilesManagement extends Publisher {
 					);
 					if (imageLink) imageList.push(this.imageSharedOrNote(imageLink as TFile, frontmatterSourceFile) as TFile);
 				} catch (e) {
-					noticeLog(e, this.settings);
-					noticeLog(
-						`Error with this file : ${embed.displayText}`,
-						this.settings
+					logs(this.settings, e);
+					logs(
+						this.settings,
+						`Error with this file : ${embed.displayText}`
 					);
 				}
 			}
@@ -337,7 +337,7 @@ export class FilesManagement extends Publisher {
 				}
 			}
 		} catch (e) {
-			noticeLog(e, this.settings);
+			logs(this.settings, e);
 		}
 		return filesInRepo;
 	}
@@ -525,9 +525,9 @@ export class FilesManagement extends Publisher {
 				) {
 					const vaultEditedTime = new Date(fileInVault.stat.mtime);
 					if (repoEditedTime && vaultEditedTime > repoEditedTime) {
-						noticeLog(
-							`edited file : ${fileInVault.path} / ${vaultEditedTime} vs ${repoEditedTime}`,
-							this.settings
+						logs(
+							this.settings,
+							`edited file : ${fileInVault.path} / ${vaultEditedTime} vs ${repoEditedTime}`
 						);
 						newFiles.push(fileInVault);
 					}

@@ -411,6 +411,10 @@
         },
         "title": "Copie de lien"
       },
+      "dev": {
+        "desc": "Utilisateur avancé seulement. Affichera sous forme de \"Notice\" selon le paramètre précédents.",
+        "title": "Affiche les logs développeurs"
+      },
       "editorMenu": {
         "desc": "Ajouter une commande de partage dans le menu du clic droit.",
         "title": "Menu \"Edition\""
@@ -426,6 +430,13 @@
       "fileMenu": {
         "desc": "Ajouter une commande de partage dans le menu \"Fichier\"",
         "title": "Menu \"Fichier\""
+      },
+      "head": {
+        "copyLinks": "Création et copie de liens",
+        "log": "Logs",
+        "menu": "Menu",
+        "other": "Autres",
+        "share": "Partage & clé de partage"
       },
       "logNoticeHeader": {
         "desc": "Sur mobile, il peut être difficile de debug le module. Activer cette option pour notifier toutes les erreurs via une notification Obsidian.",
