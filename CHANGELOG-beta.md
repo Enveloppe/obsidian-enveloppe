@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.0-11](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-10...6.5.0-11) (2023-08-28)
+
+
+### Bug Fixes
+
+* **settings:** fix heading not appearing ([336f71b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/336f71bfef2373922ee8bb7d115c1bbc3d575251))
+
 ## [6.5.0-10](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-9...6.5.0-10) (2023-08-28)
 
 ## [6.5.0-9](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-8...6.5.0-9) (2023-08-27)
