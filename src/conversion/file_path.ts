@@ -1,6 +1,7 @@
 import {
 	App,
 	FrontMatterCache,
+	normalizePath,
 	TFile,
 	TFolder,
 	Vault,
@@ -367,7 +368,6 @@ export function getReceiptFolder(
 	app: App,
 ): string {
 	const { vault, metadataCache } = app;
-	
 	if (file.extension === "md") {
 		const frontmatter = metadataCache.getCache(file.path)?.frontmatter;
 
@@ -377,23 +377,23 @@ export function getReceiptFolder(
 		if (
 			!isShared(frontmatter, settings, file, otherRepo)
 		) {
-			return fileName;
+			return normalizePath(fileName);
 		}
 
-		if (frontmatter && frontmatter.path) {
+		if (frontmatter?.path) {
 			const frontmatterPath = frontmatter.path instanceof Array ? frontmatter.path.join("/") : frontmatter.path;
 			if (frontmatterPath == "" || frontmatterPath == "/") {
-				return editedFileName;
+				return normalizePath(editedFileName);
 			}
-			return `${frontmatterPath}/${editedFileName}`;
+			return normalizePath(`${frontmatterPath}/${editedFileName}`);
 		} else if (settings.upload.behavior === FolderSettings.yaml) {
-			return createFrontmatterPath(settings, frontmatter, fileName).replace(/\/{2,}/, "/");
+			return normalizePath(createFrontmatterPath(settings, frontmatter, fileName));
 		} else if (settings.upload.behavior === FolderSettings.obsidian) {
-			return createObsidianPath(file, settings, vault, fileName).replace(/\/{2,}/, "/");
+			return normalizePath(createObsidianPath(file, settings, vault, fileName));
 		} else {
 			return settings.upload.defaultName.length > 0
-				? `${settings.upload.defaultName}/${editedFileName}`
-				: editedFileName;
+				? normalizePath(`${settings.upload.defaultName}/${editedFileName}`)
+				: normalizePath(editedFileName);
 		}
 	}
 	return file.path;
