@@ -14,7 +14,6 @@
         "postbump": "git push --follow-tags origin master",
         "predeploy": "pnpm run bump",
         "deploy": "pnpm run export",
-        "test": "jest"
     },
     "commit-and-tag-version": {
         "t": ""
