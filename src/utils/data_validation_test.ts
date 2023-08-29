@@ -36,7 +36,7 @@ export function isInternalShared(
 
 export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache): Repository | null{
 	const allOtherRepo = settings.github.otherRepo;
-	if (settings.plugin.shareAll!.enable && !frontmatter) {
+	if (settings.plugin.shareAll?.enable && !frontmatter) {
 		return defaultRepo(settings);
 	} else if (!frontmatter) return null;
 	//check all keys in the frontmatter
@@ -45,6 +45,7 @@ export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?
 			return repo;
 		}
 	}
+	logs(settings, "No other repo found, using default repo");
 	return defaultRepo(settings);
 }
 
