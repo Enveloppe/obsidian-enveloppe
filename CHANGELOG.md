@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0...6.5.1) (2023-08-29)
+
+
+### Bug Fixes
+
+* **menu:** cannot read of undefined ([3087519](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/308751956bea07c3e46cbe9cec5f1a88fcd7b135))
+* normalize Path ([ed7ff87](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ed7ff8751e6dc854b8dc6f5a4b9e6393d487f704))
+* **yaml:** fix yaml undefined category ([c55de93](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c55de93185fa716bba09d2d370e3d0cd6a951048))
+
 ## [6.5.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-11...6.5.0) (2023-08-29)
 
 ## [6.4.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.4.0-6...6.4.0) (2023-08-11)
