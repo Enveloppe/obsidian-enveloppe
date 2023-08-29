@@ -13,7 +13,7 @@
         "bump": "node commit-and-tag-version.js",
         "postbump": "git push --follow-tags origin master",
         "predeploy": "pnpm run bump",
-        "deploy": "pnpm run export",
+        "deploy": "pnpm run export"
     },
     "commit-and-tag-version": {
         "t": ""
