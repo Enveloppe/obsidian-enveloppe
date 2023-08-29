@@ -3,7 +3,7 @@ import { Menu, MenuItem, TFile, TFolder} from "obsidian";
 
 import GithubPublisher from "../main";
 import {MonoRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
-import {getRepoFrontmatter} from "../utils";
+import {getRepoFrontmatter, logs} from "../utils";
 import {defaultRepo, getRepoSharedKey, isShared, multipleSharedKey} from "../utils/data_validation_test";
 import {shareAllMarkedNotes, shareOneNote} from "./commands";
 import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";

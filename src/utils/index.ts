@@ -27,13 +27,23 @@ export function noticeLog(settings: GitHubPublisherSettings, ...messages: unknow
 		new Notice(messages.join(" "));
 		return;
 	}
-	let callFunction = new Error().stack?.split("\n")[2].trim();
+	let stack:string = callFunction();
+	if (stack.contains("logs")) {
+		stack = callFunction(true);
+	}
+	const date = new Date().toISOString().slice(11, 23);
+	console.log(`[${date}](${stack}):\n`, ...messages);
+}
+
+function callFunction(type?: boolean):string {
+	const index = type ? 4 : 3;
+	let callFunction = new Error().stack?.split("\n")[index].trim();
 	callFunction = callFunction?.substring(callFunction.indexOf("at ") + 3, callFunction.lastIndexOf(" ("));
 	callFunction = callFunction?.replace("Object.callback", "");
 	callFunction = callFunction ? callFunction : "main";
-	const date = new Date().toISOString().slice(11, 23);
-	console.log(`[${date}](${callFunction}):\n`, ...messages);
+	return callFunction;
 }
+
 
 /**
  * Add a new option in settings "dev"
