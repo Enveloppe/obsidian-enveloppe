@@ -19,6 +19,7 @@ import {
 	getCategory,
 	getFrontmatterSettings,
 	getRepoFrontmatter,
+	logs,
 } from "../utils";
 import {checkIfRepoIsInAnother, isInternalShared, isShared} from "../utils/data_validation_test";
 import { createRegexFromText } from "./find_and_replace_text";
@@ -230,6 +231,7 @@ function folderNoteIndexYAML(
 	settings: GitHubPublisherSettings
 ): string {
 	const category = getCategory(frontmatter, settings);
+	logs(settings, `Category: ${category}`);
 	const catSplit = category.split("/");
 	const parentCatFolder = !category.endsWith("/") ? catSplit.at(-1) as string : catSplit.at(-2) as string;
 	

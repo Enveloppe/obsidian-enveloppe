@@ -648,7 +648,7 @@ export function getCategory(
 	frontmatter: FrontMatterCache | null | undefined, 
 	settings: GitHubPublisherSettings):string {
 	const key = settings.upload.yamlFolderKey;
-	const category = frontmatter ? frontmatter[key] : settings.upload.defaultName;
+	const category = frontmatter && frontmatter[key] !== undefined ? frontmatter[key] : settings.upload.defaultName;
 	if (category instanceof Array) {
 		return category.join("/");
 	}
