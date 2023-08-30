@@ -4,7 +4,6 @@ import {
 	Component,
 	FrontMatterCache,
 	MetadataCache,
-	Notice,
 	parseFrontMatterTags,
 	parseYaml,
 	stringifyYaml,
@@ -19,7 +18,7 @@ import {
 	LinkedNotes,
 	MultiProperties,
 } from "../settings/interface";
-import {logs} from "../utils";
+import {logs, notif} from "../utils";
 import {bakeEmbeds} from "./bakeEmbed";
 import {getDataviewPath} from "./file_path";
 import findAndReplaceText from "./find_and_replace_text";
@@ -48,7 +47,7 @@ export function addHardLineBreak(
 		}
 		return text;
 	} catch (e) {
-		logs(settings, e);
+		notif({settings, e: true}, e);
 		return text;
 	}
 }
@@ -77,7 +76,7 @@ async function addTagsToYAML(text: string, toAdd: string[], settings: GitHubPubl
 			];
 			delete yamlObject.tag;
 		} catch (e) {
-			logs(settings, e);
+			notif({settings, e: true}, e);
 		}
 	}
 	if (yamlObject.tags) {
@@ -91,7 +90,7 @@ async function addTagsToYAML(text: string, toAdd: string[], settings: GitHubPubl
 				]),
 			];
 		} catch (e) {
-			logs(settings, e);
+			notif({settings, e: true}, e);
 		}
 	} else {
 		yamlObject.tags = toAdd;
@@ -269,7 +268,7 @@ export async function convertDataviewQueries(
 	const inlineJsDataViewRegex = new RegExp(`\`${escapeRegex(inlineJsQueryPrefix)}(.+?)\``, "gsm");
 	const inlineJsMatches = text.matchAll(inlineJsDataViewRegex);
 	if (!matches && !inlineMatches && !dataviewJsMatches && !inlineJsMatches) {
-		logs(properties.settings, "No dataview queries found");
+		logs({settings: properties.settings}, "No dataview queries found");
 		return replacedText;
 	}
 	const error = i18next.t("error.dataview");
@@ -282,8 +281,8 @@ export async function convertDataviewQueries(
 			const markdown = removeDataviewQueries(await dvApi.tryQueryMarkdown(query, path) as string, properties.frontmatter.general);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
-			console.error(e);
-			new Notice(error);
+			logs({settings: properties.settings, e: true}, e);
+			notif({settings: properties.settings}, error);
 			return queryBlock[0];
 		}
 	}
@@ -300,8 +299,8 @@ export async function convertDataviewQueries(
 			const markdown = removeDataviewQueries(div.innerHTML, properties.frontmatter.general);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
-			console.error(e);
-			new Notice(error);
+			logs({settings: properties.settings, e: true}, e);
+			notif({settings: properties.settings}, error);
 			return queryBlock[0];
 		}
 	}
@@ -314,8 +313,8 @@ export async function convertDataviewQueries(
 			const dataviewResult = dvApi.tryEvaluate(query, { this: dvApi.page(path, sourceFile.path) });
 			replacedText = dataviewResult ? replacedText.replace(code, removeDataviewQueries(dataviewResult.toString(), properties.frontmatter.general)) : replacedText.replace(code, removeDataviewQueries(dvApi.settings.renderNullAs, properties.frontmatter.general));
 		} catch (e) {
-			console.error(e);
-			new Notice(error);
+			logs({settings: properties.settings, e: true}, e);
+			notif({settings: properties.settings}, error);
 			return inlineQuery[0];
 		}
 	}
@@ -333,8 +332,8 @@ export async function convertDataviewQueries(
 			replacedText = replacedText.replace(code, markdown);
 
 		} catch (e) {
-			console.error(e);
-			new Notice(error);
+			logs({settings: properties.settings, e: true}, e);
+			notif({settings: properties.settings}, error);
 			return inlineJsQuery[0];
 		}
 	}

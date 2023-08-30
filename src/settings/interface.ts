@@ -141,6 +141,8 @@ export interface GitHubPublisherSettings {
 		noticeError: boolean;
 		dev?: boolean;
 		displayModalRepoEditing: boolean;
+		migrated?: boolean;
+
 	}
 }
 

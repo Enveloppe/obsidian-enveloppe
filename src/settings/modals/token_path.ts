@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { App, Modal, Notice,Setting } from "obsidian";
 import GithubPublisher from "src/main";
-import { createTokenPath } from "src/utils";
+import { createTokenPath, logs } from "src/utils";
 
 import { TOKEN_PATH } from "../interface";
 import { migrateToken } from "../migrate";
@@ -94,6 +94,7 @@ export class TokenEditPath extends Modal {
 							input.controlEl.querySelector("input")!.style.border = "1px solid red";
 							new Notice(i18next.t("error.reading-token-file"));
 							this.tokenPath="error";
+							logs({settings: this.plugin.settings, e: true}, e);
 						}
 					});
 			});

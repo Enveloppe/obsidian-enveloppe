@@ -1,10 +1,11 @@
+import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import {FrontMatterCache, Notice, TFile} from "obsidian";
 import GithubPublisher from "src/main";
 
 import {GithubBranch} from "../GitHub/branch";
 import {FrontmatterConvert, GitHubPublisherSettings, MultiProperties, RepoFrontmatter, Repository} from "../settings/interface";
-import {getRepoFrontmatter, logs, verifyRateLimitAPI} from ".";
+import {getRepoFrontmatter, logs, notif} from ".";
 
 /**
  * Check if the file is a valid file to publish
@@ -45,7 +46,7 @@ export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?
 			return repo;
 		}
 	}
-	logs(settings, "No other repo found, using default repo");
+	logs({settings}, "No other repo found, using default repo");
 	return defaultRepo(settings);
 }
 
@@ -288,7 +289,7 @@ export async function checkRepositoryValidity(
 		}
 	}
 	catch (e) {
-		logs(settings, e);
+		notif({settings, e: true}, e);
 		return false;
 	}
 	return false;
@@ -331,7 +332,7 @@ export async function checkRepositoryValidityWithRepoFrontmatter(
 		}
 	}
 	catch (e) {
-		logs(settings, e);
+		notif({settings, e: true}, e);
 		return false;
 	}
 	return false;
@@ -360,4 +361,28 @@ export function defaultRepo(settings: GitHubPublisherSettings): Repository {
 			removePart: settings.plugin.copyLink.removePart,
 		},
 	};
+}
+
+export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPublisherSettings, commands=false, numberOfFile=1): Promise<number> {
+	const rateLimit = await octokit.request("GET /rate_limit");
+	const remaining = rateLimit.data.resources.core.remaining;
+	const reset = rateLimit.data.resources.core.reset;
+	const date = new Date(reset * 1000);
+	const time = date.toLocaleTimeString();
+	if (remaining <= numberOfFile) {
+		new Notice(i18next.t("commands.checkValidity.rateLimit.limited", {resetTime: time}));
+		return 0;
+	}
+	if (!commands) {
+		notif({settings}, i18next.t("commands.checkValidity.rateLimit.notLimited", {
+			remaining: remaining,
+			resetTime: time
+		}));
+	} else {
+		new Notice(i18next.t("commands.checkValidity.rateLimit.notLimited", {
+			remaining: remaining,
+			resetTime: time
+		}));
+	}
+	return remaining;
 }

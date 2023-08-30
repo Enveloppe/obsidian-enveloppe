@@ -55,8 +55,8 @@ export class FilesManagement extends Publisher {
 				if (isShared(frontMatter, this.settings, file, repo)) {
 					shared_File.push(file);
 				}
-			} catch {
-				// ignore
+			} catch(e) {
+				logs({settings: this.settings, e: true}, e);
 			}
 		}
 		return shared_File;
@@ -79,13 +79,13 @@ export class FilesManagement extends Publisher {
 					if (isShared(frontMatter, this.settings, file as TFile, repo)) {
 						files.push(file as TFile);
 					}
-				} catch {
-					// ignore
+				} catch(e) {
+					logs({settings: this.settings, e: true}, e);
 				}
 			}
 		}
 
-		logs(this.settings, files);
+		logs({settings: this.settings}, files);
 		return files;
 	}
 
@@ -174,7 +174,7 @@ export class FilesManagement extends Publisher {
 						linkedFiles.push(thisLinkedFile);
 					}
 				} catch (e) {
-					// ignore error
+					logs({settings: this.settings}, e);
 				}
 			}
 		}
@@ -228,10 +228,10 @@ export class FilesManagement extends Publisher {
 						embedList.push(thisEmbed);
 					}
 				} catch (e) {
-					logs(this.settings, e);
 					logs(
-						this.settings,
-						`Error with this links : ${embedCache.link}`
+						{settings: this.settings, e: true},
+						`Error with this links : ${embedCache.link}`,
+						e
 					);
 				}
 			}
@@ -264,10 +264,10 @@ export class FilesManagement extends Publisher {
 					);
 					if (imageLink) imageList.push(this.imageSharedOrNote(imageLink as TFile, frontmatterSourceFile) as TFile);
 				} catch (e) {
-					logs(this.settings, e);
 					logs(
-						this.settings,
-						`Error with this file : ${embed.displayText}`
+						{settings: this.settings, e: true},
+						`Error with this file : ${embed.displayText}`,
+						e
 					);
 				}
 			}
@@ -337,7 +337,7 @@ export class FilesManagement extends Publisher {
 				}
 			}
 		} catch (e) {
-			logs(this.settings, e);
+			logs({settings: this.settings, e: true}, e);
 		}
 		return filesInRepo;
 	}
@@ -526,7 +526,7 @@ export class FilesManagement extends Publisher {
 					const vaultEditedTime = new Date(fileInVault.stat.mtime);
 					if (repoEditedTime && vaultEditedTime > repoEditedTime) {
 						logs(
-							this.settings,
+							{settings: this.settings},
 							`edited file : ${fileInVault.path} / ${vaultEditedTime} vs ${repoEditedTime}`
 						);
 						newFiles.push(fileInVault);

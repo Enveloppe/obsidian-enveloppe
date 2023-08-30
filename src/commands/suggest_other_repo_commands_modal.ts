@@ -188,7 +188,7 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 			repositoryValidityActiveFile(this.plugin, this.branchName, this.repo);
 			break;
 		}
-		logs(this.plugin.settings, `run command ${item.commands}`);
+		logs({settings: this.plugin.settings}, `run command ${item.commands}`);
 	}
 }
 

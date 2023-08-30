@@ -2,8 +2,7 @@ import i18next from "i18next";
 import {App, Modal, Notice, Setting} from "obsidian";
 
 import GithubPublisherPlugin from "../../main";
-import {verifyRateLimitAPI} from "../../utils";
-import {checkRepositoryValidity} from "../../utils/data_validation_test";
+import {checkRepositoryValidity, verifyRateLimitAPI} from "../../utils/data_validation_test";
 import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../interface";
 
 /**

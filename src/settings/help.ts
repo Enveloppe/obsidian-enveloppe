@@ -283,9 +283,9 @@ export function help(settings: GitHubPublisherSettings) {
  * Create the useful links section in the settings help tab
  * @return {DocumentFragment}
  */
-export function usefullLinks(): DocumentFragment {
-	const usefullLinks = document.createDocumentFragment();
-	usefullLinks.createEl("ul", undefined, (el) => {
+export function usefulLinks(): DocumentFragment {
+	const usefulLinks = document.createDocumentFragment();
+	usefulLinks.createEl("ul", undefined, (el) => {
 		el.createEl("li", undefined, (el) => {
 			el.createEl("a", {
 				text: i18next.t("settings.help.usefulLinks.documentation"),
@@ -311,7 +311,7 @@ export function usefullLinks(): DocumentFragment {
 			});
 		});
 	});
-	return usefullLinks;
+	return usefulLinks;
 }
 
 /**

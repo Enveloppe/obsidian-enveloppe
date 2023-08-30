@@ -7,7 +7,7 @@ import {
 	GitHubPublisherSettings,
 	RepoFrontmatter,
 } from "../settings/interface";
-import { logs, noticeLog } from "../utils";
+import { logs, notif } from "../utils";
 import { FilesManagement } from "./files";
 
 
@@ -79,15 +79,15 @@ export class GithubBranch extends FilesManagement {
 					sha: shaMainBranch,
 				}
 			);
-			noticeLog(
-				this.settings,
+			notif(
+				{settings: this.settings},
 				i18next.t("publish.branch.success", {branchStatus: branch.status, repo: repoFrontmatter})
 			);
 			return branch.status === 201;
 		} catch (e) {
 			// catch the old branch
 			try {
-				logs(this.settings, e);
+				logs({settings: this.settings, e: true}, e);
 				const allBranch = await this.octokit.request(
 					"GET /repos/{owner}/{repo}/branches",
 					{
@@ -98,10 +98,10 @@ export class GithubBranch extends FilesManagement {
 				const mainBranch = allBranch.data.find(
 					(branch: { name: string }) => branch.name === branchName
 				);
-				noticeLog(this.settings, i18next.t("publish.branch.alreadyExists", {branchName, repo: repoFrontmatter}));
+				notif({settings: this.settings}, i18next.t("publish.branch.alreadyExists", {branchName, repo: repoFrontmatter}));
 				return !!mainBranch;
 			} catch (e) {
-				logs(this.settings, e);
+				notif({settings: this.settings, e: true}, e);
 				return false;
 			}
 		}
@@ -125,7 +125,7 @@ export class GithubBranch extends FilesManagement {
 				{
 					owner: repoFrontmatter.owner,
 					repo: repoFrontmatter.repo,
-					title: i18next.t("publish.branch.prMessage", {branchName: branchName}),
+					title: i18next.t("publish.branch.prMessage", {branchName}),
 					body: "",
 					head: branchName,
 					base: repoFrontmatter.branch,
@@ -133,7 +133,7 @@ export class GithubBranch extends FilesManagement {
 			);
 			return PR.data.number;
 		} catch (e) {
-			logs(this.settings, e);
+			logs({settings: this.settings, e: true}, e);
 			try {
 				const PR = await this.octokit.request(
 					"GET /repos/{owner}/{repo}/pulls",
@@ -145,11 +145,10 @@ export class GithubBranch extends FilesManagement {
 				);
 				return PR.data[0].number;
 			} catch (e) {
-				noticeLog(
-					this.settings,
+				notif(
+					{settings: this.settings, e: true},
 					i18next.t("publish.branch.error", {error: e, repo: repoFrontmatter})
 				);
-				logs(this.settings, e);
 				return 0;
 			}
 		}
@@ -179,6 +178,7 @@ export class GithubBranch extends FilesManagement {
 			);
 			return branch.status === 200;
 		} catch (e) {
+			logs({settings: this.settings, e: true}, e);
 			return false;
 		}
 	}
@@ -198,7 +198,7 @@ export class GithubBranch extends FilesManagement {
 		const commitMsg = repoFrontmatter.commitMsg || repoFrontmatter.commitMsg.trim().length > 0 ? `${repoFrontmatter.commitMsg} #${pullRequestNumber}` : `[PUBLISHER] Merge #${pullRequestNumber}`;
 		try {
 			const branch = await this.octokit.request(
-				"PUT" + " /repos/{owner}/{repo}/pulls/{pull_number}/merge",
+				"PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge",
 				{
 					owner: repoFrontmatter.owner,
 					repo: repoFrontmatter.repo,
@@ -209,7 +209,7 @@ export class GithubBranch extends FilesManagement {
 			);
 			return branch.status === 200;
 		} catch (e) {
-			logs(this.settings, e);
+			notif({settings: this.settings, e: true}, e);
 			new Notice(i18next.t("error.mergeconflic"));
 			return false;
 		}
@@ -264,7 +264,7 @@ export class GithubBranch extends FilesManagement {
 			}
 			return true;
 		} catch (e) {
-			logs(this.settings, e);
+			logs({settings: this.settings, e: true}, e);
 			new Notice(i18next.t("error.errorConfig", {repo: repoFrontmatter})
 			);
 			return false;
@@ -313,7 +313,7 @@ export class GithubBranch extends FilesManagement {
 				});
 				//@ts-ignore
 				if (repoExist.status === 200) {
-					noticeLog(this.settings, i18next.t("commands.checkValidity.repoExistsTestBranch", {repo}));
+					notif({settings: this.settings}, i18next.t("commands.checkValidity.repoExistsTestBranch", {repo}));
 
 					const branchExist = await this.octokit.request("GET /repos/{owner}/{repo}/branches/{branch}", {
 						owner: repo.owner,
@@ -323,22 +323,23 @@ export class GithubBranch extends FilesManagement {
 						//check the error code
 						if (e.status === 404) {
 							new Notice(
-								(i18next.t("commands.checkValidity.inBranch.error404", { repo: repo}))
+								(i18next.t("commands.checkValidity.inBranch.error404", { repo}))
 							);
 						} else if (e.status === 403) {
 							new Notice(
-								(i18next.t("commands.checkValidity.inBranch.error403", {repo: repo}))
+								(i18next.t("commands.checkValidity.inBranch.error403", {repo}))
 							);
 						}
 					});
 					//@ts-ignore
 					if (branchExist.status === 200 && !silent) {
 						new Notice(
-							(i18next.t("commands.checkValidity.success", {repo: repo}))
+							(i18next.t("commands.checkValidity.success", {repo}))
 						);
 					}
 				}
 			} catch (e) {
+				logs({settings: this.settings, e: true}, e);
 				break;
 			}
 		}

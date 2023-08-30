@@ -11,8 +11,7 @@ import {
 	getRepoFrontmatter,
 	getSettingsOfMetadataExtractor,
 	logs,
-	noticeLog,
-	noticeMessage} from "../utils";
+	notif,	publisherNotification} from "../utils";
 import {checkRepositoryValidityWithRepoFrontmatter} from "../utils/data_validation_test";
 import { ShareStatusBar } from "../utils/status_bar";
 
@@ -59,11 +58,12 @@ export async function shareAllMarkedNotes(
 					if (uploaded) {
 						listStateUploaded.push(...uploaded.uploaded);
 					}
-				} catch  {
+				} catch(e)  {
 					errorCount++;
 					fileError.push(sharedFile.name);
 					new Notice(
 						(i18next.t("error.unablePublishNote", {file: sharedFile.name})));
+					logs({settings: PublisherManager.settings, e: true}, e);
 				}
 			}
 			statusBar.finish(8000);
@@ -96,7 +96,7 @@ export async function shareAllMarkedNotes(
 				repoFrontmatter
 			);
 			if (update) {
-				await noticeMessage(
+				await publisherNotification(
 					PublisherManager,
 					noticeValue,
 					settings,
@@ -112,7 +112,7 @@ export async function shareAllMarkedNotes(
 			}
 		}
 	} catch (error) {
-		console.error(error);
+		logs({settings: PublisherManager.settings, e: true}, error);
 		new Notice(i18next.t("error.unablePublishMultiNotes") );
 		statusBar.error();
 	}
@@ -146,7 +146,7 @@ export async function purgeNotesRemote(
 		await PublisherManager.updateRepository(branchName, monoRepo.frontmatter);
 		if (PublisherManager.settings.plugin.displayModalRepoEditing) new ListChangedFiles(PublisherManager.plugin.app, deleted).open();
 	} catch (e) {
-		console.error(e);
+		notif({settings: PublisherManager.settings, e: true}, e);
 	}
 }
 
@@ -209,7 +209,7 @@ export async function shareOneNote(
 				repoFrontmatter
 			);
 			if (update) {
-				await noticeMessage(
+				await publisherNotification(
 					PublisherManager,
 					title,
 					settings,
@@ -233,7 +233,7 @@ export async function shareOneNote(
 		}
 	} catch (error) {
 		if (!(error instanceof DOMException)) {
-			logs(settings, error);
+			logs({settings, e: true}, error);
 			new Notice(
 				(i18next.t("error.errorPublish", {repo: getRepoFrontmatter(settings, repository, metadataCache.getFileCache(file)?.frontmatter)}))
 			);

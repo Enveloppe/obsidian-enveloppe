@@ -231,7 +231,7 @@ function folderNoteIndexYAML(
 	settings: GitHubPublisherSettings
 ): string {
 	const category = getCategory(frontmatter, settings);
-	logs(settings, `Category: ${category}`);
+	logs({settings}, `Category: ${category}`);
 	const catSplit = category.split("/");
 	const parentCatFolder = !category.endsWith("/") ? catSplit.at(-1) as string : catSplit.at(-2) as string;
 	

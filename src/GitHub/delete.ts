@@ -11,8 +11,8 @@ import {
 	MonoRepoProperties,
 	RepoFrontmatter,
 } from "../settings/interface";
-import { logs, noticeLog, trimObject, verifyRateLimitAPI} from "../utils";
-import {isAttachment} from "../utils/data_validation_test";
+import { logs, notif, trimObject} from "../utils";
+import {isAttachment, verifyRateLimitAPI} from "../utils/data_validation_test";
 import { FilesManagement } from "./files";
 
 /**
@@ -127,8 +127,8 @@ async function deleteFromGithubOneRepo(
 				: false;
 			try {
 				if (!checkingIndex) {
-					noticeLog(
-						settings,
+					notif(
+						{settings},
 						`trying to delete file : ${file.file} from ${repo.owner}/${repo.repo}`
 					);
 					const reponse = await octokit.request(
@@ -151,7 +151,7 @@ async function deleteFromGithubOneRepo(
 					}
 				}
 			} catch (e) {
-				if (!(e instanceof DOMException)) logs(settings, e);
+				if (!(e instanceof DOMException)) logs({settings, e: true}, e);
 			}
 		}
 	}
@@ -300,7 +300,7 @@ async function checkIndexFiles(
 		}
 	} catch (e) {
 		if (!(e instanceof DOMException)) {
-			logs(settings, e);
+			notif({settings, e: true}, e);
 			return false;
 		}
 	}

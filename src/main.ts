@@ -22,8 +22,8 @@ import {
 	Repository,
 } from "./settings/interface";
 import { migrateSettings,OldSettings } from "./settings/migrate";
-import {createTokenPath, logs, verifyRateLimitAPI} from "./utils";
-import {checkRepositoryValidity} from "./utils/data_validation_test";
+import {createTokenPath, logs, notif} from "./utils";
+import {checkRepositoryValidity, verifyRateLimitAPI} from "./utils/data_validation_test";
 
 /**
  * Main class of the plugin
@@ -96,7 +96,7 @@ export default class GithubPublisher extends Plugin {
 	
 	async reloadCommands(branchName: string) {
 		//compare old and new repo to delete old commands
-		logs(this.settings, "Reloading commands");
+		logs({settings: this.settings}, "Reloading commands");
 		const newRepo:Repository[] = this.settings.github?.otherRepo ?? [];
 		this.cleanOldCommands();
 		for (const repo of newRepo) {
@@ -130,6 +130,7 @@ export default class GithubPublisher extends Plugin {
 				return tokenFile.split("=")[1]; 
 			}
 		} catch (e) {
+			notif({settings: this.settings, e: true}, e);
 			return "";
 		}
 		return "";
@@ -179,7 +180,7 @@ export default class GithubPublisher extends Plugin {
 		await migrateSettings(oldSettings as unknown as OldSettings, this);
 		
 		const branchName =
-			app.vault.getName().replaceAll(" ", "-").replaceAll(".", "-") +
+			this.app.vault.getName().replaceAll(" ", "-").replaceAll(".", "-") +
 			"-" +
 			new Date().toLocaleDateString("en-US").replace(/\//g, "-");
 		this.addSettingTab(new GithubPublisherSettingsTab(this.app, this, branchName));

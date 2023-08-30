@@ -12,7 +12,7 @@ import {
 
 import GithubPublisher from "../../main";
 import {GithubPublisherSettingsTab} from "../../settings";
-import {logs} from "../../utils";
+import {logs, notif} from "../../utils";
 import {GitHubPublisherSettings, Preset} from "../interface";
 import { migrateSettings,OldSettings } from "../migrate";
 
@@ -40,7 +40,7 @@ export class ImportModal extends Modal {
 	}
 
 	async censorRepositoryData(original: GitHubPublisherSettings) {
-		logs(original, "original settings:", original);
+		logs({settings: original}, "original settings:", original);
 		this.plugin.settings.plugin = original.plugin;
 		this.plugin.settings.github.repo = original.github.repo;
 		this.plugin.settings.github.user = original.github.user;
@@ -69,10 +69,10 @@ export class ImportModal extends Modal {
 						if (Object.keys(importedSettings).includes("editorMenu")) {
 							//need to convert old settings to new settings
 							const oldSettings = importedSettings as unknown as OldSettings;
-							await migrateSettings(oldSettings, this.plugin);
-							logs(this.plugin.settings, i18next.t("informations.migrating.oldSettings"));
+							await migrateSettings(oldSettings, this.plugin, true);
+							logs({settings: this.plugin.settings}, i18next.t("informations.migrating.oldSettings"));
 						} else {
-							logs(this.plugin.settings, i18next.t("informations.migrating.normalFormat"));
+							logs({settings: this.plugin.settings}, i18next.t("informations.migrating.normalFormat"));
 							importedSettings = importedSettings as unknown as GitHubPublisherSettings;
 							//create a copy of actual settings
 							const actualSettings = clone(this.plugin.settings);
@@ -251,10 +251,10 @@ export class ExportModal extends Modal {
 							.onClick(() => {
 								// Can't use the method above on mobile, so we'll just open a new tab
 								//create a temporary file
-								this.app.vault.adapter.write(`${app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`, output);
+								this.app.vault.adapter.write(`${this.app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`, output);
 								//open the file with default application
 								//eslint-disable-next-line
-								(this.app as any).openWithDefaultApp(`${app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`);
+								(this.app as any).openWithDefaultApp(`${this.app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`);
 							}));
 				}
 			});
@@ -262,9 +262,9 @@ export class ExportModal extends Modal {
 
 	onClose() {
 		try{
-			this.app.vault.adapter.trashSystem(`${app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`);
+			this.app.vault.adapter.trashSystem(`${this.app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`);
 		}catch(e){
-			//do nothing if file doesn't exist
+			logs({settings: this.plugin.settings}, "Error while deleting temporary file", e);
 		}
 		const {contentEl} = this;
 		contentEl.empty();
@@ -298,7 +298,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	onChooseItem(item: Preset, evt: MouseEvent | KeyboardEvent): void {
 		const presetSettings = item.settings;
-		logs(presetSettings,"onChooseItem");
+		logs({settings: presetSettings},"onChooseItem");
 		try {
 			const original = clone(this.plugin.settings);
 			if (!(presetSettings.upload.replaceTitle instanceof Array)) {
@@ -319,7 +319,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 
 		} catch (e) {
 			new Notice(i18next.t("modals.import.error.span") + e);
-			logs(this.plugin.settings, "onChooseItem", e);
+			notif({settings: this.plugin.settings}, "onChooseItem", e);
 		}
 	}
 }
@@ -338,7 +338,7 @@ export async function loadAllPresets(octokit: Octokit, plugin: GithubPublisher):
 	if (!Array.isArray(githubPreset.data)) {
 		return presetList;
 	}
-	logs(plugin.settings, "LoadAllPreset", githubPreset);
+	logs({settings: plugin.settings}, "LoadAllPreset", githubPreset);
 	for (const preset of githubPreset.data) {
 		if (preset.name.endsWith(".json")) {
 			const presetName = preset.name.replace(".json", "");

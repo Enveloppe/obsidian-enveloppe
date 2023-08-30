@@ -1,4 +1,3 @@
-import {Octokit} from "@octokit/core";
 import i18next from "i18next";
 import {App, FrontMatterCache, Notice, Platform, TFile} from "obsidian";
 import GithubPublisher from "src/main";
@@ -10,19 +9,27 @@ import {
 	FolderSettings,
 	FrontmatterConvert,
 	GitHubPublisherSettings,
-	ListEditedFiles, 	MetadataExtractor,
+	ListEditedFiles, 	
+	MetadataExtractor,
 	MultiRepoProperties,
 	RepoFrontmatter,
 	Repository, TOKEN_PATH,
 	UploadedFiles} from "../settings/interface";
 
+type LogsParameters = {
+	settings: GitHubPublisherSettings,
+	e?: boolean,
+	logs?: boolean,
+}
+	
 /**
  * Create a notice message for the log
- * @param {any} message the message to display
+ * @param {unknow[]} messages the message to display
  * @param {GithubPublisher} settings to know if it should use the notice or the log
  */
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function noticeLog(settings: GitHubPublisherSettings, ...messages: unknown[]) {
+export function notif(args: LogsParameters, ...messages: unknown[]) {
+	const {settings, e} = args;
 	if (settings.plugin.noticeError) {
 		new Notice(messages.join(" "));
 		return;
@@ -32,7 +39,11 @@ export function noticeLog(settings: GitHubPublisherSettings, ...messages: unknow
 		stack = callFunction(true);
 	}
 	const date = new Date().toISOString().slice(11, 23);
-	console.log(`[${date}](${stack}):\n`, ...messages);
+	const prefix = args.logs ? `DEV LOGS [${date}] ${stack}:\n` : `[GitHub Publisher](${stack}):\n`;
+	if (e)
+		console.error(prefix, ...messages);
+	else
+		console.log(prefix, ...messages);
 }
 
 function callFunction(type?: boolean):string {
@@ -41,6 +52,7 @@ function callFunction(type?: boolean):string {
 	callFunction = callFunction?.substring(callFunction.indexOf("at ") + 3, callFunction.lastIndexOf(" ("));
 	callFunction = callFunction?.replace("Object.callback", "");
 	callFunction = callFunction ? callFunction : "main";
+	callFunction = callFunction === "eval" ? "main" : callFunction;
 	return callFunction;
 }
 
@@ -51,9 +63,11 @@ function callFunction(type?: boolean):string {
  * Not just the logs for normal process
  * For advanced users only
  */
-export function logs(settings: GitHubPublisherSettings, ...messages: unknown[]) {
+export function logs(args: LogsParameters, ...messages: unknown[]) {
+	const settings = args.settings as GitHubPublisherSettings;
+	args.logs = true;
 	if (settings.plugin?.dev) {
-		noticeLog(settings, ...messages);
+		notif(args, ...messages);
 	}
 }
 
@@ -207,10 +221,9 @@ export async function createLink(
  * @param {TFile | string} file
  * @param {GitHubPublisherSettings} settings
  * @param {RepoFrontmatter | RepoFrontmatter[]} repo
- * @return {Promise<void>}
  */
 
-export async function noticeMessage(
+export async function publisherNotification(
 	PublisherManager: Publisher,
 	file: TFile | string | undefined,
 	settings: GitHubPublisherSettings,
@@ -218,7 +231,7 @@ export async function noticeMessage(
 ) {
 	repo = Array.isArray(repo) ? repo : [repo];
 	for (const repository of repo) {
-		await noticeMessageOneRepo(
+		await publisherNotificationOneRepo(
 			PublisherManager,
 			file,
 			settings,
@@ -236,23 +249,23 @@ export async function noticeMessage(
  * @return {Promise<void>}
  */
 
-async function noticeMessageOneRepo(
+async function publisherNotificationOneRepo(
 	PublisherManager: Publisher,
 	file: TFile | string | undefined,
 	settings: GitHubPublisherSettings,
 	repo: RepoFrontmatter
 ): Promise<void> {
 	const noticeValue =
-		file instanceof TFile ? "\"" + file.basename + "\"" : file;
+		file instanceof TFile ? `"${file.basename}"` : file;
 	let successMsg = "";
 	if (file instanceof String) {
 		successMsg = i18next.t("informations.successfulPublish", { nbNotes: noticeValue, repo: repo });
 	} else {
-		logs(settings, "file published :", noticeValue);
+		logs({settings}, "file published :", noticeValue);
 		successMsg = i18next.t("informations.successPublishOneNote", { file: noticeValue, repo: repo });
 	}
 	if (settings.github.workflow.name.length > 0) {
-		const msg = i18next.t("informations.sendMessage", {nbNotes: noticeValue, repo: repo}) + ".\n" + i18next.t("informations.waitingWorkflow");
+		const msg = `${i18next.t("informations.sendMessage", {nbNotes: noticeValue, repo})}.\n${i18next.t("informations.waitingWorkflow")}`;
 		new Notice(msg);
 		const successWorkflow = await PublisherManager.workflowGestion(repo);
 		if (successWorkflow) {
@@ -661,29 +674,7 @@ export function getCategory(
 	 * If the user is over the limit, the function will display a message to the user.
 	 * It also calculate the time remaining before the limit is reset.
 	 */
-export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPublisherSettings, commands=false, numberOfFile=1): Promise<number> {
-	const rateLimit = await octokit.request("GET /rate_limit");
-	const remaining = rateLimit.data.resources.core.remaining;
-	const reset = rateLimit.data.resources.core.reset;
-	const date = new Date(reset * 1000);
-	const time = date.toLocaleTimeString();
-	if (remaining <= numberOfFile) {
-		new Notice(i18next.t("commands.checkValidity.rateLimit.limited", {resetTime: time}));
-		return 0;
-	}
-	if (!commands) {
-		noticeLog(settings, i18next.t("commands.checkValidity.rateLimit.notLimited", {
-			remaining: remaining,
-			resetTime: time
-		}));
-	} else {
-		new Notice(i18next.t("commands.checkValidity.rateLimit.notLimited", {
-			remaining: remaining,
-			resetTime: time
-		}));
-	}
-	return remaining;
-}
+
 
 
 /**

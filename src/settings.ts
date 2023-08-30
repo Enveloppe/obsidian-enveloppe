@@ -7,7 +7,7 @@ import {
 	KeyBasedOnSettings,
 	multipleRepoExplained,
 	supportMe,
-	usefullLinks} from "./settings/help";
+	usefulLinks} from "./settings/help";
 import {
 	EnumbSettingsTabId,	FolderSettings, GithubTiersVersion, Repository } from "./settings/interface";
 import { migrateToken } from "./settings/migrate";
@@ -21,8 +21,7 @@ import {
 	folderHideShowSettings,
 	shortcutsHideShow, showHideBasedOnFolder,
 } from "./settings/style";
-import {verifyRateLimitAPI} from "./utils";
-import { checkRepositoryValidity } from "./utils/data_validation_test";
+import { checkRepositoryValidity, verifyRateLimitAPI } from "./utils/data_validation_test";
 
 
 export class GithubPublisherSettingsTab extends PluginSettingTab {
@@ -1125,7 +1124,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		this.settingsPage.createEl("h2", {
 			text: i18next.t("settings.help.usefulLinks.title") ,
 		});
-		this.settingsPage.appendChild(usefullLinks());
+		this.settingsPage.appendChild(usefulLinks());
 		this.settingsPage.createEl("hr");
 		this.settingsPage.createEl("h2", {
 			text: i18next.t("settings.help.frontmatter.title") ,

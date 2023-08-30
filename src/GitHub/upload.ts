@@ -28,7 +28,7 @@ import {
 	getFrontmatterSettings,
 	getRepoFrontmatter,
 	logs,
-	noticeLog,
+	notif,
 } from "../utils";
 import {
 	checkEmptyConfiguration,
@@ -137,12 +137,12 @@ export default class Publisher {
 								)
 							);
 							fileError.push(file.name);
-							console.error(e);
+							logs({settings: this.settings, e: true}, e);
 						}
 					}
 					statusBar.finish(8000);
 				} catch (e) {
-					logs(this.settings, e);
+					logs({settings: this.settings, e: true}, e);
 					new Notice(
 						(i18next.t("error.errorPublish", {repo: repoFrontmatter}))
 					);
@@ -226,7 +226,7 @@ export default class Publisher {
 			return false;
 		}
 		try {
-			noticeLog(this.settings, `Publishing file: ${file.path}`);
+			logs({settings: this.settings}, `Publishing file: ${file.path}`);
 			fileHistory.push(file);
 			const frontmatterSettings = getFrontmatterSettings(
 				frontmatter,
@@ -263,7 +263,7 @@ export default class Publisher {
 				multiRepMsg += `[${repo.owner}/${repo.repo}/${repo.branch}] `;
 			}
 			const msg = `Publishing ${file.name} to ${multiRepMsg}`;
-			noticeLog(this.settings, msg);
+			logs({settings: this.settings}, msg);
 			const fileDeleted: Deleted[] = [];
 			const updated: UploadedFiles[][] = [];
 			const fileError: string[] = [];
@@ -296,7 +296,7 @@ export default class Publisher {
 			}
 			return {deleted: fileDeleted[0], uploaded: updated[0], error: fileError};
 		} catch (e) {
-			logs(this.settings, e);
+			logs({settings: this.settings, e: true}, e);
 			return false;
 		}
 	}
@@ -328,8 +328,8 @@ export default class Publisher {
 		properties: MonoProperties,
 	) {
 		const repo = properties.frontmatter.repo;
-		noticeLog(
-			this.settings,
+		notif(
+			{settings: this.settings},
 			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${branchName}`
 		);
 		let deleted: Deleted = {
@@ -437,8 +437,8 @@ export default class Publisher {
 				result.isUpdated = true;
 			}
 		} catch {
-			noticeLog(
-				this.settings,
+			notif(
+				{settings: this.settings},
 				i18next.t("error.normal")
 			);
 		}
@@ -497,7 +497,7 @@ export default class Publisher {
 				repoFrontmatter
 			);
 		} catch (e) {
-			console.error(e);
+			notif({settings: this.settings, e: true}, e);
 			return undefined;
 		}
 	}

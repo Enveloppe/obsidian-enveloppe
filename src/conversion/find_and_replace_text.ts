@@ -32,10 +32,7 @@ export default function findAndReplaceText(
 	if (!settings.conversion.censorText) {
 		return text;
 	}
-	let censoring = settings.conversion.censorText.filter((censor) => !censor.after);
-	if (after) {
-		censoring = settings.conversion.censorText.filter((censor) => censor.after);
-	}
+	const censoring = after ? settings.conversion.censorText.filter((censor) => censor.after) : settings.conversion.censorText.filter((censor) => !censor.after);
 	for (const censor of censoring) {
 		if (censor.entry.trim().length > 0) {
 			const toReplace = censor.entry;
