@@ -21,6 +21,8 @@ body:
           required: true
         - label: "I checked my configurations files and the documentation"
           required: true
+        - label: "My issue is not relative to the [actions/github Workflow](https://github.com/ObsidianPublisher/actions). If it's the case, you must open an issue [here](https://github.com/ObsidianPublisher/actions/issues)."
+          required: true
   - type: textarea
     id: error
     attributes:
