@@ -22,22 +22,6 @@ body:
         - label: "I checked my configurations files and the documentation"
           required: true
   - type: textarea
-    id: requirements
-    attributes:
-      label: Requirements
-      description: Paste your `requirements.txt` file here
-      render: bash session
-    validations:
-      required: true
-  - type: textarea
-    id: mkdocs-yml
-    attributes:
-      label: Mkdocs.yml
-      description: Paste your `mkdocs.yml` file here
-      render: YAML
-    validations:
-      required: true
-  - type: textarea
     id: error
     attributes:
       label: Error
@@ -80,3 +64,19 @@ body:
       description: Add any other context about the problem here.
     validations:
       required: false
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Requirements
+      description: Paste your `requirements.txt` file here
+      render: bash session
+    validations:
+      required: true
+  - type: textarea
+    id: mkdocs-yml
+    attributes:
+      label: Mkdocs.yml
+      description: Paste your `mkdocs.yml` file here
+      render: YAML
+    validations:
+      required: true
