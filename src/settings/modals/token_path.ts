@@ -21,6 +21,7 @@ export class TokenEditPath extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
+		contentEl.addClasses(["github-publisher", "modals", "token-path"]);
 	
 		const defaultPath = createTokenPath(this.plugin, TOKEN_PATH);
 		const desc = contentEl.createEl("p", undefined, (p) => {
@@ -65,6 +66,8 @@ export class TokenEditPath extends Modal {
 		});
 			
 		const input = new Setting(contentEl)
+			.setClass("display-none")
+			.setClass("max-width")
 			.addText((text) => {
 				const path = this.plugin.settings.github.tokenPath ?? defaultPath;
 				text
@@ -79,8 +82,7 @@ export class TokenEditPath extends Modal {
 						this.tokenPath = path;
 					});
 			});
-		input.infoEl.style.display = "none";
-		input.controlEl.querySelector("input")!.style.width = "100%";
+		
 
 		new Setting(contentEl)
 			.addButton((button) => {

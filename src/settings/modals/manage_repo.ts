@@ -42,6 +42,7 @@ export class ModalAddingNewRepository extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
+		contentEl.addClasses(["github-publisher", "modals", "manage-repo", "add"]);
 		contentEl.createEl("h2", {text: i18next.t("settings.github.smartRepo.modals.title")});
 		contentEl.createEl("p", {text: i18next.t("settings.github.smartRepo.modals.desc")});
 		contentEl.createEl("p", {text: i18next.t("settings.github.smartRepo.modals.frontmatterInfo")});
@@ -71,6 +72,8 @@ export class ModalAddingNewRepository extends Modal {
 		};
 
 		new Setting(contentEl)
+			.setClass("max-width")
+			.setClass("display-none")
 			.addButton((button) => {
 				button
 
@@ -78,13 +81,13 @@ export class ModalAddingNewRepository extends Modal {
 					.onClick(() => {
 						this.repository.push(defaultRepository);
 						this.onOpen();
-					})
-					.buttonEl.style.width = "100%";
-			})
-			.infoEl.style.display = "none";
+					});
+			});
 
 		for (const repo of this.repository) {
 			new Setting(contentEl)
+				.setClass("max-width")
+				.setClass("display-none")
 				.addText((text) => {
 					text
 						.setPlaceholder("smartKey")
@@ -93,17 +96,16 @@ export class ModalAddingNewRepository extends Modal {
 							repo.smartKey = value.toLowerCase();
 							if (this.plugin.settings.github.otherRepo.filter((r) => r.smartKey === repo.smartKey).length > 1) {
 								new Notice(i18next.t("settings.github.smartRepo.modals.duplicate"));
-								text.inputEl.style.border = "1px solid red";
+								text.inputEl.addClass("error");
 								repo.smartKey = "";
 							} else if (repo.smartKey === "default") {
-								text.inputEl.style.border = "1px solid red";
+								text.inputEl.addClass("error");
 								repo.smartKey = "";
 								new Notice(i18next.t("settings.github.smartRepo.modals.default") as string);
 							} else {
-								text.inputEl.style.border = "0";
+								text.inputEl.removeClass("error");
 							}
-						})
-						.inputEl.style.width = "100%";
+						});
 
 				})
 
@@ -123,8 +125,7 @@ export class ModalAddingNewRepository extends Modal {
 								this.repository[this.repository.indexOf(repo)] = result;
 							}).open();
 						});
-				})
-				.infoEl.style.display = "none";
+				});
 
 		}
 		new Setting(contentEl)
@@ -176,6 +177,7 @@ class ModalEditingRepository extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
+		contentEl.addClasses(["github-publisher", "modals", "manage-repo"]);
 		contentEl.createEl("h2", {text: i18next.t("common.edit", {things: this.repository.smartKey})});
 
 		new Setting(contentEl)
@@ -256,7 +258,7 @@ class ModalEditingRepository extends Modal {
 			.addButton((button) =>
 				button
 					.setButtonText(i18next.t("settings.github.testConnection"))
-					.setClass("github-publisher-connect-button")
+					.setClass("connect")
 					.onClick(async () => {
 						const octokit = await this.plugin.reloadOctokit();
 						this.repository.verifiedRepo = await checkRepositoryValidity(
@@ -359,7 +361,6 @@ class ModalEditingRepository extends Modal {
 			new Setting(contentEl)
 				.setName(i18next.t("settings.plugin.copyLink.baselink.title"))
 				.setDesc(i18next.t("settings.plugin.copyLink.baselink.desc"))
-				.setClass("github-publisher")
 				.addText((text) =>
 					text
 						.setPlaceholder(this.plugin.settings.plugin.copyLink.links)
@@ -374,7 +375,6 @@ class ModalEditingRepository extends Modal {
 				.setDesc(
 					i18next.t("settings.plugin.copyLink.linkPathRemover.desc")
 				)
-				.setClass("github-publisher")
 				.addText((text) => {
 					text.setPlaceholder("docs")
 						.setValue(this.repository.copyLink.removePart.join(", "))

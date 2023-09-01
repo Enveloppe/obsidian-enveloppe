@@ -29,8 +29,8 @@ export class ListChangedFiles extends Modal {
 				emoji = "📄";
 			}
 			const li = ul.createEl("li");
-			li.createEl("span", { text: emoji, cls: "github-publisher emoji" });
-			li.createEl("code", { text: file, cls: "code-title github-publisher list-changed"});
+			li.createEl("span", { text: emoji, cls: "emoji" });
+			li.createEl("code", { text: file, cls: "code-title"});
 		});
 	}
 
@@ -44,7 +44,8 @@ export class ListChangedFiles extends Modal {
 		*/
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.createEl("h2", { text: i18next.t("modals.listChangedFiles.title"), cls: "github-publisher title"});
+		contentEl.addClasses(["github-publisher", "modals", "list-changed"]);
+		contentEl.createEl("h2", { text: i18next.t("modals.listChangedFiles.title"), cls: "success"});
 		if (Object.keys(this.listChanged).contains("edited")) {
 			this.listChanged = this.listChanged as ListEditedFiles;
 			contentEl.createEl("h3", { text: `📤 ${i18next.t("modals.listChangedFiles.added")}`});
@@ -53,7 +54,8 @@ export class ListChangedFiles extends Modal {
 			this.displayListOfFile(this.listChanged.edited, contentEl);
 			contentEl.createEl("h3", { text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`});
 			this.displayListOfFile(this.listChanged.deleted, contentEl);
-			contentEl.createEl("h2", { text: `❌ ${i18next.t("modals.listChangedFiles.error")}`, cls: "github-publisher title error"});
+			
+			contentEl.createEl("h2", { text: `❌ ${i18next.t("modals.listChangedFiles.error")}`, cls: "error"});
 			contentEl.createEl("h3", { text: `📤 ${i18next.t("modals.listChangedFiles.unpublished")}`});
 			this.displayListOfFile(this.listChanged.unpublished, contentEl);
 			contentEl.createEl("h3", { text: `♻️ ${i18next.t("modals.listChangedFiles.notDeleted")}`});
@@ -62,7 +64,7 @@ export class ListChangedFiles extends Modal {
 			this.listChanged = this.listChanged as Deleted;
 			contentEl.createEl("h3", { text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`});
 			this.displayListOfFile(this.listChanged.deleted, contentEl);
-			contentEl.createEl("h3", { text: `❌ ${i18next.t("modals.listChangedFiles.error")}`, cls: "github-publisher error"});
+			contentEl.createEl("h3", { text: `❌ ${i18next.t("modals.listChangedFiles.error")}`, cls: "error"});
 			contentEl.createEl("h3", { text: `♻️ ${i18next.t("modals.listChangedFiles.notDeleted")}`});
 			this.displayListOfFile(this.listChanged.undeleted, contentEl);
 		}

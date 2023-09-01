@@ -38,6 +38,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	display(): void{
 		const { containerEl } = this;
 		containerEl.empty();
+		containerEl.addClass("github-publisher");
 		
 		const PUBLISHER_TABS = {
 			"github-configuration": {
@@ -67,10 +68,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		};
 
 		new Setting(containerEl)
-			.setClass("github-publisher-export-import")
+			.setClass("import-export")
 			.addButton((button) => {
 				button.setButtonText(i18next.t("modals.export.title"))
-					.setClass("github-publisher-export")
 					.onClick(() => {
 						new ExportModal(this.app, this.plugin).open();
 					});
@@ -78,7 +78,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			)
 			.addButton((button) => {
 				button.setButtonText(i18next.t("modals.import.title"))
-					.setClass("github-publisher-import")
 					.onClick(() => {
 						new ImportModal(this.app, this.plugin, this.settingsPage, this).open();
 					});
@@ -87,7 +86,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				button
 					.setButtonText(i18next.t("modals.import.presets.title"))
 					.setTooltip(i18next.t("modals.import.presets.desc"))
-					.setClass("github-publisher-add-new-repository")
 					.onClick(async () => {
 						const octokit = await this.plugin.reloadOctokit();
 						const presetLists = await loadAllPresets(octokit.octokit, this.plugin);
@@ -95,21 +93,21 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					});
 			});
 		const tabBar = containerEl.createEl("nav", {
-			cls: "settings-tab-bar github-publisher",
+			cls: "settings-tab-bar",
 		});
 
 
 
 		for (const [tabID, tabInfo] of Object.entries(PUBLISHER_TABS)) {
 			const tabEl = tabBar.createEl("div", {
-				cls: "settings-tab github-publisher",
+				cls: "settings-tab",
 			});
 			const tabIcon = tabEl.createEl("div", {
-				cls: "settings-tab-icon github-publisher",
+				cls: "settings-tab-icon",
 			});
 			setIcon(tabIcon, tabInfo.icon);
 			tabEl.createEl("div", {
-				cls: "settings-tab-name github-publisher",
+				cls: "settings-tab-name",
 				text: tabInfo.name,
 			});
 			if (tabID === "github-configuration")
@@ -125,7 +123,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 		}
 		this.settingsPage = containerEl.createEl("div", {
-			cls: "settings-tab-page github-publisher",
+			cls: "settings-tab-page",
 		});
 		this.renderSettingsPage("github-configuration");
 	}
@@ -160,7 +158,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 	/**
 	 * Render the github configuration tab
-	 * @returns {void}
 	 */
 	renderGithubConfiguration() {
 		const githubSettings = this.plugin.settings.github;
@@ -225,7 +222,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		desc_ghToken.createEl("span", undefined, (span) => {
 			span.innerText = i18next.t("settings.github.ghToken.desc") ;
 			span.createEl("a", undefined, (link) => {
-				link.innerText = i18next.t("common.here") + "." ;
+				link.innerText = `${i18next.t("common.here")}.` ;
 				link.href =
 					"https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
@@ -240,10 +237,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setValue(decryptedToken)
 					.onChange(async (value) => {
 						if (value.trim().length === 0 ) {
-							tokenSettings.controlEl.querySelector("input")!.style.border = "1px solid red";
+							tokenSettings.controlEl.addClass("error");
 							new Notice(i18next.t("settings.github.ghToken.error"));
 						} else {
-							tokenSettings.controlEl.querySelector("input")!.style.border = "";
+							tokenSettings.controlEl.removeClass("error");
 							await migrateToken(this.plugin, value.trim());
 						}
 						await this.plugin.saveSettings();
@@ -285,11 +282,11 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			);
 
 		new Setting(this.settingsPage)
-			.setClass("github-publisher-no-display")
+			.setClass("no-display")
 			.addButton((button) =>
 				button
 					.setButtonText(i18next.t("settings.github.testConnection"))
-					.setClass("github-publisher-connect-button")
+					.setClass("connect-button")
 					.onClick(async () => {
 						const octokit = await this.plugin.reloadOctokit();
 						this.plugin.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, null,null);
@@ -406,7 +403,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 		const frontmatterKeySettings = new Setting(this.settingsPage)
 			.setName(i18next.t("settings.upload.frontmatterKey.title"))
-			.setClass("github-publisher")
 			.setDesc(i18next.t("settings.upload.frontmatterKey.desc"))
 			.addText((text) => {
 				text.setPlaceholder(i18next.t("settings.upload.frontmatterKey.placeholder"))
@@ -418,7 +414,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 		const rootFolderSettings = new Setting(this.settingsPage)
 			.setName(i18next.t("settings.upload.rootFolder.title"))
-			.setClass("github-publisher")
 			.setDesc(i18next.t("settings.upload.rootFolder.desc"))
 			.addText((text) => {
 				text.setPlaceholder("docs")
@@ -445,7 +440,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setDesc(
 				i18next.t("settings.upload.useFrontmatterTitle.desc") 
 			)
-			.setClass("github-publisher-title")
+			.setClass("title")
 			.addToggle((toggle) => {
 				toggle
 					.setValue(uploadSettings.frontmatterTitle.enable)
@@ -491,7 +486,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				
 		const folderNoteSettings = new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.links.folderNote.title"))
-			.setClass("github-publisher-folderNote")
 			.setDesc(
 				i18next.t("settings.conversion.links.folderNote.desc") 
 			)
@@ -561,7 +555,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.githubWorkflow.excludedFiles.title"))
 				.setDesc(i18next.t("settings.githubWorkflow.excludedFiles.desc"))
-				.setClass("github-publisher-textarea")
 				.addTextArea((textArea) => {
 					textArea
 						.setPlaceholder(
@@ -740,9 +733,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.tags.title"))
 			.setDesc(i18next.t("settings.conversion.tags.desc"))
-			.setClass("github-publisher-textarea")
 			.addTextArea((text) => {
-				text.inputEl.style.width = "50%";
+				text.inputEl.addClass("mid-height");
 				text.setPlaceholder("field_name")
 					.setValue(textSettings.tags.fields.join(","))
 					.onChange(async (value) => {
@@ -756,7 +748,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.tags.exclude.title"))
 			.setDesc(i18next.t("settings.conversion.tags.exclude.desc"))
-			.setClass("github-publisher-textarea")
 			.addTextArea((text) => {
 				text.setPlaceholder("field value")
 					.setValue(
@@ -811,7 +802,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.embed.transferMetaFile.title"))
 			.setDesc(i18next.t("settings.embed.transferMetaFile.desc"))
-			.setClass("github-publisher-textarea")
 			.addTextArea((text) => {
 				text.setPlaceholder("banner")
 					.setValue(
@@ -883,7 +873,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				this.settingsPage.createEl("p", undefined, (el) => {
 					el.createEl("span", {
 						text: i18next.t("settings.embed.bake.variable.desc"),
-						cls: ["github-publisher", "bake"]
+						cls: ["bake"]
 					})
 						.createEl("ul", undefined, (ul) => {
 							ul.createEl("li", undefined, (li) => {
@@ -899,12 +889,11 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 				this.settingsPage.createEl("p", {
 					text: `⚠️ ${i18next.t("settings.embed.bake.warning")}`,
-					cls: ["warning", "github-publisher", "embed"]
+					cls: ["warning", "embed"]
 				});
 
 				new Setting(this.settingsPage)
 					.setName(i18next.t("settings.embed.bake.textBefore.title"))
-					.setClass("github-publisher-textarea")
 					.addTextArea((text) => {
 						text
 							.setValue(embedSettings.bake?.textBefore ?? "")
@@ -916,7 +905,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 				new Setting(this.settingsPage)
 					.setName(i18next.t("settings.embed.bake.textAfter.title"))
-					.setClass("github-publisher-textarea")
 					.addTextArea((text) => {
 						text
 							.setValue(embedSettings.bake?.textAfter ?? "")
@@ -982,7 +970,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.excludedFolder.title"))
 			.setDesc(i18next.t("settings.plugin.excludedFolder.desc"))
-			.setClass("github-publisher-textarea")
 			.addTextArea((textArea) =>
 				textArea
 					.setPlaceholder("_assets, Archive, /^_(.*)/gi")
@@ -1040,7 +1027,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.plugin.copyLink.baselink.title"))
 				.setDesc(i18next.t("settings.plugin.copyLink.baselink.desc"))
-				.setClass("github-publisher")
 				.addText((text) => {
 					text.setPlaceholder("my_blog.com")
 						.setValue(pluginSettings.copyLink.links)
@@ -1054,7 +1040,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				.setDesc(
 					i18next.t("settings.plugin.copyLink.linkPathRemover.desc") 
 				)
-				.setClass("github-publisher")
 				.addText((text) => {
 					text.setPlaceholder("docs")
 						.setValue(pluginSettings.copyLink.removePart.join(", "))

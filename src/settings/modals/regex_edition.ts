@@ -59,6 +59,7 @@ export class ModalRegexFilePathName extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
+		contentEl.addClasses(["github-publisher", "modals", "regex", "file-path-name"]);
 		if (this.settings.upload.behavior === FolderSettings.fixed) {
 			contentEl.createEl("h2", { text: i18next.t("settings.regexReplacing.modal.title.only")});
 		} else {
@@ -83,9 +84,8 @@ export class ModalRegexFilePathName extends Modal {
 
 		for (const title of this.allRegex) {
 			const sett = new Setting(contentEl)
-				.setClass("github-publisher-censor-entry")
+				.setClass("entry")
 				.addText((text) => {
-					text.inputEl.style.width = "100%";
 					text.setPlaceholder(i18next.t("regex.entry"))
 						.setValue(title.regex)
 						.onChange((value) => {
@@ -93,7 +93,6 @@ export class ModalRegexFilePathName extends Modal {
 						});
 				})
 				.addText((text) => {
-					text.inputEl.style.width = "100%";
 					text.setPlaceholder(i18next.t("regex.replace"))
 						.setValue(title.replacement)
 						.onChange((value) => {
@@ -109,13 +108,12 @@ export class ModalRegexFilePathName extends Modal {
 						.setValue(title.type)
 						.onChange((value) => {
 							title.type = value as TypeOfEditRegex;
-
 						});
 				});
 			} else {
 				sett
 					.addButton((button) => {
-						button.buttonEl.classList.add("github-publisher-disabled-button");
+						button.buttonEl.classList.add("disabled");
 						button.setButtonText(i18next.t("common.path.file"));
 					});
 			}
@@ -123,14 +121,12 @@ export class ModalRegexFilePathName extends Modal {
 				button
 					.setIcon("trash")
 					.onClick(() => {
-						//remove replace 
 						this.allRegex.splice(this.allRegex.indexOf(title), 1);
 						this.onOpen();
 					});
 			});
 		}
 		new Setting(contentEl)
-			.setClass("github-publisher-modals")
 			.addButton((button) => {
 				button
 					.setIcon("plus")
@@ -201,9 +197,8 @@ export class ModalRegexOnContents extends Modal {
 			const moment = censorText.after ? i18next.t("common.after").toLowerCase() : i18next.t("common.before").toLowerCase();
 			const desc = i18next.t("settings.regexReplacing.momentReplaceRegex", {moment: moment});
 			new Setting(contentEl)
-				.setClass("github-publisher-censor-entry")
+				.setClass("entry")
 				.addText((text) => {
-					text.inputEl.style.width = "100%";
 					text.setPlaceholder(i18next.t(
 						"regex.entry") 
 					)
@@ -213,7 +208,6 @@ export class ModalRegexOnContents extends Modal {
 						});
 				})
 				.addText((text) => {
-					text.inputEl.style.width="100%";
 					text.setPlaceholder(i18next.t("regex.replace"))
 						.setValue(censorText.replace)
 						.onChange(async (value) => {
