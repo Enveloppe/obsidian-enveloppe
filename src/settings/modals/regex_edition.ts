@@ -183,6 +183,7 @@ export class ModalRegexOnContents extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
+		contentEl.addClasses(["github-publisher", "modals", "regex", "on-contents"]);
 		contentEl
 			.createEl("p", {
 				text: i18next.t("settings.regexReplacing.modal.title.text") ,

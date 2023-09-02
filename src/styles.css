@@ -1,7 +1,7 @@
 /* styles.css */
 
 /* ---------- MODALS REGEX ---------- */
-.github-publisher.modals.regex.file-path-name .setting-item.entry {
+.github-publisher.modals .setting-item.entry {
 	border: 0 !important;
 	padding: 5px !important;
 }
@@ -12,11 +12,11 @@ hr.github-publisher-hr {
 }
 
 
-.github-publisher.modals.regex.file-path-name .setting-item.entry input {
+.github-publisher.modals .setting-item.entry input {
 	width: 100%;
 }
 
-.setting-item.entry .setting-item-info {
+.github-publisher.modals .setting-item.entry .setting-item-info {
 	display: none;
 }
 
