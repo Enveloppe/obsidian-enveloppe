@@ -23,7 +23,7 @@ import {
 } from "./settings/interface";
 import { migrateSettings,OldSettings } from "./settings/migrate";
 import {createTokenPath, logs, notif} from "./utils";
-import {checkRepositoryValidity, verifyRateLimitAPI} from "./utils/data_validation_test";
+import {checkRepositoryValidity, defaultRepo, verifyRateLimitAPI} from "./utils/data_validation_test";
 
 /**
  * Main class of the plugin
@@ -48,7 +48,10 @@ export default class GithubPublisher extends Plugin {
 			this.addCommand(await createLinkCallback(repo, this));
 		}
 		this.addCommand(await shareOneNoteCallback(repo, this, branchName));
-		this.addCommand(await purgeNotesRemoteCallback(this, repo, branchName));
+		if (plugin.settings.upload.autoclean.enable) {
+			logs({settings: this.settings}, "Adding purge command");
+			this.addCommand(await purgeNotesRemoteCallback(this, repo, branchName));
+		}
 		this.addCommand(await uploadAllNotesCallback(this, repo, branchName));
 		this.addCommand(await uploadNewNotesCallback(this, repo, branchName));
 		this.addCommand(await uploadAllEditedNotesCallback(this, repo, branchName));
@@ -64,11 +67,9 @@ export default class GithubPublisher extends Plugin {
 				const publisherCMDsName = command.id.replace("obsidian-mkdocs-publisher:", "").split("-");
 				//repo will be the last element of the array
 				const repoCmd = publisherCMDsName[publisherCMDsName.length - 1];
-				if (repoCmd.startsWith("K")) {
-					if (repo.smartKey === repoCmd.replace("K", "")) {
-						//@ts-ignore
-						this.app.commands.removeCommand(command.id);
-					}
+				if (repoCmd.startsWith("K") && repo.smartKey === repoCmd.replace("K", "")) {
+					//@ts-ignore
+					this.app.commands.removeCommand(command.id);
 				}
 			}
 		}
@@ -80,12 +81,19 @@ export default class GithubPublisher extends Plugin {
 		const allCommands = this.app.commands.listCommands();
 		for (const command of allCommands) {
 			if (command.id.startsWith("obsidian-mkdocs-publisher")) {
-				const publisherCMDsName = command.id.replace("obsidian-mkdocs-publisher:", "").split("-");
+				const commandName = command.id.replace("obsidian-mkdocs-publisher:", "");
 				//repo will be the last element of the array
-				const repoCmd = publisherCMDsName[publisherCMDsName.length - 1];
+				const repoCmd = commandName.split("-")[commandName.split("-").length - 1];
 				if (repoCmd.startsWith("K")) {
 					const repoIndex = allRepo.findIndex((repo) => repo.smartKey === repoCmd.replace("K", ""));
 					if (repoIndex === -1) {
+						//@ts-ignore
+						this.app.commands.removeCommand(command.id);
+					}
+				}
+				if (!this.settings.upload.autoclean.enable) {
+					if (commandName === "publisher-delete-clean") {
+						logs({settings: this.settings}, "Removing purge/clean commands");
 						//@ts-ignore
 						this.app.commands.removeCommand(command.id);
 					}
@@ -169,7 +177,7 @@ export default class GithubPublisher extends Plugin {
 		await i18next.init({
 			lng: translationLanguage,
 			fallbackLng: "en",
-			resources: resources,
+			resources,
 			returnNull: false,
 		});
 		
@@ -251,7 +259,6 @@ export default class GithubPublisher extends Plugin {
 
 	/**
 	 * Get the settings of the plugin
-	 * @return {Promise<void>}
 	 */
 	async loadSettings() {
 		this.settings = Object.assign(
@@ -263,7 +270,6 @@ export default class GithubPublisher extends Plugin {
 
 	/**
 	 * Save the settings of the plugin
-	 * @return {Promise<void>}
 	 */
 	async saveSettings() {
 		await this.saveData(this.settings);

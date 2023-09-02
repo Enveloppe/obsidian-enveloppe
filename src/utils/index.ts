@@ -432,9 +432,9 @@ export function getRepoFrontmatter(
 	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"]!=="default") {
 		const smartKey = frontmatter.shortRepo.toLowerCase();
 		const allOtherRepo = settings.github.otherRepo;
-		const shortRepo = allOtherRepo.filter((repo) => {
+		const shortRepo = allOtherRepo.find((repo) => {
 			return repo.smartKey.toLowerCase() === smartKey;
-		})[0];
+		});
 		github = shortRepo ?? github;
 	}
 	let repoFrontmatter: RepoFrontmatter = {

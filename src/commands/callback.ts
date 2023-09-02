@@ -8,8 +8,8 @@ import i18next from "i18next";
 import {Command, Notice } from "obsidian";
 
 import GithubPublisher from "../main";
-import {FolderSettings, MonoRepoProperties, MultiRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
-import {createLink, getRepoFrontmatter} from "../utils";
+import {MonoRepoProperties, MultiRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
+import {createLink, getRepoFrontmatter, logs} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
 import {purgeNotesRemote, shareOneNote} from "./commands";
 import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} from "./plugin_commands";
@@ -75,24 +75,19 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 		name,
 		hotkeys: [],
 		//@ts-ignore
-		checkCallback: async (checking) => {
-			if (plugin.settings.upload.autoclean.enable && plugin.settings.upload.behavior !== FolderSettings.fixed) {
-				if (!checking) {
-					const monoRepo: MonoRepoProperties = {
-						frontmatter: getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
-						repo: repo,
-					};
-					//@ts-ignore
-					const publisher = await plugin.reloadOctokit();
-					purgeNotesRemote(
-						publisher,
-						branchName,
-						monoRepo
-					);
-				}
-				return true;
-			}
-			return false;
+		callback: async () => {
+			logs({settings: plugin.settings}, "Enabling purge command");
+			const monoRepo: MonoRepoProperties = {
+				frontmatter: getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
+				repo: repo,
+			};
+			//@ts-ignore
+			const publisher = await plugin.reloadOctokit();
+			await purgeNotesRemote(
+				publisher,
+				branchName,
+				monoRepo
+			);
 		},
 	} as Command;
 }

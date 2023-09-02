@@ -549,6 +549,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						uploadSettings.autoclean.enable = value;
 						await this.plugin.saveSettings();
 						this.renderSettingsPage(EnumbSettingsTabId.upload);
+						this.plugin.cleanOldCommands();
+						await this.plugin.chargeAllCommands(null, this.plugin, this.branchName);
 					});
 			});
 		if (uploadSettings.autoclean.enable && !condition) {
