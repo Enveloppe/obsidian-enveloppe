@@ -152,8 +152,8 @@ export async function getSettingsOfMetadataExtractor(
 
 /**
  * Check if the link has a slash at the end and if not add it
- * @param {string} link: string
  * @returns {string} string with the link with a slash at the end
+ * @param link {string} the link to check
  */
 
 function checkSlash(link: string): string {
@@ -257,7 +257,7 @@ async function publisherNotificationOneRepo(
 ): Promise<void> {
 	const noticeValue =
 		file instanceof TFile ? `"${file.basename}"` : file;
-	let successMsg = "";
+	let successMsg: string;
 	if (file instanceof String) {
 		successMsg = i18next.t("informations.successfulPublish", { nbNotes: noticeValue, repo: repo });
 	} else {
