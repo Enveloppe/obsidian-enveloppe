@@ -1,6 +1,6 @@
 import {Octokit} from "@octokit/core";
 import i18next from "i18next";
-import {FrontMatterCache, Menu, Plugin, TFile, TFolder} from "obsidian";
+import {FrontMatterCache, Menu, Plugin, TAbstractFile, TFile, TFolder} from "obsidian";
 
 import {
 	checkRepositoryValidityCallback,
@@ -23,7 +23,7 @@ import {
 } from "./settings/interface";
 import { migrateSettings,OldSettings } from "./settings/migrate";
 import {createTokenPath, logs, notif} from "./utils";
-import {checkRepositoryValidity, defaultRepo, verifyRateLimitAPI} from "./utils/data_validation_test";
+import {checkRepositoryValidity, verifyRateLimitAPI} from "./utils/data_validation_test";
 
 /**
  * Main class of the plugin
@@ -200,18 +200,14 @@ export default class GithubPublisher extends Plugin {
 			this.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.settings, false);
 			await this.saveSettings();
 		}
-		this.registerEvent(
-			//@ts-ignore
-			this.app.workspace.on("file-menu", (menu: Menu, file: TFile) => {
-				addMenuFile(this, file, branchName, menu);
-			})
-		);
 
 		this.registerEvent(
 			//@ts-ignore
-			this.app.workspace.on("file-menu", (menu: Menu, folder: TFolder) => {
+			this.app.workspace.on("file-menu", (menu: Menu, folder: TAbstractFile) => {
 				if (this.settings.plugin.fileMenu && folder instanceof TFolder) {
 					addMenuFolder(menu, folder, branchName, this);
+				} else if (folder instanceof TFile) {
+					addMenuFile(this, folder, branchName, menu);
 				}
 			})
 		);
