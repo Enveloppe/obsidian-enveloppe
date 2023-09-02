@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.3...6.5.4) (2023-09-02)
+
+
+### Bug Fixes
+
+* **autoclean:** fix the autoclean **command** not disabled if the option is disabled ([a30758d](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a30758d1d5b225d14b2842ce1dab1a67cb77ef3a))
+
 ## [6.5.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.2...6.5.3) (2023-09-01)
 
 ## [6.5.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.1...6.5.2) (2023-08-30)
