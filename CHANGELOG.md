@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.4...6.5.5) (2023-09-02)
+
+
+### Bug Fixes
+
+* **style:** wrong style for regex text content ([2863e0b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2863e0b2ce4bfc84f65ae9054eb07a9e34244432))
+
 ## [6.5.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.3...6.5.4) (2023-09-02)
 
 
