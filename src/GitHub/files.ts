@@ -150,7 +150,7 @@ export class FilesManagement extends Publisher {
 							 * In case there's a frontmatter configuration, pass along
 							 * `filename` so we can later use that to convert wikilinks.
 							 */
-							if (frontmatter && frontmatter[this.settings.upload.frontmatterTitle.key]) {
+							if (frontmatter?.[this.settings.upload.frontmatterTitle.key]) {
 								frontmatterDestinationFilePath = frontmatter[this.settings.upload.frontmatterTitle.key];
 								if (altText === imageLink.basename) {
 									altText = frontmatterDestinationFilePath;
@@ -445,7 +445,7 @@ export class FilesManagement extends Publisher {
 		frontmatterSettings: FrontmatterConvert
 	): Promise<TFile[]> {
 		for (const field of this.settings.embed.keySendFile) {
-			if (frontmatterSourceFile&&frontmatterSourceFile[field] != undefined) {
+			if (frontmatterSourceFile?.[field]) {
 				const imageLinkPath = frontmatterSourceFile[field] instanceof Array ? frontmatterSourceFile[field] : [frontmatterSourceFile[field]];
 				for (const path of imageLinkPath) {
 					const pathToCheck = path.replace(/\[{2}(.*)\]{2}/, "$1");
@@ -461,12 +461,13 @@ export class FilesManagement extends Publisher {
 				}
 			}
 		}
+		embedFiles = [...new Set(embedFiles)].filter((x) => x != null);
 		// @ts-ignore
 		if (this.plugin.app.plugins.enabledPlugins.has("dataview")) {
 			const dvApi = getAPI();
-			if (!dvApi) return [...new Set(embedFiles)].filter((x) => x != null);
+			if (!dvApi) return embedFiles;
 			const dataviewMetadata = dvApi.page(file.path);
-			if (!dataviewMetadata) return [...new Set(embedFiles)].filter((x) => x != null);
+			if (!dataviewMetadata) return embedFiles;
 			for (const field of this.settings.embed.keySendFile) {
 				const fieldValue = dataviewMetadata[field];
 				if (fieldValue != undefined) {
