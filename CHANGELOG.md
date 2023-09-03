@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.5...6.5.6) (2023-09-03)
+
+
+### Bug Fixes
+
+* **property:** allow list with file link to be used as property value ([618d4e9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/618d4e942573ade82de7beb73f23ee5eca97f0ba))
+
 ## [6.5.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.4...6.5.5) (2023-09-02)
 
 
