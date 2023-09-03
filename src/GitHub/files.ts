@@ -378,14 +378,14 @@ export class FilesManagement extends Publisher {
 
 	/**
 	 * Get the filepath of a file shared in a dataview field and return the file if it exists in the vault
-	 * @param {Link | string} path
+	 * @param {Link | string} source
 	 * @param {Link | string} field
 	 * @param {FrontmatterConvert} frontmatterSourceFile
 	 * @return {TFile}
 	 */
 
 	getImageByPath(
-		path: Link | string,
+		source: Link | string,
 		field: Link | string,
 		frontmatterSourceFile: FrontmatterConvert
 	): TFile | undefined {
@@ -393,12 +393,12 @@ export class FilesManagement extends Publisher {
 			// @ts-ignore
 			field = field.path;
 		}
-		if (path.constructor.name === "Link") {
+		if (source.constructor.name === "Link") {
 			// @ts-ignore
-			path = path.path;
+			source = source.path;
 		}
 		// @ts-ignore
-		const imageLink = this.metadataCache.getFirstLinkpathDest(field, path);
+		const imageLink = this.metadataCache.getFirstLinkpathDest(field, source);
 		if (imageLink) {
 			return this.imageSharedOrNote(imageLink as TFile, frontmatterSourceFile) as TFile;
 		}
@@ -446,39 +446,42 @@ export class FilesManagement extends Publisher {
 	): Promise<TFile[]> {
 		for (const field of this.settings.embed.keySendFile) {
 			if (frontmatterSourceFile&&frontmatterSourceFile[field] != undefined) {
-				const imageLink = this.metadataCache.getFirstLinkpathDest(
-					frontmatterSourceFile[field],
-					file.path
-				) ?? this.vault.getAbstractFileByPath(frontmatterSourceFile[field]);
-				if (imageLink !== null) {
-					embedFiles.push(
+				const imageLinkPath = frontmatterSourceFile[field] instanceof Array ? frontmatterSourceFile[field] : [frontmatterSourceFile[field]];
+				for (const path of imageLinkPath) {
+					const pathToCheck = path.replace(/\[{2}(.*)\]{2}/, "$1");
+					const imageLink = this.metadataCache.getFirstLinkpathDest(
+						pathToCheck,
+						file.path
+					) ?? this.vault.getAbstractFileByPath(pathToCheck);
+					if (imageLink !== null) {
+						embedFiles.push(
 						this.imageSharedOrNote(file, frontmatterSettings) as TFile
-					);
+						);
+					}
 				}
 			}
 		}
 		// @ts-ignore
 		if (this.plugin.app.plugins.enabledPlugins.has("dataview")) {
 			const dvApi = getAPI();
-			if (!dvApi) return embedFiles;
-			const dataviewMetadata = await dvApi.page(file.path);
-			if (!dataviewMetadata) return embedFiles;
+			if (!dvApi) return [...new Set(embedFiles)].filter((x) => x != null);
+			const dataviewMetadata = dvApi.page(file.path);
+			if (!dataviewMetadata) return [...new Set(embedFiles)].filter((x) => x != null);
 			for (const field of this.settings.embed.keySendFile) {
 				const fieldValue = dataviewMetadata[field];
-
 				if (fieldValue != undefined) {
 					if (fieldValue.constructor.name === "Array") {
 						for (const value of fieldValue) {
 							const path = this.getImageByPath(
+								file.path,
 								value,
-								fieldValue,
 								frontmatterSettings
 							);
 							if (path) embedFiles.push(path);
 						}
 					} else {
 						const path = this.getImageByPath(
-							fieldValue,
+							file.path,
 							fieldValue,
 							frontmatterSettings
 						);
