@@ -169,7 +169,7 @@ export class FilesManagement extends Publisher {
 							}
 						};
 						if (image.link.includes("#")) {
-							thisLinkedFile.anchor = "#" + image.link.split("#")[1];
+							thisLinkedFile.anchor = `#${image.link.split("#")[1]}`;
 						}
 						linkedFiles.push(thisLinkedFile);
 					}
