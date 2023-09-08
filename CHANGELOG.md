@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.6...6.5.7) (2023-09-08)
+
+
+### Bug Fixes
+
+* **menu:** fix menu not apparing on mobile ([fc438cc](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/fc438cc243e504c66d1ffb2c219dffd75b784e51))
+
 ## [6.5.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.5...6.5.6) (2023-09-03)
 
 
