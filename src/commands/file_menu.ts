@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { Menu, MenuItem, TFile, TFolder} from "obsidian";
+import { Menu, MenuItem, Platform, TFile, TFolder} from "obsidian";
 
 import GithubPublisher from "../main";
 import {MonoRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
@@ -34,15 +34,17 @@ export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, 
 
 /**
  * Create a submenu if multiple repository are set up
+ * If Platform is Desktop, create a submenu
+ * If not, add the command to the original menu, in line
  * @param {GithubPublisher} plugin - The plugin instance
  * @param {MenuItem} item - The item to add the submenu to
  * @param {TFolder} folder - The folder to share
  * @param {string} branchName - The branch name for the repository
  * @return {Menu} - The submenu created
  */
-export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem, folder: TFolder, branchName: string): Menu {
+export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem, folder: TFolder, branchName: string, originalMenu: Menu): Menu {
 	//@ts-ignore
-	const subMenu = item.setSubmenu() as Menu;
+	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
 	subMenu.addItem((subItem) => {
 		subItem
 			.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
@@ -103,19 +105,26 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 		const repoFrontmatter = getRepoFrontmatter(plugin.settings, getSharedKey, frontmatter);
 		menu.addItem((item) => {
 			/**
-			 * Create a submenu if multiple repo exists in the settings
+			 * Create a submenu if multiple repo exists in the settings & platform is desktop
 			 */
 
 			if (allKeysFromFile.length > 1 || (repoFrontmatter instanceof Array && repoFrontmatter.length > 1)) {
-				item
-					.setTitle("Github Publisher")
-					.setIcon("upload-cloud");
+				if (Platform.isDesktop) {
+					item
+						.setTitle("Github Publisher")
+						.setIcon("upload-cloud");
+				} else {
+					//add the line to separate the commands
+					menu.addSeparator();
+					item.setIsLabel(true);
+				}
 				subMenuCommandsFile(
 					plugin,
 					item,
 					file,
 					branchName,
-					getSharedKey
+					getSharedKey,
+					menu
 				);
 				return;
 			}
@@ -149,6 +158,8 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 
 /**
  * Create a subMenu if multiple repository are set up
+ * If Platform is Desktop, create a submenu
+ * If not, add the command to the original menu, in line
  * @param {GithubPublisher} plugin - The plugin instance
  * @param {MenuItem} item - The item to add the submenu to
  * @param {TFile} file - The file to share
@@ -156,11 +167,11 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
  * @param {Repository} repo - The data repository found in the file
  * @return {Menu} - The submenu created
  */
-export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository | null): Menu {
+export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository | null, originalMenu: Menu): Menu {
 	const frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	//@ts-ignore
-	const subMenu = item.setSubmenu() as Menu;
+	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
 	let repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, frontmatter);
 	repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
 	/**
@@ -266,13 +277,20 @@ export async function addMenuFolder(menu: Menu, folder: TFolder, branchName: str
 		*/
 		const areTheyMultipleRepo = plugin.settings.github?.otherRepo?.length > 0;
 		if (areTheyMultipleRepo) {
-			item.setTitle("Github Publisher");
-			item.setIcon("upload-cloud");
+			if (Platform.isDesktop) {
+				item.setTitle("Github Publisher");
+				item.setIcon("upload-cloud");
+			} else {
+				//add the line to separate the commands
+				menu.addSeparator();
+				item.setIsLabel(true);
+			}
 			addSubMenuCommandsFolder(
 				plugin,
 				item,
 				folder,
-				branchName
+				branchName,
+				menu
 			);
 			return;
 		}
