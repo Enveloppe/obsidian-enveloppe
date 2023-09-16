@@ -1,7 +1,7 @@
 {
     "id": "obsidian-mkdocs-publisher",
     "name": "Github Publisher",
-    "version": "6.5.7",
+    "version": "6.5.8",
     "minAppVersion": "0.15.4",
     "description": "Github Publisher helps you to publish your notes on a preconfigured GitHub repository, for free, and more!",
     "author": "Mara-Li",

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.7...6.5.8) (2023-09-16)
+
+
+### Bug Fixes
+
+* **locales:** fix wrong branch name showing ([bb9f196](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/bb9f19639dbac51a064ae175cd6d173aaf8549af))
+
 ## [6.5.7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.6...6.5.7) (2023-09-08)
 
 
