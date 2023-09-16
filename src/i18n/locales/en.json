@@ -2,8 +2,8 @@
   "commands": {
     "checkValidity": {
       "inBranch": {
-        "error403": "Error 403: {{- repo.owner}}/{{- repo.repo}} was moved permanently (from {{- branchInfo}}).",
-        "error404": "Error 404: The branch {{- branchInfo}} was not found in {{- repo.owner}}/{{- repo.repo}}."
+        "error403": "Error 403: {{- repo.owner}}/{{- repo.repo}} was moved permanently (from {{- repo.branch}}).",
+        "error404": "Error 404: The branch {{- repo.branch}} was not found in {{- repo.owner}}/{{- repo.repo}}."
       },
       "inRepo": {
         "error301": "Error 301: {{- repo.owner}}/{{- repo.repo}}  was moved permanently.",
@@ -15,7 +15,7 @@
         "limited": "You have reached the rate limit of the GitHub API. The limit will be reset at {{- resetTime}}.",
         "notLimited": "You are not rate limited. You can make {{- remaining}} requests before the limit is reset at {{- resetTime}}."
       },
-      "repoExistsTestBranch": "Repository {{- repo.owner}}/{{- repo.repo}} exists. Now testing the {{- main}} branch.",
+      "repoExistsTestBranch": "Repository {{- repo.owner}}/{{- repo.repo}} exists. Now testing the {{- repo.branch}} branch.",
       "success": "{{- repo.owner}}/{{- repo.repo}} seems to be valid!",
       "title": "Test the connection to the configured repository"
     },
