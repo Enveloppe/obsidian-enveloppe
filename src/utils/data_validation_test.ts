@@ -8,9 +8,10 @@ import {FrontmatterConvert, GitHubPublisherSettings, MultiProperties, RepoFrontm
 import {getRepoFrontmatter, logs, notif} from ".";
 
 /**
- * Check if the file is a valid file to publish
- * Check also the path from the excluded folder list
- * Always return false if the internalNonShared is not enabled
+ * - Check if the file is a valid file to publish
+ * -  Check also the path from the excluded folder list
+ * - Always return false if the internalNonShared is not enabled
+ * - Return true for all files that are not shared, unless they are striclty excluded (share: false or folder excluded)
  * @param {FrontMatterCache} frontmatter
  * @param {MultiProperties} properties
  * @param {TFile} file (for the excluded file name & filepath)
@@ -22,9 +23,10 @@ export function isInternalShared(
 	file: TFile,
 ): boolean {
 	const frontmatterSettings = properties.frontmatter.general;
-	
+
 	if (!frontmatterSettings.convertInternalNonShared) return false;
-	if (properties.repository?.shareAll?.enable) {
+	if (properties.repository?.shareAll?.enable)
+	{
 		const excludedFileName = properties.repository.shareAll.excludedFileName;
 		return !file.basename.startsWith(excludedFileName);
 	}
@@ -32,7 +34,7 @@ export function isInternalShared(
 	if (isExcludedPath(properties.settings, file)) return false;
 	const shareKey = properties.repository?.shareKey || properties.settings.plugin.shareKey;
 	if (frontmatter[shareKey] === undefined) return true;
-	return frontmatter[shareKey];
+	return ["true", "1", "yes"].includes(frontmatter[shareKey].toString().toLowerCase());
 }
 
 export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache): Repository | null{
@@ -51,7 +53,9 @@ export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?
 }
 
 /**
- * Disable publishing if the file hasn't a valid frontmatter or if the file is in the folder list to ignore
+ * - Disable publishing if the file hasn't a valid frontmatter or if the file is in the folder list to ignore
+ * - Check if the file is in the excluded file list
+ * - Verify for all Repository if the file is shared
  * @param {FrontMatterCache} meta the frontmatter of the file
  * @param {GitHubPublisherSettings} settings
  * @param {TFile} file
@@ -73,7 +77,9 @@ export function isShared(
 		const shareKey = otherRepo ? otherRepo.shareKey : settings.plugin.shareKey;
 		if ( meta == null || meta[shareKey] === undefined || isExcludedPath(settings, file)) {
 			return false;
-		} return meta[shareKey];
+		}
+		const shareKeyInFrontmatter = meta[shareKey].toString().toLowerCase();
+		return ["true", "1", "yes"].includes(shareKeyInFrontmatter);
 	} else if (settings.plugin.shareAll?.enable || otherRepoWithShareAll.length > 0) {
 		const allExcludedFileName = otherRepoWithShareAll.map((repo) => repo.shareAll!.excludedFileName);
 		allExcludedFileName.push(settings.plugin.shareAll!.excludedFileName);
@@ -109,7 +115,7 @@ export function multipleSharedKey(frontmatter: FrontMatterCache | undefined, set
 	const keysInFile: string[] = [];
 	if (settings.plugin.shareAll?.enable)
 		keysInFile.push("share"); //add a key to count the shareAll
-	
+
 	const otherRepoWithShareAll = settings.github.otherRepo.filter((repo) => repo.shareAll);
 	if (otherRepoWithShareAll.length > 0) {
 		for (const repo of otherRepoWithShareAll) {
@@ -119,7 +125,7 @@ export function multipleSharedKey(frontmatter: FrontMatterCache | undefined, set
 	if (!frontmatter) return keysInFile;
 	const allKey = settings.github.otherRepo.map((repo) => repo.shareKey);
 	allKey.push(settings.plugin.shareKey);
-	
+
 	for (const key of allKey) {
 		if (frontmatter[key]) {
 			keysInFile.push(key);
