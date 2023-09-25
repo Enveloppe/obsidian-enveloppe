@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.5.9](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.8...6.5.9) (2023-09-25)
+
+
+### Bug Fixes
+
+* support string in shareKey ([1fe71c5](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1fe71c5c9da0a7565f61d5824ab53ee00ba8da4e)), closes [#225](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/225)
+
 ## [6.5.8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.7...6.5.8) (2023-09-16)
 
 
