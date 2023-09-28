@@ -231,6 +231,10 @@
         "title": "Dossier de pièces-jointes par défaut"
       },
       "forcePush": {
+        "desc": "Les extensions suivantes seront toujours publiées, quelque soit la dernière date d'envoi.",
+        "info": "Par défaut, les pièces-jointes ne sont envoyés que si elles ont été modifiées depuis leur dernier envoi, ou si elles n'existent pas dans le dépôt.",
+        "separateByComma": "Séparer les extensions par des virgules.",
+        "title": "Forcer l'envoie des pièces-jointes"
       },
       "links": {
         "desc": "Permet d'éditer les liens des embeds, en supprimant entièrement la citation, ou en la transformant en un simple lien.",

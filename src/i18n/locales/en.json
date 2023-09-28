@@ -231,6 +231,10 @@
         "title": "Default attachment folder"
       },
       "forcePush": {
+        "desc": "The following extensions will always be published, regardless of the last sending date.",
+        "info": "By default, attachments are only sent if they have been modified since they were last sent, or if they do not exist in the repository.",
+        "separateByComma": "Separate extensions with commas.",
+        "title": "Force attachments to be sent"
       },
       "links": {
         "desc": "Allow to edit the links of the embeds, removing entirely the citation, or transform to a simple link",

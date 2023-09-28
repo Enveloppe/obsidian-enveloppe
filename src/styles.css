@@ -124,6 +124,10 @@ a.github-publisher-download:hover {
 	height: 100px;
 }
 
+.github-publisher .mini textarea {
+	height: 50px;
+}
+
 .github-publisher .border-bottom {
 	border-bottom: 1px solid var(--background-modifier-border);
 	padding-bottom: 10px;

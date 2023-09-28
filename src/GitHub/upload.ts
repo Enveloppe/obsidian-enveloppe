@@ -34,6 +34,7 @@ import {
 import {
 	checkEmptyConfiguration,
 	checkIfRepoIsInAnother,
+	forcePushAttachment,
 	isAttachment,
 	isShared,
 } from "../utils/data_validation_test";
@@ -292,6 +293,11 @@ export default class Publisher {
 		autoclean: boolean,
 		properties: MonoProperties,
 	) {
+		const load = this.plugin.addStatusBarItem();
+		//add a little load icon from lucide icons, using SVG
+		load.createEl("span", { cls: ["obsidian-publisher", "loading", "icons"] }).innerHTML = LOADING_ICON;
+		load.createEl("span", { text: i18next.t("statusBar.loading"), cls: ["obsidian-publisher", "loading", "icons"] });
+		embedFiles = await this.cleanLinkedImageIfAlreadyInRepo(embedFiles, properties);
 		const repo = properties.frontmatter.repo;
 		notif(
 			{ settings: this.settings },
@@ -302,6 +308,7 @@ export default class Publisher {
 			deleted: [],
 			undeleted: [],
 		};
+		load.remove();
 		const uploaded: UploadedFiles | undefined = await this.uploadText(text, path, file.name, branchName, repo);
 		if (!uploaded) {
 			return {
@@ -310,13 +317,7 @@ export default class Publisher {
 				error: [`Error while uploading ${file.name} to ${repo.owner}/${repo.repo}/${repo.branch}`]
 			};
 		}
-		const load = this.plugin.addStatusBarItem();
-		//add a little load icon from lucide icons, using SVG
-		load.createEl("span",{cls: ["obsidian-publisher", "loading", "icons"]}).innerHTML = LOADING_ICON;
-		load.createEl("span", { text: i18next.t("statusBar.loading"), cls: ["obsidian-publisher", "loading", "icons"] });
 
-		embedFiles = await this.cleanLinkedImageIfAlreadyInRepo(embedFiles, properties);
-		load.remove();
 		logs({ settings: this.settings }, `length: ${embedFiles.length}`, embedFiles);
 
 		const embeded = await this.statusBarForEmbed(
@@ -581,6 +582,10 @@ export default class Publisher {
 				);
 				const repoFrontmatter = properties.frontmatter;
 				try {
+					if (forcePushAttachment(file, this.settings)) {
+						newLinkedFiles.push(file);
+						continue;
+					}
 					const {status, data } = await this.octokit.request(
 						"GET /repos/{owner}/{repo}/commits",
 						{

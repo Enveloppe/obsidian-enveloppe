@@ -112,6 +112,7 @@ export interface GitHubPublisherSettings {
 	}
 	embed: {
 		attachments: boolean;
+		forcePushAttachments: string[];
 		keySendFile: string[];
 		notes: boolean;
 		folder: string;
@@ -260,6 +261,7 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 	},
 	embed: {
 		attachments: true,
+		forcePushAttachments: [],
 		keySendFile: [],
 		notes: false,
 		folder: "",
