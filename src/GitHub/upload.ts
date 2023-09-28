@@ -133,18 +133,18 @@ export default class Publisher {
 							statusBar.increment();
 						} catch (e) {
 							new Notice(
-								(i18next.t("error.unablePublishNote", {file: file.name})
+								(i18next.t("error.unablePublishNote", { file: file.name })
 								)
 							);
 							fileError.push(file.name);
-							logs({settings: this.settings, e: true}, e);
+							logs({ settings: this.settings, e: true }, e);
 						}
 					}
 					statusBar.finish(8000);
 				} catch (e) {
-					logs({settings: this.settings, e: true}, e);
+					logs({ settings: this.settings, e: true }, e);
 					new Notice(
-						(i18next.t("error.errorPublish", {repo: repoFrontmatter}))
+						(i18next.t("error.errorPublish", { repo: repoFrontmatter }))
 					);
 					statusBar.error();
 				}
@@ -226,7 +226,7 @@ export default class Publisher {
 			return false;
 		}
 		try {
-			logs({settings: this.settings}, `Publishing file: ${file.path}`);
+			logs({ settings: this.settings }, `Publishing file: ${file.path}`);
 			fileHistory.push(file);
 			const frontmatterSettings = getFrontmatterSettings(
 				frontmatter,
@@ -246,7 +246,7 @@ export default class Publisher {
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
 			let text = await this.vault.cachedRead(file);
 			const multiProperties: MultiProperties = {
-				settings: this.settings,			
+				settings: this.settings,
 				frontmatter: {
 					general: frontmatterSettings,
 					repo: repo.frontmatter,
@@ -263,7 +263,7 @@ export default class Publisher {
 				multiRepMsg += `[${repo.owner}/${repo.repo}/${repo.branch}] `;
 			}
 			const msg = `Publishing ${file.name} to ${multiRepMsg}`;
-			logs({settings: this.settings}, msg);
+			logs({ settings: this.settings }, msg);
 			const fileDeleted: Deleted[] = [];
 			const updated: UploadedFiles[][] = [];
 			const fileError: string[] = [];
@@ -276,7 +276,7 @@ export default class Publisher {
 					},
 					repository: multiProperties.repository
 				};
-				const deleted = 
+				const deleted =
 					await this.uploadOnMultipleRepo(
 						file,
 						text,
@@ -294,9 +294,9 @@ export default class Publisher {
 				updated.push(deleted.uploaded);
 				fileError.push(...deleted.error);
 			}
-			return {deleted: fileDeleted[0], uploaded: updated[0], error: fileError};
+			return { deleted: fileDeleted[0], uploaded: updated[0], error: fileError };
 		} catch (e) {
-			logs({settings: this.settings, e: true}, e);
+			logs({ settings: this.settings, e: true }, e);
 			return false;
 		}
 	}
@@ -329,7 +329,7 @@ export default class Publisher {
 	) {
 		const repo = properties.frontmatter.repo;
 		notif(
-			{settings: this.settings},
+			{ settings: this.settings },
 			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${branchName}`
 		);
 		let deleted: Deleted = {
@@ -438,7 +438,7 @@ export default class Publisher {
 			}
 		} catch {
 			notif(
-				{settings: this.settings},
+				{ settings: this.settings },
 				i18next.t("error.normal")
 			);
 		}
@@ -467,7 +467,29 @@ export default class Publisher {
 			this.settings,
 			properties.frontmatter.general
 		);
-		return await this.upload(image64, path, "", branchName, properties.frontmatter.repo);
+		/** check if the file already exists BEFORE uploading it */
+		const repoFrontmatter = properties.frontmatter.repo;
+		const uploaded: UploadedFiles = {
+			isUpdated: false,
+			file: imageFile.name
+		};
+		try {
+			const { status } = await this.octokit.request(
+				"GET /repos/{owner}/{repo}/contents/{path}",
+				{
+					owner: repoFrontmatter.owner,
+					repo: repoFrontmatter.repo,
+					path,
+				});
+			if (status === 200) {
+				notif({ settings: this.settings }, i18next.t("error.alreadyExists", { file: imageFile.name }));
+				return uploaded;
+			}
+		} catch (e) {
+			// if the file doesn't exist, it's normal
+			return await this.upload(image64, path, "", branchName, properties.frontmatter.repo);
+		}
+		return uploaded;
 	}
 
 	/**
@@ -497,7 +519,7 @@ export default class Publisher {
 				repoFrontmatter
 			);
 		} catch (e) {
-			notif({settings: this.settings, e: true}, e);
+			notif({ settings: this.settings, e: true }, e);
 			return undefined;
 		}
 	}

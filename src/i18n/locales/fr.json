@@ -79,6 +79,7 @@
     "success": "Suppression réussie de {{- nb}} fichiers."
   },
   "error": {
+    "alreadyExists": "{{- file}} existe déjà.",
     "autoClean": "Le {{- what}} étant vide, l'auto-nettoyage est désactivée.",
     "dataview": "Impossible de convertir la requête Dataview. Veuillez mettre à jour le module Dataview à la dernière version;",
     "errorConfig": "Erreur de configuration pour {{- repo.owner}}/{{- repo.repo}}:{{- repo.branch}}. Merci de vérifier vos paramètres.",

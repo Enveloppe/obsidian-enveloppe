@@ -79,6 +79,7 @@
     "success": "Successfully deleted {{- nb}} files."
   },
   "error": {
+    "alreadyExists": "{{- file}} already exists.",
     "autoClean": "Since {{- what}} is empty, auto-cleaning is disabled.",
     "dataview": "Unable to render dataview query. Please update the dataview plugin to the last version.",
     "errorConfig": "Error configuring {{- repo.owner}}/{{- repo.repo}}. Please check your settings.",
