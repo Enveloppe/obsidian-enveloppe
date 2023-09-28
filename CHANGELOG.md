@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.6.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.9...6.6.0) (2023-09-28)
+
+
+### Features
+
+* optimize publishing image ([5751dfe](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5751dfea10ae92de5792dce2453edcd72544eb4a))
+* **style:** new icons & message for statusbar ! ([2a57d58](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2a57d58d15a82198c51b0fb2181fca5a72ef760d))
+
+
+### Bug Fixes
+
+* forgot to remove comments for texting icon style ([35e22ea](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/35e22eaad1abc969f09deb7b98c7ac6d6365c6d1))
+
 ## [6.5.9](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.8...6.5.9) (2023-09-25)
 
 
