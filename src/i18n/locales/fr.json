@@ -44,7 +44,7 @@
   "common": {
     "add": "Ajouter {{- things}}",
     "after": "Après",
-    "attachments": "pièces-jointes",
+    "attachments": "Pièces-jointes",
     "before": "Avant",
     "cancel": "Annuler",
     "close": "Fermer",
@@ -53,7 +53,7 @@
     "delete": "Supprimer {{- things}}",
     "edit": "Éditer {{- things}}",
     "error": "Erreur",
-    "files": "fichiers",
+    "files": "Fichiers",
     "ghToken": "Token GitHub",
     "here": "ici",
     "or": "ou",
@@ -67,7 +67,7 @@
     "repository": "Dépôt",
     "rootFolder": "dossier racine",
     "save": "Sauvegarder",
-    "shared": "partagés",
+    "shared": "partagées",
     "text": "texte",
     "warning": "Attention"
   },
@@ -509,8 +509,9 @@
   },
   "statusBar": {
     "counter": "{{- msg}} : {{- counter}}/{{- nb}}",
+    "loading": "Chargement en cours...",
     "markedForSharing": "{{- nb}} {{- type}} à partager",
-    "sharing": "⌛Partage de {{- type}}",
-    "success": "✅{{- action}} {{- type}}"
+    "sharing": "Partage de {{- type}}",
+    "success": "{{- type}} {{- action}}"
   }
 }

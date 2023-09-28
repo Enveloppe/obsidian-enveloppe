@@ -8,6 +8,7 @@ import {
 	TFile,
 	Vault,
 } from "obsidian";
+import { LOADING_ICON } from "src/utils/icons";
 
 import { mainConverting } from "../conversion/convert_text";
 import {
@@ -86,103 +87,66 @@ export default class Publisher {
 		const uploadedFile: UploadedFiles[] = [];
 		const fileError: string[] = [];
 		if (linkedFiles.length > 0) {
-			if (linkedFiles.length > 1) {
-				const statusBarItems = this.plugin.addStatusBarItem();
-				const statusBar = new ShareStatusBar(
-					statusBarItems,
-					linkedFiles.length,
-					true
-				);
-				const repoFrontmatter = properties.frontmatter.repo;
-				const repoProperties: MonoRepoProperties = {
-					frontmatter: properties.frontmatter.repo,
-					repo: properties.repository,
-				};
-				try {
-					for (const file of linkedFiles) {
-						try {
-							if (!fileHistory.includes(file)) {
-								if (file.extension === "md" && deepScan) {
-									const published = await this.publish(
-										file,
-										false,
-										branchName,
-										repoProperties,
-										fileHistory,
-										true
-									);
-									if (published) {
-										uploadedFile.push(...published.uploaded);
-									}
-								} else if (
-									isAttachment(file.extension) &&
-									properties.frontmatter.general.attachment
-								) {
-									const published = await this.uploadImage(
-										file,
-										branchName,
-										properties
-									);
-									fileHistory.push(file);
-									if (published) {
-										uploadedFile.push(published);
-									}
-
+			const statusBarItems = this.plugin.addStatusBarItem();
+			const statusBar = new ShareStatusBar(
+				statusBarItems,
+				linkedFiles.length,
+				true
+			);
+			const repoFrontmatter = properties.frontmatter.repo;
+			const repoProperties: MonoRepoProperties = {
+				frontmatter: properties.frontmatter.repo,
+				repo: properties.repository,
+			};
+			try {
+				for (const file of linkedFiles) {
+					try {
+						if (!fileHistory.includes(file)) {
+							if (file.extension === "md" && deepScan) {
+								const published = await this.publish(
+									file,
+									false,
+									branchName,
+									repoProperties,
+									fileHistory,
+									true
+								);
+								if (published) {
+									uploadedFile.push(...published.uploaded);
 								}
+							} else if (
+								isAttachment(file.extension) &&
+								properties.frontmatter.general.attachment
+							) {
+								const published = await this.uploadImage(
+									file,
+									branchName,
+									properties
+								);
+								fileHistory.push(file);
+								if (published) {
+									uploadedFile.push(published);
+								}
+
 							}
-							statusBar.increment();
-						} catch (e) {
-							new Notice(
-								(i18next.t("error.unablePublishNote", { file: file.name })
-								)
-							);
-							fileError.push(file.name);
-							logs({ settings: this.settings, e: true }, e);
 						}
-					}
-					statusBar.finish(8000);
-				} catch (e) {
-					logs({ settings: this.settings, e: true }, e);
-					new Notice(
-						(i18next.t("error.errorPublish", { repo: repoFrontmatter }))
-					);
-					statusBar.error();
-				}
-			} else {
-				// 1 one item to send
-				const embed = linkedFiles[0];
-				if (!fileHistory.includes(embed)) {
-					if (embed.extension === "md" && deepScan) {
-						const multi: MultiRepoProperties = {
-							frontmatter: properties.frontmatter.repo,
-							repo: properties.repository,
-						};
-						const published = await this.publish(
-							embed,
-							false,
-							branchName,
-							multi,
-							fileHistory,
-							true
+						statusBar.increment();
+					} catch (e) {
+						new Notice(
+							(i18next.t("error.unablePublishNote", { file: file.name })
+							)
 						);
-						if (published) {
-							uploadedFile.push(...published.uploaded);
-						}
-					} else if (
-						isAttachment(embed.extension) &&
-						properties.frontmatter.general.attachment
-					) {
-						const published = await this.uploadImage(
-							embed,
-							branchName,
-							properties
-						);
-						fileHistory.push(embed);
-						if (published) {
-							uploadedFile.push(published);
-						}
+						fileError.push(file.name);
+						logs({ settings: this.settings, e: true }, e);
 					}
 				}
+				statusBar.finish(8000);
+			} catch (e) {
+				logs({ settings: this.settings, e: true }, e);
+				new Notice(
+					(i18next.t("error.errorPublish", { repo: repoFrontmatter }))
+				);
+				statusBar.error();
 			}
 		}
 		return {
@@ -244,6 +208,7 @@ export default class Publisher {
 				frontmatterSettings
 			);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
+
 			let text = await this.vault.cachedRead(file);
 			const multiProperties: MultiProperties = {
 				settings: this.settings,
@@ -340,11 +305,20 @@ export default class Publisher {
 		const uploaded: UploadedFiles | undefined = await this.uploadText(text, path, file.name, branchName, repo);
 		if (!uploaded) {
 			return {
-				deleted: deleted,
+				deleted,
 				uploaded: [],
 				error: [`Error while uploading ${file.name} to ${repo.owner}/${repo.repo}/${repo.branch}`]
 			};
 		}
+		const load = this.plugin.addStatusBarItem();
+		//add a little load icon from lucide icons, using SVG
+		load.createEl("span",{cls: ["obsidian-publisher", "loading", "icons"]}).innerHTML = LOADING_ICON;
+		load.createEl("span", { text: i18next.t("statusBar.loading"), cls: ["obsidian-publisher", "loading", "icons"] });
+
+		embedFiles = await this.cleanLinkedImageIfAlreadyInRepo(embedFiles, properties);
+		//load.remove();
+		logs({ settings: this.settings }, `length: ${embedFiles.length}`, embedFiles);
+
 		const embeded = await this.statusBarForEmbed(
 			embedFiles,
 			fileHistory,
@@ -467,29 +441,8 @@ export default class Publisher {
 			this.settings,
 			properties.frontmatter.general
 		);
-		/** check if the file already exists BEFORE uploading it */
-		const repoFrontmatter = properties.frontmatter.repo;
-		const uploaded: UploadedFiles = {
-			isUpdated: false,
-			file: imageFile.name
-		};
-		try {
-			const { status } = await this.octokit.request(
-				"GET /repos/{owner}/{repo}/contents/{path}",
-				{
-					owner: repoFrontmatter.owner,
-					repo: repoFrontmatter.repo,
-					path,
-				});
-			if (status === 200) {
-				notif({ settings: this.settings }, i18next.t("error.alreadyExists", { file: imageFile.name }));
-				return uploaded;
-			}
-		} catch (e) {
-			// if the file doesn't exist, it's normal
-			return await this.upload(image64, path, "", branchName, properties.frontmatter.repo);
-		}
-		return uploaded;
+		return await this.upload(image64, path, "", branchName, properties.frontmatter.repo);
+
 	}
 
 	/**
@@ -605,5 +558,47 @@ export default class Publisher {
 			}
 		}
 		return false;
+	}
+
+
+	/**
+	 * Remove all image embed in the note if they are already in the repo (same path)
+	 * @param embedFiles {TFile[]} File embedded in the note
+	 * @param properties {MonoProperties} Properties of the note
+	 * @returns {Promise<TFile[]>} New list of embed files
+	 */
+	async cleanLinkedImageIfAlreadyInRepo(
+		embedFiles: TFile[],
+		properties: MonoProperties
+	): Promise<TFile[]> {
+		const newLinkedFiles: TFile[] = [];
+		for (const file of embedFiles) {
+			if (isAttachment(file.name)) {
+				const imagePath = getImageLinkOptions(
+					file,
+					this.settings,
+					properties.frontmatter.general
+				);
+				const repoFrontmatter = properties.frontmatter;
+				try {
+					const { status } = await this.octokit.request(
+						"GET /repos/{owner}/{repo}/contents/{path}",
+						{
+							owner: repoFrontmatter.repo.owner,
+							repo: repoFrontmatter.repo.repo,
+							path: imagePath,
+						});
+					if (status === 200) {
+						notif({ settings: this.settings }, i18next.t("error.alreadyExists", { file: file.name }));
+						continue;
+					}
+				} catch (e) {
+					newLinkedFiles.push(file);
+				}
+			} else {
+				newLinkedFiles.push(file);
+			}
+		}
+		return newLinkedFiles;
 	}
 }

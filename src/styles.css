@@ -176,15 +176,15 @@ a.github-publisher-download:hover {
 	.github-publisher .settings-tab-bar {
 		flex-wrap: wrap;
 	}
-		
+
 	.github-publisher .settings-tab {
 		border-bottom: 1px solid var(--background-modifier-border);
 	}
-		
+
 	.github-publisher .settings-tab-bar {
 		border-bottom: 0;
 	}
-		
+
 	.github-publisher.manage-repo button.connect {
 		margin: 0 !important;
 	}
@@ -242,7 +242,7 @@ a.github-publisher-download:hover {
 
 
 
-.github-publisher.github-publisher.modals.regex.file-path-name 
+.github-publisher.github-publisher.modals.regex.file-path-name
 .disabled {
 	pointer-events: none;
 	opacity: 0.5;
@@ -300,3 +300,61 @@ a.github-publisher-download:hover {
 	display: none;
 }
 
+@keyframes bumpAnimation {
+	0% {
+		transform: translateY(0);
+		/* Pas de déplacement au départ */
+	}
+
+	50% {
+		transform: translateY(-10px);
+		/* Déplacement vers le haut à mi-chemin */
+	}
+
+	100% {
+		transform: translateY(0);
+		/* Retour à la position initiale */
+	}
+}
+
+@keyframes hourglassRotation {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	50% {
+		transform: rotate(180deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+span.obsidian-publisher.loading svg {
+	/* animate */
+	animation: spin 1s linear infinite;
+	vertical-align: middle;
+}
+
+span.obsidian-publisher.icons svg {
+	margin-right: 2px;
+}
+
+span.obsidian-publisher.icons svg.lucide.lucide-mail-check {
+	/* animation to bump to up */
+	animation: bumpAnimation 0.5s ease-in-out;
+}
+
+.status-bar-item.plugin-obsidian-mkdocs-publisher.success {
+	color: var(--color-green);
+}
+
+.status-bar-item.plugin-obsidian-mkdocs-publisher.error {
+	color: var(--text-error);
+}
+
+span.obsidian-publisher.icons svg.lucide.lucide-hourglass {
+	/* animation to bump to up */
+	animation: hourglassRotation 1s linear infinite;
+}

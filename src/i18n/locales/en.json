@@ -44,7 +44,7 @@
   "common": {
     "add": "Add {{- things}}",
     "after": "After",
-    "attachments": "attachments",
+    "attachments": "Attachments",
     "before": "Before",
     "cancel": "Cancel",
     "close": "Close",
@@ -53,7 +53,7 @@
     "delete": "Delete {{- things}}",
     "edit": "Edit {{- things}}",
     "error": "Error",
-    "files": "files",
+    "files": "Files",
     "ghToken": "GitHub Token",
     "here": "here",
     "or": "or",
@@ -62,12 +62,12 @@
       "folder": "Folder path",
       "full": "Filepath"
     },
-    "published": "Published",
+    "published": "published",
     "regex": "regex",
     "repository": "Repository",
     "rootFolder": "root folder",
     "save": "Save",
-    "shared": "Shared",
+    "shared": "shared",
     "text": "text",
     "warning": "Warning"
   },
@@ -509,8 +509,9 @@
   },
   "statusBar": {
     "counter": "{{- msg}}: {{- counter}}/{{- nb}}",
+    "loading": "Loading...",
     "markedForSharing": "{{- nb}} {{- type}} marked for sharing",
-    "sharing": "⌛Sharing {{- type}}",
-    "success": "✅ {{- action}} {{- type}}"
+    "sharing": "Sharing {{- type}}",
+    "success": "{{- type}} {{- action}}"
   }
 }
