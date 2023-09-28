@@ -30,7 +30,6 @@
     },
     "shareActiveFile": "Transférer la note active",
     "shareViewFiles": {
-      "default": "Github Publisher : Transférer {{- viewFile}}",
       "multiple": {
         "on": "Transférer {{- doc}} vers {{- smartKey }}",
         "other": "Transférer vers…"
@@ -232,9 +231,6 @@
         "title": "Dossier de pièces-jointes par défaut"
       },
       "forcePush": {
-        "desc": "Les extensions suivantes seront toujours envoyés dans le dépôt, même si elles y existent déjà. Séparer les extensions par une virgule.",
-        "infoAboutAttachments": "Normalement, les pièces-jointes sont envoyées uniquement si elle n'existe pas sur le dépôt.",
-        "title": "Forcer l'envoie des pièces-jointes"
       },
       "links": {
         "desc": "Permet d'éditer les liens des embeds, en supprimant entièrement la citation, ou en la transformant en un simple lien.",
@@ -249,7 +245,6 @@
       "notes": "Note (Markdown)",
       "title": "Embed",
       "transferImage": {
-        "desc": "Transférer les pièces-jointes",
         "title": "Envoyer les pièces-jointes intégrées dans un fichier dans le dépôt."
       },
       "transferMetaFile": {

@@ -34,7 +34,6 @@ import {
 import {
 	checkEmptyConfiguration,
 	checkIfRepoIsInAnother,
-	forcePushAttachment,
 	isAttachment,
 	isShared,
 } from "../utils/data_validation_test";
@@ -570,7 +569,7 @@ export default class Publisher {
 	 */
 	async cleanLinkedImageIfAlreadyInRepo(
 		embedFiles: TFile[],
-		properties: MonoProperties
+		properties: MonoProperties,
 	): Promise<TFile[]> {
 		const newLinkedFiles: TFile[] = [];
 		for (const file of embedFiles) {
@@ -582,18 +581,22 @@ export default class Publisher {
 				);
 				const repoFrontmatter = properties.frontmatter;
 				try {
-					const {status} = await this.octokit.request(
-						"GET /repos/{owner}/{repo}/contents/{path}",
+					const {status, data } = await this.octokit.request(
+						"GET /repos/{owner}/{repo}/commits",
 						{
 							owner: repoFrontmatter.repo.owner,
 							repo: repoFrontmatter.repo.repo,
 							path: imagePath,
 						});
+
 					if (status === 200) {
-						if (forcePushAttachment(file, properties.settings)) {
+						const lastEditedInRepo = data[0]?.commit?.committer?.date;
+						const lastEditedDate = lastEditedInRepo ? new Date(lastEditedInRepo) : undefined;
+						const lastEditedAttachment = new Date(file.stat.mtime);
+						//if the file in the vault is newer than the file in the repo, push it
+						if (lastEditedDate && lastEditedAttachment > lastEditedDate || !lastEditedDate) {
 							newLinkedFiles.push(file);
-						} else notif({ settings: this.settings }, i18next.t("error.alreadyExists", { file: file.name }));
-						continue;
+						} else logs({settings: this.settings}, i18next.t("error.alreadyExists", {file: file.name}));
 					}
 				} catch (e) {
 					newLinkedFiles.push(file);

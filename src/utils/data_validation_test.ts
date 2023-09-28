@@ -386,15 +386,9 @@ export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPubli
 		}));
 	} else {
 		new Notice(i18next.t("commands.checkValidity.rateLimit.notLimited", {
-			remaining: remaining,
+			remaining,
 			resetTime: time
 		}));
 	}
 	return remaining;
-}
-
-export function forcePushAttachment(file: TFile, settings: GitHubPublisherSettings) {
-	const forcePushThese = settings.embed.forcePushAttachments;
-	if (forcePushThese.length === 0) return false;
-	return forcePushThese.includes(file.extension);
 }

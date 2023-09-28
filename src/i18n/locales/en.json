@@ -30,7 +30,6 @@
     },
     "shareActiveFile": "Upload single current active note",
     "shareViewFiles": {
-      "default": "Github Publisher: Upload {{- viewFile}}",
       "multiple": {
         "on": "Upload {{- doc}} to {{- smartKey }}",
         "other": "Upload to…"
@@ -232,9 +231,6 @@
         "title": "Default attachment folder"
       },
       "forcePush": {
-        "desc": "The following extensions will always be sent to the repository, even if they already exist there. \nSeparate extensions with a comma.",
-        "infoAboutAttachments": "Normally, attachments are only sent if it does not exist on the repository.",
-        "title": "Force push attachments"
       },
       "links": {
         "desc": "Allow to edit the links of the embeds, removing entirely the citation, or transform to a simple link",
@@ -249,7 +245,6 @@
       "notes": "Note (Markdown)",
       "title": "Embed",
       "transferImage": {
-        "desc": "Send attachments embedded in a file to GitHub.",
         "title": "Transfer attachments"
       },
       "transferMetaFile": {

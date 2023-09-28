@@ -802,27 +802,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							await this.plugin.saveSettings();
 						});
 				});
-
-			const forcePushDesc = document.createDocumentFragment();
-			forcePushDesc.createEl("div", { text: i18next.t("settings.embed.forcePush.infoAboutAttachments") });
-			forcePushDesc.createEl("div", { text: i18next.t("settings.embed.forcePush.desc") });
-
-			new Setting(this.settingsPage)
-				.setName(i18next.t("settings.embed.forcePush.title"))
-				.setDesc(forcePushDesc)
-				.setClass("mini")
-				.addTextArea((text) => {
-					text
-						.setPlaceholder("pdf, png")
-						.setValue(embedSettings.forcePushAttachments?.join(", "))
-						.onChange(async (value) => {
-							embedSettings.forcePushAttachments = value
-								.split(/[,\n]\W*/)
-								.map((item) => item.trim())
-								.filter((item) => item.length > 0);
-							await this.plugin.saveSettings();
-						});
-				});
 		}
 
 		new Setting(this.settingsPage)
