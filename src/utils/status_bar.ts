@@ -81,7 +81,7 @@ export class ShareStatusBar {
 		this.statusBarItem.addClass("success");
 		this.statusBarItem.removeClass("sharing");
 		setTimeout(() => {
-			//this.statusBarItem.remove();
+			this.statusBarItem.remove();
 		}, displayDurationMillisec);
 	}
 

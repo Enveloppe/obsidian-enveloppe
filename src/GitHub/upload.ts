@@ -316,7 +316,7 @@ export default class Publisher {
 		load.createEl("span", { text: i18next.t("statusBar.loading"), cls: ["obsidian-publisher", "loading", "icons"] });
 
 		embedFiles = await this.cleanLinkedImageIfAlreadyInRepo(embedFiles, properties);
-		//load.remove();
+		load.remove();
 		logs({ settings: this.settings }, `length: ${embedFiles.length}`, embedFiles);
 
 		const embeded = await this.statusBarForEmbed(
