@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.7.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.6.1...6.7.0) (2023-09-28)
+
+
+### Features
+
+* **attachment:** allow force push attachments ([8028dd3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8028dd39f95be06889138d77c7f94d4fd33843ff))
+
 ## [6.6.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.6.0...6.6.1) (2023-09-28)
 
 
