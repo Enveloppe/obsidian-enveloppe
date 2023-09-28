@@ -206,6 +206,7 @@
       "title": "Texte & liens"
     },
     "embed": {
+      "attachment": "Pièces-jointes",
       "bake": {
         "text": "Permet d'ajouter du texte avant et après chaque intégration, par exemple en ajoutant du HTML ou en stylisant le bloc avec du markdown.",
         "textAfter": {
@@ -230,6 +231,11 @@
         "desc": "Pour utiliser un dossier différent de celui par défaut pour les pièces-jointes.",
         "title": "Dossier de pièces-jointes par défaut"
       },
+      "forcePush": {
+        "desc": "Les extensions suivantes seront toujours envoyés dans le dépôt, même si elles y existent déjà. Séparer les extensions par une virgule.",
+        "infoAboutAttachments": "Normalement, les pièces-jointes sont envoyées uniquement si elle n'existe pas sur le dépôt.",
+        "title": "Forcer l'envoie des pièces-jointes"
+      },
       "links": {
         "desc": "Permet d'éditer les liens des embeds, en supprimant entièrement la citation, ou en la transformant en un simple lien.",
         "dp": {
@@ -240,6 +246,7 @@
         },
         "title": "Changer les balises d'embed"
       },
+      "notes": "Note (Markdown)",
       "title": "Embed",
       "transferImage": {
         "desc": "Transférer les pièces-jointes",
@@ -445,7 +452,7 @@
       },
       "shareKey": {
         "all": {
-          "desc": "Allow to share all file and ignore the share key state",
+          "desc": "Autoriser le partage de tous les fichiers et ignorer l'état de la clé de partage",
           "title": "Partager tous les fichiers sans clé de partage"
         },
         "desc": "Clé de partage",

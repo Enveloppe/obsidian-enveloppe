@@ -34,6 +34,7 @@ import {
 import {
 	checkEmptyConfiguration,
 	checkIfRepoIsInAnother,
+	forcePushAttachment,
 	isAttachment,
 	isShared,
 } from "../utils/data_validation_test";
@@ -581,7 +582,7 @@ export default class Publisher {
 				);
 				const repoFrontmatter = properties.frontmatter;
 				try {
-					const { status } = await this.octokit.request(
+					const {status} = await this.octokit.request(
 						"GET /repos/{owner}/{repo}/contents/{path}",
 						{
 							owner: repoFrontmatter.repo.owner,
@@ -589,7 +590,9 @@ export default class Publisher {
 							path: imagePath,
 						});
 					if (status === 200) {
-						notif({ settings: this.settings }, i18next.t("error.alreadyExists", { file: file.name }));
+						if (forcePushAttachment(file, properties.settings)) {
+							newLinkedFiles.push(file);
+						} else notif({ settings: this.settings }, i18next.t("error.alreadyExists", { file: file.name }));
 						continue;
 					}
 				} catch (e) {

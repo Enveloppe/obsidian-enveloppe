@@ -206,6 +206,7 @@
       "title": "Text & links"
     },
     "embed": {
+      "attachment": "Attachments",
       "bake": {
         "text": "Allow you to add text before and after each embed, for example adding HTML or stylize the block with markdown.",
         "textAfter": {
@@ -230,6 +231,11 @@
         "desc": "To use a folder different from default",
         "title": "Default attachment folder"
       },
+      "forcePush": {
+        "desc": "The following extensions will always be sent to the repository, even if they already exist there. \nSeparate extensions with a comma.",
+        "infoAboutAttachments": "Normally, attachments are only sent if it does not exist on the repository.",
+        "title": "Force push attachments"
+      },
       "links": {
         "desc": "Allow to edit the links of the embeds, removing entirely the citation, or transform to a simple link",
         "dp": {
@@ -240,6 +246,7 @@
         },
         "title": "Change embed markup"
       },
+      "notes": "Note (Markdown)",
       "title": "Embed",
       "transferImage": {
         "desc": "Send attachments embedded in a file to GitHub.",

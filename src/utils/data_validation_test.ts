@@ -392,3 +392,9 @@ export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPubli
 	}
 	return remaining;
 }
+
+export function forcePushAttachment(file: TFile, settings: GitHubPublisherSettings) {
+	const forcePushThese = settings.embed.forcePushAttachments;
+	if (forcePushThese.length === 0) return false;
+	return forcePushThese.includes(file.extension);
+}
