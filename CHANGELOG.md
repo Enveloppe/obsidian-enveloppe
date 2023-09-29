@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.7.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.7.1...6.7.2) (2023-09-29)
+
+
+### Bug Fixes
+
+* crash when empty share key ([22c81ba](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/22c81bacb340f0f209c61a4bacf88b80b88a1767)), closes [#226](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/226)
+
 ## [6.7.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.7.0...6.7.1) (2023-09-28)
 
 ## [6.7.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.6.1...6.7.0) (2023-09-28)
