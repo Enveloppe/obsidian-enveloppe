@@ -260,6 +260,7 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 			},
 		},
 		embed: {
+			forcePushAttachments: [],
 			attachments: old.embedImage,
 			keySendFile: old.metadataFileFields,
 			notes: old.embedNotes,
