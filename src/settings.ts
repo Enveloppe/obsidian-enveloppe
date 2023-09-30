@@ -823,7 +823,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							await this.plugin.saveSettings();
 						});
 				});
-
 		}
 
 		new Setting(this.settingsPage)

@@ -233,7 +233,7 @@
       "forcePush": {
         "desc": "Les extensions suivantes seront toujours publiées, quelque soit la dernière date d'envoi.",
         "info": "Par défaut, les pièces-jointes ne sont envoyés que si elles ont été modifiées depuis leur dernier envoi, ou si elles n'existent pas dans le dépôt.",
-        "separateByComma": "Séparer les extensions par des virgules.",
+        "separateByComma": "Séparer les extensions par des virgules. Vous pouvez utiliser des regex en les encadrant par \"/\", comme /regex/. Utiliser {{all}} pour forcer l'envoi de toutes les pièces-jointes.",
         "title": "Forcer l'envoi des pièces-jointes"
       },
       "links": {

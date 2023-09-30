@@ -5,6 +5,7 @@ import { Notice, parseYaml } from "obsidian";
 
 import {
 	Deleted,
+	FIND_REGEX,
 	FolderSettings,
 	GitHubPublisherSettings,
 	GithubRepo,
@@ -73,7 +74,7 @@ async function deleteFromGithubOneRepo(
 	const octokit = filesManagement.octokit;
 	const filesInRepo = await filterGithubFile(getAllFile, settings);
 	if (
-		(settings.github.rateLimit === 0 || filesInRepo.length > settings.github.rateLimit) 
+		(settings.github.rateLimit === 0 || filesInRepo.length > settings.github.rateLimit)
 		&& await verifyRateLimitAPI(octokit, settings, false, filesInRepo.length) === 0
 	) {
 		return {success: false, deleted: [], undeleted: []};
@@ -161,7 +162,7 @@ async function deleteFromGithubOneRepo(
 		successMsg = (i18next.t("deletion.success", {nb: deletedSuccess.toString()}));
 	}
 	if (deletedFailed > 0) {
-		failedMsg = (i18next.t("deletion.failed", {nb: deletedFailed.toString()}));	
+		failedMsg = (i18next.t("deletion.failed", {nb: deletedFailed.toString()}));
 	}
 	if (!silent) {
 		new Notice(successMsg + failedMsg);
@@ -183,7 +184,7 @@ function excludedFileFromDelete(
 	const autoCleanExcluded = settings.upload.autoclean.excluded;
 	if (autoCleanExcluded.length > 0) {
 		for (const excludedFile of autoCleanExcluded) {
-			const isRegex = excludedFile.match(/^\/(.*)\/[igmsuy]*$/);
+			const isRegex = excludedFile.match(FIND_REGEX);
 			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
 			if (regex && regex.test(file)) {
 				return true;

@@ -233,7 +233,7 @@
       "forcePush": {
         "desc": "The following extensions will always be published, regardless of the last sending date.",
         "info": "By default, attachments are only sent if they have been modified since they were last sent, or if they do not exist in the repository.",
-        "separateByComma": "Separate extensions with commas.",
+        "separateByComma": "Separate extensions with commas. \nYou can use regex by enclosing it with \"/\", like /regex/. Use {{all}} to force all attachments to be sent.",
         "title": "Force attachments to be sent"
       },
       "links": {

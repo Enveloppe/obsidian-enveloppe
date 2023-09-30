@@ -5,8 +5,6 @@ export enum TypeOfEditRegex {
 	title = "title",
 }
 
-
-
 export enum EnumbSettingsTabId {
 	github = "github-configuration",
 	upload = "upload-configuration",
@@ -379,3 +377,6 @@ export interface Preset {
 	name: string;
 	settings: GitHubPublisherSettings;
 }
+
+
+export const FIND_REGEX = /^\/(.*)\/[igmsuy]*$/;
