@@ -95,6 +95,8 @@ export class ShareStatusBar {
 		this.statusBarItem.removeClass("found-attachments");
 		this.icon.innerHTML = ERROR_ICONS;
 		this.status.setText(i18next.t("error.errorPublish"));
-		this.statusBarItem.remove();
+		setTimeout(() => {
+			this.statusBarItem.remove();
+		}, 8000);
 	}
 }
