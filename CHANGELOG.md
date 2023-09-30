@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.7.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.7.2...6.7.3) (2023-09-30)
+
+
+### Bug Fixes
+
+* **attachment:** allow regex and force push all with {{all}} key. ([188fde0](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/188fde035cf253d869fd6bddc7367e8c68fc4237))
+
 ## [6.7.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.7.1...6.7.2) (2023-09-29)
 
 
