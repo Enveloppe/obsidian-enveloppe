@@ -4,7 +4,7 @@ import {FrontMatterCache, Notice, TFile} from "obsidian";
 import GithubPublisher from "src/main";
 
 import {GithubBranch} from "../GitHub/branch";
-import {FrontmatterConvert, GitHubPublisherSettings, MultiProperties, RepoFrontmatter, Repository} from "../settings/interface";
+import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, MultiProperties, RepoFrontmatter, Repository} from "../settings/interface";
 import {getRepoFrontmatter, logs, notif} from ".";
 
 /**
@@ -98,7 +98,7 @@ export function isShared(
 function isExcludedPath(settings: GitHubPublisherSettings, file: TFile):boolean {
 	const excludedFolder = settings.plugin.excludedFolder;
 	for (const folder of excludedFolder) {
-		const isRegex = folder.match(/^\/(.*)\/[igmsuy]*$/);
+		const isRegex = folder.match(FIND_REGEX);
 		const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
 		if ((regex && regex.test(file.path)) || file.path.contains(folder.trim())) {
 			return true;
@@ -157,7 +157,7 @@ export function multipleSharedKey(frontmatter: FrontMatterCache | undefined, set
  * @return {RegExpMatchArray}
  */
 
-export function isAttachment(filename: string) {
+export function isAttachment(filename: string): RegExpMatchArray | null {
 	return filename.match(
 		/(png|jpe?g|gif|bmp|svg|mp[34]|web[mp]|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)$/i
 	);
@@ -172,7 +172,7 @@ export function isAttachment(filename: string) {
 export function checkIfRepoIsInAnother(
 	source: RepoFrontmatter | RepoFrontmatter[],
 	target: RepoFrontmatter | RepoFrontmatter[]
-) {
+): boolean {
 	source = source instanceof Array ? source : [source];
 	target = target instanceof Array ? target : [target];
 
@@ -271,11 +271,9 @@ export function noTextConversion(conditionConvert: FrontmatterConvert) {
  * Check the validity of the repository settings, from the frontmatter of the file or from the settings of the plugin
  * It doesn't check if the repository allow to creating and merging branch, only if the repository and the main branch exists
  * @param {GithubBranch} PublisherManager The class that manage the branch
- * @param {GitHubPublisherSettings} settings The settings of the plugin
- * @param repository
+ * @param repository {Repository | null} The repository to check if any, if null, it will use the default repository {@link defaultRepo}
  * @param { TFile | null} file The file to check if any
- * @param {MetadataCache} metadataCache The metadata cache of Obsidian
- * @param silent
+ * @param silent {boolean} if the notice should be displayed
  * @return {Promise<void>}
  */
 export async function checkRepositoryValidity(
@@ -304,15 +302,14 @@ export async function checkRepositoryValidity(
 /**
  * Check the validity of the repository settings, from the frontmatter of the file or from the settings of the plugin
  * @param {GithubBranch} PublisherManager
- * @param {GitHubPublisherSettings} settings
  * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter
- * @param {number} numberOfFile
+ * @param {number} numberOfFile the number of file to publish
  * @return {Promise<boolean>}
  */
 export async function checkRepositoryValidityWithRepoFrontmatter(
 	PublisherManager: GithubBranch,
 	repoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
-	numberOfFile=1
+	numberOfFile: number=1
 ): Promise<boolean> {
 	const settings = PublisherManager.settings;
 	try {
@@ -396,5 +393,10 @@ export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPubli
 export function forcePushAttachment(file: TFile, settings: GitHubPublisherSettings) {
 	const forcePushThese = settings.embed.forcePushAttachments;
 	if (forcePushThese.length === 0) return false;
-	return forcePushThese.includes(file.extension);
+	for (const ext of forcePushThese) {
+		if (file.extension === ext) return true;
+		else if (ext === "{{all}}") return true;
+		else if (ext.match(FIND_REGEX) && file.extension.match(new RegExp(ext))) return true;
+	}
+	return false;
 }
