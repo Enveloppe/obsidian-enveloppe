@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.7.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.7.3...6.7.4) (2023-10-02)
+
+
+### Bug Fixes
+
+* **dataview:** inlineJS queries not working ([4c5de97](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4c5de973c8df941e9f969e218dacefdf03604734)), closes [#227](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/227)
+* forcePushAttachment not created in the migrate interface ([fe8f8ee](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/fe8f8ee527db682ab396c6ba62791cf73b3ac85d))
+
 ## [6.7.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.7.2...6.7.3) (2023-09-30)
 
 
