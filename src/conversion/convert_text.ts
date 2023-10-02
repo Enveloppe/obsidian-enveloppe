@@ -3,6 +3,7 @@ import {
 	App,
 	Component,
 	FrontMatterCache,
+	htmlToMarkdown,
 	MetadataCache,
 	parseFrontMatterTags,
 	parseYaml,
@@ -323,14 +324,16 @@ export async function convertDataviewQueries(
 		try {
 			const code = inlineJsQuery[0];
 			const query = inlineJsQuery[1].trim();
-
+			const evaluateQuery = `
+				const query = ${query};
+				dv.paragraph(query);
+			`;
 			const div = createEl("div");
 			const component = new Component();
-			await dvApi.executeJs(query, div, component, path);
+			await dvApi.executeJs(evaluateQuery, div, component, path);
 			component.load();
-			const markdown = removeDataviewQueries(div.innerHTML, properties.frontmatter.general);
+			const markdown = removeDataviewQueries(htmlToMarkdown(div.innerHTML), properties.frontmatter.general);
 			replacedText = replacedText.replace(code, markdown);
-
 		} catch (e) {
 			logs({settings: properties.settings, e: true}, e);
 			notif({settings: properties.settings}, error);
