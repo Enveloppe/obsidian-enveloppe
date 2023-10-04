@@ -14,13 +14,15 @@ import {
 	parseLinktext,
 	resolveSubpath,
 	TFile} from "obsidian";
+import { getAPI, Link } from "obsidian-dataview";
 
 import {
 	GitHubPublisherSettings,
 	LinkedNotes,
-	MultiProperties} from "../settings/interface";
-import {isShared} from "../utils/data_validation_test";
-import { createRelativePath, getTitleField, regexOnFileName } from "./file_path";
+	MultiProperties} from "../../settings/interface";
+import {isShared} from "../../utils/data_validation_test";
+import { addTagsToYAML } from "../convert_text";
+import { createRelativePath, getTitleField, regexOnFileName } from "../file_path";
 
 
 /**
@@ -105,7 +107,7 @@ function extractSubpath(
 	subpathResult: HeadingSubpathResult | BlockSubpathResult,
 	cache: CachedMetadata
 ): string {
-	
+
 	if (subpathResult.type === "block" && subpathResult.list && cache.listItems) {
 		const targetItem = subpathResult.list;
 		const ancestors = new Set<number>([targetItem.position.start.line]);
@@ -231,7 +233,7 @@ async function changeURL(textToAdd: string, properties: MultiProperties, linked:
 		const relativePath = await createRelativePath(sourceFile, linkedNote, frontmatter, app, properties);
 		return textToAdd.replace(/\{{2}url\}{2}/gmi, relativePath);
 	} return textToAdd.replace(/\{{2}url\}{2}/gmi, linkedNote.linked.path);
-	
+
 }
 
 /**
@@ -240,7 +242,7 @@ async function changeURL(textToAdd: string, properties: MultiProperties, linked:
  * @param linked {TFile} The linked note
  * @param app {App} The Obsidian App instance
  * @param settings {GitHubPublisherSettings}
- * @returns {string} 
+ * @returns {string}
  */
 function changeTitle(textToAdd: string, linked: TFile, app: App, settings: GitHubPublisherSettings):string {
 	const title = linked.basename;
@@ -249,3 +251,94 @@ function changeTitle(textToAdd: string, linked: TFile, app: App, settings: GitHu
 	const getTitle = regexOnFileName(getTitleField(frontmatter, linked, settings), settings).replace(".md", "");
 	return textToAdd.replace(/\{{2}title\}{2}/gmi, getTitle);
 }
+
+/**
+ * Add inlines dataview or frontmatter keys to the tags key in the frontmatter
+ * Will be recursive for array
+ * stringify with extract alt text for links
+ * @param {string} text the text to convert
+ * @param {GitHubPublisherSettings} settings the global settings
+ * @param {TFile} sourceFile the file to process
+ * @param {App} app obsidian app
+ * @return {Promise<string>} the converted text
+ */
+
+export async function convertInlineDataview(
+	text: string,
+	settings: GitHubPublisherSettings,
+	sourceFile: TFile,
+	app: App
+): Promise<string> {
+	// @ts-ignore
+	if (
+		settings.conversion.tags.fields.length === 0 ||
+		// @ts-ignore
+		!app.plugins.enabledPlugins.has("dataview")
+	) {
+		return text;
+	}
+	const dvApi = getAPI();
+	if (!dvApi) {
+		return text;
+	}
+	const dataviewLinks = dvApi.page(sourceFile.path);
+	if (!dataviewLinks) {
+		return text;
+	}
+	const valueToAdd: string[] = [];
+	for (const field of settings.conversion.tags.fields) {
+		const fieldValue = dataviewLinks[field];
+		if (fieldValue) {
+			if (fieldValue.constructor.name === "Link") {
+				const stringifyField = dataviewExtract(fieldValue, settings);
+				if (stringifyField) valueToAdd.push(stringifyField);
+			} else if (fieldValue.constructor.name === "Array") {
+				for (const item of fieldValue) {
+					let stringifyField = item;
+					if (item.constructor.name === "Link") {
+						stringifyField = dataviewExtract(item, settings);
+						valueToAdd.push(stringifyField);
+					} else if (
+						!settings.conversion.tags.exclude.includes(
+							stringifyField.toString()
+						)
+					) {
+						valueToAdd.push(stringifyField.toString());
+					}
+				}
+			} else if (
+				!settings.conversion.tags.exclude.includes(fieldValue.toString())
+			) {
+				valueToAdd.push(fieldValue.toString());
+			}
+		}
+	}
+	if (valueToAdd.length > 0) {
+		return await addTagsToYAML(text, valueToAdd.filter(Boolean), settings);
+	}
+	return text;
+}
+
+/**
+ * stringify the dataview link by extracting the value from the link
+ * extract the alt text if it exists, otherwise extract the filename
+ * return null if the alt text or the filename is excluded
+ * @param {Link} fieldValue the dataview link
+ * @param {GitHubPublisherSettings} settings the global settings
+ * @return {string | null} the display text by dataview
+ */
+function dataviewExtract(fieldValue: Link, settings: GitHubPublisherSettings): string | null {
+	const basename = (name: string) => /([^/\\.]*)(\..*)?$/.exec(name)![1];
+	const filename = basename(fieldValue.path).toString();
+	const display = fieldValue.display
+		? fieldValue.display.toString()
+		: filename;
+	if (
+		!settings.conversion.tags.exclude.includes(display) &&
+		!settings.conversion.tags.fields.includes(filename)
+	) {
+		return display;
+	}
+	return null;
+}
+

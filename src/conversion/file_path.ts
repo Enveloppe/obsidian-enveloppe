@@ -24,46 +24,7 @@ import {
 import {checkIfRepoIsInAnother, isInternalShared, isShared} from "../utils/data_validation_test";
 import { createRegexFromText } from "./find_and_replace_text";
 
-/**
- * Get the dataview path from a markdown file
- * @param {string} markdown Markdown file content
- * @param {GitHubPublisherSettings} settings Settings
- * @param {Vault} vault Vault
- * @returns {LinkedNotes[]} Array of linked notes
- */
 
-export function getDataviewPath(
-	markdown: string,
-	settings: GitHubPublisherSettings,
-	vault: Vault
-): LinkedNotes[] {
-	if (!settings.conversion.dataview) {
-		return [];
-	}
-	const wikiRegex = /\[\[(.*?)\]\]/gim;
-	const wikiMatches = markdown.matchAll(wikiRegex);
-	const linkedFiles: LinkedNotes[] = [];
-	if (!wikiMatches) return [];
-	if (wikiMatches) {
-		for (const wikiMatch of wikiMatches) {
-			const altText = wikiMatch[1].replace(/(.*)\\?\|/i, "");
-			const linkFrom = wikiMatch[1].replace(/\\?\|(.*)/, "");
-			const linked =
-				vault.getAbstractFileByPath(linkFrom) instanceof TFile
-					? (vault.getAbstractFileByPath(linkFrom) as TFile)
-					: null;
-			if (linked) {
-				linkedFiles.push({
-					linked,
-					linkFrom,
-					altText,
-					type: "link"
-				});
-			}
-		}
-	}
-	return linkedFiles;
-}
 
 
 /**
@@ -234,7 +195,7 @@ function folderNoteIndexYAML(
 	logs({settings}, `Category: ${category}`);
 	const catSplit = category.split("/");
 	const parentCatFolder = !category.endsWith("/") ? catSplit.at(-1) as string : catSplit.at(-2) as string;
-	
+
 	if (!settings.upload.folderNote.enable) return regexOnFileName(fileName, settings);
 	if (
 		fileName.replace(".md", "").toLowerCase() ===
@@ -257,7 +218,7 @@ function createFrontmatterPath(
 	frontmatter: FrontMatterCache | null | undefined,
 	fileName: string
 ): string {
-	
+
 	const uploadSettings = settings.upload;
 	const folderCategory = getCategory(frontmatter, settings);
 	const folderNote = folderNoteIndexYAML(fileName, frontmatter, settings);
@@ -301,8 +262,8 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 }
 
 
-/** 
- * Allow to modify enterely the path of a file, using regex / string replace 
+/**
+ * Allow to modify enterely the path of a file, using regex / string replace
  * @param {string} path path
  * @param {GitHubPublisherSettings} settings Settings
  * @return {string} edited path
