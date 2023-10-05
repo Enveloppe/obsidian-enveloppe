@@ -108,8 +108,8 @@ devDependencies:
     specifier: ^1.4.11
     version: 1.4.11(@codemirror/state@6.2.1)(@codemirror/view@6.21.0)
   obsidian-dataview:
-    specifier: ^0.5.56
-    version: 0.5.56
+    specifier: ^0.5.54
+    version: 0.5.54
   obsidian-plugin-cli:
     specifier: ^0.9.0
     version: 0.9.0
@@ -5515,8 +5515,8 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /luxon@3.4.3:
-    resolution: {integrity: sha512-tFWBiv3h7z+T/tDaoxA8rqTxy1CHV6gHS//QdaH4pulbq/JuBSGgQspQQqcgnwdAx6pNI7cmvz5Sv/addzHmUg==}
+  /luxon@2.5.2:
+    resolution: {integrity: sha512-Yg7/RDp4nedqmLgyH0LwgGRvMEKVzKbUdkBYyCosbHgJ+kaOUx0qzSiSatVc3DFygnirTPYnMM2P5dg2uH1WvA==}
     engines: {node: '>=12'}
     dev: true
 
@@ -5791,15 +5791,15 @@ packages:
       - '@codemirror/view'
     dev: true
 
-  /obsidian-dataview@0.5.56:
-    resolution: {integrity: sha512-QyXpJLDJVpLmPCiF8ht4XqeuhWaccAs/pSpP+oDmwou4uJvEO4rXosj7joYQXv1QMsxf5UHy2OO56BZoyzVGBg==}
+  /obsidian-dataview@0.5.54:
+    resolution: {integrity: sha512-ia6oGn3fqaHuoMu/e7bKMNUA4rZRYTJAhUffp9oLzxsjqRKxPhwfUOim6JQhI/jnHvtwTQaxcUwwM9nVE+HRog==}
     dependencies:
       '@codemirror/language': github.com/lishid/cm-language/1aadcc247f20ccfda76424a9f853dbb4ee203fdc
       '@codemirror/state': 6.2.1
       '@codemirror/view': 6.21.0
       emoji-regex: 10.2.1
       localforage: 1.10.0
-      luxon: 3.4.3
+      luxon: 2.5.2
       obsidian-calendar-ui: 0.3.12(@codemirror/state@6.2.1)(@codemirror/view@6.21.0)
       papaparse: 5.4.1
       parsimmon: 1.18.1
