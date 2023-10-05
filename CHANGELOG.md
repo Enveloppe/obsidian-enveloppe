@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.8.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.8.0...6.8.1) (2023-10-05)
+
+
+### Features
+
+* **links:** skip links if prefix by '\` ([8ef7037](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8ef7037c90ba695796504a75eaefef3894321f6b))
+
 ## [6.8.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.7.4...6.8.0) (2023-10-05)
 
 
