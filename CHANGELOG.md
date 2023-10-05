@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.8.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.7.4...6.8.0) (2023-10-05)
+
+
+### Features
+
+* **regex:** allow to bypass "not in codeblock" for regex ([925b0fd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/925b0fdfe5efa9bcaf7fa9f7b3de3cfac93d89ba))
+
+
+### Bug Fixes
+
+* **internalSharing:** shared note was not converted ([6d7c8d3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6d7c8d3d137664cf5b05c63c6fd0c264ec722389))
+* **textReplacer:** replace text only if not in code blocks ([f3fd6de](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f3fd6dee0401e61d41d76f48b9488980d64b68ec)), closes [#228](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/228)
+
 ## [6.7.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.7.3...6.7.4) (2023-10-02)
 
 
