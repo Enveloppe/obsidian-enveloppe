@@ -9,9 +9,9 @@ import {getRepoFrontmatter, logs, notif} from ".";
 
 /**
  * - Check if the file is a valid file to publish
- * -  Check also the path from the excluded folder list
- * - Always return false if the internalNonShared is not enabled
- * - Return true for all files that are not shared, unless they are striclty excluded (share: false or folder excluded)
+ * - Check also the path from the excluded folder list
+ * - Always return true if nonShared is true
+ * - Return the share state otherwise
  * @param {FrontMatterCache} frontmatter
  * @param {MultiProperties} properties
  * @param {TFile} file (for the excluded file name & filepath)
@@ -23,18 +23,21 @@ export function isInternalShared(
 	file: TFile,
 ): boolean {
 	const frontmatterSettings = properties.frontmatter.general;
+	if (frontmatterSettings.convertInternalNonShared) {
+		return true;
+	}
 
-	if (!frontmatterSettings.convertInternalNonShared) return false;
 	if (properties.repository?.shareAll?.enable)
 	{
 		const excludedFileName = properties.repository.shareAll.excludedFileName;
 		return !file.basename.startsWith(excludedFileName);
 	}
-	if (!frontmatter) return true;
+	if (!frontmatter) return false;
 	if (isExcludedPath(properties.settings, file)) return false;
 	const shareKey = properties.repository?.shareKey || properties.settings.plugin.shareKey;
-	if (!frontmatter[shareKey] || frontmatter[shareKey] == null) return true;
+	if (!frontmatter[shareKey] || frontmatter[shareKey] == null) return false;
 	return ["true", "1", "yes"].includes(frontmatter[shareKey].toString().toLowerCase());
+
 }
 
 export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache): Repository | null{
