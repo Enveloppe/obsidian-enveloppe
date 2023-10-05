@@ -466,6 +466,10 @@
     "regexReplacing": {
       "empty": "Replacement can be empty to remove the whole string.",
       "forbiddenValue": "The {{- what}} cannont contain the character: {{- forbiddenChar}}",
+      "inCodeBlocks": {
+        "runIn": "Runned in code-blocks",
+        "runOut": "Not runned in the code blocks"
+      },
       "modal": {
         "desc": "Replace text in the file with the given value. Enclose the text with \"//\" to use regex.",
         "title": {

@@ -326,6 +326,7 @@ export interface TextCleaner {
 	replace: string;
 	after: boolean;
 	flags?: string;
+	inCodeBlocks?: boolean;
 }
 
 

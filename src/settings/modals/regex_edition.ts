@@ -8,8 +8,8 @@ export class ModalRegexFilePathName extends Modal {
 	allRegex: RegexReplace[];
 	onSubmit: (result: RegexReplace[]) => void;
 	constructor(
-		app: App, 
-		settings: GitHubPublisherSettings, 
+		app: App,
+		settings: GitHubPublisherSettings,
 		allRegex : RegexReplace[],
 		onSubmit: (result: RegexReplace[]) => void) {
 		super(app);
@@ -79,7 +79,7 @@ export class ModalRegexFilePathName extends Modal {
 		this.settings.upload.replaceTitle.forEach((title) => {
 			if (!title.type) {
 				title.type = TypeOfEditRegex.title;
-			}	
+			}
 		});
 
 		for (const title of this.allRegex) {
@@ -172,8 +172,8 @@ export class ModalRegexOnContents extends Modal {
 	settings: GitHubPublisherSettings;
 	onSubmit: (settings: GitHubPublisherSettings) => void;
 	constructor(
-		app: App, 
-		settings: GitHubPublisherSettings, 
+		app: App,
+		settings: GitHubPublisherSettings,
 		onSubmit: (settings: GitHubPublisherSettings) => void) {
 		super(app);
 		this.settings = settings;
@@ -195,13 +195,18 @@ export class ModalRegexOnContents extends Modal {
 				text: i18next.t("settings.regexReplacing.empty")});
 		for (const censorText of this.settings.conversion.censorText) {
 			const afterIcon = censorText.after ? "arrow-down" : "arrow-up";
+			const inCodeBlocks = censorText?.inCodeBlocks ? "code" : "scan";
 			const moment = censorText.after ? i18next.t("common.after").toLowerCase() : i18next.t("common.before").toLowerCase();
 			const desc = i18next.t("settings.regexReplacing.momentReplaceRegex", {moment: moment});
+			let toolTipCode = i18next.t("settings.regexReplacing.inCodeBlocks.runIn");
+			if (!censorText.inCodeBlocks) {
+				toolTipCode = i18next.t("settings.regexReplacing.inCodeBlocks.runOut");
+			}
 			new Setting(contentEl)
 				.setClass("entry")
 				.addText((text) => {
 					text.setPlaceholder(i18next.t(
-						"regex.entry") 
+						"regex.entry")
 					)
 						.setValue(censorText.entry)
 						.onChange(async (value) => {
@@ -215,7 +220,7 @@ export class ModalRegexOnContents extends Modal {
 							censorText.replace = value;
 						});
 				})
-				
+
 				.addExtraButton((btn) => {
 					btn.setIcon("trash")
 						.setTooltip(i18next.t("common.delete", {things: "Regex"}))
@@ -230,22 +235,30 @@ export class ModalRegexOnContents extends Modal {
 						});
 				})
 				.addExtraButton((btn) => {
-					btn 
+					btn
 						.setTooltip(desc)
 						.setIcon(afterIcon)
 						.onClick(async () => {
 							censorText.after = !censorText.after;
 							this.onOpen();
 						});
+				})
+				.addExtraButton((btn) => {
+					btn
+						.setTooltip(toolTipCode)
+						.setIcon(inCodeBlocks)
+						.onClick(async () => {
+							censorText.inCodeBlocks = !censorText.inCodeBlocks;
+							this.onOpen();
+						});
 				});
-				
 		}
 		new Setting(contentEl)
 			.addButton((btn) => {
 				btn
 					.setIcon("plus")
 					.setTooltip(i18next.t("common.add", {things: "Regex"}))
-					
+
 					.onClick(async () => {
 						const censorText: TextCleaner = {
 							entry: "",
