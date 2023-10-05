@@ -9,9 +9,11 @@ import {
 } from "../settings/interface";
 import {isAttachment, noTextConversion} from "../utils/data_validation_test";
 import { createRelativePath } from "./file_path";
+import { replaceTextNotInCodeBlocks } from "./find_and_replace_text";
 
 /**
  * Convert wikilinks to markdown
+ * Pretty cursed
  * @param {string} fileContent the text to convert
  * @param {FrontmatterConvert} conditionConvert  the frontmatter settings
  * @param {GitHubPublisherSettings} settings  global settings
@@ -127,7 +129,7 @@ export function convertWikilinks(
 					) {
 						linkCreator = "";
 					}
-					fileContent = fileContent.replace(wikiMatch, linkCreator);
+					fileContent = replaceTextNotInCodeBlocks(fileContent, wikiMatch, linkCreator);
 
 				} else if (!fileName.startsWith("http")) {
 					const altMatch = wikiMatch.match(/(\|).*(]])/);
@@ -168,7 +170,7 @@ export function convertWikilinks(
 					) {
 						linkCreator = "";
 					}
-					fileContent = fileContent.replace(wikiMatch, linkCreator);
+					fileContent = replaceTextNotInCodeBlocks(fileContent, wikiMatch, linkCreator);
 				}
 			}
 		}
@@ -291,7 +293,7 @@ export async function convertLinkCitation(
 					newLink = `[${altText}](${pathInGithub})`;
 				}
 				newLink = addAltText(newLink, linkedFile);
-				fileContent = fileContent.replace(link, newLink);
+				fileContent = replaceTextNotInCodeBlocks(fileContent, link, newLink);
 			}
 		}
 	}
@@ -324,3 +326,4 @@ export function creatorAltLink(
 	}
 	return match.split("/").at(-1) as string; //alt text based on filename for other files
 }
+

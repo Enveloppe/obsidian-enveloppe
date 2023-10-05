@@ -1,4 +1,5 @@
 import { GitHubPublisherSettings } from "../settings/interface";
+import { escapeRegex } from "./links";
 
 /**
  * Convert a string to a regex object when the string is in the form of a regex (enclosed by /)
@@ -39,11 +40,35 @@ export default function findAndReplaceText(
 			const replaceWith = censor.replace;
 			if (toReplace.match(/^\/.+\/[gimy]*$/)) {
 				const regex = createRegexFromText(toReplace, censor.flags);
-				text = text.replace(regex, replaceWith);
+				text = replaceTextNotInCodeBlocks(text, regex, replaceWith);
 			} else {
-				text = text.replaceAll(toReplace, replaceWith);
+				text = replaceTextNotInCodeBlocks(text, toReplace, replaceWith);
 			}
 		}
 	}
 	return text;
 }
+
+
+export function replaceTextNotInCodeBlocks(text: string, toReplace: string | RegExp, replaceWith: string) {
+	let regexWithString: string ;
+	let regex: RegExp;
+	if (toReplace instanceof RegExp) {
+		regexWithString = "```[\\s\\S]*?```|`[^`]*`|" + toReplace.source;
+		regex = new RegExp(regexWithString, `g${toReplace.flags}`);
+	} else {
+		regexWithString = "```[\\s\\S]*?```|`[^`]*`|" + escapeRegex(toReplace);
+		regex = new RegExp(regexWithString, "g");
+	}
+	return text.replace(regex, (match) => {
+		if (match.match(/`[^`]*`/)) {
+			return match;
+		} else if (match.match(/```[\s\S]*?```/)) {
+			return match;
+		} else {
+			return match.replace(toReplace, replaceWith);
+		}
+	});
+}
+
+
