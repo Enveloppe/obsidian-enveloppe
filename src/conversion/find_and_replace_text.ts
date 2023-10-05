@@ -56,20 +56,25 @@ export default function findAndReplaceText(
 }
 
 
-export function replaceTextNotInCodeBlocks(text: string, toReplace: string | RegExp, replaceWith: string) {
+export function replaceTextNotInCodeBlocks(text: string, toReplace: string | RegExp, replaceWith: string, links?: boolean) {
 	let regexWithString: string ;
 	let regex: RegExp;
+
 	if (toReplace instanceof RegExp) {
-		regexWithString = "```[\\s\\S]*?```|`[^`]*`|" + toReplace.source;
+		regexWithString = "```[\\s\\S]*?```|`[^`]*`|";
+		if (links) regexWithString += "\\\\?!?";
+		regexWithString += toReplace.source;
 		regex = new RegExp(regexWithString, `g${toReplace.flags}`);
 	} else {
-		regexWithString = "```[\\s\\S]*?```|`[^`]*`|" + escapeRegex(toReplace);
+		regexWithString = "```[\\s\\S]*?```|`[^`]*`|\\\\?!?";
+		if (links) regexWithString += "\\\\?!?";
+		regexWithString += escapeRegex(toReplace);
 		regex = new RegExp(regexWithString, "g");
 	}
 	return text.replace(regex, (match) => {
-		if (match.match(/`[^`]*`/)) {
+		if (match.match(/`[^`]*`/) || match.match(/```[\s\S]*?```/)) {
 			return match;
-		} else if (match.match(/```[\s\S]*?```/)) {
+		} else if (links && match.match(/^\\/)) {
 			return match;
 		} else {
 			return match.replace(toReplace, replaceWith);
