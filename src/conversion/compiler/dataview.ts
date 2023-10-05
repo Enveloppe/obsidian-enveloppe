@@ -27,8 +27,6 @@ import { convertLinkCitation, convertWikilinks, escapeRegex } from "../links";
  * @link https://github.com/oleeskild/obsidian-digital-garden/blob/4cdf2791e24b2a0c2a30e7d39965b7b9b50e2ab0/src/Publisher.ts#L297
  */
 
-
-
 export async function convertDataviewQueries(
 	text: string,
 	path: string,
@@ -60,7 +58,11 @@ export async function convertDataviewQueries(
 	}
 	const error = i18next.t("error.dataview");
 
-	//Code block queries
+	/**
+	 * DQL Dataview - The SQL-like Dataview Query Language
+	 * Are in **code blocks**
+	 * @link https://blacksmithgu.github.io/obsidian-dataview/queries/dql-js-inline/#dataview-query-language-dql
+	*/
 	for (const queryBlock of matches) {
 		try {
 			const block = queryBlock[0];
@@ -78,6 +80,11 @@ export async function convertDataviewQueries(
 		}
 	}
 
+	/**
+	 * DataviewJS - JavaScript API for Dataview
+	 * Are in **CODE BLOCKS**
+	 * @link https://blacksmithgu.github.io/obsidian-dataview/api/intro/
+	 */
 	for (const queryBlock of dataviewJsMatches) {
 		try {
 			const block = queryBlock[0];
@@ -97,6 +104,13 @@ export async function convertDataviewQueries(
 	}
 
 	//Inline queries
+
+	/**
+	 * Inline DQL Dataview - The SQL-like Dataview Query Language in inline
+	 * Syntax : `= query`
+	 * (the prefix can be changed in the settings)
+	 * @source https://blacksmithgu.github.io/obsidian-dataview/queries/dql-js-inline/#inline-dql
+	*/
 	for (const inlineQuery of inlineMatches) {
 		try {
 			const code = inlineQuery[0];
@@ -110,6 +124,17 @@ export async function convertDataviewQueries(
 		}
 	}
 
+	/**
+	 * Inline DataviewJS - JavaScript API for Dataview in inline
+	 * Syntax : `$=js query`
+	 * For the moment, it is not possible to properly process the inlineJS.
+	 * Temporary solution : encapsulate the query into "pure" JS :
+	 * ```ts
+	 * const query = queryFound;
+	 * dv.paragraph(query);
+	 * ```
+	 * After the evaluation, the div is converted to markdown with {@link htmlToMarkdown()} and the dataview queries are removed
+	 */
 	for (const inlineJsQuery of inlineJsMatches) {
 		try {
 			const code = inlineJsQuery[0];
@@ -145,6 +170,12 @@ function removeDataviewQueries(dataviewMarkdown: string, frontmatterSettings: Fr
 
 /**
  * Wrapper to prevent writing 15 lines of code every time
+ * @param {string} md the text to convert
+ * @param {FrontMatterCache | undefined | null} frontmatter the frontmatter cache
+ * @param {TFile} sourceFile the file to process
+ * @param {App} app obsidian app
+ * @param {MultiProperties} properties the properties of the plugins (settings, repository, frontmatter)
+ * @returns {Promise<string>} the converted text
  */
 async function convertDataviewLinks(
 	md: string,
@@ -210,7 +241,12 @@ export function getDataviewPath(
 	return linkedFiles;
 }
 
-function sanitizeQuery(query: string) {
+/**
+ * Allow to sanitize the query if it is inside a callout block
+ * @param query {string} The query to sanitize
+ * @returns {isInsideCallout: boolean, finalQuery: string}
+ */
+function sanitizeQuery(query: string): {isInsideCallout: boolean, finalQuery: string} {
 	let isInsideCallout = false;
 	const parts = query.split("\n");
 	const sanitized = [];
@@ -230,6 +266,11 @@ function sanitizeQuery(query: string) {
 	return {isInsideCallout, finalQuery};
 }
 
+/**
+ * Surround the text with a callout block
+ * @param input {string} The text to surround
+ * @returns {string} The text surrounded with a callout block
+ */
 function surroundWithCalloutBlock(input: string): string {
 	const tmp = input.split("\n");
 

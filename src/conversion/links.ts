@@ -9,7 +9,7 @@ import {
 } from "../settings/interface";
 import {isAttachment, noTextConversion} from "../utils/data_validation_test";
 import { createRelativePath } from "./file_path";
-import { replaceTextNotInCodeBlocks } from "./find_and_replace_text";
+import { replaceText } from "./find_and_replace_text";
 
 /**
  * Convert wikilinks to markdown
@@ -129,7 +129,7 @@ export function convertWikilinks(
 					) {
 						linkCreator = "";
 					}
-					fileContent = replaceTextNotInCodeBlocks(fileContent, wikiMatch, linkCreator, true);
+					fileContent = replaceText(fileContent, wikiMatch, linkCreator, true);
 
 				} else if (!fileName.startsWith("http")) {
 					const altMatch = wikiMatch.match(/(\|).*(]])/);
@@ -170,7 +170,7 @@ export function convertWikilinks(
 					) {
 						linkCreator = "";
 					}
-					fileContent = replaceTextNotInCodeBlocks(fileContent, wikiMatch, linkCreator, true);
+					fileContent = replaceText(fileContent, wikiMatch, linkCreator, true);
 				}
 			}
 		}
@@ -293,7 +293,7 @@ export async function convertLinkCitation(
 					newLink = `[${altText}](${pathInGithub})`;
 				}
 				newLink = addAltText(newLink, linkedFile);
-				fileContent = replaceTextNotInCodeBlocks(fileContent, link, newLink, true);
+				fileContent = replaceText(fileContent, link, newLink, true);
 			}
 		}
 	}

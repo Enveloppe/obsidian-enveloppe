@@ -41,12 +41,12 @@ export default function findAndReplaceText(
 			if (toReplace.match(/^\/.+\/[gimy]*$/)) {
 				const regex = createRegexFromText(toReplace, censor.flags);
 				if (!censor.inCodeBlocks)
-					text = replaceTextNotInCodeBlocks(text, regex, replaceWith);
+					text = replaceText(text, regex, replaceWith);
 				else
 					text = text.replace(regex, replaceWith);
 			} else {
 				if (!censor.inCodeBlocks)
-					text = replaceTextNotInCodeBlocks(text, toReplace, replaceWith);
+					text = replaceText(text, toReplace, replaceWith);
 				else
 					text = text.replace(toReplace, replaceWith);
 			}
@@ -55,29 +55,38 @@ export default function findAndReplaceText(
 	return text;
 }
 
-
-export function replaceTextNotInCodeBlocks(text: string, toReplace: string | RegExp, replaceWith: string, links?: boolean) {
+/**
+ * Replace the String.prototype.replace() function with a function that will not replace text in code blocks.
+ * In `links` allow to exclude the replacement if the string is prepended by a backslash.
+ * So, enable the replacing for all text that is **not** in a codeblocks.
+ * @param fileContent {string} The entire file content
+ * @param pattern {string | RegExp} The string or regex to be replaced
+ * @param replaceWith {string} The string to replace with
+ * @param links {boolean} Whether to exclude the replacement if the string is prepended by a backslash.
+ * @returns {string} The file content with the replacements
+ */
+export function replaceText(fileContent: string, pattern: string | RegExp, replaceWith: string, links?: boolean):string {
 	let regexWithString: string ;
 	let regex: RegExp;
 
-	if (toReplace instanceof RegExp) {
+	if (pattern instanceof RegExp) {
 		regexWithString = "```[\\s\\S]*?```|`[^`]*`|";
 		if (links) regexWithString += "\\\\?!?";
-		regexWithString += toReplace.source;
-		regex = new RegExp(regexWithString, `g${toReplace.flags}`);
+		regexWithString += pattern.source;
+		regex = new RegExp(regexWithString, `g${pattern.flags}`);
 	} else {
 		regexWithString = "```[\\s\\S]*?```|`[^`]*`|\\\\?!?";
 		if (links) regexWithString += "\\\\?!?";
-		regexWithString += escapeRegex(toReplace);
+		regexWithString += escapeRegex(pattern);
 		regex = new RegExp(regexWithString, "g");
 	}
-	return text.replace(regex, (match) => {
+	return fileContent.replace(regex, (match) => {
 		if (match.match(/`[^`]*`/) || match.match(/```[\s\S]*?```/)) {
 			return match;
 		} else if (links && match.match(/^\\/)) {
 			return match;
 		} else {
-			return match.replace(toReplace, replaceWith);
+			return match.replace(pattern, replaceWith);
 		}
 	});
 }
