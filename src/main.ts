@@ -101,7 +101,7 @@ export default class GithubPublisher extends Plugin {
 			}
 		}
 	}
-	
+
 	async reloadCommands(branchName: string) {
 		//compare old and new repo to delete old commands
 		logs({settings: this.settings}, "Reloading commands");
@@ -124,7 +124,7 @@ export default class GithubPublisher extends Plugin {
 	 * ```
 	 * @returns {Promise<string>} - The token of the plugin
 	 */
-	
+
 	async loadToken(): Promise<string> {
 		const tokenPath = createTokenPath(this, this.settings.github.tokenPath);
 
@@ -134,8 +134,12 @@ export default class GithubPublisher extends Plugin {
 		}
 		try {
 			const tokenFile = await this.app.vault.adapter.read(`${tokenPath}`);
+			if (tokenPath.endsWith(".json")) {
+				const tokenJSON = JSON.parse(tokenFile);
+				return tokenJSON.GITHUB_PUBLISHER_TOKEN;
+			}
 			if (tokenFile) {
-				return tokenFile.split("=")[1]; 
+				return tokenFile.split("=")[1];
 			}
 		} catch (e) {
 			notif({settings: this.settings, e: true}, e);
@@ -145,7 +149,7 @@ export default class GithubPublisher extends Plugin {
 	}
 
 	/**
-	 * Create a new instance of Octokit to load a new instance of GithubBranch 
+	 * Create a new instance of Octokit to load a new instance of GithubBranch
 	*/
 	async reloadOctokit() {
 		let octokit: Octokit;
@@ -165,7 +169,7 @@ export default class GithubPublisher extends Plugin {
 			this
 		);
 	}
-	
+
 
 
 	/**
@@ -180,13 +184,13 @@ export default class GithubPublisher extends Plugin {
 			resources,
 			returnNull: false,
 		});
-		
+
 		await this.loadSettings();
 
-		
+
 		const oldSettings = this.settings;
 		await migrateSettings(oldSettings as unknown as OldSettings, this);
-		
+
 		const branchName =
 			this.app.vault.getName().replaceAll(" ", "-").replaceAll(".", "-") +
 			"-" +
@@ -211,7 +215,7 @@ export default class GithubPublisher extends Plugin {
 				}
 			})
 		);
-		
+
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor, view) => {
 				if (view.file) addMenuFile(this, view.file, branchName, menu);
@@ -239,7 +243,7 @@ export default class GithubPublisher extends Plugin {
 				}
 			});
 		}
-		
+
 		const repoWithShortcuts = this.settings.github.otherRepo.filter((repo) => repo.createShortcuts);
 		for (const repo of repoWithShortcuts) {
 			await this.chargeAllCommands(repo, this, branchName);

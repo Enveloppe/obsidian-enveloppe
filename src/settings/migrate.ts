@@ -144,8 +144,17 @@ export async function migrateToken(plugin: GithubPublisher, token?: string) {
 		return;
 	}
 	logs({settings: plugin.settings}, `Moving the GitHub Token in the file : ${tokenPath}`);
-	const envToken = `GITHUB_TOKEN=${token}`;
-	await plugin.app.vault.adapter.write(tokenPath, envToken);
+	console.log(tokenPath, tokenPath.endsWith(".json"));
+	if (tokenPath.endsWith(".json")) {
+		const envToken = {
+			GITHUB_PUBLISHER_TOKEN: token
+		};
+		await plugin.app.vault.adapter.write(tokenPath, JSON.stringify(envToken));
+	} else {
+		const envToken = `GITHUB_TOKEN=${token}`;
+		await plugin.app.vault.adapter.write(tokenPath, envToken);
+	}
+	return;
 }
 
 
