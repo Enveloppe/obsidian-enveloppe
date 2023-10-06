@@ -144,7 +144,6 @@ export async function migrateToken(plugin: GithubPublisher, token?: string) {
 		return;
 	}
 	logs({settings: plugin.settings}, `Moving the GitHub Token in the file : ${tokenPath}`);
-	console.log(tokenPath, tokenPath.endsWith(".json"));
 	if (tokenPath.endsWith(".json")) {
 		const envToken = {
 			GITHUB_PUBLISHER_TOKEN: token
