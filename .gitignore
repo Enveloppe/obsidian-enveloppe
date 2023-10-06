@@ -1,5 +1,5 @@
 # vscode
-.vscode 
+.vscode
 
 # Intellij
 *.iml
@@ -30,3 +30,4 @@ env
 dist/
 .hotreload
 act.json
+tokens.json
