@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.8.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.8.1...6.8.2) (2023-10-06)
+
+
+### Bug Fixes
+
+* **token:** allow to use json for token, allowing to use other plugins to use this file (for example, adding more tokens) ([d25867a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d25867a98a722939ad1ffb5f1811fc3316fddaf9))
+
 ## [6.8.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.8.0...6.8.1) (2023-10-05)
 
 
