@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.8.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.8.2...6.8.3) (2023-10-14)
+
+
+### Bug Fixes
+
+* **regex:** prevent registering an bas regex ([5a104f6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5a104f64f9204cb4134e74e59f3729ccf6e775c6)), closes [#229](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/229)
+
 ## [6.8.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.8.1...6.8.2) (2023-10-06)
 
 
