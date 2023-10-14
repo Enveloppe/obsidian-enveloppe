@@ -4,7 +4,9 @@ require("dotenv").config();
 const fs = require("fs");
 const c = require("ansi-colors");
 const { execSync } = require("child_process");
+
 const path = require("path");
+
 let vaultDev = process.env.VAULT_DEV || "";
 //get args "--prod" or "--dev"
 const args = process.argv.slice(2);
