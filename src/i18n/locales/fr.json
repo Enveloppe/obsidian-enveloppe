@@ -470,6 +470,7 @@
         "runIn": "Lancé dans les bloc de code",
         "runOut": "N'est pas lancé dans les bloc de codes"
       },
+      "invalidRegex": "Une erreur est survenue : {{- e}}",
       "modal": {
         "desc": "Replace des textes dans le fichier par la valeur donnée. Vous pouvez encadrer le texte à remplacer avec \"//\" pour utiliser un regex.",
         "title": {

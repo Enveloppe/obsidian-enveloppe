@@ -470,6 +470,7 @@
         "runIn": "Runned in code-blocks",
         "runOut": "Not runned in the code blocks"
       },
+      "invalidRegex": "An error has occurred: {{- e}}",
       "modal": {
         "desc": "Replace text in the file with the given value. Enclose the text with \"//\" to use regex.",
         "title": {

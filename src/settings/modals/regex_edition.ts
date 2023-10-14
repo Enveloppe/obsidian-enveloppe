@@ -1,7 +1,24 @@
 import i18next from "i18next";
 import {App, Modal, Notice, Setting} from "obsidian";
+import { escapeRegex } from "src/conversion/links";
 
 import {FolderSettings, GitHubPublisherSettings, RegexReplace, TextCleaner, TypeOfEditRegex} from "../interface";
+
+function isRegexValid(regexString: string) {
+	try {
+		new RegExp(regexString);
+		return {
+			error: null,
+			isValid: true
+		};
+	}
+	catch (e) {
+		return {
+			error: e,
+			isValid: false
+		};
+	}
+}
 
 export class ModalRegexFilePathName extends Modal {
 	settings: GitHubPublisherSettings;
@@ -28,7 +45,7 @@ export class ModalRegexFilePathName extends Modal {
 		);
 	}
 
-	forbiddenValue(value: string, type: TypeOfEditRegex): (string|boolean)[] {
+	forbiddenValue(value: string, type: TypeOfEditRegex): {value: string, isForbidden: boolean} {
 		const regexSpecialDontExclude = /\/(.*)(\\[dwstrnvfb0cxup])(.*)\//i;
 		let onWhat = type === TypeOfEditRegex.path ? i18next.t("common.path.folder") : i18next.t("common.path.file");
 		onWhat = onWhat.toLowerCase();
@@ -36,6 +53,10 @@ export class ModalRegexFilePathName extends Modal {
 		if (value == "/") {
 			new Notice(i18next.t("settings.regexReplacing.forbiddenValue", {what: onWhat, forbiddenChar: value}));
 			value = "";
+			isForbidden = true;
+		} else if (!isRegexValid(value).isValid) {
+			const error = isRegexValid(value).error;
+			new Notice(i18next.t("settings.regexReplacing.invalidRegex", {e: error}));
 			isForbidden = true;
 		}
 		else if (
@@ -53,7 +74,10 @@ export class ModalRegexFilePathName extends Modal {
 				new Notice(i18next.t("settings.regexReplacing.warningPath"));
 			}
 		}
-		return [value, isForbidden];
+		return {
+			value,
+			isForbidden
+		};
 	}
 
 	onOpen() {
@@ -90,6 +114,7 @@ export class ModalRegexFilePathName extends Modal {
 						.setValue(title.regex)
 						.onChange((value) => {
 							title.regex = value;
+							sett.controlEl.setAttribute("value", value);
 						});
 				})
 				.addText((text) => {
@@ -97,9 +122,11 @@ export class ModalRegexFilePathName extends Modal {
 						.setValue(title.replacement)
 						.onChange((value) => {
 							title.replacement = value;
+							sett.controlEl.setAttribute("replace", value);
 						});
 				});
-
+			sett.controlEl.setAttribute("value", title.regex);
+			sett.controlEl.setAttribute("replace", title.replacement);
 			if (this.settings.upload.behavior !== FolderSettings.fixed) {
 				sett.addDropdown((dropdown) => {
 					dropdown
@@ -147,12 +174,17 @@ export class ModalRegexFilePathName extends Modal {
 						this.allRegex.forEach((title) => {
 							const isForbiddenEntry = this.forbiddenValue(title.regex, title.type);
 							const isForbiddenReplace = this.forbiddenValue(title.replacement, title.type);
-							canBeValidated.push(isForbiddenEntry[1] as boolean);
-							canBeValidated.push(isForbiddenReplace[1] as boolean);
-							if (isForbiddenEntry[1] || isForbiddenReplace[1]) {
-								title.regex = isForbiddenEntry[0] as string;
-								title.replacement = isForbiddenReplace[0] as string;
+							canBeValidated.push(isForbiddenEntry.isForbidden);
+							canBeValidated.push(isForbiddenReplace.isForbidden);
+							if (isForbiddenEntry.isForbidden || isForbiddenReplace.isForbidden) {
+								title.regex = isForbiddenEntry.value as string;
+								title.replacement = isForbiddenReplace.value as string;
+								const faultyInputValue = contentEl.querySelector(`[value="${escapeRegex(title.regex)}"] input`);
+								const faultyInputReplace = contentEl.querySelector(`[replace="${escapeRegex(title.replacement)}"] input`);
+								faultyInputValue?.classList.add("error");
+								faultyInputReplace?.classList.add("error");
 							}
+
 						});
 						if (!canBeValidated.includes(true)) {
 							this.onSubmit(this.allRegex);
@@ -193,6 +225,7 @@ export class ModalRegexOnContents extends Modal {
 			})
 			.createEl("p", {
 				text: i18next.t("settings.regexReplacing.empty")});
+
 		for (const censorText of this.settings.conversion.censorText) {
 			const afterIcon = censorText.after ? "arrow-down" : "arrow-up";
 			const inCodeBlocks = censorText?.inCodeBlocks ? "code" : "scan";
@@ -202,7 +235,7 @@ export class ModalRegexOnContents extends Modal {
 			if (!censorText.inCodeBlocks) {
 				toolTipCode = i18next.t("settings.regexReplacing.inCodeBlocks.runOut");
 			}
-			new Setting(contentEl)
+			const sett = new Setting(contentEl)
 				.setClass("entry")
 				.addText((text) => {
 					text.setPlaceholder(i18next.t(
@@ -211,6 +244,7 @@ export class ModalRegexOnContents extends Modal {
 						.setValue(censorText.entry)
 						.onChange(async (value) => {
 							censorText.entry = value;
+							sett.controlEl.setAttribute("value", value);
 						});
 				})
 				.addText((text) => {
@@ -252,6 +286,7 @@ export class ModalRegexOnContents extends Modal {
 							this.onOpen();
 						});
 				});
+			sett.controlEl.setAttribute("value", censorText.entry);
 		}
 		new Setting(contentEl)
 			.addButton((btn) => {
@@ -274,8 +309,20 @@ export class ModalRegexOnContents extends Modal {
 				button
 					.setButtonText(i18next.t("common.save"))
 					.onClick(() => {
-						this.onSubmit(this.settings);
-						this.close();
+						const canBeValidated: boolean[] = [];
+						for (const censor of this.settings.conversion.censorText) {
+							if (!isRegexValid(censor.entry).isValid) {
+								new Notice(i18next.t("settings.regexReplacing.invalidRegex", {e: isRegexValid(censor.entry).error}));
+								//add error class to faulty input
+								const faultyInput = contentEl.querySelector(`[value="${escapeRegex(censor.entry)}"] input`);
+								console.log(faultyInput);
+								faultyInput?.classList.add("error");
+								canBeValidated.push(false);
+							}
+						} if (!canBeValidated.includes(false)) {
+							this.onSubmit(this.settings);
+							this.close();
+						}
 					});
 			});
 	}

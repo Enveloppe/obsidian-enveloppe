@@ -47,6 +47,11 @@ hr.github-publisher-hr {
 	display: block;
 }
 
+.github-publisher.modals .error {
+	border-color: var(--text-error);
+	box-shadow: 0 0 0 1px var(--text-error);
+}
+
 .github-publisher-import-input {
 	width: 0.1px;
 	height: 0.1px;
