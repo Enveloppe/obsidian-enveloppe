@@ -376,19 +376,27 @@ export function getImageLinkOptions(
 	sourceFrontmatter: FrontmatterConvert | null
 ): string {
 	if (!sourceFrontmatter || !sourceFrontmatter.attachmentLinks) {
+		if (settings.embed.useObsidianFolder) {
+			if (settings.upload.behavior === FolderSettings.yaml) {
+				return settings.upload.rootFolder.length > 0 ? normalizePath(`${settings.upload.rootFolder}/${file.path}`) : file.path;
+			}
+			else {
+				//no root, but default folder name
+				return settings.upload.defaultName.length > 0 ? normalizePath(`${settings.upload.defaultName}/${file.path}`) : file.path;
+			}
+		}
 		const defaultImageFolder = settings.embed.folder;
 		if (defaultImageFolder.length > 0) {
-			return defaultImageFolder + "/" + file.name;
+			return normalizePath(`${defaultImageFolder}/${file.name}`);
 		} else if (settings.upload.defaultName.length > 0) {
-			return settings.upload.defaultName + "/" + file.name;
+			return normalizePath(`${settings.upload.defaultName}/${file.name}`);
 		} else {
 			return file.path;
 		}
 	} else if (
-		sourceFrontmatter &&
-		sourceFrontmatter.attachmentLinks
+		sourceFrontmatter?.attachmentLinks
 	) {
-		return sourceFrontmatter.attachmentLinks + "/" + file.name;
+		return normalizePath(`${sourceFrontmatter.attachmentLinks}/${file.name}`);
 	}
 	return file.path;
 }

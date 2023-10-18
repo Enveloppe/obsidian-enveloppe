@@ -236,6 +236,10 @@
         "separateByComma": "Separate extensions with commas. \nYou can use regex by enclosing it with \"/\", like /regex/. Use {{all}} to force all attachments to be sent.",
         "title": "Force attachments to be sent"
       },
+      "imagePath": {
+        "desc": "Use the obsidian folder structure or configure a default folder below",
+        "title": "Structure"
+      },
       "links": {
         "desc": "Allow to edit the links of the embeds, removing entirely the citation, or transform to a simple link",
         "dp": {

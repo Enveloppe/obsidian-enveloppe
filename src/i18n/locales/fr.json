@@ -236,6 +236,10 @@
         "separateByComma": "Séparer les extensions par des virgules. Vous pouvez utiliser des regex en les encadrant par \"/\", comme /regex/. Utiliser {{all}} pour forcer l'envoi de toutes les pièces-jointes.",
         "title": "Forcer l'envoi des pièces-jointes"
       },
+      "imagePath": {
+        "desc": "Utilisez la structure de dossier Obsidian ou configurer un dossier par défaut ci-dessous",
+        "title": "Structure"
+      },
       "links": {
         "desc": "Permet d'éditer les liens des embeds, en supprimant entièrement la citation, ou en la transformant en un simple lien.",
         "dp": {

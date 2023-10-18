@@ -789,19 +789,33 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 		if (embedSettings.attachments) {
 			new Setting(this.settingsPage)
-				.setName(i18next.t("settings.embed.defaultImageFolder.title"))
-				.setDesc(i18next.t("settings.embed.defaultImageFolder.desc"))
-				.addText((text) => {
-					text.setPlaceholder("docs/images")
-						.setValue(embedSettings.folder)
+				.setName(i18next.t("settings.embed.imagePath.title"))
+				.setDesc(i18next.t("settings.embed.imagePath.desc"))
+				.addToggle((toggle) => {
+					toggle
+						.setValue(embedSettings.useObsidianFolder ?? false)
 						.onChange(async (value) => {
-							embedSettings.folder = value.replace(
-								/\/$/,
-								""
-							);
+							embedSettings.useObsidianFolder = value;
 							await this.plugin.saveSettings();
+							this.renderSettingsPage(EnumbSettingsTabId.embed);
 						});
 				});
+			if (!embedSettings.useObsidianFolder) {
+				new Setting(this.settingsPage)
+					.setName(i18next.t("settings.embed.defaultImageFolder.title"))
+					.setDesc(i18next.t("settings.embed.defaultImageFolder.desc"))
+					.addText((text) => {
+						text.setPlaceholder("docs/images")
+							.setValue(embedSettings.folder)
+							.onChange(async (value) => {
+								embedSettings.folder = value.replace(
+									/\/$/,
+									""
+								);
+								await this.plugin.saveSettings();
+							});
+					});
+			}
 
 			const descAboutForcePush = document.createDocumentFragment();
 			descAboutForcePush.createEl("div", {text: i18next.t("settings.embed.forcePush.info")});

@@ -111,6 +111,7 @@ export interface GitHubPublisherSettings {
 	embed: {
 		attachments: boolean;
 		forcePushAttachments: string[];
+		useObsidianFolder?: boolean;
 		keySendFile: string[];
 		notes: boolean;
 		folder: string;
@@ -334,7 +335,7 @@ export interface FrontmatterConvert {
 	links: boolean;
 	attachment: boolean;
 	embed: boolean;
-	attachmentLinks: string;
+	attachmentLinks?: string;
 	convertWiki: boolean;
 	removeEmbed: "keep" | "remove" | "links" | "bake";
 	charEmbedLinks: string;

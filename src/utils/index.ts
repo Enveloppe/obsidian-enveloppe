@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import {App, FrontMatterCache, Notice, Platform, TFile} from "obsidian";
+import {App, FrontMatterCache, normalizePath, Notice, Platform, TFile} from "obsidian";
 import GithubPublisher from "src/main";
 
 import {getReceiptFolder} from "../conversion/file_path";
@@ -9,7 +9,7 @@ import {
 	FolderSettings,
 	FrontmatterConvert,
 	GitHubPublisherSettings,
-	ListEditedFiles, 	
+	ListEditedFiles,
 	MetadataExtractor,
 	MultiRepoProperties,
 	RepoFrontmatter,
@@ -21,7 +21,7 @@ type LogsParameters = {
 	e?: boolean,
 	logs?: boolean,
 }
-	
+
 /**
  * Create a notice message for the log
  * @param args {LogsParameters} the settings and the error type
@@ -303,17 +303,11 @@ export function getFrontmatterSettings(
 	settings: GitHubPublisherSettings,
 	repo: Repository | null
 ) {
-	let imageDefaultFolder: string = "";
-	if (settings.embed.folder.length > 0) {
-		imageDefaultFolder = settings.embed.folder;
-	} else if (settings.upload.defaultName.length > 0) {
-		imageDefaultFolder = settings.upload.defaultName;
-	}
+
 	const settingsConversion: FrontmatterConvert = {
 		convertWiki: settings.conversion.links.wiki,
 		attachment: settings.embed.attachments,
 		embed: settings.embed.notes,
-		attachmentLinks: imageDefaultFolder,
 		links: true,
 		removeEmbed: settings.embed.convertEmbedToLinks,
 		charEmbedLinks: settings.embed.charConvert,
@@ -322,7 +316,7 @@ export function getFrontmatterSettings(
 		convertInternalNonShared: settings.conversion.links.unshared,
 		convertInternalLinks: settings.conversion.links.internal,
 	};
-	
+
 	const shareAll = repo ? repo.shareAll?.enable : settings.plugin.shareAll?.enable;
 	if (shareAll) {
 		settingsConversion.convertInternalNonShared = true;
@@ -378,9 +372,9 @@ export function getFrontmatterSettings(
 		}
 	}
 	if (frontmatter.attachmentLinks !== undefined) {
-		settingsConversion.attachmentLinks = frontmatter.attachmentLinks
+		settingsConversion.attachmentLinks = normalizePath(frontmatter.attachmentLinks
 			.toString()
-			.replace(/\/$/, "");
+			.replace(/\/$/, ""));
 	}
 	if (frontmatter.mdlinks !== undefined) {
 		settingsConversion.convertWiki = frontmatter.mdlinks;
@@ -658,7 +652,7 @@ function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
  * @return {string} - The category or the default name
  */
 export function getCategory(
-	frontmatter: FrontMatterCache | null | undefined, 
+	frontmatter: FrontMatterCache | null | undefined,
 	settings: GitHubPublisherSettings):string {
 	const key = settings.upload.yamlFolderKey;
 	const category = frontmatter && frontmatter[key] !== undefined ? frontmatter[key] : settings.upload.defaultName;
