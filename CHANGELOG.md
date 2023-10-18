@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.9.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.8.3...6.9.0) (2023-10-18)
+
+
+### Features
+
+* **imagePath:** allow to use Obsidian path for attachments ([301efe8](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/301efe8798228f0afc9440545c9e55bf44dbb646))
+
 ## [6.8.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.8.2...6.8.3) (2023-10-14)
 
 
