@@ -124,6 +124,12 @@ a.github-publisher-download:hover {
 
 /* --------- GENERAL SETTINGS --------- */
 
+.github-publisher {
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	user-select: text;
+}
+
 .github-publisher textarea {
 	width: 250px;
 	height: 100px;
@@ -294,7 +300,7 @@ a.github-publisher-download:hover {
 	font-size: 18px;
 }
 
-.github-publisher .important {
+.github-publisher .important:not(.token) {
 	color: var(--text-error);
 	font-weight: bold;
 }

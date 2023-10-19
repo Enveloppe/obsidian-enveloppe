@@ -269,7 +269,7 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
  * @param {GitHubPublisherSettings} settings Settings
  * @return {string} edited path
  */
-function regexOnPath(path: string, settings: GitHubPublisherSettings) {
+export function regexOnPath(path: string, settings: GitHubPublisherSettings):string {
 	const uploadSettings = settings.upload;
 	if (uploadSettings.behavior === FolderSettings.fixed || uploadSettings.replacePath.length === 0) return path;
 	for (const regexTitle of uploadSettings.replacePath) {

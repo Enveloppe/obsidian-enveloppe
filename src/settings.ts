@@ -40,7 +40,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		const { containerEl } = this;
 		containerEl.empty();
 		containerEl.addClass("github-publisher");
-
 		const PUBLISHER_TABS = {
 			"github-configuration": {
 				name: i18next.t("settings.github.title"),
@@ -111,7 +110,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				cls: "settings-tab-name",
 				text: tabInfo.name,
 			});
-			if (tabID === "github-configuration")
+			if (tabID === this.settings.tabsID ?? EnumbSettingsTabId.github)
 				tabEl.addClass("settings-tab-active");
 
 			tabEl.addEventListener("click", async () => {
@@ -127,13 +126,17 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			cls: "settings-tab-page",
 		});
 		this.renderSettingsPage(this.settings.tabsID ?? EnumbSettingsTabId.github);
+
+
 	}
 
 	/**
 	 * Render the settings tab
 	 * @param {string} tabId - to know which tab to render
 	 */
-	async renderSettingsPage(tabId: string) {
+	async renderSettingsPage(tabId: string | EnumbSettingsTabId) {
+		this.settings.tabsID = tabId as EnumbSettingsTabId;
+		await this.plugin.saveSettings();
 		this.settingsPage.empty();
 		switch (tabId) {
 		case "github-configuration":
@@ -155,8 +158,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			this.renderHelp();
 			break;
 		}
-		this.settings.tabsID = tabId as EnumbSettingsTabId;
-		await this.plugin.saveSettings();
 	}
 
 	/**
