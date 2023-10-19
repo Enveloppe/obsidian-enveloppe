@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.10.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.10.0...6.10.1) (2023-10-19)
+
+
+### Bug Fixes
+
+* **settings:** allow to keep the old behavior for settings tab ([815cb0f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/815cb0fc07741c9491f17e99d42a09a4d8ff370f))
+
 ## [6.10.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.9.2...6.10.0) (2023-10-19)
 
 
