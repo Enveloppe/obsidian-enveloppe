@@ -68,7 +68,7 @@ export async function createRelativePath(
 	const targetPath =
 		targetFile.linked.extension === "md"
 			? getReceiptFolder(targetFile.linked, settings, shortRepo, app)
-			: getImageLinkOptions(
+			: getImagePath(
 				targetFile.linked,
 				settings,
 				getFrontmatterSettings(frontmatter, settings, shortRepo)
@@ -239,7 +239,8 @@ function createFrontmatterPath(
 export function regexOnFileName(fileName: string, settings: GitHubPublisherSettings): string {
 	const uploadSettings = settings.upload;
 	if (fileName === uploadSettings.folderNote.rename && uploadSettings.folderNote.enable || uploadSettings.replaceTitle.length === 0) return fileName;
-	fileName = fileName.replace(".md", "");
+	const extension = fileName.match(/\.[0-9a-z]+$/i)?.at(-1) ?? "";
+	fileName = fileName.replace(extension, "");
 	for (const regexTitle of uploadSettings.replaceTitle) {
 		if (regexTitle.regex.trim().length > 0) {
 			const toReplace = regexTitle.regex;
@@ -258,7 +259,7 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 			}
 		}
 	}
-	return `${fileName}.md`;
+	return `${fileName}${extension}`;
 }
 
 
@@ -370,11 +371,27 @@ export function getReceiptFolder(
  * @return {string} the new filepath
  */
 
-export function getImageLinkOptions(
+export function getImagePath(
 	file: TFile,
 	settings: GitHubPublisherSettings,
 	sourceFrontmatter: FrontmatterConvert | null
 ): string {
+	let imagePath = createImagePath(file, settings, sourceFrontmatter);
+	imagePath = regexOnPath(imagePath, settings);
+	return regexOnFileName(imagePath, settings);
+}
+
+/**
+ * Create filepath in github Repository based on settings and frontmatter for image
+ * @param {TFile} file : Source file
+ * @param {GitHubPublisherSettings} settings Settings
+ * @param {FrontmatterConvert | null} sourceFrontmatter
+ * @return {string} the new filepath
+ */
+
+function createImagePath(file: TFile,
+	settings: GitHubPublisherSettings,
+	sourceFrontmatter: FrontmatterConvert | null):string {
 	if (!sourceFrontmatter || !sourceFrontmatter.attachmentLinks) {
 		if (settings.embed.useObsidianFolder) {
 			if (settings.upload.behavior === FolderSettings.yaml) {
@@ -400,4 +417,3 @@ export function getImageLinkOptions(
 	}
 	return file.path;
 }
-
