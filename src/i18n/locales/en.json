@@ -63,6 +63,7 @@
     },
     "published": "published",
     "regex": "regex",
+    "rename": "Renamed key(s)...",
     "repository": "Repository",
     "rootFolder": "root folder",
     "save": "Save",
@@ -305,6 +306,7 @@
           "default": "The name \"default\" is reserved for your primary configuration.",
           "desc": "These \"other repositories\" allow you to use all the commands on the repositories added below.",
           "duplicate": "Smartkey must be unique!",
+          "empty": "Smartkeys cannot be empty",
           "frontmatterInfo": "Using the \"shortRepo\" properties key with the \"smartKey\" also allows you to use this repository in a file without having to write its path.",
           "newRepo": "a new repository",
           "otherConfig": "Other settings",
@@ -489,9 +491,9 @@
     "upload": {
       "defaultFolder": {
         "desc": "Set the default reception folder. Let it empty to use the root of the repository.",
+        "other": "Use this folder as root within the repository (each path will be prepend by it)",
         "placeholder": "docs",
-        "title": "Default Folder",
-        "other" : "Use this folder as root within the repository (each path will be prepend by it)"
+        "title": "Default Folder"
       },
       "folderBehavior": {
         "desc": "Choose the file tree in the repository, with using a properties key, a fixed folder or your Obsidian file tree.",

@@ -50,7 +50,7 @@ export class ModalAddingNewRepository extends Modal {
 
 
 		const defaultRepository: Repository = {
-			smartKey: "",
+			smartKey: "smartkey",
 			user: this.settings.github.user,
 			repo: this.settings.github.repo,
 			branch: this.settings.github.branch,
@@ -85,7 +85,7 @@ export class ModalAddingNewRepository extends Modal {
 			});
 
 		for (const repo of this.repository) {
-			new Setting(contentEl)
+			const sett = new Setting(contentEl)
 				.setClass("max-width")
 				.setClass("display-none")
 				.addText((text) => {
@@ -94,17 +94,7 @@ export class ModalAddingNewRepository extends Modal {
 						.setValue(repo.smartKey)
 						.onChange((value) => {
 							repo.smartKey = value.toLowerCase();
-							if (this.plugin.settings.github.otherRepo.filter((r) => r.smartKey === repo.smartKey).length > 1) {
-								new Notice(i18next.t("settings.github.smartRepo.modals.duplicate"));
-								text.inputEl.addClass("error");
-								repo.smartKey = "";
-							} else if (repo.smartKey === "default") {
-								text.inputEl.addClass("error");
-								repo.smartKey = "";
-								new Notice(i18next.t("settings.github.smartRepo.modals.default") as string);
-							} else {
-								text.inputEl.removeClass("error");
-							}
+							sett.controlEl.setAttribute("smartKey", value.toLowerCase());
 						});
 
 				})
@@ -133,15 +123,69 @@ export class ModalAddingNewRepository extends Modal {
 				button
 					.setButtonText(i18next.t("common.save"))
 					.onClick(() => {
-						this.onSubmit(this.repository);
-						this.close();
+						const error = this.foundError();
+						const input = error.repo.length > 0 ? this.containerEl.querySelector(`[smartkey="${error.repo}"] input`) : contentEl.querySelector("[placeholder=\"smartKey\"] input");
+						if (error.type === "None") {
+							//remove error
+							input?.classList.remove("error");
+							this.onSubmit(this.repository);
+							this.close();
+						}
+						input?.classList.add("error");
+						if (error.type === "duplicate") {
+							new Notice(i18next.t("settings.github.smartRepo.modals.duplicate"));
+						} else if (error.type === "default") {
+							new Notice(i18next.t("settings.github.smartRepo.modals.default"));
+						} else if (error.type === "empty") {
+							new Notice(i18next.t("settings.github.smartRepo.modals.empty"));
+						}
 					});
 			});
 	}
+
+	foundError(): { repo: string; type: "duplicate" | "default" | "empty" | "None"} {
+		for (const repo of this.repository) {
+			if (this.plugin.settings.github.otherRepo.filter((r) => r.smartKey === repo.smartKey).length > 1) {
+				return {repo: repo.smartKey, type: "duplicate"};
+			} else if (repo.smartKey === "default") {
+				return {repo: repo.smartKey, type: "default"};
+			} else if (repo.smartKey.length === 0) {
+				return {repo: "", type: "empty"};
+			}
+		}
+		return {repo: "", type: "None"};
+
+	}
+
+
 	onClose() {
-		const {contentEl} = this;
-		contentEl.empty();
+		const { contentEl } = this;
+		const error = this.foundError();
+		if (error.type === "empty") {
+			//rename the repo
+			const repo = this.repository.filter((r) => r.smartKey === error.repo);
+			for (let i = 0; i < repo.length; i++) {
+				repo[i].smartKey = `smartkey-${i}`;
+			}
+			new Notice(`${i18next.t("settings.github.smartRepo.modals.empty")} ${i18next.t("common.rename")}`);
+		} else if (error.type === "duplicate") {
+			//rename the repo
+			const repo = this.repository.filter((r) => r.smartKey === error.repo);
+			for (let i = 0; i < repo.length; i++) {
+				repo[i].smartKey = `${repo[i].smartKey}-${i}`;
+			}
+			new Notice(`${i18next.t("settings.github.smartRepo.modals.duplicate")} ${i18next.t("common.rename")}`);
+		} else if (error.type === "default") {
+			//rename the repo
+			const repo = this.repository.filter((r) => r.smartKey === error.repo);
+			for (const r of repo) {
+				const randomKey = Math.random().toString(36).substring(2, 8);
+				r.smartKey = `${r.smartKey}-${randomKey}`;
+			}
+			new Notice(`${i18next.t("settings.github.smartRepo.modals.default")} ${i18next.t("common.rename")}`);
+		}
 		this.onSubmit(this.repository);
+		contentEl.empty();
 	}
 }
 
@@ -206,7 +250,7 @@ class ModalEditingRepository extends Modal {
 						})
 				);
 		}
-		
+
 		new Setting(contentEl)
 			.setName(i18next.t("settings.github.username.title"))
 			.setDesc(i18next.t("settings.github.username.desc"))
@@ -220,7 +264,7 @@ class ModalEditingRepository extends Modal {
 						this.repository.user = value.trim();
 					})
 			);
-		
+
 		new Setting(contentEl)
 			.setName(i18next.t("settings.github.repoName.title"))
 			.setDesc(i18next.t("settings.github.repoName.desc"))
@@ -232,7 +276,7 @@ class ModalEditingRepository extends Modal {
 						this.repository.repo = value.trim();
 					})
 			);
-				
+
 		new Setting(contentEl)
 			.setName(i18next.t("settings.github.branch.title"))
 			.setDesc(i18next.t("settings.github.branch.desc"))
@@ -263,7 +307,7 @@ class ModalEditingRepository extends Modal {
 						const octokit = await this.plugin.reloadOctokit();
 						this.repository.verifiedRepo = await checkRepositoryValidity(
 							octokit,
-							this.repository, 
+							this.repository,
 							null);
 						this.plugin.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.plugin.settings);
 					})
