@@ -455,6 +455,10 @@
         "desc": "Sur mobile, il peut être difficile de debug le module. Activer cette option pour notifier toutes les erreurs via une notification Obsidian.",
         "title": "Notifier toutes les erreurs"
       },
+      "saveTab": {
+        "desc": "Permet de rouvrir les paramètres sur l'onglet précédemment utilisé",
+        "title": "Sauvegarder l'onglet"
+      },
       "shareKey": {
         "all": {
           "desc": "Autoriser le partage de tous les fichiers et ignorer l'état de la clé de partage",

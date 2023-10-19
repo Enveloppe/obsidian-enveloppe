@@ -455,6 +455,10 @@
         "desc": "On mobile, it can be hard to debug the plugin. Enable this option to log every error in a Notice.",
         "title": "Notice every error"
       },
+      "saveTab": {
+        "desc": "Allows you to reopen the settings on the previously used tab",
+        "title": "Save tab"
+      },
       "shareKey": {
         "all": {
           "desc": "Allow to share all file and ignore the share key state",

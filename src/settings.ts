@@ -40,6 +40,14 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		const { containerEl } = this;
 		containerEl.empty();
 		containerEl.addClass("github-publisher");
+		const defaultTabId = EnumbSettingsTabId.github;
+		let savedId = this.settings.tabsID ?? defaultTabId;
+		if (this.settings.plugin.saveTabId !== undefined && !this.settings.plugin.saveTabId) { //real false
+			this.settings.tabsID = defaultTabId;
+			savedId = defaultTabId;
+			this.plugin.saveSettings();
+		}
+
 		const PUBLISHER_TABS = {
 			"github-configuration": {
 				name: i18next.t("settings.github.title"),
@@ -110,7 +118,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				cls: "settings-tab-name",
 				text: tabInfo.name,
 			});
-			if (tabID === this.settings.tabsID ?? EnumbSettingsTabId.github)
+			if (tabID === savedId)
 				tabEl.addClass("settings-tab-active");
 
 			tabEl.addEventListener("click", async () => {
@@ -125,7 +133,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		this.settingsPage = containerEl.createEl("div", {
 			cls: "settings-tab-page",
 		});
-		this.renderSettingsPage(this.settings.tabsID ?? EnumbSettingsTabId.github);
+		this.renderSettingsPage(savedId);
 
 
 	}
@@ -135,8 +143,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	 * @param {string} tabId - to know which tab to render
 	 */
 	async renderSettingsPage(tabId: string | EnumbSettingsTabId) {
-		this.settings.tabsID = tabId as EnumbSettingsTabId;
-		await this.plugin.saveSettings();
+		if (this.settings.plugin.saveTabId || this.settings.plugin.saveTabId === undefined) {
+			this.settings.tabsID = tabId as EnumbSettingsTabId;
+			await this.plugin.saveSettings();
+		}
 		this.settingsPage.empty();
 		switch (tabId) {
 		case "github-configuration":
@@ -1131,6 +1141,20 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+
+		new Setting(this.settingsPage)
+			.setName(i18next.t("settings.plugin.saveTab.title"))
+			.setDesc(i18next.t("settings.plugin.saveTab.desc"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(pluginSettings.saveTabId ?? true)
+					.onChange(async (value) => {
+						pluginSettings.saveTabId = value;
+						this.settings.tabsID = value ? EnumbSettingsTabId.plugin : EnumbSettingsTabId.github;
+						await this.plugin.saveSettings();
+					})
+			);
+
 
 		this.settingsPage.createEl("h4", {text: i18next.t("settings.plugin.head.log")});
 

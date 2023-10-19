@@ -143,6 +143,7 @@ export interface GitHubPublisherSettings {
 		dev?: boolean;
 		displayModalRepoEditing: boolean;
 		migrated?: boolean;
+		saveTabId?: boolean;
 
 	}
 }
