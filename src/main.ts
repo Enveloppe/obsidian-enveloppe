@@ -32,6 +32,7 @@ import {checkRepositoryValidity, verifyRateLimitAPI} from "./utils/data_validati
 
 export default class GithubPublisher extends Plugin {
 	settings!: GitHubPublisherSettings;
+	branchName: string = "";
 
 	/**
 	 * Get the title field of a file
@@ -43,19 +44,19 @@ export default class GithubPublisher extends Plugin {
 		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
 	}
 
-	async chargeAllCommands(repo: Repository|null, plugin: GithubPublisher, branchName: string) {
+	async chargeAllCommands(repo: Repository|null, plugin: GithubPublisher) {
 		if (plugin.settings.plugin.copyLink.addCmd) {
 			this.addCommand(await createLinkCallback(repo, this));
 		}
-		this.addCommand(await shareOneNoteCallback(repo, this, branchName));
+		this.addCommand(await shareOneNoteCallback(repo, this, this.branchName));
 		if (plugin.settings.upload.autoclean.enable) {
 			logs({settings: this.settings}, "Adding purge command");
-			this.addCommand(await purgeNotesRemoteCallback(this, repo, branchName));
+			this.addCommand(await purgeNotesRemoteCallback(this, repo, this.branchName));
 		}
-		this.addCommand(await uploadAllNotesCallback(this, repo, branchName));
-		this.addCommand(await uploadNewNotesCallback(this, repo, branchName));
-		this.addCommand(await uploadAllEditedNotesCallback(this, repo, branchName));
-		this.addCommand(await shareEditedOnlyCallback(repo, branchName, this));
+		this.addCommand(await uploadAllNotesCallback(this, repo, this.branchName));
+		this.addCommand(await uploadNewNotesCallback(this, repo, this.branchName));
+		this.addCommand(await uploadAllEditedNotesCallback(this, repo, this.branchName));
+		this.addCommand(await shareEditedOnlyCallback(repo, this.branchName, this));
 		this.addCommand(await checkRepositoryValidityCallback(this, repo));
 	}
 
@@ -102,14 +103,14 @@ export default class GithubPublisher extends Plugin {
 		}
 	}
 
-	async reloadCommands(branchName: string) {
+	async reloadCommands() {
 		//compare old and new repo to delete old commands
 		logs({settings: this.settings}, "Reloading commands");
 		const newRepo:Repository[] = this.settings.github?.otherRepo ?? [];
 		this.cleanOldCommands();
 		for (const repo of newRepo) {
 			if (repo.createShortcuts) {
-				await this.chargeAllCommands(repo, this, branchName);
+				await this.chargeAllCommands(repo, this);
 			} else {
 				this.cleanSpecificCommands(repo);
 			}
@@ -166,7 +167,7 @@ export default class GithubPublisher extends Plugin {
 		}
 		return new GithubBranch(
 			octokit,
-			this
+			this,
 		);
 	}
 
@@ -191,11 +192,11 @@ export default class GithubPublisher extends Plugin {
 		const oldSettings = this.settings;
 		await migrateSettings(oldSettings as unknown as OldSettings, this);
 
-		const branchName =
+		this.branchName =
 			this.app.vault.getName().replaceAll(" ", "-").replaceAll(".", "-") +
 			"-" +
 			new Date().toLocaleDateString("en-US").replace(/\//g, "-");
-		this.addSettingTab(new GithubPublisherSettingsTab(this.app, this, branchName));
+		this.addSettingTab(new GithubPublisherSettingsTab(this.app, this, this.branchName));
 		// verify rate limit
 
 		if (!this.settings.github.verifiedRepo && (await this.loadToken()) !== "") {
@@ -209,19 +210,19 @@ export default class GithubPublisher extends Plugin {
 			//@ts-ignore
 			this.app.workspace.on("file-menu", (menu: Menu, folder: TAbstractFile) => {
 				if (this.settings.plugin.fileMenu && folder instanceof TFolder) {
-					addMenuFolder(menu, folder, branchName, this);
+					addMenuFolder(menu, folder, this.branchName, this);
 				} else if (folder instanceof TFile) {
-					addMenuFile(this, folder, branchName, menu);
+					addMenuFile(this, folder, this.branchName, menu);
 				}
 			})
 		);
 
 		this.registerEvent(
 			this.app.workspace.on("editor-menu", (menu, editor, view) => {
-				if (view.file) addMenuFile(this, view.file, branchName, menu);
+				if (view.file) addMenuFile(this, view.file, this.branchName, menu);
 			})
 		);
-		await this.chargeAllCommands(null, this, branchName);
+		await this.chargeAllCommands(null, this);
 
 		this.addCommand({
 			id: "check-rate-limit",
@@ -239,14 +240,14 @@ export default class GithubPublisher extends Plugin {
 				id: "run-cmd-for-repo",
 				name: i18next.t("commands.runOtherRepo.title"),
 				callback: async () => {
-					new ChooseWhichRepoToRun(this.app, this, branchName).open();
+					new ChooseWhichRepoToRun(this.app, this, this.branchName).open();
 				}
 			});
 		}
 
 		const repoWithShortcuts = this.settings.github.otherRepo.filter((repo) => repo.createShortcuts);
 		for (const repo of repoWithShortcuts) {
-			await this.chargeAllCommands(repo, this, branchName);
+			await this.chargeAllCommands(repo, this);
 		}
 	}
 

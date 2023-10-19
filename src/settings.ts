@@ -301,7 +301,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						new ModalAddingNewRepository(this.app, this.plugin.settings, this.branchName, this.plugin, repository, (result => {
 							this.plugin.settings.github.otherRepo = result;
 							this.plugin.saveSettings();
-							this.plugin.reloadCommands(this.branchName);
+							this.plugin.reloadCommands();
 						})
 						).open();
 					}));
@@ -549,7 +549,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 						this.renderSettingsPage(EnumbSettingsTabId.upload);
 						this.plugin.cleanOldCommands();
-						await this.plugin.chargeAllCommands(null, this.plugin, this.branchName);
+						await this.plugin.chargeAllCommands(null, this.plugin);
 					});
 			});
 		if (uploadSettings.autoclean.enable && !condition) {

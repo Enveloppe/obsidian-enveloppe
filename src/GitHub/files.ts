@@ -19,8 +19,6 @@ import { isAttachment, isShared } from "../utils/data_validation_test";
 import Publisher from "./upload";
 
 export class FilesManagement extends Publisher {
-	octokit: Octokit;
-	plugin: GithubPublisher;
 
 	/**
 	 * @param {Octokit} octokit The octokit instance
@@ -29,14 +27,9 @@ export class FilesManagement extends Publisher {
 
 	constructor(
 		octokit: Octokit,
-		plugin: GithubPublisher
+		plugin: GithubPublisher,
 	) {
 		super(octokit, plugin);
-		this.vault = plugin.app.vault;
-		this.metadataCache = plugin.app.metadataCache;
-		this.settings = plugin.settings;
-		this.octokit = octokit;
-		this.plugin = plugin;
 	}
 
 	/**

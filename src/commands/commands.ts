@@ -44,7 +44,7 @@ export async function shareAllMarkedNotes(
 			if (createGithubBranch) {
 				const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter, sharedFiles.length);
 				if (!isValid) return false;
-				await PublisherManager.newBranch(branchName, repoFrontmatter);
+				await PublisherManager.newBranch(repoFrontmatter);
 			}
 			for (const sharedFile of sharedFiles) {
 				try {
@@ -52,7 +52,6 @@ export async function shareAllMarkedNotes(
 					const uploaded = await PublisherManager.publish(
 						sharedFile,
 						false,
-						branchName,
 						monoRepo
 					) ;
 					if (uploaded) {
@@ -86,13 +85,11 @@ export async function shareAllMarkedNotes(
 				if (metadataExtractor) {
 					await PublisherManager.uploadMetadataExtractorFiles(
 						metadataExtractor,
-						branchName,
 						repoFrontmatter
 					);
 				}
 			}
 			const update = await PublisherManager.updateRepository(
-				branchName,
 				repoFrontmatter
 			);
 			if (update) {
@@ -136,14 +133,14 @@ export async function purgeNotesRemote(
 		);
 		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, monoRepo.frontmatter);
 		if (!isValid) return false;
-		await PublisherManager.newBranch(branchName, monoRepo.frontmatter);
+		await PublisherManager.newBranch(monoRepo.frontmatter);
 		const deleted = await deleteFromGithub(
 			false,
 			branchName,
 			PublisherManager,
 			monoRepo
 		);
-		await PublisherManager.updateRepository(branchName, monoRepo.frontmatter);
+		await PublisherManager.updateRepository(monoRepo.frontmatter);
 		if (PublisherManager.settings.plugin.displayModalRepoEditing) new ListChangedFiles(PublisherManager.plugin.app, deleted).open();
 	} catch (e) {
 		notif({settings: PublisherManager.settings, e: true}, e);
@@ -178,11 +175,10 @@ export async function shareOneNote(
 			repo: repository
 		};
 		if (!isValid) return false;
-		await PublisherManager.newBranch(branchName, repoFrontmatter);
+		await PublisherManager.newBranch(repoFrontmatter);
 		const publishSuccess = await PublisherManager.publish(
 			file,
 			true,
-			branchName,
 			multiRepo,
 			[],
 			true
@@ -199,13 +195,11 @@ export async function shareOneNote(
 				if (metadataExtractor) {
 					await PublisherManager.uploadMetadataExtractorFiles(
 						metadataExtractor,
-						branchName,
 						repoFrontmatter
 					);
 				}
 			}
 			const update = await PublisherManager.updateRepository(
-				branchName,
 				repoFrontmatter
 			);
 			if (update) {
@@ -225,7 +219,7 @@ export async function shareOneNote(
 					const listEdited = createListEdited(publishSuccess.uploaded, publishSuccess.deleted, publishSuccess.error);
 					new ListChangedFiles(app, listEdited).open();
 				}
-				
+
 			} else {
 				new Notice(
 					(i18next.t("error.errorPublish", { repo: repoFrontmatter})));
@@ -245,7 +239,7 @@ export async function shareOneNote(
  * Deep scan the repository and send only the note that not exist in the repository
  * @param {GithubBranch} PublisherManager
  * @param {string} branchName - The branch name created by the plugin
- * @param {MonoRepoProperties} monoRepo - The repo 
+ * @param {MonoRepoProperties} monoRepo - The repo
  * @returns {Promise<void>}
  */
 export async function shareNewNote(
@@ -274,7 +268,7 @@ export async function shareNewNote(
 		const statusBarElement = plugin.addStatusBarItem();
 		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, monoRepo.frontmatter, newlySharedNotes.length);
 		if (!isValid) return false;
-		await PublisherManager.newBranch(branchName, monoRepo.frontmatter);
+		await PublisherManager.newBranch(monoRepo.frontmatter);
 		await shareAllMarkedNotes(
 			PublisherManager,
 			statusBarElement,
@@ -324,7 +318,7 @@ export async function shareAllEditedNotes(
 		const statusBarElement = plugin.addStatusBarItem();
 		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, monoRepo.frontmatter, newlySharedNotes.length);
 		if (!isValid) return false;
-		await PublisherManager.newBranch(branchName, monoRepo.frontmatter);
+		await PublisherManager.newBranch(monoRepo.frontmatter);
 		await shareAllMarkedNotes(
 			PublisherManager,
 			statusBarElement,
@@ -370,7 +364,7 @@ export async function shareOnlyEdited(
 		const statusBarElement = PublisherManager.plugin.addStatusBarItem();
 		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter, newlySharedNotes.length);
 		if (!isValid) return false;
-		await PublisherManager.newBranch(branchName, repoFrontmatter);
+		await PublisherManager.newBranch(repoFrontmatter);
 		await shareAllMarkedNotes(
 			PublisherManager,
 			statusBarElement,

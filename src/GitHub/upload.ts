@@ -52,6 +52,7 @@ export default class Publisher {
 	vault: Vault;
 	metadataCache: MetadataCache;
 	settings: GitHubPublisherSettings;
+	branchName: string;
 
 	/**
 	 * Class to manage the branch
@@ -61,27 +62,26 @@ export default class Publisher {
 
 	constructor(
 		octokit: Octokit,
-		plugin: GithubPublisherPlugin
+		plugin: GithubPublisherPlugin,
 	) {
 		this.vault = plugin.app.vault;
 		this.metadataCache = plugin.app.metadataCache;
 		this.settings = plugin.settings;
 		this.octokit = octokit;
 		this.plugin = plugin;
+		this.branchName = plugin.branchName;
 	}
 
 	/**
 	 * Add a status bar + send embed to GitHub. Deep-scanning files.
 	 * @param {TFile[]} linkedFiles File embedded
 	 * @param {TFile[]} fileHistory already sent files
-	 * @param {string} branchName The name of the branch created by the plugin
 	 * @param {boolean} deepScan starts the conversion+push of md file. If false, just sharing image
 	 * @param {Properties} properties Object properties will all parameters needed, taken from frontmatter and the plugin settings
 	 */
 	async statusBarForEmbed(
 		linkedFiles: TFile[],
 		fileHistory: TFile[],
-		branchName: string,
 		deepScan: boolean,
 		properties: MonoProperties,
 	) {
@@ -107,7 +107,6 @@ export default class Publisher {
 								const published = await this.publish(
 									file,
 									false,
-									branchName,
 									repoProperties,
 									fileHistory,
 									true
@@ -121,7 +120,6 @@ export default class Publisher {
 							) {
 								const published = await this.uploadImage(
 									file,
-									branchName,
 									properties
 								);
 								fileHistory.push(file);
@@ -161,7 +159,6 @@ export default class Publisher {
 	 * Main prog to scan notes, their embed files and send it to GitHub.
 	 * @param {TFile} file Origin file
 	 * @param {boolean} autoclean If the autoclean must be done right after the file
-	 * @param {string} branchName The name of the branch created
 	 * @param repo
 	 * @param {TFile[]} fileHistory File already sent during DeepScan
 	 * @param {boolean} deepScan if the plugin must check the embed notes too.
@@ -169,14 +166,13 @@ export default class Publisher {
 	async publish(
 		file: TFile,
 		autoclean: boolean = false,
-		branchName: string,
 		repo: MultiRepoProperties | MonoRepoProperties,
 		fileHistory: TFile[] = [],
 		deepScan: boolean = false,
 	) {
 		const shareFiles = new FilesManagement(
 			this.octokit,
-			this.plugin
+			this.plugin,
 		);
 		const frontmatter = this.metadataCache.getFileCache(file)?.frontmatter;
 		const isNotEmpty = checkEmptyConfiguration(getRepoFrontmatter(this.settings, repo.repo, frontmatter), this.plugin);
@@ -246,7 +242,6 @@ export default class Publisher {
 					await this.uploadOnMultipleRepo(
 						file,
 						text,
-						branchName,
 						path,
 						embedFiles,
 						fileHistory,
@@ -271,7 +266,6 @@ export default class Publisher {
 	 * Upload the file to GitHub
 	 * @param {TFile} file sourceFile
 	 * @param {string} text text to send
-	 * @param {string} branchName the branch name created by the plugin
 	 * @param {string} path path to the file in the github repo
 	 * @param {TFile[]} embedFiles File embedded in the note
 	 * @param {TFile[]} fileHistory File already sent during DeepScan
@@ -284,7 +278,6 @@ export default class Publisher {
 	async uploadOnMultipleRepo(
 		file: TFile,
 		text: string,
-		branchName: string,
 		path: string,
 		embedFiles: TFile[],
 		fileHistory: TFile[],
@@ -301,7 +294,7 @@ export default class Publisher {
 		const repo = properties.frontmatter.repo;
 		notif(
 			{ settings: this.settings },
-			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${branchName}`
+			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${this.branchName}`
 		);
 		let deleted: Deleted = {
 			success: false,
@@ -309,7 +302,7 @@ export default class Publisher {
 			undeleted: [],
 		};
 		load.remove();
-		const uploaded: UploadedFiles | undefined = await this.uploadText(text, path, file.name, branchName, repo);
+		const uploaded: UploadedFiles | undefined = await this.uploadText(text, path, file.name, repo);
 		if (!uploaded) {
 			return {
 				deleted,
@@ -323,7 +316,6 @@ export default class Publisher {
 		const embeded = await this.statusBarForEmbed(
 			embedFiles,
 			fileHistory,
-			branchName,
 			deepScan,
 			properties
 		);
@@ -333,7 +325,7 @@ export default class Publisher {
 		if (autoclean && repo.autoclean) {
 			deleted = await deleteFromGithub(
 				true,
-				branchName,
+				this.branchName,
 				shareFiles,
 				{
 					frontmatter: repo,
@@ -352,7 +344,6 @@ export default class Publisher {
 	 * Upload file to GitHub
 	 * @param {string} content Contents of the file sent
 	 * @param {string} title for commit message, name of the file
-	 * @param {string} branchName the branch name created by the plugin
 	 * @param {string} path path in GitHub
 	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
 	 */
@@ -361,7 +352,6 @@ export default class Publisher {
 		content: string,
 		path: string,
 		title: string = "",
-		branchName: string,
 		repoFrontmatter: RepoFrontmatter
 	) {
 		if (!repoFrontmatter.repo) {
@@ -389,7 +379,7 @@ export default class Publisher {
 			message: `Adding ${title}`,
 			content,
 			sha: "",
-			branch: branchName,
+			branch: this.branchName,
 		};
 		const result: UploadedFiles = {
 			isUpdated: false,
@@ -402,7 +392,7 @@ export default class Publisher {
 					owner: repoFrontmatter.owner,
 					repo: repoFrontmatter.repo,
 					path,
-					ref: branchName,
+					ref: this.branchName,
 				}
 			);
 			// @ts-ignore
@@ -432,7 +422,6 @@ export default class Publisher {
 
 	async uploadImage(
 		imageFile: TFile,
-		branchName: string,
 		properties: MonoProperties,
 	) {
 		const imageBin = await this.vault.readBinary(imageFile);
@@ -442,7 +431,7 @@ export default class Publisher {
 			this.settings,
 			properties.frontmatter.general
 		);
-		return await this.upload(image64, path, "", branchName, properties.frontmatter.repo);
+		return await this.upload(image64, path, "", properties.frontmatter.repo);
 
 	}
 
@@ -451,7 +440,6 @@ export default class Publisher {
 	 * @param {string} text contents of the note
 	 * @param {string} path new Path in GitHub
 	 * @param {string} title name note for message commit
-	 * @param {string} branchName The branch created by the plugin
 	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
 	 * @return {Promise<void>}
 	 */
@@ -460,7 +448,6 @@ export default class Publisher {
 		text: string,
 		path: string,
 		title: string = "",
-		branchName: string,
 		repoFrontmatter: RepoFrontmatter
 	): Promise<UploadedFiles | undefined> {
 		try {
@@ -469,7 +456,6 @@ export default class Publisher {
 				contentBase64,
 				path,
 				title,
-				branchName,
 				repoFrontmatter
 			);
 		} catch (e) {
@@ -481,14 +467,12 @@ export default class Publisher {
 	/**
 	 * Upload the metadataExtractor json file
 	 * @param {MetadataExtractor} metadataExtractor metadataExtractor
-	 * @param {string} branchName The branch name created by the plugin
 	 * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter frontmatter settings
 	 * @return {Promise<void>}
 	 */
 
 	async uploadMetadataExtractorFiles(
 		metadataExtractor: MetadataExtractor,
-		branchName: string,
 		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]
 	): Promise<void> {
 		if (metadataExtractor) {
@@ -507,7 +491,6 @@ export default class Publisher {
 							contents,
 							path,
 							file.split("/").pop(),
-							branchName,
 							repo
 						);
 					}
@@ -586,12 +569,13 @@ export default class Publisher {
 						newLinkedFiles.push(file);
 						continue;
 					}
-					const {status, data } = await this.octokit.request(
+					const { status, data } = await this.octokit.request(
 						"GET /repos/{owner}/{repo}/commits",
 						{
 							owner: repoFrontmatter.repo.owner,
 							repo: repoFrontmatter.repo.repo,
 							path: imagePath,
+							sha: this.branchName,
 						});
 
 					if (status === 200) {
@@ -601,7 +585,7 @@ export default class Publisher {
 						//if the file in the vault is newer than the file in the repo, push it
 						if (lastEditedDate && lastEditedAttachment > lastEditedDate || !lastEditedDate) {
 							newLinkedFiles.push(file);
-						} else logs({settings: this.settings}, i18next.t("error.alreadyExists", {file: file.name}));
+						} else logs({ settings: this.settings }, i18next.t("error.alreadyExists", { file: file.name }));
 					}
 				} catch (e) {
 					newLinkedFiles.push(file);
