@@ -3,7 +3,7 @@ import {FrontMatterCache, TFile, TFolder} from "obsidian";
 import { getAPI, Link } from "obsidian-dataview";
 
 import {
-	getImageLinkOptions,
+	getImagePath,
 	getReceiptFolder,
 } from "../conversion/file_path";
 import GithubPublisher from "../main";
@@ -99,7 +99,7 @@ export class FilesManagement extends Publisher {
 		const allFileWithPath: ConvertedLink[] = [];
 		for (const file of files) {
 			if (isAttachment(file.extension)) {
-				const filepath = getImageLinkOptions(file, this.settings, null);
+				const filepath = getImagePath(file, this.settings, null);
 				allFileWithPath.push({
 					converted: filepath,
 					real: file.path,

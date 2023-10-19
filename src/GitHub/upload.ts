@@ -12,7 +12,7 @@ import { LOADING_ICON } from "src/utils/icons";
 
 import { mainConverting } from "../conversion/convert_text";
 import {
-	getImageLinkOptions,
+	getImagePath,
 	getReceiptFolder,
 } from "../conversion/file_path";
 import GithubPublisherPlugin from "../main";
@@ -437,7 +437,7 @@ export default class Publisher {
 	) {
 		const imageBin = await this.vault.readBinary(imageFile);
 		const image64 = arrayBufferToBase64(imageBin);
-		const path = getImageLinkOptions(
+		const path = getImagePath(
 			imageFile,
 			this.settings,
 			properties.frontmatter.general
@@ -575,7 +575,7 @@ export default class Publisher {
 		const newLinkedFiles: TFile[] = [];
 		for (const file of embedFiles) {
 			if (isAttachment(file.name)) {
-				const imagePath = getImageLinkOptions(
+				const imagePath = getImagePath(
 					file,
 					this.settings,
 					properties.frontmatter.general
