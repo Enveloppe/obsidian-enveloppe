@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.9.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.9.1...6.9.2) (2023-10-19)
+
+
+### Bug Fixes
+
+* rename "default folder" by "root folder" in the settings (didn't change any behavior) ([1f5ce3f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1f5ce3f8030bdc221ac520c2070ad22556c06dbc))
+
 ## [6.9.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.9.0...6.9.1) (2023-10-19)
 
 
