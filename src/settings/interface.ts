@@ -53,6 +53,7 @@ export interface Repository {
  * @description Interface for the settings of the plugin
  */
 export interface GitHubPublisherSettings {
+	tabsID?: EnumbSettingsTabId;
 	github: {
 		user: string;
 		repo: string;

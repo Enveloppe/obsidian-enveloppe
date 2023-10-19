@@ -9,7 +9,7 @@ import {
 	supportMe,
 	usefulLinks} from "./settings/help";
 import {
-	EnumbSettingsTabId,	FolderSettings, GithubTiersVersion, Repository } from "./settings/interface";
+	EnumbSettingsTabId,	FolderSettings, GitHubPublisherSettings, GithubTiersVersion, Repository } from "./settings/interface";
 import { migrateToken } from "./settings/migrate";
 import {ExportModal, ImportLoadPreset, ImportModal, loadAllPresets} from "./settings/modals/import_export";
 import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
@@ -27,11 +27,13 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	plugin: GithubPublisherPlugin;
 	settingsPage!: HTMLElement;
 	branchName: string;
+	settings: GitHubPublisherSettings;
 
 	constructor(app: App, plugin: GithubPublisherPlugin, branchName: string) {
 		super(app, plugin);
 		this.plugin = plugin;
 		this.branchName = branchName;
+		this.settings = plugin.settings;
 	}
 
 	display(): void{
@@ -124,14 +126,14 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		this.settingsPage = containerEl.createEl("div", {
 			cls: "settings-tab-page",
 		});
-		this.renderSettingsPage("github-configuration");
+		this.renderSettingsPage(this.settings.tabsID ?? EnumbSettingsTabId.github);
 	}
 
 	/**
 	 * Render the settings tab
 	 * @param {string} tabId - to know which tab to render
 	 */
-	renderSettingsPage(tabId: string) {
+	async renderSettingsPage(tabId: string) {
 		this.settingsPage.empty();
 		switch (tabId) {
 		case "github-configuration":
@@ -153,13 +155,15 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			this.renderHelp();
 			break;
 		}
+		this.settings.tabsID = tabId as EnumbSettingsTabId;
+		await this.plugin.saveSettings();
 	}
 
 	/**
 	 * Render the github configuration tab
 	 */
 	renderGithubConfiguration() {
-		const githubSettings = this.plugin.settings.github;
+		const githubSettings = this.settings.github;
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.apiType.title"))
 			.setDesc(i18next.t("settings.github.apiType.desc"))
@@ -288,8 +292,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setClass("connect-button")
 					.onClick(async () => {
 						const octokit = await this.plugin.reloadOctokit();
-						this.plugin.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, null,null);
-						this.plugin.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.plugin.settings);
+						this.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, null,null);
+						this.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.settings);
 						await this.plugin.saveSettings();
 					})
 			)
@@ -297,9 +301,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				button
 					.setButtonText(i18next.t("settings.github.smartRepo.button"))
 					.onClick(async () => {
-						const repository: Repository[] = this.plugin.settings.github?.otherRepo ?? [];
-						new ModalAddingNewRepository(this.app, this.plugin.settings, this.branchName, this.plugin, repository, (result => {
-							this.plugin.settings.github.otherRepo = result;
+						const repository: Repository[] = this.settings.github?.otherRepo ?? [];
+						new ModalAddingNewRepository(this.app, this.settings, this.branchName, this.plugin, repository, (result => {
+							this.settings.github.otherRepo = result;
 							this.plugin.saveSettings();
 							this.plugin.reloadCommands();
 						})
@@ -351,7 +355,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	 * Render the settings tab for the upload configuration
 	 */
 	renderUploadConfiguration() {
-		const uploadSettings = this.plugin.settings.upload;
+		const uploadSettings = this.settings.upload;
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.upload.folderBehavior.title"))
 			.setDesc(i18next.t("settings.upload.folderBehavior.desc"))
@@ -485,7 +489,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						if (uploadSettings.behavior !== FolderSettings.fixed) {
 							allRegex = allRegex.concat(uploadSettings.replacePath);
 						}
-						new ModalRegexFilePathName(this.app, this.plugin.settings, allRegex, (result => {
+						new ModalRegexFilePathName(this.app, this.settings, allRegex, (result => {
 							uploadSettings.replacePath = result.filter(title => {return title.type === "path";});
 							uploadSettings.replaceTitle = result.filter(title => {return title.type === "title";});
 							this.plugin.saveSettings();
@@ -520,7 +524,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 		}
 
-		showHideBasedOnFolder(this.plugin.settings, frontmatterKeySettings, rootFolderSettings, folderNoteSettings);
+		showHideBasedOnFolder(this.settings, frontmatterKeySettings, rootFolderSettings, folderNoteSettings);
 
 		//@ts-ignore
 		if (this.app.plugins.manifests["metadata-extractor"]) {
@@ -603,7 +607,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	 * Render the settings page for the text conversion parameters
 	 */
 	renderTextConversion() {
-		const textSettings = this.plugin.settings.conversion;
+		const textSettings = this.settings.conversion;
 		this.settingsPage.createEl("p", {
 			text: i18next.t("settings.conversion.desc") ,
 		});
@@ -615,7 +619,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			text: i18next.t("settings.conversion.links.desc") ,
 		});
 
-		const shareAll= this.plugin.settings.plugin.shareAll?.enable ? ` ${i18next.t("settings.conversion.links.internals.shareAll")}` : "";
+		const shareAll= this.settings.plugin.shareAll?.enable ? ` ${i18next.t("settings.conversion.links.internals.shareAll")}` : "";
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.links.internals.title"))
@@ -627,7 +631,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setValue(textSettings.links.internal)
 					.onChange(async (value) => {
 						textSettings.links.internal = value;
-						if (this.plugin.settings.plugin.shareAll?.enable) {
+						if (this.settings.plugin.shareAll?.enable) {
 							textSettings.links.unshared = true;
 						}
 						await this.plugin.saveSettings();
@@ -635,7 +639,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					});
 			});
 
-		if (textSettings.links.internal && !this.plugin.settings.plugin.shareAll?.enable) {
+		if (textSettings.links.internal && !this.settings.plugin.shareAll?.enable) {
 			new Setting(this.settingsPage)
 				.setName(
 					i18next.t("settings.conversion.links.nonShared.title")
@@ -717,8 +721,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				button
 					.setIcon("pencil")
 					.onClick(async () => {
-						new ModalRegexOnContents(this.app, this.plugin.settings, (result => {
-							this.plugin.settings.conversion.censorText = result.conversion.censorText;
+						new ModalRegexOnContents(this.app, this.settings, (result => {
+							this.settings.conversion.censorText = result.conversion.censorText;
 							this.plugin.saveSettings();
 						})).open();
 					});
@@ -784,7 +788,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 		this.settingsPage.createEl("h5", { text: i18next.t("settings.embed.attachment"), cls: "center" });
 
-		const embedSettings = this.plugin.settings.embed;
+		const embedSettings = this.settings.embed;
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.embed.transferImage.title"))
 			.addToggle((toggle) => {
@@ -973,7 +977,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	 * Render the settings page for the plugin settings (general settings, as shareKey)
 	 */
 	renderPluginSettings() {
-		const pluginSettings = this.plugin.settings.plugin;
+		const pluginSettings = this.settings.plugin;
 
 		this.settingsPage.createEl("h3", {text: i18next.t("settings.plugin.head.share")});
 		new Setting(this.settingsPage)
@@ -987,7 +991,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							enable: value,
 							excludedFileName: pluginSettings.shareAll?.excludedFileName ?? "DRAFT",
 						};
-						if (value) this.plugin.settings.conversion.links.internal = true;
+						if (value) this.settings.conversion.links.internal = true;
 						await this.plugin.saveSettings();
 						this.renderSettingsPage(EnumbSettingsTabId.plugin);
 					})
@@ -1172,15 +1176,15 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		this.settingsPage
 			.createEl("pre", { cls: "language-yaml" })
 			.createEl("code", {
-				text: KeyBasedOnSettings(this.plugin.settings),
+				text: KeyBasedOnSettings(this.settings),
 				cls: "language-yaml",
 			});
-		this.settingsPage.appendChild(help(this.plugin.settings));
+		this.settingsPage.appendChild(help(this.settings));
 		this.settingsPage.createEl("h2", {
 			text: i18next.t("settings.help.multiRepoHelp.title") ,
 		});
 		this.settingsPage.appendChild(
-			multipleRepoExplained(this.plugin.settings)
+			multipleRepoExplained(this.settings)
 		);
 		this.settingsPage.appendChild(supportMe());
 	}
