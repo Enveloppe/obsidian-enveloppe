@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.10.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.9.2...6.10.0) (2023-10-19)
+
+
+### Features
+
+* **settings:** save the tabID ([c5c7793](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c5c7793e64fb6f863695d56b6117686431110202))
+
 ## [6.9.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.9.1...6.9.2) (2023-10-19)
 
 
