@@ -378,9 +378,19 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					});
 			});
 
+		const defaultFolder = uploadSettings.behavior !== FolderSettings.yaml ?
+			{
+				desc: i18next.t("settings.upload.rootFolder.other"),
+				title: i18next.t("settings.upload.rootFolder.title"),
+			}
+			: {
+				desc: i18next.t("settings.upload.defaultFolder.desc"),
+				title: i18next.t("settings.upload.defaultFolder.title"),
+			};
+
 		new Setting(this.settingsPage)
-			.setName(i18next.t("settings.upload.defaultFolder.title"))
-			.setDesc(i18next.t("settings.upload.defaultFolder.desc"))
+			.setName(defaultFolder.title)
+			.setDesc(defaultFolder.desc)
 			.addText((text) => {
 				text.setPlaceholder(i18next.t("settings.upload.defaultFolder.placeholder"))
 					.setValue(uploadSettings.defaultName)

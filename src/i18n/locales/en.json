@@ -490,7 +490,8 @@
       "defaultFolder": {
         "desc": "Set the default reception folder. Let it empty to use the root of the repository.",
         "placeholder": "docs",
-        "title": "Default Folder"
+        "title": "Default Folder",
+        "other" : "Use this folder as root within the repository (each path will be prepend by it)"
       },
       "folderBehavior": {
         "desc": "Choose the file tree in the repository, with using a properties key, a fixed folder or your Obsidian file tree.",
@@ -513,6 +514,7 @@
       },
       "rootFolder": {
         "desc": "Append this path to the folder set by the properties key",
+        "other": "Use this folder as root within the repository (each path will be prepend by it).",
         "title": "Root folder"
       },
       "title": "Upload configuration",

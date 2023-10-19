@@ -513,6 +513,7 @@
       },
       "rootFolder": {
         "desc": "Ajouter ce chemin au dossier définit par la clé de propriété.",
+        "other": "Utilisez ce dossier comme racine dans le référentiel (chaque chemin sera précédé de ce nom).",
         "title": "Dossier racine"
       },
       "title": "Configuration du transfert",
