@@ -425,11 +425,11 @@
         "title": "Copy link"
       },
       "dev": {
-        "desc": "Advanced user only. \nWill display as \"Notice\" according to the previous setting.",
+        "desc": "Advanced user only. Will display as notice according to the previous setting.",
         "title": "Display developper logs"
       },
       "editorMenu": {
-        "desc": "Add a sharing commands in the right-click menu",
+        "desc": "Add a sharing command in the right-click menu",
         "title": "Editor menu"
       },
       "embedEditRepo": {
@@ -437,11 +437,11 @@
         "title": "Show what files are edited, added, or deleted after uploaded"
       },
       "excludedFolder": {
-        "desc": "Never publish file in these folder, regardless of the share key. Separate folder name by comma. Regex are supported by surrounding them with \"//\"",
-        "title": "Excluded folder"
+        "desc": "Never publish file in these folders, regardless of the share key. Separate folder name by comma. Regex are supported by surrounding them with \"//\"",
+        "title": "Excluded folders"
       },
       "fileMenu": {
-        "desc": "Add an sharing commands in the file menu",
+        "desc": "Add a sharing command in the file menu",
         "title": "File menu"
       },
       "head": {
@@ -449,7 +449,7 @@
         "log": "Logs",
         "menu": "Menu",
         "other": "Others",
-        "share": "Share & sharing key"
+        "share": "Sharing config"
       },
       "logNoticeHeader": {
         "desc": "On mobile, it can be hard to debug the plugin. Enable this option to log every error in a Notice.",
@@ -461,10 +461,10 @@
       },
       "shareKey": {
         "all": {
-          "desc": "Allow to share all file and ignore the share key state",
-          "title": "Share all files without sharing key"
+          "desc": "Share all files regardless of the state of the share key of the notes",
+          "title": "Share all files"
         },
-        "desc": "The properties key to publish your file on the website.",
+        "desc": "The YAML frontmatter key to publish your file on the website. Default is `share`.",
         "excludedFileName": {
           "title": "Exclude files with names starting with ..."
         },
