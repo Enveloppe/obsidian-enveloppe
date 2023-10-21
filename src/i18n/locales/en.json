@@ -203,7 +203,7 @@
         },
         "title": "Convert properties/dataview fields into tags"
       },
-      "title": "Text & links"
+      "title": "Text & link converters"
     },
     "embed": {
       "attachment": "Attachments",
@@ -251,8 +251,8 @@
         },
         "title": "Change embed markup"
       },
-      "notes": "Note (Markdown)",
-      "title": "Embed",
+      "notes": "Embed notes",
+      "title": "Attachment & embed note config",
       "transferImage": {
         "title": "Transfer attachments"
       },
@@ -318,7 +318,7 @@
         }
       },
       "testConnection": "Test connection",
-      "title": "GitHub configuration",
+      "title": "GitHub config",
       "username": {
         "desc": "The username or organization hosting the repo in GitHub",
         "title": "GitHub username"
@@ -326,7 +326,7 @@
     },
     "githubWorkflow": {
       "autoCleanUp": {
-        "desc": "If the plugin must remove from GitHub the depublished files (stop share or deleted)",
+        "desc": "Remove depublished files (stopped sharing or deleted) from GitHub",
         "title": "Auto clean up"
       },
       "excludedFiles": {
@@ -390,7 +390,7 @@
           "title": "This key is used to share a note with the plugin."
         },
         "shortRepo": "Allow to use one of the repo set in other repo settings.",
-        "title": "Properties keys cheatsheet",
+        "title": "Property key cheatsheet",
         "titleKey": "Change the title of the note."
       },
       "multiRepoHelp": {
@@ -437,7 +437,7 @@
         "title": "Show what files are edited, added, or deleted after uploaded"
       },
       "excludedFolder": {
-        "desc": "Never publish file in these folders, regardless of the share key. Separate folder name by comma. Regex are supported by surrounding them with \"//\"",
+        "desc": "Never publish file in these folders, regardless of the share key. Read the docs for more info.",
         "title": "Excluded folders"
       },
       "fileMenu": {
@@ -500,16 +500,16 @@
         "title": "Default folder"
       },
       "folderBehavior": {
-        "desc": "Choose the file tree in the repository, with using a properties key, a fixed folder or your Obsidian file tree.",
+        "desc": "Choose the file tree in the repository, with using a property key, a fixed folder or your Obsidian file tree.",
         "fixedFolder": "Fixed Folder",
         "obsidianPath": "Obsidian Path",
         "title": "File tree in repository",
-        "yaml": "Properties key"
+        "yaml": "Property key"
       },
       "frontmatterKey": {
         "desc": "Set the key where to get the folder's value.",
         "placeholder": "category",
-        "title": "Properties key"
+        "title": "Property key"
       },
       "regexFilePathTitle": {
         "desc": "If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string.",
@@ -523,9 +523,9 @@
         "other": "Use this folder as root within the repository (each path will be prepend by it).",
         "title": "Root folder"
       },
-      "title": "Upload configuration",
+      "title": "Upload config",
       "useFrontmatterTitle": {
-        "desc": "Use a properties value to generate the filename. By default, \"title\" is used. ",
+        "desc": "Use a property value to generate the filename. By default, \"title\" is used. ",
         "title": "Set the key where to get the value of the filename"
       }
     }
