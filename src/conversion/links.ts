@@ -240,7 +240,7 @@ export function escapeRegex(filepath: string): string {
  * Convert internal links with changing the path to the relative path in the github repository
  */
 
-export async function convertLinkCitation(
+export async function convertToInternalGithub(
 	fileContent: string,
 	linkedFiles: LinkedNotes[],
 	sourceFile: TFile,

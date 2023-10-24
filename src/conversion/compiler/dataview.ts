@@ -9,7 +9,7 @@ import { getAPI } from "obsidian-dataview";
 import { FrontmatterConvert, GitHubPublisherSettings, LinkedNotes, MultiProperties } from "src/settings/interface";
 import { logs, notif } from "src/utils";
 
-import { convertLinkCitation, convertWikilinks, escapeRegex } from "../links";
+import { convertToInternalGithub, convertWikilinks, escapeRegex } from "../links";
 
 /**
  * Convert dataview queries to markdown
@@ -184,7 +184,7 @@ async function convertDataviewLinks(
 	app: App,
 	properties: MultiProperties): Promise<string> {
 	const dataviewPath = getDataviewPath(md, properties.settings, app.vault);
-	md = await convertLinkCitation(
+	md = await convertToInternalGithub(
 		md,
 		dataviewPath,
 		sourceFile,

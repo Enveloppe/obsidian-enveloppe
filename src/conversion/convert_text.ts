@@ -19,7 +19,7 @@ import { notif } from "../utils";
 import { convertDataviewQueries } from "./compiler/dataview";
 import { bakeEmbeds, convertInlineDataview } from "./compiler/embeds";
 import findAndReplaceText from "./find_and_replace_text";
-import { convertLinkCitation, convertWikilinks } from "./links";
+import { convertToInternalGithub, convertWikilinks } from "./links";
 
 /**
  * Convert soft line breaks to hard line breaks, adding two space at the end of the line.
@@ -152,7 +152,7 @@ export async function mainConverting(
 		text = await bakeEmbeds(file, new Set(), app, properties, null, linkedFiles);
 	text = findAndReplaceText(text, properties.settings, false);
 	text = await addInlineTags(properties.settings, file, plugin.app.metadataCache, frontmatter, text);
-	text = await convertLinkCitation(
+	text = await convertToInternalGithub(
 		text,
 		linkedFiles,
 		file,
