@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.10.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.10.2...6.10.3) (2023-10-24)
+
+
+### Bug Fixes
+
+* **links:** if an external links is in between two wikilinks, both wikilinks will be wrongly formatted ([2e34d76](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2e34d76b16faf7e76466c950830d122510102253)), closes [#237](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/237)
+* **links:** remove empty anchor ([7944e8e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7944e8e3f7013364d2ad7b5fcd0a97be12fcbd7e))
+* **links:** remove empty anchor on MDlinks ([d6cfc7b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d6cfc7becc8d2fe88b46ce72f5ea2a40e3715516))
+* **links:** unshared links was wrongly converted ([9202873](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/9202873bec90f23cb3606665d59b201a264104ff))
+
 ## [6.10.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.10.1...6.10.2) (2023-10-19)
 
 ## [6.10.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.10.0...6.10.1) (2023-10-19)
