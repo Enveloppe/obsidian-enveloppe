@@ -147,7 +147,7 @@ export class ImportModal extends Modal {
 		contentEl.empty();
 		this.settingsPage.empty();
 		// @ts-ignore
-		let openedTab = document.querySelector(".settings-tab-active.github-publisher") ? document.querySelector(".settings-tab-active.github-publisher").innerText : i18next.t("settings.github.title") ;
+		let openedTab = this.plugin.settings.tabsID ?? document.querySelector(".settings-tab-active.github-publisher") ? document.querySelector(".settings-tab-active.github-publisher").innerText : i18next.t("settings.github.title") ;
 		openedTab = openedTab.trim();
 		switch (openedTab) {
 		case i18next.t("settings.github.title") :
@@ -185,7 +185,8 @@ export class ExportModal extends Modal {
 	censorGithubSettingsData(censuredSettings: GitHubPublisherSettings) {
 		const cloneCensored = Object(censuredSettings);
 		const { github } = cloneCensored;
-		
+		if (cloneCensored.tabsID)
+			delete cloneCensored.tabsID;
 		if (github) {
 			delete github.repo;
 			delete github.user;
@@ -277,6 +278,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 	plugin: GithubPublisher;
 	presetList: Preset[];
 	page: GithubPublisherSettingsTab;
+	settings: GitHubPublisherSettings;
 
 
 	constructor(app: App, plugin: GithubPublisher, presetList: Preset[], octokit: Octokit, page: GithubPublisherSettingsTab) {
@@ -285,6 +287,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 		this.presetList = presetList;
 		this.octokit = octokit;
 		this.page = page;
+		this.settings = plugin.settings;
 	}
 
 	getItems(): Preset[] {
@@ -307,19 +310,21 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 
 			for (const [key, value] of Object.entries(presetSettings)) {
 				// @ts-ignore
-				this.plugin.settings[key] = value;
+				this.settings[key] = value;
 			}
-			this.plugin.settings.plugin = original.plugin;
-			this.plugin.settings.github.repo = original.github.repo;
-			this.plugin.settings.github.user = original.github.user;
-			this.plugin.settings.github.otherRepo = original.github.otherRepo;
-			this.plugin.settings.github.rateLimit = original.github.rateLimit;
+			this.settings.plugin = original.plugin;
+			this.settings.github.repo = original.github.repo;
+			this.settings.github.user = original.github.user;
+			this.settings.github.otherRepo = original.github.otherRepo;
+			this.settings.github.rateLimit = original.github.rateLimit;
+			this.settings.tabsID = original.tabsID;
+
 			this.plugin.saveSettings();
 			this.page.renderSettingsPage("github-configuration");
 
 		} catch (e) {
 			new Notice(i18next.t("modals.import.error.span") + e);
-			notif({settings: this.plugin.settings}, "onChooseItem", e);
+			notif({settings: this.settings}, "onChooseItem", e);
 		}
 	}
 }
@@ -355,7 +360,7 @@ export async function loadPresetContent(path: string, octokit: Octokit, plugin: 
 	const presetContent = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
 		owner: "ObsidianPublisher",
 		repo: "plugin-presets",
-		path: path,
+		path,
 	});
 		// @ts-ignore
 	if (!presetContent.data?.content) {
