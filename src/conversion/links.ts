@@ -1,6 +1,5 @@
 import { App, FrontMatterCache, TFile } from "obsidian";
 import slugify from "slugify";
-import { logs } from "src/utils";
 
 import {
 	FrontmatterConvert,
@@ -271,7 +270,6 @@ export async function convertToInternalGithub(
 			`(\\[{2}${escapedLinkedFile}(\\\\?\\|.*?)?\\]{2})|(\\[.*?\\]\\((${escapedLinkedFile}|${linkInMarkdown})\\))`,
 			"g"
 		);
-		logs({settings}, regexToReplace);
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {
 			for (const link of matchedLink) {
