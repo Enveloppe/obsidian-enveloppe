@@ -343,7 +343,7 @@ export interface FrontmatterConvert {
 	charEmbedLinks: string;
 	dataview: boolean;
 	hardbreak: boolean;
-	convertInternalNonShared: boolean;
+	unshared: boolean;
 	convertInternalLinks: boolean;
 }
 

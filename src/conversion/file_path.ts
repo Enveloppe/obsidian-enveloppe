@@ -56,6 +56,7 @@ export async function createRelativePath(
 		properties,
 		targetFile.linked,
 	);
+	logs({settings}, `Shared: ${shared} for ${targetFile.linked.path}`);
 	if (
 		targetFile.linked.extension === "md" && (!isFromAnotherRepo || !shared)
 	) {

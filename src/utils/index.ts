@@ -313,13 +313,13 @@ export function getFrontmatterSettings(
 		charEmbedLinks: settings.embed.charConvert,
 		dataview: settings.conversion.dataview,
 		hardbreak: settings.conversion.hardbreak,
-		convertInternalNonShared: settings.conversion.links.unshared,
+		unshared: settings.conversion.links.unshared,
 		convertInternalLinks: settings.conversion.links.internal,
 	};
 
 	const shareAll = repo ? repo.shareAll?.enable : settings.plugin.shareAll?.enable;
 	if (shareAll) {
-		settingsConversion.convertInternalNonShared = true;
+		settingsConversion.unshared = true;
 	}
 
 	if (!frontmatter) return settingsConversion;
@@ -336,7 +336,7 @@ export function getFrontmatterSettings(
 				settingsConversion.convertWiki = frontmatter.links.mdlinks;
 			}
 			if (frontmatter.links.nonShared !== undefined) {
-				settingsConversion.convertInternalNonShared =
+				settingsConversion.unshared =
 					frontmatter.links.nonShared;
 			}
 		} else {
@@ -392,7 +392,7 @@ export function getFrontmatterSettings(
 		settingsConversion.convertInternalLinks = frontmatter.internals;
 	}
 	if (frontmatter.nonShared !== undefined) {
-		settingsConversion.convertInternalNonShared = frontmatter.nonShared;
+		settingsConversion.unshared = frontmatter.nonShared;
 	}
 	return settingsConversion;
 }

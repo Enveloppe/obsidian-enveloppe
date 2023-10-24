@@ -23,7 +23,7 @@ export function isInternalShared(
 	file: TFile,
 ): boolean {
 	const frontmatterSettings = properties.frontmatter.general;
-	if (frontmatterSettings.convertInternalNonShared) {
+	if (frontmatterSettings.unshared) {
 		return true;
 	}
 
