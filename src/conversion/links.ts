@@ -1,5 +1,6 @@
 import { App, FrontMatterCache, TFile } from "obsidian";
 import slugify from "slugify";
+import { logs } from "src/utils";
 
 import {
 	FrontmatterConvert,
@@ -249,6 +250,7 @@ export async function convertLinkCitation(
 ): Promise<string> {
 	const frontmatterSettings = properties.frontmatter.general;
 	const settings = properties.settings;
+	logs({ settings }, "convert links citation");
 	if (!frontmatterSettings.convertInternalLinks) {
 		return fileContent;
 	}
@@ -266,12 +268,14 @@ export async function convertLinkCitation(
 		linkInMarkdown = linkInMarkdown.replaceAll(" ", "%20");
 		const escapedLinkedFile = escapeRegex(linkedFile.linkFrom);
 		const regexToReplace = new RegExp(
-			`(\\[{2}${escapedLinkedFile}(\\\\?\\|.*)?\\]{2})|(\\[.*\\]\\((${escapedLinkedFile}|${linkInMarkdown})\\))`,
+			`(\\[{2}${escapedLinkedFile}(\\\\?\\|.*?)?\\]{2})|(\\[.*?\\]\\((${escapedLinkedFile}|${linkInMarkdown})\\))`,
 			"g"
 		);
+		logs({settings}, regexToReplace);
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {
 			for (const link of matchedLink) {
+				logs({settings}, "debug", `link: ${link}, ${escapedLinkedFile}, ${linkInMarkdown}`);
 				const regToReplace = new RegExp(`((${escapedLinkedFile})|(${linkInMarkdown}))`);
 				let pathInGithubWithAnchor = pathInGithub;
 				if (linkedFile.anchor) {
