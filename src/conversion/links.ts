@@ -283,7 +283,9 @@ export async function convertToInternalGithub(
 				if (link.match(/\[.*\]\(.*\)/)) {
 					if (linkedFile.linked.extension === "md") {
 						anchor =  settings.conversion.links.slugify ? slugify(anchor, { lower: true, strict: true }) : anchor;
-						pathInGithub = `${pathInGithub.replaceAll(" ", "%20")}.md#${anchor}`;
+						if (anchor.length > 0)
+							anchor = `#${anchor}`;
+						pathInGithub = `${pathInGithub.replaceAll(" ", "%20")}.md${anchor}`;
 						//probably useless
 						// pathInGithub = pathInGithub.replace(/(\.md)?(#.*)/, ".md$2");
 						pathInGithub = !pathInGithub.match(/(#.*)/) && !pathInGithub.endsWith(".md") ?
