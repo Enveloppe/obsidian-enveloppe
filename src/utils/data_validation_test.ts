@@ -35,7 +35,8 @@ export function isInternalShared(
 	if (!frontmatter) return false;
 	if (isExcludedPath(properties.settings, file)) return false;
 	const shareKey = properties.repository?.shareKey || properties.settings.plugin.shareKey;
-	if (!frontmatter[shareKey] || frontmatter[shareKey] == null) return false;
+	logs({settings: properties.settings}, "shareKey", shareKey, "frontmatter", frontmatter[shareKey]);
+	if (frontmatter[shareKey] == null || frontmatter[shareKey] === undefined || ["false", "0", "no"].includes(frontmatter[shareKey].toString().toLowerCase())) return false;
 	return ["true", "1", "yes"].includes(frontmatter[shareKey].toString().toLowerCase());
 
 }
@@ -78,7 +79,7 @@ export function isShared(
 	const otherRepoWithShareAll = settings.github.otherRepo.filter((repo) => repo.shareAll?.enable);
 	if (!settings.plugin.shareAll?.enable && otherRepoWithShareAll.length === 0) {
 		const shareKey = otherRepo ? otherRepo.shareKey : settings.plugin.shareKey;
-		if ( meta == null || !meta[shareKey] || meta[shareKey] == null || isExcludedPath(settings, file)) {
+		if ( meta == null || !meta[shareKey] || meta[shareKey] == null || isExcludedPath(settings, file) || meta[shareKey] === undefined || ["false", "0", "no"].includes(meta[shareKey].toString().toLowerCase())) {
 			return false;
 		}
 		const shareKeyInFrontmatter:string = meta[shareKey].toString().toLowerCase();

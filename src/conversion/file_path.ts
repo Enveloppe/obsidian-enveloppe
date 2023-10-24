@@ -52,7 +52,7 @@ export async function createRelativePath(
 	const targetRepo = getRepoFrontmatter(settings, shortRepo, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(properties.frontmatter.repo, targetRepo);
 	const shared = isInternalShared(
-		frontmatter,
+		frontmatterTarget,
 		properties,
 		targetFile.linked,
 	);
