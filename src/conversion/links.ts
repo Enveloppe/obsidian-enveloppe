@@ -206,7 +206,8 @@ function createMarkdownLinks(fileName: string, isEmbed: string, altLink: string,
 	const encodedURI = encodeURI(markdownName);
 	if (settings.conversion.links.slugify) {
 		anchor = fileName.match(/(#.*)/) ? slugify(fileName.match(/(#.*)/)![0], { lower: true, strict: true }) : "";
-		anchor = `#${anchor}`;
+		if (anchor.length > 0)
+			anchor = `#${anchor}`;
 	}
 	return `${isEmbed}[${altLink}](${encodedURI}${anchor})`;
 }
