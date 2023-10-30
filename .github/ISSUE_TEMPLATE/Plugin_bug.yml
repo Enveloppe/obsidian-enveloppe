@@ -55,7 +55,7 @@ body:
           required: true
         - label: "I checked my configurations files and the documentation"
           required: true
-        - label: "My issue concern doesn't concern the [Mkdocs template](https://github.com/ObsidianPublisher/template-main/)",
+        - label: "My issue concern doesn't concern the [Mkdocs template](https://github.com/ObsidianPublisher/template-main/)"
           required: true
   - type: dropdown
     id: commands
