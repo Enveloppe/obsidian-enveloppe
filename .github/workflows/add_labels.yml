@@ -8,31 +8,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ startsWith(github.event.issue.title, '[Plugin][FR]:') }}
+        if: ${{ startsWith(github.event.issue.title, '[FR]:') }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: |
             ✨ Enhancement
-            💎 Obsidian Github Publisher
       - uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ startsWith(github.event.issue.title, '[MKDOCS][FR]:') }}
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: |
-            ✨ Enhancement
-            📫 Material Mkdocs Template
-      - uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ startsWith(github.event.issue.title, '[Plugin][Bug]:') }}
+        if: ${{ startsWith(github.event.issue.title, '[Bug]:') }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: |
             🐛 Bug
-            💎 Obsidian Github Publisher
-      - uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ startsWith(github.event.issue.title, '[MKDOCS][Bug]:') }}
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: |
-            🐛 Bug
-            📫 Material Mkdocs Template
-      
