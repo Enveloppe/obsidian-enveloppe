@@ -16,7 +16,7 @@ body:
       options:
         - label: "I checked the issue to prevent duplicate"
           required: true
-        - label: "My issue concern doesn't concern the [Mkdocs template](https://github.com/ObsidianPublisher/template-main/)",
+        - label: "My issue concern doesn't concern the [Mkdocs template](https://github.com/ObsidianPublisher/template-main/)"
           required: true
   - type: textarea
     id: describe-request
