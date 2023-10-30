@@ -46,7 +46,6 @@ body:
         6. Now, you need to open : A local terminal console (if you have git installed) or a codespace (if you have any) for this repository. Don't forget to `git pull` if you have already cloned the repository.
         7. You need to be on your main branch, so first : `git checkout main` ; After, you have to run `git checkout revert <path to edited file or folder>`. If you want to take an entire folder, for example `docs`, just type `docs/.`. It will take all file
         8. `git commit -am "restoring folder" && git push`. If you use VScode, you can also use the menu to ordering your file restoration.
-
   - type: checkboxes
     attributes:
       label: Issue validation
@@ -55,6 +54,8 @@ body:
         - label: "I checked the issue to prevent duplicate"
           required: true
         - label: "I checked my configurations files and the documentation"
+          required: true
+        - label: "My issue concern doesn't concern the [Mkdocs template](https://github.com/ObsidianPublisher/template-main/)",
           required: true
   - type: dropdown
     id: commands
