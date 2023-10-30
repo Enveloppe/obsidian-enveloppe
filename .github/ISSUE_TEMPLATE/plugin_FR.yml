@@ -1,7 +1,7 @@
 name: "[Obsidian Github Publisher] Feature request"
 description: Suggest an idea for the obsidian GitHub Publisher plugin.
-title: "[Plugin][FR]: "
-labels: ["✨ Enhancement", "💎 Obsidian Github Publisher"]
+title: "[FR]: "
+labels: ["✨ Enhancement"]
 assignees:
   - lisandra-dev
 body:
@@ -15,6 +15,8 @@ body:
       description: "Thanks to check if your issue is relative to the repository. Any non relative or duplicate issue will be closed."
       options:
         - label: "I checked the issue to prevent duplicate"
+          required: true
+        - label: "My issue concern doesn't concern the [Mkdocs template](https://github.com/ObsidianPublisher/template-main/)",
           required: true
   - type: textarea
     id: describe-request
