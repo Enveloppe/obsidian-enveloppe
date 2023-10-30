@@ -1,7 +1,7 @@
 name: "[Obsidian Github Publisher] Bug report"
 description: Fill a bug report for Obsidian Github Publisher (Plugin)
-title: "[Plugin][Bug]: "
-labels: ["🐛 Bug", "💎 Obsidian Github Publisher"]
+title: "[Bug]: "
+labels: ["🐛 Bug"]
 assignees:
   - lisandra-dev
 body:
