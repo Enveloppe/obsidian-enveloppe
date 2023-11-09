@@ -5,7 +5,7 @@
 
 import i18next from "i18next";
 import { App, Component, FrontMatterCache, htmlToMarkdown,TFile, Vault } from "obsidian";
-import { getAPI } from "obsidian-dataview";
+import { getAPI, Literal, Success } from "obsidian-dataview";
 import { FrontmatterConvert, GitHubPublisherSettings, LinkedNotes, MultiProperties } from "src/settings/interface";
 import { logs, notif } from "src/utils";
 
@@ -115,8 +115,13 @@ export async function convertDataviewQueries(
 		try {
 			const code = inlineQuery[0];
 			const query = inlineQuery[1].trim();
-			const dataviewResult = dvApi.tryEvaluate(query, { this: dvApi.page(path, sourceFile.path) });
-			replacedText = dataviewResult ? replacedText.replace(code, removeDataviewQueries(dataviewResult.toString(), properties.frontmatter.general)) : replacedText.replace(code, removeDataviewQueries(dvApi.settings.renderNullAs, properties.frontmatter.general));
+			let dataviewResult = dvApi.evaluateInline(query, path);
+			if (dataviewResult.successful) {
+				dataviewResult = dataviewResult as Success<Literal, string>;
+				replacedText = replacedText.replace(code, removeDataviewQueries(dataviewResult.value, properties.frontmatter.general));
+			} else {
+				replacedText = replacedText.replace(code, removeDataviewQueries(dvApi.settings.renderNullAs, properties.frontmatter.general));
+			}
 		} catch (e) {
 			logs({ settings: properties.settings, e: true }, e);
 			notif({ settings: properties.settings }, error);
@@ -164,8 +169,9 @@ export async function convertDataviewQueries(
  * @param {@link FrontmatterConvert} frontmatterSettings the settings
  * @return {string} the text without dataview queries or the dataview queries in markdown
  */
-function removeDataviewQueries(dataviewMarkdown: string, frontmatterSettings: FrontmatterConvert): string {
-	return frontmatterSettings.dataview ? dataviewMarkdown : "";
+function removeDataviewQueries(dataviewMarkdown: Literal, frontmatterSettings: FrontmatterConvert): string {
+	const toString = dataviewMarkdown?.toString();
+	return frontmatterSettings.dataview && dataviewMarkdown && toString ? toString : "";
 }
 
 /**

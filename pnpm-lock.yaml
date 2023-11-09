@@ -29,6 +29,9 @@ devDependencies:
   '@octokit/core':
     specifier: ^4.2.4
     version: 4.2.4
+  '@types/luxon':
+    specifier: ^3.3.3
+    version: 3.3.3
   '@types/node':
     specifier: ^18.18.1
     version: 18.18.3
@@ -108,8 +111,8 @@ devDependencies:
     specifier: ^1.4.11
     version: 1.4.11(@codemirror/state@6.2.1)(@codemirror/view@6.21.2)
   obsidian-dataview:
-    specifier: ^0.5.54
-    version: 0.5.54
+    specifier: ^0.5.64
+    version: 0.5.64
   obsidian-plugin-cli:
     specifier: ^0.9.0
     version: 0.9.0
@@ -129,7 +132,7 @@ devDependencies:
     specifier: latest
     version: 2.6.2
   typescript:
-    specifier: latest
+    specifier: ^5.2.2
     version: 5.2.2
 
 packages:
@@ -2275,6 +2278,10 @@ packages:
 
   /@types/json5@0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: true
+
+  /@types/luxon@3.3.3:
+    resolution: {integrity: sha512-/BJF3NT0pRMuxrenr42emRUF67sXwcZCd+S1ksG/Fcf9O7C3kKCY4uJSbKBE4KDUIYr3WMsvfmWD8hRjXExBJQ==}
     dev: true
 
   /@types/minimist@1.2.3:
@@ -5509,8 +5516,8 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /luxon@2.5.2:
-    resolution: {integrity: sha512-Yg7/RDp4nedqmLgyH0LwgGRvMEKVzKbUdkBYyCosbHgJ+kaOUx0qzSiSatVc3DFygnirTPYnMM2P5dg2uH1WvA==}
+  /luxon@3.4.3:
+    resolution: {integrity: sha512-tFWBiv3h7z+T/tDaoxA8rqTxy1CHV6gHS//QdaH4pulbq/JuBSGgQspQQqcgnwdAx6pNI7cmvz5Sv/addzHmUg==}
     engines: {node: '>=12'}
     dev: true
 
@@ -5778,22 +5785,22 @@ packages:
     resolution: {integrity: sha512-REKQtAuIOKDbvNH/th1C1gWmJWCP5tRn9T/mfZGZt4Zncgko7McXK0aSKFtEInipvgbZJ2nScivvyLdiWluSMw==}
     hasBin: true
     dependencies:
-      obsidian: github.com/obsidianmd/obsidian-api/249eb773347588f4e9fec7c600e1904cd9240fcb(@codemirror/state@6.2.1)(@codemirror/view@6.21.2)
+      obsidian: github.com/obsidianmd/obsidian-api/791214a68d0dc322b88e5abce617bdf603cc2a2d(@codemirror/state@6.2.1)(@codemirror/view@6.21.2)
       tslib: 2.1.0
     transitivePeerDependencies:
       - '@codemirror/state'
       - '@codemirror/view'
     dev: true
 
-  /obsidian-dataview@0.5.54:
-    resolution: {integrity: sha512-ia6oGn3fqaHuoMu/e7bKMNUA4rZRYTJAhUffp9oLzxsjqRKxPhwfUOim6JQhI/jnHvtwTQaxcUwwM9nVE+HRog==}
+  /obsidian-dataview@0.5.64:
+    resolution: {integrity: sha512-byp1bpsdchG3JWngfGb6jqe53gz6L9ou8LcbiBdMGKg2T2Po2ZtJWRoyX69f3CY7/SPZnyumveRaZ72vCDnyRA==}
     dependencies:
-      '@codemirror/language': github.com/lishid/cm-language/1aadcc247f20ccfda76424a9f853dbb4ee203fdc
+      '@codemirror/language': github.com/lishid/cm-language/cc6a2cc30288db6be3f879ddf0e3ef64f14ed6ab
       '@codemirror/state': 6.2.1
       '@codemirror/view': 6.21.2
       emoji-regex: 10.2.1
       localforage: 1.10.0
-      luxon: 2.5.2
+      luxon: 3.4.3
       obsidian-calendar-ui: 0.3.12(@codemirror/state@6.2.1)(@codemirror/view@6.21.2)
       papaparse: 5.4.1
       parsimmon: 1.18.1
@@ -7190,10 +7197,10 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  github.com/lishid/cm-language/1aadcc247f20ccfda76424a9f853dbb4ee203fdc:
-    resolution: {tarball: https://codeload.github.com/lishid/cm-language/tar.gz/1aadcc247f20ccfda76424a9f853dbb4ee203fdc}
+  github.com/lishid/cm-language/cc6a2cc30288db6be3f879ddf0e3ef64f14ed6ab:
+    resolution: {tarball: https://codeload.github.com/lishid/cm-language/tar.gz/cc6a2cc30288db6be3f879ddf0e3ef64f14ed6ab}
     name: '@codemirror/language'
-    version: 6.6.0
+    version: 6.9.2
     prepare: true
     requiresBuild: true
     dependencies:
@@ -7205,9 +7212,9 @@ packages:
       style-mod: 4.1.0
     dev: true
 
-  github.com/obsidianmd/obsidian-api/249eb773347588f4e9fec7c600e1904cd9240fcb(@codemirror/state@6.2.1)(@codemirror/view@6.21.2):
-    resolution: {tarball: https://codeload.github.com/obsidianmd/obsidian-api/tar.gz/249eb773347588f4e9fec7c600e1904cd9240fcb}
-    id: github.com/obsidianmd/obsidian-api/249eb773347588f4e9fec7c600e1904cd9240fcb
+  github.com/obsidianmd/obsidian-api/791214a68d0dc322b88e5abce617bdf603cc2a2d(@codemirror/state@6.2.1)(@codemirror/view@6.21.2):
+    resolution: {tarball: https://codeload.github.com/obsidianmd/obsidian-api/tar.gz/791214a68d0dc322b88e5abce617bdf603cc2a2d}
+    id: github.com/obsidianmd/obsidian-api/791214a68d0dc322b88e5abce617bdf603cc2a2d
     name: obsidian
     version: 1.4.11
     peerDependencies:
