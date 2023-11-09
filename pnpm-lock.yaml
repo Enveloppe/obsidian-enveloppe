@@ -12,6 +12,9 @@ dependencies:
   dedent:
     specifier: ^0.7.0
     version: 0.7.0
+  ts-deepmerge:
+    specifier: ^6.2.0
+    version: 6.2.0
 
 devDependencies:
   '@babel/core':
@@ -6736,6 +6739,11 @@ packages:
     dependencies:
       typescript: 5.2.2
     dev: true
+
+  /ts-deepmerge@6.2.0:
+    resolution: {integrity: sha512-2qxI/FZVDPbzh63GwWIZYE7daWKtwXZYuyc8YNq0iTmMUwn4mL0jRLsp6hfFlgbdRSR4x2ppe+E86FnvEpN7Nw==}
+    engines: {node: '>=14.13.1'}
+    dev: false
 
   /ts-jest@29.1.1(@babel/core@7.23.0)(babel-jest@29.7.0)(esbuild@0.19.4)(jest@29.7.0)(typescript@5.2.2):
     resolution: {integrity: sha512-D6xjnnbP17cC85nliwGiL+tpoKN0StpgE0TeOjXQTU6MVCfsB4v7aW05CgQ/1OywGb0x/oy9hHFnN+sczTiRaA==}

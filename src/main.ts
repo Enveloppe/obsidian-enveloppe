@@ -1,6 +1,7 @@
 import {Octokit} from "@octokit/core";
 import i18next from "i18next";
 import {FrontMatterCache, Menu, Plugin, TAbstractFile, TFile, TFolder} from "obsidian";
+import merge from "ts-deepmerge";
 
 import {
 	checkRepositoryValidityCallback,
@@ -179,6 +180,8 @@ export default class GithubPublisher extends Plugin {
 	 */
 	async onload(): Promise<void> {
 		console.info(`[GITHUB PUBLISHER] v.${this.manifest.version} (lang: ${translationLanguage}) loaded`);
+		await this.loadSettings();
+
 		await i18next.init({
 			lng: translationLanguage,
 			fallbackLng: "en",
@@ -186,7 +189,6 @@ export default class GithubPublisher extends Plugin {
 			returnNull: false,
 		});
 
-		await this.loadSettings();
 
 
 		const oldSettings = this.settings;
@@ -258,15 +260,9 @@ export default class GithubPublisher extends Plugin {
 		console.info("[Github Publisher] unloaded");
 	}
 
-	/**
-	 * Get the settings of the plugin
-	 */
 	async loadSettings() {
-		this.settings = Object.assign(
-			{},
-			DEFAULT_SETTINGS,
-			await this.loadData()
-		);
+		const loadedData = await this.loadData();
+		this.settings = merge(DEFAULT_SETTINGS, loadedData) as unknown as GitHubPublisherSettings;
 	}
 
 	/**

@@ -64,7 +64,8 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "dedent": "^0.7.0"
+        "dedent": "^0.7.0",
+        "ts-deepmerge": "^6.2.0"
     },
     "pnpm": {
         "overrides": {
