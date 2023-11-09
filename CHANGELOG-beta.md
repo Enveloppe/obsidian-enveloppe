@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.11.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.10.3...6.11.0-0) (2023-11-09)
+
+
+### Features
+
+* **folderNote:** support of automatically add `title` (or other) key with basename of file ([66c150e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/66c150e85fb26ef085dbf8e132579ca7a6eea068)), closes [#242](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/242)
+
+
+### Bug Fixes
+
+* **dataview:** temporary fix for dataview API until i found a better way ([26dbbdc](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/26dbbdc73334699115755de09d4c8c056d2bc3a9))
+* **settings:** allow deep merge of settings, preventing error with nested objet ([a252eb9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/a252eb956fff280c0d42c6e7f41122ebbdf261c1))
+
 ## [6.5.0-11](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.5.0-10...6.5.0-11) (2023-08-28)
 
 
