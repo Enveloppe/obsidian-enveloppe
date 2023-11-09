@@ -21,7 +21,7 @@ import {
 	LinkedNotes,
 	MultiProperties} from "../../settings/interface";
 import {isShared} from "../../utils/data_validation_test";
-import { addTagsToYAML } from "../convert_text";
+import { addToYaml } from "../convert_text";
 import { createRelativePath, getTitleField, regexOnFileName } from "../file_path";
 
 
@@ -287,34 +287,31 @@ export async function convertInlineDataview(
 	}
 	const valueToAdd: string[] = [];
 	for (const field of settings.conversion.tags.fields) {
-		const fieldValue = dataviewLinks[field];
+		let fieldValue = dataviewLinks[field];
 		if (fieldValue) {
 			if (fieldValue.constructor.name === "Link") {
+				fieldValue = fieldValue as Link;
 				const stringifyField = dataviewExtract(fieldValue, settings);
 				if (stringifyField) valueToAdd.push(stringifyField);
-			} else if (fieldValue.constructor.name === "Array") {
+			} else if (fieldValue instanceof Array) {
 				for (const item of fieldValue) {
 					let stringifyField = item;
-					if (item.constructor.name === "Link") {
-						stringifyField = dataviewExtract(item, settings);
-						valueToAdd.push(stringifyField);
+					if (item && item.constructor.name === "Link") {
+						stringifyField = dataviewExtract(item as Link, settings);
+						if (stringifyField) valueToAdd.push(stringifyField);
 					} else if (
-						!settings.conversion.tags.exclude.includes(
-							stringifyField.toString()
-						)
-					) {
-						valueToAdd.push(stringifyField.toString());
-					}
+						stringifyField && !settings.conversion.tags.exclude.includes(stringifyField.toString() as string)
+					) valueToAdd.push(stringifyField.toString() as string);
 				}
 			} else if (
-				!settings.conversion.tags.exclude.includes(fieldValue.toString())
+				!settings.conversion.tags.exclude.includes(fieldValue.toString() as string)
 			) {
-				valueToAdd.push(fieldValue.toString());
+				valueToAdd.push(fieldValue.toString() as string);
 			}
 		}
 	}
 	if (valueToAdd.length > 0) {
-		return await addTagsToYAML(text, valueToAdd.filter(Boolean), settings);
+		return addToYaml(text, valueToAdd.filter(Boolean), settings);
 	}
 	return text;
 }

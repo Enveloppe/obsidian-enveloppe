@@ -7,6 +7,7 @@ import {
 	stringifyYaml,
 	TFile,
 } from "obsidian";
+import { isFolderNote } from "src/utils/data_validation_test";
 
 import GithubPublisher from "../main";
 import {
@@ -49,38 +50,28 @@ export function addHardLineBreak(
 	}
 }
 
-/**
- * Add the string list to the YAML frontmatter tags key
- * If the tags key does not exist, it will be created
- * @param {string} text the text to convert
- * @param {string[]} toAdd the list of tags to add
- * @param settings
- * @returns {Promise<string>} the converted text
- */
-
-export async function addTagsToYAML(text: string, toAdd: string[], settings: GitHubPublisherSettings): Promise<string> {
-	const yaml = text.split("---")[1];
-	const yamlObject = parseYaml(yaml);
-	if (yamlObject.tag) {
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: any) {
+	if (yaml.tag) {
 		try {
 			toAdd = [
 				...new Set([
 					...toAdd,
-					...yamlObject.tag.map((tag: string) =>
+					...yaml.tag.map((tag: string) =>
 						tag.replaceAll("/", "_")
 					),
 				]),
 			];
-			delete yamlObject.tag;
+			delete yaml.tag;
 		} catch (e) {
 			notif({ settings, e: true }, e);
 		}
 	}
-	if (yamlObject.tags) {
+	if (yaml.tags) {
 		try {
-			yamlObject.tags = [
+			yaml.tags = [
 				...new Set([
-					...yamlObject.tags.map((tag: string) =>
+					...yaml.tags.map((tag: string) =>
 						tag.replaceAll("/", "_")
 					),
 					...toAdd,
@@ -90,11 +81,60 @@ export async function addTagsToYAML(text: string, toAdd: string[], settings: Git
 			notif({ settings, e: true }, e);
 		}
 	} else {
-		yamlObject.tags = toAdd;
+		yaml.tags = toAdd;
+	}
+	return yaml;
+}
+
+/**
+ * Add the string list to the YAML frontmatter tags key
+ * If the tags key does not exist, it will be created
+ * @param {string} text the text to convert
+ * @param {string[]} toAdd the list of tags to add
+ * @param settings
+ * @returns {Promise<string>} the converted text
+ */
+
+export function addToYaml(text: string, toAdd: string[], settings: GitHubPublisherSettings, folderNoteParaMeters?: { properties: MultiProperties, file: TFile}): string {
+	const yaml = text.split("---")[1];
+	let yamlObject = parseYaml(yaml);
+	if (toAdd.length > 0) {
+		yamlObject = tagsToYaml(toAdd, settings, yamlObject);
+	}
+	if (folderNoteParaMeters) {
+		yamlObject = titleToYaml(yamlObject, folderNoteParaMeters.properties, folderNoteParaMeters.file);
 	}
 	const returnToYaml = stringifyYaml(yamlObject);
 	const fileContentsOnly = text.split("---").slice(2).join("---");
 	return `---\n${returnToYaml}---\n${fileContentsOnly}`;
+}
+
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+function titleToYaml(yaml: any, properties: MultiProperties, file: TFile) {
+	const settings = properties.settings.upload.folderNote.addTitle;
+	if (!settings) {
+		return yaml;
+	}
+	if (!yaml[settings.key] && isFolderNote(properties) && settings.enable) {
+		yaml[settings.key] = file.basename;
+	}
+	return yaml;
+}
+
+function inlineTags(settings: GitHubPublisherSettings, file: TFile, metadataCache: MetadataCache, frontmatter: FrontMatterCache | undefined | null) {
+	if (!settings.conversion.tags.inline) {
+		return [];
+	}
+	const inlineTags = metadataCache.getFileCache(file)?.tags;
+	const inlineTagsInText = inlineTags
+		? inlineTags.map((t) => t.tag.replace("#", "").replaceAll("/", "_"))
+		: [];
+	const frontmatterTags = parseFrontMatterTags(frontmatter);
+
+	const yamlTags = frontmatterTags
+		? frontmatterTags.map((t) => t.replace("#", "").replaceAll("/", "_"))
+		: [];
+	return [...new Set([...inlineTagsInText, ...yamlTags])];
 }
 
 /**
@@ -107,30 +147,17 @@ export async function addTagsToYAML(text: string, toAdd: string[], settings: Git
  * @param {string} text the text to convert
  * @return {Promise<string>} the converted text
  */
-export async function addInlineTags(
+export async function processYaml(
 	settings: GitHubPublisherSettings,
 	file: TFile,
 	metadataCache: MetadataCache,
 	frontmatter: FrontMatterCache | undefined | null,
-	text: string
+	text: string,
+	multiProperties: MultiProperties
 ): Promise<string> {
-	if (!settings.conversion.tags.inline) {
-		return text;
-	}
-	const inlineTags = metadataCache.getFileCache(file)?.tags;
-	const inlineTagsInText = inlineTags
-		? inlineTags.map((t) => t.tag.replace("#", "").replaceAll("/", "_"))
-		: [];
-	const frontmatterTags = parseFrontMatterTags(frontmatter);
-
-	const yamlTags = frontmatterTags
-		? frontmatterTags.map((t) => t.replace("#", "").replaceAll("/", "_"))
-		: [];
-	const toAdd = [...new Set([...inlineTagsInText, ...yamlTags])];
-	if (toAdd.length > 0) {
-		return await addTagsToYAML(text, toAdd, settings);
-	}
-	return text;
+	const toAdd = inlineTags(settings, file, metadataCache, frontmatter);
+	const folderNoteParaMeters = { properties: multiProperties, file };
+	return addToYaml(text, toAdd, settings, folderNoteParaMeters);
 }
 
 
@@ -151,7 +178,7 @@ export async function mainConverting(
 	if (properties.frontmatter.general.removeEmbed === "bake")
 		text = await bakeEmbeds(file, new Set(), app, properties, null, linkedFiles);
 	text = findAndReplaceText(text, properties.settings, false);
-	text = await addInlineTags(properties.settings, file, plugin.app.metadataCache, frontmatter, text);
+	text = await processYaml(properties.settings, file, plugin.app.metadataCache, frontmatter, text, properties);
 	text = await convertToInternalGithub(
 		text,
 		linkedFiles,
@@ -174,3 +201,5 @@ export async function mainConverting(
 
 	return findAndReplaceText(text, properties.settings, true);
 }
+
+

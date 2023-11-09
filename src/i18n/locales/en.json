@@ -506,6 +506,12 @@
         "title": "File tree in repository",
         "yaml": "Property key"
       },
+      "folderNote": {
+        "addTitle": {
+          "key": "Use a key other than \"title\"",
+          "title": "Automatically add the \"title\" key with the file name"
+        }
+      },
       "frontmatterKey": {
         "desc": "Set the key where to get the folder's value.",
         "placeholder": "category",

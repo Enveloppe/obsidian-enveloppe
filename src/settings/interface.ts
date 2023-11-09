@@ -90,6 +90,10 @@ export interface GitHubPublisherSettings {
 		folderNote: {
 			enable: boolean;
 			rename: string;
+			addTitle: {
+				enable: boolean;
+				key: string;
+			};
 		}
 		metadataExtractorPath: string;
 	}
@@ -176,6 +180,7 @@ export interface MultiProperties {
 		repo: RepoFrontmatter | RepoFrontmatter[];
 	},
 	repository: Repository | null;
+	filepath: string;
 }
 
 export interface MonoProperties {
@@ -185,6 +190,7 @@ export interface MonoProperties {
 		repo: RepoFrontmatter
 	},
 	repository: Repository | null;
+	filepath: string;
 }
 
 export interface MonoRepoProperties {
@@ -204,7 +210,7 @@ export interface MultiRepoProperties {
  */
 export const TOKEN_PATH:string = "%configDir%/plugins/%pluginID%/env";
 
-export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
+export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 	github: {
 		user: "",
 		repo: "",
@@ -241,6 +247,10 @@ export const DEFAULT_SETTINGS: GitHubPublisherSettings = {
 		folderNote: {
 			enable: false,
 			rename: "index.md",
+			addTitle: {
+				enable: false,
+				key: "title",
+			}
 		},
 		metadataExtractorPath: "",
 	},

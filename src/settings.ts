@@ -524,6 +524,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 
 		if (uploadSettings.folderNote.enable) {
+
 			folderNoteSettings.addText((text) => {
 				text.setPlaceholder("folderNote")
 					.setValue(uploadSettings.folderNote.rename)
@@ -533,6 +534,29 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 					});
 			});
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.upload.folderNote.addTitle.title"))
+				.addToggle((toggle) => {
+					toggle
+						.setValue(uploadSettings.folderNote.addTitle.enable)
+						.onChange(async (value) => {
+							uploadSettings.folderNote.addTitle.enable = value;
+							await this.plugin.saveSettings();
+							this.renderSettingsPage(EnumbSettingsTabId.upload);
+						});
+				});
+			if (uploadSettings.folderNote.addTitle.enable) {
+				new Setting(this.settingsPage)
+					.setName(i18next.t("settings.upload.folderNote.addTitle.key"))
+					.addText((text) => {
+						text.setPlaceholder("title")
+							.setValue(uploadSettings.folderNote.addTitle.key)
+							.onChange(async (value) => {
+								uploadSettings.folderNote.addTitle.key = value;
+								await this.plugin.saveSettings();
+							});
+					});
+			}
 		}
 
 		showHideBasedOnFolder(this.settings, frontmatterKeySettings, rootFolderSettings, folderNoteSettings);

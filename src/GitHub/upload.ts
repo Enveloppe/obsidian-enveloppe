@@ -213,10 +213,11 @@ export default class Publisher {
 					general: frontmatterSettings,
 					repo: repo.frontmatter,
 				},
-				repository: repo.repo
+				repository: repo.repo,
+				filepath: getReceiptFolder(file, this.settings, repo.repo, this.plugin.app),
 			};
 			text = await mainConverting(text, file, this.plugin.app, frontmatter, linkedFiles, this.plugin, multiProperties);
-			const path = getReceiptFolder(file, this.settings, repo.repo, this.plugin.app);
+			const path = multiProperties.filepath;
 			const repoFrontmatter = Array.isArray(repo.frontmatter)
 				? repo.frontmatter
 				: [repo.frontmatter];
@@ -236,7 +237,8 @@ export default class Publisher {
 						general: frontmatterSettings,
 						repo
 					},
-					repository: multiProperties.repository
+					repository: multiProperties.repository,
+					filepath: multiProperties.filepath,
 				};
 				const deleted =
 					await this.uploadOnMultipleRepo(

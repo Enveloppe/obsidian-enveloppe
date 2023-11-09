@@ -404,3 +404,15 @@ export function forcePushAttachment(file: TFile, settings: GitHubPublisherSettin
 	}
 	return false;
 }
+
+export function isFolderNote(properties: MultiProperties) {
+	const enabled = properties.settings.upload.folderNote.enable;
+	if (enabled) {
+		const model = properties.settings.upload.folderNote.rename;
+		const filepath = properties.filepath;
+		//get the file name aka split by / and get the last element
+		const filename = filepath.split("/").pop();
+		return filename === model;
+	}
+	return false;
+}

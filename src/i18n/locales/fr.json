@@ -505,6 +505,12 @@
         "title": "Hiérarchie des dossiers",
         "yaml": "Valeur d'une clé de propriété"
       },
+      "folderNote": {
+        "addTitle": {
+          "key": "Utiliser une autre clé que \"title\"",
+          "title": "Ajouter automatiquement la clé \"title\" avec le nom du fichier"
+        }
+      },
       "frontmatterKey": {
         "desc": "Définir le nom de la clé où obtenir le dossier",
         "placeholder": "category",
