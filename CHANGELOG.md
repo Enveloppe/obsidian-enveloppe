@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.11.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.0-0...6.11.0) (2023-11-17)
+
+
+### Bug Fixes
+
+* **regex:path:** in some case, the regex will be undefined ([56a09d5](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/56a09d51c28a4654c7d3f00af2da4764160a6213)), closes [#245](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/245)
+
 ## [6.10.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.10.2...6.10.3) (2023-10-24)
 
 
