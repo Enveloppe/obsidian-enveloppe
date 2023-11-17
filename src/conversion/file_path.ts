@@ -243,7 +243,7 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 	const extension = fileName.match(/\.[0-9a-z]+$/i)?.at(-1) ?? "";
 	fileName = fileName.replace(extension, "");
 	for (const regexTitle of uploadSettings.replaceTitle) {
-		if (regexTitle.regex.trim().length > 0) {
+		if (regexTitle.regex?.trim().length > 0) {
 			const toReplace = regexTitle.regex;
 			const replaceWith = regexTitle.replacement;
 			if (toReplace.match(/\/.+\//)) {

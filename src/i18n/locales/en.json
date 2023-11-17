@@ -475,6 +475,7 @@
     },
     "regexReplacing": {
       "empty": "Replacement can be empty to remove the whole string.",
+      "emptyRegex": "The value to replace cannot be empty",
       "forbiddenValue": "The {{- what}} cannont contain the character: {{- forbiddenChar}}",
       "inCodeBlocks": {
         "runIn": "Runned in code-blocks",

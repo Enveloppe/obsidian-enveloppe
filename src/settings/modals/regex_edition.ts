@@ -172,7 +172,17 @@ export class ModalRegexFilePathName extends Modal {
 					.onClick(() => {
 						const canBeValidated: boolean[] = [];
 						this.allRegex.forEach((title) => {
+							if (!title.regex)
+								title.regex = "";
+							if (!title.replacement)
+								title.replacement = "";
 							const isForbiddenEntry = this.forbiddenValue(title.regex, title.type);
+							if (title.regex.length === 0) {
+								new Notice(i18next.t("settings.regexReplacing.emptyRegex"));
+								isForbiddenEntry.isForbidden = true;
+								isForbiddenEntry.value = "";
+							}
+
 							const isForbiddenReplace = this.forbiddenValue(title.replacement, title.type);
 							canBeValidated.push(isForbiddenEntry.isForbidden);
 							canBeValidated.push(isForbiddenReplace.isForbidden);
@@ -187,6 +197,8 @@ export class ModalRegexFilePathName extends Modal {
 
 						});
 						if (!canBeValidated.includes(true)) {
+							//remove empty regex
+
 							this.onSubmit(this.allRegex);
 							this.close();
 						}
