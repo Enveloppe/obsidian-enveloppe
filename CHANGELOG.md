@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.11.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.0...6.11.1) (2023-11-19)
+
+
+### Bug Fixes
+
+* newly downloaded plugin crash at startup ([c0a86d9](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c0a86d92e65cd87e95f932cd7ffef9e3916b0fb5))
+
 ## [6.11.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.0-0...6.11.0) (2023-11-17)
 
 
