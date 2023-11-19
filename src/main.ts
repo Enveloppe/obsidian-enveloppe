@@ -262,7 +262,12 @@ export default class GithubPublisher extends Plugin {
 
 	async loadSettings() {
 		const loadedData = await this.loadData();
-		this.settings = merge(DEFAULT_SETTINGS, loadedData) as unknown as GitHubPublisherSettings;
+		try {
+			this.settings = merge(DEFAULT_SETTINGS, loadedData) as unknown as GitHubPublisherSettings;
+		} catch (e) {
+			notif({settings: this.settings, e: true}, e);
+			this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		}
 	}
 
 	/**
