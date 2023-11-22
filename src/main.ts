@@ -265,7 +265,7 @@ export default class GithubPublisher extends Plugin {
 		try {
 			this.settings = merge(DEFAULT_SETTINGS, loadedData) as unknown as GitHubPublisherSettings;
 		} catch (e) {
-			notif({settings: this.settings, e: true}, e);
+			console.warn("[Github Publisher] Error while deep merging settings, using default loading method");
 			this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 		}
 	}
