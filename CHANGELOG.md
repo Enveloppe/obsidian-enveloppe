@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.11.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.1...6.11.2) (2023-11-22)
+
+
+### Bug Fixes
+
+* plugin don't load on new installation ([04328dc](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/04328dcc6b6194555f27bdaadcff3d5bea8b6bcf)), closes [#247](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/247)
+
 ## [6.11.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.0...6.11.1) (2023-11-19)
 
 
