@@ -187,7 +187,7 @@ export async function mainConverting(
 		frontmatter,
 		properties
 	);
-	text = convertWikilinks(text, properties.frontmatter.general, linkedFiles, properties.settings);
+	text = convertWikilinks(text, properties.frontmatter.general, linkedFiles, properties.settings, frontmatter);
 	text = await convertDataviewQueries(
 		text,
 		file.path,

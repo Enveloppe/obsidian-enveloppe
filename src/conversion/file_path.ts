@@ -23,7 +23,39 @@ import { getCategory, getFrontmatterSettings, getRepoFrontmatter } from "../util
 import { createRegexFromText } from "./find_and_replace_text";
 
 
+/** Search a link in the entire frontmatter value */
+/** Link will always be in the form of [[]] */
+export function linkIsInFormatter(
+	linkedFile: LinkedNotes,
+	frontmatter: FrontMatterCache | undefined | null,
+): boolean {
+	if (frontmatter) {
+		for (const key in frontmatter) {
+			const wikiLinks = `[[${linkedFile.linkFrom}]]`;
+			if (frontmatter[key] === wikiLinks) {
+				console.warn(`Text ${linkedFile.linkFrom} is in frontmatter`);
+				return true;
+			}
+		}
+	}
+	return false;
+}
 
+export function textIsInFrontmatter(
+	text: string,
+	frontmatter: FrontMatterCache | undefined | null,
+): boolean {
+
+	if (frontmatter) {
+		for (const key in frontmatter) {
+			if (frontmatter[key] === `[[${text}]]`) {
+				console.warn(`Text ${text} is in frontmatter`);
+				return true;
+			}
+		}
+	}
+	return false;
+}
 
 /**
  * Create relative path from a sourceFile to a targetPath. If the target file is a note, only share if the frontmatter sharekey is present and true
@@ -54,6 +86,7 @@ export async function createRelativePath(
 		properties,
 		targetFile.linked,
 	);
+
 	logs({settings}, `Shared: ${shared} for ${targetFile.linked.path}`);
 	if (
 		targetFile.linked.extension === "md" && (!isFromAnotherRepo || !shared)

@@ -8,8 +8,11 @@ import {
 	MultiProperties,
 } from "../settings/interface";
 import {isAttachment, noTextConversion} from "../utils/data_validation_test";
-import { createRelativePath } from "./file_path";
+import { createRelativePath, linkIsInFormatter, textIsInFrontmatter } from "./file_path";
 import { replaceText } from "./find_and_replace_text";
+
+
+
 
 /**
  * Convert wikilinks to markdown
@@ -26,6 +29,7 @@ export function convertWikilinks(
 	conditionConvert: FrontmatterConvert,
 	linkedFiles: LinkedNotes[],
 	settings: GitHubPublisherSettings,
+	sourceFrontmatter: FrontMatterCache | undefined | null,
 ): string {
 	const convertWikilink = conditionConvert.convertWiki;
 	const imageSettings = conditionConvert.attachment;
@@ -73,7 +77,7 @@ export function convertWikilinks(
 				const linkedFile = linkedFiles.find(
 					(item) => item.linkFrom.replace(/#.*/, "") === StrictFileName
 				);
-				if (linkedFile) {
+				if (linkedFile && !linkIsInFormatter(linkedFile, sourceFrontmatter)) {
 					let altText: string;
 					if (linkedFile.linked.extension !== "md") {
 						altText =
@@ -131,7 +135,7 @@ export function convertWikilinks(
 					}
 					fileContent = replaceText(fileContent, wikiMatch, linkCreator, true);
 
-				} else if (!fileName.startsWith("http")) {
+				} else if (!fileName.startsWith("http") && !textIsInFrontmatter(fileName, sourceFrontmatter)) {
 					const altMatch = wikiMatch.match(/(\|).*(]])/);
 					const altCreator = fileName.split("/");
 
@@ -254,6 +258,10 @@ export async function convertToInternalGithub(
 		return fileContent;
 	}
 	for (const linkedFile of linkedFiles) {
+		if (linkIsInFormatter(linkedFile, frontmatter)) {
+			continue;
+		}
+
 		let pathInGithub = await createRelativePath(
 			sourceFile,
 			linkedFile,

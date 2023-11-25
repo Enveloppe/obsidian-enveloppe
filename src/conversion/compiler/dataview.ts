@@ -202,7 +202,8 @@ async function convertDataviewLinks(
 		md,
 		properties.frontmatter.general,
 		dataviewPath,
-		properties.settings
+		properties.settings,
+		frontmatter
 	);
 }
 
