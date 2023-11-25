@@ -8,7 +8,6 @@ import {
 	TFile,
 	Vault,
 } from "obsidian";
-import { LOADING_ICON } from "src/utils/icons";
 
 import { mainConverting } from "../conversion/convert_text";
 import {
@@ -26,8 +25,6 @@ import {
 	RepoFrontmatter, UploadedFiles,
 } from "../settings/interface";
 import {
-	getFrontmatterSettings,
-	getRepoFrontmatter,
 	logs,
 	notif,
 } from "../utils";
@@ -38,6 +35,8 @@ import {
 	isAttachment,
 	isShared,
 } from "../utils/data_validation_test";
+import { LOADING_ICON } from "../utils/icons";
+import { getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import { ShareStatusBar } from "../utils/status_bar";
 import { deleteFromGithub } from "./delete";
 import { FilesManagement } from "./files";

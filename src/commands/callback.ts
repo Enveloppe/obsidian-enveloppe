@@ -9,8 +9,9 @@ import {Command, Notice } from "obsidian";
 
 import GithubPublisher from "../main";
 import {MonoRepoProperties, MultiRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
-import {createLink, getRepoFrontmatter, logs} from "../utils";
+import {createLink, logs} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
+import { getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {purgeNotesRemote, shareOneNote} from "./commands";
 import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} from "./plugin_commands";
 

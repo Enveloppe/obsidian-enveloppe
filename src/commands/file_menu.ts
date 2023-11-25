@@ -3,8 +3,8 @@ import { Menu, MenuItem, Platform, TFile, TFolder} from "obsidian";
 
 import GithubPublisher from "../main";
 import {MonoRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
-import {getRepoFrontmatter} from "../utils";
 import {defaultRepo, getRepoSharedKey, isShared, multipleSharedKey} from "../utils/data_validation_test";
+import { getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {shareAllMarkedNotes, shareOneNote} from "./commands";
 import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 
@@ -99,7 +99,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 	let getSharedKey = getRepoSharedKey(plugin.settings, frontmatter);
 	const allKeysFromFile = multipleSharedKey(frontmatter, plugin.settings);
 	if (
-		isShared(frontmatter, plugin.settings, file, getSharedKey) && 
+		isShared(frontmatter, plugin.settings, file, getSharedKey) &&
 		plugin.settings.plugin.fileMenu
 	) {
 		const repoFrontmatter = getRepoFrontmatter(plugin.settings, getSharedKey, frontmatter);
@@ -129,7 +129,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 				return;
 			}
 			const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file)?.frontmatter).replace(".md", "");
-			
+
 			if (!frontmatter || !frontmatter[plugin.settings.plugin.shareKey]) {
 				const otherRepo = plugin.settings.github.otherRepo.find((repo) => repo.shareAll?.enable);
 				if (otherRepo) getSharedKey = otherRepo;

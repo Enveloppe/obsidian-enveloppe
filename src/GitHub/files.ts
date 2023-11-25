@@ -14,8 +14,9 @@ import {
 	LinkedNotes,
 	RepoFrontmatter, Repository,
 } from "../settings/interface";
-import {getRepoFrontmatter, logs} from "../utils";
+import {logs} from "../utils";
 import { isAttachment, isShared } from "../utils/data_validation_test";
+import { getRepoFrontmatter } from "../utils/parse_frontmatter";
 import Publisher from "./upload";
 
 export class FilesManagement extends Publisher {
@@ -465,6 +466,7 @@ export class FilesManagement extends Publisher {
 				const fieldValue = dataviewMetadata[field];
 				if (fieldValue != undefined) {
 					if (fieldValue.constructor.name === "Array") {
+						// @ts-ignore
 						for (const value of fieldValue) {
 							const path = this.getImageByPath(
 								file.path,
@@ -476,7 +478,7 @@ export class FilesManagement extends Publisher {
 					} else {
 						const path = this.getImageByPath(
 							file.path,
-							fieldValue,
+							fieldValue.toString() as string,
 							frontmatterSettings
 						);
 						if (path)

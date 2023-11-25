@@ -8,8 +8,9 @@ import { Notice } from "obsidian";
 
 import GithubPublisher from "../main";
 import {MonoRepoProperties, MultiRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
-import {createLink, getRepoFrontmatter} from "../utils";
+import {createLink} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
+import { getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {
 	purgeNotesRemote,
 	shareAllEditedNotes,

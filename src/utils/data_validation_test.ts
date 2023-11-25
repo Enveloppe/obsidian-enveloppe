@@ -5,7 +5,8 @@ import GithubPublisher from "src/main";
 
 import {GithubBranch} from "../GitHub/branch";
 import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, MultiProperties, RepoFrontmatter, Repository} from "../settings/interface";
-import {getRepoFrontmatter, logs, notif} from ".";
+import {logs, notif} from ".";
+import { getRepoFrontmatter } from "./parse_frontmatter";
 
 /**
  * - Check if the file is a valid file to publish

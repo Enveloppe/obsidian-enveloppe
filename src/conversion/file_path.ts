@@ -16,12 +16,10 @@ import {
 	Repository,
 } from "../settings/interface";
 import {
-	getCategory,
-	getFrontmatterSettings,
-	getRepoFrontmatter,
 	logs,
 } from "../utils";
 import {checkIfRepoIsInAnother, isInternalShared, isShared} from "../utils/data_validation_test";
+import { getCategory, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import { createRegexFromText } from "./find_and_replace_text";
 
 

@@ -8,11 +8,11 @@ import { ListChangedFiles } from "../settings/modals/list_changed";
 import {
 	createLink,
 	createListEdited,
-	getRepoFrontmatter,
 	getSettingsOfMetadataExtractor,
 	logs,
 	notif,	publisherNotification} from "../utils";
 import {checkRepositoryValidityWithRepoFrontmatter} from "../utils/data_validation_test";
+import { getRepoFrontmatter } from "../utils/parse_frontmatter";
 import { ShareStatusBar } from "../utils/status_bar";
 
 

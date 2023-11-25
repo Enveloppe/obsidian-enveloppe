@@ -248,6 +248,10 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 			folderNote: {
 				enable: old.folderNote,
 				rename: old.folderNoteRename,
+				addTitle: {
+					enable: old.folderNote,
+					key: old.frontmatterTitleKey,
+				}
 			},
 			metadataExtractorPath: old.metadataExtractorPath,
 		},
