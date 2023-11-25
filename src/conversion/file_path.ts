@@ -33,7 +33,6 @@ export function linkIsInFormatter(
 		for (const key in frontmatter) {
 			const wikiLinks = `[[${linkedFile.linkFrom}]]`;
 			if (frontmatter[key] === wikiLinks) {
-				console.warn(`Text ${linkedFile.linkFrom} is in frontmatter`);
 				return true;
 			}
 		}
@@ -49,7 +48,6 @@ export function textIsInFrontmatter(
 	if (frontmatter) {
 		for (const key in frontmatter) {
 			if (frontmatter[key] === `[[${text}]]`) {
-				console.warn(`Text ${text} is in frontmatter`);
 				return true;
 			}
 		}
