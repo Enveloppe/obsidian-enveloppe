@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.11.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.2...6.11.3) (2023-11-25)
+
+
+### Bug Fixes
+
+* never update frontmatter links ([ed3ddc7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ed3ddc752629adb5c0758e1a9484d32fe9c1521c))
+
 ## [6.11.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.1...6.11.2) (2023-11-22)
 
 
