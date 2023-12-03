@@ -312,7 +312,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				button
 					.setButtonText(i18next.t("settings.github.smartRepo.button"))
 					.onClick(async () => {
-						const repository: Repository[] = this.settings.github?.otherRepo ?? [];
+						const repository: Repository[] = this.copy(this.settings.github?.otherRepo ?? []);
 						new ModalAddingNewRepository(this.app, this.settings, this.branchName, this.plugin, repository, (result => {
 							this.settings.github.otherRepo = result;
 							this.plugin.saveSettings();
@@ -500,7 +500,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						if (uploadSettings.behavior !== FolderSettings.fixed) {
 							allRegex = allRegex.concat(uploadSettings.replacePath);
 						}
-						new ModalRegexFilePathName(this.app, this.settings, allRegex, (result => {
+						new ModalRegexFilePathName(this.app, this.settings, this.copy(allRegex), (result => {
 							uploadSettings.replacePath = result.filter(title => {return title.type === "path";});
 							uploadSettings.replaceTitle = result.filter(title => {return title.type === "title";});
 							this.plugin.saveSettings();
@@ -756,7 +756,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				button
 					.setIcon("pencil")
 					.onClick(async () => {
-						new ModalRegexOnContents(this.app, this.settings, (result => {
+						new ModalRegexOnContents(this.app, this.copy(this.settings), (result => {
 							this.settings.conversion.censorText = result.conversion.censorText;
 							this.plugin.saveSettings();
 						})).open();
@@ -1236,5 +1236,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			multipleRepoExplained(this.settings)
 		);
 		this.settingsPage.appendChild(supportMe());
+	}
+
+	// eslint-disable-next-line
+	copy(object: any) {
+		return JSON.parse(JSON.stringify(object));
 	}
 }
