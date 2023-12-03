@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.11.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.4...6.11.5) (2023-12-03)
+
+
+### Bug Fixes
+
+* **settings:** use await to save settings ([fa1f1b7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/fa1f1b7bca8db8f71f3e072088cd1398147b8410))
+
 ## [6.11.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.3...6.11.4) (2023-12-03)
 
 
