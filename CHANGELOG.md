@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.11.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.3...6.11.4) (2023-12-03)
+
+
+### Bug Fixes
+
+* closing modal doesn't reset form ([72b2913](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/72b291304da9058b31482d2bbe4527a9a6c9a2dd))
+
 ## [6.11.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.2...6.11.3) (2023-11-25)
 
 
