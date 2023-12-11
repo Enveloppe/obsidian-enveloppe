@@ -7,5 +7,6 @@
     "author": "Mara-Li",
     "authorUrl": "https://github.com/Mara-Li",
     "fundingUrl": "https://ko-fi.com/lisandra_dev",
-    "isDesktopOnly": false
+    "isDesktopOnly": false,
+    "helpUrl": "https://obsidian-publisher.netlify.app"
 }
