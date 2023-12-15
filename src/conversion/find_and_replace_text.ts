@@ -1,3 +1,6 @@
+
+import { logs } from "src/utils";
+
 import { GitHubPublisherSettings } from "../settings/interface";
 import { escapeRegex } from "./links";
 
@@ -41,12 +44,12 @@ export default function findAndReplaceText(
 			if (toReplace.match(/^\/.+\/[gimy]*$/)) {
 				const regex = createRegexFromText(toReplace, censor.flags);
 				if (!censor.inCodeBlocks)
-					text = replaceText(text, regex, replaceWith);
+					text = replaceText(text, regex, replaceWith, settings);
 				else
 					text = text.replace(regex, replaceWith);
 			} else {
 				if (!censor.inCodeBlocks)
-					text = replaceText(text, toReplace, replaceWith);
+					text = replaceText(text, toReplace, replaceWith, settings);
 				else
 					text = text.replace(toReplace, replaceWith);
 			}
@@ -65,7 +68,12 @@ export default function findAndReplaceText(
  * @param links {boolean} Whether to exclude the replacement if the string is prepended by a backslash.
  * @returns {string} The file content with the replacements
  */
-export function replaceText(fileContent: string, pattern: string | RegExp, replaceWith: string, links?: boolean):string {
+export function replaceText(
+	fileContent: string,
+	pattern: string | RegExp,
+	replaceWith: string,
+	settings: GitHubPublisherSettings,
+	links?: boolean):string {
 	let regexWithString: string ;
 	let regex: RegExp;
 
@@ -86,7 +94,14 @@ export function replaceText(fileContent: string, pattern: string | RegExp, repla
 		} else if (links && match.match(/^\\/)) {
 			return match;
 		} else {
-			return match.replace(pattern, replaceWith);
+			try {
+				const replaceWithParsed = JSON.parse(`"${replaceWith}"`);
+				return match.replace(pattern, replaceWithParsed);
+			}
+			catch(e) {
+				logs({settings, e: true}, e);
+				return match.replace(pattern, replaceWith);
+			}
 		}
 	});
 }

@@ -133,7 +133,7 @@ export function convertWikilinks(
 					) {
 						linkCreator = "";
 					}
-					fileContent = replaceText(fileContent, wikiMatch, linkCreator, true);
+					fileContent = replaceText(fileContent, wikiMatch, linkCreator, settings, true);
 
 				} else if (!fileName.startsWith("http") && !textIsInFrontmatter(fileName, sourceFrontmatter)) {
 					const altMatch = wikiMatch.match(/(\|).*(]])/);
@@ -174,7 +174,7 @@ export function convertWikilinks(
 					) {
 						linkCreator = "";
 					}
-					fileContent = replaceText(fileContent, wikiMatch, linkCreator, true);
+					fileContent = replaceText(fileContent, wikiMatch, linkCreator, settings, true);
 				}
 			}
 		}
@@ -304,7 +304,7 @@ export async function convertToInternalGithub(
 					newLink = `[${altText}](${pathInGithub})`;
 				}
 				newLink = addAltText(newLink, linkedFile);
-				fileContent = replaceText(fileContent, link, newLink, true);
+				fileContent = replaceText(fileContent, link, newLink, settings, true);
 			}
 		}
 	}
