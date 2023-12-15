@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.11.7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.6...6.11.7) (2023-12-15)
+
+
+### Bug Fixes
+
+* RegExp replacement should text supports escape character ([de34672](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de346721bf147c8e0bb0112627adb91b9402e388))
+
 ## [6.11.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.5...6.11.6) (2023-12-11)
 
 ## [6.11.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.4...6.11.5) (2023-12-03)
