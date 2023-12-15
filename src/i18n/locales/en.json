@@ -105,10 +105,10 @@
     },
     "noNewNote": "No new notes to upload.",
     "scanningRepo": "Scanning the repository, may take a while...",
-    "sendMessage": "Upload {{- nbNotes}} notes to {{- repo.owner}}/{{- repo.repo}}",
-    "startingClean": "Starting cleaning {{- repo.owner}}/{{- repo.repo}}",
-    "successPublishOneNote": "Successfully uploaded {{- file}} to {{- repo.owner}}/{{- repo.repo}}",
-    "successfulPublish": "Successfully uploaded {{- nbNotes}} to {{- repo.owner}}/{{- repo.repo}}",
+    "sendMessage": "Upload <i>{{- nbNotes}}</i> notes to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "startingClean": "Starting cleaning <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "successPublishOneNote": "Successfully uploaded <i><u>{{- file}}</i><u> to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "successfulPublish": "Successfully uploaded <i>{{- nbNotes}}</i> to <u>{{- repo.owner}}/{{- repo.repo}}<u>",
     "waitingWorkflow": "Now, waiting for the workflow to be completed..."
   },
   "modals": {

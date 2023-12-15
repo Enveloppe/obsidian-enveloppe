@@ -105,10 +105,10 @@
     },
     "noNewNote": "Aucune note à transférer.",
     "scanningRepo": "Scan du dépôt, veuillez patienter...",
-    "sendMessage": "Transfert de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
-    "startingClean": "Début du nettoyage de {{- repo.owner}}/{{- repo.repo}}",
-    "successPublishOneNote": "Transfert réussi de {{- file}} vers {{- repo.owner}}/{{- repo.repo}}",
-    "successfulPublish": "Transfert réussi de {{- nbNotes}} notes vers {{- repo.owner}}/{{- repo.repo}}",
+    "sendMessage": "Transfert de <i>{{- nbNotes}}</i> notes vers <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "startingClean": "Début du nettoyage de <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "successPublishOneNote": "Transfert réussi de <i><u>{{- file}}</u></i> vers <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "successfulPublish": "Transfert réussi de <i>{{- nbNotes}}</i> notes vers <u>{{- repo.owner}}/{{- repo.repo}}</u>",
     "waitingWorkflow": "Maintenant, attente de la fin du workflow..."
   },
   "modals": {

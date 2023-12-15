@@ -12,9 +12,10 @@ import {
 	MultiRepoProperties,
 	RepoFrontmatter, TOKEN_PATH,
 	UploadedFiles} from "../settings/interface";
+import { HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 
 type LogsParameters = {
-	settings: GitHubPublisherSettings,
+	settings: Partial<GitHubPublisherSettings>,
 	e?: boolean,
 	logs?: boolean,
 }
@@ -27,7 +28,7 @@ type LogsParameters = {
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function notif(args: LogsParameters, ...messages: unknown[]) {
 	const {settings, e} = args;
-	if (settings.plugin.noticeError) {
+	if (settings.plugin?.noticeError) {
 		new Notice(messages.join(" "));
 		return;
 	}
@@ -254,22 +255,28 @@ async function publisherNotificationOneRepo(
 ): Promise<void> {
 	const noticeValue =
 		file instanceof TFile ? `"${file.basename}"` : file;
+	const docSuccess = document.createDocumentFragment();
 	let successMsg: string;
 	if (file instanceof String) {
-		successMsg = i18next.t("informations.successfulPublish", { nbNotes: noticeValue, repo: repo });
+		successMsg = i18next.t("informations.successfulPublish", { nbNotes: noticeValue, repo });
 	} else {
 		logs({settings}, "file published :", noticeValue);
-		successMsg = i18next.t("informations.successPublishOneNote", { file: noticeValue, repo: repo });
+		successMsg = i18next.t("informations.successPublishOneNote", { file: noticeValue, repo });
 	}
+	docSuccess.createEl("span", { text: successMsg, cls: ["obsidian-publisher", "success", "icons"] }).innerHTML = SUCCESS_ICON;
+	docSuccess.createEl("span", { cls: ["obsidian-publisher", "success", "notification"] }).innerHTML = successMsg;
 	if (settings.github.workflow.name.length > 0) {
+		const workflowSuccess = document.createDocumentFragment();
+		workflowSuccess.createEl("span", { text: i18next.t("informations.successfulPublish", { nbNotes: noticeValue, repo }), cls: ["obsidian-publisher", "wait", "icons"] }).innerHTML = HOURGLASS_ICON;
 		const msg = `${i18next.t("informations.sendMessage", {nbNotes: noticeValue, repo})}.\n${i18next.t("informations.waitingWorkflow")}`;
+		workflowSuccess.createEl("span", { cls: ["obsidian-publisher", "wait", "notification"] }).innerHTML = msg;
 		new Notice(msg);
 		const successWorkflow = await PublisherManager.workflowGestion(repo);
 		if (successWorkflow) {
-			new Notice(successMsg);
+			new Notice(docSuccess, 0);
 		}
 	} else {
-		new Notice(successMsg);
+		new Notice(docSuccess,0);
 	}
 }
 

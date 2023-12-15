@@ -233,6 +233,13 @@ a.github-publisher-download:hover {
 .github-publisher .settings-tab-icon {
 	text-align: center;
 }
+
+span.obsidian-publisher.icons {
+	vertical-align: middle;
+	position: relative;
+	padding-right: 5px;
+}
+
 .github-publisher .settings-tab-page > .setting-item:first-child {
 	margin-top: 15px;
 }
@@ -264,8 +271,6 @@ a.github-publisher-download:hover {
 .github-publisher .setting-item.no-display > .setting-item-info {
 	display: none;
 }
-
-
 
 .github-publisher.github-publisher.modals.regex.file-path-name
 .disabled {
@@ -373,6 +378,16 @@ span.obsidian-publisher.icons svg.lucide.lucide-mail-check {
 
 .status-bar-item.plugin-obsidian-mkdocs-publisher.success {
 	color: var(--color-green);
+}
+
+.notice:has(.obsidian-publisher.success.notification) {
+	background-color: var(--color-green);
+	color: black;
+}
+
+.notice:has(.obsidian-publisher.wait.notification) {
+	background-color: var(--color-yellow);
+	color: black;
 }
 
 .status-bar-item.plugin-obsidian-mkdocs-publisher.error {
