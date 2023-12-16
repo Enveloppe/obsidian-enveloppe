@@ -44,6 +44,16 @@ export function notif(args: LogsParameters, ...messages: unknown[]) {
 		console.log(prefix, ...messages);
 }
 
+export function noticeMobile(cls:"error"|"load"|"success"|"wait", icon: string, message: string) {
+	if (!Platform.isMobile) {
+		return;
+	}
+	const noticeFrag = document.createDocumentFragment();
+	noticeFrag.createEl("span", { text: message, cls: ["obsidian-publisher", cls, "icons"] }).innerHTML = icon;
+	noticeFrag.createEl("span", { cls: ["obsidian-publisher", cls, "notification"] }).innerHTML = message;
+	return new Notice(noticeFrag, 0);
+}
+
 function callFunction(type?: boolean):string {
 	const index = type ? 4 : 3;
 	let callFunction = new Error().stack?.split("\n")[index].trim();

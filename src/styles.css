@@ -377,14 +377,22 @@ span.obsidian-publisher.icons svg.lucide.lucide-mail-check {
 }
 
 .status-bar-item.plugin-obsidian-mkdocs-publisher.success {
-	color: var(--color-green);
+	color: var(--text-success);
 }
 
 .notice:has(.obsidian-publisher.success.notification) {
-	background-color: var(--color-green);
+	background-color: var(--text-success);
+	color: green;
+	font-weight: bold;
+
+}
+
+.notice:has(.obsidian-publisher.error.notification) {
+	background-color: var(--text-error);
 	color: black;
 }
 
+.notice:has(.obsidian-publisher.load.notification),
 .notice:has(.obsidian-publisher.wait.notification) {
 	background-color: var(--color-yellow);
 	color: black;

@@ -26,6 +26,7 @@ import {
 } from "../settings/interface";
 import {
 	logs,
+	noticeMobile,
 	notif,
 } from "../utils";
 import {
@@ -297,12 +298,14 @@ export default class Publisher {
 			{ settings: this.settings },
 			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${this.branchName}`
 		);
+		const notifMob = noticeMobile("wait", LOADING_ICON, i18next.t("statusBar.loading"));
 		let deleted: Deleted = {
 			success: false,
 			deleted: [],
 			undeleted: [],
 		};
 		load.remove();
+		notifMob?.hide();
 		const uploaded: UploadedFiles | undefined = await this.uploadText(text, path, file.name, repo);
 		if (!uploaded) {
 			return {

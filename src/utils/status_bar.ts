@@ -1,5 +1,7 @@
 import i18next from "i18next";
+import { Notice } from "obsidian";
 
+import { noticeMobile } from ".";
 import { ERROR_ICONS, FOUND_ATTACHMENTS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 
 // Credit : https://github.com/oleeskild/obsidian-digital-garden/ @oleeskild
@@ -17,6 +19,7 @@ export class ShareStatusBar {
 	attachment = false;
 	status: HTMLElement;
 	icon: HTMLElement;
+	noticeMobile: Notice | undefined;
 
 	/**
 	 * @param {HTMLElement} statusBarItem
@@ -41,6 +44,7 @@ export class ShareStatusBar {
 		this.icon.innerHTML = FOUND_ATTACHMENTS;
 		this.status = this.statusBarItem.createEl("span", { text: `${msg}` });
 		this.status.addClass("found-attachments");
+		this.noticeMobile = noticeMobile("wait", FOUND_ATTACHMENTS, msg);
 	}
 
 	/**
@@ -56,6 +60,14 @@ export class ShareStatusBar {
 		);
 		this.statusBarItem.addClass("sharing");
 		this.statusBarItem.removeClass("found-attachments");
+		console.log(this.counter, this.noticeMobile);
+		if (!this.noticeMobile?.noticeEl.children[0].classList.contains("load")) {
+			setTimeout(() => {
+				this.noticeMobile?.hide();
+			}, 4000);
+			this.noticeMobile = noticeMobile("load", HOURGLASS_ICON, msg);
+		}
+
 	}
 
 	/**
@@ -80,9 +92,14 @@ export class ShareStatusBar {
 		);
 		this.statusBarItem.addClass("success");
 		this.statusBarItem.removeClass("sharing");
+		this.noticeMobile?.hide();
 		setTimeout(() => {
 			this.statusBarItem.remove();
 		}, displayDurationMillisec);
+		setTimeout(() => {
+			this.noticeMobile?.hide();
+		}, displayDurationMillisec - 4000);
+
 	}
 
 	/**
@@ -94,9 +111,13 @@ export class ShareStatusBar {
 		this.statusBarItem.removeClass("sharing");
 		this.statusBarItem.removeClass("found-attachments");
 		this.icon.innerHTML = ERROR_ICONS;
-		this.status.setText(i18next.t("error.errorPublish"));
+		this.status.innerHTML = i18next.t("error.errorPublish");
+		this.noticeMobile?.hide();
 		setTimeout(() => {
 			this.statusBarItem.remove();
 		}, 8000);
+		setTimeout(() => {
+			this.noticeMobile?.hide();
+		}, 4000);
 	}
 }

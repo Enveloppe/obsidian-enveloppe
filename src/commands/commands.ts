@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import { Notice, Platform, TFile } from "obsidian";
+import { ERROR_ICONS } from "src/utils/icons";
 
 import { GithubBranch } from "../GitHub/branch";
 import { deleteFromGithub } from "../GitHub/delete";
@@ -104,13 +105,18 @@ export async function shareAllMarkedNotes(
 					new ListChangedFiles(PublisherManager.plugin.app, listEdited).open();
 				}
 			} else {
-				new Notice(
-					(i18next.t("error.errorPublish", {repo: repoFrontmatter})));
+				const errorFrag = document.createDocumentFragment();
+				errorFrag.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"]}).innerHTML = ERROR_ICONS;
+				errorFrag.createSpan({ cls: ["error", "obsidian-publisher", "notification"] }).innerHTML = i18next.t("error.errorPublish", { repo: repoFrontmatter });
+
+				new Notice(errorFrag);
 			}
 		}
 	} catch (error) {
 		logs({settings: PublisherManager.settings, e: true}, error);
-		new Notice(i18next.t("error.unablePublishMultiNotes") );
+		const errorFrag = document.createDocumentFragment();
+		errorFrag.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"] }).innerHTML = ERROR_ICONS;
+		errorFrag.createSpan({ cls: ["error", "obsidian-publisher", "notification"], text: i18next.t("error.unablePublishMultiNotes") });
 		statusBar.error();
 	}
 }
@@ -221,16 +227,19 @@ export async function shareOneNote(
 				}
 
 			} else {
-				new Notice(
-					(i18next.t("error.errorPublish", { repo: repoFrontmatter})));
+				const notif = document.createDocumentFragment();
+				notif.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"] }).innerHTML = ERROR_ICONS;
+				notif.createSpan({ cls: ["error", "obsidian-publisher", "notification"] }).innerHTML = i18next.t("error.errorPublish", { repo: repoFrontmatter });
+				new Notice(notif);
 			}
 		}
 	} catch (error) {
 		if (!(error instanceof DOMException)) {
 			logs({settings, e: true}, error);
-			new Notice(
-				(i18next.t("error.errorPublish", {repo: getRepoFrontmatter(settings, repository, metadataCache.getFileCache(file)?.frontmatter)}))
-			);
+			const notif = document.createDocumentFragment();
+			notif.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"] }).innerHTML = ERROR_ICONS;
+			notif.createSpan({ cls: ["error", "obsidian-publisher", "notification"] }).innerHTML = i18next.t("error.errorPublish", { repo: getRepoFrontmatter(settings, repository, metadataCache.getFileCache(file)?.frontmatter) });
+			new Notice(notif);
 		}
 	}
 }
