@@ -60,7 +60,7 @@ export class ShareStatusBar {
 		);
 		this.statusBarItem.addClass("sharing");
 		this.statusBarItem.removeClass("found-attachments");
-		console.log(this.counter, this.noticeMobile);
+
 		if (!this.noticeMobile?.noticeEl.children[0].classList.contains("load")) {
 			setTimeout(() => {
 				this.noticeMobile?.hide();

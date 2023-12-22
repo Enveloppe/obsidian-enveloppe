@@ -444,7 +444,6 @@ export class FilesManagement extends Publisher {
 			if (frontmatterLink) {
 				frontmatterLink.forEach((link) => {
 					const fieldRegex = new RegExp(`${field}(\\.\\d+)?`, "g");
-					console.log(fieldRegex);
 					if (link.key.match(fieldRegex)) {
 						imageLinkPath.push(link.link);
 					}
