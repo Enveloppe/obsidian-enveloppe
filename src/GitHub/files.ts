@@ -439,23 +439,32 @@ export class FilesManagement extends Publisher {
 		frontmatterSettings: FrontmatterConvert
 	): Promise<TFile[]> {
 		for (const field of this.settings.embed.keySendFile) {
-			if (frontmatterSourceFile?.[field]) {
-				const imageLinkPath = frontmatterSourceFile[field] instanceof Array ? frontmatterSourceFile[field] : [frontmatterSourceFile[field]];
-				for (const path of imageLinkPath) {
-					const pathToCheck = path.replace(/\[{2}(.*)\]{2}/, "$1");
-					const imageLink = this.metadataCache.getFirstLinkpathDest(
-						pathToCheck,
-						file.path
-					) ?? this.vault.getAbstractFileByPath(pathToCheck);
-					if (imageLink !== null) {
-						embedFiles.push(
-						this.imageSharedOrNote(file, frontmatterSettings) as TFile
-						);
+			const frontmatterLink = this.metadataCache.getFileCache(file)?.frontmatterLinks;
+			const imageLinkPath: string[] = [];
+			if (frontmatterLink) {
+				frontmatterLink.forEach((link) => {
+					const fieldRegex = new RegExp(`${field}(\\.\\d+)?`, "g");
+					console.log(fieldRegex);
+					if (link.key.match(fieldRegex)) {
+						imageLinkPath.push(link.link);
 					}
+				});
+			}
+			for (const path of imageLinkPath) {
+				const imageLink = this.metadataCache.getFirstLinkpathDest(
+					path,
+					file.path
+				) ?? this.vault.getAbstractFileByPath(path);
+				if (imageLink !== null) {
+					embedFiles.push(
+						this.imageSharedOrNote(file, frontmatterSettings) as TFile
+					);
 				}
 			}
+
 		}
 		embedFiles = [...new Set(embedFiles)].filter((x) => x != null);
+		logs({settings: this.settings}, embedFiles);
 		// @ts-ignore
 		if (this.plugin.app.plugins.enabledPlugins.has("dataview")) {
 			const dvApi = getAPI();
