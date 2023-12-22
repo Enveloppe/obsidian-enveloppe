@@ -278,9 +278,9 @@ async function publisherNotificationOneRepo(
 	if (settings.github.workflow.name.length > 0) {
 		const workflowSuccess = document.createDocumentFragment();
 		workflowSuccess.createEl("span", { text: i18next.t("informations.successfulPublish", { nbNotes: noticeValue, repo }), cls: ["obsidian-publisher", "wait", "icons"] }).innerHTML = HOURGLASS_ICON;
-		const msg = `${i18next.t("informations.sendMessage", {nbNotes: noticeValue, repo})}.\n${i18next.t("informations.waitingWorkflow")}`;
+		const msg = `${i18next.t("informations.sendMessage", {nbNotes: noticeValue, repo})}.<br>${i18next.t("informations.waitingWorkflow")}`;
 		workflowSuccess.createEl("span", { cls: ["obsidian-publisher", "wait", "notification"] }).innerHTML = msg;
-		new Notice(msg);
+		new Notice(workflowSuccess);
 		const successWorkflow = await PublisherManager.workflowGestion(repo);
 		if (successWorkflow) {
 			new Notice(docSuccess, 0);
