@@ -537,7 +537,7 @@ export default class Publisher {
 				const build = workflowGet.data.workflow_runs.find(
 					(run) =>
 						run.name ===
-						repoFrontmatter.workflowName.replace(".yml", "")
+						repoFrontmatter.workflowName.replace(".yml", "").replace(".yaml", "")
 				);
 				if (build && build.status === "completed") {
 					finished = true;
