@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.11.11](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.10...6.11.11) (2023-12-22)
+
+
+### Bug Fixes
+
+* empty settings when importing new settings ([245d5c3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/245d5c36d16eba71e4c56eee293cf1adef85929d))
+
 ## [6.11.10](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.9...6.11.10) (2023-12-22)
 
 
