@@ -147,7 +147,7 @@ export class ImportModal extends Modal {
 		contentEl.empty();
 		this.settingsPage.empty();
 		// @ts-ignore
-		let openedTab = this.plugin.settings.tabsID ?? document.querySelector(".settings-tab-active.github-publisher") ? document.querySelector(".settings-tab-active.github-publisher").innerText : i18next.t("settings.github.title") ;
+		let openedTab = this.plugin.settings.tabsID ?? document.querySelector(".settings-tab.settings-tab-active") ? document.querySelector(".settings-tab.settings-tab-active .settings-tab-name").innerText : i18next.t("settings.github.title") ;
 		openedTab = openedTab.trim();
 		switch (openedTab) {
 		case i18next.t("settings.github.title") :
