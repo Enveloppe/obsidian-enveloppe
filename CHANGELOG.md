@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.11.9](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.8...6.11.9) (2023-12-22)
+
+
+### Bug Fixes
+
+* replace extension for yaml and yml (workflow dispatch) ([4edd902](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4edd90299dc07c61a6b48956614f420b22e47a7f))
+* **style:** forgot to update the notification docFragment ([23b2c7b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/23b2c7b3308017a559296f49fba4568a1281de24))
+
 ## [6.11.8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.7...6.11.8) (2023-12-16)
 
 ## [6.11.7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.6...6.11.7) (2023-12-15)
