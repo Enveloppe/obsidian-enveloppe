@@ -195,6 +195,7 @@
         "desc": "Ceci convertira tous les champs des propriétés/dataview en tags. Séparez les champs par une virgule.",
         "exclude": {
           "desc": "Exclusion de champs de la conversion. Séparer les valeurs par une virgule.",
+          "placeholder": "Valeur du chemin",
           "title": "Exclusion de tags"
         },
         "inlineTags": {
@@ -232,9 +233,10 @@
         "title": "Dossier de pièces-jointes par défaut"
       },
       "forcePush": {
+        "all": "Utiliser {{all}} pour modifier la destination de toutes les pièces jointes (et/ou forcer leur envoie).",
+        "default": "Utiliser {{default}} pour utiliser le chemin de destination par défaut.",
         "desc": "Les extensions suivantes seront toujours publiées, quelque soit la dernière date d'envoi.",
         "info": "Par défaut, les pièces-jointes ne sont envoyés que si elles ont été modifiées depuis leur dernier envoi, ou si elles n'existent pas dans le dépôt.",
-        "separateByComma": "Séparer les extensions par des virgules. Vous pouvez utiliser des regex en les encadrant par \"/\", comme /regex/. Utiliser {{all}} pour forcer l'envoi de toutes les pièces-jointes.",
         "title": "Forcer l'envoi des pièces-jointes"
       },
       "imagePath": {
@@ -252,6 +254,14 @@
         "title": "Changer les balises d'embed"
       },
       "notes": "Note (Markdown)",
+      "overrides": {
+        "desc": "Permet d'envoyer une pièce jointe dans un chemin spécifique et de forcer les pièces jointes à être poussées.",
+        "modal": {
+          "dest": "Destination",
+          "path": "Chemin ou extension",
+          "title": "Remplacer le chemin des pièces jointes"
+        }
+      },
       "title": "Embed",
       "transferImage": {
         "title": "Envoyer les pièces-jointes intégrées dans un fichier dans le dépôt."
@@ -408,6 +418,8 @@
         "title": "Liens utiles"
       }
     },
+    "overrides": {
+    },
     "plugin": {
       "copyLink": {
         "baselink": {
@@ -484,6 +496,9 @@
       "invalidRegex": "Une erreur est survenue : {{- e}}",
       "modal": {
         "desc": "Replace des textes dans le fichier par la valeur donnée. Vous pouvez encadrer le texte à remplacer avec \"//\" pour utiliser un regex.",
+        "force": "Forcer l'envoi",
+        "keywords": "Mots clés",
+        "name": "Utiliser {{name}} pour utiliser le nom du fichier.",
         "title": {
           "all": "Remplacement du nom ou du chemin du fichier",
           "only": "Remplacement du titre uniquement",

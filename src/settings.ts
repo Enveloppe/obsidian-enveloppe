@@ -13,7 +13,7 @@ import {
 import { migrateToken } from "./settings/migrate";
 import {ExportModal, ImportLoadPreset, ImportModal, loadAllPresets} from "./settings/modals/import_export";
 import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
-import { ModalRegexFilePathName, ModalRegexOnContents } from "./settings/modals/regex_edition";
+import { ModalRegexFilePathName, ModalRegexOnContents, OverrideAttachmentsModal } from "./settings/modals/regex_edition";
 import { TokenEditPath } from "./settings/modals/token_path";
 import {
 	autoCleanCondition,
@@ -799,7 +799,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("settings.conversion.tags.exclude.title"))
 			.setDesc(i18next.t("settings.conversion.tags.exclude.desc"))
 			.addTextArea((text) => {
-				text.setPlaceholder("field value")
+				text
+					.setPlaceholder(i18next.t("settings.conversion.tags.exclude.placeholder"))
 					.setValue(
 						textSettings.tags.exclude.join(",")
 					)
@@ -866,24 +867,17 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					});
 			}
 
-			const descAboutForcePush = document.createDocumentFragment();
-			descAboutForcePush.createEl("div", {text: i18next.t("settings.embed.forcePush.info")});
-			descAboutForcePush.createEl("div", {text: i18next.t("settings.embed.forcePush.desc")});
-			descAboutForcePush.createEl("div", {text: i18next.t("settings.embed.forcePush.separateByComma")});
-
 			new Setting(this.settingsPage)
-				.setName(i18next.t("settings.embed.forcePush.title"))
-				.setDesc(descAboutForcePush)
-				.setClass("mini")
-				.addTextArea((text) => {
-					text.setPlaceholder("pdf, svg, mp4")
-						.setValue(embedSettings.forcePushAttachments?.join(", "))
-						.onChange(async (value) => {
-							embedSettings.forcePushAttachments = value
-								.split(/[,\n]\W*/)
-								.map((item) => item.trim())
-								.filter((item) => item.length > 0);
-							await this.plugin.saveSettings();
+				.setName(i18next.t("settings.embed.overrides.modal.title"))
+				.setDesc(i18next.t("settings.embed.overrides.desc"))
+				.addButton((button) => {
+					button
+						.setIcon("pencil")
+						.onClick(async () => {
+							new OverrideAttachmentsModal(this.app, this.settings, this.copy(embedSettings.overrideAttachments), (async result => {
+								embedSettings.overrideAttachments = result;
+								await this.plugin.saveSettings();
+							})).open();
 						});
 				});
 		}

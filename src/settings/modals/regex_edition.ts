@@ -2,7 +2,7 @@ import i18next from "i18next";
 import {App, Modal, Notice, Setting} from "obsidian";
 import { escapeRegex } from "src/conversion/links";
 
-import {FolderSettings, GitHubPublisherSettings, RegexReplace, TextCleaner, TypeOfEditRegex} from "../interface";
+import {FolderSettings, GitHubPublisherSettings, OverrideAttachments, RegexReplace, TextCleaner, TypeOfEditRegex} from "../interface";
 
 function isRegexValid(regexString: string) {
 	try {
@@ -17,6 +17,143 @@ function isRegexValid(regexString: string) {
 			error: e,
 			isValid: false
 		};
+	}
+}
+
+export class OverrideAttachmentsModal extends Modal {
+	settings: GitHubPublisherSettings;
+	allOverrides: OverrideAttachments[];
+	onSubmit: (result: OverrideAttachments[]) => void;
+	constructor(
+		app: App,
+		settings: GitHubPublisherSettings,
+		allOverrides : OverrideAttachments[],
+		onSubmit: (result: OverrideAttachments[]) => void) {
+		super(app);
+		this.allOverrides = allOverrides;
+		this.settings = settings;
+		this.onSubmit = onSubmit;
+	}
+
+	forbiddenValue(value: string): {value: string, isForbidden: boolean} {
+		if (!isRegexValid(value).isValid) {
+			const error = isRegexValid(value).error;
+			new Notice(i18next.t("settings.regexReplacing.invalidRegex", {e: error}));
+			return {
+				value: "",
+				isForbidden: true
+			};
+		} else if (value.match(/[\\><:"|?*]/) && !value.match(/^\/(.*)\/[gmisuvdy]*$/)) {
+			new Notice(i18next.t("settings.regexReplacing.forbiddenValue", { what: i18next.t("common.path.folder"), forbiddenChar: value.match(/[\\><:"|?*]/)![0] }));
+			return {
+				value: "",
+				isForbidden: true
+			};
+		}
+		return {
+			value,
+			isForbidden: false
+		};
+	}
+	onOpen(): void {
+		const { contentEl } = this;
+		contentEl.empty();
+		contentEl.addClasses(["github-publisher", "modals", "regex", "file-path-name"]);
+		contentEl.createEl("h2", { text: i18next.t("settings.embed.overrides.modal.title") });
+		contentEl.createEl("p", { text: i18next.t("settings.regexReplacing.modal.desc") });
+		contentEl.createEl("h3", {text: i18next.t("settings.regexReplacing.modal.keywords")});
+		const ul = contentEl.createEl("ul", {cls: "keywords"});
+		ul.createEl("li", {text: i18next.t("settings.embed.forcePush.all")});
+		ul.createEl("li", {text: i18next.t("settings.embed.forcePush.default")});
+		ul.createEl("li", {text: i18next.t("settings.regexReplacing.modal.name")});
+		contentEl.createEl("h3", {text: i18next.t("settings.regexReplacing.modal.force")});
+		contentEl.createEl("p", { text: i18next.t("settings.embed.forcePush.info") });
+
+		if (!this.settings.embed.overrideAttachments) {
+			this.settings.embed.overrideAttachments = [];
+		}
+		for (const override of this.allOverrides) {
+			const sett = new Setting(contentEl)
+				.setClass("entry")
+				.addText((text) => {
+					text.setPlaceholder(i18next.t("settings.embed.overrides.modal.path"))
+						.setValue(override.path)
+						.onChange((value) => {
+							override.path = value;
+							sett.controlEl.setAttribute("value", value);
+						});
+				})
+				.addText((text) => {
+					text.setPlaceholder(i18next.t("settings.embed.overrides.modal.dest"))
+						.setValue(override.destination)
+						.onChange((value) => {
+							override.destination = value;
+							sett.controlEl.setAttribute("replace", value);
+						});
+				})
+				.addToggle((toggle) => {
+					toggle
+						.setTooltip(i18next.t("settings.embed.forcePush.title"))
+						.setValue(override.forcePush)
+						.onChange((value) => {
+							override.forcePush = value;
+						});
+				});
+			sett.controlEl.setAttribute("value", override.path);
+			sett.controlEl.setAttribute("replace", override.destination);
+			sett.addExtraButton((button) => {
+				button
+					.setIcon("trash")
+					.onClick(() => {
+						this.allOverrides.splice(this.allOverrides.indexOf(override), 1);
+						this.onOpen();
+					});
+			});
+		}
+
+		new Setting(contentEl)
+			.addButton((button) => {
+				button
+					.setIcon("plus")
+					.onClick(() => {
+						this.allOverrides.push({
+							path: "",
+							destination: "",
+							forcePush: false
+						});
+						this.onOpen();
+					});
+			})
+			.addButton((button) => {
+				button
+					.setButtonText(i18next.t("common.save"))
+					.onClick(() => {
+						const canBeValidated: boolean[] = [];
+						this.allOverrides.forEach((override) => {
+							const isForbiddenEntry = this.forbiddenValue(override.path);
+							const isForbiddenReplace = this.forbiddenValue(override.destination);
+							canBeValidated.push(isForbiddenEntry.isForbidden);
+							canBeValidated.push(isForbiddenReplace.isForbidden);
+							if (isForbiddenEntry.isForbidden || isForbiddenReplace.isForbidden) {
+								override.path = isForbiddenEntry.value as string;
+								override.destination = isForbiddenReplace.value as string;
+								const faultyInputValue = contentEl.querySelector(`[value="${escapeRegex(override.path)}"] input`);
+								const faultyInputReplace = contentEl.querySelector(`[replace="${escapeRegex(override.destination)}"] input`);
+								faultyInputValue?.classList.add("error");
+								faultyInputReplace?.classList.add("error");
+							}
+						});
+						if (!canBeValidated.includes(true)) {
+							//remove empty regex
+							this.onSubmit(this.allOverrides);
+							this.close();
+						}
+					});
+			});
+	}
+	onClose(): void {
+		const { contentEl } = this;
+		contentEl.empty();
 	}
 }
 

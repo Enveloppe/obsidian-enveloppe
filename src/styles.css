@@ -100,6 +100,11 @@ a.github-publisher-download:hover {
 
 }
 
+.github-publisher.modals h1, .github-publisher.modals h2, .github-publisher.modals h3, .github-publisher.modals h4, .github-publisher.modals h5, .github-publisher.modals h6 {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
 .github-publisher-copy:before {
 	color: var(--interactive-success);
 	content: "✓";

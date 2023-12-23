@@ -8,6 +8,7 @@ import {
 } from "obsidian";
 
 import {
+	FIND_REGEX,
 	FolderSettings,
 	FrontmatterConvert,
 	GitHubPublisherSettings,
@@ -411,6 +412,7 @@ export function getImagePath(
 	return regexOnFileName(imagePath, settings);
 }
 
+
 /**
  * Create filepath in github Repository based on settings and frontmatter for image
  * @param {TFile} file : Source file
@@ -421,7 +423,7 @@ export function getImagePath(
 
 function createImagePath(file: TFile,
 	settings: GitHubPublisherSettings,
-	sourceFrontmatter: FrontmatterConvert | null):string {
+	sourceFrontmatter: FrontmatterConvert | null): string {
 	if (!sourceFrontmatter || !sourceFrontmatter.attachmentLinks) {
 		if (settings.embed.useObsidianFolder) {
 			if (settings.upload.behavior === FolderSettings.yaml) {
@@ -433,7 +435,28 @@ function createImagePath(file: TFile,
 			}
 		}
 		const defaultImageFolder = settings.embed.folder;
-		if (defaultImageFolder.length > 0) {
+		//find in override
+		const isOverridden = settings.embed.overrideAttachments.filter((override) => {
+			const isRegex = override.path.match(FIND_REGEX);
+			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : undefined;
+			return (
+				regex?.test(file.path)
+				|| file.path === override.path
+				|| override.path.contains("{{all}}"))
+				&& !override.destination.contains("{{default}}");
+		});
+		if (isOverridden.length > 0) {
+			let filePath = file.path;
+			for (const override of isOverridden) {
+				const isRegex = override.path.match(FIND_REGEX);
+				const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
+				const dest = override.destination.replace("{{name}}", file.name);
+				filePath = regex ? normalizePath(filePath.replace(regex, dest)) : normalizePath(filePath.replace(override.path, dest));
+			}
+			console.log("Overridden path: ", filePath, " for ", file.name);
+			return filePath;
+		}
+		else if (defaultImageFolder.length > 0) {
 			return normalizePath(`${defaultImageFolder}/${file.name}`);
 		} else if (settings.upload.defaultName.length > 0) {
 			return normalizePath(`${settings.upload.defaultName}/${file.name}`);

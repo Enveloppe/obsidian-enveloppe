@@ -195,6 +195,7 @@
         "desc": "This will convert any properties or dataview inline field into properties tags. Separate fields with a comma.",
         "exclude": {
           "desc": "This will exclude value from being converted. Separate fields with a comma.",
+          "placeholder": "Field value",
           "title": "Exclude value from conversion"
         },
         "inlineTags": {
@@ -232,6 +233,8 @@
         "title": "Default attachment folder"
       },
       "forcePush": {
+        "all": "Use {{all}} to change the destination of all attachments (and/or force them to be sent).",
+        "default": "Use {{default}} to use the default destination path.",
         "desc": "The following extensions will always be published, regardless of the last sending date.",
         "info": "By default, attachments are only sent if they have been modified since they were last sent, or if they do not exist in the repository.",
         "separateByComma": "Separate extensions with commas. \nYou can use regex by enclosing it with \"/\", like /regex/. Use {{all}} to force all attachments to be sent.",
@@ -252,6 +255,14 @@
         "title": "Change embed markup"
       },
       "notes": "Embed notes",
+      "overrides": {
+        "desc": "Allow to send an attachment into a specific path and force push attachments.",
+        "modal": {
+          "dest": "Destination",
+          "path": "Path or extension",
+          "title": "Override attachments path"
+        }
+      },
       "title": "Attachment & embed note config",
       "transferImage": {
         "title": "Transfer attachments"
@@ -408,6 +419,8 @@
         "title": "Useful links"
       }
     },
+    "overrides": {
+    },
     "plugin": {
       "copyLink": {
         "baselink": {
@@ -484,6 +497,9 @@
       "invalidRegex": "An error has occurred: {{- e}}",
       "modal": {
         "desc": "Replace text in the file with the given value. Enclose the text with \"//\" to use regex.",
+        "force": "Force push",
+        "keywords": "Keywords",
+        "name": "Use {{name}} to use the filename.",
         "title": {
           "all": "Folder path & filename replacer",
           "only": "Replace filename",

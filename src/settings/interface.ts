@@ -115,7 +115,7 @@ export interface GitHubPublisherSettings {
 	}
 	embed: {
 		attachments: boolean;
-		forcePushAttachments: string[];
+		overrideAttachments: OverrideAttachments[];
 		useObsidianFolder?: boolean;
 		keySendFile: string[];
 		notes: boolean;
@@ -272,7 +272,7 @@ export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 	},
 	embed: {
 		attachments: true,
-		forcePushAttachments: [],
+		overrideAttachments: [],
 		keySendFile: [],
 		notes: false,
 		folder: "",
@@ -392,5 +392,10 @@ export interface Preset {
 	settings: GitHubPublisherSettings;
 }
 
+export interface OverrideAttachments {
+	path: string;
+	destination: string;
+	forcePush: boolean;
+}
 
 export const FIND_REGEX = /^\/(.*)\/[igmsuy]*$/;

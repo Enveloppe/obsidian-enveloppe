@@ -396,14 +396,19 @@ export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPubli
 }
 
 export function forcePushAttachment(file: TFile, settings: GitHubPublisherSettings) {
-	const forcePushThese = settings.embed.forcePushAttachments;
-	if (forcePushThese.length === 0) return false;
-	for (const ext of forcePushThese) {
-		if (file.extension === ext) return true;
-		else if (ext === "{{all}}") return true;
-		else if (ext.match(FIND_REGEX) && file.extension.match(new RegExp(ext))) return true;
-	}
-	return false;
+	const needToBeForPush = settings.embed.overrideAttachments.filter((path) => {
+		const isRegex = path.path.match(FIND_REGEX);
+		const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
+		return (
+			path.forcePush &&(
+				regex?.test(file.path)
+				|| file.path === path.path
+				|| path.path.contains("{{all}}")
+			)
+		);
+	});
+	if (needToBeForPush.length === 0) return false;
+	return true;
 }
 
 export function isFolderNote(properties: MultiProperties) {
