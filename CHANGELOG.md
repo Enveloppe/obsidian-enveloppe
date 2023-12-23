@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.12.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.11...6.12.0) (2023-12-23)
+
+
+### Features
+
+* overriding attachments ([66e7373](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/66e7373fe5a75c7c96d247a99cda6e9657820124))
+
 ## [6.11.11](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.11.10...6.11.11) (2023-12-22)
 
 
