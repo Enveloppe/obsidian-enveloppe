@@ -204,7 +204,7 @@
         },
         "title": "Convert properties/dataview fields into tags"
       },
-      "title": "Text & link converters"
+      "title": "Content"
     },
     "embed": {
       "attachment": "Attachments",
@@ -263,7 +263,7 @@
           "title": "Override attachments path"
         }
       },
-      "title": "Attachment & embed note config",
+      "title": "Attachment & embeds ",
       "transferImage": {
         "title": "Transfer attachments"
       },
@@ -546,7 +546,7 @@
         "other": "Use this folder as root within the repository (each path will be prepend by it).",
         "title": "Root folder"
       },
-      "title": "Upload config",
+      "title": "File paths",
       "useFrontmatterTitle": {
         "desc": "Use a property value to generate the filename. By default, \"title\" is used. ",
         "title": "Set the key where to get the value of the filename"

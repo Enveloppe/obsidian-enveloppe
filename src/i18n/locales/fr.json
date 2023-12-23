@@ -204,7 +204,7 @@
         },
         "title": "Convertir des champs dataview ou propriétés en tags"
       },
-      "title": "Texte & liens"
+      "title": "Contenu"
     },
     "embed": {
       "attachment": "Pièces-jointes",
@@ -262,7 +262,7 @@
           "title": "Remplacer le chemin des pièces jointes"
         }
       },
-      "title": "Embed",
+      "title": "Pièces-jointes & Embeds",
       "transferImage": {
         "title": "Envoyer les pièces-jointes intégrées dans un fichier dans le dépôt."
       },
@@ -544,7 +544,7 @@
         "other": "Utilisez ce dossier comme racine dans le référentiel (chaque chemin sera précédé de ce nom).",
         "title": "Dossier racine"
       },
-      "title": "Configuration du transfert",
+      "title": "Chemins des fichiers",
       "useFrontmatterTitle": {
         "desc": "Utiliser un champ des propriétés pour générer le nom du fichier. Par défaut, \"title\" est utilisé.",
         "title": "Utiliser une clé de propriété pour définir le titre"
