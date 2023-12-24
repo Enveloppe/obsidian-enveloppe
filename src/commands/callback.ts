@@ -125,6 +125,7 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 						await plugin.reloadOctokit(),
 						file,
 						repo,
+						file.basename,
 					);
 				}
 				return true;

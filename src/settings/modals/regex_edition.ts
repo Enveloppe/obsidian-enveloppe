@@ -464,7 +464,6 @@ export class ModalRegexOnContents extends Modal {
 								new Notice(i18next.t("settings.regexReplacing.invalidRegex", {e: isRegexValid(censor.entry).error}));
 								//add error class to faulty input
 								const faultyInput = contentEl.querySelector(`[value="${escapeRegex(censor.entry)}"] input`);
-								console.log(faultyInput);
 								faultyInput?.classList.add("error");
 								canBeValidated.push(false);
 							}

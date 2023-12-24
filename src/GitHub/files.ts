@@ -454,14 +454,14 @@ export class FilesManagement extends Publisher {
 					path,
 					file.path
 				) ?? this.vault.getAbstractFileByPath(path);
-				if (imageLink !== null) {
+				if (imageLink instanceof TFile && !embedFiles.includes(imageLink)) {
 					embedFiles.push(
-						this.imageSharedOrNote(file, frontmatterSettings) as TFile
+						this.imageSharedOrNote(imageLink, frontmatterSettings) as TFile
 					);
 				}
 			}
-
 		}
+
 		embedFiles = [...new Set(embedFiles)].filter((x) => x != null);
 		logs({settings: this.settings}, embedFiles);
 		// @ts-ignore
