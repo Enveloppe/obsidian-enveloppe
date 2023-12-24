@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.12.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.12.3...6.12.4) (2023-12-24)
+
 ## [6.12.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.12.2...6.12.3) (2023-12-24)
 
 
