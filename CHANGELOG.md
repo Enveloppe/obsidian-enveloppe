@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.12.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.12.2...6.12.3) (2023-12-24)
+
+
+### Bug Fixes
+
+* a typo error lead to a error... ([d7cc545](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d7cc545a99b605c3f05d1686291e000d58aaf55d))
+
 ## [6.12.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.12.1...6.12.2) (2023-12-24)
 
 
