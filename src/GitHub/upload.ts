@@ -591,7 +591,6 @@ export default class Publisher {
 								path: imagePath,
 								sha: this.branchName,
 							});
-						console.log(reply);
 						if (reply.status === 200) {
 							const data = reply.data;
 							const lastEditedInRepo = data[0]?.commit?.committer?.date;
