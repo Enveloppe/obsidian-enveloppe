@@ -582,7 +582,6 @@ export default class Publisher {
 							path: imagePath,
 							ref: this.branchName,
 						});
-
 					if (response.status === 200) {
 						const reply =  await this.octokit.request(
 							"GET /repos/{owner}/{repo}/commits",
@@ -590,10 +589,9 @@ export default class Publisher {
 								owner: repoFrontmatter.repo.owner,
 								repo: repoFrontmatter.repo.repo,
 								path: imagePath,
-								// @ts-ignore
-								sha: response.data.sha,
+								sha: this.branchName,
 							});
-
+						console.log(reply);
 						if (reply.status === 200) {
 							const data = reply.data;
 							const lastEditedInRepo = data[0]?.commit?.committer?.date;
