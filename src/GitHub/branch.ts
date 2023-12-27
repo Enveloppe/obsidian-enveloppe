@@ -121,6 +121,7 @@ export class GithubBranch extends FilesManagement {
 			return PR.data.number;
 		} catch (e) {
 			logs({settings: this.settings, e: true}, e);
+			//trying to get the last open PR number
 			try {
 				const PR = await this.octokit.request(
 					"GET /repos/{owner}/{repo}/pulls",
@@ -130,8 +131,9 @@ export class GithubBranch extends FilesManagement {
 						state: "open",
 					}
 				);
-				return PR.data[0].number;
+				return PR.data[0]?.number || 0;
 			} catch (e) {
+				// there is no open PR and impossible to create a new one
 				notif(
 					{settings: this.settings, e: true},
 					i18next.t("publish.branch.error", {error: e, repo: repoFrontmatter})
