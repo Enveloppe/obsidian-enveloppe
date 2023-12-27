@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.12.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.12.4...6.12.5) (2023-12-27)
+
+
+### Bug Fixes
+
+* prevent crash if PR can't be done ([eb0b272](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/eb0b2728dbfe7e19cdfafd5363aca846fa609e15))
+
 ## [6.12.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.12.3...6.12.4) (2023-12-24)
 
 ## [6.12.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.12.2...6.12.3) (2023-12-24)
