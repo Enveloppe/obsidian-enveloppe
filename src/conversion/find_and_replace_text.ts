@@ -43,15 +43,9 @@ export default function findAndReplaceText(
 			const replaceWith = censor.replace;
 			if (toReplace.match(/^\/.+\/[gimy]*$/)) {
 				const regex = createRegexFromText(toReplace, censor.flags);
-				if (!censor.inCodeBlocks)
-					text = replaceText(text, regex, replaceWith, settings);
-				else
-					text = text.replace(regex, replaceWith);
+				text = censor.inCodeBlocks ? text.replace(regex, replaceWith) : replaceText(text, regex, replaceWith, settings);
 			} else {
-				if (!censor.inCodeBlocks)
-					text = replaceText(text, toReplace, replaceWith, settings);
-				else
-					text = text.replace(toReplace, replaceWith);
+				text = censor.inCodeBlocks ? text.replace(toReplace, replaceWith) : replaceText(text, toReplace, replaceWith, settings);
 			}
 		}
 	}
