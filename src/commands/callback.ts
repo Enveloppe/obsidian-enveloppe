@@ -106,13 +106,13 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 	let name = i18next.t("commands.shareActiveFile");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
+	const octokit = await plugin.reloadOctokit();
 	//@ts-ignore
 	return {
 		id,
 		name,
 		hotkeys: [],
-		//@ts-ignore
-		checkCallback: async (checking) => {
+		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
 			const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
 			if (
@@ -121,8 +121,7 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 				if (!checking) {
 					shareOneNote(
 						branchName,
-						//@ts-ignore
-						await plugin.reloadOctokit(),
+						octokit,
 						file,
 						repo,
 						file.basename,
