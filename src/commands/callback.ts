@@ -233,17 +233,17 @@ export async function checkRepositoryValidityCallback(plugin: GithubPublisher, r
 	let name = i18next.t("commands.checkValidity.title");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
+	const octokit = await plugin.reloadOctokit();
 	//@ts-ignore
 	return {
 		id,
 		name,
-		//@ts-ignore
-		checkCallback: async (checking) => {
+		checkCallback: (checking) => {
 			if (plugin.app.workspace.getActiveFile())
 			{
 				if (!checking) {
-					await checkRepositoryValidity(
-						await plugin.reloadOctokit(),
+					checkRepositoryValidity(
+						octokit,
 						repo,
 						plugin.app.workspace.getActiveFile()
 					);
