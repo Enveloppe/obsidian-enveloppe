@@ -5,7 +5,7 @@
 
 import i18next from "i18next";
 import { App, Component, FrontMatterCache, htmlToMarkdown,TFile, Vault } from "obsidian";
-import { getAPI, Literal, Success } from "obsidian-dataview";
+import { getAPI, isPluginEnabled,Literal, Success } from "obsidian-dataview";
 import { FrontmatterConvert, GitHubPublisherSettings, LinkedNotes, MultiProperties } from "src/settings/interface";
 import { logs, notif } from "src/utils";
 
@@ -37,6 +37,7 @@ export async function convertDataviewQueries(
 ): Promise<string> {
 	let replacedText = text;
 	const dataViewRegex = /```dataview\s(.+?)```/gsm;
+	if (!isPluginEnabled(app)) return replacedText;
 	const dvApi = getAPI();
 	if (!dvApi) return replacedText;
 	const matches = text.matchAll(dataViewRegex);
