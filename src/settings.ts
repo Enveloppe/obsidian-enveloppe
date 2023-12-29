@@ -737,17 +737,22 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
+		//@ts-ignore
+		const isDataviewEnabled = this.app.plugins.plugins.dataview;
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.dataview.title"))
 			.setDesc(i18next.t("settings.conversion.dataview.desc"))
 			.addToggle((toggle) => {
 				toggle
-					.setValue(textSettings.dataview)
+					.setValue(textSettings.dataview && isDataviewEnabled)
+					.setDisabled(!isDataviewEnabled)
 					.onChange(async (value) => {
 						textSettings.dataview = value;
 						await this.plugin.saveSettings();
 					});
 			});
+
+
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.regexReplacing.modal.title.text"))

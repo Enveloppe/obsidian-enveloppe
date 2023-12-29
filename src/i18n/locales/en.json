@@ -157,7 +157,7 @@
   "settings": {
     "conversion": {
       "dataview": {
-        "desc": "Convert dataview to markdown.",
+        "desc": "Convert dataview to markdown. Only works if Dataview is enabled.",
         "title": "Dataview"
       },
       "desc": "Theses option won't change the content of the file in your Obsidian Vault, but will change the content of the file in GitHub.",

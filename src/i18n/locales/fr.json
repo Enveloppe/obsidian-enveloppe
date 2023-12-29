@@ -157,7 +157,7 @@
   "settings": {
     "conversion": {
       "dataview": {
-        "desc": "Convertir les requêtes Dataview en markdown.",
+        "desc": "Convertir les requêtes Dataview en markdown. Ne fonctionne que si Dataview est activé.",
         "title": "Dataview"
       },
       "desc": "Ces options ne changent pas le contenu du fichier dans votre coffre Obsidian, mais changeront le contenu du fichier publié sur GitHub.",

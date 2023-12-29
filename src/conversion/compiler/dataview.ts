@@ -37,7 +37,9 @@ export async function convertDataviewQueries(
 ): Promise<string> {
 	let replacedText = text;
 	const dataViewRegex = /```dataview\s(.+?)```/gsm;
-	if (!isPluginEnabled(app)) return replacedText;
+	//@ts-ignore
+	const isDataviewEnabled = app.plugins.plugins.dataview;
+	if (!isDataviewEnabled || !isPluginEnabled(app)) return replacedText;
 	const dvApi = getAPI();
 	if (!dvApi) return replacedText;
 	const matches = text.matchAll(dataViewRegex);
