@@ -41,15 +41,15 @@ export async function convertDataviewQueries(
 	if (!dvApi) return replacedText;
 	const matches = text.matchAll(dataViewRegex);
 
-	const dataviewJsPrefix = dvApi.settings.dataviewJsKeyword;
+	const dataviewJsPrefix = dvApi.settings.dataviewJsKeyword || "dataviewjs";
 	const dataViewJsRegex = new RegExp(`\`\`\`${escapeRegex(dataviewJsPrefix)}\\s(.+?)\`\`\``, "gsm");
 	const dataviewJsMatches = text.matchAll(dataViewJsRegex);
 
-	const inlineQueryPrefix = dvApi.settings.inlineQueryPrefix;
+	const inlineQueryPrefix = dvApi.settings.inlineQueryPrefix || "=";
 	const inlineDataViewRegex = new RegExp(`\`${escapeRegex(inlineQueryPrefix)}(.+?)\``, "gsm");
 	const inlineMatches = text.matchAll(inlineDataViewRegex);
 
-	const inlineJsQueryPrefix = dvApi.settings.inlineJsQueryPrefix;
+	const inlineJsQueryPrefix = dvApi.settings.inlineJsQueryPrefix ||"$=";
 	const inlineJsDataViewRegex = new RegExp(`\`${escapeRegex(inlineJsQueryPrefix)}(.+?)\``, "gsm");
 	const inlineJsMatches = text.matchAll(inlineJsDataViewRegex);
 	if (!matches && !inlineMatches && !dataviewJsMatches && !inlineJsMatches) {
