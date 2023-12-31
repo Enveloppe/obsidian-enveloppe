@@ -88,7 +88,7 @@ export async function createRelativePath(
 
 	logs({settings}, `Shared: ${shared} for ${targetFile.linked.path}`);
 	if (
-		targetFile.linked.extension === "md" && (!isFromAnotherRepo || !shared)
+		targetFile.linked.extension === "md" && !targetFile.linked.name.includes("excalidraw") && (!isFromAnotherRepo || !shared)
 	) {
 		return targetFile.destinationFilePath ? targetFile.destinationFilePath: targetFile.linked.basename;
 	}
@@ -97,7 +97,7 @@ export async function createRelativePath(
 	}
 
 	const targetPath =
-		targetFile.linked.extension === "md"
+		targetFile.linked.extension === "md" && !targetFile.linked.name.includes("excalidraw")
 			? getReceiptFolder(targetFile.linked, settings, shortRepo, app)
 			: getImagePath(
 				targetFile.linked,
@@ -424,14 +424,20 @@ export function getImagePath(
 function createImagePath(file: TFile,
 	settings: GitHubPublisherSettings,
 	sourceFrontmatter: FrontmatterConvert | null): string {
+	let fileName = file.name;
+	let filePath = file.path;
+	if (file.name.includes(".excalidraw")) {
+		fileName = fileName.replace(".excalidraw.md", ".svg");
+		filePath = filePath.replace(".excalidraw.md", ".svg");
+	}
 	if (!sourceFrontmatter || !sourceFrontmatter.attachmentLinks) {
 		if (settings.embed.useObsidianFolder) {
 			if (settings.upload.behavior === FolderSettings.yaml) {
-				return settings.upload.rootFolder.length > 0 ? normalizePath(`${settings.upload.rootFolder}/${file.path}`) : file.path;
+				return settings.upload.rootFolder.length > 0 ? normalizePath(`${settings.upload.rootFolder}/${filePath}`) : filePath;
 			}
 			else {
 				//no root, but default folder name
-				return settings.upload.defaultName.length > 0 ? normalizePath(`${settings.upload.defaultName}/${file.path}`) : file.path;
+				return settings.upload.defaultName.length > 0 ? normalizePath(`${settings.upload.defaultName}/${filePath}`) : filePath;
 			}
 		}
 		const defaultImageFolder = settings.embed.folder;
@@ -440,33 +446,32 @@ function createImagePath(file: TFile,
 			const isRegex = override.path.match(FIND_REGEX);
 			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : undefined;
 			return (
-				regex?.test(file.path)
-				|| file.path === override.path
+				regex?.test(filePath)
+				|| filePath === override.path
 				|| override.path.contains("{{all}}"))
 				&& !override.destination.contains("{{default}}");
 		});
 		if (isOverridden.length > 0) {
-			let filePath = file.path;
 			for (const override of isOverridden) {
 				const isRegex = override.path.match(FIND_REGEX);
 				const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
-				const dest = override.destination.replace("{{name}}", file.name);
+				const dest = override.destination.replace("{{name}}", fileName);
 				filePath = regex ? normalizePath(filePath.replace(regex, dest)) : normalizePath(filePath.replace(override.path, dest));
 			}
-			logs({settings}, `Overridden path for ${file.name} : ${filePath}`);
+			logs({settings}, `Overridden path for ${fileName} : ${filePath}`);
 			return filePath;
 		}
 		else if (defaultImageFolder.length > 0) {
-			return normalizePath(`${defaultImageFolder}/${file.name}`);
+			return normalizePath(`${defaultImageFolder}/${fileName}`);
 		} else if (settings.upload.defaultName.length > 0) {
-			return normalizePath(`${settings.upload.defaultName}/${file.name}`);
+			return normalizePath(`${settings.upload.defaultName}/${fileName}`);
 		} else {
-			return file.path;
+			return filePath;
 		}
 	} else if (
 		sourceFrontmatter?.attachmentLinks
 	) {
-		return normalizePath(`${sourceFrontmatter.attachmentLinks}/${file.name}`);
+		return normalizePath(`${sourceFrontmatter.attachmentLinks}/${fileName}`);
 	}
-	return file.path;
+	return filePath;
 }

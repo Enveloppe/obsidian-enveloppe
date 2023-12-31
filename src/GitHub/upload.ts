@@ -9,6 +9,7 @@ import {
 	Vault,
 } from "obsidian";
 
+import { convertToHTMLSVG } from "../conversion/compiler/excalidraw";
 import { mainConverting } from "../conversion/convert_text";
 import {
 	getImagePath,
@@ -103,7 +104,8 @@ export default class Publisher {
 				for (const file of linkedFiles) {
 					try {
 						if (!fileHistory.includes(file)) {
-							if (file.extension === "md" && deepScan) {
+							const isExcalidraw = file.name.includes("excalidraw");
+							if (file.extension === "md" && !isExcalidraw && deepScan) {
 								const published = await this.publish(
 									file,
 									false,
@@ -115,7 +117,7 @@ export default class Publisher {
 									uploadedFile.push(...published.uploaded);
 								}
 							} else if (
-								isAttachment(file.extension) &&
+								isAttachment(file.name) &&
 								properties.frontmatter.general.attachment
 							) {
 								const published = await this.uploadImage(
@@ -429,7 +431,14 @@ export default class Publisher {
 		properties: MonoProperties,
 	) {
 		const imageBin = await this.vault.readBinary(imageFile);
-		const image64 = arrayBufferToBase64(imageBin);
+		let image64 = arrayBufferToBase64(imageBin);
+		if (imageFile.name.includes("excalidraw")) {
+			const svg = await convertToHTMLSVG(imageFile, this.vault);
+			if (svg) {
+				//convert to base64
+				image64 = Base64.encode(svg).toString();
+			}
+		}
 		const path = getImagePath(
 			imageFile,
 			this.settings,
@@ -612,3 +621,4 @@ export default class Publisher {
 		return newLinkedFiles;
 	}
 }
+

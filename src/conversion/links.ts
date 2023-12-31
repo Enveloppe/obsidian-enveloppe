@@ -289,7 +289,7 @@ export async function convertToInternalGithub(
 				}
 				let newLink = link.replace(regToReplace, pathInGithubWithAnchor); //strict replacement of link
 				if (link.match(/\[.*\]\(.*\)/)) {
-					if (linkedFile.linked.extension === "md") {
+					if (linkedFile.linked.extension === "md" && !linkedFile.linked.name.includes("excalidraw")) {
 						anchor =  settings.conversion.links.slugify ? slugify(anchor, { lower: true, strict: true }) : anchor;
 						if (anchor.length > 0)
 							anchor = `#${anchor}`;
@@ -301,7 +301,7 @@ export async function convertToInternalGithub(
 							: pathInGithub;
 					}
 					const altText = link.match(/\[(.*)\]/)![1];
-					newLink = `[${altText}](${pathInGithub})`;
+					newLink = `[${altText}](${encodeURI(pathInGithub)})`; //encode to URI for compatibility with github
 				}
 				newLink = addAltText(newLink, linkedFile);
 				fileContent = replaceText(fileContent, link, newLink, settings, true);

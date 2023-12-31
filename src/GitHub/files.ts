@@ -92,7 +92,7 @@ export class FilesManagement extends Publisher {
 		const files = this.vault.getFiles();
 		const allFileWithPath: ConvertedLink[] = [];
 		for (const file of files) {
-			if (isAttachment(file.extension)) {
+			if (isAttachment(file.name)) {
 				const filepath = getImagePath(file, this.settings, null);
 				allFileWithPath.push({
 					converted: filepath,
@@ -248,7 +248,6 @@ export class FilesManagement extends Publisher {
 	): TFile[] {
 		const embedCaches = this.metadataCache.getCache(file.path)?.embeds;
 		const imageList: TFile[] = [];
-
 		if (embedCaches != undefined) {
 			for (const embed of embedCaches) {
 				try {
@@ -415,7 +414,7 @@ export class FilesManagement extends Publisher {
 		const transferImage = settingsConversion.attachment;
 		const transferEmbeds = settingsConversion.embed;
 		if (
-			(isAttachment(file.extension) && transferImage) ||
+			(isAttachment(file.name) && transferImage) ||
 			(transferEmbeds && file.extension === "md")
 		) {
 			return file;

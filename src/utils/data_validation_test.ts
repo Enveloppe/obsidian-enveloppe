@@ -163,8 +163,9 @@ export function multipleSharedKey(frontmatter: FrontMatterCache | undefined, set
  */
 
 export function isAttachment(filename: string): RegExpMatchArray | null {
+	if (filename.includes("excalidraw")) return filename.match(/excalidraw\.md$/i);
 	return filename.match(
-		/(png|jpe?g|gif|bmp|svg|mp[34]|web[mp]|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf)$/i
+		/(png|jpe?g|gif|bmp|svg|mp[34]|web[mp]|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf|excalidraw)$/i
 	);
 }
 
