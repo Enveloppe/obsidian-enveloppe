@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.13.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.12.5...6.13.0-0) (2023-12-31)
+
+
+### Features
+
+* excalidraw support ([62be967](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/62be967ee951aaa70ec0aa08c7938a0037cd88ed)), closes [#267](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/267)
+
+
+### Bug Fixes
+
+* **dataview:** add barrage to prevent crash if no dataview found ([5328c58](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5328c588fffeea0f29b9c8daf3c02ea58634b048))
+* **dataview:** add default key if no default are found ([f3faa42](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f3faa4258da94972924f611adb44d51dca2051b0))
+* **dataview:** disable dataview is plugin not enabled ([bfd7360](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/bfd73607387747e440845df3f2e93f12e0310788))
+* same for check repo validity ([2edcc82](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2edcc820b14aad43c6e8d2532f96d4fb7cd3ab2a))
+* the callback function should not appear if share: false ([b2a9efd](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b2a9efde014b4439400173c7d14045b00ba47d17))
+
 ## [6.11.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.10.3...6.11.0-0) (2023-11-09)
 
 
