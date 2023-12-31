@@ -9,6 +9,9 @@ overrides:
   got@<11.8.5: '>=11.8.5'
 
 dependencies:
+  '@excalidraw/utils':
+    specifier: ^0.1.2
+    version: 0.1.2
   dedent:
     specifier: ^0.7.0
     version: 0.7.0
@@ -1624,6 +1627,10 @@ packages:
     resolution: {integrity: sha512-ut5V+D+fOoWPgGGNj83GGjnntO39xDy6DWxO0wb7Jp3DcMX0TfIqdzHF85VTQkerdyGmuuMD9AKAo5KiNlf/AQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
+
+  /@excalidraw/utils@0.1.2:
+    resolution: {integrity: sha512-hypi3np+Do3e8Eb0Y1ug52EyJP4JAP3RPQRfAgiMN0ftag7M49vahiWVXd9yX4wsviCKYacTbBDs2mRqt3nyUQ==}
+    dev: false
 
   /@humanwhocodes/config-array@0.11.13:
     resolution: {integrity: sha512-JSBDMiDKSzQVngfRjOdFXgFfklaXI4K9nLF49Auh21lmBWRLIK3+xTErTWD4KU54pb6coM6ESE7Awz/FNU3zgQ==}
@@ -5828,7 +5835,7 @@ packages:
     resolution: {integrity: sha512-REKQtAuIOKDbvNH/th1C1gWmJWCP5tRn9T/mfZGZt4Zncgko7McXK0aSKFtEInipvgbZJ2nScivvyLdiWluSMw==}
     hasBin: true
     dependencies:
-      obsidian: github.com/obsidianmd/obsidian-api/791214a68d0dc322b88e5abce617bdf603cc2a2d(@codemirror/state@6.3.1)(@codemirror/view@6.22.0)
+      obsidian: github.com/obsidianmd/obsidian-api/bbb696aeb8bf5126bf2ecbf84fc8284fe133bc20(@codemirror/state@6.3.1)(@codemirror/view@6.22.0)
       tslib: 2.1.0
     transitivePeerDependencies:
       - '@codemirror/state'
@@ -7274,11 +7281,11 @@ packages:
       style-mod: 4.1.0
     dev: true
 
-  github.com/obsidianmd/obsidian-api/791214a68d0dc322b88e5abce617bdf603cc2a2d(@codemirror/state@6.3.1)(@codemirror/view@6.22.0):
-    resolution: {tarball: https://codeload.github.com/obsidianmd/obsidian-api/tar.gz/791214a68d0dc322b88e5abce617bdf603cc2a2d}
-    id: github.com/obsidianmd/obsidian-api/791214a68d0dc322b88e5abce617bdf603cc2a2d
+  github.com/obsidianmd/obsidian-api/bbb696aeb8bf5126bf2ecbf84fc8284fe133bc20(@codemirror/state@6.3.1)(@codemirror/view@6.22.0):
+    resolution: {tarball: https://codeload.github.com/obsidianmd/obsidian-api/tar.gz/bbb696aeb8bf5126bf2ecbf84fc8284fe133bc20}
+    id: github.com/obsidianmd/obsidian-api/bbb696aeb8bf5126bf2ecbf84fc8284fe133bc20
     name: obsidian
-    version: 1.4.11
+    version: 1.5.1
     peerDependencies:
       '@codemirror/state': ^6.0.0
       '@codemirror/view': ^6.0.0
