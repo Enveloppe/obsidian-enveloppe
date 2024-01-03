@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.13.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.0-1...6.13.0-2) (2024-01-03)
+
+
+### Features
+
+* same as before but for **all** perfiles keys ([3c4ae53](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3c4ae53a5707b624f1ef015dc371b83d6b3c4e49))
+
 ## [6.13.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.0-0...6.13.0-1) (2024-01-03)
 
 
