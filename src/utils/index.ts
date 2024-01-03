@@ -199,8 +199,17 @@ export async function createLink(
 	}
 	const frontmatter = app.metadataCache.getFileCache(file)!.frontmatter;
 	let removePart = copyLink.removePart;
+	const smartKey = otherRepo?.smartKey;
 	if (frontmatter) {
-		if (frontmatter["baselink"] !== undefined) {
+		if (smartKey) {
+			if (frontmatter[`${smartKey}.baselink`] !== undefined) {
+				baseLink = frontmatter[`${smartKey}.baselink`];
+				removePart = [];
+			} else if (frontmatter[`${smartKey}.copylink`] && typeof frontmatter[`${smartKey}.copylink`] === "object") {
+				baseLink = frontmatter[`${smartKey}.copylink`].base;
+				removePart = frontmatter[`${smartKey}.copylink`].remove ?? [];
+			}
+		} else if (frontmatter["baselink"] !== undefined) {
 			baseLink = frontmatter["baselink"];
 			removePart = [];
 		} else if (frontmatter["copylink"] && typeof frontmatter["copylink"]==="object") {
