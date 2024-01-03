@@ -14,6 +14,7 @@ import {
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
+	RepoFrontmatter,
 	Repository,
 } from "../settings/interface";
 import {
@@ -76,7 +77,7 @@ export async function createRelativePath(
 	const { metadataCache } = app;
 	const settings = properties.settings;
 	const shortRepo = properties.repository;
-	const sourcePath = getReceiptFolder(sourceFile, settings, shortRepo, app);
+	const sourcePath = getReceiptFolder(sourceFile, settings, shortRepo, app, properties.frontmatter.repo);
 	const frontmatterTarget = metadataCache.getFileCache(targetFile.linked)!.frontmatter;
 	const targetRepo = getRepoFrontmatter(settings, shortRepo, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(properties.frontmatter.repo, targetRepo);
@@ -93,12 +94,12 @@ export async function createRelativePath(
 		return targetFile.destinationFilePath ? targetFile.destinationFilePath: targetFile.linked.basename;
 	}
 	if (targetFile.linked.path === sourceFile.path) {
-		return getReceiptFolder(targetFile.linked, settings, shortRepo, app).split("/").at(-1) as string;
+		return getReceiptFolder(targetFile.linked, settings, shortRepo, app, targetRepo).split("/").at(-1) as string;
 	}
 
 	const targetPath =
 		targetFile.linked.extension === "md" && !targetFile.linked.name.includes("excalidraw")
-			? getReceiptFolder(targetFile.linked, settings, shortRepo, app)
+			? getReceiptFolder(targetFile.linked, settings, shortRepo, app, targetRepo)
 			: getImagePath(
 				targetFile.linked,
 				settings,
@@ -147,7 +148,8 @@ export async function createRelativePath(
 			targetFile.linked,
 			settings,
 			shortRepo,
-			app
+			app,
+			targetRepo
 		).split("/").at(-1) as string;
 	}
 	return relative;
@@ -167,7 +169,7 @@ function folderNoteIndexOBS(
 	file: TFile,
 	vault: Vault,
 	settings: GitHubPublisherSettings,
-	fileName: string
+	fileName: string,
 ): string {
 	const index = settings.upload.folderNote.rename;
 	const folderParent = file.parent ? `/${file.parent.path}/` : "/" ;
@@ -195,10 +197,11 @@ function createObsidianPath(
 	file: TFile,
 	settings: GitHubPublisherSettings,
 	vault: Vault,
-	fileName: string
+	fileName: string,
+	repoFrontmatter?: RepoFrontmatter,
 ): string {
 	fileName = folderNoteIndexOBS(file, vault, settings, fileName);
-	const rootFolder = settings.upload.defaultName.length > 0 ? settings.upload.defaultName : "";
+	const rootFolder = repoFrontmatter?.path?.defaultName && repoFrontmatter.path.defaultName.length > 0 ? repoFrontmatter.path.rootFolder : settings.upload.defaultName.length > 0 ? settings.upload.defaultName : "";
 	const path = rootFolder + fileName;
 	//remove last word from path splitted with /
 	let pathWithoutEnd = path.split("/").slice(0, -1).join("/");
@@ -220,9 +223,10 @@ function createObsidianPath(
 function folderNoteIndexYAML(
 	fileName: string,
 	frontmatter: FrontMatterCache | undefined | null,
-	settings: GitHubPublisherSettings
+	settings: GitHubPublisherSettings,
+	repoFrontmatter?: RepoFrontmatter,
 ): string {
-	const category = getCategory(frontmatter, settings);
+	const category = repoFrontmatter?.path?.category?.value ?? getCategory(frontmatter, settings);
 	logs({settings}, `Category: ${category}`);
 	const catSplit = category.split("/");
 	const parentCatFolder = !category.endsWith("/") ? catSplit.at(-1) as string : catSplit.at(-2) as string;
@@ -247,13 +251,16 @@ function folderNoteIndexYAML(
 function createFrontmatterPath(
 	settings: GitHubPublisherSettings,
 	frontmatter: FrontMatterCache | null | undefined,
-	fileName: string
+	fileName: string,
+	repoFrontmatter?: RepoFrontmatter,
 ): string {
 
 	const uploadSettings = settings.upload;
-	const folderCategory = getCategory(frontmatter, settings);
-	const folderNote = folderNoteIndexYAML(fileName, frontmatter, settings);
-	const folderRoot = uploadSettings.rootFolder.length > 0 && !folderCategory.includes(uploadSettings.rootFolder) ? `${uploadSettings.rootFolder}/` : "";
+	const folderCategory = repoFrontmatter?.path?.category?.value ?? getCategory(frontmatter, settings);
+	const path = repoFrontmatter?.path;
+	const folderNote = folderNoteIndexYAML(fileName, frontmatter, settings, repoFrontmatter);
+	const root = path?.rootFolder && path.rootFolder.length > 0 ? path.rootFolder : uploadSettings.rootFolder.length > 0 ? uploadSettings.rootFolder : undefined;
+	const folderRoot = root && !folderCategory.includes(root) ? `${root}/` : "";
 	if (folderCategory.trim().length === 0) return folderNote;
 	const folderRegex = regexOnPath(folderRoot + folderCategory, settings);
 	if (folderRegex.trim().length === 0) return folderNote;
@@ -361,11 +368,15 @@ export function getReceiptFolder(
 	settings: GitHubPublisherSettings,
 	otherRepo: Repository | null,
 	app: App,
+	repoFrontmatter?: RepoFrontmatter | RepoFrontmatter[],
 ): string {
 	const { vault, metadataCache } = app;
 	if (file.extension === "md") {
 		const frontmatter = metadataCache.getCache(file.path)?.frontmatter;
-
+		if (!repoFrontmatter) repoFrontmatter = getRepoFrontmatter(settings, otherRepo, frontmatter);
+		repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
+		let targetRepo = repoFrontmatter.find((repo) => repo.path?.smartkey === otherRepo?.smartKey || "default");
+		if (!targetRepo) targetRepo = repoFrontmatter[0];
 		const fileName = getTitleField(frontmatter, file, settings);
 		const editedFileName = regexOnFileName(fileName, settings);
 
@@ -374,20 +385,20 @@ export function getReceiptFolder(
 		) {
 			return normalizePath(fileName);
 		}
-
-		if (frontmatter?.path) {
-			const frontmatterPath = frontmatter.path instanceof Array ? frontmatter.path.join("/") : frontmatter.path;
+		if (targetRepo.path?.override) {
+			const frontmatterPath = targetRepo.path.override;
 			if (frontmatterPath == "" || frontmatterPath == "/") {
 				return normalizePath(editedFileName);
 			}
 			return normalizePath(`${frontmatterPath}/${editedFileName}`);
-		} else if (settings.upload.behavior === FolderSettings.yaml) {
-			return normalizePath(createFrontmatterPath(settings, frontmatter, fileName));
-		} else if (settings.upload.behavior === FolderSettings.obsidian) {
-			return normalizePath(createObsidianPath(file, settings, vault, fileName));
+		} else if (targetRepo.path?.type === FolderSettings.yaml) {
+			console.log("YAML", createFrontmatterPath(settings, frontmatter, fileName, targetRepo));
+			return normalizePath(createFrontmatterPath(settings, frontmatter, fileName, targetRepo));
+		} else if (targetRepo.path?.type === FolderSettings.obsidian) {
+			return normalizePath(createObsidianPath(file, settings, vault, fileName, targetRepo));
 		} else {
-			return settings.upload.defaultName.length > 0
-				? normalizePath(`${settings.upload.defaultName}/${editedFileName}`)
+			return targetRepo.path?.defaultName && targetRepo.path.defaultName.length > 0
+				? normalizePath(`${targetRepo.path.defaultName}/${editedFileName}`)
 				: normalizePath(editedFileName);
 		}
 	}

@@ -129,8 +129,8 @@ function translateBooleanForRemoveEmbed(removeEmbed: unknown) {
 export function getRepoFrontmatter(
 	settings: GitHubPublisherSettings,
 	repository: Repository | null,
-	frontmatter?: FrontMatterCache
-) {
+	frontmatter?: FrontMatterCache | null,
+): RepoFrontmatter[] | RepoFrontmatter {
 	let github = repository ?? settings.github;
 	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"] !== "default") {
 		const smartKey = frontmatter.shortRepo.toLowerCase();
@@ -154,13 +154,13 @@ export function getRepoFrontmatter(
 		repoFrontmatter.autoclean = false;
 	}
 	if (!frontmatter || (frontmatter.multipleRepo === undefined && frontmatter.repo === undefined && frontmatter.shortRepo === undefined)) {
-		return repoFrontmatter;
+		return parsePath(settings, repository, repoFrontmatter, frontmatter) as RepoFrontmatter;
 	}
 	let isFrontmatterAutoClean = null;
 	if (frontmatter.multipleRepo) {
 		const multipleRepo = parseMultipleRepo(frontmatter, repoFrontmatter);
 		if (multipleRepo.length === 1) {
-			return multipleRepo[0] as RepoFrontmatter;
+			return parsePath(settings, repository, multipleRepo[0], frontmatter) as RepoFrontmatter;
 		}
 		return multipleRepo;
 	} else if (frontmatter.repo) {
@@ -184,12 +184,12 @@ export function getRepoFrontmatter(
 			repoFrontmatter = repositoryStringSlice(repo, repoFrontmatter);
 		}
 	} else if (frontmatter.shortRepo instanceof Array) {
-		return multipleShortKeyRepo(frontmatter, settings.github.otherRepo, repoFrontmatter);
+		return multipleShortKeyRepo(frontmatter, settings.github.otherRepo, repoFrontmatter, settings);
 	}
 	if (frontmatter.autoclean !== undefined && isFrontmatterAutoClean === null) {
 		repoFrontmatter.autoclean = frontmatter.autoclean;
 	}
-	return repoFrontmatter;
+	return parsePath(settings, repository, repoFrontmatter);
 }
 
 /**
@@ -281,7 +281,7 @@ function parseMultipleRepo(
  * @param {RepoFrontmatter} repoFrontmatter - The default repoFrontmatter (from the default settings)
  * @return {RepoFrontmatter[] | RepoFrontmatter} - The repoFrontmatter from shortRepo
  */
-function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository[], repoFrontmatter: RepoFrontmatter) {
+function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository[], repoFrontmatter: RepoFrontmatter, setting: GitHubPublisherSettings) {
 	if (frontmatter.shortRepo instanceof Array) {
 		const multipleRepo: RepoFrontmatter[] = [];
 		for (const repo of frontmatter.shortRepo) {
@@ -293,7 +293,7 @@ function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository
 					return repo.smartKey.toLowerCase() === smartKey;
 				})[0];
 				if (shortRepo) {
-					multipleRepo.push({
+					let repo = {
 						branch: shortRepo.branch,
 						repo: shortRepo.repo,
 						owner: shortRepo.user,
@@ -301,7 +301,10 @@ function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository
 						automaticallyMergePR: shortRepo.automaticallyMergePR,
 						workflowName: shortRepo.workflow.name,
 						commitMsg: shortRepo.workflow.commitMessage
-					} as RepoFrontmatter);
+					} as RepoFrontmatter;
+					const parsedPath = parsePath(setting, shortRepo, repo);
+					repo = Array.isArray(parsedPath) ? parsedPath[0] : parsedPath;
+					multipleRepo.push(repo);
 				}
 			}
 		}
@@ -325,7 +328,7 @@ function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository
  * @return {RepoFrontmatter}
  */
 
-function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter) {
+function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter): RepoFrontmatter {
 	const newRepo: RepoFrontmatter = {
 		branch: repoFrontmatter.branch,
 		repo: repoFrontmatter.repo,
@@ -369,4 +372,46 @@ export function getCategory(
 		return category.join("/");
 	}
 	return category;
+}
+
+export function parsePath(
+	settings: GitHubPublisherSettings,
+	repository: Repository | null,
+	repoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
+	frontmatter?: FrontMatterCache | null | undefined
+): RepoFrontmatter[] | RepoFrontmatter {
+	repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
+	for (const repo of repoFrontmatter) {
+		const smartKey = repository ? repository.smartKey : "default";
+		repo.path = {
+			type: settings.upload.behavior,
+			defaultName: settings.upload.defaultName,
+			rootFolder: settings.upload.rootFolder,
+			category: {
+				key: settings.upload.yamlFolderKey,
+				value: getCategory(frontmatter, settings),
+			},
+			override: frontmatter?.path,
+			smartkey: smartKey,
+		};
+		if (frontmatter?.[`${smartKey}.path`]) {
+			repo.path.override = frontmatter[`${smartKey}.path`] instanceof Array ? frontmatter[`${smartKey}.path`].join("/") : frontmatter[`${smartKey}.path`];
+			continue;
+		}
+		if (frontmatter?.[`${smartKey}.${repo.path.category!.key}`]) {
+			const category = frontmatter[`${smartKey}.${repo.path.category!.key}`];
+			repo.path.category!.value = category instanceof Array ? category.join("/") : category;
+		}
+		if (frontmatter?.[`${smartKey}.rootFolder`]) {
+			const rootFolder = frontmatter[`${smartKey}.rootFolder`] instanceof Array ? frontmatter[`${smartKey}.rootFolder`].join("/") : frontmatter[`${smartKey}.rootFolder`];
+			repo.path.rootFolder = rootFolder;
+		}
+		if (frontmatter?.[`${smartKey}.defaultName`]) {
+			repo.path.defaultName = frontmatter[`${smartKey}.defaultName`] instanceof Array ? frontmatter[`${smartKey}.defaultName`].join("/") : frontmatter[`${smartKey}.defaultName`];
+		}
+		if (frontmatter?.[`${smartKey}.type`]) {
+			repo.path.type = frontmatter[`${smartKey}.type`] as FolderSettings;
+		}
+	}
+	return repoFrontmatter;
 }

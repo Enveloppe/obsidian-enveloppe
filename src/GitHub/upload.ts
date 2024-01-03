@@ -216,7 +216,7 @@ export default class Publisher {
 					repo: repo.frontmatter,
 				},
 				repository: repo.repo,
-				filepath: getReceiptFolder(file, this.settings, repo.repo, this.plugin.app),
+				filepath: getReceiptFolder(file, this.settings, repo.repo, this.plugin.app, repo.frontmatter),
 			};
 			text = await mainConverting(text, file, this.plugin.app, frontmatter, linkedFiles, this.plugin, multiProperties);
 			const path = multiProperties.filepath;

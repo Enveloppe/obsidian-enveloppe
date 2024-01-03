@@ -191,7 +191,7 @@ export async function createLink(
 	if (!settings.plugin.copyLink.enable) {
 		return;
 	}
-	let filepath = getReceiptFolder(file, settings, otherRepo, app);
+	let filepath = getReceiptFolder(file, settings, otherRepo, app, multiRepo.frontmatter);
 
 	let baseLink = copyLink.links;
 	if (baseLink.length === 0) {

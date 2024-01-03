@@ -342,6 +342,17 @@ export interface TextCleaner {
 	inCodeBlocks?: boolean;
 }
 
+export interface Path {
+	type: FolderSettings;
+	defaultName: string;
+	rootFolder: string;
+	category?: {
+		key: string;
+		value: string;
+	};
+	override?: string;
+	smartkey?: string;
+}
 
 export interface FrontmatterConvert {
 	links: boolean;
@@ -366,6 +377,7 @@ export interface RepoFrontmatter {
 	commitMsg: string;
 	automaticallyMergePR: boolean;
 	verifiedRepo?: boolean;
+	path?: Path;
 }
 
 export interface ListEditedFiles {

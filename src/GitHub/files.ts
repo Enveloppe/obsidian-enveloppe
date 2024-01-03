@@ -101,15 +101,16 @@ export class FilesManagement extends Publisher {
 			} else if (file.extension == "md") {
 				const frontMatter = this.metadataCache.getCache(file.path)?.frontmatter;
 				if (isShared(frontMatter, this.settings, file, repo)) {
-					const filepath = getReceiptFolder(file, this.settings, repo, this.plugin.app);
+					const repoFrontatter = getRepoFrontmatter(
+						this.settings,
+						repo,
+						frontMatter
+					);
+					const filepath = getReceiptFolder(file, this.settings, repo, this.plugin.app, repoFrontatter);
 					allFileWithPath.push({
 						converted: filepath,
 						real: file.path,
-						repoFrontmatter: getRepoFrontmatter(
-							this.settings,
-							repo,
-							frontMatter
-						),
+						repoFrontmatter: repoFrontatter,
 					});
 				}
 			}
