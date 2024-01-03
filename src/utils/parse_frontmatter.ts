@@ -411,7 +411,8 @@ export function parsePath(
 			repo.path.defaultName = frontmatter[`${smartKey}.defaultName`] instanceof Array ? frontmatter[`${smartKey}.defaultName`].join("/") : frontmatter[`${smartKey}.defaultName`];
 		}
 		if (frontmatter?.[`${smartKey}.type`]) {
-			repo.path.type = frontmatter[`${smartKey}.type`] as FolderSettings;
+			const type = frontmatter[`${smartKey}.type`].toLowerCase();
+			if (type.match(/^(fixed|obsidian|yaml)$/i)) repo.path.type = frontmatter[`${smartKey}.type`] as FolderSettings;
 		}
 	}
 	return repoFrontmatter;
