@@ -103,7 +103,7 @@ export function getFrontmatterSettings(
 	if (frontmatter.nonShared !== undefined) {
 		settingsConversion.unshared = frontmatter.nonShared;
 	}
-	return settingsConversion;
+	return parseFrontmatterSettingsWithRepository(repo, frontmatter, settingsConversion);
 }
 
 function translateBooleanForRemoveEmbed(removeEmbed: unknown) {
@@ -394,6 +394,7 @@ export function parsePath(
 			override: frontmatter?.path,
 			smartkey: smartKey,
 		};
+
 		if (frontmatter?.[`${smartKey}.path`]) {
 			repo.path.override = frontmatter[`${smartKey}.path`] instanceof Array ? frontmatter[`${smartKey}.path`].join("/") : frontmatter[`${smartKey}.path`];
 			continue;
@@ -414,4 +415,55 @@ export function parsePath(
 		}
 	}
 	return repoFrontmatter;
+}
+
+function parseFrontmatterSettingsWithRepository(
+	repository: Repository | null,
+	frontmatter: FrontMatterCache | null | undefined,
+	frontConvert: FrontmatterConvert)
+{
+	if (!repository) return frontConvert;
+	const smartKey = repository.smartKey;
+	if (frontmatter?.[`${smartKey}.links`]) {
+		if (typeof frontmatter?.[`${smartKey}.links`] === "object") {
+			frontConvert.links = frontmatter[`${smartKey}.links`]?.convert ?? frontConvert.links;
+			frontConvert.convertInternalLinks = frontmatter[`${smartKey}.links`]?.internals ?? frontConvert.convertInternalLinks;
+			frontConvert.convertWiki = frontmatter[`${smartKey}.links`]?.mdlinks ?? frontConvert.convertWiki;
+			frontConvert.unshared = frontmatter[`${smartKey}.links`]?.nonShared ?? frontConvert.unshared;
+		} else {
+			frontConvert.links = frontmatter[`${smartKey}.links`];
+		}
+	}
+	if (frontmatter?.[`${smartKey}.embed`]) {
+		if (typeof frontmatter?.[`${smartKey}.embed`] === "object") {
+			frontConvert.embed = frontmatter[`${smartKey}.embed`]?.send ?? frontConvert.embed;
+			frontConvert.removeEmbed = translateBooleanForRemoveEmbed(frontmatter[`${smartKey}.embed`]?.remove ?? frontConvert.removeEmbed);
+			frontConvert.charEmbedLinks = frontmatter[`${smartKey}.embed`]?.char ?? frontConvert.charEmbedLinks;
+		} else {
+			frontConvert.embed = frontmatter[`${smartKey}.embed`];
+		}
+	}
+	if (frontmatter?.[`${smartKey}.attachment`]) {
+		if (typeof frontmatter?.[`${smartKey}.attachment`] === "object") {
+			frontConvert.attachment = frontmatter[`${smartKey}.attachment`]?.send ?? frontConvert.attachment;
+			frontConvert.attachmentLinks = frontmatter[`${smartKey}.attachment`]?.folder ?? frontConvert.attachmentLinks;
+		} else {
+			frontConvert.attachment = frontmatter[`${smartKey}.attachment`];
+		}
+	}
+	if (frontmatter?.[`${smartKey}.attachmentLinks`]) {
+		frontConvert.attachmentLinks = normalizePath(frontmatter[`${smartKey}.attachmentLinks`]
+			.toString()
+			.replace(/\/$/, ""));
+	}
+	frontConvert.convertWiki = frontmatter?.[`${smartKey}.mdlinks`] ?? frontConvert.convertWiki;
+
+	if (frontmatter?.[`${smartKey}.removeEmbed`]) {
+		frontConvert.removeEmbed = translateBooleanForRemoveEmbed(frontmatter[`${smartKey}.removeEmbed`]);
+	}
+	frontConvert.dataview = frontmatter?.[`${smartKey}.dataview`] ?? frontConvert.dataview;
+	frontConvert.hardbreak = frontmatter?.[`${smartKey}.hardbreak`] ?? frontConvert.hardbreak;
+	frontConvert.convertInternalLinks = frontmatter?.[`${smartKey}.internals`] ?? frontConvert.convertInternalLinks;
+	frontConvert.unshared = frontmatter?.[`${smartKey}.nonShared`] ?? frontConvert.unshared;
+	return frontConvert;
 }
