@@ -97,7 +97,7 @@ function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: an
 
 export function addToYaml(text: string, toAdd: string[], settings: GitHubPublisherSettings, folderNoteParaMeters?: { properties: MultiProperties, file: TFile}): string {
 	const yaml = text.split("---")[1];
-	let yamlObject = parseYaml(yaml);
+	let yamlObject = yaml ? parseYaml(yaml) : {};
 	if (toAdd.length > 0) {
 		yamlObject = tagsToYaml(toAdd, settings, yamlObject);
 	}
