@@ -23,7 +23,7 @@ import {
 	Repository,
 } from "./settings/interface";
 import { migrateSettings,OldSettings } from "./settings/migrate";
-import {createTokenPath, logs, notif} from "./utils";
+import {createTokenPath, logs, monkeyPatchConsole, notif} from "./utils";
 import {checkRepositoryValidity, verifyRateLimitAPI} from "./utils/data_validation_test";
 
 /**
@@ -251,6 +251,8 @@ export default class GithubPublisher extends Plugin {
 		for (const repo of repoWithShortcuts) {
 			await this.chargeAllCommands(repo, this);
 		}
+
+		monkeyPatchConsole(this);
 	}
 
 	/**

@@ -79,6 +79,62 @@ export function logs(args: LogsParameters, ...messages: unknown[]) {
 	}
 }
 
+export function monkeyPatchConsole(plugin: GithubPublisher) {
+
+	if (!plugin.settings.plugin.dev) {
+		return;
+	}
+
+	const logFile = `${plugin.manifest.dir}/logs.txt`;
+	const logs: string[] = [];
+	//detect if console.debug, console.error, console.info, console.log or console.warn is called
+	const originalConsole = {
+		debug: console.debug,
+		error: console.error,
+		info: console.info,
+		log: console.log,
+		warn: console.warn,
+	};
+	const logMessages = (prefix: string) => (...messages: unknown[]) => {
+		//search each plugin to find the one who call the console
+		//if it's not this plugin, do nothing
+		const stack = new Error().stack?.split("\n")?.[3];
+		if (!stack?.includes("obsidian-mkdocs-publisher")) {
+			return;
+		}
+		logs.push(`\n[${prefix}]`);
+		for (const message of messages) {
+			logs.push(String(message));
+		}
+		plugin.app.vault.adapter.write(logFile, logs.join(" "));
+		//also display the message in the console
+		switch (prefix) {
+		case "error":
+			originalConsole.error(...messages);
+			break;
+		case "info":
+			originalConsole.info(...messages);
+			break;
+		case "log":
+			originalConsole.log(...messages);
+			break;
+		case "warn":
+			originalConsole.warn(...messages);
+			break;
+		case "debug":
+			originalConsole.debug(...messages);
+			break;
+		}
+	};
+	console.debug = logMessages("debug");
+	console.error = logMessages("error");
+	console.info = logMessages("info");
+	console.log = logMessages("log");
+	console.warn = logMessages("warn");
+
+}
+
+
 /**
  * Create the differents list of the modals opened after the upload
  * @param {UploadedFiles[]} listUploaded
