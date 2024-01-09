@@ -80,8 +80,8 @@ export function logs(args: LogsParameters, ...messages: unknown[]) {
 }
 
 export function monkeyPatchConsole(plugin: GithubPublisher) {
-
-	if (!plugin.settings.plugin.dev) {
+	const stack = new Error().stack?.split("\n")?.[3];
+	if (!stack?.includes("obsidian-mkdocs-publisher") || !plugin.settings.plugin.dev) {
 		return;
 	}
 
@@ -96,12 +96,6 @@ export function monkeyPatchConsole(plugin: GithubPublisher) {
 		warn: console.warn,
 	};
 	const logMessages = (prefix: string) => (...messages: unknown[]) => {
-		//search each plugin to find the one who call the console
-		//if it's not this plugin, do nothing
-		const stack = new Error().stack?.split("\n")?.[3];
-		if (!stack?.includes("obsidian-mkdocs-publisher")) {
-			return;
-		}
 		logs.push(`\n[${prefix}]`);
 		for (const message of messages) {
 			logs.push(String(message));
