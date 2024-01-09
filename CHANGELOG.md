@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.13.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.0...6.13.1) (2024-01-09)
+
+
+### Bug Fixes
+
+* urgent fix that breaks logs ([3b58a38](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3b58a382dedacffe9b161554203cdeafacd624b7))
+
 ## [6.13.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.0-4...6.13.0) (2024-01-09)
 
 
