@@ -392,7 +392,6 @@ export function getReceiptFolder(
 			}
 			return normalizePath(`${frontmatterPath}/${editedFileName}`);
 		} else if (targetRepo.path?.type === FolderSettings.yaml) {
-			console.log("YAML", createFrontmatterPath(settings, frontmatter, fileName, targetRepo));
 			return normalizePath(createFrontmatterPath(settings, frontmatter, fileName, targetRepo));
 		} else if (targetRepo.path?.type === FolderSettings.obsidian) {
 			return normalizePath(createObsidianPath(file, settings, vault, fileName, targetRepo));

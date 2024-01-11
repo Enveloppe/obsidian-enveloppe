@@ -72,28 +72,29 @@ async function deleteFromGithubOneRepo(
 	);
 	const settings = filesManagement.settings;
 	const octokit = filesManagement.octokit;
-	const filesInRepo = await filterGithubFile(getAllFile, settings);
+	const filesInRepo = await filterGithubFile(getAllFile, settings, repo);
 	if (
 		(settings.github.rateLimit === 0 || filesInRepo.length > settings.github.rateLimit)
 		&& await verifyRateLimitAPI(octokit, settings, false, filesInRepo.length) === 0
 	) {
 		return {success: false, deleted: [], undeleted: []};
 	}
-
+	const defaultName = repo.path?.defaultName ?? settings.upload.defaultName;
+	const behavior = repo.path?.type ?? settings.upload.behavior;
+	const root = repo.path?.rootFolder ?? settings.upload.rootFolder;
 	if (!filesInRepo) {
 		let errorMsg = "";
-		if (settings.upload.defaultName.length > 0) {
-			if (settings.upload.defaultName.length > 0) {
-				errorMsg = i18next.t("deletion.defaultFolder");
-			} else if (
-				settings.upload.behavior === FolderSettings.yaml &&
-				settings.upload.rootFolder.length === 0
-			) {
-				errorMsg = i18next.t("deletion.rootFolder");
-			}
+		if (defaultName.length === 0) {
+			errorMsg = i18next.t("deletion.defaultFolder");
+		} else if (
+			behavior === FolderSettings.yaml &&
+			root.length === 0
+		) {
+			errorMsg = i18next.t("deletion.rootFolder");
 		}
+
 		if (!silent) {
-			new Notice("Error : " + errorMsg);
+			new Notice(`Error : ${errorMsg}`);
 		}
 		return {success: false, deleted: [], undeleted: []};
 	}
@@ -114,10 +115,12 @@ async function deleteFromGithubOneRepo(
 		);
 		const isMarkdownForAnotherRepo = file.file.trim().endsWith(".md")
 			? !allSharedConverted.some(
-				(f) =>
-					f.converted === file.file &&
-						JSON.stringify(f.repo) == JSON.stringify(repo)
-			)
+				(f) => {
+					let repoFrontmatter = f.repo;
+					if (Array.isArray(repoFrontmatter)) {
+						repoFrontmatter = repoFrontmatter.find((r) => JSON.stringify(r.repo) === JSON.stringify(repo.repo));
+					} return f.converted === file.file && repoFrontmatter;
+				})
 			: false;
 		const isNeedToBeDeleted = isInObsidian
 			? isMarkdownForAnotherRepo
@@ -212,14 +215,15 @@ function excludedFileFromDelete(
 
 export async function filterGithubFile(
 	fileInRepo: GithubRepo[],
-	settings: GitHubPublisherSettings
+	settings: GitHubPublisherSettings,
+	repoFrontmatter: RepoFrontmatter
 ): Promise<GithubRepo[]> {
 	const sharedFilesInRepo: GithubRepo[] = [];
 	for (const file of fileInRepo) {
-		const behavior = settings.upload.behavior;
-		const root = settings.upload.rootFolder;
-		const defaultName = settings.upload.defaultName;
-		const attachmentFolder = settings.embed.folder;
+		const behavior = repoFrontmatter.path?.type ?? settings.upload.behavior;
+		const root = repoFrontmatter.path?.rootFolder ?? settings.upload.rootFolder;
+		const defaultName = repoFrontmatter.path?.defaultName ?? settings.upload.defaultName;
+		const attachmentFolder = repoFrontmatter.path?.attachment?.folder ?? settings.embed.folder;
 		if (
 			(behavior === FolderSettings.yaml &&
 				root.length === 0) ||
@@ -250,8 +254,7 @@ export async function filterGithubFile(
 
 function parseYamlFrontmatter(contents: string): unknown {
 	const yamlFrontmatter = contents.split("---")[1];
-	const yamlFrontmatterParsed = parseYaml(yamlFrontmatter);
-
+	const yamlFrontmatterParsed = parseYaml(yamlFrontmatter) ?? {};
 	return trimObject(yamlFrontmatterParsed);
 }
 

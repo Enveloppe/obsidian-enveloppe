@@ -393,6 +393,10 @@ export function parsePath(
 			},
 			override: frontmatter?.path,
 			smartkey: smartKey,
+			attachment: {
+				send: settings.embed.attachments,
+				folder: settings.embed.folder,
+			}
 		};
 
 		if (frontmatter?.[`${smartKey}.path`]) {
@@ -413,6 +417,21 @@ export function parsePath(
 		if (frontmatter?.[`${smartKey}.type`]) {
 			const type = frontmatter[`${smartKey}.type`].toLowerCase();
 			if (type.match(/^(fixed|obsidian|yaml)$/i)) repo.path.type = frontmatter[`${smartKey}.type`] as FolderSettings;
+		}
+		if (frontmatter?.[`${smartKey}.attachment`]) {
+			if (typeof frontmatter?.[`${smartKey}.attachment`] === "object") {
+				repo.path.attachment = {
+					send: frontmatter[`${smartKey}.attachment`]?.send ?? repo.path.attachment?.send,
+					folder: frontmatter[`${smartKey}.attachment`]?.folder ?? repo.path.attachment?.folder,
+				};
+			} else {
+				repo.path.attachment!.send = frontmatter[`${smartKey}.attachment`];
+			}
+		}
+		if (frontmatter?.[`${smartKey}.attachmentLinks`]) {
+			repo.path.attachment!.folder = normalizePath(frontmatter[`${smartKey}.attachmentLinks`]
+				.toString()
+				.replace(/\/$/, ""));
 		}
 	}
 	return repoFrontmatter;

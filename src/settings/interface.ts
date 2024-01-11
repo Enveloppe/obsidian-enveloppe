@@ -352,6 +352,10 @@ export interface Path {
 	};
 	override?: string;
 	smartkey?: string;
+	attachment?: {
+		send: boolean;
+		folder: string;
+	};
 }
 
 export interface FrontmatterConvert {
