@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.13.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.2...6.13.3) (2024-01-11)
+
+
+### Bug Fixes
+
+* Tfolder with wrong path because frontmatter was not read ([d8a9673](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d8a96738fc78e59e1e8f5280d72a86cc299aa271))
+
 ## [6.13.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.1...6.13.2) (2024-01-11)
 
 
