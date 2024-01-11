@@ -177,12 +177,14 @@ export default class Publisher {
 			this.plugin,
 		);
 		const frontmatter = this.metadataCache.getFileCache(file)?.frontmatter;
-		const isNotEmpty = checkEmptyConfiguration(getRepoFrontmatter(this.settings, repo.repo, frontmatter), this.plugin);
+		const repoFrontmatter = getRepoFrontmatter(this.settings, repo.repo, frontmatter);
+		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, this.plugin);
+		repo.frontmatter = repoFrontmatter;
 		if (
 			!isShared(frontmatter, this.settings, file, repo.repo) ||
 			fileHistory.includes(file) ||
 			!checkIfRepoIsInAnother(
-				getRepoFrontmatter(this.settings, repo.repo, frontmatter),
+				repoFrontmatter,
 				repo.frontmatter
 			) || !isNotEmpty
 		) {

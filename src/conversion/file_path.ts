@@ -226,7 +226,7 @@ function folderNoteIndexYAML(
 	settings: GitHubPublisherSettings,
 	repoFrontmatter?: RepoFrontmatter,
 ): string {
-	const category = repoFrontmatter?.path?.category?.value ?? getCategory(frontmatter, settings);
+	const category = repoFrontmatter?.path?.category?.value ?? getCategory(frontmatter, settings, repoFrontmatter?.path);
 	logs({settings}, `Category: ${category}`);
 	const catSplit = category.split("/");
 	const parentCatFolder = !category.endsWith("/") ? catSplit.at(-1) as string : catSplit.at(-2) as string;
@@ -256,7 +256,7 @@ function createFrontmatterPath(
 ): string {
 
 	const uploadSettings = settings.upload;
-	const folderCategory = repoFrontmatter?.path?.category?.value ?? getCategory(frontmatter, settings);
+	const folderCategory = repoFrontmatter?.path?.category?.value ?? getCategory(frontmatter, settings, repoFrontmatter?.path);
 	const path = repoFrontmatter?.path;
 	const folderNote = folderNoteIndexYAML(fileName, frontmatter, settings, repoFrontmatter);
 	const root = path?.rootFolder && path.rootFolder.length > 0 ? path.rootFolder : uploadSettings.rootFolder.length > 0 ? uploadSettings.rootFolder : undefined;

@@ -43,7 +43,7 @@ export async function shareAllMarkedNotes(
 		if (sharedFiles.length > 0) {
 			const publishedFiles = sharedFiles.map((file) => file.name);
 			if (createGithubBranch) {
-				const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter, sharedFiles.length);
+				const isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter, sharedFiles.length);
 				if (!isValid) return false;
 				await PublisherManager.newBranch(repoFrontmatter);
 			}
