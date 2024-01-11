@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.13.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.1...6.13.2) (2024-01-11)
+
+
+### Bug Fixes
+
+* files from another repo always deleted ([aac57f3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/aac57f33d97583c964da9c7591830c5284eeb183))
+
 ## [6.13.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.0...6.13.1) (2024-01-09)
 
 
