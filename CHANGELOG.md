@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.13.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.3...6.13.4) (2024-01-16)
+
+
+### Bug Fixes
+
+* typo that breaks obsidian path creating ([f9e67d6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f9e67d697c23f22fda28cb722218ca78eb5eb4bf)), closes [#272](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/272)
+
 ## [6.13.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.2...6.13.3) (2024-01-11)
 
 
