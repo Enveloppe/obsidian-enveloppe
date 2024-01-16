@@ -201,8 +201,11 @@ function createObsidianPath(
 	repoFrontmatter?: RepoFrontmatter,
 ): string {
 	fileName = folderNoteIndexOBS(file, vault, settings, fileName);
-	const rootFolder = repoFrontmatter?.path?.defaultName && repoFrontmatter.path.defaultName.length > 0 ? repoFrontmatter.path.rootFolder : settings.upload.defaultName.length > 0 ? settings.upload.defaultName : "";
-	const path = rootFolder + fileName;
+
+	const defaultFolder = repoFrontmatter?.path?.defaultName && repoFrontmatter.path.defaultName.length > 0 ?
+		repoFrontmatter.path.defaultName : settings.upload.defaultName.length > 0 ?
+			settings.upload.defaultName : "";
+	const path = defaultFolder + fileName;
 	//remove last word from path splitted with /
 	let pathWithoutEnd = path.split("/").slice(0, -1).join("/");
 	//get file name only
@@ -379,7 +382,6 @@ export function getReceiptFolder(
 		if (!targetRepo) targetRepo = repoFrontmatter[0];
 		const fileName = getTitleField(frontmatter, file, settings);
 		const editedFileName = regexOnFileName(fileName, settings);
-
 		if (
 			!isShared(frontmatter, settings, file, otherRepo)
 		) {
