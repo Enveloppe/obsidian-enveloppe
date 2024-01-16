@@ -31,3 +31,4 @@ dist/
 .hotreload
 act.json
 tokens.json
+logs.txt
