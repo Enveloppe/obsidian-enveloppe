@@ -2,7 +2,7 @@ import i18next from "i18next";
 import { Menu, MenuItem, Platform, TFile, TFolder} from "obsidian";
 
 import GithubPublisher from "../main";
-import {MonoRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
+import {MonoRepoProperties, Repository} from "../settings/interface";
 import {defaultRepo, getRepoSharedKey, isShared, multipleSharedKey} from "../utils/data_validation_test";
 import { getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {shareAllMarkedNotes, shareOneNote} from ".";
@@ -18,8 +18,9 @@ import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchName: string, repo: Repository | null) {
 	const publisher = await plugin.reloadOctokit();
 	const statusBarItems = plugin.addStatusBarItem();
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, undefined);
 	const monoProperties: MonoRepoProperties = {
-		frontmatter: getRepoFrontmatter(plugin.settings, repo, undefined) as RepoFrontmatter,
+		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 		repo,
 	};
 	await shareAllMarkedNotes(
