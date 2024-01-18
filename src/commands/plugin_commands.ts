@@ -171,11 +171,13 @@ export async function repositoryValidityActiveFile(plugin:GithubPublisher, branc
  */
 export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: string, repo: Repository|null=null): Promise<void> {
 	const publisher = await plugin.reloadOctokit();
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
+
 	await shareAllEditedNotes(
 		publisher,
 		branchName,
 		{
-			frontmatter: getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
+			frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 			repo
 		} as MonoRepoProperties,
 	);
