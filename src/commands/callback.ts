@@ -8,7 +8,7 @@ import i18next from "i18next";
 import {Command, Notice } from "obsidian";
 
 import GithubPublisher from "../main";
-import {MonoRepoProperties, MultiRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
+import {MonoRepoProperties, MultiRepoProperties, Repository} from "../settings/interface";
 import {createLink, logs} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
 import { getRepoFrontmatter } from "../utils/parse_frontmatter";
@@ -78,9 +78,10 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 		//@ts-ignore
 		callback: async () => {
 			logs({settings: plugin.settings}, "Enabling purge command");
+			const frontmatter = getRepoFrontmatter(plugin.settings, repo);
 			const monoRepo: MonoRepoProperties = {
-				frontmatter: getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
-				repo: repo,
+				frontmatter: Array.isArray(frontmatter) ? frontmatter[0] : frontmatter,
+				repo,
 			};
 			//@ts-ignore
 			const publisher = await plugin.reloadOctokit();

@@ -7,7 +7,7 @@ import i18next from "i18next";
 import { Notice } from "obsidian";
 
 import GithubPublisher from "../main";
-import {MonoRepoProperties, MultiRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
+import {MonoRepoProperties, MultiRepoProperties, Repository} from "../settings/interface";
 import {createLink} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
 import { getRepoFrontmatter } from "../utils/parse_frontmatter";
@@ -83,7 +83,7 @@ export async function deleteCommands(plugin : GithubPublisher, repo: Repository 
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	const publisher = await plugin.reloadOctokit();
 	const mono: MonoRepoProperties = {
-		frontmatter: repoFrontmatter as RepoFrontmatter,
+		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 		repo
 	};
 	await purgeNotesRemote(
@@ -106,8 +106,9 @@ export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository |
 	const statusBarItems = plugin.addStatusBarItem();
 	const publisher = await plugin.reloadOctokit();
 	const sharedFiles = publisher.getSharedFiles(repo);
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	const mono: MonoRepoProperties = {
-		frontmatter: getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
+		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 		repo
 	};
 	await shareAllMarkedNotes(
@@ -131,11 +132,12 @@ export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository |
 
 export async function uploadNewNotes(plugin: GithubPublisher, branchName: string, repo: Repository|null): Promise<void> {
 	const publisher = await plugin.reloadOctokit();
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	await shareNewNote(
 		publisher,
 		branchName,
 		{
-			frontmatter: getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
+			frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 			repo
 		} as MonoRepoProperties,
 	);
@@ -193,11 +195,12 @@ export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: 
  */
 export async function shareEditedOnly(branchName: string, repo: Repository|null, plugin: GithubPublisher) {
 	const publisher = await plugin.reloadOctokit();
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	await shareOnlyEdited(
 		publisher,
 		branchName,
 		{
-			frontmatter: getRepoFrontmatter(plugin.settings, repo) as RepoFrontmatter,
+			frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 			repo
 		} as MonoRepoProperties,
 	);
