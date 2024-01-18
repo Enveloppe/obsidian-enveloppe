@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.13.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.4...6.13.5) (2024-01-18)
+
+
+### Bug Fixes
+
+* commands with force not array was, in fact, array. ([0435ffc](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0435ffc460ed9ac3197c3697dac47e233ff601e4)), closes [#274](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/274) [#275](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/275)
+* prevent error between RepoFrontmatter[] and RepoFrontmatter ([9f3b0ff](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/9f3b0ffb0cf814ac7d6a26a99577bc7c7c962d39))
+* upload all edited notes send all files ([e22cf01](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e22cf01241442c4bf393e7b07fd2825f2c1aee89)), closes [#275](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/275) [#274](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/274)
+
 ## [6.13.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.3...6.13.4) (2024-01-16)
 
 
