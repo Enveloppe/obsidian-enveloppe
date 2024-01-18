@@ -17,7 +17,7 @@ import {
 	shareAllMarkedNotes,
 	shareNewNote,
 	shareOneNote, shareOnlyEdited
-} from "./commands";
+} from ".";
 
 /**
  * Create the command to create a link to the note in the repo if a file is active ; else do nothing

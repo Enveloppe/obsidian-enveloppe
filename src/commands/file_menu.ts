@@ -5,7 +5,7 @@ import GithubPublisher from "../main";
 import {MonoRepoProperties, RepoFrontmatter, Repository} from "../settings/interface";
 import {defaultRepo, getRepoSharedKey, isShared, multipleSharedKey} from "../utils/data_validation_test";
 import { getRepoFrontmatter } from "../utils/parse_frontmatter";
-import {shareAllMarkedNotes, shareOneNote} from "./commands";
+import {shareAllMarkedNotes, shareOneNote} from ".";
 import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 
 /**

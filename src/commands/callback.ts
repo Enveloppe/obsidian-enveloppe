@@ -12,7 +12,7 @@ import {MonoRepoProperties, MultiRepoProperties, Repository} from "../settings/i
 import {createLink, logs} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
 import { getRepoFrontmatter } from "../utils/parse_frontmatter";
-import {purgeNotesRemote, shareOneNote} from "./commands";
+import {purgeNotesRemote, shareOneNote} from ".";
 import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} from "./plugin_commands";
 
 /**
