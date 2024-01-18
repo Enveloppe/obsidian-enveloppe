@@ -96,17 +96,22 @@ function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: an
  */
 
 export function addToYaml(text: string, toAdd: string[], settings: GitHubPublisherSettings, folderNoteParaMeters?: { properties: MultiProperties, file: TFile}): string {
-	const yaml = text.split("---")[1];
+	const yaml = text.split("---")?.[1];
 	let yamlObject = yaml ? parseYaml(yaml) : {};
-	if (toAdd.length > 0) {
+	if (yamlObject && toAdd.length > 0) {
 		yamlObject = tagsToYaml(toAdd, settings, yamlObject);
 	}
 	if (folderNoteParaMeters) {
 		yamlObject = titleToYaml(yamlObject, folderNoteParaMeters.properties, folderNoteParaMeters.file);
 	}
-	const returnToYaml = stringifyYaml(yamlObject);
-	const fileContentsOnly = text.split("---").slice(2).join("---");
-	return `---\n${returnToYaml}---\n${fileContentsOnly}`;
+	if (Object.keys(yamlObject).length > 0) {
+		const returnToYaml = stringifyYaml(yamlObject);
+		if (yaml){
+			const fileContentsOnly = text.split("---").slice(2).join("---");
+			return `---\n${returnToYaml}---\n${fileContentsOnly}`;
+		} else return `---\n${returnToYaml}---\n${text}`;
+	}
+	return text;
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
