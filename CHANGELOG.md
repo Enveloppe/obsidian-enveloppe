@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.13.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.5...6.13.6) (2024-01-18)
+
+
+### Bug Fixes
+
+* Uploading note without frontmatter lead to empty notes ([f5bbed1](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f5bbed13674b53876b0ec0979d9b86c9d2ba7459)), closes [#276](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/276)
+
 ## [6.13.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.4...6.13.5) (2024-01-18)
 
 
