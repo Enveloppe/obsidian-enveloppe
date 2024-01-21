@@ -181,7 +181,8 @@ export async function shareOneNote(
 			repo: repository
 		};
 		if (!isValid) return false;
-		await PublisherManager.newBranch(repoFrontmatter);
+		if (!settings.github.dryRun.enable)
+			await PublisherManager.newBranch(repoFrontmatter);
 		const publishSuccess = await PublisherManager.publish(
 			file,
 			true,
@@ -206,7 +207,7 @@ export async function shareOneNote(
 				}
 			}
 			const update = await PublisherManager.updateRepository(
-				repoFrontmatter
+				repoFrontmatter, settings.github.dryRun.enable
 			);
 			if (update) {
 				await publisherNotification(

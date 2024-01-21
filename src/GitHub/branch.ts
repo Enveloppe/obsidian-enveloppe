@@ -206,8 +206,10 @@ export class GithubBranch extends FilesManagement {
 	 * @returns {Promise<boolean>} True if the update is successful
 	 */
 	async updateRepository(
-		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]
+		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
+		dryRun = false
 	): Promise<boolean> {
+		if (dryRun) return true;
 		repoFrontmatter = Array.isArray(repoFrontmatter)
 			? repoFrontmatter
 			: [repoFrontmatter];
