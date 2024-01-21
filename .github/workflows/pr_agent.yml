@@ -1,3 +1,4 @@
+name: PR Agent
 on:
   pull_request:
   issue_comment:
