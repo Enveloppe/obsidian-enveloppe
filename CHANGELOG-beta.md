@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.14.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.6...6.14.0-0) (2024-01-21)
+
+
+### Features
+
+* add dryRun settings ([#277](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/277)) ([b94a318](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b94a318c8896a65cb893844bfbb5df26834c02f8))
+
+
+### Bug Fixes
+
+* translation error ([1fe66e3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1fe66e3ab16b49d614a9d872689fc14d8959d4c2))
+
 ## [6.13.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.0-3...6.13.0-4) (2024-01-03)
 
 
