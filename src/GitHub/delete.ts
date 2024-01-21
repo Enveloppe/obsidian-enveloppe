@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
-import { MetadataCache, normalizePath, Notice, parseYaml, TFile, TFolder } from "obsidian";
+import { MetadataCache, normalizePath, Notice, parseYaml, TAbstractFile, TFile, TFolder, Vault } from "obsidian";
 
 import {
 	Deleted,
@@ -318,12 +318,15 @@ function cleanDryRun(
 	const {vault, settings} = filesManagement;
 	const app = filesManagement.plugin.app;
 	const repo = repoProperties.frontmatter;
-	const dryRunFolderPath = normalizePath(repo.dryRun.folderName.replace("{{owner}}", repo.owner).replace("{{repo}}", repo.repo).replace("{{branch}}", repo.branch));
+	const dryRunFolderPath = normalizePath(repo.dryRun.folderName
+		.replace("{{owner}}", repo.owner)
+		.replace("{{repo}}", repo.repo)
+		.replace("{{branch}}", repo.branch));
 	const dryRunFolder = vault.getAbstractFileByPath(dryRunFolderPath);
 	if (!dryRunFolder || dryRunFolder instanceof TFile) return {success: false, deleted: [], undeleted: []};
-	const dryRunFolderChildren = (dryRunFolder as TFolder).children;
-	const dryRunFiles = dryRunFolderChildren.filter((file) => {
-		return file instanceof TFile;
+	const dryRunFiles:TFile[] = [];
+	Vault.recurseChildren(dryRunFolder as TFolder, (file: TAbstractFile) => {
+		if (!excludedFileFromDelete(normalizePath(file.path.replace(dryRunFolderPath, "")), settings) && (isAttachment(file.path) || file.path.match("md$")) && file instanceof TFile) dryRunFiles.push(file);
 	});
 	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repo).map((file) => {
 		return { converted: file.converted, repo: file.repoFrontmatter };
@@ -334,9 +337,11 @@ function cleanDryRun(
 		undeleted: [],
 		success: false,
 	};
+	const deletedFolder: TAbstractFile[] = [];
 	for (const file of dryRunFiles) {
+		const convertedPath = normalizePath(file.path.replace(dryRunFolderPath, ""));
 		const isInObsidian = allSharedFiles.some(
-			(f) => f.converted === file.path
+			(f) => f.converted === convertedPath
 		);
 		const isMarkdownForAnotherRepo = file.path.trim().endsWith(".md") ?
 			!allSharedFiles.some(
@@ -344,21 +349,39 @@ function cleanDryRun(
 					let repoFrontmatter = f.repo;
 					if (Array.isArray(repoFrontmatter)) {
 						repoFrontmatter = repoFrontmatter.find((r) => JSON.stringify(r.repo) === JSON.stringify(repo.repo));
-					} return f.converted === file.path && repoFrontmatter;
+					} return f.converted === convertedPath && repoFrontmatter;
 				})
 			: false;
 		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
 		if (isNeedToBeDeleted) {
-			const indexFile = (file.path.contains(settings.upload.folderNote.rename)) ? indexFileDryRun(file as TFile, app.metadataCache) : false;
+			const indexFile = (convertedPath.contains(settings.upload.folderNote.rename)) ? indexFileDryRun(file as TFile, app.metadataCache) : false;
 			if (!indexFile) {
-				notif({settings}, `[DRYRUN] trying to delete file : ${file.path} from ${repo.owner}/${repo.repo}`);
+				notif({settings}, `[DRYRUN] trying to delete file : ${file.path} from ${dryRunFolderPath}`);
 				vault.trash(file, false);
 				deletedSuccess++;
+				deletedFolder.push(file);
 			}
 		}
-
 	}
-	const successMsg = i18next.t("deletion.noFile") ;
+
+	//recursive delete empty folder in dryRunFolder
+	//empty folder are folder with children.length === 0
+	const dryRunFolders:TFolder[] = [];
+	Vault.recurseChildren(vault.getAbstractFileByPath(dryRunFolderPath) as TFolder, (file: TAbstractFile) => {
+		if (file instanceof TFolder) {
+			dryRunFolders.push(file);
+		}
+	});
+	for (const folder of dryRunFolders.reverse()) {
+		const children = folder.children.filter((child) => !deletedFolder.includes(child));
+		if (children.length === 0) {
+			deletedFolder.push(folder);
+			vault.trash(folder, false);
+			deletedSuccess++;
+		}
+	}
+
+	const successMsg = deletedSuccess > 0 ? (i18next.t("deletion.success", {nb: deletedSuccess.toString()})) : i18next.t("deletion.noFile");
 	if (!silent)
 		new Notice(successMsg);
 	result.success = deletedSuccess === 0;

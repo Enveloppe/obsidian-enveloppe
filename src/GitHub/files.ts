@@ -89,7 +89,7 @@ export class FilesManagement extends Publisher {
 	 */
 
 	getAllFileWithPath(repo: Repository | null): ConvertedLink[] {
-		const files = this.vault.getFiles();
+		const files = this.vault.getFiles().filter((x) => !x.path.startsWith(this.settings.github.dryRun.folderName));
 		const allFileWithPath: ConvertedLink[] = [];
 		for (const file of files) {
 			if (isAttachment(file.name)) {

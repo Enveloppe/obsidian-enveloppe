@@ -318,6 +318,7 @@ export async function checkRepositoryValidityWithRepoFrontmatter(
 	numberOfFile: number=1
 ): Promise<boolean> {
 	const settings = PublisherManager.settings;
+	if (settings.github.dryRun.enable) return true;
 	try {
 		/**
 		 * verify for each repoFrontmatter if verifiedRepo is true

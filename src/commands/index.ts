@@ -134,19 +134,23 @@ export async function purgeNotesRemote(
 	monoRepo: MonoRepoProperties,
 ): Promise<void|boolean> {
 	try {
+		const noticeFragment = document.createDocumentFragment();
+		noticeFragment.createSpan({ cls: ["obsidian-publisher", "notification"] }).innerHTML = i18next.t("informations.startingClean", { repo: monoRepo.frontmatter });
 		new Notice(
-			i18next.t("informations.startingClean", {repo: monoRepo.frontmatter})
+			noticeFragment
 		);
-		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, monoRepo.frontmatter);
+		const isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, monoRepo.frontmatter);
 		if (!isValid) return false;
-		await PublisherManager.newBranch(monoRepo.frontmatter);
+		if (!PublisherManager.settings.github.dryRun.enable)
+			await PublisherManager.newBranch(monoRepo.frontmatter);
 		const deleted = await deleteFromGithub(
 			false,
 			branchName,
 			PublisherManager,
 			monoRepo
 		);
-		await PublisherManager.updateRepository(monoRepo.frontmatter);
+		if (!PublisherManager.settings.github.dryRun.enable)
+			await PublisherManager.updateRepository(monoRepo.frontmatter);
 		if (PublisherManager.settings.plugin.displayModalRepoEditing) new ListChangedFiles(PublisherManager.plugin.app, deleted).open();
 	} catch (e) {
 		notif({settings: PublisherManager.settings, e: true}, e);
@@ -276,7 +280,7 @@ export async function shareNewNote(
 		);
 
 		const statusBarElement = plugin.addStatusBarItem();
-		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, monoRepo.frontmatter, newlySharedNotes.length);
+		const isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, monoRepo.frontmatter, newlySharedNotes.length);
 		if (!isValid) return false;
 		await PublisherManager.newBranch(monoRepo.frontmatter);
 		await shareAllMarkedNotes(
@@ -326,7 +330,7 @@ export async function shareAllEditedNotes(
 		);
 
 		const statusBarElement = plugin.addStatusBarItem();
-		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, monoRepo.frontmatter, newlySharedNotes.length);
+		const isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, monoRepo.frontmatter, newlySharedNotes.length);
 		if (!isValid) return false;
 		await PublisherManager.newBranch(monoRepo.frontmatter);
 		await shareAllMarkedNotes(
@@ -372,7 +376,7 @@ export async function shareOnlyEdited(
 			(i18next.t("informations.foundNoteToSend", {nbNotes: newlySharedNotes.length}))
 		);
 		const statusBarElement = PublisherManager.plugin.addStatusBarItem();
-		const isValid = checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter, newlySharedNotes.length);
+		const isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter, newlySharedNotes.length);
 		if (!isValid) return false;
 		await PublisherManager.newBranch(repoFrontmatter);
 		await shareAllMarkedNotes(

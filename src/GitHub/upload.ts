@@ -332,7 +332,7 @@ export default class Publisher {
 
 		const embeddedUploaded = embeded.uploaded;
 		embeddedUploaded.push(uploaded);
-		if (autoclean && repo.autoclean && !this.settings.github.dryRun) {
+		if ((autoclean && repo.autoclean) || repo.dryRun.autoclean) {
 			deleted = await deleteFromGithub(
 				true,
 				this.branchName,
@@ -452,7 +452,7 @@ export default class Publisher {
 		if (this.settings.github.dryRun.enable) {
 			const folderName = this.settings.github.dryRun.folderName
 				.replace("{{repo}}", repoFrontmatter.repo)
-				.replace("{{branch}}", this.branchName)
+				.replace("{{branch}}", repoFrontmatter.branch)
 				.replace("{{owner}}", repoFrontmatter.owner);
 			const dryRunPath = normalizePath(`${folderName}/${path}`);
 			const isAlreadyExist = this.vault.getAbstractFileByPath(dryRunPath);
@@ -499,7 +499,7 @@ export default class Publisher {
 			//create a new file in the vault
 			const folderName = this.settings.github.dryRun.folderName
 				.replace("{{repo}}", repoFrontmatter.repo)
-				.replace("{{branch}}", this.branchName)
+				.replace("{{branch}}", repoFrontmatter.branch)
 				.replace("{{owner}}", repoFrontmatter.owner);
 
 			const newPath = normalizePath(`${folderName}/${path}`);
