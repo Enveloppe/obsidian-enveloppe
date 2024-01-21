@@ -332,7 +332,7 @@ export default class Publisher {
 
 		const embeddedUploaded = embeded.uploaded;
 		embeddedUploaded.push(uploaded);
-		if ((autoclean && repo.autoclean) || repo.dryRun.autoclean) {
+		if (autoclean || repo.dryRun.autoclean) {
 			deleted = await deleteFromGithub(
 				true,
 				this.branchName,
@@ -643,47 +643,48 @@ export default class Publisher {
 					continue;
 				}
 				if (!this.settings.github.dryRun.enable) {
-					try {
-						if (forcePushAttachment(file, this.settings)) {
-							newLinkedFiles.push(file);
-							continue;
-						}
-						//first search if the file exists
-						const response = await this.octokit.request(
-							"GET /repos/{owner}/{repo}/contents/{path}",
+					newLinkedFiles.push(file);
+					continue;
+				}
+				try {
+					if (forcePushAttachment(file, this.settings)) {
+						newLinkedFiles.push(file);
+						continue;
+					}
+					//first search if the file exists
+					const response = await this.octokit.request(
+						"GET /repos/{owner}/{repo}/contents/{path}",
+						{
+							owner: repoFrontmatter.repo.owner,
+							repo: repoFrontmatter.repo.repo,
+							path: imagePath,
+							ref: this.branchName,
+						});
+					if (response.status === 200) {
+						const reply =  await this.octokit.request(
+							"GET /repos/{owner}/{repo}/commits",
 							{
 								owner: repoFrontmatter.repo.owner,
 								repo: repoFrontmatter.repo.repo,
 								path: imagePath,
-								ref: this.branchName,
+								sha: this.branchName,
 							});
-						if (response.status === 200) {
-							const reply =  await this.octokit.request(
-								"GET /repos/{owner}/{repo}/commits",
-								{
-									owner: repoFrontmatter.repo.owner,
-									repo: repoFrontmatter.repo.repo,
-									path: imagePath,
-									sha: this.branchName,
-								});
-							if (reply.status === 200) {
-								const data = reply.data;
-								const lastEditedInRepo = data[0]?.commit?.committer?.date;
-								const lastEditedDate = lastEditedInRepo ? new Date(lastEditedInRepo) : undefined;
-								const lastEditedAttachment = new Date(file.stat.mtime);
-								//if the file in the vault is newer than the file in the repo, push it
-								if (lastEditedDate && lastEditedAttachment > lastEditedDate || !lastEditedDate) {
-									newLinkedFiles.push(file);
-								} else logs({ settings: this.settings }, i18next.t("error.alreadyExists", { file: file.name }));
-							}
+						if (reply.status === 200) {
+							const data = reply.data;
+							const lastEditedInRepo = data[0]?.commit?.committer?.date;
+							const lastEditedDate = lastEditedInRepo ? new Date(lastEditedInRepo) : undefined;
+							const lastEditedAttachment = new Date(file.stat.mtime);
+							//if the file in the vault is newer than the file in the repo, push it
+							if (lastEditedDate && lastEditedAttachment > lastEditedDate || !lastEditedDate) {
+								newLinkedFiles.push(file);
+							} else logs({ settings: this.settings }, i18next.t("error.alreadyExists", { file: file.name }));
 						}
-					} catch (e) {
-						newLinkedFiles.push(file);
 					}
+				} catch (e) {
+					newLinkedFiles.push(file);
 				}
-			} else {
-				newLinkedFiles.push(file);
 			}
+
 		}
 		return newLinkedFiles;
 	}
