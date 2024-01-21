@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.14.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-0...6.14.0-1) (2024-01-21)
+
+
+### Bug Fixes
+
+* excluded folder in shareAll was always true in some condition ([cb82060](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/cb820605882e9f02925cad5df3c93f212a46066e))
+
 ## [6.14.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.13.6...6.14.0-0) (2024-01-21)
 
 
