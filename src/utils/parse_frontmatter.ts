@@ -149,7 +149,10 @@ export function getRepoFrontmatter(
 		commitMsg: github.workflow.commitMessage,
 		automaticallyMergePR: github.automaticallyMergePR,
 		verifiedRepo: github.verifiedRepo ?? false,
-		dryRun: settings.github.dryRun
+		dryRun: {
+			...settings.github.dryRun,
+			autoclean: settings.upload.autoclean.enable && settings.github.dryRun.enable
+		}
 	};
 	if (settings.upload.behavior === FolderSettings.fixed) {
 		repoFrontmatter.autoclean = false;
