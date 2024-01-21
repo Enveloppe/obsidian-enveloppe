@@ -283,7 +283,7 @@ async function checkIndexFiles(
 			{
 				owner: repoFrontmatter.owner,
 				repo: repoFrontmatter.repo,
-				path: path,
+				path,
 			}
 		);
 		if (fileRequest.status === 200) {
