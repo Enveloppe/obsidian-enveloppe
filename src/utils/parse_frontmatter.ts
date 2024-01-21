@@ -224,7 +224,7 @@ function parseMultipleRepo(
 	) {
 		for (const repo of frontmatter.multipleRepo) {
 			if (typeof repo === "object") {
-				const repository: RepoFrontmatter = JSON.parse(JSON.stringify(repoFrontmatter));
+				const repository: RepoFrontmatter = structuredClone(repoFrontmatter);
 				if (repo.branch !== undefined) {
 					repository.branch = repo.branch;
 				}
@@ -241,7 +241,7 @@ function parseMultipleRepo(
 			} else {
 				//is string
 				const repoString = repo.split("/");
-				const repository: RepoFrontmatter = JSON.parse(JSON.stringify(repoFrontmatter));
+				const repository: RepoFrontmatter = structuredClone(repoFrontmatter);
 				multipleRepo.push(
 					repositoryStringSlice(repoString, repository)
 				);
@@ -318,8 +318,8 @@ function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository
  */
 
 function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter): RepoFrontmatter {
-	const newRepo: RepoFrontmatter = JSON.parse(JSON.stringify(repoFrontmatter));
-	if (repo.length >= 4) {
+	const newRepo: RepoFrontmatter = structuredClone(repoFrontmatter);
+	if (repo.length === 4) {
 		newRepo.branch = repo[2];
 		newRepo.repo = repo[1];
 		newRepo.owner = repo[0];
