@@ -299,7 +299,7 @@
           "title": "Mode de test"
         },
         "folder": {
-          "desc": "Use {{owner}}, {{repo}} and {{branch}} to dynamically name the folder.",
+          "desc": "Utilisez {{owner}}, {{repo}} et {{branch}} pour nommer dynamiquement le dossier.",
           "title": "Dossier où le dépôt sera simulé"
         }
       },
