@@ -144,7 +144,7 @@ export function getRepoFrontmatter(
 		branch: github.branch,
 		repo: github.repo,
 		owner: github.user,
-		autoclean: settings.github.dryRun.enable ? false : settings.upload.autoclean.enable,
+		autoclean: !settings.github.dryRun.enable && settings.upload.autoclean.enable,
 		workflowName: github.workflow.name,
 		commitMsg: github.workflow.commitMessage,
 		automaticallyMergePR: github.automaticallyMergePR,
