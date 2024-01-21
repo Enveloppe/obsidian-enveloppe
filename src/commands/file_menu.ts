@@ -46,7 +46,7 @@ export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, 
 export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem, folder: TFolder, branchName: string, originalMenu: Menu): Menu {
 	//@ts-ignore
 	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
-	if (!isExcludedPath(plugin.settings,folder, defaultRepo(plugin.settings))) {
+	if (!isExcludedPath(plugin.settings, folder, defaultRepo(plugin.settings))) {
 		subMenu.addItem((subItem) => {
 			subItem
 				.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
