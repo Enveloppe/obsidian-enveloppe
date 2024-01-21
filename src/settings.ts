@@ -294,6 +294,32 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+		new Setting(this.settingsPage)
+			.setName("Dry run")
+			.setDesc("Disable GitHub push and all other action and only perform a dry-run to see what would be pushed")
+			.addToggle((toggle) =>
+				toggle
+					.setValue(githubSettings.dryRun.enable)
+					.onChange(async (value) => {
+						githubSettings.dryRun.enable = value;
+						await this.plugin.saveSettings();
+						this.renderSettingsPage(EnumbSettingsTabId.github);
+					})
+			);
+		if (githubSettings.dryRun.enable) {
+			new Setting(this.settingsPage)
+				.setName("Folder where file will be copied")
+				.setDesc("Use {{owner}}, {{repo}} and {{branch}} to dynamically create the folder name.")
+				.addText((text) =>
+					text
+						.setPlaceholder("github-publisher")
+						.setValue(githubSettings.dryRun.folderName)
+						.onChange(async (value) => {
+							githubSettings.dryRun.folderName = value.trim();
+							await this.plugin.saveSettings();
+						})
+				);
+		}
 
 		new Setting(this.settingsPage)
 			.setClass("no-display")
