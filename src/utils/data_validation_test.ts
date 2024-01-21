@@ -89,7 +89,6 @@ export function isShared(
 		const allExcludedFileName = otherRepoWithShareAll.map((repo) => repo.shareAll!.excludedFileName);
 		allExcludedFileName.push(settings.plugin.shareAll!.excludedFileName);
 		if (allExcludedFileName.some(prefix => prefix.trim().length > 0 && !file.basename.startsWith(prefix) || prefix.trim().length === 0)) {
-			console.warn("excludedFileName", allExcludedFileName);
 			return !isExcludedPath(settings, file, otherRepo);
 		}
 	}
@@ -105,7 +104,6 @@ export function isExcludedPath(settings: GitHubPublisherSettings, file: TFile | 
 	const excludedFolder = settings.plugin.excludedFolder;
 	if (settings.plugin.shareAll?.enable || repository?.shareAll?.enable) {
 		const excludedFromShare = repository?.shareAll?.excludedFileName ?? settings.plugin.shareAll?.excludedFileName;
-		console.warn("excludedFromShare", excludedFromShare);
 		if (excludedFromShare && file.name.startsWith(excludedFromShare)) {
 			return true;
 		}
