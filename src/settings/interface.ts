@@ -60,6 +60,10 @@ export interface GitHubPublisherSettings {
 		branch: string;
 		tokenPath: string;
 		automaticallyMergePR: boolean;
+		dryRun: {
+			enable: boolean;
+			folderName: string;
+		}
 		api: {
 			tiersForApi: GithubTiersVersion;
 			hostname: string;
@@ -216,6 +220,10 @@ export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 		repo: "",
 		branch: "main",
 		automaticallyMergePR: true,
+		dryRun: {
+			enable: false,
+			folderName: "github-publisher",
+		},
 		tokenPath: TOKEN_PATH,
 		api: {
 			tiersForApi: GithubTiersVersion.free,
@@ -382,6 +390,10 @@ export interface RepoFrontmatter {
 	automaticallyMergePR: boolean;
 	verifiedRepo?: boolean;
 	path?: Path;
+	dryRun: {
+		enable: boolean;
+		folderName: string;
+	}
 }
 
 export interface ListEditedFiles {
