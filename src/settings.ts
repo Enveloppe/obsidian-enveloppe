@@ -295,8 +295,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					})
 			);
 		new Setting(this.settingsPage)
-			.setName("Dry run")
-			.setDesc("Disable GitHub push and all other action and only perform a dry-run to see what would be pushed")
+			.setName(i18next.t("settings.github.dryRun.enable.title"))
+			.setDesc(i18next.t("settings.github.dryRun.enable.desc"))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(githubSettings.dryRun.enable)
@@ -308,8 +308,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			);
 		if (githubSettings.dryRun.enable) {
 			new Setting(this.settingsPage)
-				.setName("Folder where file will be copied")
-				.setDesc("Use {{owner}}, {{repo}} and {{branch}} to dynamically create the folder name.")
+				.setName(i18next.t("settings.github.dryRun.folder.title"))
+				.setDesc(i18next.t("settings.github.dryRun.folder.desc"))
 				.addText((text) =>
 					text
 						.setPlaceholder("github-publisher")
