@@ -293,6 +293,16 @@
         "desc": "Dans le cas où vous souhaitez utiliser une branche différente de \"main\".",
         "title": "Branche principale"
       },
+      "dryRun": {
+        "enable": {
+          "desc": "Désactiver le push GitHub et toutes les autres actions et effectuer seulement une simulation pour voir ce qui serait transféré ou supprimé dans le dépôt.",
+          "title": "Mode de test"
+        },
+        "folder": {
+          "desc": "Use {{owner}}, {{repo}} and {{branch}} to dynamically name the folder.",
+          "title": "Dossier où le dépôt sera simulé"
+        }
+      },
       "ghToken": {
         "button": {
           "configDir": " : Le dossier de configuration d'Obsidian",

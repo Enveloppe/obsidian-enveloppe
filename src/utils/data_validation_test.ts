@@ -1,6 +1,6 @@
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
-import {FrontMatterCache, Notice, TFile} from "obsidian";
+import {FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
 import GithubPublisher from "src/main";
 
 import {GithubBranch} from "../GitHub/branch";
@@ -31,10 +31,10 @@ export function isInternalShared(
 	if (properties.repository?.shareAll?.enable)
 	{
 		const excludedFileName = properties.repository.shareAll.excludedFileName;
-		return !file.basename.startsWith(excludedFileName);
+		return !file.basename.startsWith(excludedFileName) && !isInDryRunFolder(properties.settings, properties.repository, file);
 	}
 	if (!frontmatter) return false;
-	if (isExcludedPath(properties.settings, file)) return false;
+	if (isExcludedPath(properties.settings, file, properties.repository)) return false;
 	const shareKey = properties.repository?.shareKey || properties.settings.plugin.shareKey;
 	logs({settings: properties.settings}, "shareKey", shareKey, "frontmatter", frontmatter[shareKey]);
 	if (frontmatter[shareKey] == null || frontmatter[shareKey] === undefined || ["false", "0", "no"].includes(frontmatter[shareKey].toString().toLowerCase())) return false;
@@ -80,7 +80,7 @@ export function isShared(
 	const otherRepoWithShareAll = settings.github.otherRepo.filter((repo) => repo.shareAll?.enable);
 	if (!settings.plugin.shareAll?.enable && otherRepoWithShareAll.length === 0) {
 		const shareKey = otherRepo ? otherRepo.shareKey : settings.plugin.shareKey;
-		if ( meta == null || !meta[shareKey] || meta[shareKey] == null || isExcludedPath(settings, file) || meta[shareKey] === undefined || ["false", "0", "no"].includes(meta[shareKey].toString().toLowerCase())) {
+		if ( meta == null || !meta[shareKey] || meta[shareKey] == null || isExcludedPath(settings, file, otherRepo) || meta[shareKey] === undefined || ["false", "0", "no"].includes(meta[shareKey].toString().toLowerCase())) {
 			return false;
 		}
 		const shareKeyInFrontmatter:string = meta[shareKey].toString().toLowerCase();
@@ -88,8 +88,8 @@ export function isShared(
 	} else if (settings.plugin.shareAll?.enable || otherRepoWithShareAll.length > 0) {
 		const allExcludedFileName = otherRepoWithShareAll.map((repo) => repo.shareAll!.excludedFileName);
 		allExcludedFileName.push(settings.plugin.shareAll!.excludedFileName);
-		if (allExcludedFileName.some(prefix => !file.basename.startsWith(prefix)) && !isExcludedPath(settings, file)) {
-			return true;
+		if (allExcludedFileName.some(prefix => !file.basename.startsWith(prefix))) {
+			return !isExcludedPath(settings, file, otherRepo);
 		}
 	}
 	return false;
@@ -100,16 +100,22 @@ export function isShared(
  * @param file {TFile}
  * @returns boolean
  */
-function isExcludedPath(settings: GitHubPublisherSettings, file: TFile):boolean {
+export function isExcludedPath(settings: GitHubPublisherSettings, file: TFile | TFolder, repository: Repository | null):boolean {
 	const excludedFolder = settings.plugin.excludedFolder;
-	for (const folder of excludedFolder) {
-		const isRegex = folder.match(FIND_REGEX);
-		const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
-		if ((regex && regex.test(file.path)) || file.path.contains(folder.trim())) {
+	if (settings.plugin.shareAll?.enable || repository?.shareAll?.enable) {
+		const excludedFromShare = repository?.shareAll?.excludedFileName ?? settings.plugin.shareAll?.excludedFileName;
+		if (excludedFromShare && file.name.startsWith(excludedFromShare)) {
 			return true;
 		}
 	}
-	return false;
+	for (const folder of excludedFolder) {
+		const isRegex = folder.match(FIND_REGEX);
+		const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
+		if ((regex?.test(file.path)) || file.path.contains(folder.trim())) {
+			return true;
+		}
+	}
+	return isInDryRunFolder(settings, repository, file);
 }
 
 
@@ -318,6 +324,7 @@ export async function checkRepositoryValidityWithRepoFrontmatter(
 	numberOfFile: number=1
 ): Promise<boolean> {
 	const settings = PublisherManager.settings;
+	if (settings.github.dryRun.enable) return true;
 	try {
 		/**
 		 * verify for each repoFrontmatter if verifiedRepo is true
@@ -422,4 +429,18 @@ export function isFolderNote(properties: MultiProperties) {
 		return filename === model;
 	}
 	return false;
+}
+
+export function isInDryRunFolder(settings: GitHubPublisherSettings, repo: Repository | null, file: TFile | TFolder) {
+	if (!settings.github.dryRun.enable) return false;
+	const variables = {
+		owner: repo?.user ?? settings.github.user,
+		repo: repo?.repo ?? settings.github.repo,
+		branch: repo?.branch ?? settings.github.branch,
+	};
+	const folder = settings.github.dryRun.folderName
+		.replace("{{owner}}", variables.owner)
+		.replace("{{repo}}", variables.repo)
+		.replace("{{branch}}", variables.branch);
+	return file.path.startsWith(normalizePath(folder));
 }

@@ -3,7 +3,7 @@ import { Menu, MenuItem, Platform, TFile, TFolder} from "obsidian";
 
 import GithubPublisher from "../main";
 import {MonoRepoProperties, Repository} from "../settings/interface";
-import {defaultRepo, getRepoSharedKey, isShared, multipleSharedKey} from "../utils/data_validation_test";
+import {defaultRepo, getRepoSharedKey, isExcludedPath, isInDryRunFolder, isShared, multipleSharedKey} from "../utils/data_validation_test";
 import { getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {shareAllMarkedNotes, shareOneNote} from ".";
 import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
@@ -46,21 +46,24 @@ export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, 
 export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem, folder: TFolder, branchName: string, originalMenu: Menu): Menu {
 	//@ts-ignore
 	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
-	subMenu.addItem((subItem) => {
-		subItem
-			.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
-				smartKey: i18next.t("common.default").toUpperCase(),
-				doc: folder.name
-			}))
-			.setIcon("folder-up")
-			.onClick(async () => {
-				const repo = getRepoSharedKey(plugin.settings, undefined);
-				await shareFolderRepo(plugin, folder, branchName, repo);
-			});
-	});
+	if (!isExcludedPath(plugin.settings,folder, defaultRepo(plugin.settings))) {
+		subMenu.addItem((subItem) => {
+			subItem
+				.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
+					smartKey: i18next.t("common.default").toUpperCase(),
+					doc: folder.name
+				}))
+				.setIcon("folder-up")
+				.onClick(async () => {
+					const repo = getRepoSharedKey(plugin.settings, undefined);
+					await shareFolderRepo(plugin, folder, branchName, repo);
+				});
+		});
+	}
 	const activatedRepoCommands = plugin.settings.github.otherRepo.filter((repo) => repo.createShortcuts);
 	if (activatedRepoCommands.length > 0) {
 		activatedRepoCommands.forEach((otherRepo) => {
+			if (isInDryRunFolder(plugin.settings, otherRepo, folder)) return;
 			subMenu.addItem((item) => {
 				item.setTitle(
 					i18next.t("commands.shareViewFiles.multiple.on", {

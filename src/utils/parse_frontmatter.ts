@@ -144,11 +144,15 @@ export function getRepoFrontmatter(
 		branch: github.branch,
 		repo: github.repo,
 		owner: github.user,
-		autoclean: settings.upload.autoclean.enable,
+		autoclean: !settings.github.dryRun.enable && settings.upload.autoclean.enable,
 		workflowName: github.workflow.name,
 		commitMsg: github.workflow.commitMessage,
 		automaticallyMergePR: github.automaticallyMergePR,
 		verifiedRepo: github.verifiedRepo ?? false,
+		dryRun: {
+			...settings.github.dryRun,
+			autoclean: settings.upload.autoclean.enable && settings.github.dryRun.enable
+		}
 	};
 	if (settings.upload.behavior === FolderSettings.fixed) {
 		repoFrontmatter.autoclean = false;
@@ -220,15 +224,7 @@ function parseMultipleRepo(
 	) {
 		for (const repo of frontmatter.multipleRepo) {
 			if (typeof repo === "object") {
-				const repository: RepoFrontmatter = {
-					branch: repoFrontmatter.branch,
-					repo: repoFrontmatter.repo,
-					owner: repoFrontmatter.owner,
-					autoclean: false,
-					automaticallyMergePR: repoFrontmatter.automaticallyMergePR,
-					workflowName: repoFrontmatter.workflowName,
-					commitMsg: repoFrontmatter.commitMsg
-				};
+				const repository: RepoFrontmatter = structuredClone(repoFrontmatter);
 				if (repo.branch !== undefined) {
 					repository.branch = repo.branch;
 				}
@@ -245,15 +241,7 @@ function parseMultipleRepo(
 			} else {
 				//is string
 				const repoString = repo.split("/");
-				const repository: RepoFrontmatter = {
-					branch: repoFrontmatter.branch,
-					repo: repoFrontmatter.repo,
-					owner: repoFrontmatter.owner,
-					autoclean: false,
-					automaticallyMergePR: repoFrontmatter.automaticallyMergePR,
-					workflowName: repoFrontmatter.workflowName,
-					commitMsg: repoFrontmatter.commitMsg
-				};
+				const repository: RepoFrontmatter = structuredClone(repoFrontmatter);
 				multipleRepo.push(
 					repositoryStringSlice(repoString, repository)
 				);
@@ -289,9 +277,9 @@ function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository
 			if (smartKey === "default") {
 				multipleRepo.push(repoFrontmatter);
 			} else {
-				const shortRepo = allRepo.filter((repo) => {
+				const shortRepo = allRepo.find((repo) => {
 					return repo.smartKey.toLowerCase() === smartKey;
-				})[0];
+				});
 				if (shortRepo) {
 					let repo = {
 						branch: shortRepo.branch,
@@ -300,7 +288,8 @@ function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository
 						autoclean: repoFrontmatter.autoclean,
 						automaticallyMergePR: shortRepo.automaticallyMergePR,
 						workflowName: shortRepo.workflow.name,
-						commitMsg: shortRepo.workflow.commitMessage
+						commitMsg: shortRepo.workflow.commitMessage,
+						dryRun: repoFrontmatter.dryRun
 					} as RepoFrontmatter;
 					const parsedPath = parsePath(setting, shortRepo, repo);
 					repo = Array.isArray(parsedPath) ? parsedPath[0] : parsedPath;
@@ -329,16 +318,8 @@ function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository
  */
 
 function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter): RepoFrontmatter {
-	const newRepo: RepoFrontmatter = {
-		branch: repoFrontmatter.branch,
-		repo: repoFrontmatter.repo,
-		owner: repoFrontmatter.owner,
-		autoclean: false,
-		automaticallyMergePR: repoFrontmatter.automaticallyMergePR,
-		workflowName: repoFrontmatter.workflowName,
-		commitMsg: repoFrontmatter.commitMsg
-	};
-	if (repo.length >= 4) {
+	const newRepo: RepoFrontmatter = structuredClone(repoFrontmatter);
+	if (repo.length === 4) {
 		newRepo.branch = repo[2];
 		newRepo.repo = repo[1];
 		newRepo.owner = repo[0];

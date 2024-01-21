@@ -294,6 +294,16 @@
         "desc": "If you use a different branch than \"main\"",
         "title": "Main branch"
       },
+      "dryRun": {
+        "enable": {
+          "desc": "Disable GitHub push and all other action and only perform a dry-run to see what would be pushed or deleted in the repository.",
+          "title": "Test mode"
+        },
+        "folder": {
+          "desc": "Use {{owner}}, {{repo}} and {{branch}} to dynamically name the folder.",
+          "title": "Folder where the repository will be simulated"
+        }
+      },
       "ghToken": {
         "button": {
           "configDir": ": The configuration folder of Obsidian",

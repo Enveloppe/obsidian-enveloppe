@@ -294,6 +294,32 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+		new Setting(this.settingsPage)
+			.setName(i18next.t("settings.github.dryRun.enable.title"))
+			.setDesc(i18next.t("settings.github.dryRun.enable.desc"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(githubSettings.dryRun.enable)
+					.onChange(async (value) => {
+						githubSettings.dryRun.enable = value;
+						await this.plugin.saveSettings();
+						this.renderSettingsPage(EnumbSettingsTabId.github);
+					})
+			);
+		if (githubSettings.dryRun.enable) {
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.github.dryRun.folder.title"))
+				.setDesc(i18next.t("settings.github.dryRun.folder.desc"))
+				.addText((text) =>
+					text
+						.setPlaceholder("github-publisher")
+						.setValue(githubSettings.dryRun.folderName)
+						.onChange(async (value) => {
+							githubSettings.dryRun.folderName = value.trim();
+							await this.plugin.saveSettings();
+						})
+				);
+		}
 
 		new Setting(this.settingsPage)
 			.setClass("no-display")

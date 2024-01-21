@@ -4,8 +4,10 @@ import { Base64 } from "js-base64";
 import {
 	arrayBufferToBase64,
 	MetadataCache,
+	normalizePath,
 	Notice,
 	TFile,
+	TFolder,
 	Vault,
 } from "obsidian";
 
@@ -330,7 +332,7 @@ export default class Publisher {
 
 		const embeddedUploaded = embeded.uploaded;
 		embeddedUploaded.push(uploaded);
-		if (autoclean && repo.autoclean) {
+		if (autoclean || repo.dryRun.autoclean) {
 			deleted = await deleteFromGithub(
 				true,
 				this.branchName,
@@ -433,6 +435,7 @@ export default class Publisher {
 		properties: MonoProperties,
 	) {
 		const imageBin = await this.vault.readBinary(imageFile);
+		const repoFrontmatter = properties.frontmatter.repo;
 		let image64 = arrayBufferToBase64(imageBin);
 		if (imageFile.name.includes("excalidraw")) {
 			const svg = await convertToHTMLSVG(imageFile, this.vault);
@@ -446,6 +449,33 @@ export default class Publisher {
 			this.settings,
 			properties.frontmatter.general
 		);
+		if (this.settings.github.dryRun.enable) {
+			const folderName = this.settings.github.dryRun.folderName
+				.replace("{{repo}}", repoFrontmatter.repo)
+				.replace("{{branch}}", repoFrontmatter.branch)
+				.replace("{{owner}}", repoFrontmatter.owner);
+			const dryRunPath = normalizePath(`${folderName}/${path}`);
+			const isAlreadyExist = this.vault.getAbstractFileByPath(dryRunPath);
+			if (isAlreadyExist && isAlreadyExist instanceof TFile) {
+				const needToByUpdated = isAlreadyExist.stat.mtime > imageFile.stat.mtime;
+				if (needToByUpdated) {
+					this.vault.modifyBinary(isAlreadyExist, imageBin);
+				}
+				return {
+					isUpdated: needToByUpdated,
+					file: imageFile.name
+				};
+			}
+			const folder = dryRunPath.split("/").slice(0, -1).join("/");
+			const folderExists = this.vault.getAbstractFileByPath(folder);
+			if (!folderExists || !(folderExists instanceof TFolder))
+				await this.vault.createFolder(folder);
+			await this.vault.createBinary(path, imageBin);
+			return {
+				isUpdated: true,
+				file: imageFile.name
+			};
+		}
 		return await this.upload(image64, path, "", properties.frontmatter.repo);
 
 	}
@@ -463,8 +493,35 @@ export default class Publisher {
 		text: string,
 		path: string,
 		title: string = "",
-		repoFrontmatter: RepoFrontmatter
+		repoFrontmatter: RepoFrontmatter,
 	): Promise<UploadedFiles | undefined> {
+		if (this.settings.github.dryRun.enable) {
+			//create a new file in the vault
+			const folderName = this.settings.github.dryRun.folderName
+				.replace("{{repo}}", repoFrontmatter.repo)
+				.replace("{{branch}}", repoFrontmatter.branch)
+				.replace("{{owner}}", repoFrontmatter.owner);
+
+			const newPath = normalizePath(`${folderName}/${path}`);
+			const isAlreadyExist = this.vault.getAbstractFileByPath(newPath);
+			if (isAlreadyExist && isAlreadyExist instanceof TFile) {
+				//modify
+				await this.vault.modify(isAlreadyExist, text);
+				return {
+					isUpdated: true,
+					file: title
+				};
+			} //create
+			const folder = newPath.split("/").slice(0, -1).join("/");
+			const folderExists = this.vault.getAbstractFileByPath(folder);
+			if (!folderExists || !(folderExists instanceof TFolder))
+				await this.vault.createFolder(folder);
+			await this.vault.create(newPath, text);
+			return {
+				isUpdated: false,
+				file: title
+			};
+		}
 		try {
 			const contentBase64 = Base64.encode(text).toString();
 			return await this.upload(
@@ -491,6 +548,7 @@ export default class Publisher {
 		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]
 	): Promise<void> {
 		if (metadataExtractor) {
+			if (this.settings.github.dryRun.enable) return;
 			for (const file of Object.values(metadataExtractor)) {
 				if (file) {
 					const contents = await this.vault.adapter.read(file);
@@ -521,6 +579,7 @@ export default class Publisher {
 	 */
 
 	async workflowGestion(repoFrontmatter: RepoFrontmatter): Promise<boolean> {
+		if (this.settings.github.dryRun.enable) return false;
 		let finished = false;
 		if (repoFrontmatter.workflowName.length === 0) {
 			return false;
@@ -579,6 +638,14 @@ export default class Publisher {
 					properties.frontmatter.general
 				);
 				const repoFrontmatter = properties.frontmatter;
+				if (this.settings.github.dryRun.enable) {
+					newLinkedFiles.push(file);
+					continue;
+				}
+				if (!this.settings.github.dryRun.enable) {
+					newLinkedFiles.push(file);
+					continue;
+				}
 				try {
 					if (forcePushAttachment(file, this.settings)) {
 						newLinkedFiles.push(file);
@@ -616,9 +683,8 @@ export default class Publisher {
 				} catch (e) {
 					newLinkedFiles.push(file);
 				}
-			} else {
-				newLinkedFiles.push(file);
 			}
+
 		}
 		return newLinkedFiles;
 	}
