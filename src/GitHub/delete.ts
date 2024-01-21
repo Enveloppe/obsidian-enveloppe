@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
-import { Notice, parseYaml } from "obsidian";
+import { MetadataCache, normalizePath, Notice, parseYaml, TFile, TFolder } from "obsidian";
 
 import {
 	Deleted,
@@ -65,6 +65,7 @@ async function deleteFromGithubOneRepo(
 	repoProperties: MonoRepoProperties,
 ): Promise<Deleted> {
 	const repo = repoProperties.frontmatter;
+	if (repo.dryRun.autoclean) return cleanDryRun(silent, filesManagement, repoProperties);
 	if (!repo.autoclean) return {success: false, deleted: [], undeleted: []};
 	const getAllFile = await filesManagement.getAllFileFromRepo(
 		branchName,
@@ -189,7 +190,7 @@ function excludedFileFromDelete(
 		for (const excludedFile of autoCleanExcluded) {
 			const isRegex = excludedFile.match(FIND_REGEX);
 			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
-			if (regex && regex.test(file)) {
+			if (regex?.test(file)) {
 				return true;
 			} else if (
 				file.trim().includes(excludedFile.trim()) &&
@@ -306,6 +307,72 @@ async function checkIndexFiles(
 		if (!(e instanceof DOMException)) {
 			notif({settings, e: true}, e);
 			return false;
+		}
+	}
+	return false;
+}
+
+function cleanDryRun(
+	silent: boolean = false,
+	filesManagement: FilesManagement, repoProperties: MonoRepoProperties): Deleted {
+	const {vault, settings} = filesManagement;
+	const app = filesManagement.plugin.app;
+	const repo = repoProperties.frontmatter;
+	const dryRunFolderPath = normalizePath(repo.dryRun.folderName.replace("{{owner}}", repo.owner).replace("{{repo}}", repo.repo).replace("{{branch}}", repo.branch));
+	const dryRunFolder = vault.getAbstractFileByPath(dryRunFolderPath);
+	if (!dryRunFolder || dryRunFolder instanceof TFile) return {success: false, deleted: [], undeleted: []};
+	const dryRunFolderChildren = (dryRunFolder as TFolder).children;
+	const dryRunFiles = dryRunFolderChildren.filter((file) => {
+		return file instanceof TFile;
+	});
+	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repo).map((file) => {
+		return { converted: file.converted, repo: file.repoFrontmatter };
+	});
+	let deletedSuccess = 0;
+	const result: Deleted = {
+		deleted: [],
+		undeleted: [],
+		success: false,
+	};
+	for (const file of dryRunFiles) {
+		const isInObsidian = allSharedFiles.some(
+			(f) => f.converted === file.path
+		);
+		const isMarkdownForAnotherRepo = file.path.trim().endsWith(".md") ?
+			!allSharedFiles.some(
+				(f) => {
+					let repoFrontmatter = f.repo;
+					if (Array.isArray(repoFrontmatter)) {
+						repoFrontmatter = repoFrontmatter.find((r) => JSON.stringify(r.repo) === JSON.stringify(repo.repo));
+					} return f.converted === file.path && repoFrontmatter;
+				})
+			: false;
+		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
+		if (isNeedToBeDeleted) {
+			const indexFile = (file.path.contains(settings.upload.folderNote.rename)) ? indexFileDryRun(file as TFile, app.metadataCache) : false;
+			if (!indexFile) {
+				notif({settings}, `[DRYRUN] trying to delete file : ${file.path} from ${repo.owner}/${repo.repo}`);
+				vault.trash(file, false);
+				deletedSuccess++;
+			}
+		}
+
+	}
+	const successMsg = i18next.t("deletion.noFile") ;
+	if (!silent)
+		new Notice(successMsg);
+	result.success = deletedSuccess === 0;
+	return result;
+}
+
+function indexFileDryRun(file: TFile, metadataCache: MetadataCache):boolean {
+	const frontmatter = metadataCache.getFileCache(file)?.frontmatter;
+	if (frontmatter) {
+		const index = frontmatter.index;
+		const deleteFile = frontmatter.delete;
+		const share = frontmatter.share;
+		if (index === true || deleteFile === false || share === false) {
+			return true;
 		}
 	}
 	return false;

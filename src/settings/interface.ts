@@ -393,6 +393,7 @@ export interface RepoFrontmatter {
 	dryRun: {
 		enable: boolean;
 		folderName: string;
+		autoclean: boolean;
 	}
 }
 
