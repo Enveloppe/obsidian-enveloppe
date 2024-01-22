@@ -300,7 +300,7 @@
         },
         "folder": {
           "desc": "Utilisez {{owner}}, {{repo}} et {{branch}} pour nommer dynamiquement le dossier.",
-          "title": "Dossier où le dépôt sera simulé"
+          "title": "Dossier où le dépôt sera simulé (test mode uniquement)"
         }
       },
       "ghToken": {
