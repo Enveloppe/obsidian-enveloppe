@@ -432,7 +432,7 @@ export function isFolderNote(properties: MultiProperties) {
 }
 
 export function isInDryRunFolder(settings: GitHubPublisherSettings, repo: Repository | null, file: TFile | TFolder) {
-	if (!settings.github.dryRun.enable) return false;
+	if (settings.github.dryRun.folderName.trim().length ===0) return false;
 	const variables = {
 		owner: repo?.user ?? settings.github.user,
 		repo: repo?.repo ?? settings.github.repo,

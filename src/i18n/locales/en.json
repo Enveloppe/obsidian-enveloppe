@@ -301,7 +301,7 @@
         },
         "folder": {
           "desc": "Use {{owner}}, {{repo}} and {{branch}} to dynamically name the folder.",
-          "title": "Folder where the repository will be simulated"
+          "title": "Folder where the repository will be simulated (test mode only)"
         }
       },
       "ghToken": {
