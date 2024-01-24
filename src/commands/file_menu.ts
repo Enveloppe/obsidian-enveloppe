@@ -4,7 +4,7 @@ import { Menu, MenuItem, Platform, TFile, TFolder} from "obsidian";
 import GithubPublisher from "../main";
 import {MonoRepoProperties, Repository} from "../settings/interface";
 import {defaultRepo, getRepoSharedKey, isExcludedPath, isInDryRunFolder, isShared, multipleSharedKey} from "../utils/data_validation_test";
-import { getLinkedFrontmatter, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {shareAllMarkedNotes, shareOneNote} from ".";
 import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 
@@ -18,7 +18,7 @@ import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchName: string, repo: Repository | null) {
 	const publisher = await plugin.reloadOctokit();
 	const statusBarItems = plugin.addStatusBarItem();
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, null, plugin.app, undefined);
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, null);
 	const monoProperties: MonoRepoProperties = {
 		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 		repo,
@@ -108,7 +108,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 	) {
 		return;
 	}
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, getSharedKey, file, plugin.app, frontmatter);
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, getSharedKey, frontmatter);
 
 	menu.addItem((item) => {
 		/**
@@ -152,7 +152,6 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 			.setIcon("file-up")
 			.onClick(async () => {
 				await shareOneNote(
-					branchName,
 					await plugin.reloadOctokit(),
 					file,
 					getSharedKey,
@@ -174,13 +173,11 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
  * @return {Menu} - The submenu created
  */
 export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository | null, originalMenu: Menu): Menu {
-	let frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
-	const linkedFrontmatter = getLinkedFrontmatter(frontmatter, plugin.settings, file, plugin.app);
-	frontmatter = linkedFrontmatter ? { ...linkedFrontmatter, ...frontmatter } : frontmatter;
+	const frontmatter = frontmatterFromFile(file, plugin);
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	//@ts-ignore
 	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
-	let repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, file, plugin.app, frontmatter);
+	let repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, frontmatter);
 	repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
 	/**
 	 * default repo
@@ -196,7 +193,6 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 				.setIcon("file-up")
 				.onClick(async () => {
 					await shareOneNote(
-						branchName,
 						await plugin.reloadOctokit(),
 						file,
 						defaultRepo(plugin.settings),
@@ -219,7 +215,6 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 						.setIcon("file-up")
 						.onClick(async () => {
 							await shareOneNote(
-								branchName,
 								await plugin.reloadOctokit(),
 								file,
 								otherRepo,
@@ -241,7 +236,6 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 					.setIcon("file-up")
 					.onClick(async () => {
 						await shareOneNote(
-							branchName,
 							await plugin.reloadOctokit(),
 							file,
 							repo,
@@ -259,7 +253,6 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 			.onClick(async () => {
 				new ChooseRepoToRun(plugin.app, plugin, repo?.shareKey, branchName, "file", file.basename, async (item: Repository) => {
 					await shareOneNote(
-						branchName,
 						await plugin.reloadOctokit(),
 						file,
 						item,

@@ -13,19 +13,19 @@ import {
 	logs,
 	notif,	publisherNotification} from "../utils";
 import {checkRepositoryValidityWithRepoFrontmatter} from "../utils/data_validation_test";
-import { getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import { ShareStatusBar } from "../utils/status_bar";
 
 
 /**
- * Share all marked note (share: true) from Obsidian to GitHub
- * @param {GithubBranch} PublisherManager
- * @param {HTMLElement} statusBarItems - The status bar element
- * @param {string} branchName - The branch name created by the plugin
- * @param {MonoRepoProperties} monoRepo - The repo where to share the files
- * @param {TFile[]} sharedFiles - The files to share
- * @param {boolean} createGithubBranch - If true, create the branch before sharing the files
- */
+	* Share all marked note (share: true) from Obsidian to GitHub
+	* @param {GithubBranch} PublisherManager
+	* @param {HTMLElement} statusBarItems - The status bar element
+	* @param {string} branchName - The branch name created by the plugin
+	* @param {MonoRepoProperties} monoRepo - The repo where to share the files
+	* @param {TFile[]} sharedFiles - The files to share
+	* @param {boolean} createGithubBranch - If true, create the branch before sharing the files
+	*/
 export async function shareAllMarkedNotes(
 	PublisherManager: GithubBranch,
 	statusBarItems: HTMLElement,
@@ -122,12 +122,12 @@ export async function shareAllMarkedNotes(
 }
 
 /**
- * Delete unshared/deleted in the repo
- * @param {GithubBranch} PublisherManager
- * @param {string} branchName - The branch name created by the plugin
- * @param {MonoRepoProperties} monoRepo - The repo where to delete the files
- * @returns {Promise<void>}
- */
+	* Delete unshared/deleted in the repo
+	* @param {GithubBranch} PublisherManager
+	* @param {string} branchName - The branch name created by the plugin
+	* @param {MonoRepoProperties} monoRepo - The repo where to delete the files
+	* @returns {Promise<void>}
+	*/
 export async function purgeNotesRemote(
 	PublisherManager: GithubBranch,
 	branchName: string,
@@ -158,27 +158,25 @@ export async function purgeNotesRemote(
 }
 
 /**
- * Share only **one** note and their embedded contents, including note and attachments
- * @param {string} branchName - The branch name created by the plugin
- * @param {GithubBranch} PublisherManager
- * @param {TFile} file - The file to share
- * @param {Repository|null} repository
- * @param {string} title The title from frontmatter + regex (if any)
- * @returns {Promise<void>}
- */
+	* Share only **one** note and their embedded contents, including note and attachments
+	* @param {string} branchName - The branch name created by the plugin
+	* @param {GithubBranch} PublisherManager
+	* @param {TFile} file - The file to share
+	* @param {Repository|null} repository
+	* @param {string} title The title from frontmatter + regex (if any)
+	* @returns {Promise<void>}
+	*/
 export async function shareOneNote(
-	branchName: string,
 	PublisherManager: GithubBranch,
 	file: TFile,
 	repository: Repository | null = null,
-	title?: string,
+	title?: string
 ): Promise<void|false> {
 	const settings = PublisherManager.settings;
 	const app = PublisherManager.plugin.app;
-	const metadataCache = app.metadataCache;
+	const frontmatter = frontmatterFromFile(file, PublisherManager.plugin);
 	try {
-		const frontmatter = metadataCache.getFileCache(file)?.frontmatter;
-		const repoFrontmatter = getRepoFrontmatter(settings, repository, file, PublisherManager.plugin.app, frontmatter);
+		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
 		const isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter);
 		const multiRepo: MultiRepoProperties = {
 			frontmatter: repoFrontmatter,
@@ -243,19 +241,19 @@ export async function shareOneNote(
 			logs({settings, e: true}, error);
 			const notif = document.createDocumentFragment();
 			notif.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"] }).innerHTML = ERROR_ICONS;
-			notif.createSpan({ cls: ["error", "obsidian-publisher", "notification"] }).innerHTML = i18next.t("error.errorPublish", { repo: getRepoFrontmatter(settings, repository, file, app, metadataCache.getFileCache(file)?.frontmatter) });
+			notif.createSpan({ cls: ["error", "obsidian-publisher", "notification"] }).innerHTML = i18next.t("error.errorPublish", { repo: getRepoFrontmatter(settings, repository, frontmatter) });
 			new Notice(notif);
 		}
 	}
 }
 
 /**
- * Deep scan the repository and send only the note that not exist in the repository
- * @param {GithubBranch} PublisherManager
- * @param {string} branchName - The branch name created by the plugin
- * @param {MonoRepoProperties} monoRepo - The repo
- * @returns {Promise<void>}
- */
+	* Deep scan the repository and send only the note that not exist in the repository
+	* @param {GithubBranch} PublisherManager
+	* @param {string} branchName - The branch name created by the plugin
+	* @param {MonoRepoProperties} monoRepo - The repo
+	* @returns {Promise<void>}
+	*/
 export async function shareNewNote(
 	PublisherManager: GithubBranch,
 	branchName: string,
@@ -297,11 +295,11 @@ export async function shareNewNote(
 }
 
 /**
- * Share edited notes : they exist on the repo, BUT the last edited time in Obsidian is after the last upload. Also share new notes.
- * @param {GithubBranch} PublisherManager
- * @param {string} branchName - The branch name created by the plugin
- * @param {MonoRepoProperties} monoRepo - The repo
- */
+	* Share edited notes : they exist on the repo, BUT the last edited time in Obsidian is after the last upload. Also share new notes.
+	* @param {GithubBranch} PublisherManager
+	* @param {string} branchName - The branch name created by the plugin
+	* @param {MonoRepoProperties} monoRepo - The repo
+	*/
 export async function shareAllEditedNotes(
 	PublisherManager: GithubBranch,
 	branchName: string,
@@ -347,11 +345,11 @@ export async function shareAllEditedNotes(
 }
 
 /**
- * share **only** edited notes : they exist on the repo, but the last edited time is after the last upload.
- * @param {GithubBranch} PublisherManager
- * @param {string} branchName - The branch name created by the plugin
- * @param {MonoRepoProperties} monoRepo - The repo
- */
+	* share **only** edited notes : they exist on the repo, but the last edited time is after the last upload.
+	* @param {GithubBranch} PublisherManager
+	* @param {string} branchName - The branch name created by the plugin
+	* @param {MonoRepoProperties} monoRepo - The repo
+	*/
 export async function shareOnlyEdited(
 	PublisherManager: GithubBranch,
 	branchName: string,

@@ -38,7 +38,7 @@ export async function createLinkCallback(repo: Repository | null, plugin: Github
 			) {
 				if (!checking) {
 					const multiRepo: MultiRepoProperties = {
-						frontmatter: getRepoFrontmatter(plugin.settings, repo, file, plugin.app, frontmatter),
+						frontmatter: getRepoFrontmatter(plugin.settings, repo, frontmatter),
 						repo,
 					};
 					createLink(
@@ -78,7 +78,7 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 		//@ts-ignore
 		callback: async () => {
 			logs({settings: plugin.settings}, "Enabling purge command");
-			const frontmatter = getRepoFrontmatter(plugin.settings, repo, null, plugin.app);
+			const frontmatter = getRepoFrontmatter(plugin.settings, repo);
 			const monoRepo: MonoRepoProperties = {
 				frontmatter: Array.isArray(frontmatter) ? frontmatter[0] : frontmatter,
 				repo,
@@ -102,7 +102,7 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
  * @param {string} branchName - The branch name to upload the file
  * @return {Promise<Command>}
  */
-export async function shareOneNoteCallback(repo: Repository|null, plugin: GithubPublisher, branchName: string): Promise<Command> {
+export async function shareOneNoteCallback(repo: Repository|null, plugin: GithubPublisher): Promise<Command> {
 	const id = repo ? `publisher-one-K${repo.smartKey}` : "publisher-one";
 	let name = i18next.t("commands.shareActiveFile");
 	const common = i18next.t("common.repository");
@@ -121,7 +121,6 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 			) {
 				if (!checking) {
 					shareOneNote(
-						branchName,
 						octokit,
 						file,
 						repo,

@@ -179,7 +179,7 @@ export default class Publisher {
 			this.plugin,
 		);
 		const frontmatter = frontmatterFromFile(file, this.plugin);
-		const repoFrontmatter = getRepoFrontmatter(this.settings, repo.repo, file, this.plugin.app, frontmatter, false);
+		const repoFrontmatter = getRepoFrontmatter(this.settings, repo.repo, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, this.plugin);
 		repo.frontmatter = repoFrontmatter;
 		if (
@@ -220,7 +220,7 @@ export default class Publisher {
 					repo: repo.frontmatter,
 				},
 				repository: repo.repo,
-				filepath: getReceiptFolder(file, this.settings, repo.repo, this.plugin.app, repo.frontmatter),
+				filepath: getReceiptFolder(file, this.settings, repo.repo, this.plugin, repo.frontmatter),
 			};
 			text = await mainConverting(text, file, this.plugin.app, frontmatter, linkedFiles, this.plugin, multiProperties);
 			const path = multiProperties.filepath;

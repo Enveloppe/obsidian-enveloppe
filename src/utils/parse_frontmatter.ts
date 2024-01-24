@@ -143,19 +143,9 @@ function translateBooleanForRemoveEmbed(removeEmbed: unknown) {
 export function getRepoFrontmatter(
 	settings: GitHubPublisherSettings,
 	repository: Repository | null,
-	sourceFile: TFile | null,
-	app: App,
 	frontmatter?: FrontMatterCache | null,
-	parseSet = true,
 ): RepoFrontmatter[] | RepoFrontmatter {
 	let github = repository ?? settings.github;
-	if (parseSet && frontmatter) {
-		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, settings, sourceFile, app);
-		if (linkedFrontmatter) {
-			//fusion frontmatter and override the linkedFrontmatter with the frontmatter if the key is the same
-			frontmatter = {...linkedFrontmatter, ...frontmatter};
-		}
-	}
 	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"] !== "default") {
 		const smartKey = frontmatter.shortRepo.toLowerCase();
 		const allOtherRepo = settings.github.otherRepo;
