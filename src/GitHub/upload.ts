@@ -179,7 +179,7 @@ export default class Publisher {
 			this.plugin,
 		);
 		const frontmatter = this.metadataCache.getFileCache(file)?.frontmatter;
-		const repoFrontmatter = getRepoFrontmatter(this.settings, repo.repo, frontmatter);
+		const repoFrontmatter = getRepoFrontmatter(this.settings, repo.repo, file, this.plugin.app, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, this.plugin);
 		repo.frontmatter = repoFrontmatter;
 		if (

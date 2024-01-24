@@ -3,10 +3,19 @@
  * See docs for all the condition
  */
 
-import { FrontMatterCache, normalizePath } from "obsidian";
+import { App, FrontMatterCache, normalizePath,TFile } from "obsidian";
+import GithubPublisher from "src/main";
 
 import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, RepoFrontmatter, Repository } from "../settings/interface";
 
+/**
+ * Retrieves the frontmatter settings for a given file.
+ *
+ * @param frontmatter - The frontmatter cache for the file.
+ * @param settings - The GitHub Publisher settings.
+ * @param repo - The repository settings for the file.
+ * @returns The frontmatter settings for the file.
+ */
 export function getFrontmatterSettings(
 	frontmatter: FrontMatterCache | undefined | null,
 	settings: GitHubPublisherSettings,
@@ -105,7 +114,12 @@ export function getFrontmatterSettings(
 	}
 	return parseFrontmatterSettingsWithRepository(repo, frontmatter, settingsConversion);
 }
-
+/**
+ * Translates a boolean value or string representation of a boolean into a string value for the 'removeEmbed' setting.
+ *
+ * @param removeEmbed - The value to be translated. Can be a boolean value or a string representation of a boolean.
+ * @returns The translated string value for the 'removeEmbed' setting. Possible values are 'keep', 'remove', 'links', or 'bake'.
+ */
 function translateBooleanForRemoveEmbed(removeEmbed: unknown) {
 	if (removeEmbed === "true") {
 		return "keep";
@@ -129,9 +143,19 @@ function translateBooleanForRemoveEmbed(removeEmbed: unknown) {
 export function getRepoFrontmatter(
 	settings: GitHubPublisherSettings,
 	repository: Repository | null,
+	sourceFile: TFile | null,
+	app: App,
 	frontmatter?: FrontMatterCache | null,
+	parseSet = true,
 ): RepoFrontmatter[] | RepoFrontmatter {
 	let github = repository ?? settings.github;
+	if (parseSet && frontmatter) {
+		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, settings, sourceFile, app);
+		if (linkedFrontmatter) {
+			//fusion frontmatter and override the linkedFrontmatter with the frontmatter if the key is the same
+			frontmatter = {...linkedFrontmatter, ...frontmatter};
+		}
+	}
 	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"] !== "default") {
 		const smartKey = frontmatter.shortRepo.toLowerCase();
 		const allOtherRepo = settings.github.otherRepo;
@@ -158,15 +182,12 @@ export function getRepoFrontmatter(
 		repoFrontmatter.autoclean = false;
 	}
 	if (!frontmatter || (frontmatter.multipleRepo === undefined && frontmatter.repo === undefined && frontmatter.shortRepo === undefined)) {
-		return parsePath(settings, repository, repoFrontmatter, frontmatter) as RepoFrontmatter;
+		return parsePath(settings, repository, repoFrontmatter, frontmatter);
 	}
 	let isFrontmatterAutoClean = null;
 	if (frontmatter.multipleRepo) {
 		const multipleRepo = parseMultipleRepo(frontmatter, repoFrontmatter);
-		if (multipleRepo.length === 1) {
-			return parsePath(settings, repository, multipleRepo[0], frontmatter) as RepoFrontmatter;
-		}
-		return multipleRepo;
+		return parsePath(settings, repository, multipleRepo, frontmatter);
 	} else if (frontmatter.repo) {
 		if (typeof frontmatter.repo === "object") {
 			if (frontmatter.repo.branch !== undefined) {
@@ -248,7 +269,16 @@ function parseMultipleRepo(
 			}
 		}
 	}
-	//remove duplicates
+	return removeDuplicateRepo(multipleRepo);
+}
+
+/**
+ * Removes duplicate repositories from the given array of RepoFrontmatter objects.
+ * Only the {repo, owner, branch, autoclean} properties are compared.
+ * @param multipleRepo - An array of RepoFrontmatter objects representing multiple repositories.
+ * @returns An array of RepoFrontmatter objects with duplicate repositories removed.
+ */
+function removeDuplicateRepo(multipleRepo: RepoFrontmatter[]) {
 	return multipleRepo.filter(
 		(v, i, a) =>
 			a.findIndex(
@@ -267,7 +297,6 @@ function parseMultipleRepo(
  * @param {FrontMatterCache} frontmatter - The frontmatter of the file
  * @param {Repository[]} allRepo - The list of all repo from the settings
  * @param {RepoFrontmatter} repoFrontmatter - The default repoFrontmatter (from the default settings)
- * @return {RepoFrontmatter[] | RepoFrontmatter} - The repoFrontmatter from shortRepo
  */
 function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository[], repoFrontmatter: RepoFrontmatter, setting: GitHubPublisherSettings) {
 	if (frontmatter.shortRepo instanceof Array) {
@@ -470,4 +499,40 @@ function parseFrontmatterSettingsWithRepository(
 	frontConvert.convertInternalLinks = frontmatter?.[`${smartKey}.internals`] ?? frontConvert.convertInternalLinks;
 	frontConvert.unshared = frontmatter?.[`${smartKey}.nonShared`] ?? frontConvert.unshared;
 	return frontConvert;
+}
+
+export function getLinkedFrontmatter(
+	originalFrontmatter: FrontMatterCache | null | undefined,
+	settings: GitHubPublisherSettings,
+	sourceFile: TFile | null | undefined,
+	app: App,
+) {
+	const {metadataCache, vault} = app;
+	const linkedKey = settings.plugin.setFrontmatterKey;
+	if (!linkedKey || !originalFrontmatter || !sourceFile) return originalFrontmatter;
+	const linkedFrontmatter = originalFrontmatter?.[linkedKey];
+	if (!linkedFrontmatter) return originalFrontmatter;
+	let linkedFile: undefined | string;
+	metadataCache.getFileCache(sourceFile)?.frontmatterLinks?.forEach((link) => {
+		const fieldRegex = new RegExp(`${linkedKey}(\\.\\d+)?`, "g");
+		if (link.key.match(fieldRegex)) {
+			linkedFile = link.link;
+		}
+	});
+	if (!linkedFile) return originalFrontmatter;
+	const linkedFrontmatterFile = metadataCache.getFirstLinkpathDest(linkedFile, sourceFile.path) ?? vault.getAbstractFileByPath(linkedFile);
+	if (!linkedFrontmatterFile || !(linkedFrontmatterFile instanceof TFile)) return originalFrontmatter;
+	const linked = metadataCache.getFileCache(linkedFrontmatterFile)?.frontmatter;
+	if (!linked) return originalFrontmatter;
+	return linked;
+}
+
+export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher) {
+	let frontmatter = null;
+	if (file) {
+		frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, plugin.settings, file, plugin.app);
+		frontmatter = linkedFrontmatter ? { ...linkedFrontmatter, ...frontmatter } : frontmatter;
+	}
+	return frontmatter;
 }

@@ -79,7 +79,7 @@ export async function createRelativePath(
 	const shortRepo = properties.repository;
 	const sourcePath = getReceiptFolder(sourceFile, settings, shortRepo, app, properties.frontmatter.repo);
 	const frontmatterTarget = metadataCache.getFileCache(targetFile.linked)!.frontmatter;
-	const targetRepo = getRepoFrontmatter(settings, shortRepo, frontmatterTarget);
+	const targetRepo = getRepoFrontmatter(settings, shortRepo, targetFile.linked, app, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(properties.frontmatter.repo, targetRepo);
 	const shared = isInternalShared(
 		frontmatterTarget,
@@ -376,7 +376,7 @@ export function getReceiptFolder(
 	const { vault, metadataCache } = app;
 	if (file.extension === "md") {
 		const frontmatter = metadataCache.getCache(file.path)?.frontmatter;
-		if (!repoFrontmatter) repoFrontmatter = getRepoFrontmatter(settings, otherRepo, frontmatter);
+		if (!repoFrontmatter) repoFrontmatter = getRepoFrontmatter(settings, otherRepo, file, app, frontmatter);
 		repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
 		let targetRepo = repoFrontmatter.find((repo) => repo.path?.smartkey === otherRepo?.smartKey || "default");
 		if (!targetRepo) targetRepo = repoFrontmatter[0];

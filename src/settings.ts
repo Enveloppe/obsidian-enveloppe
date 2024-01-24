@@ -1099,6 +1099,19 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					})
 			);
 
+		new Setting(this.settingsPage)
+			.setName(i18next.t("settings.plugin.set.title"))
+			.setDesc(i18next.t("settings.plugin.set.desc"))
+			.addText((text) =>
+				text
+					.setPlaceholder("Set")
+					.setValue(pluginSettings.setFrontmatterKey)
+					.onChange(async (value) => {
+						pluginSettings.setFrontmatterKey = value.trim();
+						await this.plugin.saveSettings();
+					})
+			);
+
 		this.settingsPage.createEl("h3", {text: i18next.t("settings.plugin.head.menu")});
 
 		new Setting(this.settingsPage)

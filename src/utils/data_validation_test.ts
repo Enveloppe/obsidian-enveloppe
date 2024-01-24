@@ -1,12 +1,12 @@
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
-import {FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
+import {App, FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
 import GithubPublisher from "src/main";
 
 import {GithubBranch} from "../GitHub/branch";
 import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, MultiProperties, RepoFrontmatter, Repository} from "../settings/interface";
 import {logs, notif} from ".";
-import { getRepoFrontmatter } from "./parse_frontmatter";
+import { frontmatterFromFile, getLinkedFrontmatter, getRepoFrontmatter } from "./parse_frontmatter";
 
 /**
  * - Check if the file is a valid file to publish
@@ -41,13 +41,22 @@ export function isInternalShared(
 	return ["true", "1", "yes"].includes(frontmatter[shareKey].toString().toLowerCase());
 
 }
-
-export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache): Repository | null{
+/**
+ * Retrieves the shared key for a repository based on the provided settings, app, frontmatter, and file.
+ *
+ * @param settings - The GitHubPublisherSettings object containing the configuration settings.
+ * @param app - The App object representing the Obsidian application.
+ * @param frontmatter - The FrontMatterCache object representing the frontmatter of the file.
+ * @param file - The TFile object representing the file being processed.
+ * @returns The Repository object representing the repository with the shared key, or null if no repository is found.
+ */
+export function getRepoSharedKey(settings: GitHubPublisherSettings, app: App, frontmatter?: FrontMatterCache, file?: TFile): Repository | null{
 	const allOtherRepo = settings.github.otherRepo;
 	if (settings.plugin.shareAll?.enable && !frontmatter) {
 		return defaultRepo(settings);
 	} else if (!frontmatter) return null;
-	//check all keys in the frontmatter
+	const linkedFrontmatter = getLinkedFrontmatter(frontmatter, settings, file, app);
+	frontmatter = linkedFrontmatter ? {...linkedFrontmatter, ...frontmatter} : frontmatter;
 	for (const repo of allOtherRepo) {
 		if (frontmatter[repo.shareKey]) {
 			return repo;
@@ -121,8 +130,14 @@ export function isExcludedPath(settings: GitHubPublisherSettings, file: TFile | 
 
 /**
  * Allow to get all sharedKey from one file to count them
+ *
+ * @param {FrontMatterCache | undefined} frontmatter - The frontmatter of the file.
+ * @param {GitHubPublisherSettings} settings - The GitHub Publisher settings.
+ * @param {TFile | null} file - The file to get the shared keys from.
+ * @param {App} app - The Obsidian app instance.
+ * @returns {string[]} - An array of shared keys found in the file.
  */
-export function multipleSharedKey(frontmatter: FrontMatterCache | undefined, settings: GitHubPublisherSettings) {
+export function multipleSharedKey(frontmatter: FrontMatterCache | undefined, settings: GitHubPublisherSettings, file: TFile | null, app: App): string[] {
 	const keysInFile: string[] = [];
 	if (settings.plugin.shareAll?.enable)
 		keysInFile.push("share"); //add a key to count the shareAll
@@ -134,6 +149,8 @@ export function multipleSharedKey(frontmatter: FrontMatterCache | undefined, set
 		}
 	}
 	if (!frontmatter) return keysInFile;
+	const linkedRepo = getLinkedFrontmatter(frontmatter, settings, file, app);
+	frontmatter = linkedRepo ? {...linkedRepo, ...frontmatter} : frontmatter;
 	const allKey = settings.github.otherRepo.map((repo) => repo.shareKey);
 	allKey.push(settings.plugin.shareKey);
 
@@ -142,8 +159,8 @@ export function multipleSharedKey(frontmatter: FrontMatterCache | undefined, set
 			keysInFile.push(key);
 		}
 	}
-
-	return keysInFile;
+	//remove duplicate
+	return [...new Set(keysInFile)];
 }
 
 /**
@@ -267,7 +284,7 @@ export async function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter |
  * @param {FrontmatterConvert} conditionConvert The frontmatter option to check
  * @return {boolean} if the text need to be converted
  */
-export function noTextConversion(conditionConvert: FrontmatterConvert) {
+export function noTextConversion(conditionConvert: FrontmatterConvert): boolean {
 	const convertWikilink = conditionConvert.convertWiki;
 	const imageSettings = conditionConvert.attachment;
 	const embedSettings = conditionConvert.embed;
@@ -292,12 +309,11 @@ export async function checkRepositoryValidity(
 	PublisherManager: GithubBranch,
 	repository: Repository | null = null,
 	file: TFile | null,
-	silent=false): Promise<boolean> {
+	silent: boolean=false): Promise<boolean> {
 	const settings = PublisherManager.settings;
-	const metadataCache = PublisherManager.plugin.app.metadataCache;
 	try {
-		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : undefined;
-		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
+		const frontmatter = frontmatterFromFile(file, PublisherManager.plugin);
+		const repoFrontmatter = getRepoFrontmatter(settings, repository, file, PublisherManager.plugin.app, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin, silent);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, silent);
@@ -354,6 +370,12 @@ export async function checkRepositoryValidityWithRepoFrontmatter(
 	return false;
 }
 
+/**
+ * Returns the default repository based on the provided settings.
+ *
+ * @param settings - The GitHubPublisherSettings object containing the configuration settings.
+ * @returns The Repository object representing the default repository.
+ */
 export function defaultRepo(settings: GitHubPublisherSettings): Repository {
 	return {
 		smartKey: "default",
@@ -379,31 +401,57 @@ export function defaultRepo(settings: GitHubPublisherSettings): Repository {
 	};
 }
 
-export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPublisherSettings, commands=false, numberOfFile=1): Promise<number> {
+/**
+ * This function is used to verify the rate limit of the GitHub API.
+ * It checks the remaining number of requests and the reset time of the rate limit.
+ * If the remaining requests are less than or equal to the specified number of files,
+ * it displays a notice indicating that the rate limit is limited.
+ * Otherwise, it displays a notice indicating that the rate limit is not limited.
+ * @param octokit - The Octokit instance used to make requests to the GitHub API.
+ * @param settings - The settings object containing the rate limit configuration.
+ * @param commands - Indicates whether the function is called from a command or not. Default is `false`.
+ * @param numberOfFile - The number of files to be processed. Default is `1`.
+ * @returns The remaining number of requests in the rate limit.
+ */
+export async function verifyRateLimitAPI(
+	octokit: Octokit,
+	settings: GitHubPublisherSettings,
+	commands = false,
+	numberOfFile = 1
+): Promise<number> {
 	const rateLimit = await octokit.request("GET /rate_limit");
 	const remaining = rateLimit.data.resources.core.remaining;
 	const reset = rateLimit.data.resources.core.reset;
 	const date = new Date(reset * 1000);
 	const time = date.toLocaleTimeString();
+
 	if (remaining <= numberOfFile) {
-		new Notice(i18next.t("commands.checkValidity.rateLimit.limited", {resetTime: time}));
+		new Notice(i18next.t("commands.checkValidity.rateLimit.limited", { resetTime: time }));
 		return 0;
 	}
-	if (!commands) {
-		notif({settings}, i18next.t("commands.checkValidity.rateLimit.notLimited", {
-			remaining: remaining,
-			resetTime: time
-		}));
+
+	const message = i18next.t("commands.checkValidity.rateLimit.notLimited", {
+		remaining,
+		resetTime: time
+	});
+
+	if (commands) {
+		new Notice(message);
 	} else {
-		new Notice(i18next.t("commands.checkValidity.rateLimit.notLimited", {
-			remaining,
-			resetTime: time
-		}));
+		notif({ settings }, message);
 	}
+
 	return remaining;
 }
 
-export function forcePushAttachment(file: TFile, settings: GitHubPublisherSettings) {
+/**
+ * Determines if an attachment file needs to be force pushed based on the provided settings.
+ *
+ * @param file - The attachment file to check.
+ * @param settings - The GitHub Publisher settings.
+ * @returns True if the attachment file needs to be force pushed, false otherwise.
+ */
+export function forcePushAttachment(file: TFile, settings: GitHubPublisherSettings):boolean {
 	const needToBeForPush = settings.embed.overrideAttachments.filter((path) => {
 		const isRegex = path.path.match(FIND_REGEX);
 		const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
@@ -419,18 +467,31 @@ export function forcePushAttachment(file: TFile, settings: GitHubPublisherSettin
 	return true;
 }
 
-export function isFolderNote(properties: MultiProperties) {
-	const enabled = properties.settings.upload.folderNote.enable;
-	if (enabled) {
-		const model = properties.settings.upload.folderNote.rename;
-		const filepath = properties.filepath;
-		//get the file name aka split by / and get the last element
+/**
+ * Checks if a file is a folder note based on certain conditions.
+ * @param properties - An object containing the properties for the file and settings.
+ * @returns True if the file is a folder note, false otherwise.
+ */
+export function isFolderNote(properties: MultiProperties): boolean {
+	const { settings, filepath } = properties;
+	const { enable, rename } = settings.upload.folderNote;
+
+	if (enable) {
 		const filename = filepath.split("/").pop();
-		return filename === model;
+		return filename === rename;
 	}
+
 	return false;
 }
 
+/**
+ * Checks if a file or folder is located within the dry run folder specified in the GitHub Publisher settings.
+ *
+ * @param settings - The GitHub Publisher settings.
+ * @param repo - The repository information. If null, the default repository information from the settings will be used.
+ * @param file - The file or folder to check.
+ * @returns True if the file or folder is located within the dry run folder, false otherwise.
+ */
 export function isInDryRunFolder(settings: GitHubPublisherSettings, repo: Repository | null, file: TFile | TFolder) {
 	if (settings.github.dryRun.folderName.trim().length ===0) return false;
 	const variables = {

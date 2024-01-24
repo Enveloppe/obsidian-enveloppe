@@ -104,6 +104,8 @@ export class FilesManagement extends Publisher {
 					const repoFrontatter = getRepoFrontmatter(
 						this.settings,
 						repo,
+						file,
+						this.plugin.app,
 						frontMatter
 					);
 					const filepath = getReceiptFolder(file, this.settings, repo, this.plugin.app, repoFrontatter);
