@@ -482,6 +482,10 @@
         "desc": "Allows you to reopen the settings on the previously used tab",
         "title": "Save tab"
       },
+      "set": {
+        "desc": "Choose the property key you want to use to link the property of a file to another, without rewrite them each time. Work only for file linked by a wikilink in the frontmatter.",
+        "title": "Set of options"
+      },
       "shareKey": {
         "all": {
           "desc": "Share all files regardless of the state of the share key of the notes",

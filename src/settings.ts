@@ -1100,8 +1100,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			);
 
 		new Setting(this.settingsPage)
-			.setName("Set of options")
-			.setDesc("Choose the property key you want to use to link the property of a file to another, without rewrite them each time.")
+			.setName(i18next.t("settings.plugin.set.title"))
+			.setDesc(i18next.t("settings.plugin.set.desc"))
 			.addText((text) =>
 				text
 					.setPlaceholder("Set")
