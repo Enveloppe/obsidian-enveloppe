@@ -4,6 +4,7 @@
  */
 
 import { App, FrontMatterCache, normalizePath,TFile } from "obsidian";
+import GithubPublisher from "src/main";
 
 import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, RepoFrontmatter, Repository } from "../settings/interface";
 
@@ -505,7 +506,14 @@ export function getLinkedFrontmatter(
 	const linked = metadataCache.getFileCache(linkedFrontmatterFile)?.frontmatter;
 	if (!linked) return originalFrontmatter;
 	return linked;
+}
 
-
-
+export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher) {
+	let frontmatter = null;
+	if (file) {
+		frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, plugin.settings, file, plugin.app);
+		frontmatter = linkedFrontmatter ? { ...linkedFrontmatter, ...frontmatter } : frontmatter;
+	}
+	return frontmatter;
 }

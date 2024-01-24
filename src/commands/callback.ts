@@ -11,7 +11,7 @@ import GithubPublisher from "../main";
 import {MonoRepoProperties, MultiRepoProperties, Repository} from "../settings/interface";
 import {createLink, logs} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
-import { getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {purgeNotesRemote, shareOneNote} from ".";
 import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} from "./plugin_commands";
 
@@ -32,7 +32,7 @@ export async function createLinkCallback(repo: Repository | null, plugin: Github
 		hotkeys: [],
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
-			const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
+			const frontmatter = frontmatterFromFile(file, plugin);
 			if (
 				file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 			) {
@@ -115,7 +115,7 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 		hotkeys: [],
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
-			const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
+			const frontmatter = frontmatterFromFile(file, plugin);
 			if (
 				file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 			) {

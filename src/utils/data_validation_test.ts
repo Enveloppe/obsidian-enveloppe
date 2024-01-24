@@ -6,7 +6,7 @@ import GithubPublisher from "src/main";
 import {GithubBranch} from "../GitHub/branch";
 import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, MultiProperties, RepoFrontmatter, Repository} from "../settings/interface";
 import {logs, notif} from ".";
-import { getLinkedFrontmatter, getRepoFrontmatter } from "./parse_frontmatter";
+import { frontmatterFromFile, getLinkedFrontmatter, getRepoFrontmatter } from "./parse_frontmatter";
 
 /**
  * - Check if the file is a valid file to publish
@@ -297,11 +297,8 @@ export async function checkRepositoryValidity(
 	file: TFile | null,
 	silent: boolean=false): Promise<boolean> {
 	const settings = PublisherManager.settings;
-	const metadataCache = PublisherManager.plugin.app.metadataCache;
 	try {
-		let frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : undefined;
-		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, settings, file, PublisherManager.plugin.app);
-		frontmatter = linkedFrontmatter ? {...linkedFrontmatter, ...frontmatter} : frontmatter;
+		const frontmatter = frontmatterFromFile(file, PublisherManager.plugin);
 		const repoFrontmatter = getRepoFrontmatter(settings, repository, file, PublisherManager.plugin.app, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin, silent);
 		if (isNotEmpty) {
