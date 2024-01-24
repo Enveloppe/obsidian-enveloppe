@@ -135,7 +135,6 @@ export function getRepoFrontmatter(
 	parseSet = true,
 ): RepoFrontmatter[] | RepoFrontmatter {
 	let github = repository ?? settings.github;
-	console.log("REPOSITORY", github);
 	if (parseSet && frontmatter) {
 		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, settings, sourceFile, app);
 		if (linkedFrontmatter) {
@@ -428,7 +427,6 @@ export function parsePath(
 		path.category!.value = getCategory(frontmatter, settings, path);
 		repo.path = path;
 	}
-	console.warn("REPO FRONTMATTER", repoFrontmatter);
 	return repoFrontmatter;
 }
 
