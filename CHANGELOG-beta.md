@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.14.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-2...6.14.0-3) (2024-01-24)
+
+
+### Features
+
+* allow to "link" frontmatter to another, preventing to recopy long frontmatter ([#281](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/281)) ([6ec7f36](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/6ec7f360ca8d49e76a33bfaf14fec06c25fcc48d))
+
 ## [6.14.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-1...6.14.0-2) (2024-01-22)
 
 ## [6.14.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-0...6.14.0-1) (2024-01-21)
