@@ -1,0 +1,18 @@
+name: Improve release message/changelog
+
+on:
+  release:
+    types: [ created ]
+
+jobs:
+
+  improve-release:
+    runs-on: ubuntu-latest
+    name: Improve release message
+    steps:
+      - name: Update release
+        uses: EsmerlinJM/gha-release-messages-improved@main
+        with:
+          repository: EsmerlinJM/gha-release-messages-improved
+          openai_api_key: ${{ secrets.OPENAI_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
