@@ -4,7 +4,7 @@ import { Menu, MenuItem, Platform, TFile, TFolder} from "obsidian";
 import GithubPublisher from "../main";
 import {MonoRepoProperties, Repository} from "../settings/interface";
 import {defaultRepo, getRepoSharedKey, isExcludedPath, isInDryRunFolder, isShared, multipleSharedKey} from "../utils/data_validation_test";
-import { getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { getLinkedFrontmatter, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {shareAllMarkedNotes, shareOneNote} from ".";
 import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 
@@ -101,63 +101,65 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
 export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: string, menu: Menu) {
 	const frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 	let getSharedKey = getRepoSharedKey(plugin.settings, plugin.app, frontmatter, file);
-	const allKeysFromFile = multipleSharedKey(frontmatter, plugin.settings);
+	const allKeysFromFile = multipleSharedKey(frontmatter, plugin.settings, file, plugin.app);
 	if (
-		isShared(frontmatter, plugin.settings, file, getSharedKey) &&
-		plugin.settings.plugin.fileMenu
+		!(isShared(frontmatter, plugin.settings, file, getSharedKey) &&
+	plugin.settings.plugin.fileMenu)
 	) {
-		const repoFrontmatter = getRepoFrontmatter(plugin.settings, getSharedKey, file, plugin.app, frontmatter);
-		menu.addItem((item) => {
-			/**
-			 * Create a submenu if multiple repo exists in the settings & platform is desktop
-			 */
-
-			if (allKeysFromFile.length > 1 || (repoFrontmatter instanceof Array && repoFrontmatter.length > 1)) {
-				if (Platform.isDesktop) {
-					item
-						.setTitle("Github Publisher")
-						.setIcon("upload-cloud");
-				} else {
-					//add the line to separate the commands
-					menu.addSeparator();
-					item.setIsLabel(true);
-				}
-				subMenuCommandsFile(
-					plugin,
-					item,
-					file,
-					branchName,
-					getSharedKey,
-					menu
-				);
-				return;
-			}
-			const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file)?.frontmatter).replace(".md", "");
-
-			if (!frontmatter || !frontmatter[plugin.settings.plugin.shareKey]) {
-				const otherRepo = plugin.settings.github.otherRepo.find((repo) => repo.shareAll?.enable);
-				if (otherRepo) getSharedKey = otherRepo;
-				else if (plugin.settings.plugin.shareAll?.enable) getSharedKey = defaultRepo(plugin.settings);
-			} else if (frontmatter[plugin.settings.plugin.shareKey]) {
-				getSharedKey = defaultRepo(plugin.settings);
-			}
-			item
-				.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
-					doc: fileName,
-					smartKey: getSharedKey?.smartKey.toUpperCase() || i18next.t("common.default").toUpperCase()
-				}))
-				.setIcon("file-up")
-				.onClick(async () => {
-					await shareOneNote(
-						branchName,
-						await plugin.reloadOctokit(),
-						file,
-						getSharedKey,
-						fileName
-					);
-				});
-		});
+		return;
 	}
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, getSharedKey, file, plugin.app, frontmatter);
+
+	menu.addItem((item) => {
+		/**
+			* Create a submenu if multiple repo exists in the settings & platform is desktop
+			*/
+
+		if (allKeysFromFile.length > 1 || (repoFrontmatter instanceof Array && repoFrontmatter.length > 1)) {
+			if (Platform.isDesktop) {
+				item
+					.setTitle("Github Publisher")
+					.setIcon("upload-cloud");
+			} else {
+				//add the line to separate the commands
+				menu.addSeparator();
+				item.setIsLabel(true);
+			}
+			subMenuCommandsFile(
+				plugin,
+				item,
+				file,
+				branchName,
+				getSharedKey,
+				menu
+			);
+			return;
+		}
+		const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file)?.frontmatter).replace(".md", "");
+
+		if (!frontmatter || !frontmatter[plugin.settings.plugin.shareKey]) {
+			const otherRepo = plugin.settings.github.otherRepo.find((repo) => repo.shareAll?.enable);
+			if (otherRepo) getSharedKey = otherRepo;
+			else if (plugin.settings.plugin.shareAll?.enable) getSharedKey = defaultRepo(plugin.settings);
+		} else if (frontmatter[plugin.settings.plugin.shareKey]) {
+			getSharedKey = defaultRepo(plugin.settings);
+		}
+		item
+			.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
+				doc: fileName,
+				smartKey: getSharedKey?.smartKey.toUpperCase() || i18next.t("common.default").toUpperCase()
+			}))
+			.setIcon("file-up")
+			.onClick(async () => {
+				await shareOneNote(
+					branchName,
+					await plugin.reloadOctokit(),
+					file,
+					getSharedKey,
+					fileName
+				);
+			});
+	});
 }
 
 /**
@@ -172,7 +174,9 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
  * @return {Menu} - The submenu created
  */
 export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository | null, originalMenu: Menu): Menu {
-	const frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+	let frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+	const linkedFrontmatter = getLinkedFrontmatter(frontmatter, plugin.settings, file, plugin.app);
+	frontmatter = linkedFrontmatter ? { ...linkedFrontmatter, ...frontmatter } : frontmatter;
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	//@ts-ignore
 	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
