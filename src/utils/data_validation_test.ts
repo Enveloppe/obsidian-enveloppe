@@ -295,11 +295,13 @@ export async function checkRepositoryValidity(
 	PublisherManager: GithubBranch,
 	repository: Repository | null = null,
 	file: TFile | null,
-	silent=false): Promise<boolean> {
+	silent: boolean=false): Promise<boolean> {
 	const settings = PublisherManager.settings;
 	const metadataCache = PublisherManager.plugin.app.metadataCache;
 	try {
-		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : undefined;
+		let frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : undefined;
+		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, settings, file, PublisherManager.plugin.app);
+		frontmatter = linkedFrontmatter ? {...linkedFrontmatter, ...frontmatter} : frontmatter;
 		const repoFrontmatter = getRepoFrontmatter(settings, repository, file, PublisherManager.plugin.app, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin, silent);
 		if (isNotEmpty) {
