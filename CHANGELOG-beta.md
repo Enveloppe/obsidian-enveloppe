@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.14.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-3...6.14.0-4) (2024-01-24)
+
+
+### Bug Fixes
+
+* **frontmatter:** Ensure consistent behavior across various commands ([4a7c19e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4a7c19ed7fd605ecc84d09e323cdff95a400ba4c))
+
 ## [6.14.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-2...6.14.0-3) (2024-01-24)
 
 
