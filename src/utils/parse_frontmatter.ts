@@ -183,15 +183,15 @@ export function getRepoFrontmatter(
 	const linkedFrontmatter = parseSet ? getLinkedFrontmatter(frontmatter, settings, repository, repoFrontmatter, sourceFile, app) : repoFrontmatter;
 	let linkedArray = Array.isArray(linkedFrontmatter) ? linkedFrontmatter : [linkedFrontmatter];
 	if (!frontmatter || (frontmatter.multipleRepo === undefined && frontmatter.repo === undefined && frontmatter.shortRepo === undefined)) {
-		return parsePath(settings, repository, linkedFrontmatter, frontmatter) as RepoFrontmatter;
+		return parsePath(settings, repository, linkedFrontmatter, frontmatter);
 	}
 	let isFrontmatterAutoClean = null;
 	if (frontmatter.multipleRepo) {
 		const multipleRepo = parseMultipleRepo(frontmatter, repoFrontmatter);
 		if (multipleRepo.length === 1) {
-			return parsePath(settings, repository, findRepositoryInLinkedArray(multipleRepo[0], linkedArray), frontmatter) as RepoFrontmatter;
+			return parsePath(settings, repository, findRepositoryInLinkedArray(multipleRepo[0], linkedArray), frontmatter);
 		}
-		return parsePath(settings, repository, findAndOverrideInArrays(multipleRepo, linkedArray), frontmatter) as RepoFrontmatter[];
+		return parsePath(settings, repository, findAndOverrideInArrays(multipleRepo, linkedArray), frontmatter);
 	} else if (frontmatter.repo) {
 		if (typeof frontmatter.repo === "object") {
 			if (frontmatter.repo.branch !== undefined) {
