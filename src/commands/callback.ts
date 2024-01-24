@@ -44,8 +44,7 @@ export async function createLinkCallback(repo: Repository | null, plugin: Github
 					createLink(
 						file,
 						multiRepo,
-						plugin.settings,
-						plugin.app
+						plugin
 					);
 					new Notice(i18next.t("commands.copyLink.onActivation"));
 				}

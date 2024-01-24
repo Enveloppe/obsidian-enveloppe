@@ -172,7 +172,7 @@ export async function shareOneNote(
 	repository: Repository | null = null,
 	title?: string
 ): Promise<void|false> {
-	const settings = PublisherManager.settings;
+	const {settings, plugin} = PublisherManager;
 	const app = PublisherManager.plugin.app;
 	const frontmatter = frontmatterFromFile(file, PublisherManager.plugin);
 	try {
@@ -221,8 +221,7 @@ export async function shareOneNote(
 				await createLink(
 					file,
 					multiRepo,
-					settings,
-					app
+					plugin
 				);
 				if (settings.plugin.displayModalRepoEditing) {
 					const listEdited = createListEdited(publishSuccess.uploaded, publishSuccess.deleted, publishSuccess.error);

@@ -40,8 +40,7 @@ export async function createLinkOnActiveFile(repo: Repository | null, plugin: Gi
 		await createLink(
 			file,
 			multiRepo,
-			plugin.settings,
-			plugin.app
+			plugin
 		);
 		new Notice(i18next.t("commands.copyLink.onActivation"));
 		return;
