@@ -8,6 +8,14 @@ import GithubPublisher from "src/main";
 
 import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, RepoFrontmatter, Repository } from "../settings/interface";
 
+/**
+ * Retrieves the frontmatter settings for a given file.
+ *
+ * @param frontmatter - The frontmatter cache for the file.
+ * @param settings - The GitHub Publisher settings.
+ * @param repo - The repository settings for the file.
+ * @returns The frontmatter settings for the file.
+ */
 export function getFrontmatterSettings(
 	frontmatter: FrontMatterCache | undefined | null,
 	settings: GitHubPublisherSettings,
@@ -106,7 +114,12 @@ export function getFrontmatterSettings(
 	}
 	return parseFrontmatterSettingsWithRepository(repo, frontmatter, settingsConversion);
 }
-
+/**
+ * Translates a boolean value or string representation of a boolean into a string value for the 'removeEmbed' setting.
+ *
+ * @param removeEmbed - The value to be translated. Can be a boolean value or a string representation of a boolean.
+ * @returns The translated string value for the 'removeEmbed' setting. Possible values are 'keep', 'remove', 'links', or 'bake'.
+ */
 function translateBooleanForRemoveEmbed(removeEmbed: unknown) {
 	if (removeEmbed === "true") {
 		return "keep";
