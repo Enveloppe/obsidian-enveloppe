@@ -118,26 +118,6 @@ function translateBooleanForRemoveEmbed(removeEmbed: unknown) {
 	} else return "keep";
 }
 
-function findRepositoryInLinkedArray(repo: RepoFrontmatter, linkedArray: RepoFrontmatter[]) {
-	const index = linkedArray.findIndex((linkedRepo) => {
-		return linkedRepo.repo === repo.repo && linkedRepo.owner === repo.owner && linkedRepo.branch === repo.branch;
-	});
-	if (index === -1) linkedArray.push(repo);
-	else linkedArray[index] = repo;
-	return linkedArray;
-}
-
-function findAndOverrideInArrays(repos: RepoFrontmatter[], linkedArray: RepoFrontmatter[]) {
-	for (const repo of repos) {
-		const index = linkedArray.findIndex((linkedRepo) => {
-			return linkedRepo.repo === repo.repo && linkedRepo.owner === repo.owner && linkedRepo.branch === repo.branch;
-		});
-		if (index === -1) linkedArray.push(repo);
-		else linkedArray[index] = repo;
-	}
-	return linkedArray;
-}
-
 /**
  * Get the frontmatter from the frontmatter
  * @param {GitHubPublisherSettings} settings
@@ -155,6 +135,14 @@ export function getRepoFrontmatter(
 	parseSet = true,
 ): RepoFrontmatter[] | RepoFrontmatter {
 	let github = repository ?? settings.github;
+	console.log("REPOSITORY", github);
+	if (parseSet && frontmatter) {
+		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, settings, sourceFile, app);
+		if (linkedFrontmatter) {
+			//fusion frontmatter and override the linkedFrontmatter with the frontmatter if the key is the same
+			frontmatter = {...linkedFrontmatter, ...frontmatter};
+		}
+	}
 	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"] !== "default") {
 		const smartKey = frontmatter.shortRepo.toLowerCase();
 		const allOtherRepo = settings.github.otherRepo;
@@ -180,18 +168,13 @@ export function getRepoFrontmatter(
 	if (settings.upload.behavior === FolderSettings.fixed) {
 		repoFrontmatter.autoclean = false;
 	}
-	const linkedFrontmatter = parseSet ? getLinkedFrontmatter(frontmatter, settings, repository, repoFrontmatter, sourceFile, app) : repoFrontmatter;
-	let linkedArray = Array.isArray(linkedFrontmatter) ? linkedFrontmatter : [linkedFrontmatter];
 	if (!frontmatter || (frontmatter.multipleRepo === undefined && frontmatter.repo === undefined && frontmatter.shortRepo === undefined)) {
-		return parsePath(settings, repository, linkedFrontmatter, frontmatter);
+		return parsePath(settings, repository, repoFrontmatter, frontmatter);
 	}
 	let isFrontmatterAutoClean = null;
 	if (frontmatter.multipleRepo) {
 		const multipleRepo = parseMultipleRepo(frontmatter, repoFrontmatter);
-		if (multipleRepo.length === 1) {
-			return parsePath(settings, repository, findRepositoryInLinkedArray(multipleRepo[0], linkedArray), frontmatter);
-		}
-		return parsePath(settings, repository, findAndOverrideInArrays(multipleRepo, linkedArray), frontmatter);
+		return parsePath(settings, repository, multipleRepo, frontmatter);
 	} else if (frontmatter.repo) {
 		if (typeof frontmatter.repo === "object") {
 			if (frontmatter.repo.branch !== undefined) {
@@ -212,15 +195,13 @@ export function getRepoFrontmatter(
 			isFrontmatterAutoClean = repo.length > 4 ? true : null;
 			repoFrontmatter = repositoryStringSlice(repo, repoFrontmatter);
 		}
-		linkedArray = findRepositoryInLinkedArray(repoFrontmatter, linkedArray);
 	} else if (frontmatter.shortRepo instanceof Array) {
-		const multipleRepo= multipleShortKeyRepo(frontmatter, settings.github.otherRepo, repoFrontmatter, settings);
-		return multipleRepo instanceof Array ? findAndOverrideInArrays(multipleRepo, linkedArray) : findRepositoryInLinkedArray(multipleRepo, linkedArray);
+		return multipleShortKeyRepo(frontmatter, settings.github.otherRepo, repoFrontmatter, settings);
 	}
-	if (frontmatter.autoclean !== undefined && isFrontmatterAutoClean === null && !(linkedFrontmatter instanceof Array)) {
-		linkedArray[0].autoclean = frontmatter.autoclean;
+	if (frontmatter.autoclean !== undefined && isFrontmatterAutoClean === null) {
+		repoFrontmatter.autoclean = frontmatter.autoclean;
 	}
-	return parsePath(settings, repository, linkedArray);
+	return parsePath(settings, repository, repoFrontmatter);
 }
 
 /**
@@ -447,6 +428,7 @@ export function parsePath(
 		path.category!.value = getCategory(frontmatter, settings, path);
 		repo.path = path;
 	}
+	console.warn("REPO FRONTMATTER", repoFrontmatter);
 	return repoFrontmatter;
 }
 
@@ -501,19 +483,17 @@ function parseFrontmatterSettingsWithRepository(
 	return frontConvert;
 }
 
-function getLinkedFrontmatter(
+export function getLinkedFrontmatter(
 	originalFrontmatter: FrontMatterCache | null | undefined,
 	settings: GitHubPublisherSettings,
-	repository: Repository | null,
-	originalRepoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
-	sourceFile: TFile | null,
+	sourceFile: TFile | null | undefined,
 	app: App,
 ) {
 	const {metadataCache, vault} = app;
 	const linkedKey = settings.plugin.setFrontmatterKey;
-	if (!linkedKey || !originalFrontmatter || !sourceFile) return originalRepoFrontmatter;
+	if (!linkedKey || !originalFrontmatter || !sourceFile) return originalFrontmatter;
 	const linkedFrontmatter = originalFrontmatter?.[linkedKey];
-	if (!linkedFrontmatter) return originalRepoFrontmatter;
+	if (!linkedFrontmatter) return originalFrontmatter;
 	let linkedFile: undefined | string;
 	metadataCache.getFileCache(sourceFile)?.frontmatterLinks?.forEach((link) => {
 		const fieldRegex = new RegExp(`${linkedKey}(\\.\\d+)?`, "g");
@@ -521,13 +501,12 @@ function getLinkedFrontmatter(
 			linkedFile = link.link;
 		}
 	});
-	if (!linkedFile) return originalRepoFrontmatter;
+	if (!linkedFile) return originalFrontmatter;
 	const linkedFrontmatterFile = metadataCache.getFirstLinkpathDest(linkedFile, sourceFile.path) ?? vault.getAbstractFileByPath(linkedFile);
-	if (!linkedFrontmatterFile || !(linkedFrontmatterFile instanceof TFile)) return originalRepoFrontmatter;
+	if (!linkedFrontmatterFile || !(linkedFrontmatterFile instanceof TFile)) return originalFrontmatter;
 	const linked = metadataCache.getFileCache(linkedFrontmatterFile)?.frontmatter;
-	if (!linked) return originalRepoFrontmatter;
-	return getRepoFrontmatter(settings, repository, linkedFrontmatterFile, app, linked, false); //prevent circular
-
+	if (!linked) return originalFrontmatter;
+	return linked;
 
 
 

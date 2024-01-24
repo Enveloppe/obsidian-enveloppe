@@ -55,7 +55,7 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
 				}))
 				.setIcon("folder-up")
 				.onClick(async () => {
-					const repo = getRepoSharedKey(plugin.settings, undefined);
+					const repo = getRepoSharedKey(plugin.settings, plugin.app, undefined);
 					await shareFolderRepo(plugin, folder, branchName, repo);
 				});
 		});
@@ -99,8 +99,8 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
  * @param {Menu} menu - The menu to add the item to
  */
 export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: string, menu: Menu) {
-	const frontmatter = file instanceof TFile ? plugin.app.metadataCache.getFileCache(file)!.frontmatter : undefined;
-	let getSharedKey = getRepoSharedKey(plugin.settings, frontmatter);
+	const frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+	let getSharedKey = getRepoSharedKey(plugin.settings, plugin.app, frontmatter, file);
 	const allKeysFromFile = multipleSharedKey(frontmatter, plugin.settings);
 	if (
 		isShared(frontmatter, plugin.settings, file, getSharedKey) &&
@@ -306,7 +306,7 @@ export async function addMenuFolder(menu: Menu, folder: TFolder, branchName: str
 			}))
 			.setIcon("folder-up")
 			.onClick(async () => {
-				const repo = getRepoSharedKey(plugin.settings, undefined);
+				const repo = getRepoSharedKey(plugin.settings, plugin.app, undefined);
 				await shareFolderRepo(plugin, folder, branchName, repo);
 			});
 	});

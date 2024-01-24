@@ -1,12 +1,12 @@
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
-import {FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
+import {App, FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
 import GithubPublisher from "src/main";
 
 import {GithubBranch} from "../GitHub/branch";
 import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, MultiProperties, RepoFrontmatter, Repository} from "../settings/interface";
 import {logs, notif} from ".";
-import { getRepoFrontmatter } from "./parse_frontmatter";
+import { getLinkedFrontmatter, getRepoFrontmatter } from "./parse_frontmatter";
 
 /**
  * - Check if the file is a valid file to publish
@@ -42,12 +42,13 @@ export function isInternalShared(
 
 }
 
-export function getRepoSharedKey(settings: GitHubPublisherSettings, frontmatter?: FrontMatterCache): Repository | null{
+export function getRepoSharedKey(settings: GitHubPublisherSettings, app: App, frontmatter?: FrontMatterCache, file?: TFile): Repository | null{
 	const allOtherRepo = settings.github.otherRepo;
 	if (settings.plugin.shareAll?.enable && !frontmatter) {
 		return defaultRepo(settings);
 	} else if (!frontmatter) return null;
-	//check all keys in the frontmatter
+	const linkedFrontmatter = getLinkedFrontmatter(frontmatter, settings, file, app);
+	frontmatter = linkedFrontmatter ? {...linkedFrontmatter, ...frontmatter} : frontmatter;
 	for (const repo of allOtherRepo) {
 		if (frontmatter[repo.shareKey]) {
 			return repo;
