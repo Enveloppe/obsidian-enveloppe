@@ -152,6 +152,7 @@ export interface GitHubPublisherSettings {
 		displayModalRepoEditing: boolean;
 		migrated?: boolean;
 		saveTabId?: boolean;
+		setFrontmatterKey: string;
 
 	}
 }
@@ -300,6 +301,7 @@ export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 		},
 		noticeError: false,
 		displayModalRepoEditing: false,
+		setFrontmatterKey: "Set"
 	}
 };
 

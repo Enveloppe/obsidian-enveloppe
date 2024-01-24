@@ -1099,6 +1099,19 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					})
 			);
 
+		new Setting(this.settingsPage)
+			.setName("Set of options")
+			.setDesc("Choose the property key you want to use to link the property of a file to another, without rewrite them each time.")
+			.addText((text) =>
+				text
+					.setPlaceholder("Set")
+					.setValue(pluginSettings.setFrontmatterKey)
+					.onChange(async (value) => {
+						pluginSettings.setFrontmatterKey = value.trim();
+						await this.plugin.saveSettings();
+					})
+			);
+
 		this.settingsPage.createEl("h3", {text: i18next.t("settings.plugin.head.menu")});
 
 		new Setting(this.settingsPage)
