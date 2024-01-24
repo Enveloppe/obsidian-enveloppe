@@ -3,7 +3,7 @@
  * See docs for all the condition
  */
 
-import { FrontMatterCache, normalizePath } from "obsidian";
+import { App, FrontMatterCache, normalizePath,TFile } from "obsidian";
 
 import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, RepoFrontmatter, Repository } from "../settings/interface";
 
@@ -118,6 +118,26 @@ function translateBooleanForRemoveEmbed(removeEmbed: unknown) {
 	} else return "keep";
 }
 
+function findRepositoryInLinkedArray(repo: RepoFrontmatter, linkedArray: RepoFrontmatter[]) {
+	const index = linkedArray.findIndex((linkedRepo) => {
+		return linkedRepo.repo === repo.repo && linkedRepo.owner === repo.owner && linkedRepo.branch === repo.branch;
+	});
+	if (index === -1) linkedArray.push(repo);
+	else linkedArray[index] = repo;
+	return linkedArray;
+}
+
+function findAndOverrideInArrays(repos: RepoFrontmatter[], linkedArray: RepoFrontmatter[]) {
+	for (const repo of repos) {
+		const index = linkedArray.findIndex((linkedRepo) => {
+			return linkedRepo.repo === repo.repo && linkedRepo.owner === repo.owner && linkedRepo.branch === repo.branch;
+		});
+		if (index === -1) linkedArray.push(repo);
+		else linkedArray[index] = repo;
+	}
+	return linkedArray;
+}
+
 /**
  * Get the frontmatter from the frontmatter
  * @param {GitHubPublisherSettings} settings
@@ -129,7 +149,10 @@ function translateBooleanForRemoveEmbed(removeEmbed: unknown) {
 export function getRepoFrontmatter(
 	settings: GitHubPublisherSettings,
 	repository: Repository | null,
+	sourceFile: TFile | null,
+	app: App,
 	frontmatter?: FrontMatterCache | null,
+	parseSet = true,
 ): RepoFrontmatter[] | RepoFrontmatter {
 	let github = repository ?? settings.github;
 	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"] !== "default") {
@@ -157,16 +180,18 @@ export function getRepoFrontmatter(
 	if (settings.upload.behavior === FolderSettings.fixed) {
 		repoFrontmatter.autoclean = false;
 	}
+	const linkedFrontmatter = parseSet ? getLinkedFrontmatter(frontmatter, settings, repository, repoFrontmatter, sourceFile, app) : repoFrontmatter;
+	let linkedArray = Array.isArray(linkedFrontmatter) ? linkedFrontmatter : [linkedFrontmatter];
 	if (!frontmatter || (frontmatter.multipleRepo === undefined && frontmatter.repo === undefined && frontmatter.shortRepo === undefined)) {
-		return parsePath(settings, repository, repoFrontmatter, frontmatter) as RepoFrontmatter;
+		return parsePath(settings, repository, linkedFrontmatter, frontmatter) as RepoFrontmatter;
 	}
 	let isFrontmatterAutoClean = null;
 	if (frontmatter.multipleRepo) {
 		const multipleRepo = parseMultipleRepo(frontmatter, repoFrontmatter);
 		if (multipleRepo.length === 1) {
-			return parsePath(settings, repository, multipleRepo[0], frontmatter) as RepoFrontmatter;
+			return parsePath(settings, repository, findRepositoryInLinkedArray(multipleRepo[0], linkedArray), frontmatter) as RepoFrontmatter;
 		}
-		return multipleRepo;
+		return parsePath(settings, repository, findAndOverrideInArrays(multipleRepo, linkedArray), frontmatter) as RepoFrontmatter[];
 	} else if (frontmatter.repo) {
 		if (typeof frontmatter.repo === "object") {
 			if (frontmatter.repo.branch !== undefined) {
@@ -187,13 +212,15 @@ export function getRepoFrontmatter(
 			isFrontmatterAutoClean = repo.length > 4 ? true : null;
 			repoFrontmatter = repositoryStringSlice(repo, repoFrontmatter);
 		}
+		linkedArray = findRepositoryInLinkedArray(repoFrontmatter, linkedArray);
 	} else if (frontmatter.shortRepo instanceof Array) {
-		return multipleShortKeyRepo(frontmatter, settings.github.otherRepo, repoFrontmatter, settings);
+		const multipleRepo= multipleShortKeyRepo(frontmatter, settings.github.otherRepo, repoFrontmatter, settings);
+		return multipleRepo instanceof Array ? findAndOverrideInArrays(multipleRepo, linkedArray) : findRepositoryInLinkedArray(multipleRepo, linkedArray);
 	}
-	if (frontmatter.autoclean !== undefined && isFrontmatterAutoClean === null) {
-		repoFrontmatter.autoclean = frontmatter.autoclean;
+	if (frontmatter.autoclean !== undefined && isFrontmatterAutoClean === null && !(linkedFrontmatter instanceof Array)) {
+		linkedArray[0].autoclean = frontmatter.autoclean;
 	}
-	return parsePath(settings, repository, repoFrontmatter);
+	return parsePath(settings, repository, linkedArray);
 }
 
 /**
@@ -248,7 +275,10 @@ function parseMultipleRepo(
 			}
 		}
 	}
-	//remove duplicates
+	return removeDuplicateRepo(multipleRepo);
+}
+
+function removeDuplicateRepo(multipleRepo: RepoFrontmatter[]) {
 	return multipleRepo.filter(
 		(v, i, a) =>
 			a.findIndex(
@@ -267,7 +297,6 @@ function parseMultipleRepo(
  * @param {FrontMatterCache} frontmatter - The frontmatter of the file
  * @param {Repository[]} allRepo - The list of all repo from the settings
  * @param {RepoFrontmatter} repoFrontmatter - The default repoFrontmatter (from the default settings)
- * @return {RepoFrontmatter[] | RepoFrontmatter} - The repoFrontmatter from shortRepo
  */
 function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository[], repoFrontmatter: RepoFrontmatter, setting: GitHubPublisherSettings) {
 	if (frontmatter.shortRepo instanceof Array) {
@@ -470,4 +499,36 @@ function parseFrontmatterSettingsWithRepository(
 	frontConvert.convertInternalLinks = frontmatter?.[`${smartKey}.internals`] ?? frontConvert.convertInternalLinks;
 	frontConvert.unshared = frontmatter?.[`${smartKey}.nonShared`] ?? frontConvert.unshared;
 	return frontConvert;
+}
+
+function getLinkedFrontmatter(
+	originalFrontmatter: FrontMatterCache | null | undefined,
+	settings: GitHubPublisherSettings,
+	repository: Repository | null,
+	originalRepoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
+	sourceFile: TFile | null,
+	app: App,
+) {
+	const {metadataCache, vault} = app;
+	const linkedKey = settings.plugin.setFrontmatterKey;
+	if (!linkedKey || !originalFrontmatter || !sourceFile) return originalRepoFrontmatter;
+	const linkedFrontmatter = originalFrontmatter?.[linkedKey];
+	if (!linkedFrontmatter) return originalRepoFrontmatter;
+	let linkedFile: undefined | string;
+	metadataCache.getFileCache(sourceFile)?.frontmatterLinks?.forEach((link) => {
+		const fieldRegex = new RegExp(`${linkedKey}(\\.\\d+)?`, "g");
+		if (link.key.match(fieldRegex)) {
+			linkedFile = link.link;
+		}
+	});
+	if (!linkedFile) return originalRepoFrontmatter;
+	const linkedFrontmatterFile = metadataCache.getFirstLinkpathDest(linkedFile, sourceFile.path) ?? vault.getAbstractFileByPath(linkedFile);
+	if (!linkedFrontmatterFile || !(linkedFrontmatterFile instanceof TFile)) return originalRepoFrontmatter;
+	const linked = metadataCache.getFileCache(linkedFrontmatterFile)?.frontmatter;
+	if (!linked) return originalRepoFrontmatter;
+	return getRepoFrontmatter(settings, repository, linkedFrontmatterFile, app, linked, false); //prevent circular
+
+
+
+
 }
