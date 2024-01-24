@@ -391,13 +391,13 @@ export async function verifyRateLimitAPI(octokit: Octokit, settings: GitHubPubli
 		new Notice(i18next.t("commands.checkValidity.rateLimit.limited", {resetTime: time}));
 		return 0;
 	}
-	if (!commands) {
-		notif({settings}, i18next.t("commands.checkValidity.rateLimit.notLimited", {
-			remaining: remaining,
+	if (commands) {
+		new Notice(i18next.t("commands.checkValidity.rateLimit.notLimited", {
+			remaining,
 			resetTime: time
 		}));
 	} else {
-		new Notice(i18next.t("commands.checkValidity.rateLimit.notLimited", {
+		notif({settings}, i18next.t("commands.checkValidity.rateLimit.notLimited", {
 			remaining,
 			resetTime: time
 		}));
