@@ -178,7 +178,7 @@ export async function shareOneNote(
 	const metadataCache = app.metadataCache;
 	try {
 		const frontmatter = metadataCache.getFileCache(file)?.frontmatter;
-		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
+		const repoFrontmatter = getRepoFrontmatter(settings, repository, file, PublisherManager.plugin.app, frontmatter);
 		const isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter);
 		const multiRepo: MultiRepoProperties = {
 			frontmatter: repoFrontmatter,
@@ -243,7 +243,7 @@ export async function shareOneNote(
 			logs({settings, e: true}, error);
 			const notif = document.createDocumentFragment();
 			notif.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"] }).innerHTML = ERROR_ICONS;
-			notif.createSpan({ cls: ["error", "obsidian-publisher", "notification"] }).innerHTML = i18next.t("error.errorPublish", { repo: getRepoFrontmatter(settings, repository, metadataCache.getFileCache(file)?.frontmatter) });
+			notif.createSpan({ cls: ["error", "obsidian-publisher", "notification"] }).innerHTML = i18next.t("error.errorPublish", { repo: getRepoFrontmatter(settings, repository, file, app, metadataCache.getFileCache(file)?.frontmatter) });
 			new Notice(notif);
 		}
 	}

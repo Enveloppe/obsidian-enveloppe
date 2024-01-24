@@ -297,7 +297,7 @@ export async function checkRepositoryValidity(
 	const metadataCache = PublisherManager.plugin.app.metadataCache;
 	try {
 		const frontmatter = file ? metadataCache.getFileCache(file)?.frontmatter : undefined;
-		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
+		const repoFrontmatter = getRepoFrontmatter(settings, repository, file, PublisherManager.plugin.app, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin, silent);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, silent);

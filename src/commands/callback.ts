@@ -38,7 +38,7 @@ export async function createLinkCallback(repo: Repository | null, plugin: Github
 			) {
 				if (!checking) {
 					const multiRepo: MultiRepoProperties = {
-						frontmatter: getRepoFrontmatter(plugin.settings, repo, frontmatter),
+						frontmatter: getRepoFrontmatter(plugin.settings, repo, file, plugin.app, frontmatter),
 						repo,
 					};
 					createLink(
@@ -78,7 +78,7 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 		//@ts-ignore
 		callback: async () => {
 			logs({settings: plugin.settings}, "Enabling purge command");
-			const frontmatter = getRepoFrontmatter(plugin.settings, repo);
+			const frontmatter = getRepoFrontmatter(plugin.settings, repo, null, plugin.app);
 			const monoRepo: MonoRepoProperties = {
 				frontmatter: Array.isArray(frontmatter) ? frontmatter[0] : frontmatter,
 				repo,

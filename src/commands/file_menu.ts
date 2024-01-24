@@ -18,7 +18,7 @@ import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchName: string, repo: Repository | null) {
 	const publisher = await plugin.reloadOctokit();
 	const statusBarItems = plugin.addStatusBarItem();
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, undefined);
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, null, plugin.app, undefined);
 	const monoProperties: MonoRepoProperties = {
 		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 		repo,
@@ -106,7 +106,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 		isShared(frontmatter, plugin.settings, file, getSharedKey) &&
 		plugin.settings.plugin.fileMenu
 	) {
-		const repoFrontmatter = getRepoFrontmatter(plugin.settings, getSharedKey, frontmatter);
+		const repoFrontmatter = getRepoFrontmatter(plugin.settings, getSharedKey, file, plugin.app, frontmatter);
 		menu.addItem((item) => {
 			/**
 			 * Create a submenu if multiple repo exists in the settings & platform is desktop
@@ -176,7 +176,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	//@ts-ignore
 	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
-	let repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, frontmatter);
+	let repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, file, plugin.app, frontmatter);
 	repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
 	/**
 	 * default repo
