@@ -259,6 +259,12 @@ function parseMultipleRepo(
 	return removeDuplicateRepo(multipleRepo);
 }
 
+/**
+ * Removes duplicate repositories from the given array of RepoFrontmatter objects.
+ * Only the {repo, owner, branch, autoclean} properties are compared.
+ * @param multipleRepo - An array of RepoFrontmatter objects representing multiple repositories.
+ * @returns An array of RepoFrontmatter objects with duplicate repositories removed.
+ */
 function removeDuplicateRepo(multipleRepo: RepoFrontmatter[]) {
 	return multipleRepo.filter(
 		(v, i, a) =>
