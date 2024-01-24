@@ -99,15 +99,14 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
  * @param {Menu} menu - The menu to add the item to
  */
 export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: string, menu: Menu) {
-	const frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+	const frontmatter = frontmatterFromFile(file, plugin);
 	let getSharedKey = getRepoSharedKey(plugin.settings, plugin.app, frontmatter, file);
 	const allKeysFromFile = multipleSharedKey(frontmatter, plugin.settings, file, plugin.app);
 	if (
 		!(isShared(frontmatter, plugin.settings, file, getSharedKey) &&
-	plugin.settings.plugin.fileMenu)
-	) {
-		return;
-	}
+		plugin.settings.plugin.fileMenu)
+	) return;
+
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, getSharedKey, frontmatter);
 
 	menu.addItem((item) => {

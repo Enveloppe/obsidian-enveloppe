@@ -50,7 +50,7 @@ export function isInternalShared(
  * @param file - The TFile object representing the file being processed.
  * @returns The Repository object representing the repository with the shared key, or null if no repository is found.
  */
-export function getRepoSharedKey(settings: GitHubPublisherSettings, app: App, frontmatter?: FrontMatterCache, file?: TFile): Repository | null{
+export function getRepoSharedKey(settings: GitHubPublisherSettings, app: App, frontmatter?: FrontMatterCache | null, file?: TFile): Repository | null{
 	const allOtherRepo = settings.github.otherRepo;
 	if (settings.plugin.shareAll?.enable && !frontmatter) {
 		return defaultRepo(settings);
@@ -137,7 +137,7 @@ export function isExcludedPath(settings: GitHubPublisherSettings, file: TFile | 
  * @param {App} app - The Obsidian app instance.
  * @returns {string[]} - An array of shared keys found in the file.
  */
-export function multipleSharedKey(frontmatter: FrontMatterCache | undefined, settings: GitHubPublisherSettings, file: TFile | null, app: App): string[] {
+export function multipleSharedKey(frontmatter: FrontMatterCache | undefined | null, settings: GitHubPublisherSettings, file: TFile | null, app: App): string[] {
 	const keysInFile: string[] = [];
 	if (settings.plugin.shareAll?.enable)
 		keysInFile.push("share"); //add a key to count the shareAll
@@ -313,7 +313,7 @@ export async function checkRepositoryValidity(
 	const settings = PublisherManager.settings;
 	try {
 		const frontmatter = frontmatterFromFile(file, PublisherManager.plugin);
-		const repoFrontmatter = getRepoFrontmatter(settings, repository, file, PublisherManager.plugin.app, frontmatter);
+		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin, silent);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, silent);

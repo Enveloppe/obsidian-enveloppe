@@ -372,7 +372,7 @@ export function getReceiptFolder(
 	plugin: GithubPublisher,
 	repoFrontmatter?: RepoFrontmatter | RepoFrontmatter[],
 ): string {
-	const { vault} = app;
+	const { vault} = plugin.app;
 	if (file.extension === "md") {
 		const frontmatter = frontmatterFromFile(file, plugin);
 		if (!repoFrontmatter) repoFrontmatter = getRepoFrontmatter(settings, otherRepo, frontmatter);
