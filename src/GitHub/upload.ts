@@ -40,7 +40,7 @@ import {
 	isShared,
 } from "../utils/data_validation_test";
 import { LOADING_ICON } from "../utils/icons";
-import { getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import { ShareStatusBar } from "../utils/status_bar";
 import { deleteFromGithub } from "./delete";
 import { FilesManagement } from "./files";
@@ -178,8 +178,8 @@ export default class Publisher {
 			this.octokit,
 			this.plugin,
 		);
-		const frontmatter = this.metadataCache.getFileCache(file)?.frontmatter;
-		const repoFrontmatter = getRepoFrontmatter(this.settings, repo.repo, file, this.plugin.app, frontmatter);
+		const frontmatter = frontmatterFromFile(file, this.plugin);
+		const repoFrontmatter = getRepoFrontmatter(this.settings, repo.repo, file, this.plugin.app, frontmatter, false);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, this.plugin);
 		repo.frontmatter = repoFrontmatter;
 		if (
