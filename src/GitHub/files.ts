@@ -16,7 +16,7 @@ import {
 } from "../settings/interface";
 import {logs} from "../utils";
 import { isAttachment, isShared } from "../utils/data_validation_test";
-import { getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import Publisher from "./upload";
 
 export class FilesManagement extends Publisher {
@@ -99,20 +99,18 @@ export class FilesManagement extends Publisher {
 					real: file.path,
 				});
 			} else if (file.extension == "md") {
-				const frontMatter = this.metadataCache.getCache(file.path)?.frontmatter;
+				const frontMatter = frontmatterFromFile(file, this.plugin);
 				if (isShared(frontMatter, this.settings, file, repo)) {
-					const repoFrontatter = getRepoFrontmatter(
+					const repoFrontmatter = getRepoFrontmatter(
 						this.settings,
 						repo,
-						file,
-						this.plugin.app,
 						frontMatter
 					);
-					const filepath = getReceiptFolder(file, this.settings, repo, this.plugin.app, repoFrontatter);
+					const filepath = getReceiptFolder(file, repo, this.plugin, repoFrontmatter);
 					allFileWithPath.push({
 						converted: filepath,
 						real: file.path,
-						repoFrontmatter: repoFrontatter,
+						repoFrontmatter: repoFrontmatter,
 					});
 				}
 			}

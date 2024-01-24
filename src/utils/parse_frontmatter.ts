@@ -3,7 +3,7 @@
  * See docs for all the condition
  */
 
-import { App, FrontMatterCache, normalizePath,TFile } from "obsidian";
+import { FrontMatterCache, normalizePath,TFile } from "obsidian";
 import GithubPublisher from "src/main";
 
 import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, RepoFrontmatter, Repository } from "../settings/interface";
@@ -133,29 +133,19 @@ function translateBooleanForRemoveEmbed(removeEmbed: unknown) {
 }
 
 /**
- * Get the frontmatter from the frontmatter
- * @param {GitHubPublisherSettings} settings
- * @param repository
- * @param {FrontMatterCache} frontmatter
- * @return {RepoFrontmatter[] | RepoFrontmatter}
+ * Retrieves the repository frontmatter based on the provided settings and repository information.
+ *
+ * @param {GitHubPublisherSettings} settings - The GitHub Publisher settings.
+ * @param {Repository | null} repository - The repository information.
+ * @param {FrontMatterCache | null} frontmatter - The frontmatter cache.
+ * @returns {RepoFrontmatter[] | RepoFrontmatter} - The repository frontmatter.
  */
-
 export function getRepoFrontmatter(
 	settings: GitHubPublisherSettings,
 	repository: Repository | null,
-	sourceFile: TFile | null,
-	app: App,
 	frontmatter?: FrontMatterCache | null,
-	parseSet = true,
 ): RepoFrontmatter[] | RepoFrontmatter {
 	let github = repository ?? settings.github;
-	if (parseSet && frontmatter) {
-		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, settings, sourceFile, app);
-		if (linkedFrontmatter) {
-			//fusion frontmatter and override the linkedFrontmatter with the frontmatter if the key is the same
-			frontmatter = {...linkedFrontmatter, ...frontmatter};
-		}
-	}
 	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"] !== "default") {
 		const smartKey = frontmatter.shortRepo.toLowerCase();
 		const allOtherRepo = settings.github.otherRepo;
@@ -503,11 +493,11 @@ function parseFrontmatterSettingsWithRepository(
 
 export function getLinkedFrontmatter(
 	originalFrontmatter: FrontMatterCache | null | undefined,
-	settings: GitHubPublisherSettings,
 	sourceFile: TFile | null | undefined,
-	app: App,
+	plugin: GithubPublisher,
 ) {
-	const {metadataCache, vault} = app;
+	const {settings} = plugin;
+	const {metadataCache, vault} = plugin.app;
 	const linkedKey = settings.plugin.setFrontmatterKey;
 	if (!linkedKey || !originalFrontmatter || !sourceFile) return originalFrontmatter;
 	const linkedFrontmatter = originalFrontmatter?.[linkedKey];
@@ -531,7 +521,7 @@ export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher)
 	let frontmatter = null;
 	if (file) {
 		frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
-		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, plugin.settings, file, plugin.app);
+		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
 		frontmatter = linkedFrontmatter ? { ...linkedFrontmatter, ...frontmatter } : frontmatter;
 	}
 	return frontmatter;

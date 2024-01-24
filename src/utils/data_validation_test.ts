@@ -1,6 +1,6 @@
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
-import {App, FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
+import { FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
 import GithubPublisher from "src/main";
 
 import {GithubBranch} from "../GitHub/branch";
@@ -43,19 +43,18 @@ export function isInternalShared(
 }
 /**
  * Retrieves the shared key for a repository based on the provided settings, app, frontmatter, and file.
- *
- * @param settings - The GitHubPublisherSettings object containing the configuration settings.
- * @param app - The App object representing the Obsidian application.
+ * @param plugin - The GitHub Publisher plugin instance.
  * @param frontmatter - The FrontMatterCache object representing the frontmatter of the file.
  * @param file - The TFile object representing the file being processed.
  * @returns The Repository object representing the repository with the shared key, or null if no repository is found.
  */
-export function getRepoSharedKey(settings: GitHubPublisherSettings, app: App, frontmatter?: FrontMatterCache, file?: TFile): Repository | null{
+export function getRepoSharedKey(plugin: GithubPublisher, frontmatter?: FrontMatterCache | null, file?: TFile): Repository | null{
+	const {settings} = plugin;
 	const allOtherRepo = settings.github.otherRepo;
 	if (settings.plugin.shareAll?.enable && !frontmatter) {
 		return defaultRepo(settings);
 	} else if (!frontmatter) return null;
-	const linkedFrontmatter = getLinkedFrontmatter(frontmatter, settings, file, app);
+	const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
 	frontmatter = linkedFrontmatter ? {...linkedFrontmatter, ...frontmatter} : frontmatter;
 	for (const repo of allOtherRepo) {
 		if (frontmatter[repo.shareKey]) {
@@ -137,8 +136,9 @@ export function isExcludedPath(settings: GitHubPublisherSettings, file: TFile | 
  * @param {App} app - The Obsidian app instance.
  * @returns {string[]} - An array of shared keys found in the file.
  */
-export function multipleSharedKey(frontmatter: FrontMatterCache | undefined, settings: GitHubPublisherSettings, file: TFile | null, app: App): string[] {
+export function multipleSharedKey(frontmatter: FrontMatterCache | undefined | null, file: TFile | null, plugin: GithubPublisher): string[] {
 	const keysInFile: string[] = [];
+	const {settings} = plugin;
 	if (settings.plugin.shareAll?.enable)
 		keysInFile.push("share"); //add a key to count the shareAll
 
@@ -149,7 +149,7 @@ export function multipleSharedKey(frontmatter: FrontMatterCache | undefined, set
 		}
 	}
 	if (!frontmatter) return keysInFile;
-	const linkedRepo = getLinkedFrontmatter(frontmatter, settings, file, app);
+	const linkedRepo = getLinkedFrontmatter(frontmatter, file, plugin);
 	frontmatter = linkedRepo ? {...linkedRepo, ...frontmatter} : frontmatter;
 	const allKey = settings.github.otherRepo.map((repo) => repo.shareKey);
 	allKey.push(settings.plugin.shareKey);
@@ -313,7 +313,7 @@ export async function checkRepositoryValidity(
 	const settings = PublisherManager.settings;
 	try {
 		const frontmatter = frontmatterFromFile(file, PublisherManager.plugin);
-		const repoFrontmatter = getRepoFrontmatter(settings, repository, file, PublisherManager.plugin.app, frontmatter);
+		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin, silent);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, silent);

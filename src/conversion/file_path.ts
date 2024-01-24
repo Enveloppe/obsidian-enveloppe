@@ -1,11 +1,11 @@
 import {
-	App,
 	FrontMatterCache,
 	normalizePath,
 	TFile,
 	TFolder,
 	Vault,
 } from "obsidian";
+import GithubPublisher from "src/main";
 
 import {
 	FIND_REGEX,
@@ -21,7 +21,7 @@ import {
 	logs,
 } from "../utils";
 import {checkIfRepoIsInAnother, isInternalShared, isShared} from "../utils/data_validation_test";
-import { getCategory, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, getCategory, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import { createRegexFromText } from "./find_and_replace_text";
 
 
@@ -62,7 +62,7 @@ export function textIsInFrontmatter(
  * @param {TFile} sourceFile the shared file containing all links, embed etc
  * @param {LinkedNotes} targetFile The target file
  * @param {FrontMatterCache | null} frontmatter FrontmatterCache or null
- * @param app
+ * @param {plugin} GithubPublisher
  * @param properties
  * @return {string} relative path
  */
@@ -71,15 +71,14 @@ export async function createRelativePath(
 	sourceFile: TFile,
 	targetFile: LinkedNotes,
 	frontmatter: FrontMatterCache | null | undefined,
-	app: App,
+	plugin: GithubPublisher,
 	properties: MultiProperties,
 ): Promise<string> {
-	const { metadataCache } = app;
 	const settings = properties.settings;
 	const shortRepo = properties.repository;
-	const sourcePath = getReceiptFolder(sourceFile, settings, shortRepo, app, properties.frontmatter.repo);
-	const frontmatterTarget = metadataCache.getFileCache(targetFile.linked)!.frontmatter;
-	const targetRepo = getRepoFrontmatter(settings, shortRepo, targetFile.linked, app, frontmatterTarget);
+	const sourcePath = getReceiptFolder(sourceFile, shortRepo, plugin, properties.frontmatter.repo);
+	const frontmatterTarget = frontmatterFromFile(targetFile.linked, plugin);
+	const targetRepo = getRepoFrontmatter(settings, shortRepo, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(properties.frontmatter.repo, targetRepo);
 	const shared = isInternalShared(
 		frontmatterTarget,
@@ -94,12 +93,12 @@ export async function createRelativePath(
 		return targetFile.destinationFilePath ? targetFile.destinationFilePath: targetFile.linked.basename;
 	}
 	if (targetFile.linked.path === sourceFile.path) {
-		return getReceiptFolder(targetFile.linked, settings, shortRepo, app, targetRepo).split("/").at(-1) as string;
+		return getReceiptFolder(targetFile.linked, shortRepo, plugin, targetRepo).split("/").at(-1) as string;
 	}
 
 	const targetPath =
 		targetFile.linked.extension === "md" && !targetFile.linked.name.includes("excalidraw")
-			? getReceiptFolder(targetFile.linked, settings, shortRepo, app, targetRepo)
+			? getReceiptFolder(targetFile.linked, shortRepo, plugin, targetRepo)
 			: getImagePath(
 				targetFile.linked,
 				settings,
@@ -146,9 +145,8 @@ export async function createRelativePath(
 		//in case of errors
 		return getReceiptFolder(
 			targetFile.linked,
-			settings,
 			shortRepo,
-			app,
+			plugin,
 			targetRepo
 		).split("/").at(-1) as string;
 	}
@@ -368,15 +366,15 @@ export function getTitleField(
 
 export function getReceiptFolder(
 	file: TFile,
-	settings: GitHubPublisherSettings,
 	otherRepo: Repository | null,
-	app: App,
+	plugin: GithubPublisher,
 	repoFrontmatter?: RepoFrontmatter | RepoFrontmatter[],
 ): string {
-	const { vault, metadataCache } = app;
+	const { vault} = plugin.app;
+	const settings = plugin.settings;
 	if (file.extension === "md") {
-		const frontmatter = metadataCache.getCache(file.path)?.frontmatter;
-		if (!repoFrontmatter) repoFrontmatter = getRepoFrontmatter(settings, otherRepo, file, app, frontmatter);
+		const frontmatter = frontmatterFromFile(file, plugin);
+		if (!repoFrontmatter) repoFrontmatter = getRepoFrontmatter(settings, otherRepo, frontmatter);
 		repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
 		let targetRepo = repoFrontmatter.find((repo) => repo.path?.smartkey === otherRepo?.smartKey || "default");
 		if (!targetRepo) targetRepo = repoFrontmatter[0];

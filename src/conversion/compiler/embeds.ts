@@ -15,6 +15,7 @@ import {
 	resolveSubpath,
 	TFile} from "obsidian";
 import { getAPI, Link } from "obsidian-dataview";
+import GithubPublisher from "src/main";
 
 import {
 	GitHubPublisherSettings,
@@ -145,7 +146,7 @@ function extractSubpath(
  * @source https://github.com/mgmeyers/obsidian-easy-bake/blob/master/src/BakeModal.ts
  * @param {TFile} originalFile the file to bake
  * @param {Set<TFile>} ancestor the ancestor of the file
- * @param {App} app the Obsidian App instance
+ * @param {GithubPublisher} plugin the Obsidian Plugin instance
  * @param {MultiProperties} properties the properties of the plugins (settings, repository, frontmatter)
  * @param {string|null} subpath the subpath to bake
  * @param {LinkedNotes[]} linkedNotes the linked notes embedded in the file
@@ -153,11 +154,12 @@ function extractSubpath(
 export async function bakeEmbeds(
 	originalFile: TFile,
 	ancestor: Set<TFile>,
-	app: App,
+	plugin: GithubPublisher,
 	properties: MultiProperties,
 	subpath: string|null,
 	linkedNotes: LinkedNotes[]): Promise<string> {
-	const { vault, metadataCache } = app;
+	const { app } = plugin;
+	const { vault, metadataCache } = plugin.app;
 	let text = await vault.cachedRead(originalFile);
 
 	const cache = metadataCache.getFileCache(originalFile);
@@ -186,13 +188,13 @@ export async function bakeEmbeds(
 
 		const replaceTarget = async (replacement: string) => {
 			if (properties.settings.embed.bake?.textAfter) {
-				let textAfter = await changeURL(properties.settings.embed.bake?.textAfter, properties, linked, originalFile, app, linkedNotes);
+				let textAfter = await changeURL(properties.settings.embed.bake?.textAfter, properties, linked, originalFile, plugin, linkedNotes);
 				textAfter = changeTitle(textAfter, linked, app, properties.settings);
 				const newLine = replacement.match(/[\s\n]/g) ? "" : "\n";
 				replacement = `${replacement}${newLine}${textAfter}`;
 			}
 			if (properties.settings.embed.bake?.textBefore) {
-				let textBefore = await changeURL(properties.settings.embed.bake?.textBefore, properties, linked, originalFile, app, linkedNotes);
+				let textBefore = await changeURL(properties.settings.embed.bake?.textBefore, properties, linked, originalFile, plugin, linkedNotes);
 				textBefore = changeTitle(textBefore, linked, app, properties.settings);
 				replacement = `${textBefore}\n${replacement}`;
 			}
@@ -207,7 +209,7 @@ export async function bakeEmbeds(
 			//do nothing
 			continue;
 		}
-		const baked = sanitizeBakedContent(await bakeEmbeds(linked, newAncestors, app, properties, subpath, linkedNotes));
+		const baked = sanitizeBakedContent(await bakeEmbeds(linked, newAncestors, plugin, properties, subpath, linkedNotes));
 		await replaceTarget(
 			listMatch ? applyIndent(stripFirstBullet(baked), listMatch[1]) : baked);
 	}
@@ -220,17 +222,17 @@ export async function bakeEmbeds(
  * @param properties {MultiProperties} contains the settings, repository and frontmatter
  * @param linked {TFile} The linked note
  * @param sourceFile {TFile} The source file
- * @param app {App} The Obsidian App instance
+ * @param plugin {GithubPublisher} The Obsidian App instance
  * @param linkedNotes {LinkedNotes[]} The linked notes embedded in the file
  * @returns {Promise<string>}
  */
-async function changeURL(textToAdd: string, properties: MultiProperties, linked: TFile, sourceFile: TFile, app: App, linkedNotes: LinkedNotes[]): Promise<string> {
+async function changeURL(textToAdd: string, properties: MultiProperties, linked: TFile, sourceFile: TFile, plugin: GithubPublisher, linkedNotes: LinkedNotes[]): Promise<string> {
 	const frontmatter = app.metadataCache.getFileCache(linked)?.frontmatter;
 	if (!frontmatter) return textToAdd;
 	const linkedNote = linkedNotes.find((note) => note.linked === linked);
 	if (!linkedNote) return textToAdd;
 	if (properties.frontmatter.general.convertInternalLinks) {
-		const relativePath = await createRelativePath(sourceFile, linkedNote, frontmatter, app, properties);
+		const relativePath = await createRelativePath(sourceFile, linkedNote, frontmatter, plugin, properties);
 		return textToAdd.replace(/\{{2}url\}{2}/gmi, relativePath);
 	} return textToAdd.replace(/\{{2}url\}{2}/gmi, linkedNote.linked.path);
 

@@ -10,7 +10,7 @@ import GithubPublisher from "../main";
 import {MonoRepoProperties, MultiRepoProperties, Repository} from "../settings/interface";
 import {createLink} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
-import { getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {
 	purgeNotesRemote,
 	shareAllEditedNotes,
@@ -28,19 +28,19 @@ import {
  */
 export async function createLinkOnActiveFile(repo: Repository | null, plugin: GithubPublisher): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
-	const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
+	const frontmatter = frontmatterFromFile(file, plugin);
+
 	if (
 		file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 	) {
 		const multiRepo: MultiRepoProperties = {
-			frontmatter: getRepoFrontmatter(plugin.settings, repo, file, plugin.app, frontmatter),
+			frontmatter: getRepoFrontmatter(plugin.settings, repo, frontmatter),
 			repo
 		};
 		await createLink(
 			file,
 			multiRepo,
-			plugin.settings,
-			plugin.app
+			plugin
 		);
 		new Notice(i18next.t("commands.copyLink.onActivation"));
 		return;
@@ -56,12 +56,11 @@ export async function createLinkOnActiveFile(repo: Repository | null, plugin: Gi
  * @param {string} branchName
  * @return {Promise<void>}
  */
-export async function shareActiveFile(plugin: GithubPublisher, repo: Repository | null, branchName: string): Promise<void> {
+export async function shareActiveFile(plugin: GithubPublisher, repo: Repository | null): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
 	if (file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)) {
 		await shareOneNote(
-			branchName,
 			await plugin.reloadOctokit(),
 			file,
 			repo,
@@ -80,7 +79,7 @@ export async function shareActiveFile(plugin: GithubPublisher, repo: Repository 
  * @return {Promise<void>}
  */
 export async function deleteCommands(plugin : GithubPublisher, repo: Repository | null, branchName: string): Promise<void> {
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, null, plugin.app);
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	const publisher = await plugin.reloadOctokit();
 	const mono: MonoRepoProperties = {
 		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
@@ -102,11 +101,11 @@ export async function deleteCommands(plugin : GithubPublisher, repo: Repository 
  * @return {Promise<void>}
  */
 
-export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository | null, branchName: string) {
+export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository | null, branchName: string): Promise<void> {
 	const statusBarItems = plugin.addStatusBarItem();
 	const publisher = await plugin.reloadOctokit();
 	const sharedFiles = publisher.getSharedFiles(repo);
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, null, plugin.app);
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	const mono: MonoRepoProperties = {
 		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 		repo
@@ -132,7 +131,7 @@ export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository |
 
 export async function uploadNewNotes(plugin: GithubPublisher, branchName: string, repo: Repository|null): Promise<void> {
 	const publisher = await plugin.reloadOctokit();
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, null, plugin.app);
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	await shareNewNote(
 		publisher,
 		branchName,
@@ -173,7 +172,7 @@ export async function repositoryValidityActiveFile(plugin:GithubPublisher, branc
  */
 export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: string, repo: Repository|null=null): Promise<void> {
 	const publisher = await plugin.reloadOctokit();
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, null, plugin.app);
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 
 	await shareAllEditedNotes(
 		publisher,
@@ -195,7 +194,7 @@ export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: 
  */
 export async function shareEditedOnly(branchName: string, repo: Repository|null, plugin: GithubPublisher) {
 	const publisher = await plugin.reloadOctokit();
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, null, plugin.app);
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	await shareOnlyEdited(
 		publisher,
 		branchName,

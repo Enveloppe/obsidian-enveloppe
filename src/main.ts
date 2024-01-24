@@ -27,20 +27,20 @@ import {createTokenPath, logs, monkeyPatchConsole, notif} from "./utils";
 import {checkRepositoryValidity, verifyRateLimitAPI} from "./utils/data_validation_test";
 
 /**
- * Main class of the plugin
- * @extends Plugin
- */
+	* Main class of the plugin
+	* @extends Plugin
+	*/
 
 export default class GithubPublisher extends Plugin {
 	settings!: GitHubPublisherSettings;
 	branchName: string = "";
 
 	/**
-	 * Get the title field of a file
-	 * @param {TFile} file - The file to get the title field from
-	 * @param {FrontMatterCache} frontmatter - The frontmatter of the file
-	 * @return {string} - The title field of the file
-	 */
+		* Get the title field of a file
+		* @param {TFile} file - The file to get the title field from
+		* @param {FrontMatterCache} frontmatter - The frontmatter of the file
+		* @return {string} - The title field of the file
+		*/
 	getTitleFieldForCommand(file:TFile, frontmatter: FrontMatterCache | undefined | null): string {
 		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
 	}
@@ -49,7 +49,7 @@ export default class GithubPublisher extends Plugin {
 		if (plugin.settings.plugin.copyLink.addCmd) {
 			this.addCommand(await createLinkCallback(repo, this));
 		}
-		this.addCommand(await shareOneNoteCallback(repo, this, this.branchName));
+		this.addCommand(await shareOneNoteCallback(repo, this));
 		if (plugin.settings.upload.autoclean.enable) {
 			logs({settings: this.settings}, "Adding purge command");
 			this.addCommand(await purgeNotesRemoteCallback(this, repo, this.branchName));
@@ -119,13 +119,13 @@ export default class GithubPublisher extends Plugin {
 	}
 
 	/**
-	 * Read the env file to get the token of the plugin
-	 * Form of the file:
-	 * ```
-	 * GITHUB_TOKEN=token
-	 * ```
-	 * @returns {Promise<string>} - The token of the plugin
-	 */
+		* Read the env file to get the token of the plugin
+		* Form of the file:
+		* ```
+		* GITHUB_TOKEN=token
+		* ```
+		* @returns {Promise<string>} - The token of the plugin
+		*/
 
 	async loadToken(): Promise<string> {
 		const tokenPath = createTokenPath(this, this.settings.github.tokenPath);
@@ -151,7 +151,7 @@ export default class GithubPublisher extends Plugin {
 	}
 
 	/**
-	 * Create a new instance of Octokit to load a new instance of GithubBranch
+		* Create a new instance of Octokit to load a new instance of GithubBranch
 	*/
 	async reloadOctokit() {
 		let octokit: Octokit;
@@ -175,9 +175,9 @@ export default class GithubPublisher extends Plugin {
 
 
 	/**
-	 * Function called when the plugin is loaded
-	 * @return {Promise<void>}
-	 */
+		* Function called when the plugin is loaded
+		* @return {Promise<void>}
+		*/
 	async onload(): Promise<void> {
 		console.info(`[GITHUB PUBLISHER] v.${this.manifest.version} (lang: ${translationLanguage}) loaded`);
 		await this.loadSettings();
@@ -256,8 +256,8 @@ export default class GithubPublisher extends Plugin {
 	}
 
 	/**
-	 * Called when the plugin is disabled
-	 */
+		* Called when the plugin is disabled
+		*/
 	onunload() {
 		console.info("[Github Publisher] unloaded");
 	}
@@ -273,8 +273,8 @@ export default class GithubPublisher extends Plugin {
 	}
 
 	/**
-	 * Save the settings of the plugin
-	 */
+		* Save the settings of the plugin
+		*/
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}

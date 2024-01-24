@@ -181,14 +181,14 @@ export async function mainConverting(
 
 ): Promise<string> {
 	if (properties.frontmatter.general.removeEmbed === "bake")
-		text = await bakeEmbeds(file, new Set(), app, properties, null, linkedFiles);
+		text = await bakeEmbeds(file, new Set(), plugin, properties, null, linkedFiles);
 	text = findAndReplaceText(text, properties.settings, false);
 	text = await processYaml(properties.settings, file, plugin.app.metadataCache, frontmatter, text, properties);
 	text = await convertToInternalGithub(
 		text,
 		linkedFiles,
 		file,
-		app,
+		plugin,
 		frontmatter,
 		properties
 	);
@@ -196,7 +196,7 @@ export async function mainConverting(
 	text = await convertDataviewQueries(
 		text,
 		file.path,
-		plugin.app,
+		plugin,
 		frontmatter,
 		file,
 		properties

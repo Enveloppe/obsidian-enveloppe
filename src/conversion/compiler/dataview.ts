@@ -4,8 +4,9 @@
  */
 
 import i18next from "i18next";
-import { App, Component, FrontMatterCache, htmlToMarkdown,TFile, Vault } from "obsidian";
+import { Component, FrontMatterCache, htmlToMarkdown,TFile, Vault } from "obsidian";
 import { getAPI, isPluginEnabled,Literal, Success } from "obsidian-dataview";
+import GithubPublisher from "src/main";
 import { FrontmatterConvert, GitHubPublisherSettings, LinkedNotes, MultiProperties } from "src/settings/interface";
 import { logs, notif } from "src/utils";
 
@@ -18,7 +19,7 @@ import { convertToInternalGithub, convertWikilinks, escapeRegex } from "../links
  * Also convert links using convertDataviewLinks
  * @param {string} text the text to convert
  * @param {string} path the path of the file to convert
- * @param {App} app obsidian app
+ * @param {GithubPublisher} plugin GithubPublisher plugin
  * @param {FrontMatterCache} frontmatter the frontmatter cache
  * @param {TFile} sourceFile the file to process
  * @param {MultiProperties} properties the properties of the plugins (settings, repository, frontmatter)
@@ -30,7 +31,7 @@ import { convertToInternalGithub, convertWikilinks, escapeRegex } from "../links
 export async function convertDataviewQueries(
 	text: string,
 	path: string,
-	app: App,
+	plugin: GithubPublisher,
 	frontmatter: FrontMatterCache | undefined | null,
 	sourceFile: TFile,
 	properties: MultiProperties,
@@ -163,7 +164,7 @@ export async function convertDataviewQueries(
 			return inlineJsQuery[0];
 		}
 	}
-	return await convertDataviewLinks(replacedText, frontmatter, sourceFile, app, properties);
+	return await convertDataviewLinks(replacedText, frontmatter, sourceFile, plugin, properties);
 }
 
 /**
@@ -182,7 +183,7 @@ function removeDataviewQueries(dataviewMarkdown: Literal, frontmatterSettings: F
  * @param {string} md the text to convert
  * @param {FrontMatterCache | undefined | null} frontmatter the frontmatter cache
  * @param {TFile} sourceFile the file to process
- * @param {App} app obsidian app
+ * @param {GithubPublisher} plugin obsidian app
  * @param {MultiProperties} properties the properties of the plugins (settings, repository, frontmatter)
  * @returns {Promise<string>} the converted text
  */
@@ -190,14 +191,14 @@ async function convertDataviewLinks(
 	md: string,
 	frontmatter: FrontMatterCache | undefined | null,
 	sourceFile: TFile,
-	app: App,
+	plugin: GithubPublisher,
 	properties: MultiProperties): Promise<string> {
 	const dataviewPath = getDataviewPath(md, properties.settings, app.vault);
 	md = await convertToInternalGithub(
 		md,
 		dataviewPath,
 		sourceFile,
-		app,
+		plugin,
 		frontmatter,
 		properties
 	);

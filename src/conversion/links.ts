@@ -1,5 +1,6 @@
-import { App, FrontMatterCache, TFile } from "obsidian";
+import { FrontMatterCache, TFile } from "obsidian";
 import slugify from "slugify";
+import GithubPublisher from "src/main";
 
 import {
 	FrontmatterConvert,
@@ -248,7 +249,7 @@ export async function convertToInternalGithub(
 	fileContent: string,
 	linkedFiles: LinkedNotes[],
 	sourceFile: TFile,
-	app: App,
+	plugin: GithubPublisher,
 	frontmatter: FrontMatterCache | undefined | null,
 	properties: MultiProperties,
 ): Promise<string> {
@@ -266,7 +267,7 @@ export async function convertToInternalGithub(
 			sourceFile,
 			linkedFile,
 			frontmatter,
-			app,
+			plugin,
 			properties,
 		);
 		pathInGithub = pathInGithub.replace(".md", "");

@@ -20,12 +20,12 @@ interface GithubPublisherCommands {
 }
 
 /**
- * @extends FuzzySuggestModal
- * @category Command
- * @category SuggestModal
- * @category GithubPublisherPlugin
- * @description This class is used to choose which repo to run the command on
- */
+	* @extends FuzzySuggestModal
+	* @category Command
+	* @category SuggestModal
+	* @category GithubPublisherPlugin
+	* @description This class is used to choose which repo to run the command on
+	*/
 
 export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
 	plugin: GithubPublisherPlugin;
@@ -50,8 +50,8 @@ export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
 }
 
 /**
- * Just return the repo data
- */
+	* Just return the repo data
+	*/
 export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 	plugin: GithubPublisherPlugin;
 	branchName: string;
@@ -87,7 +87,7 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 		repoFound=repoFound.concat(this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.shareAll?.enable && !this.fileName?.startsWith(repo.shareAll?.excludedFileName)));
 		repoFound.push(defRepo);
 		repoFound=[...new Set(repoFound)];
-		if (repoFound.length === 0) 
+		if (repoFound.length === 0)
 			return this.plugin.settings.github.otherRepo;
 		return repoFound;
 	}
@@ -101,9 +101,9 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 }
 
 /**
- * @description This class call the commands on the chosen repo
- * @extends FuzzySuggestModal
- */
+	* @description This class call the commands on the chosen repo
+	* @extends FuzzySuggestModal
+	*/
 
 export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPublisherCommands> {
 	plugin: GithubPublisherPlugin;
@@ -179,7 +179,7 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 			shareEditedOnly(this.branchName, this.repo, this.plugin);
 			break;
 		case "shareOneNote":
-			shareActiveFile(this.plugin, this.repo, this.branchName);
+			shareActiveFile(this.plugin, this.repo);
 			break;
 		case "createLink":
 			createLinkOnActiveFile(this.repo, this.plugin);

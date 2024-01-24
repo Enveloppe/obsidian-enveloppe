@@ -4,7 +4,7 @@ import { Menu, MenuItem, Platform, TFile, TFolder} from "obsidian";
 import GithubPublisher from "../main";
 import {MonoRepoProperties, Repository} from "../settings/interface";
 import {defaultRepo, getRepoSharedKey, isExcludedPath, isInDryRunFolder, isShared, multipleSharedKey} from "../utils/data_validation_test";
-import { getLinkedFrontmatter, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {shareAllMarkedNotes, shareOneNote} from ".";
 import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 
@@ -18,7 +18,7 @@ import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchName: string, repo: Repository | null) {
 	const publisher = await plugin.reloadOctokit();
 	const statusBarItems = plugin.addStatusBarItem();
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, null, plugin.app, undefined);
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, null);
 	const monoProperties: MonoRepoProperties = {
 		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 		repo,
@@ -55,7 +55,7 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
 				}))
 				.setIcon("folder-up")
 				.onClick(async () => {
-					const repo = getRepoSharedKey(plugin.settings, plugin.app, undefined);
+					const repo = getRepoSharedKey(plugin, undefined);
 					await shareFolderRepo(plugin, folder, branchName, repo);
 				});
 		});
@@ -99,16 +99,15 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
  * @param {Menu} menu - The menu to add the item to
  */
 export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: string, menu: Menu) {
-	const frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
-	let getSharedKey = getRepoSharedKey(plugin.settings, plugin.app, frontmatter, file);
-	const allKeysFromFile = multipleSharedKey(frontmatter, plugin.settings, file, plugin.app);
+	const frontmatter = frontmatterFromFile(file, plugin);
+	let getSharedKey = getRepoSharedKey(plugin, frontmatter, file);
+	const allKeysFromFile = multipleSharedKey(frontmatter, file, plugin);
 	if (
 		!(isShared(frontmatter, plugin.settings, file, getSharedKey) &&
-	plugin.settings.plugin.fileMenu)
-	) {
-		return;
-	}
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, getSharedKey, file, plugin.app, frontmatter);
+		plugin.settings.plugin.fileMenu)
+	) return;
+
+	const repoFrontmatter = getRepoFrontmatter(plugin.settings, getSharedKey, frontmatter);
 
 	menu.addItem((item) => {
 		/**
@@ -152,7 +151,6 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 			.setIcon("file-up")
 			.onClick(async () => {
 				await shareOneNote(
-					branchName,
 					await plugin.reloadOctokit(),
 					file,
 					getSharedKey,
@@ -174,13 +172,11 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
  * @return {Menu} - The submenu created
  */
 export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository | null, originalMenu: Menu): Menu {
-	let frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
-	const linkedFrontmatter = getLinkedFrontmatter(frontmatter, plugin.settings, file, plugin.app);
-	frontmatter = linkedFrontmatter ? { ...linkedFrontmatter, ...frontmatter } : frontmatter;
+	const frontmatter = frontmatterFromFile(file, plugin);
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	//@ts-ignore
 	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
-	let repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, file, plugin.app, frontmatter);
+	let repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, frontmatter);
 	repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
 	/**
 	 * default repo
@@ -196,7 +192,6 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 				.setIcon("file-up")
 				.onClick(async () => {
 					await shareOneNote(
-						branchName,
 						await plugin.reloadOctokit(),
 						file,
 						defaultRepo(plugin.settings),
@@ -219,7 +214,6 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 						.setIcon("file-up")
 						.onClick(async () => {
 							await shareOneNote(
-								branchName,
 								await plugin.reloadOctokit(),
 								file,
 								otherRepo,
@@ -241,7 +235,6 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 					.setIcon("file-up")
 					.onClick(async () => {
 						await shareOneNote(
-							branchName,
 							await plugin.reloadOctokit(),
 							file,
 							repo,
@@ -259,7 +252,6 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 			.onClick(async () => {
 				new ChooseRepoToRun(plugin.app, plugin, repo?.shareKey, branchName, "file", file.basename, async (item: Repository) => {
 					await shareOneNote(
-						branchName,
 						await plugin.reloadOctokit(),
 						file,
 						item,
@@ -310,7 +302,7 @@ export async function addMenuFolder(menu: Menu, folder: TFolder, branchName: str
 			}))
 			.setIcon("folder-up")
 			.onClick(async () => {
-				const repo = getRepoSharedKey(plugin.settings, plugin.app, undefined);
+				const repo = getRepoSharedKey(plugin);
 				await shareFolderRepo(plugin, folder, branchName, repo);
 			});
 	});

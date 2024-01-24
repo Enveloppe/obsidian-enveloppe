@@ -13,6 +13,7 @@ import {
 	RepoFrontmatter, TOKEN_PATH,
 	UploadedFiles} from "../settings/interface";
 import { HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
+import { frontmatterFromFile } from "./parse_frontmatter";
 
 type LogsParameters = {
 	settings: Partial<GitHubPublisherSettings>,
@@ -231,23 +232,23 @@ function checkSlash(link: string): string {
 export async function createLink(
 	file: TFile,
 	multiRepo: MultiRepoProperties,
-	settings: GitHubPublisherSettings,
-	app:App
+	plugin: GithubPublisher,
 ): Promise<void> {
 	const otherRepo = multiRepo.repo;
+	const settings = plugin.settings;
 	const repo = multiRepo.frontmatter;
 	const copyLink = otherRepo ? otherRepo.copyLink : settings.plugin.copyLink;
 	const github = otherRepo ? otherRepo : settings.github;
 	if (!settings.plugin.copyLink.enable) {
 		return;
 	}
-	let filepath = getReceiptFolder(file, settings, otherRepo, app, multiRepo.frontmatter);
+	let filepath = getReceiptFolder(file, otherRepo, plugin, multiRepo.frontmatter);
 
 	let baseLink = copyLink.links;
 	if (baseLink.length === 0) {
 		baseLink = repo instanceof Array ? `https://${github.user}.github.io/${settings.github.repo}/` : `https://${repo.owner}.github.io/${repo.repo}/`;
 	}
-	const frontmatter = app.metadataCache.getFileCache(file)!.frontmatter;
+	const frontmatter = frontmatterFromFile(file, plugin);
 	let removePart = copyLink.removePart;
 	const smartKey = otherRepo?.smartKey;
 	if (frontmatter) {

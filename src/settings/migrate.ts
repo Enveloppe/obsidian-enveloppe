@@ -218,7 +218,11 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 				},
 				otherRepo: [],
 				rateLimit: 0,
-				verifiedRepo: false
+				verifiedRepo: false,
+				dryRun: {
+					enable: false,
+					folderName: "",
+				}
 			},
 		upload: {
 			behavior: old.downloadedFolder as FolderSettings,
@@ -272,13 +276,14 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 			},
 		},
 		embed: {
-			forcePushAttachments: [],
 			attachments: old.embedImage,
 			keySendFile: old.metadataFileFields,
 			notes: old.embedNotes,
 			folder: old.defaultImageFolder,
 			charConvert: "->",
-			convertEmbedToLinks: "keep"
+			convertEmbedToLinks: "keep",
+			overrideAttachments: [],
+
 		},
 		plugin: {
 			shareKey: old.shareKey,
@@ -292,7 +297,8 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 				addCmd: false,
 			},
 			noticeError: old.logNotice,
-			displayModalRepoEditing: false
+			displayModalRepoEditing: false,
+			setFrontmatterKey: "Set"
 		}
 	};
 	//@ts-ignore
