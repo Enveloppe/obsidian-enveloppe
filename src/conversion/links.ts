@@ -7,7 +7,7 @@ import {
 	LinkedNotes,
 	MultiProperties,
 } from "../settings/interface";
-import {isAttachment, noTextConversion} from "../utils/data_validation_test";
+import { isAttachment, noTextConversion } from "../utils/data_validation_test";
 import { createRelativePath, linkIsInFormatter, textIsInFrontmatter } from "./file_path";
 import { replaceText } from "./find_and_replace_text";
 
@@ -202,18 +202,29 @@ function createMarkdownLinks(fileName: string, isEmbed: string, altLink: string,
 	const markdownName = !isAttachment(fileName.trim())
 		? fileName.replace(/#.*/, "").trim() + ".md"
 		: fileName.trim();
-	const anchorMatch = fileName.match(/(#.*)/);	
-	let anchor = anchorMatch ? anchorMatch[0].replaceAll(" ", "%20") : "";
+	const anchorMatch = fileName.match(/(#.*)/);
+	let anchor = anchorMatch ? anchorMatch[0] : null;
 	const encodedURI = encodeURI(markdownName);
-	if (settings.conversion.links.slugify && anchorMatch) {
-		const slugified = slugify(anchorMatch[0], { lower: true, strict: true });
-		anchor = slugified.trim().length > 0 ? slugified : anchorMatch[0];
-		if (anchor.length > 0)
-			anchor = `${anchor}`;
-	}
+	anchor = slugifyAnchor(anchor, settings);
 	return `${isEmbed}[${altLink}](${encodedURI}${anchor})`;
 }
 
+
+function slugifyAnchor(anchor: string | null, settings: GitHubPublisherSettings) {
+	const slugifySetting = typeof(settings.conversion.links.slugify) === "string" ? settings.conversion.links.slugify : "disable";
+	if (anchor && slugifySetting !== "disable") {
+		switch (settings.conversion.links.slugify) {
+		case "lower":
+			return anchor.toLowerCase().replaceAll(" ", "-");
+		case "strict":
+			return slugify(anchor, { lower: true, strict: true });
+		default:
+			return anchor;
+		}
+
+	}
+	return anchor?.replaceAll(" ", "%20") ?? "";
+}
 
 /**
  * Add alt text to links
@@ -292,11 +303,8 @@ export async function convertToInternalGithub(
 				let newLink = link.replace(regToReplace, pathInGithubWithAnchor); //strict replacement of link
 				if (link.match(/\[.*\]\(.*\)/)) {
 					if (linkedFile.linked.extension === "md" && !linkedFile.linked.name.includes("excalidraw")) {
-						const slugified = slugify(anchor, { lower: true, strict: true});
-						anchor =  settings.conversion.links.slugify && slugified.trim().length > 0 ? slugified : anchor;
-						if (anchor.length > 0)
-							anchor = `#${anchor}`;
-						pathInGithub = `${pathInGithub.replaceAll(" ", "%20")}.md${anchor}`;
+						anchor = slugifyAnchor(anchor, settings);
+						pathInGithub = `${pathInGithub.replaceAll(" ", "%20")}.md#${anchor}`;
 						//probably useless
 						// pathInGithub = pathInGithub.replace(/(\.md)?(#.*)/, ".md$2");
 						pathInGithub = !pathInGithub.match(/(#.*)/) && !pathInGithub.endsWith(".md") ?

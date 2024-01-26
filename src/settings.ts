@@ -733,16 +733,21 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						this.renderSettingsPage("text-conversion");
 					});
 			});
-
+		const slugifySetting = typeof(textSettings.links.slugify)=="boolean" ? textSettings.links.slugify ? "strict" : "disable" : textSettings.links.slugify;
 		if (textSettings.links.wiki || textSettings.links.internal) {
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.conversion.links.slugify.title"))
 				.setDesc(i18next.t("settings.conversion.links.slugify.desc"))
-				.addToggle((toggle) => {
-					toggle
-						.setValue(textSettings.links.slugify)
+				.addDropdown((dropdown) => {
+					dropdown
+						.addOptions({
+							disable: i18next.t("settings.conversion.links.slugify.disable"),
+							strict: i18next.t("settings.conversion.links.slugify.strict"),
+							lower: i18next.t("settings.conversion.links.slugify.lower"),
+						})
+						.setValue(slugifySetting)
 						.onChange(async (value) => {
-							textSettings.links.slugify = value;
+							textSettings.links.slugify = ["disable", "strict", "lower"].includes(value) ? value as "disable" | "strict" | "lower" : "disable";
 							await this.plugin.saveSettings();
 						});
 				});
