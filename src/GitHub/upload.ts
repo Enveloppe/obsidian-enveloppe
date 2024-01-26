@@ -320,9 +320,6 @@ export default class Publisher {
 				error: [`Error while uploading ${file.name} to ${repo.owner}/${repo.repo}/${repo.branch}`]
 			};
 		}
-
-		logs({ settings: this.settings }, `length: ${embedFiles.length}`, embedFiles);
-
 		const embeded = await this.statusBarForEmbed(
 			embedFiles,
 			fileHistory,
@@ -639,10 +636,6 @@ export default class Publisher {
 				);
 				const repoFrontmatter = properties.frontmatter;
 				if (this.settings.github.dryRun.enable) {
-					newLinkedFiles.push(file);
-					continue;
-				}
-				if (!this.settings.github.dryRun.enable) {
 					newLinkedFiles.push(file);
 					continue;
 				}
