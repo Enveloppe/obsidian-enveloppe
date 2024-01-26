@@ -97,7 +97,7 @@ function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: an
 export function addToYaml(text: string, toAdd: string[], plugin: GithubPublisher, folderNoteParaMeters: { properties: MultiProperties | null, file: TFile}): string {
 	const { settings, app } = plugin;
 	const frontmatter = app.metadataCache.getFileCache(folderNoteParaMeters.file);
-	let yamlObject = parseYaml(stringifyYaml(frontmatter?.frontmatter));
+	let yamlObject = parseYaml(stringifyYaml(frontmatter?.frontmatter ?? {}));
 	try {
 		if (yamlObject && toAdd.length > 0) {
 			yamlObject = tagsToYaml(toAdd, settings, yamlObject);
