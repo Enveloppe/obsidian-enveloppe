@@ -1,6 +1,5 @@
 import { FrontMatterCache, TFile } from "obsidian";
 import slugify from "slugify";
-import GithubPublisher from "src/main";
 
 import {
 	FrontmatterConvert,
@@ -11,9 +10,6 @@ import {
 import {isAttachment, noTextConversion} from "../utils/data_validation_test";
 import { createRelativePath, linkIsInFormatter, textIsInFrontmatter } from "./file_path";
 import { replaceText } from "./find_and_replace_text";
-
-
-
 
 /**
  * Convert wikilinks to markdown
@@ -249,25 +245,28 @@ export async function convertToInternalGithub(
 	fileContent: string,
 	linkedFiles: LinkedNotes[],
 	sourceFile: TFile,
-	plugin: GithubPublisher,
 	frontmatter: FrontMatterCache | undefined | null,
 	properties: MultiProperties,
 ): Promise<string> {
 	const frontmatterSettings = properties.frontmatter.general;
-	const settings = properties.settings;
+	const settings = properties.plugin.settings;
 	if (!frontmatterSettings.convertInternalLinks) {
 		return fileContent;
 	}
+	// let firstKey: boolean | string = false;
 	for (const linkedFile of linkedFiles) {
-		if (linkIsInFormatter(linkedFile, frontmatter)) {
-			continue;
-		}
+		// const newKey = linkIsInFormatter(linkedFile, frontmatter);
+		// if (newKey !== false && newKey !== firstKey) {
+		// 	logs({settings}, `The link ${linkedFile.linkFrom} is in the frontmatter of ${newKey}, and different of the oldkey (${firstKey}), re-add it in case it is in the content`);
+		// 	firstKey = newKey;
+		// 	linkedFiles.push(linkedFile);
+		// 	continue;
+		// }
 
 		let pathInGithub = await createRelativePath(
 			sourceFile,
 			linkedFile,
 			frontmatter,
-			plugin,
 			properties,
 		);
 		pathInGithub = pathInGithub.replace(".md", "");

@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import {App, Modal, Notice, Setting} from "obsidian";
 
-import GithubPublisherPlugin from "../../main";
+import GithubPublisher from "../../main";
 import {checkRepositoryValidity, verifyRateLimitAPI} from "../../utils/data_validation_test";
 import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../interface";
 
@@ -12,14 +12,14 @@ import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../interf
  * @param {App} app - the Obsidian App
  * @param {GitHubPublisherSettings} settings - the plugin settings
  * @param {string} branchName - the branch name
- * @param {GithubPublisherPlugin} plugin - the plugin
+ * @param {GithubPublisher} plugin - the plugin
  * @param {Repository[]} repository - the list of repo in the settings
  * @param {(result: Repository[]) => void} onSubmit - the function to call when the modal is submitted
  */
 
 export class ModalAddingNewRepository extends Modal {
 	settings: GitHubPublisherSettings;
-	plugin: GithubPublisherPlugin;
+	plugin: GithubPublisher;
 	branchName: string;
 	repository: Repository[];
 	onSubmit: (result: Repository[]) => void;
@@ -28,7 +28,7 @@ export class ModalAddingNewRepository extends Modal {
 		app: App,
 		settings: GitHubPublisherSettings,
 		branchName: string,
-		plugin: GithubPublisherPlugin,
+		plugin: GithubPublisher,
 		repository: Repository[],
 		onSubmit: (result: Repository[]) => void) {
 		super(app);
@@ -194,7 +194,7 @@ export class ModalAddingNewRepository extends Modal {
  * @extends Modal
  * @param {App} app - The Obsidian App instance
  * @param {Repository} repository - The repository to edit
- * @param {GithubPublisherPlugin} GithubPublisherPlugin - The GithubPublisherPlugin instance
+ * @param {GithubPublisher} GithubPublisher - The GithubPublisher instance
  * @param {string} brancheName - The name of the branch (for validation)
  * @param {function} onSubmit - The function to call when the modal is closed (to save the changes)
  */
@@ -202,20 +202,20 @@ export class ModalAddingNewRepository extends Modal {
 class ModalEditingRepository extends Modal {
 	repository: Repository;
 	branchName: string;
-	plugin: GithubPublisherPlugin;
+	plugin: GithubPublisher;
 	onSubmit: (result: Repository) => void;
 
 	constructor(
 		app: App,
 		repository: Repository,
-		GithubPublisherPlugin: GithubPublisherPlugin,
+		GithubPublisher: GithubPublisher,
 		brancheName: string,
 		onSubmit: (result: Repository) => void) {
 		super(app);
 		this.repository = repository;
 		this.onSubmit = onSubmit;
 		this.branchName = brancheName;
-		this.plugin = GithubPublisherPlugin;
+		this.plugin = GithubPublisher;
 	}
 
 	onOpen() {

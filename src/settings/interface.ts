@@ -1,5 +1,7 @@
 import { TFile } from "obsidian";
 
+import GithubPublisher from "../main";
+
 export enum TypeOfEditRegex {
 	path = "path",
 	title = "title",
@@ -179,7 +181,7 @@ export enum GithubTiersVersion {
 }
 
 export interface MultiProperties {
-	settings: GitHubPublisherSettings;
+	plugin: GithubPublisher;
 	frontmatter: {
 		general: FrontmatterConvert;
 		repo: RepoFrontmatter | RepoFrontmatter[];
@@ -189,7 +191,7 @@ export interface MultiProperties {
 }
 
 export interface MonoProperties {
-	settings: GitHubPublisherSettings;
+	plugin: GithubPublisher;
 	frontmatter: {
 		general: FrontmatterConvert;
 		repo: RepoFrontmatter
@@ -213,7 +215,7 @@ export interface MultiRepoProperties {
  * Just a constant for the token path
  * @type {string} TOKEN_PATH
  */
-export const TOKEN_PATH:string = "%configDir%/plugins/%pluginID%/env";
+export const TOKEN_PATH: string = "%configDir%/plugins/%pluginID%/env";
 
 export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 	github: {

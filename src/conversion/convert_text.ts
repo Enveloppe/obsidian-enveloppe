@@ -1,5 +1,4 @@
 import {
-	App,
 	FrontMatterCache,
 	MetadataCache,
 	parseFrontMatterTags,
@@ -20,7 +19,7 @@ import { notif } from "../utils";
 import { convertDataviewQueries } from "./compiler/dataview";
 import { bakeEmbeds, convertInlineDataview } from "./compiler/embeds";
 import findAndReplaceText from "./find_and_replace_text";
-import { convertToInternalGithub, convertWikilinks } from "./links";
+import { convertToInternalGithub, convertWikilinks, escapeRegex } from "./links";
 
 /**
  * Convert soft line breaks to hard line breaks, adding two space at the end of the line.
@@ -95,28 +94,36 @@ function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: an
  * @returns {Promise<string>} the converted text
  */
 
-export function addToYaml(text: string, toAdd: string[], settings: GitHubPublisherSettings, folderNoteParaMeters?: { properties: MultiProperties, file: TFile}): string {
-	const yaml = text.split("---")?.[1];
-	let yamlObject = yaml ? parseYaml(yaml) : {};
-	if (yamlObject && toAdd.length > 0) {
-		yamlObject = tagsToYaml(toAdd, settings, yamlObject);
-	}
-	if (folderNoteParaMeters) {
-		yamlObject = titleToYaml(yamlObject, folderNoteParaMeters.properties, folderNoteParaMeters.file);
-	}
-	if (Object.keys(yamlObject).length > 0) {
-		const returnToYaml = stringifyYaml(yamlObject);
-		if (yaml){
-			const fileContentsOnly = text.split("---").slice(2).join("---");
-			return `---\n${returnToYaml}---\n${fileContentsOnly}`;
-		} else return `---\n${returnToYaml}---\n${text}`;
+export function addToYaml(text: string, toAdd: string[], plugin: GithubPublisher, folderNoteParaMeters: { properties: MultiProperties | null, file: TFile}): string {
+	const { settings, app } = plugin;
+	const frontmatter = app.metadataCache.getFileCache(folderNoteParaMeters.file);
+	let yamlObject = parseYaml(stringifyYaml(frontmatter?.frontmatter));
+	try {
+		if (yamlObject && toAdd.length > 0) {
+			yamlObject = tagsToYaml(toAdd, settings, yamlObject);
+		}
+		if (folderNoteParaMeters?.properties) {
+			yamlObject = titleToYaml(yamlObject, folderNoteParaMeters.properties, folderNoteParaMeters.file);
+		}
+		
+		if (Object.keys(yamlObject).length > 0) {
+			//check if valid yaml
+			const returnToYaml = stringifyYaml(yamlObject);
+			if (yamlObject) {
+				const yamlRegex = new RegExp(`---\n${escapeRegex(stringifyYaml(frontmatter?.frontmatter))}---\n`, "g");
+				const fileContentsOnly = text.replace(yamlRegex, "");
+				return `---\n${returnToYaml}---\n${fileContentsOnly}`;
+			} else return `---\n${returnToYaml}---\n${text}`;
+		}
+	} catch (e) {
+		return text; //not a valid yaml, skipping
 	}
 	return text;
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 function titleToYaml(yaml: any, properties: MultiProperties, file: TFile) {
-	const settings = properties.settings.upload.folderNote.addTitle;
+	const settings = properties.plugin.settings.upload.folderNote.addTitle;
 	if (!settings) {
 		return yaml;
 	}
@@ -145,24 +152,23 @@ function inlineTags(settings: GitHubPublisherSettings, file: TFile, metadataCach
 /**
  * Add inlines tags to frontmatter tags keys.
  * Duplicate tags will be removed.
- * @param {GitHubPublisherSettings} settings the global settings
  * @param {TFile} file the file to process
- * @param {MetadataCache} metadataCache the metadataCache
  * @param {FrontMatterCache} frontmatter the frontmatter cache
  * @param {string} text the text to convert
  * @return {Promise<string>} the converted text
  */
 export async function processYaml(
-	settings: GitHubPublisherSettings,
 	file: TFile,
-	metadataCache: MetadataCache,
 	frontmatter: FrontMatterCache | undefined | null,
 	text: string,
 	multiProperties: MultiProperties
 ): Promise<string> {
+	const { plugin } = multiProperties;
+	const { settings, app } = plugin;
+	const metadataCache = app.metadataCache;
 	const toAdd = inlineTags(settings, file, metadataCache, frontmatter);
 	const folderNoteParaMeters = { properties: multiProperties, file };
-	return addToYaml(text, toAdd, settings, folderNoteParaMeters);
+	return addToYaml(text, toAdd, plugin, folderNoteParaMeters);
 }
 
 
@@ -173,38 +179,35 @@ export async function processYaml(
 export async function mainConverting(
 	text: string,
 	file: TFile,
-	app: App,
 	frontmatter: FrontMatterCache | undefined | null,
 	linkedFiles: LinkedNotes[],
-	plugin: GithubPublisher,
 	properties: MultiProperties,
 
 ): Promise<string> {
+	const { plugin } = properties;
 	if (properties.frontmatter.general.removeEmbed === "bake")
-		text = await bakeEmbeds(file, new Set(), plugin, properties, null, linkedFiles);
-	text = findAndReplaceText(text, properties.settings, false);
-	text = await processYaml(properties.settings, file, plugin.app.metadataCache, frontmatter, text, properties);
+		text = await bakeEmbeds(file, new Set(), properties, null, linkedFiles);
+	text = findAndReplaceText(text, plugin.settings, false);
+	text = await processYaml(file, frontmatter, text, properties);
 	text = await convertToInternalGithub(
 		text,
 		linkedFiles,
 		file,
-		plugin,
 		frontmatter,
 		properties
 	);
-	text = convertWikilinks(text, properties.frontmatter.general, linkedFiles, properties.settings, frontmatter);
+	text = convertWikilinks(text, properties.frontmatter.general, linkedFiles, plugin.settings, frontmatter);
 	text = await convertDataviewQueries(
 		text,
 		file.path,
-		plugin,
 		frontmatter,
 		file,
 		properties
 	);
-	text = await convertInlineDataview(text, properties.settings, file, plugin.app);
-	text = addHardLineBreak(text, properties.settings, properties.frontmatter.general);
+	text = await convertInlineDataview(text, plugin, file);
+	text = addHardLineBreak(text, plugin.settings, properties.frontmatter.general);
 
-	return findAndReplaceText(text, properties.settings, true);
+	return findAndReplaceText(text, plugin.settings, true);
 }
 
 

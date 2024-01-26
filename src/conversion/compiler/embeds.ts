@@ -154,11 +154,11 @@ function extractSubpath(
 export async function bakeEmbeds(
 	originalFile: TFile,
 	ancestor: Set<TFile>,
-	plugin: GithubPublisher,
 	properties: MultiProperties,
 	subpath: string|null,
 	linkedNotes: LinkedNotes[]): Promise<string> {
-	const { app } = plugin;
+	const { plugin } = properties;	
+	const { app, settings } = plugin;
 	const { vault, metadataCache } = plugin.app;
 	let text = await vault.cachedRead(originalFile);
 
@@ -187,15 +187,15 @@ export async function bakeEmbeds(
 		const after = text.substring(end);
 
 		const replaceTarget = async (replacement: string) => {
-			if (properties.settings.embed.bake?.textAfter) {
-				let textAfter = await changeURL(properties.settings.embed.bake?.textAfter, properties, linked, originalFile, plugin, linkedNotes);
-				textAfter = changeTitle(textAfter, linked, app, properties.settings);
+			if (settings.embed.bake?.textAfter) {
+				let textAfter = await changeURL(settings.embed.bake?.textAfter, properties, linked, originalFile, linkedNotes);
+				textAfter = changeTitle(textAfter, linked, app, settings);
 				const newLine = replacement.match(/[\s\n]/g) ? "" : "\n";
 				replacement = `${replacement}${newLine}${textAfter}`;
 			}
-			if (properties.settings.embed.bake?.textBefore) {
-				let textBefore = await changeURL(properties.settings.embed.bake?.textBefore, properties, linked, originalFile, plugin, linkedNotes);
-				textBefore = changeTitle(textBefore, linked, app, properties.settings);
+			if (settings.embed.bake?.textBefore) {
+				let textBefore = await changeURL(settings.embed.bake?.textBefore, properties, linked, originalFile, linkedNotes);
+				textBefore = changeTitle(textBefore, linked, app, settings);
 				replacement = `${textBefore}\n${replacement}`;
 			}
 			text = before + replacement + after;
@@ -203,13 +203,13 @@ export async function bakeEmbeds(
 		};
 
 		const frontmatter = metadataCache.getFileCache(linked)?.frontmatter;
-		const shared = isShared(frontmatter, properties.settings, linked, properties.repository);
+		const shared = isShared(frontmatter, settings, linked, properties.repository);
 		const listMatch = before.match(/(?:^|\n)([ \t]*)(?:[-*+]|[0-9]+[.)]) +$/);
 		if (newAncestors.has(linked) || !shared) {
 			//do nothing
 			continue;
 		}
-		const baked = sanitizeBakedContent(await bakeEmbeds(linked, newAncestors, plugin, properties, subpath, linkedNotes));
+		const baked = sanitizeBakedContent(await bakeEmbeds(linked, newAncestors, properties, subpath, linkedNotes));
 		await replaceTarget(
 			listMatch ? applyIndent(stripFirstBullet(baked), listMatch[1]) : baked);
 	}
@@ -226,13 +226,14 @@ export async function bakeEmbeds(
  * @param linkedNotes {LinkedNotes[]} The linked notes embedded in the file
  * @returns {Promise<string>}
  */
-async function changeURL(textToAdd: string, properties: MultiProperties, linked: TFile, sourceFile: TFile, plugin: GithubPublisher, linkedNotes: LinkedNotes[]): Promise<string> {
+async function changeURL(textToAdd: string, properties: MultiProperties, linked: TFile, sourceFile: TFile, linkedNotes: LinkedNotes[]): Promise<string> {
+	const app = properties.plugin.app;
 	const frontmatter = app.metadataCache.getFileCache(linked)?.frontmatter;
 	if (!frontmatter) return textToAdd;
 	const linkedNote = linkedNotes.find((note) => note.linked === linked);
 	if (!linkedNote) return textToAdd;
 	if (properties.frontmatter.general.convertInternalLinks) {
-		const relativePath = await createRelativePath(sourceFile, linkedNote, frontmatter, plugin, properties);
+		const relativePath = await createRelativePath(sourceFile, linkedNote, frontmatter, properties);
 		return textToAdd.replace(/\{{2}url\}{2}/gmi, relativePath);
 	} return textToAdd.replace(/\{{2}url\}{2}/gmi, linkedNote.linked.path);
 
@@ -259,18 +260,16 @@ function changeTitle(textToAdd: string, linked: TFile, app: App, settings: GitHu
  * Will be recursive for array
  * stringify with extract alt text for links
  * @param {string} text the text to convert
- * @param {GitHubPublisherSettings} settings the global settings
  * @param {TFile} sourceFile the file to process
- * @param {App} app obsidian app
  * @return {Promise<string>} the converted text
  */
 
 export async function convertInlineDataview(
 	text: string,
-	settings: GitHubPublisherSettings,
+	plugin: GithubPublisher,
 	sourceFile: TFile,
-	app: App
 ): Promise<string> {
+	const {settings, app} = plugin;
 	// @ts-ignore
 	if (
 		settings.conversion.tags.fields.length === 0 ||
@@ -313,7 +312,7 @@ export async function convertInlineDataview(
 		}
 	}
 	if (valueToAdd.length > 0) {
-		return addToYaml(text, valueToAdd.filter(Boolean), settings);
+		return addToYaml(text, valueToAdd.filter(Boolean), plugin, {properties: null, file: sourceFile});
 	}
 	return text;
 }

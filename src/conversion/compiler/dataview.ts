@@ -4,10 +4,10 @@
  */
 
 import i18next from "i18next";
-import { Component, FrontMatterCache, htmlToMarkdown,TFile, Vault } from "obsidian";
+import { Component, FrontMatterCache, htmlToMarkdown,TFile } from "obsidian";
 import { getAPI, isPluginEnabled,Literal, Success } from "obsidian-dataview";
 import GithubPublisher from "src/main";
-import { FrontmatterConvert, GitHubPublisherSettings, LinkedNotes, MultiProperties } from "src/settings/interface";
+import { FrontmatterConvert, LinkedNotes, MultiProperties } from "src/settings/interface";
 import { logs, notif } from "src/utils";
 
 import { convertToInternalGithub, convertWikilinks, escapeRegex } from "../links";
@@ -31,11 +31,12 @@ import { convertToInternalGithub, convertWikilinks, escapeRegex } from "../links
 export async function convertDataviewQueries(
 	text: string,
 	path: string,
-	plugin: GithubPublisher,
 	frontmatter: FrontMatterCache | undefined | null,
 	sourceFile: TFile,
 	properties: MultiProperties,
 ): Promise<string> {
+	const plugin = properties.plugin;
+	const settings = plugin.settings;
 	let replacedText = text;
 	const dataViewRegex = /```dataview\s(.+?)```/gsm;
 	//@ts-ignore
@@ -57,7 +58,7 @@ export async function convertDataviewQueries(
 	const inlineJsDataViewRegex = new RegExp(`\`${escapeRegex(inlineJsQueryPrefix)}(.+?)\``, "gsm");
 	const inlineJsMatches = text.matchAll(inlineJsDataViewRegex);
 	if (!matches && !inlineMatches && !dataviewJsMatches && !inlineJsMatches) {
-		logs({ settings: properties.settings }, "No dataview queries found");
+		logs({ settings }, "No dataview queries found");
 		return replacedText;
 	}
 	const error = i18next.t("error.dataview");
@@ -78,8 +79,8 @@ export async function convertDataviewQueries(
 			}
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
-			logs({ settings: properties.settings, e: true }, e);
-			notif({ settings: properties.settings }, error);
+			logs({ settings, e: true }, e);
+			notif({ settings }, error);
 			return queryBlock[0];
 		}
 	}
@@ -101,8 +102,8 @@ export async function convertDataviewQueries(
 			const markdown = removeDataviewQueries(div.innerHTML, properties.frontmatter.general);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
-			logs({ settings: properties.settings, e: true }, e);
-			notif({ settings: properties.settings }, error);
+			logs({ settings, e: true }, e);
+			notif({ settings }, error);
 			return queryBlock[0];
 		}
 	}
@@ -127,8 +128,8 @@ export async function convertDataviewQueries(
 				replacedText = replacedText.replace(code, removeDataviewQueries(dvApi.settings.renderNullAs, properties.frontmatter.general));
 			}
 		} catch (e) {
-			logs({ settings: properties.settings, e: true }, e);
-			notif({ settings: properties.settings }, error);
+			logs({ settings, e: true }, e);
+			notif({ settings }, error);
 			return inlineQuery[0];
 		}
 	}
@@ -159,12 +160,12 @@ export async function convertDataviewQueries(
 			const markdown = removeDataviewQueries(htmlToMarkdown(div.innerHTML), properties.frontmatter.general);
 			replacedText = replacedText.replace(code, markdown);
 		} catch (e) {
-			logs({ settings: properties.settings, e: true }, e);
-			notif({ settings: properties.settings }, error);
+			logs({ settings, e: true }, e);
+			notif({ settings }, error);
 			return inlineJsQuery[0];
 		}
 	}
-	return await convertDataviewLinks(replacedText, frontmatter, sourceFile, plugin, properties);
+	return await convertDataviewLinks(replacedText, frontmatter, sourceFile, properties);
 }
 
 /**
@@ -191,14 +192,13 @@ async function convertDataviewLinks(
 	md: string,
 	frontmatter: FrontMatterCache | undefined | null,
 	sourceFile: TFile,
-	plugin: GithubPublisher,
 	properties: MultiProperties): Promise<string> {
-	const dataviewPath = getDataviewPath(md, properties.settings, app.vault);
+
+	const dataviewPath = getDataviewPath(md, properties.plugin);
 	md = await convertToInternalGithub(
 		md,
 		dataviewPath,
 		sourceFile,
-		plugin,
 		frontmatter,
 		properties
 	);
@@ -206,7 +206,7 @@ async function convertDataviewLinks(
 		md,
 		properties.frontmatter.general,
 		dataviewPath,
-		properties.settings,
+		properties.plugin.settings,
 		frontmatter
 	);
 }
@@ -221,9 +221,10 @@ async function convertDataviewLinks(
 
 export function getDataviewPath(
 	markdown: string,
-	settings: GitHubPublisherSettings,
-	vault: Vault
+	plugin: GithubPublisher
 ): LinkedNotes[] {
+	const { settings} = plugin;
+	const vault = plugin.app.vault;
 	if (!settings.conversion.dataview) {
 		return [];
 	}

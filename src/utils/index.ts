@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import {App, Notice, Platform, TFile} from "obsidian";
+import {App, normalizePath, Notice, Platform, TFile} from "obsidian";
 import GithubPublisher from "src/main";
 
 import {getReceiptFolder} from "../conversion/file_path";
@@ -393,6 +393,6 @@ export function createTokenPath(plugin: GithubPublisher, tokenPath?: string) {
 	}
 	tokenPath = tokenPath.replace("%configDir%", vault.configDir);
 	tokenPath = tokenPath.replace("%pluginID%", plugin.manifest.id);
-	return tokenPath;
+	return normalizePath(tokenPath);
 }
 

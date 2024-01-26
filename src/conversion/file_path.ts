@@ -71,13 +71,12 @@ export async function createRelativePath(
 	sourceFile: TFile,
 	targetFile: LinkedNotes,
 	frontmatter: FrontMatterCache | null | undefined,
-	plugin: GithubPublisher,
 	properties: MultiProperties,
 ): Promise<string> {
-	const settings = properties.settings;
+	const settings = properties.plugin.settings;
 	const shortRepo = properties.repository;
-	const sourcePath = getReceiptFolder(sourceFile, shortRepo, plugin, properties.frontmatter.repo);
-	const frontmatterTarget = frontmatterFromFile(targetFile.linked, plugin);
+	const sourcePath = getReceiptFolder(sourceFile, shortRepo, properties.plugin, properties.frontmatter.repo);
+	const frontmatterTarget = frontmatterFromFile(targetFile.linked, properties.plugin);
 	const targetRepo = getRepoFrontmatter(settings, shortRepo, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(properties.frontmatter.repo, targetRepo);
 	const shared = isInternalShared(
@@ -93,12 +92,12 @@ export async function createRelativePath(
 		return targetFile.destinationFilePath ? targetFile.destinationFilePath: targetFile.linked.basename;
 	}
 	if (targetFile.linked.path === sourceFile.path) {
-		return getReceiptFolder(targetFile.linked, shortRepo, plugin, targetRepo).split("/").at(-1) as string;
+		return getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo).split("/").at(-1) as string;
 	}
 
 	const targetPath =
 		targetFile.linked.extension === "md" && !targetFile.linked.name.includes("excalidraw")
-			? getReceiptFolder(targetFile.linked, shortRepo, plugin, targetRepo)
+			? getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo)
 			: getImagePath(
 				targetFile.linked,
 				settings,
@@ -146,7 +145,7 @@ export async function createRelativePath(
 		return getReceiptFolder(
 			targetFile.linked,
 			shortRepo,
-			plugin,
+			properties.plugin,
 			targetRepo
 		).split("/").at(-1) as string;
 	}

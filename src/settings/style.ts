@@ -2,7 +2,7 @@ import i18next from "i18next";
 import { Notice, Setting } from "obsidian";
 import { GithubPublisherSettingsTab } from "src/settings";
 
-import GithubPublisherPlugin from "../main";
+import GithubPublisher from "../main";
 import {EnumbSettingsTabId, FolderSettings, GitHubPublisherSettings} from "./interface";
 /**
  * show a settings
@@ -55,16 +55,12 @@ export function showHideBasedOnFolder(settings: GitHubPublisherSettings, frontma
 
 /**
  * Show or hide the autoclean settings
- * @param {string} value
- * @param {Setting} autoCleanSetting
- * @param {GithubPublisher} plugin
- * @return {Promise<void>}
  */
 
 export async function autoCleanCondition(
 	value: string,
 	autoCleanSetting: Setting,
-	plugin: GithubPublisherPlugin,
+	plugin: GithubPublisher,
 	what: "rootFolder" | "defaultName" = "defaultName",
 	settingsTab: GithubPublisherSettingsTab
 ) {
@@ -110,12 +106,6 @@ export async function autoCleanCondition(
  *
  * @example
  * - If obsidian path or fixed folder : hide the frontmatterKey setting and the rootFolder settings
- * @param {Setting} frontmatterKeySettings
- * @param {Setting} rootFolderSettings
- * @param {Setting} autoCleanSetting
- * @param {string} value
- * @param {GithubPublisher} plugin
- * @return {Promise<void>}
  */
 
 export async function folderHideShowSettings(
@@ -123,7 +113,7 @@ export async function folderHideShowSettings(
 	rootFolderSettings: Setting,
 	autoCleanSetting: Setting,
 	value: string,
-	plugin: GithubPublisherPlugin,
+	plugin: GithubPublisher,
 ) {
 	const settings = plugin.settings.upload;
 	if (value === FolderSettings.yaml) {
@@ -154,7 +144,7 @@ export async function folderHideShowSettings(
 export function autoCleanUpSettingsOnCondition(
 	condition: boolean,
 	autoCleanSetting: Setting,
-	plugin: GithubPublisherPlugin
+	plugin: GithubPublisher
 ) {
 	const settings = plugin.settings.upload;
 	if (condition) {
