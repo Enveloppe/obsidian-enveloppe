@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.14.0-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-4...6.14.0-5) (2024-01-26)
+
+
+### Bug Fixes
+
+* YAML and empty slug in chinese ([9478e90](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/9478e90913b19a2d4836cf805f979fb46658061a)), closes [#285](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/285)
+* **yaml:** prevent empty and wrong yaml ([2d4c1c3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2d4c1c300e24982b13d63d0a4fd3ad95798c4aa5)), closes [#200](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/200)
+
 ## [6.14.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-3...6.14.0-4) (2024-01-24)
 
 
