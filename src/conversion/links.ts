@@ -11,6 +11,7 @@ import {
 import {isAttachment, noTextConversion} from "../utils/data_validation_test";
 import { createRelativePath, linkIsInFormatter, textIsInFrontmatter } from "./file_path";
 import { replaceText } from "./find_and_replace_text";
+import { logs, notif } from "src/utils";
 
 
 
@@ -258,10 +259,15 @@ export async function convertToInternalGithub(
 	if (!frontmatterSettings.convertInternalLinks) {
 		return fileContent;
 	}
+	// let firstKey: boolean | string = false;
 	for (const linkedFile of linkedFiles) {
-		if (linkIsInFormatter(linkedFile, frontmatter)) {
-			continue;
-		}
+		// const newKey = linkIsInFormatter(linkedFile, frontmatter);
+		// if (newKey !== false && newKey !== firstKey) {
+		// 	logs({settings}, `The link ${linkedFile.linkFrom} is in the frontmatter of ${newKey}, and different of the oldkey (${firstKey}), re-add it in case it is in the content`);
+		// 	firstKey = newKey;
+		// 	linkedFiles.push(linkedFile);
+		// 	continue;
+		// }
 
 		let pathInGithub = await createRelativePath(
 			sourceFile,
