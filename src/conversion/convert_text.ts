@@ -19,7 +19,7 @@ import { notif } from "../utils";
 import { convertDataviewQueries } from "./compiler/dataview";
 import { bakeEmbeds, convertInlineDataview } from "./compiler/embeds";
 import findAndReplaceText from "./find_and_replace_text";
-import { convertToInternalGithub, convertWikilinks } from "./links";
+import { convertToInternalGithub, convertWikilinks, escapeRegex } from "./links";
 
 /**
  * Convert soft line breaks to hard line breaks, adding two space at the end of the line.
@@ -97,7 +97,7 @@ function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: an
 export function addToYaml(text: string, toAdd: string[], plugin: GithubPublisher, folderNoteParaMeters: { properties: MultiProperties | null, file: TFile}): string {
 	const { settings, app } = plugin;
 	const frontmatter = app.metadataCache.getFileCache(folderNoteParaMeters.file);
-	let yamlObject = stringifyYaml(frontmatter?.frontmatter);
+	let yamlObject = parseYaml(stringifyYaml(frontmatter?.frontmatter));
 	try {
 		if (yamlObject && toAdd.length > 0) {
 			yamlObject = tagsToYaml(toAdd, settings, yamlObject);
@@ -109,9 +109,9 @@ export function addToYaml(text: string, toAdd: string[], plugin: GithubPublisher
 		if (Object.keys(yamlObject).length > 0) {
 			//check if valid yaml
 			const returnToYaml = stringifyYaml(yamlObject);
-			parseYaml(returnToYaml);
 			if (yamlObject) {
-				const fileContentsOnly = text.split("---").slice(2).join("---");
+				const yamlRegex = new RegExp(`---\n${escapeRegex(stringifyYaml(frontmatter?.frontmatter))}---\n`, "g");
+				const fileContentsOnly = text.replace(yamlRegex, "");
 				return `---\n${returnToYaml}---\n${fileContentsOnly}`;
 			} else return `---\n${returnToYaml}---\n${text}`;
 		}
