@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.14.0-7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-6...6.14.0-7) (2024-01-26)
+
+
+### Bug Fixes
+
+* allow multiple option for slugify ([#287](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/287)) ([fbcb02c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/fbcb02cbbbc73cf86912a78bd1659f6664ed064c)), closes [#285](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/285)
+
 ## [6.14.0-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-5...6.14.0-6) (2024-01-26)
 
 
