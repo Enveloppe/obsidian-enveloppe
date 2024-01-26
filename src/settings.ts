@@ -747,7 +747,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						})
 						.setValue(slugifySetting)
 						.onChange(async (value) => {
-							textSettings.links.slugify = value as "disable" | "strict" | "lower";
+							textSettings.links.slugify = ["disable", "strict", "lower"].includes(value) ? value as "disable" | "strict" | "lower" : "disable";
 							await this.plugin.saveSettings();
 						});
 				});
