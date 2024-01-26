@@ -205,12 +205,12 @@ function createMarkdownLinks(fileName: string, isEmbed: string, altLink: string,
 	const anchorMatch = fileName.match(/(#.*)/);
 	let anchor = anchorMatch ? anchorMatch[0] : null;
 	const encodedURI = encodeURI(markdownName);
-	anchor = slugifyWithSettings(anchor, settings);
+	anchor = slugifyAnchor(anchor, settings);
 	return `${isEmbed}[${altLink}](${encodedURI}${anchor})`;
 }
 
 
-function slugifyWithSettings(anchor: string | null, settings: GitHubPublisherSettings) {
+function slugifyAnchor(anchor: string | null, settings: GitHubPublisherSettings) {
 	if (anchor && settings.conversion.links.slugify !== "disable") {
 		switch (settings.conversion.links.slugify) {
 		case "lower":
@@ -300,7 +300,7 @@ export async function convertToInternalGithub(
 				let newLink = link.replace(regToReplace, pathInGithubWithAnchor); //strict replacement of link
 				if (link.match(/\[.*\]\(.*\)/)) {
 					if (linkedFile.linked.extension === "md" && !linkedFile.linked.name.includes("excalidraw")) {
-						anchor = slugifyWithSettings(anchor, settings);
+						anchor = slugifyAnchor(anchor, settings);
 						pathInGithub = `${pathInGithub.replaceAll(" ", "%20")}.md#${anchor}`;
 						//probably useless
 						// pathInGithub = pathInGithub.replace(/(\.md)?(#.*)/, ".md$2");
