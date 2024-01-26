@@ -74,7 +74,7 @@ export async function createRelativePath(
 	plugin: GithubPublisher,
 	properties: MultiProperties,
 ): Promise<string> {
-	const settings = properties.settings;
+	const settings = plugin.settings;
 	const shortRepo = properties.repository;
 	const sourcePath = getReceiptFolder(sourceFile, shortRepo, plugin, properties.frontmatter.repo);
 	const frontmatterTarget = frontmatterFromFile(targetFile.linked, plugin);

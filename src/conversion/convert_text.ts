@@ -189,7 +189,7 @@ export async function mainConverting(
 ): Promise<string> {
 	if (properties.frontmatter.general.removeEmbed === "bake")
 		text = await bakeEmbeds(file, new Set(), plugin, properties, null, linkedFiles);
-	text = findAndReplaceText(text, properties.settings, false);
+	text = findAndReplaceText(text, plugin.settings, false);
 	text = await processYaml(file, frontmatter, text, plugin, properties);
 	text = await convertToInternalGithub(
 		text,
@@ -199,7 +199,7 @@ export async function mainConverting(
 		frontmatter,
 		properties
 	);
-	text = convertWikilinks(text, properties.frontmatter.general, linkedFiles, properties.settings, frontmatter);
+	text = convertWikilinks(text, properties.frontmatter.general, linkedFiles, plugin.settings, frontmatter);
 	text = await convertDataviewQueries(
 		text,
 		file.path,
@@ -209,9 +209,9 @@ export async function mainConverting(
 		properties
 	);
 	text = await convertInlineDataview(text, plugin, file);
-	text = addHardLineBreak(text, properties.settings, properties.frontmatter.general);
+	text = addHardLineBreak(text, plugin.settings, properties.frontmatter.general);
 
-	return findAndReplaceText(text, properties.settings, true);
+	return findAndReplaceText(text, plugin.settings, true);
 }
 
 
