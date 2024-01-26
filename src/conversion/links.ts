@@ -202,12 +202,14 @@ function createMarkdownLinks(fileName: string, isEmbed: string, altLink: string,
 	const markdownName = !isAttachment(fileName.trim())
 		? fileName.replace(/#.*/, "").trim() + ".md"
 		: fileName.trim();
-	let anchor = fileName.match(/(#.*)/) ? fileName.match(/(#.*)/)![0]!.replaceAll(" ", "%20") : "";
+	const anchorMatch = fileName.match(/(#.*)/);	
+	let anchor = anchorMatch ? anchorMatch[0].replaceAll(" ", "%20") : "";
 	const encodedURI = encodeURI(markdownName);
-	if (settings.conversion.links.slugify) {
-		anchor = fileName.match(/(#.*)/) ? slugify(fileName.match(/(#.*)/)![0], { lower: true, strict: true }) : "";
+	if (settings.conversion.links.slugify && anchorMatch) {
+		const slugified = slugify(anchorMatch[0], { lower: true, strict: true });
+		anchor = slugified.trim().length > 0 ? slugified : anchorMatch[0];
 		if (anchor.length > 0)
-			anchor = `#${anchor}`;
+			anchor = `${anchor}`;
 	}
 	return `${isEmbed}[${altLink}](${encodedURI}${anchor})`;
 }
@@ -290,7 +292,8 @@ export async function convertToInternalGithub(
 				let newLink = link.replace(regToReplace, pathInGithubWithAnchor); //strict replacement of link
 				if (link.match(/\[.*\]\(.*\)/)) {
 					if (linkedFile.linked.extension === "md" && !linkedFile.linked.name.includes("excalidraw")) {
-						anchor =  settings.conversion.links.slugify ? slugify(anchor, { lower: true, strict: true }) : anchor;
+						const slugified = slugify(anchor, { lower: true, strict: true});
+						anchor =  settings.conversion.links.slugify && slugified.trim().length > 0 ? slugified : anchor;
 						if (anchor.length > 0)
 							anchor = `#${anchor}`;
 						pathInGithub = `${pathInGithub.replaceAll(" ", "%20")}.md${anchor}`;
