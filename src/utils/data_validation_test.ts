@@ -31,12 +31,12 @@ export function isInternalShared(
 	if (properties.repository?.shareAll?.enable)
 	{
 		const excludedFileName = properties.repository.shareAll.excludedFileName;
-		return !file.basename.startsWith(excludedFileName) && !isInDryRunFolder(properties.settings, properties.repository, file);
+		return !file.basename.startsWith(excludedFileName) && !isInDryRunFolder(properties.plugin.settings, properties.repository, file);
 	}
 	if (!frontmatter) return false;
-	if (isExcludedPath(properties.settings, file, properties.repository)) return false;
-	const shareKey = properties.repository?.shareKey || properties.settings.plugin.shareKey;
-	logs({settings: properties.settings}, "shareKey", shareKey, "frontmatter", frontmatter[shareKey]);
+	if (isExcludedPath(properties.plugin.settings, file, properties.repository)) return false;
+	const shareKey = properties.repository?.shareKey || properties.plugin.settings.plugin.shareKey;
+	logs({settings: properties.plugin.settings}, "shareKey", shareKey, "frontmatter", frontmatter[shareKey]);
 	if (frontmatter[shareKey] == null || frontmatter[shareKey] === undefined || ["false", "0", "no"].includes(frontmatter[shareKey].toString().toLowerCase())) return false;
 	return ["true", "1", "yes"].includes(frontmatter[shareKey].toString().toLowerCase());
 
@@ -473,7 +473,8 @@ export function forcePushAttachment(file: TFile, settings: GitHubPublisherSettin
  * @returns True if the file is a folder note, false otherwise.
  */
 export function isFolderNote(properties: MultiProperties): boolean {
-	const { settings, filepath } = properties;
+	const {filepath } = properties;
+	const { settings } = properties.plugin;
 	const { enable, rename } = settings.upload.folderNote;
 
 	if (enable) {

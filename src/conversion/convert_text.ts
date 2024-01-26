@@ -123,7 +123,7 @@ export function addToYaml(text: string, toAdd: string[], plugin: GithubPublisher
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 function titleToYaml(yaml: any, properties: MultiProperties, file: TFile) {
-	const settings = properties.settings.upload.folderNote.addTitle;
+	const settings = properties.plugin.settings.upload.folderNote.addTitle;
 	if (!settings) {
 		return yaml;
 	}
@@ -152,9 +152,7 @@ function inlineTags(settings: GitHubPublisherSettings, file: TFile, metadataCach
 /**
  * Add inlines tags to frontmatter tags keys.
  * Duplicate tags will be removed.
- * @param {GitHubPublisherSettings} settings the global settings
  * @param {TFile} file the file to process
- * @param {MetadataCache} metadataCache the metadataCache
  * @param {FrontMatterCache} frontmatter the frontmatter cache
  * @param {string} text the text to convert
  * @return {Promise<string>} the converted text
@@ -163,9 +161,9 @@ export async function processYaml(
 	file: TFile,
 	frontmatter: FrontMatterCache | undefined | null,
 	text: string,
-	plugin: GithubPublisher,
 	multiProperties: MultiProperties
 ): Promise<string> {
+	const { plugin } = multiProperties;
 	const { settings, app } = plugin;
 	const metadataCache = app.metadataCache;
 	const toAdd = inlineTags(settings, file, metadataCache, frontmatter);
@@ -183,19 +181,18 @@ export async function mainConverting(
 	file: TFile,
 	frontmatter: FrontMatterCache | undefined | null,
 	linkedFiles: LinkedNotes[],
-	plugin: GithubPublisher,
 	properties: MultiProperties,
 
 ): Promise<string> {
+	const { plugin } = properties;
 	if (properties.frontmatter.general.removeEmbed === "bake")
-		text = await bakeEmbeds(file, new Set(), plugin, properties, null, linkedFiles);
+		text = await bakeEmbeds(file, new Set(), properties, null, linkedFiles);
 	text = findAndReplaceText(text, plugin.settings, false);
-	text = await processYaml(file, frontmatter, text, plugin, properties);
+	text = await processYaml(file, frontmatter, text, properties);
 	text = await convertToInternalGithub(
 		text,
 		linkedFiles,
 		file,
-		plugin,
 		frontmatter,
 		properties
 	);
@@ -203,7 +200,6 @@ export async function mainConverting(
 	text = await convertDataviewQueries(
 		text,
 		file.path,
-		plugin,
 		frontmatter,
 		file,
 		properties

@@ -1,10 +1,10 @@
 import i18next from "i18next";
-import {App, FuzzySuggestModal } from "obsidian";
+import { App, FuzzySuggestModal } from "obsidian";
 import { defaultRepo } from "src/utils/data_validation_test";
 
-import GithubPublisherPlugin from "../main";
-import {FolderSettings, Repository} from "../settings/interface";
-import {logs} from "../utils";
+import GithubPublisher from "../main";
+import { FolderSettings, Repository } from "../settings/interface";
+import { logs } from "../utils";
 import {
 	createLinkOnActiveFile,
 	deleteCommands, repositoryValidityActiveFile, shareActiveFile,
@@ -23,15 +23,15 @@ interface GithubPublisherCommands {
 	* @extends FuzzySuggestModal
 	* @category Command
 	* @category SuggestModal
-	* @category GithubPublisherPlugin
+	* @category GithubPublisher
 	* @description This class is used to choose which repo to run the command on
 	*/
 
 export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
-	plugin: GithubPublisherPlugin;
+	plugin: GithubPublisher;
 	branchName: string;
 
-	constructor(app: App, plugin: GithubPublisherPlugin, branchName: string) {
+	constructor(app: App, plugin: GithubPublisher, branchName: string) {
 		super(app);
 		this.plugin = plugin;
 		this.branchName = branchName;
@@ -53,14 +53,14 @@ export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
 	* Just return the repo data
 	*/
 export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
-	plugin: GithubPublisherPlugin;
+	plugin: GithubPublisher;
 	branchName: string;
 	keyToFind: string | null;
 	type: "folder" | "file";
 	fileName: string | null;
 	onSubmit: (item: Repository) => void;
 
-	constructor(app: App, plugin: GithubPublisherPlugin, keyToFind: null|string = null, branchName: string, type:"folder"|"file", fileName: string | null, onSubmit: (item: Repository) => void) {
+	constructor(app: App, plugin: GithubPublisher, keyToFind: null | string = null, branchName: string, type: "folder" | "file", fileName: string | null, onSubmit: (item: Repository) => void) {
 		super(app);
 		this.plugin = plugin;
 		this.branchName = branchName;
@@ -78,15 +78,15 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 				repoFound.push(defRepo);
 			}
 			if (this.keyToFind) {
-				repoFound=repoFound.concat(this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.shareKey == this.keyToFind));
+				repoFound = repoFound.concat(this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.shareKey == this.keyToFind));
 				if (this.keyToFind === defRepo.shareKey) {
 					repoFound.push(defRepo);
 				}
 			}
 		}
-		repoFound=repoFound.concat(this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.shareAll?.enable && !this.fileName?.startsWith(repo.shareAll?.excludedFileName)));
+		repoFound = repoFound.concat(this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.shareAll?.enable && !this.fileName?.startsWith(repo.shareAll?.excludedFileName)));
 		repoFound.push(defRepo);
-		repoFound=[...new Set(repoFound)];
+		repoFound = [...new Set(repoFound)];
 		if (repoFound.length === 0)
 			return this.plugin.settings.github.otherRepo;
 		return repoFound;
@@ -106,17 +106,17 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 	*/
 
 export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPublisherCommands> {
-	plugin: GithubPublisherPlugin;
+	plugin: GithubPublisher;
 	branchName: string;
 	repo: Repository;
-	constructor(app: App, plugin: GithubPublisherPlugin, branchName: string, repo: Repository) {
+	constructor(app: App, plugin: GithubPublisher, branchName: string, repo: Repository) {
 		super(app);
 		this.plugin = plugin;
 		this.branchName = branchName;
 		this.repo = repo;
 	}
 	getItems(): GithubPublisherCommands[] {
-		const cmd =  [
+		const cmd = [
 			{
 				commands: "shareAllMarkedNotes",
 				name: i18next.t("commands.uploadAllNotes")
@@ -188,7 +188,7 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 			repositoryValidityActiveFile(this.plugin, this.branchName, this.repo);
 			break;
 		}
-		logs({settings: this.plugin.settings}, `run command ${item.commands}`);
+		logs({ settings: this.plugin.settings }, `run command ${item.commands}`);
 	}
 }
 

@@ -1,6 +1,5 @@
 import { FrontMatterCache, TFile } from "obsidian";
 import slugify from "slugify";
-import GithubPublisher from "src/main";
 
 import {
 	FrontmatterConvert,
@@ -246,12 +245,11 @@ export async function convertToInternalGithub(
 	fileContent: string,
 	linkedFiles: LinkedNotes[],
 	sourceFile: TFile,
-	plugin: GithubPublisher,
 	frontmatter: FrontMatterCache | undefined | null,
 	properties: MultiProperties,
 ): Promise<string> {
 	const frontmatterSettings = properties.frontmatter.general;
-	const settings = properties.settings;
+	const settings = properties.plugin.settings;
 	if (!frontmatterSettings.convertInternalLinks) {
 		return fileContent;
 	}
@@ -269,7 +267,6 @@ export async function convertToInternalGithub(
 			sourceFile,
 			linkedFile,
 			frontmatter,
-			plugin,
 			properties,
 		);
 		pathInGithub = pathInGithub.replace(".md", "");

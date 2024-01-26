@@ -2,7 +2,7 @@ import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import {Notice } from "obsidian";
 
-import GithubPublisherPlugin from "../main";
+import GithubPublisher from "../main";
 import {
 	RepoFrontmatter,
 } from "../settings/interface";
@@ -14,7 +14,7 @@ export class GithubBranch extends FilesManagement {
 
 	constructor(
 		octokit: Octokit,
-		plugin: GithubPublisherPlugin,
+		plugin: GithubPublisher,
 	) {
 		super(octokit, plugin);
 	}

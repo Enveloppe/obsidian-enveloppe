@@ -17,7 +17,7 @@ import {
 	getImagePath,
 	getReceiptFolder,
 } from "../conversion/file_path";
-import GithubPublisherPlugin from "../main";
+import GithubPublisher from "../main";
 import {
 	Deleted,
 	GitHubPublisherSettings,
@@ -51,7 +51,7 @@ import { FilesManagement } from "./files";
 
 export default class Publisher {
 	octokit: Octokit;
-	plugin: GithubPublisherPlugin;
+	plugin: GithubPublisher;
 	vault: Vault;
 	metadataCache: MetadataCache;
 	settings: GitHubPublisherSettings;
@@ -65,7 +65,7 @@ export default class Publisher {
 
 	constructor(
 		octokit: Octokit,
-		plugin: GithubPublisherPlugin,
+		plugin: GithubPublisher,
 	) {
 		this.vault = plugin.app.vault;
 		this.metadataCache = plugin.app.metadataCache;
@@ -214,7 +214,7 @@ export default class Publisher {
 
 			let text = await this.vault.cachedRead(file);
 			const multiProperties: MultiProperties = {
-				settings: this.settings,
+				plugin: this.plugin,
 				frontmatter: {
 					general: frontmatterSettings,
 					repo: repo.frontmatter,
@@ -222,7 +222,7 @@ export default class Publisher {
 				repository: repo.repo,
 				filepath: getReceiptFolder(file, repo.repo, this.plugin, repo.frontmatter),
 			};
-			text = await mainConverting(text, file, frontmatter, linkedFiles, this.plugin, multiProperties);
+			text = await mainConverting(text, file, frontmatter, linkedFiles, multiProperties);
 			const path = multiProperties.filepath;
 			const repoFrontmatter = Array.isArray(repo.frontmatter)
 				? repo.frontmatter
@@ -238,7 +238,7 @@ export default class Publisher {
 			const fileError: string[] = [];
 			for (const repo of repoFrontmatter) {
 				const monoProperties: MonoProperties = {
-					settings: this.settings,
+					plugin: this.plugin,
 					frontmatter: {
 						general: frontmatterSettings,
 						repo
