@@ -222,7 +222,7 @@ export default class Publisher {
 				repository: repo.repo,
 				filepath: getReceiptFolder(file, repo.repo, this.plugin, repo.frontmatter),
 			};
-			text = await mainConverting(text, file, this.plugin.app, frontmatter, linkedFiles, this.plugin, multiProperties);
+			text = await mainConverting(text, file, frontmatter, linkedFiles, this.plugin, multiProperties);
 			const path = multiProperties.filepath;
 			const repoFrontmatter = Array.isArray(repo.frontmatter)
 				? repo.frontmatter
@@ -465,12 +465,12 @@ export default class Publisher {
 					isUpdated: needToByUpdated,
 					file: imageFile.name
 				};
-			}
+			} 
 			const folder = dryRunPath.split("/").slice(0, -1).join("/");
 			const folderExists = this.vault.getAbstractFileByPath(folder);
 			if (!folderExists || !(folderExists instanceof TFolder))
 				await this.vault.createFolder(folder);
-			await this.vault.createBinary(path, imageBin);
+			await this.vault.createBinary(dryRunPath, imageBin);
 			return {
 				isUpdated: true,
 				file: imageFile.name

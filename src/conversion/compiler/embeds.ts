@@ -259,18 +259,16 @@ function changeTitle(textToAdd: string, linked: TFile, app: App, settings: GitHu
  * Will be recursive for array
  * stringify with extract alt text for links
  * @param {string} text the text to convert
- * @param {GitHubPublisherSettings} settings the global settings
  * @param {TFile} sourceFile the file to process
- * @param {App} app obsidian app
  * @return {Promise<string>} the converted text
  */
 
 export async function convertInlineDataview(
 	text: string,
-	settings: GitHubPublisherSettings,
+	plugin: GithubPublisher,
 	sourceFile: TFile,
-	app: App
 ): Promise<string> {
+	const {settings, app} = plugin;
 	// @ts-ignore
 	if (
 		settings.conversion.tags.fields.length === 0 ||
@@ -313,7 +311,7 @@ export async function convertInlineDataview(
 		}
 	}
 	if (valueToAdd.length > 0) {
-		return addToYaml(text, valueToAdd.filter(Boolean), settings);
+		return addToYaml(text, valueToAdd.filter(Boolean), plugin, {properties: null, file: sourceFile});
 	}
 	return text;
 }
