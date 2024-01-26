@@ -116,7 +116,7 @@ export interface GitHubPublisherSettings {
 			internal: boolean;
 			unshared: boolean;
 			wiki: boolean;
-			slugify: boolean;
+			slugify: "disable" | "strict" | "lower" | boolean;
 		}
 	}
 	embed: {
@@ -278,7 +278,7 @@ export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 			internal: false,
 			unshared: false,
 			wiki: false,
-			slugify: false,
+			slugify: "disable",
 		},
 	},
 	embed: {

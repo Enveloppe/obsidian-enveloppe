@@ -733,16 +733,21 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						this.renderSettingsPage("text-conversion");
 					});
 			});
-
+		const slugifySetting = typeof(textSettings.links.slugify)=="boolean" ? textSettings.links.slugify ? "strict" : "disable" : textSettings.links.slugify;
 		if (textSettings.links.wiki || textSettings.links.internal) {
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.conversion.links.slugify.title"))
 				.setDesc(i18next.t("settings.conversion.links.slugify.desc"))
-				.addToggle((toggle) => {
-					toggle
-						.setValue(textSettings.links.slugify)
+				.addDropdown((dropdown) => {
+					dropdown
+						.addOptions({
+							disable: "Disable",
+							strict: "Strict (convert all to alphanumeric and dashes, including unicode and eastern languages)",
+							lower: "Lower (convert to lowercase and space to dashes)",
+						})
+						.setValue(slugifySetting)
 						.onChange(async (value) => {
-							textSettings.links.slugify = value;
+							textSettings.links.slugify = value as "disable" | "strict" | "lower";
 							await this.plugin.saveSettings();
 						});
 				});
