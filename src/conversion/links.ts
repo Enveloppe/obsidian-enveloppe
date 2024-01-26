@@ -217,6 +217,8 @@ function slugifyAnchor(anchor: string | null, settings: GitHubPublisherSettings)
 			return anchor.toLowerCase().replaceAll(" ", "-");
 		case "strict":
 			return slugify(anchor, { lower: true, strict: true });
+		default:
+			return anchor;	
 		}
 
 	}
