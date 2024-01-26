@@ -11,10 +11,6 @@ import {
 import {isAttachment, noTextConversion} from "../utils/data_validation_test";
 import { createRelativePath, linkIsInFormatter, textIsInFrontmatter } from "./file_path";
 import { replaceText } from "./find_and_replace_text";
-import { logs, notif } from "src/utils";
-
-
-
 
 /**
  * Convert wikilinks to markdown
