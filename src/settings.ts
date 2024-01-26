@@ -741,9 +741,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				.addDropdown((dropdown) => {
 					dropdown
 						.addOptions({
-							disable: "Disable",
-							strict: "Strict (convert all to alphanumeric and dashes, including unicode and eastern languages)",
-							lower: "Lower (convert to lowercase and space to dashes)",
+							disable: i18next.t("settings.conversion.links.slugify.disable"),
+							strict: i18next.t("settings.conversion.links.slugify.strict"),
+							lower: i18next.t("settings.conversion.links.slugify.lower"),
 						})
 						.setValue(slugifySetting)
 						.onChange(async (value) => {
