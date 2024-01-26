@@ -211,14 +211,15 @@ function createMarkdownLinks(fileName: string, isEmbed: string, altLink: string,
 
 
 function slugifyAnchor(anchor: string | null, settings: GitHubPublisherSettings) {
-	if (anchor && settings.conversion.links.slugify !== "disable") {
+	const slugifySetting = typeof(settings.conversion.links.slugify) === "string" ? settings.conversion.links.slugify : "disable";
+	if (anchor && slugifySetting !== "disable") {
 		switch (settings.conversion.links.slugify) {
 		case "lower":
 			return anchor.toLowerCase().replaceAll(" ", "-");
 		case "strict":
 			return slugify(anchor, { lower: true, strict: true });
 		default:
-			return anchor;	
+			return anchor;
 		}
 
 	}
