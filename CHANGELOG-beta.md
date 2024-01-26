@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.14.0-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-5...6.14.0-6) (2024-01-26)
+
+
+### Bug Fixes
+
+* image was not checked ([3a89d36](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3a89d368493790d0e36b0b9b66f6070d039f834e))
+
 ## [6.14.0-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-4...6.14.0-5) (2024-01-26)
 
 
