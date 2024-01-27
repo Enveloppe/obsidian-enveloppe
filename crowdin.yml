@@ -1,0 +1,3 @@
+files:
+  - source: /**/i18n/locales/**.json
+    translation: '%original_path%/%two_letters_code%.json'
