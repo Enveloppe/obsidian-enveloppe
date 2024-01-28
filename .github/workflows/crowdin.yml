@@ -1,0 +1,24 @@
+name: Auto-merge translation PR
+on:
+    pull_request_target:
+        types:
+          - opened
+          - synchronize
+          - reopened
+          - edited
+          - labeled
+          - unlabeled
+          - ready_for_review
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.pull_request.base.ref, 'i18n')
+    steps:
+      - uses: pascalgn/automerge-action@main
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_METHOD: squash
+          MERGE_COMMIT_MESSAGE: "ci(i18n): auto-merge translation"
+          
+          
