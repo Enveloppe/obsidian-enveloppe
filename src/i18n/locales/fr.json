@@ -183,7 +183,7 @@
         "slugify": {
           "desc": "Normaliser le lien (slug) des liens d'ancrage (pointant vers le titre de la rubrique). Transforme le texte en minuscules. Remplace l'espace par un tiret. Applicable uniquement aux liens d'ancrage dans la syntaxe de lien markdown.",
           "disable": "Désactiver",
-          "lower": "Convertit en minuscules et les espaces en tirets",
+          "lower": "",
           "strict": "Convertit tout en alphanumérique et tirets, y compris l'unicode et les langues non latine.",
           "title": "Slugifier l'ancre des liens markdown"
         },
@@ -240,6 +240,7 @@
         "default": "Utiliser {{default}} pour utiliser le chemin de destination par défaut.",
         "desc": "Les extensions suivantes seront toujours publiées, quelque soit la dernière date d'envoi.",
         "info": "Par défaut, les pièces-jointes ne sont envoyés que si elles ont été modifiées depuis leur dernier envoi, ou si elles n'existent pas dans le dépôt.",
+        "separateByComma": "Separate extensions with commas. \nYou can use regex by enclosing it with \"/\", like /regex/. Use {{all}} to force all attachments to be sent.",
         "title": "Forcer l'envoi des pièces-jointes"
       },
       "imagePath": {
@@ -431,8 +432,7 @@
         "title": "Liens utiles"
       }
     },
-    "overrides": {
-    },
+    "overrides": {},
     "plugin": {
       "copyLink": {
         "baselink": {
@@ -528,6 +528,7 @@
     "upload": {
       "defaultFolder": {
         "desc": "Définir le dossier de réception par défaut. Laisser vide pour utiliser la racine du dépôt.",
+        "other": "Use this folder as root within the repository (each path will be prepend by it)",
         "placeholder": "docs",
         "title": "Dossier par défaut"
       },
