@@ -83,7 +83,7 @@
     "autoClean": "Since {{- what}} is empty, auto-cleaning is disabled.",
     "dataview": "Unable to render dataview query. Please update the dataview plugin to the last version.",
     "errorConfig": "Error configuring {{- repo.owner}}/{{- repo.repo}}. Please check your settings.",
-    "errorPublish": "Error during upload to <u>{{- repo.owner}}/{{- repo.repo}}</u>: <i>{{- repo.branch}}</i>",
+    "errorPublish": "Error during upload to <u>{{- repo.owner}}/{{- repo.repo}}</u>:<i>{{- repo.branch}}</i>",
     "isEmpty": "{{- what}} is empty.",
     "mergeconflic": "Pull-request is not mergeable, you need to do it manually.",
     "normal": "The 404 error is normal ! It means that the file does not exist yet. Don't worry ❤️.",
@@ -107,8 +107,8 @@
     "scanningRepo": "Scanning the repository, may take a while...",
     "sendMessage": "Upload <i>{{- nbNotes}}</i> notes to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
     "startingClean": "Starting cleaning <u>{{- repo.owner}}/{{- repo.repo}}</u>",
-    "successPublishOneNote": "Successfully uploaded <i><u>{{- file}}</u></i> to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
-    "successfulPublish": "Successfully uploaded <i>{{- nbNotes}}</i> to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "successPublishOneNote": "Successfully uploaded <i><u>{{- file}}</i><u> to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "successfulPublish": "Successfully uploaded <i>{{- nbNotes}}</i> to <u>{{- repo.owner}}/{{- repo.repo}}<u>",
     "waitingWorkflow": "Now, waiting for the workflow to be completed..."
   },
   "modals": {
