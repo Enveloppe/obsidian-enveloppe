@@ -2,13 +2,13 @@
   "commands": {
     "checkValidity": {
       "inBranch": {
-        "error403": "Erreur 403: {{- repo.owner}}/{{- repo.repo}} a été déplacé de manière permanente (depuis {{- branchInfo}}",
-        "error404": "Erreur 404 : La branche {{- repo.branch}} est introuvable depuis {{- repo.owner}}/{{- repo.repo}}"
+        "error403": "Erreur 403: {{- repo.owner}}/{{- repo.repo}} a été déplacé de manière permanente (depuis {{- repo.branch}}).",
+        "error404": "Erreur 404 : La branche {{- repo.branch}} est introuvable depuis {{- repo.owner}}/{{- repo.repo}}."
       },
       "inRepo": {
-        "error301": "Erreur 301 : {{- repo.owner}}/{{- repo.repo}} a été déplacé de manière permanente",
-        "error403": "Erreur 403 : Cette action est interdite pour {{- repo.owner}}/{{- repo.repo}}",
-        "error404": "Erreur 404 : {{- repo.owner}}/{{- repo.repo}} est introuvable"
+        "error301": "Erreur 301 : {{- repo.owner}}/{{- repo.repo}} a été déplacé de manière permanente.",
+        "error403": "Erreur 403 : Cette action est interdite pour {{- repo.owner}}/{{- repo.repo}}.",
+        "error404": "Erreur 404 : {{- repo.owner}}/{{- repo.repo}} est introuvable."
       },
       "rateLimit": {
         "command": "Vérifier la limite de requêtes de l'API GitHub",
@@ -91,7 +91,7 @@
     "unablePublishMultiNotes": "Impossible de transférer plusieurs notes, quelque chose s'est mal passé.",
     "unablePublishNote": "Impossible de transférer {{- file}}, le fichier a été ignoré.",
     "whatEmpty": {
-      "branch": "Branch",
+      "branch": "Branche",
       "owner": "Propriétaire"
     }
   },
@@ -183,7 +183,7 @@
         "slugify": {
           "desc": "Normaliser le lien (slug) des liens d'ancrage (pointant vers le titre de la rubrique). Transforme le texte en minuscules. Remplace l'espace par un tiret. Applicable uniquement aux liens d'ancrage dans la syntaxe de lien markdown.",
           "disable": "Désactiver",
-          "lower": "Convertit en minuscules et les espaces en tirets",
+          "lower": "",
           "strict": "Convertit tout en alphanumérique et tirets, y compris l'unicode et les langues non latine.",
           "title": "Slugifier l'ancre des liens markdown"
         },
@@ -240,6 +240,7 @@
         "default": "Utiliser {{default}} pour utiliser le chemin de destination par défaut.",
         "desc": "Les extensions suivantes seront toujours publiées, quelque soit la dernière date d'envoi.",
         "info": "Par défaut, les pièces-jointes ne sont envoyés que si elles ont été modifiées depuis leur dernier envoi, ou si elles n'existent pas dans le dépôt.",
+        "separateByComma": "Séparez les extensions par des virgules. \nVous pouvez utiliser regex en l'entourant avec \"/\", comme /regex/. Utilisez {{all}} pour forcer l'envoi de toutes les pièces jointes.",
         "title": "Forcer l'envoi des pièces-jointes"
       },
       "imagePath": {
@@ -431,8 +432,7 @@
         "title": "Liens utiles"
       }
     },
-    "overrides": {
-    },
+    "overrides": {},
     "plugin": {
       "copyLink": {
         "baselink": {
@@ -528,6 +528,7 @@
     "upload": {
       "defaultFolder": {
         "desc": "Définir le dossier de réception par défaut. Laisser vide pour utiliser la racine du dépôt.",
+        "other": "Utilisez ce dossier comme racine dans le référentiel (chaque chemin sera précédé de ce nom)",
         "placeholder": "docs",
         "title": "Dossier par défaut"
       },
@@ -546,7 +547,7 @@
       },
       "frontmatterKey": {
         "desc": "Définir le nom de la clé où obtenir le dossier",
-        "placeholder": "category",
+        "placeholder": "catégorie",
         "title": "Clé de propriété"
       },
       "regexFilePathTitle": {
