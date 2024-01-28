@@ -9,7 +9,7 @@ on:
           - labeled
           - unlabeled
           - ready_for_review
-
+          
 jobs:
   automerge:
     runs-on: ubuntu-latest
@@ -20,5 +20,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MERGE_METHOD: squash
           MERGE_COMMIT_MESSAGE: "ci(i18n): auto-merge translation"
-          
+
           
