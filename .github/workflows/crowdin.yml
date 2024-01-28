@@ -13,12 +13,12 @@ on:
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    if: startsWith(github.event.pull_request.head.ref, 'i18n')
+    if: startsWith(github.event.pull_request.base.ref, 'i18n')
     steps:
       - uses: pascalgn/automerge-action@main
-        with:
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MERGE_METHOD: squash
           MERGE_COMMIT_MESSAGE: "ci(i18n): auto-merge translation"
-
+          
           
