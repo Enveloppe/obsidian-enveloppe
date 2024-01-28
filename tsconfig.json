@@ -20,6 +20,7 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "strict":true,
+    "allowSyntheticDefaultImports": true,
     "lib": [
       "DOM",
       "ES5",
