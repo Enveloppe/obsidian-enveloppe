@@ -11,569 +11,569 @@
         "error404": "Erreur 404 : {{- repo.owner}}/{{- repo.repo}} est introuvable."
       },
       "rateLimit": {
-        "command": "Vérifier la limite de requêtes de l'API GitHub",
-        "limited": "Vous avez atteint la limite de requêtes Github. La limite sera réinitialisée à {{- resetTime}}. minutes.",
-        "notLimited": "Vous n'êtes pas limité par Github. Vous pouvez encore faire {{- remaining}} requêtes, et la limite sera réinitialisée à {{- resetTime}}."
+        "command": "Check the rate limit of the GitHub API",
+        "limited": "You have reached the rate limit of the GitHub API. The limit will be reset at {{- resetTime}}.",
+        "notLimited": "You are not rate limited. You can make {{- remaining}} requests before the limit is reset at {{- resetTime}}."
       },
-      "repoExistsTestBranch": "Le dépôt {{- repo.owner}}/{{- repo.repo}} existe. Maintenant, nous allons tester la branche {{- repo.branch}}",
-      "success": "{{- repo.owner}}/{{- repo.repo}} semble valide !",
-      "title": "Tester la connexion au dépôt configuré"
+      "repoExistsTestBranch": "Repository {{- repo.owner}}/{{- repo.repo}} exists. Now testing the {{- repo.branch}} branch.",
+      "success": "{{- repo.owner}}/{{- repo.repo}} seems to be valid!",
+      "title": "Test the connection to the configured repository"
     },
     "copyLink": {
-      "onActivation": "Lien copié dans le presse-papier !",
-      "title": "Créer un lien vers cette note"
+      "onActivation": "Link copied to your clipboard",
+      "title": "Create a link to this note"
     },
-    "publisherDeleteClean": "Purger les fichiers dépubliés et supprimés",
+    "publisherDeleteClean": "Purge depublished and deleted files",
     "runOtherRepo": {
-      "noFile": "Aucun fichier actif, ou le fichier n'est pas partagé.",
-      "title": "Lancer une commande pour un dépôt"
+      "noFile": "No file is active or the file is not shared",
+      "title": "Run command for a repository"
     },
-    "shareActiveFile": "Transférer la note active",
+    "shareActiveFile": "Upload single current active note",
     "shareViewFiles": {
       "multiple": {
-        "on": "Transférer {{- doc}} vers {{- smartKey }}",
-        "other": "Transférer vers…"
+        "on": "Upload {{- doc}} to {{- smartKey }}",
+        "other": "Upload to…"
       }
     },
-    "uploadAllEditedNote": "Rafraîchir toutes les notes publiées",
-    "uploadAllNewEditedNote": "Rafraîchir les notes publiées et transférer les nouvelles notes",
-    "uploadAllNotes": "Transférer toutes les notes",
-    "uploadNewNotes": "Transférer les nouvelles notes"
+    "uploadAllEditedNote": "Refresh all published notes",
+    "uploadAllNewEditedNote": "Refresh published and upload new notes",
+    "uploadAllNotes": "Upload all shared notes",
+    "uploadNewNotes": "Upload unpublished notes"
   },
   "common": {
-    "add": "Ajouter {{- things}}",
-    "after": "Après",
-    "attachments": "Pièces-jointes",
-    "before": "Avant",
-    "cancel": "Annuler",
-    "close": "Fermer",
-    "default": "défaut",
-    "defaultName": "dossier par défaut",
-    "delete": "Supprimer {{- things}}",
-    "edit": "Éditer {{- things}}",
-    "error": "Erreur",
-    "files": "Fichiers",
-    "ghToken": "Token GitHub",
-    "here": "ici",
-    "or": "ou",
+    "add": "Add {{- things}}",
+    "after": "After",
+    "attachments": "Attachments",
+    "before": "Before",
+    "cancel": "Cancel",
+    "close": "Close",
+    "default": "default",
+    "defaultName": "default folder",
+    "delete": "Delete {{- things}}",
+    "edit": "Edit {{- things}}",
+    "error": "Error",
+    "files": "Files",
+    "ghToken": "GitHub token",
+    "here": "here",
+    "or": "or",
     "path": {
-      "file": "Nom du fichier",
-      "folder": "Chemin du dossier",
-      "full": "Chemin du fichier"
+      "file": "File name",
+      "folder": "Folder path",
+      "full": "Filepath"
     },
-    "published": "publiés",
+    "published": "published",
     "regex": "regex",
-    "rename": "Clé(s) renommée(s)...",
-    "repository": "Dépôt",
-    "rootFolder": "dossier racine",
-    "save": "Sauvegarder",
-    "shared": "partagées",
-    "text": "texte",
-    "warning": "Attention"
+    "rename": "Renamed key(s)...",
+    "repository": "Repository",
+    "rootFolder": "root folder",
+    "save": "Save",
+    "shared": "shared",
+    "text": "text",
+    "warning": "Warning"
   },
   "deletion": {
-    "defaultFolder": "Vous avez besoin d'un dossier par défaut dans les paramètres pour utiliser cette commande.",
-    "failed": "Échec de la suppression de {{- nb}} notes.",
-    "noFile": "Aucun fichier n'a été supprimé.",
-    "rootFolder": "Vous devez configurer un dossier racine dans les paramètres pour utiliser cette commande.",
-    "success": "Suppression réussie de {{- nb}} fichiers."
+    "defaultFolder": "You need a default folder name in the settings to use this command.",
+    "failed": "Failed to delete {{- nb}} files.",
+    "noFile": "No files have been deleted.",
+    "rootFolder": "You need to configure a root folder in the settings to use this command.",
+    "success": "Successfully deleted {{- nb}} files."
   },
   "error": {
-    "alreadyExists": "{{- file}} existe déjà.",
-    "autoClean": "Le {{- what}} étant vide, l'auto-nettoyage est désactivée.",
-    "dataview": "Impossible de convertir la requête Dataview. Veuillez mettre à jour le module Dataview à la dernière version;",
-    "errorConfig": "Erreur de configuration pour {{- repo.owner}}/{{- repo.repo}}:{{- repo.branch}}. Merci de vérifier vos paramètres.",
+    "alreadyExists": "{{- file}} already exists.",
+    "autoClean": "Since {{- what}} is empty, auto-cleaning is disabled.",
+    "dataview": "Unable to render dataview query. Please update the dataview plugin to the last version.",
+    "errorConfig": "Error configuring {{- repo.owner}}/{{- repo.repo}}. Please check your settings.",
     "errorPublish": "Erreur lors de la publication sur <u>{{- repo.owner}}/{{- repo.repo}}</u> : <i>{{- repo.branch}}</i>",
-    "isEmpty": "{{- what}} est vide.",
-    "mergeconflic": "La Pull-Request n'est pas fusionnable, vous avez besoin de le faire manuellement.",
-    "normal": "L'erreur 404 est normale ! Elle signifie que le fichier n'existe pas encore. Ne vous inquiétez pas ❤️.",
-    "reading-token-file": "Erreur : Le chemin est incorrect.",
-    "unablePublishMultiNotes": "Impossible de transférer plusieurs notes, quelque chose s'est mal passé.",
-    "unablePublishNote": "Impossible de transférer {{- file}}, le fichier a été ignoré.",
+    "isEmpty": "{{- what}} is empty.",
+    "mergeconflic": "Pull-request is not mergeable, you need to do it manually.",
+    "normal": "The 404 error is normal ! It means that the file does not exist yet. Don't worry ❤️.",
+    "reading-token-file": "Error: the path seems incorrect.",
+    "unablePublishMultiNotes": "Unable to upload multiple notes, something went wrong.",
+    "unablePublishNote": "Unable to upload note {{- file}}, skipping it",
     "whatEmpty": {
       "branch": "Branche",
-      "owner": "Propriétaire"
+      "owner": "Owner"
     }
   },
   "informations": {
-    "foundNoteToSend": "Trouvé {{- nbNotes}} nouvelles notes à transférer.",
+    "foundNoteToSend": "Found {{- nbNotes}} new notes to send",
     "migrating": {
-      "fileReplace": "Migration du remplacement du nom du fichier au nouveau format...",
-      "normalFormat": "Migration des paramètres...",
-      "oldSettings": "Migration des anciens paramètres au nouveau format...",
-      "subFolder": "Ajout du remplacement du sous-dossier au remplacement de chemin de fichier..."
+      "fileReplace": "Migration of filename replace to the new format...",
+      "normalFormat": "Migrating settings...",
+      "oldSettings": "Migration of old settings to new settings format...",
+      "subFolder": "Adding replacing subfolder to the folderpath replacement..."
     },
-    "noNewNote": "Aucune note à transférer.",
-    "scanningRepo": "Scan du dépôt, veuillez patienter...",
-    "sendMessage": "Transfert de <i>{{- nbNotes}}</i> notes vers <u>{{- repo.owner}}/{{- repo.repo}}</u>",
-    "startingClean": "Début du nettoyage de <u>{{- repo.owner}}/{{- repo.repo}}</u>",
-    "successPublishOneNote": "Transfert réussi de <i><u>{{- file}}</u></i> vers <u>{{- repo.owner}}/{{- repo.repo}}</u>",
-    "successfulPublish": "Transfert réussi de <i>{{- nbNotes}}</i> notes vers <u>{{- repo.owner}}/{{- repo.repo}}</u>",
-    "waitingWorkflow": "Maintenant, attente de la fin du workflow..."
+    "noNewNote": "No new notes to upload.",
+    "scanningRepo": "Scanning the repository, may take a while...",
+    "sendMessage": "Upload <i>{{- nbNotes}}</i> notes to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "startingClean": "Starting cleaning <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "successPublishOneNote": "Successfully uploaded <i><u>{{- file}}</u></i> to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "successfulPublish": "Successfully uploaded <i>{{- nbNotes}}</i> to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "waitingWorkflow": "Now, waiting for the workflow to be completed..."
   },
   "modals": {
     "export": {
-      "copy": "Copier vers le presse-papier",
-      "desc": "Exporter les paramètres vers un fichier ou dans le presse-papier.",
-      "download": "Télécharger",
-      "title": "Exporter les paramètres"
+      "copy": "Copy to clipboard",
+      "desc": "Export settings to clipboard or a file.",
+      "download": "Download",
+      "title": "Export settings"
     },
     "import": {
-      "desc": "Importer des paramètres depuis un fichier ou un texte. Cela écrasera vos paramètres actuels (sauf le nom du dépôt, le nom d'utilisateur et votre token)",
+      "desc": "Import settings from text or a file. Note : this will overwrite your current settings (except for username, repo name and token).",
       "error": {
-        "isEmpty": "la configuration est vide",
-        "span": "Erreur lors de l'importation de la configuration :"
+        "isEmpty": "the configuration is empty.",
+        "span": "Error importing configuration: "
       },
-      "importFromFile": "Import depuis le fichier",
-      "paste": "Coller la configuration ici...",
+      "importFromFile": "Import from file",
+      "paste": "Paste configuration here...",
       "presets": {
-        "desc": "Charger des pré-réglages du dépôt \"plugin-presets\"",
-        "title": "Pré-réglages"
+        "desc": "Load presets from the repository \"plugin-presets\"",
+        "title": "Presets"
       },
-      "title": "Importer des paramètres"
+      "title": "Import settings"
     },
     "listChangedFiles": {
-      "added": "Ajouté",
-      "deleted": "Supprimé",
-      "edited": "Modifié",
-      "error": "Erreurs",
-      "notDeleted": "Impossible à supprimer",
-      "title": "Liste des fichiers édités sur le dépôt",
-      "unpublished": "Impossible à publier"
+      "added": "Added",
+      "deleted": "Deleted",
+      "edited": "Edited",
+      "error": "Errors",
+      "notDeleted": "Cannot be deleted",
+      "title": "List of files edited in the repository",
+      "unpublished": "Cannot be published"
     }
   },
   "publish": {
     "branch": {
-      "alreadyExists": "La branche {{- branchName}} sur {{- repo.owner}}/{{- repo.repo}} existe déjà - Utilisation de celle-ci.",
-      "error": "Erreur avec {{- repo.owner}}/{{- repo.repo}} : {{- error}}",
-      "prMessage": "Pull-Request [{{- branchName}}] depuis Obsidian",
-      "success": "La branche a été crée avec succès (status: {{- branchStatus}} sur {{- repo.owner}}/{{- repo.repo}})"
+      "alreadyExists": "Branch already exists ({{- branchName}} on {{- repo.owner}}/{{- repo.repo}} - Using it.",
+      "error": "Error with {{- repo.owner}}/{{- repo.repo}}: {{- error}}",
+      "prMessage": "Pull-Request [{{- branchName}}] from Obsidian",
+      "success": "Branch successfully created (status: {{- branchStatus}}) on {{- repo.owner}}/{{- repo.repo}}"
     }
   },
   "regex": {
-    "entry": "Valeur à remplacer",
-    "replace": "Remplacement"
+    "entry": "Value to replace",
+    "replace": "Replacement"
   },
   "settings": {
     "conversion": {
       "dataview": {
-        "desc": "Convertir les requêtes Dataview en markdown. Ne fonctionne que si Dataview est activé.",
+        "desc": "Convert dataview to markdown. Only works if Dataview is enabled.",
         "title": "Dataview"
       },
-      "desc": "Ces options ne changent pas le contenu du fichier dans votre coffre Obsidian, mais changeront le contenu du fichier publié sur GitHub.",
+      "desc": "Theses option won't change the content of the file in your Obsidian Vault, but will change the content of the file in GitHub.",
       "hardBreak": {
-        "desc": "Ajoutez un retour à la ligne Markdown (double espace) après chaque ligne.",
-        "title": "Saut de ligne strict"
+        "desc": "Add a markdown hard line break (double whitespace) after each line.",
+        "title": "Markdown hard line break"
       },
       "links": {
-        "desc": "Vous pouvez empêcher la conversion des liens et conserver le texte alt (ou le nom du fichier) en utilisant la clé de propriétés \"links\" avec la valeur \"false\".",
+        "desc": "Put `links: false` in the frontmatter of a note to prevent links to it to be converted and keep the alt text (or filename)",
         "folderNote": {
-          "desc": "Renommer les fichiers en un nom spécifique (défaut : \"index.md\") s'il porte le même nom que leur dossier/catégorie parent (fonctionne aussi si la note est à l'extérieur du dossier).",
-          "title": "Folder Note"
+          "desc": "Rename files to a specified name (default: index.md) if it has the same name as their parent folder/category (also works if the note is outside of the folder).",
+          "title": "Folder note"
         },
         "internals": {
-          "desc": "Convertir les liens internes pointant vers les notes publiées vers leur homologue dans le dépôt, sous forme de chemin relatif.",
-          "shareAll": "Inclut tous les liens pour les paramètres \"partager tout\", car il est impossible sans frontmatter de connaître l'état de partage d'un fichier.",
-          "title": "Liens internes"
+          "desc": "Convert internal links to their counterpart in the repository, with relative path.",
+          "shareAll": "Includes all links for the \"share all\" settings, as it impossible without frontmatter to know the sharing state of a file.",
+          "title": "Internals links"
         },
         "nonShared": {
-          "desc": "L'option précédente, mais appliquées aux liens internes pointant vers des notes non-publiées. Désactivé, seul le nom du fichier sera conservé.",
-          "title": "Conversion des liens internes pointant vers des notes non-publiées"
+          "desc": "Same option as internals, but for notes that are not yet published. Disabled, only the filename will be conserved.",
+          "title": "Convert internal links pointing to unpublished notes"
         },
         "slugify": {
-          "desc": "Normaliser le lien (slug) des liens d'ancrage (pointant vers le titre de la rubrique). Transforme le texte en minuscules. Remplace l'espace par un tiret. Applicable uniquement aux liens d'ancrage dans la syntaxe de lien markdown.",
-          "disable": "Désactiver",
+          "desc": "Standardize the slug of anchor links (pointing to heading title). Transform the slug into all lower case. Replace space with hyphen. Applicable only for anchor links in markdown link syntax.",
+          "disable": "Disable",
           "lower": "",
-          "strict": "Convertit tout en alphanumérique et tirets, y compris l'unicode et les langues non latine.",
-          "title": "Slugifier l'ancre des liens markdown"
+          "strict": "Convert all to alphanumeric and dashes, including unicode and non latin languages.",
+          "title": "Sluglify anchor in markdown links"
         },
-        "title": "Liens",
+        "title": "Links",
         "wikilinks": {
-          "desc": "Conversion des liens wikilinks en liens Markdown, sans en modifier le contenu.",
-          "title": "Convertir [[WikiLinks]] en [liens](Markdown)"
+          "desc": "Convert Wikilinks to MDlinks, without changing the contents.",
+          "title": "[[Wikilinks]] to [MDlinks](links)"
         }
       },
-      "sectionTitle": "Texte principal",
+      "sectionTitle": "Main text",
       "tags": {
-        "desc": "Ceci convertira tous les champs des propriétés/dataview en tags. Séparez les champs par une virgule.",
+        "desc": "This will convert any properties or dataview inline field into properties tags. Separate fields with a comma.",
         "exclude": {
-          "desc": "Exclusion de champs de la conversion. Séparer les valeurs par une virgule.",
-          "placeholder": "Valeur du chemin",
-          "title": "Exclusion de tags"
+          "desc": "This will exclude value from being converted. Separate fields with a comma.",
+          "placeholder": "Field value",
+          "title": "Exclude value from conversion"
         },
         "inlineTags": {
-          "desc": "Ajoute vos inlines tags dans votre bloc propriétés et converti les tags imbriqués en remplaçant \"/\" par \"_\".",
-          "title": "Inlines tags"
+          "desc": "Add your inline tags in your properties tags field and converting nested tags with replacing \"/\" with \"_\"",
+          "title": "Inline tags"
         },
-        "title": "Convertir des champs dataview ou propriétés en tags"
+        "title": "Convert properties/dataview fields into tags"
       },
-      "title": "Contenu"
+      "title": "Content"
     },
     "embed": {
-      "attachment": "Pièces-jointes",
+      "attachment": "Attachments",
       "bake": {
-        "text": "Permet d'ajouter du texte avant et après chaque intégration, par exemple en ajoutant du HTML ou en stylisant le bloc avec du markdown.",
+        "text": "Allow you to add text before and after each embed, for example adding HTML or stylize the block with markdown.",
         "textAfter": {
-          "title": "Texte après le block"
+          "title": "Text after the block"
         },
         "textBefore": {
-          "title": "Texte à ajouter avant le block"
+          "title": "Text before the block"
         },
-        "title": "Paramètres pour l'inclusion des embeds",
+        "title": "Include embed settings",
         "variable": {
-          "desc": "Il est possible d'utiliser les variables suivantes :",
-          "title": " : Titre de la note inclue",
-          "url": " : Chemin vers la note inclue"
+          "desc": "It is possible to use the following variable:",
+          "title": ": note embedded title",
+          "url": ": path to the embedded note"
         },
-        "warning": "Si vous utilisez du HTML, selon les paramètres de votre hébergeur, le Markdown sera cassé."
+        "warning": "If you use HTML, depending of your host settings, the markdown will broke."
       },
       "char": {
-        "desc": "Caractère(s) à ajouter devant le lien.",
-        "title": "Caractère d'embed"
+        "desc": "Character(s) to add before the link.",
+        "title": "Embed characters"
       },
       "defaultImageFolder": {
-        "desc": "Pour utiliser un dossier différent de celui par défaut pour les pièces-jointes.",
-        "title": "Dossier de pièces-jointes par défaut"
+        "desc": "To use a folder different from default",
+        "title": "Default attachment folder"
       },
       "forcePush": {
-        "all": "Utiliser {{all}} pour modifier la destination de toutes les pièces jointes (et/ou forcer leur envoie).",
-        "default": "Utiliser {{default}} pour utiliser le chemin de destination par défaut.",
-        "desc": "Les extensions suivantes seront toujours publiées, quelque soit la dernière date d'envoi.",
-        "info": "Par défaut, les pièces-jointes ne sont envoyés que si elles ont été modifiées depuis leur dernier envoi, ou si elles n'existent pas dans le dépôt.",
+        "all": "Use {{all}} to change the destination of all attachments (and/or force them to be sent).",
+        "default": "Use {{default}} to use the default destination path.",
+        "desc": "The following extensions will always be published, regardless of the last sending date.",
+        "info": "By default, attachments are only sent if they have been modified since they were last sent, or if they do not exist in the repository.",
         "separateByComma": "Séparez les extensions par des virgules. \nVous pouvez utiliser regex en l'entourant avec \"/\", comme /regex/. Utilisez {{all}} pour forcer l'envoi de toutes les pièces jointes.",
-        "title": "Forcer l'envoi des pièces-jointes"
+        "title": "Force attachments to be sent"
       },
       "imagePath": {
-        "desc": "Utilisez la structure de dossier Obsidian ou configurer un dossier par défaut ci-dessous",
+        "desc": "Use the obsidian folder structure or configure a default folder below",
         "title": "Structure"
       },
       "links": {
-        "desc": "Permet d'éditer les liens des embeds, en supprimant entièrement la citation, ou en la transformant en un simple lien.",
+        "desc": "Allow to edit the links of the embeds, removing entirely the citation, or transform to a simple link",
         "dp": {
-          "bake": "Inclure le contenu des embeds",
-          "keep": "Pas de changement",
-          "links": "Transformer en lien simple",
-          "remove": "Supprimer le lien complètement"
+          "bake": "Include embed contents",
+          "keep": "No change",
+          "links": "Transform to link",
+          "remove": "Remove link completely"
         },
-        "title": "Changer les balises d'embed"
+        "title": "Change embed markup"
       },
-      "notes": "Note (Markdown)",
+      "notes": "Embed notes",
       "overrides": {
-        "desc": "Permet d'envoyer une pièce jointe dans un chemin spécifique et de forcer les pièces jointes à être poussées.",
+        "desc": "Allow to send an attachment into a specific path and force push attachments.",
         "modal": {
           "dest": "Destination",
-          "path": "Chemin ou extension",
-          "title": "Remplacer le chemin des pièces jointes"
+          "path": "Path or extension",
+          "title": "Override attachments path"
         }
       },
-      "title": "Pièces-jointes & Embeds",
+      "title": "Attachment & embeds ",
       "transferImage": {
-        "title": "Envoyer les pièces-jointes intégrées dans un fichier dans le dépôt."
+        "title": "Transfer attachments"
       },
       "transferMetaFile": {
-        "desc": "Permet d'envoyer des fichiers en utilisant une clé propriétés/dataview. Séparer les champs par une virgule.",
-        "title": "Envoyer des fichiers en utilisant une clé propriétés/dataview"
+        "desc": "Set the names of the metadata field you want to use to send files. Separate fields with a comma. Dataview inline field are supported.",
+        "title": "Send files using a metadata field"
       },
       "transferNotes": {
-        "desc": "Envoyer les notes intégrées dans un fichier publié dans le dépôt. Seul les fichiers publiés seront envoyés !",
-        "title": "Transférer les notes intégrées"
+        "desc": "Send embedded notes in a shared file to GitHub. Only shared files will be send!",
+        "title": "Transfer embedded notes"
       }
     },
     "github": {
       "apiType": {
-        "desc": "Choisir entre l'API GitHub ou l'API pour GitHub Entreprise (uniquement pour les utilisateurs de GitHub Enterprise — Utilisateur avancé !).",
+        "desc": "Choose between the GitHub API or the GitHub Enterprise API (only GitHub Enterprise users — Advanced user!).",
         "dropdown": {
-          "enterprise": "Entreprise",
-          "free": "Free/Pro/Team (défaut)"
+          "enterprise": "Enterprise",
+          "free": "Free/Pro/Team (default)"
         },
         "hostname": {
-          "desc": "Le nom de l'instance Github de votre entreprise.",
-          "title": "Instance Github Entreprise"
+          "desc": "The hostname of your GitHub Enterprise instance.",
+          "title": "GitHub Enterprise Hostname"
         },
-        "title": "Type d'API"
+        "title": "API Type"
       },
-      "automaticallyMergePR": "Fusionner automatiquement les pull-request",
+      "automaticallyMergePR": "Automatically merge pull requests",
       "branch": {
-        "desc": "Dans le cas où vous souhaitez utiliser une branche différente de \"main\".",
-        "title": "Branche principale"
+        "desc": "If you use a different branch than \"main\"",
+        "title": "Main branch"
       },
       "dryRun": {
         "enable": {
-          "desc": "Désactiver le push GitHub et toutes les autres actions et effectuer seulement une simulation pour voir ce qui serait transféré ou supprimé dans le dépôt.",
-          "title": "Mode de test"
+          "desc": "Disable GitHub push and all other action and only perform a dry-run to see what would be pushed or deleted in the repository.",
+          "title": "Test mode"
         },
         "folder": {
-          "desc": "Utilisez {{owner}}, {{repo}} et {{branch}} pour nommer dynamiquement le dossier.",
-          "title": "Dossier où le dépôt sera simulé (test mode uniquement)"
+          "desc": "Use {{owner}}, {{repo}} and {{branch}} to dynamically name the folder.",
+          "title": "Folder where the repository will be simulated (test mode only)"
         }
       },
       "ghToken": {
         "button": {
-          "configDir": " : Le dossier de configuration d'Obsidian",
-          "default": "Par défaut, il sera dans :",
-          "description": "Vous pouvez éditer le chemin du fichier dans lequel sera stocké le token.",
-          "pluginID": " : L'ID du plugin",
-          "tooltip": "Modifier le chemin du fichier contenant le token",
-          "variables": "Vous pouvez utiliser les variables suivantes :"
+          "configDir": ": The configuration folder of Obsidian",
+          "default": "By default, it will be in:",
+          "description": "You can edit the file path where the token will be stored.",
+          "pluginID": ": The plugin ID",
+          "tooltip": "Modify the path of the file containing the token",
+          "variables": "You can use the following variables:"
         },
-        "desc": "Un token GitHub avec autorisation de dépôt. Vous pouvez le générer ",
-        "error": "Le token ne doit pas être vide !"
+        "desc": "A GitHub token with repository permission. You can generate it ",
+        "error": "The token mustn't be empty!"
       },
       "repoName": {
-        "desc": "Le nom du dépôt dans lequel vos fichiers seront transférés.",
+        "desc": "The name of the repository where you store your blog.",
         "placeholder": "mkdocs-template",
-        "title": "Nom du dépôt"
+        "title": "Repository name"
       },
       "smartRepo": {
-        "button": "Gérer plus de dépôt",
+        "button": "Manage more repository",
         "modals": {
-          "default": "Le nom \"default\" est réservé pour votre configuration principale.",
-          "desc": "Ces \"autres dépôts\" vous permettent d'utiliser toutes les commandes sur les dépôts ajoutés ci-dessous.",
-          "duplicate": "Les smartKey doivent être uniques !",
-          "empty": "Les smartkeys ne peuvent pas être vide",
-          "frontmatterInfo": "L'utilisation de la clé propriété \"shortRepo\" avec la \"smartKey\" permet également d'utiliser ce dépôt dans un fichier sans avoir à écrire son chemin.",
-          "newRepo": "un nouveau dépôt",
-          "otherConfig": "Autres paramètres",
+          "default": "The name \"default\" is reserved for your primary configuration.",
+          "desc": "These \"other repositories\" allow you to use all the commands on the repositories added below.",
+          "duplicate": "Smartkey must be unique!",
+          "empty": "Smartkeys cannot be empty",
+          "frontmatterInfo": "Using the \"shortRepo\" properties key with the \"smartKey\" also allows you to use this repository in a file without having to write its path.",
+          "newRepo": "a new repository",
+          "otherConfig": "Other settings",
           "shortcuts": {
-            "desc": "Ajoute toutes les commandes de ce dépôt dans la palette de commandes",
-            "title": "Raccourci"
+            "desc": "Add all commands for this repository in the command palette",
+            "title": "Shortcuts"
           },
-          "title": "Gérer d'autres dépôts"
+          "title": "Manage others repositories"
         }
       },
-      "testConnection": "Tester la connexion",
-      "title": "Configuration GitHub",
+      "testConnection": "Test connection",
+      "title": "GitHub config",
       "username": {
-        "desc": "Votre username sur GitHub.",
-        "title": "Nom d'utilisateur GitHub"
+        "desc": "The username or organization hosting the repo in GitHub",
+        "title": "GitHub username"
       }
     },
     "githubWorkflow": {
       "autoCleanUp": {
-        "desc": "Si le plugin doit supprimer de votre dépôt les fichiers dépubliés (arrêt du partage ou suppression).",
-        "title": "Auto-nettoyage"
+        "desc": "Remove depublished files (stopped sharing or deleted) from GitHub",
+        "title": "Auto clean up"
       },
       "excludedFiles": {
-        "desc": "Si vous voulez exclure certains dossier ou fichier du nettoyage automatique, définissez leur chemin. Les regex sont acceptées en les encadrant par des slashs. Séparer les valeurs par une virgule.",
-        "title": "fichiers et dossier exclus"
+        "desc": "If you want to exclude some folder or file from the autoclean, add them here. You can use regex by surrounding the string with \"/\". Separate files with a comma.",
+        "title": "Excluded files and folder"
       },
       "githubAction": {
-        "desc": "Si vous souhaitez activer une action GitHub lorsque le plugin push les fichiers dans le dépôt, il vous faut indiquer le nom du fichier issus du dossier .github/workflows/. Seules les actions activées par un workflow_dispatch sont activées.",
-        "title": "Nom de l'action GitHub"
+        "desc": "If you want to activate a GitHub action when the plugin push the file, set the name of the file (in your .github/worfklows folder). Only workflow with the \"workflow_dispatch\" event will be triggered.",
+        "title": "GitHub action name"
       },
       "prRequest": {
-        "desc": "Le message envoyé lorsque la pull-request est fusionnée. Sera toujours suivi par le numéro de la pull-request.",
-        "error": "Vous ne pouvez pas utiliser une valeur vide pour le message de commit.",
-        "title": "Message de commit"
+        "desc": "The message send when the pull-request is merged. Will always followed by the pull-request number.",
+        "error": "You can't use an empty string here!",
+        "title": "Commit message"
       },
       "useMetadataExtractor": {
-        "desc": "Envoyer les fichiers générés par metadata-extractor dans ce dossier.",
-        "title": "Fichier de metadata-extractor"
+        "desc": "Send the files generated by the metadata-extractor plugin in this folder.",
+        "title": "Metadata-extractor files"
       }
     },
     "help": {
       "frontmatter": {
         "attachment": {
-          "folder": "Change le dossier par défaut pour les pièces-jointes.",
-          "send": "Envoie toutes les pièces-jointes dans le dépôt GitHub."
+          "folder": "Change the default folder for the attachments",
+          "send": "Send all attachments to GitHub"
         },
-        "autoclean": "Désactive ou active le nettoyage automatique du dépôt GitHub.",
+        "autoclean": "Disable or enable autocleaning",
         "baselink": {
-          "desc": "Change le lien de base pour la commande de copie de lien. Désactive aussi la suppression de partie de lien. Peut être utilisée en tant qu'objet sous le nom de ",
-          "remove": "Supprime les parties de lien. À mettre sous forme de liste !"
+          "desc": "Change the base link for the copy link command. Also disable the link replacer part. Can be used as an properties object with the name ",
+          "remove": "Remove part of the link. It must be a list!"
         },
         "convert": {
-          "enableOrDisable": "Active ou désactive la conversion des liens. En désactivant cette option, vous supprimez les",
-          "syntax": "syntaxes, tout en gardant le nom du fichier ou son text alternatif."
+          "enableOrDisable": "Enable or disable the conversion of links. Disabling this will remove the",
+          "syntax": "syntax, while keeping the file name or the alternative text."
         },
-        "dataview": "Convertit les requêtes dataview en markdown.",
-        "desc": "Il existe quelques clés de propriétés qui peuvent vous êtes utile. Le code ci-dessous montre les paramètres par défaut, mais n'hésitez pas à le modifier selon vos besoins pour chaque note !",
+        "dataview": "Convert dataview queries to markdown.",
+        "desc": "Moreover, there are some properties keys that can be useful for your workflow. The code below show the default settings, but feel free to change it to your needs in each notes!",
         "embed": {
-          "char": "Ajoutez un ou plusieurs caractères avant les liens. Utiliser uniquement si vous avez fixé \"remove\" à \"links\".",
+          "char": "Add a character(s) before the embedded links. Used only if you set \"remove\" to \"links\".",
           "remove": {
-            "bake": "Inclure le contenu des embeds (blocs de support, titre et fichier entier)",
-            "desc": "Modifie l'aspect des liens des notes incorporées. Peut prendre les valeurs suivantes :",
-            "keep": "Laisse comme dans Obsidian",
-            "links": "Convertit le lien vers la note incorporée en lien simple",
-            "remove": "Supprime le lien complètement et laisse une ligne vide"
+            "bake": "Include the content of the embed (support blocks, heading and entire file)",
+            "desc": "Modify the aspect of the embedded files link. Can take the followed value:",
+            "keep": "Leave as in Obsidian",
+            "links": "Convert to links (delete or edit the \"!\")",
+            "remove": "Delete the citation completely and leave an empty line"
           },
-          "send": "Envoie les notes intégrées de la note publiées dans le dépôt. Seules les notes partagées seront envoyées !"
+          "send": "Send embedded note to GitHub"
         },
-        "hardBreak": "Convertit tous les sauts de lignes en \"hard break\" markdown.",
-        "internals": "Convertit les liens internes vers leur homologue du dépôt, sous forme de liens relatifs. Désactivés, les liens seront conservés tels quels.",
-        "mdlinks": "Convertir tous les liens [[wikilinks]] en [liens](Markdown)",
-        "nonShared": "Convertit les liens internes pointant vers une notes non publiées vers son futur homologue. Désactivé, le plugin conservera le nom du fichier ou son texte alternatif.",
-        "path": "Vous pouvez écraser tous les paramètres de chemins en utilisant cette clé. Le chemin sera créée à partir de la racine du dépôt.",
+        "hardBreak": "Convert all linebreaks to markdown «hard break».",
+        "internals": "Convert internals links to their counterpart in the website, with relative path. Disabled, the plugin will keep the internal link as is.",
+        "mdlinks": "Convert all [[wikilinks]] to [markdown](links)",
+        "nonShared": "Convert internal links pointing to a unshared file to their counterpart in the website, with relative path. Disabled, the plugin will keep the filename.",
+        "path": "You can override all path settings using this key. The path will be relative to the root of your repository.",
         "repo": {
-          "branch": "Nom de la branche",
-          "desc": "Changer le dépôt GitHub pour cette note",
-          "owner": "Pseudo GitHub du propriétaire du dépôt"
+          "branch": "Branch of the repo",
+          "desc": "Change the default repo for the note.",
+          "owner": "Owner of the repo"
         },
         "share": {
-          "other": "Vous pouvez également utiliser une autre shareKey basée sur la clé définie dans « Gérer plus de dépôt ». Cela vous permet de séparer vos différents dépôts. Si vous utilisez les clés principales et secondaires, le dépôt principal sera utilisé.",
-          "title": "La clé utilisée pour partager une note"
+          "other": "You could also use another shareKey based on the key set in « Manage other repo ». It allows you to separate your different repository. If the main and secondaries key are used, the main repo will be used.",
+          "title": "This key is used to share a note with the plugin."
         },
-        "shortRepo": "Autorise l'utilisation de l'un des dépôts définis dans les paramètres",
-        "title": "Aide-mémoire des propriétés",
-        "titleKey": "Change le titre de la note"
+        "shortRepo": "Allow to use one of the repo set in other repo settings.",
+        "title": "Property key cheatsheet",
+        "titleKey": "Change the title of the note."
       },
       "multiRepoHelp": {
-        "desc": "Si vous souhaitez envoyer vos notes dans plusieurs dépôt en même temps, vous pouvez utiliser la clé ",
-        "desc2": "dans vos propriétés. La valeur de cette clé doit être une liste. Chaque dépôt doit avoir les clés suivantes :",
-        "exampleDesc": "Le code ci-dessous montre un exemple basé sur vos paramètres.",
-        "title": "Envoie dans plusieurs dépôt"
+        "desc": "If you want to send your notes to multiple repository, you can use the ",
+        "desc2": "key in your properties. The value of this key must be a list of repository. Each repository must have the following keys ",
+        "exampleDesc": "The code below show an example based on your settings.",
+        "title": "Send to multiple repository"
       },
-      "title": "Aide",
+      "title": "Help",
       "usefulLinks": {
         "discussion": "Discussion",
-        "documentation": "Documentation (en anglais)",
+        "documentation": "Documentation",
         "issue": "Issue",
-        "links": "https://obsidian-publisher.netlify.app",
-        "title": "Liens utiles"
+        "links": "https://obsidian-publisher.netlify.app/",
+        "title": "Useful links"
       }
     },
     "overrides": {},
     "plugin": {
       "copyLink": {
         "baselink": {
-          "desc": "Permet de créer un lien dans le presse-papier avec cette base. Par défaut : \"https://username.github.io/repo/\"",
-          "title": "Lien du dépôt/blog"
+          "desc": "The base link of your website. By default : https://username.github.io/repo/",
+          "title": "Base link"
         },
         "command": {
-          "desc": "Ajouter une commande permettant de copier le lien de la note publiée dans le presse-papier (nécessite de recharger le plugin pour prendre effet)"
+          "desc": "Add a command to copy the link of the note (need reloading the plugin to take effect)"
         },
-        "desc": "Envoie d'un lien vers la note publiées dans votre presse-papier.",
+        "desc": "Send a link to your note in your clipboard",
         "linkPathRemover": {
-          "desc": "Supprimer cette partie des liens créés. Séparer par une virgule si plusieurs valeurs doivent être supprimées.",
-          "title": "Suppression d'une partie du lien"
+          "desc": "Delete this part of the links created. Separate with a comma if several values are to be deleted.",
+          "title": "Deleting part of the link"
         },
-        "title": "Copie de lien"
+        "title": "Copy link"
       },
       "dev": {
-        "desc": "Utilisateur avancé seulement. Affichera sous forme de \"Notice\" selon le paramètre précédents.",
-        "title": "Affiche les logs développeurs"
+        "desc": "Advanced user only. Will display as notice according to the previous setting.",
+        "title": "Display developper logs"
       },
       "editorMenu": {
-        "desc": "Ajouter une commande de partage dans le menu du clic droit.",
-        "title": "Menu \"Edition\""
+        "desc": "Add a sharing command in the right-click menu",
+        "title": "Editor menu"
       },
       "embedEditRepo": {
-        "desc": "Permet d'afficher la liste des fichiers éditer, ajouté, supprimé... Du dépôt principal (dans un modal).",
-        "title": "Afficher les éditions sur le dépôt"
+        "desc": "Display a modal how the new version differs",
+        "title": "Show what files are edited, added, or deleted after uploaded"
       },
       "excludedFolder": {
-        "desc": "Les fichiers dans ses dossiers ne seront jamais publiés, quelle que soit l'état de la clé de partage. Séparez les noms de dossier par une virgule. Les regex sont supportés en les encadrant par \"//\"",
-        "title": "Dossiers exclus"
+        "desc": "Never publish file in these folders, regardless of the share key. Read the docs for more info.",
+        "title": "Excluded folders"
       },
       "fileMenu": {
-        "desc": "Ajouter une commande de partage dans le menu \"Fichier\"",
-        "title": "Menu \"Fichier\""
+        "desc": "Add a sharing command in the file menu",
+        "title": "File menu"
       },
       "head": {
-        "copyLinks": "Création et copie de liens",
+        "copyLinks": "Link building & copy",
         "log": "Logs",
         "menu": "Menu",
-        "other": "Autres",
-        "share": "Partage & clé de partage"
+        "other": "Others",
+        "share": "Sharing config"
       },
       "logNoticeHeader": {
-        "desc": "Sur mobile, il peut être difficile de debug le module. Activer cette option pour notifier toutes les erreurs via une notification Obsidian.",
-        "title": "Notifier toutes les erreurs"
+        "desc": "On mobile, it can be hard to debug the plugin. Enable this option to log every error in a Notice.",
+        "title": "Notice every error"
       },
       "saveTab": {
-        "desc": "Permet de rouvrir les paramètres sur l'onglet précédemment utilisé",
-        "title": "Sauvegarder l'onglet"
+        "desc": "Allows you to reopen the settings on the previously used tab",
+        "title": "Save tab"
       },
       "set": {
-        "desc": "Choisissez la clé de propriété que vous souhaitez utiliser pour lier la propriété d'un fichier à un autre, sans les réécrire à chaque fois. Ne fonctionne que pour les fichiers liés par un lien wiki dans le frontmatter.",
-        "title": "Set d'options"
+        "desc": "Choose the property key you want to use to link the property of a file to another, without rewrite them each time. Work only for file linked by a wikilink in the frontmatter.",
+        "title": "Set of options"
       },
       "shareKey": {
         "all": {
-          "desc": "Autoriser le partage de tous les fichiers et ignorer l'état de la clé de partage",
-          "title": "Partager tous les fichiers sans clé de partage"
+          "desc": "Share all files regardless of the state of the share key of the notes",
+          "title": "Share all files"
         },
-        "desc": "Clé de partage",
+        "desc": "The YAML frontmatter key to publish your file on the website. Default is `share`.",
         "excludedFileName": {
-          "title": "Exclure les fichiers dont le nom commence par ..."
+          "title": "Exclude files with names starting with ..."
         },
-        "otherRepo": "Vous pouvez également définir une clé de partage pour séparer avec des autres, sans utiliser la clé shortRepo.",
-        "title": "La clé de propriété pour publier la note sur le dépôt."
+        "otherRepo": "You can also define a share key to separate with others, without using the shortRepo key.",
+        "title": "Share key"
       },
-      "title": "Paramètres du plugin"
+      "title": "Plugin settings"
     },
     "regexReplacing": {
-      "empty": "Le remplacement peut être vide pour supprimer l'ensemble de la chaîne de caractère.",
-      "emptyRegex": "La valeur à remplacer ne peut pas être vide",
-      "forbiddenValue": "Le {{- what}} ne peut contenir le caractère : {{- forbiddenChar}}.",
+      "empty": "Replacement can be empty to remove the whole string.",
+      "emptyRegex": "The value to replace cannot be empty",
+      "forbiddenValue": "The {{- what}} cannont contain the character: {{- forbiddenChar}}",
       "inCodeBlocks": {
-        "runIn": "Lancé dans les bloc de code",
-        "runOut": "N'est pas lancé dans les bloc de codes"
+        "runIn": "Runned in code-blocks",
+        "runOut": "Not runned in the code blocks"
       },
-      "invalidRegex": "Une erreur est survenue : {{- e}}",
+      "invalidRegex": "An error has occurred: {{- e}}",
       "modal": {
-        "desc": "Replace des textes dans le fichier par la valeur donnée. Vous pouvez encadrer le texte à remplacer avec \"//\" pour utiliser un regex.",
-        "force": "Forcer l'envoi",
-        "keywords": "Mots clés",
-        "name": "Utiliser {{name}} pour utiliser le nom du fichier.",
+        "desc": "Replace text in the file with the given value. Enclose the text with \"//\" to use regex.",
+        "force": "Force push",
+        "keywords": "Keywords",
+        "name": "Use {{name}} to use the filename.",
         "title": {
-          "all": "Remplacement du nom ou du chemin du fichier",
-          "only": "Remplacement du titre uniquement",
-          "text": "Remplacement de texte"
+          "all": "Folder path & filename replacer",
+          "only": "Replace filename",
+          "text": "Text replacer"
         }
       },
-      "momentReplaceRegex": "Exécuter le remplacement {{- moment}} les autres conversions (dataview, liens internes...)",
-      "warningPath": "Attention ! Utiliser le caractère \"/\" modifiera le chemin du fichier. Veuillez faire attention avec cette option."
+      "momentReplaceRegex": "Run replacement {{- moment}} the other plugin conversion (dataview, internals links...)",
+      "warningPath": "Warning! Using the character \"/\" will edit the path, be careful with this option."
     },
     "upload": {
       "defaultFolder": {
-        "desc": "Définir le dossier de réception par défaut. Laisser vide pour utiliser la racine du dépôt.",
+        "desc": "Set the default reception folder. Leave it empty to use the root of the repository.",
         "other": "Utilisez ce dossier comme racine dans le référentiel (chaque chemin sera précédé de ce nom)",
         "placeholder": "docs",
-        "title": "Dossier par défaut"
+        "title": "Default folder"
       },
       "folderBehavior": {
-        "desc": "Choisir la hiérarchie des dossiers dans le dépôt, en se basant sur une clé frontmatter, un dossier fixe ou la hiérarchie des dossiers dans Obsidian.",
-        "fixedFolder": "Dossier fixé",
-        "obsidianPath": "Chemin Obsidian",
-        "title": "Hiérarchie des dossiers",
-        "yaml": "Valeur d'une clé de propriété"
+        "desc": "Choose the file tree in the repository, with using a property key, a fixed folder or your Obsidian file tree.",
+        "fixedFolder": "Fixed Folder",
+        "obsidianPath": "Obsidian Path",
+        "title": "File tree in repository",
+        "yaml": "Property key"
       },
       "folderNote": {
         "addTitle": {
-          "key": "Utiliser une autre clé que \"title\"",
-          "title": "Ajouter automatiquement la clé \"title\" avec le nom du fichier"
+          "key": "Use a key other than \"title\"",
+          "title": "Automatically add the \"title\" key with the file name"
         }
       },
       "frontmatterKey": {
-        "desc": "Définir le nom de la clé où obtenir le dossier",
+        "desc": "Set the key where to get the folder's value.",
         "placeholder": "catégorie",
-        "title": "Clé de propriété"
+        "title": "Property key"
       },
       "regexFilePathTitle": {
-        "desc": "Si le texte est entre \"//\", il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut.",
+        "desc": "If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string.",
         "title": {
-          "FolderPathTitle": "Éditer le titre et le chemin du dossier (automatiquement)",
-          "titleOnly": "Éditer le titre (automatiquement)"
+          "FolderPathTitle": "Apply edit on the folder path or the filename (automatically)",
+          "titleOnly": "Apply edit on the filename (automatically)"
         }
       },
       "rootFolder": {
-        "desc": "Ajouter ce chemin au dossier définit par la clé de propriété.",
-        "other": "Utilisez ce dossier comme racine dans le référentiel (chaque chemin sera précédé de ce nom).",
-        "title": "Dossier racine"
+        "desc": "Append this path to the folder set by the properties key",
+        "other": "Use this folder as root within the repository (each path will be prepend by it).",
+        "title": "Root folder"
       },
-      "title": "Chemins des fichiers",
+      "title": "File paths",
       "useFrontmatterTitle": {
-        "desc": "Utiliser un champ des propriétés pour générer le nom du fichier. Par défaut, \"title\" est utilisé.",
-        "title": "Utiliser une clé de propriété pour définir le titre"
+        "desc": "Use a property value to generate the filename. By default, \"title\" is used. ",
+        "title": "Set the key where to get the value of the filename"
       }
     }
   },
   "statusBar": {
-    "counter": "{{- msg}} : {{- counter}}/{{- nb}}",
-    "loading": "Chargement en cours...",
-    "markedForSharing": "{{- nb}} {{- type}} à partager",
-    "sharing": "Partage de {{- type}}",
+    "counter": "{{- msg}}: {{- counter}}/{{- nb}}",
+    "loading": "Loading...",
+    "markedForSharing": "{{- nb}} {{- type}} marked for sharing",
+    "sharing": "Sharing {{- type}}",
     "success": "{{- type}} {{- action}}"
   }
 }
