@@ -188,9 +188,6 @@ export default class GithubPublisher extends Plugin {
 			resources,
 			returnNull: false,
 		});
-		console.log(`[i18n] Using ${translationLanguage} as translation language. LANG: ${i18next.language}, LOADED: ${i18next.languages.join(", ")}`);
-
-
 
 		const oldSettings = this.settings;
 		await migrateSettings(oldSettings as unknown as OldSettings, this);

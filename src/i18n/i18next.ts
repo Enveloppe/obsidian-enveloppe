@@ -63,5 +63,3 @@ export const resources = {
 } as const;
 
 export const translationLanguage = Object.keys(resources).find(i => i.toLocaleLowerCase() == moment.locale()) ? moment.locale() : "en";
-console.log(`[i18n] Using ${translationLanguage} as translation language.`);
-console.log(moment.locale());
