@@ -83,7 +83,7 @@
     "autoClean": "Le {{- what}} étant vide, l'auto-nettoyage est désactivée.",
     "dataview": "Impossible de convertir la requête Dataview. Veuillez mettre à jour le module Dataview à la dernière version;",
     "errorConfig": "Erreur de configuration pour {{- repo.owner}}/{{- repo.repo}}:{{- repo.branch}}. Merci de vérifier vos paramètres.",
-    "errorPublish": "Error during upload to <u>{{- repo.owner}}/{{- repo.repo}}</u>: <i>{{- repo.branch}}</i>",
+    "errorPublish": "Erreur lors de la publication sur <u>{{- repo.owner}}/{{- repo.repo}}</u>:<i>{{- repo.branch}}</i>",
     "isEmpty": "{{- what}} est vide.",
     "mergeconflic": "La Pull-Request n'est pas fusionnable, vous avez besoin de le faire manuellement.",
     "normal": "L'erreur 404 est normale ! Elle signifie que le fichier n'existe pas encore. Ne vous inquiétez pas ❤️.",
@@ -107,8 +107,8 @@
     "scanningRepo": "Scan du dépôt, veuillez patienter...",
     "sendMessage": "Transfert de <i>{{- nbNotes}}</i> notes vers <u>{{- repo.owner}}/{{- repo.repo}}</u>",
     "startingClean": "Début du nettoyage de <u>{{- repo.owner}}/{{- repo.repo}}</u>",
-    "successPublishOneNote": "Successfully uploaded <i><u>{{- file}}</u></i> to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
-    "successfulPublish": "Successfully uploaded <i>{{- nbNotes}}</i> to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "successPublishOneNote": "Transfert réussi de <i><u>{{- file}}</u></i> vers <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "successfulPublish": "Transfert réussi de <i>{{- nbNotes}}</i> notes vers <u>{{- repo.owner}}/{{- repo.repo}}</u>",
     "waitingWorkflow": "Maintenant, attente de la fin du workflow..."
   },
   "modals": {
