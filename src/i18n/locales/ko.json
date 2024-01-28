@@ -183,7 +183,7 @@
         "slugify": {
           "desc": "Standardize the slug of anchor links (pointing to heading title). Transform the slug into all lower case. Replace space with hyphen. Applicable only for anchor links in markdown link syntax.",
           "disable": "Disable",
-          "lower": "",
+          "lower": "Lower",
           "strict": "Convert all to alphanumeric and dashes, including unicode and non latin languages.",
           "title": "Sluglify anchor in markdown links"
         },
