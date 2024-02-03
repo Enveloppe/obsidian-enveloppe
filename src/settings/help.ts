@@ -1,25 +1,25 @@
 import i18next from "i18next";
 import { normalizePath } from "obsidian";
 
-import {regexOnPath} from "../conversion/file_path";
-import {FolderSettings, GitHubPublisherSettings} from "./interface";
+import { regexOnPath } from "../conversion/file_path";
+import { FolderSettings, GitHubPublisherSettings } from "./interface";
 
 function spanAtRule(text: string, code: DocumentFragment, br: boolean = true): HTMLElement {
 	if (br) code.createEl("br");
-	return code.createEl("span", {text, cls: ["token", "key", "atrule"]});
+	return code.createEl("span", { text, cls: ["token", "key", "atrule"] });
 }
 
 function spanBoolean(text: boolean, code: DocumentFragment): HTMLElement {
-	const textToString = text ? "true" : "false" ;
-	return code.createEl("span", { text:textToString, cls: ["token", "boolean", "important"]});
+	const textToString = text ? "true" : "false";
+	return code.createEl("span", { text: textToString, cls: ["token", "boolean", "important"] });
 }
 
 function spanComment(text: string, code: DocumentFragment): HTMLElement {
-	return code.createEl("span", {text, cls: ["token", "comment"]});
+	return code.createEl("span", { text, cls: ["token", "comment"] });
 }
 
 function spanString(text: string, code: DocumentFragment): HTMLElement {
-	return code.createEl("span", {text, cls: ["token", "string"]});
+	return code.createEl("span", { text, cls: ["token", "string"] });
 }
 
 function spanCategory(settings: GitHubPublisherSettings, code: DocumentFragment) {
@@ -34,17 +34,12 @@ function spanCategory(settings: GitHubPublisherSettings, code: DocumentFragment)
 
 /**
  * Export the YAML help to create an example of yaml with the value based on the Settings
- * @param {GitHubPublisherSettings} settings
- * @return {string}
  */
 
 export function KeyBasedOnSettings(settings: GitHubPublisherSettings): DocumentFragment {
 	const code = document.createDocumentFragment();
 	const defaultPath = settings.upload.defaultName.length > 0 ? `${settings.upload.defaultName}` : "/";
-	let path = `${defaultPath}/file.md`;
-	if (settings.upload.behavior === FolderSettings.yaml) {
-		path = `${settings.upload.rootFolder.length > 0 ? settings.upload.rootFolder: ""}/${defaultPath}/file.md`;
-	}
+	let path = settings.upload.behavior === FolderSettings.yaml ? `${settings.upload.rootFolder.length > 0 ? settings.upload.rootFolder : ""}/${defaultPath}/file.md` : `${defaultPath}/file.md`;
 	path = normalizePath(regexOnPath(path, settings));
 
 	spanAtRule(`${settings.plugin.shareKey}: `, code, false);
@@ -93,7 +88,7 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings): DocumentF
 	spanBoolean(settings.upload.autoclean.enable, code);
 	spanAtRule("copylink: ", code);
 	spanAtRule("  base: ", code);
-	spanString(settings.plugin.copyLink.links.length > 0 ? settings.plugin.copyLink.links : `https://${settings.github.repo}.github.io/${settings.github.repo}` , code);
+	spanString(settings.plugin.copyLink.links.length > 0 ? settings.plugin.copyLink.links : `https://${settings.github.repo}.github.io/${settings.github.repo}`, code);
 	const removePart = settings.plugin.copyLink.removePart.map(val => `"${val}"`).join(", ");
 	if (removePart.length > 0) {
 		spanAtRule("  remove: ", code);
@@ -104,8 +99,6 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings): DocumentF
 
 /**
  * Create the contents of the help settings tab
- * @param {GitHubPublisherSettings} settings
- * @return {DocumentFragment}
  */
 export function help(settings: GitHubPublisherSettings) {
 	const explanation = document.createDocumentFragment();
@@ -119,7 +112,7 @@ export function help(settings: GitHubPublisherSettings) {
 				text: `${i18next.t("settings.help.frontmatter.share.title")}`,
 			});
 			span.createEl("ul", undefined, (l) => {
-				l.createEl("span", {text: i18next.t("settings.help.frontmatter.share.other")});
+				l.createEl("span", { text: i18next.t("settings.help.frontmatter.share.other") });
 			});
 		});
 		span.createEl("li", undefined, (span) => {
@@ -138,20 +131,18 @@ export function help(settings: GitHubPublisherSettings) {
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "mdlinks" });
 				p.createEl("span", {
-					text: `: ${
-						i18next.t("settings.help.frontmatter.mdlinks")
-					}`,
+					text: `: ${i18next.t("settings.help.frontmatter.mdlinks")
+						}`,
 				});
 			});
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "convert" });
 				p.createEl("span", undefined, (span) => {
 					span.createEl("span", {
-						text: `: ${
-							i18next.t(
-								"settings.help.frontmatter.convert.enableOrDisable"
-							)
-						} `,
+						text: `: ${i18next.t(
+							"settings.help.frontmatter.convert.enableOrDisable"
+						)
+							} `,
 					});
 					span.createEl("code", { text: " [[link]] " });
 					span.createEl("span", {
@@ -164,7 +155,7 @@ export function help(settings: GitHubPublisherSettings) {
 				});
 			});
 			l.createEl("li", undefined, (p) => {
-				p.createEl("code", {text: "internals"});
+				p.createEl("code", { text: "internals" });
 				p.createEl("span", {
 					text: `: ${i18next.t("settings.help.frontmatter.internals")}`
 				});
@@ -179,42 +170,40 @@ export function help(settings: GitHubPublisherSettings) {
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "send" });
 				p.createEl("span", {
-					text: `: ${
-						i18next.t("settings.help.frontmatter.embed.send")
-					}`,
+					text: `: ${i18next.t("settings.help.frontmatter.embed.send")
+						}`,
 				});
 			});
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "remove" });
 				p.createEl("span", {
-					text: `: ${
-						i18next.t("settings.help.frontmatter.embed.remove.desc")
-					}`,
+					text: `: ${i18next.t("settings.help.frontmatter.embed.remove.desc")
+						}`,
 				});
 				p.createEl("ul", undefined, (ul) => {
 					ul.createEl("li", undefined, (li) => {
-						li.createEl("code", {text: "remove | true"});
+						li.createEl("code", { text: "remove | true" });
 						li.createEl("span", {
 							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.remove")}`
 						},
 						);
 					});
 					ul.createEl("li", undefined, (li) => {
-						li.createEl("code", {text: "keep | false"});
+						li.createEl("code", { text: "keep | false" });
 						li.createEl("span", {
 							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.keep")}`
 						},
 						);
 					});
 					ul.createEl("li", undefined, (li) => {
-						li.createEl("code", {text: "links"});
+						li.createEl("code", { text: "links" });
 						li.createEl("span", {
 							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.links")}`
 						},
 						);
 					});
 					ul.createEl("li", undefined, (li) => {
-						li.createEl("code", {text: "bake"});
+						li.createEl("code", { text: "bake" });
 						li.createEl("span", {
 							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.bake")}`
 						},
@@ -234,21 +223,19 @@ export function help(settings: GitHubPublisherSettings) {
 			l.createEl("li", undefined, (span) => {
 				span.createEl("code", { text: "send" });
 				span.createEl("span", {
-					text: `: ${
-						i18next.t(
-							"settings.help.frontmatter.attachment.send"
-						)
-					}`,
+					text: `: ${i18next.t(
+						"settings.help.frontmatter.attachment.send"
+					)
+						}`,
 				});
 			});
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "folder" });
 				p.createEl("span", {
-					text: `: ${
-						i18next.t(
-							"settings.help.frontmatter.attachment.folder"
-						)
-					}`,
+					text: `: ${i18next.t(
+						"settings.help.frontmatter.attachment.folder"
+					)
+						}`,
 				});
 			});
 		});
@@ -261,9 +248,8 @@ export function help(settings: GitHubPublisherSettings) {
 		span.createEl("li", undefined, (span) => {
 			span.createEl("code", { text: "hardbreak", cls: "code-title" });
 			span.createEl("span", {
-				text: `: ${
-					i18next.t("settings.help.frontmatter.hardBreak")
-				}`,
+				text: `: ${i18next.t("settings.help.frontmatter.hardBreak")
+					}`,
 			});
 		});
 		span.createEl("li", undefined, (span) => {
@@ -299,7 +285,7 @@ export function help(settings: GitHubPublisherSettings) {
 					});
 				});
 				ul.createEl("li", undefined, (li) => {
-					li.createEl("code", { text: "autoclean"});
+					li.createEl("code", { text: "autoclean" });
 					li.createEl("span", {
 						text: `: ${i18next.t("settings.help.frontmatter.autoclean")}`,
 					});
@@ -320,16 +306,16 @@ export function help(settings: GitHubPublisherSettings) {
 			span.createEl("span", {
 				text: `: ${i18next.t("settings.help.frontmatter.baselink.desc")}`,
 			});
-			span.createEl("code", {text: "copylink:", cls: "code-title"});
+			span.createEl("code", { text: "copylink:", cls: "code-title" });
 			span.createEl("ul", undefined, (ul) => {
 				ul.createEl("li", undefined, (li) => {
-					li.createEl("code", { text: "base"});
+					li.createEl("code", { text: "base" });
 					li.createEl("span", {
 						text: `: ${i18next.t("settings.plugin.copyLink.baselink.title")}`,
 					});
 				});
 				ul.createEl("li", undefined, (li) => {
-					li.createEl("code", { text: "remove"});
+					li.createEl("code", { text: "remove" });
 					li.createEl("span", {
 						text: `: ${i18next.t("settings.help.frontmatter.baselink.remove")}`,
 					});
