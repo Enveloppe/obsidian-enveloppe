@@ -3,7 +3,7 @@
  * See docs for all the condition
  */
 
-import { FrontMatterCache, normalizePath,TFile } from "obsidian";
+import { FrontMatterCache, normalizePath, TFile } from "obsidian";
 import GithubPublisher from "src/main";
 
 import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, RepoFrontmatter, Repository } from "../settings/interface";
@@ -22,7 +22,7 @@ export function getFrontmatterSettings(
 	repo: Repository | null
 ) {
 
-	const settingsConversion: FrontmatterConvert = {
+	let settingsConversion: FrontmatterConvert = {
 		convertWiki: settings.conversion.links.wiki,
 		attachment: settings.embed.attachments,
 		embed: settings.embed.notes,
@@ -41,77 +41,17 @@ export function getFrontmatterSettings(
 	}
 
 	if (!frontmatter) return settingsConversion;
-	if (frontmatter.links !== undefined) {
-		if (typeof frontmatter.links === "object") {
-			if (frontmatter.links.convert !== undefined) {
-				settingsConversion.links = frontmatter.links.convert;
-			}
-			if (frontmatter.links.internals !== undefined) {
-				settingsConversion.convertInternalLinks =
-					frontmatter.links.internals;
-			}
-			if (frontmatter.links.mdlinks !== undefined) {
-				settingsConversion.convertWiki = frontmatter.links.mdlinks;
-			}
-			if (frontmatter.links.nonShared !== undefined) {
-				settingsConversion.unshared =
-					frontmatter.links.nonShared;
-			}
-		} else {
-			settingsConversion.links = frontmatter.links;
-		}
-	}
-	if (frontmatter.embed !== undefined) {
-		if (typeof frontmatter.embed === "object") {
-			if (frontmatter.embed.send !== undefined) {
-				settingsConversion.embed = frontmatter.embed.send;
-			}
-			if (frontmatter.embed.remove !== undefined) {
-				settingsConversion.removeEmbed = translateBooleanForRemoveEmbed(frontmatter.embed.remove);
-			}
-			if (frontmatter.embed.char !== undefined) {
-				settingsConversion.charEmbedLinks = frontmatter.embed.char;
-			}
-		} else {
-			settingsConversion.embed = frontmatter.embed;
-		}
-	}
-	if (frontmatter.attachment !== undefined) {
-		if (typeof frontmatter.attachment === "object") {
-			if (frontmatter.attachment.send !== undefined) {
-				settingsConversion.attachment = frontmatter.attachment.send;
-			}
-			if (frontmatter.attachment.folder !== undefined) {
-				settingsConversion.attachmentLinks =
-					frontmatter.attachment.folder;
-			}
-		} else {
-			settingsConversion.attachment = frontmatter.attachment;
-		}
-	}
-	if (frontmatter.attachmentLinks !== undefined) {
-		settingsConversion.attachmentLinks = normalizePath(frontmatter.attachmentLinks
-			.toString()
-			.replace(/\/$/, ""));
-	}
-	if (frontmatter.mdlinks !== undefined) {
-		settingsConversion.convertWiki = frontmatter.mdlinks;
-	}
-	if (frontmatter.removeEmbed !== undefined) {
-		settingsConversion.removeEmbed = translateBooleanForRemoveEmbed(frontmatter.removeEmbed);
-	}
+	settingsConversion = settingsLink(frontmatter, settingsConversion);
+	settingsConversion = settingsEmbed(frontmatter, settingsConversion);
+	settingsConversion = settingAttachment(frontmatter, settingsConversion);
+
 	if (frontmatter.dataview !== undefined) {
 		settingsConversion.dataview = frontmatter.dataview;
 	}
 	if (frontmatter.hardbreak !== undefined) {
 		settingsConversion.hardbreak = frontmatter.hardbreak;
 	}
-	if (frontmatter.internals !== undefined) {
-		settingsConversion.convertInternalLinks = frontmatter.internals;
-	}
-	if (frontmatter.nonShared !== undefined) {
-		settingsConversion.unshared = frontmatter.nonShared;
-	}
+
 	return parseFrontmatterSettingsWithRepository(repo, frontmatter, settingsConversion);
 }
 /**
@@ -443,8 +383,7 @@ export function parsePath(
 function parseFrontmatterSettingsWithRepository(
 	repository: Repository | null,
 	frontmatter: FrontMatterCache | null | undefined,
-	frontConvert: FrontmatterConvert)
-{
+	frontConvert: FrontmatterConvert) {
 	if (!repository) return frontConvert;
 	const smartKey = repository.smartKey;
 	if (frontmatter?.[`${smartKey}.links`]) {
@@ -496,8 +435,8 @@ export function getLinkedFrontmatter(
 	sourceFile: TFile | null | undefined,
 	plugin: GithubPublisher,
 ) {
-	const {settings} = plugin;
-	const {metadataCache, vault} = plugin.app;
+	const { settings } = plugin;
+	const { metadataCache, vault } = plugin.app;
 	const linkedKey = settings.plugin.setFrontmatterKey;
 	if (!linkedKey || !originalFrontmatter || !sourceFile) return originalFrontmatter;
 	const linkedFrontmatter = originalFrontmatter?.[linkedKey];
@@ -526,3 +465,82 @@ export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher)
 	}
 	return frontmatter;
 }
+
+function settingsLink(frontmatter: FrontMatterCache, settingsConversion: FrontmatterConvert) {
+	if (frontmatter.links !== undefined) {
+		if (typeof frontmatter.links === "object") {
+			if (frontmatter.links.convert !== undefined) {
+				settingsConversion.links = frontmatter.links.convert;
+			}
+			if (frontmatter.links.internals !== undefined) {
+				settingsConversion.convertInternalLinks = frontmatter.links.internals;
+			}
+			if (frontmatter.links.mdlinks !== undefined) {
+				settingsConversion.convertWiki = frontmatter.links.mdlinks;
+			}
+			if (frontmatter.links.nonShared !== undefined) {
+				settingsConversion.unshared = frontmatter.links.nonShared;
+			}
+		} else {
+			settingsConversion.links = frontmatter.links;
+		}
+	}
+	if (frontmatter["links.convert"] !== undefined) settingsConversion.links = frontmatter["links.convert"];
+	if (frontmatter["links.internals"] !== undefined) settingsConversion.convertInternalLinks = frontmatter["links.internals"];
+	if (frontmatter["links.mdlinks"] !== undefined) settingsConversion.convertWiki = frontmatter["links.mdlinks"];
+	if (frontmatter["links.nonShared"] !== undefined) settingsConversion.unshared = frontmatter["links.nonShared"];
+	if (frontmatter.mdlinks !== undefined) settingsConversion.convertWiki = frontmatter.mdlinks;
+	if (frontmatter.internals !== undefined) settingsConversion.convertInternalLinks = frontmatter.internals;
+	if (frontmatter.nonShared !== undefined) settingsConversion.unshared = frontmatter.nonShared;
+	return settingsConversion;
+}
+
+function settingsEmbed(frontmatter: FrontMatterCache, settingsConversion: FrontmatterConvert) {
+	if (frontmatter.embed !== undefined) {
+		if (typeof frontmatter.embed === "object") {
+			if (frontmatter.embed.send !== undefined) {
+				settingsConversion.embed = frontmatter.embed.send;
+			}
+			if (frontmatter.embed.remove !== undefined) {
+				settingsConversion.removeEmbed = translateBooleanForRemoveEmbed(frontmatter.embed.remove);
+			}
+			if (frontmatter.embed.char !== undefined) {
+				settingsConversion.charEmbedLinks = frontmatter.embed.char;
+			}
+		} else {
+			settingsConversion.embed = frontmatter.embed;
+		}
+	}
+	if (frontmatter["embed.send"] !== undefined) settingsConversion.embed = frontmatter["embed.send"];
+	if (frontmatter["embed.remove"] !== undefined) settingsConversion.removeEmbed = translateBooleanForRemoveEmbed(frontmatter["embed.remove"]);
+	if (frontmatter["embed.char"] !== undefined) settingsConversion.charEmbedLinks = frontmatter["embed.char"];
+	if (frontmatter.removeEmbed !== undefined) settingsConversion.removeEmbed = translateBooleanForRemoveEmbed(frontmatter.removeEmbed);
+
+	return settingsConversion;
+}
+
+function settingAttachment(frontmatter: FrontMatterCache, settingsConversion: FrontmatterConvert) {
+	if (frontmatter.attachment !== undefined) {
+		if (typeof frontmatter.attachment === "object") {
+			if (frontmatter.attachment.send !== undefined) {
+				settingsConversion.attachment = frontmatter.attachment.send;
+			}
+			if (frontmatter.attachment.folder !== undefined) {
+				settingsConversion.attachmentLinks = frontmatter.attachment.folder;
+			}
+		} else {
+			settingsConversion.attachment = frontmatter.attachment;
+		}
+	}
+
+	if (frontmatter["attachment.send"] !== undefined) settingsConversion.attachment = frontmatter["attachment.send"];
+	if (frontmatter["attachment.folder"] !== undefined) settingsConversion.attachmentLinks = frontmatter["attachment.folder"];
+
+	if (settingsConversion.attachmentLinks) {
+		settingsConversion.attachmentLinks = normalizePath(settingsConversion.attachmentLinks
+			.toString()
+			.replace(/\/$/, ""));
+	}
+	return settingsConversion;
+}
+
