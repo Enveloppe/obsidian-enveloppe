@@ -46,7 +46,7 @@ jobs:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     generate_changelog:
         runs-on: ubuntu-latest
-        needs: []
+        needs: [bump-version-and-release, release]
         name: Generate changelog
         steps:
             - uses: EsmerlinJM/gha-release-messages-improved@main
