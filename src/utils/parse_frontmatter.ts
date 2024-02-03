@@ -464,6 +464,8 @@ function settingsLink(frontmatter: FrontMatterCache | null | undefined, settings
 	if (frontmatter[`${key}.internals`] !== undefined) settingsConversion.convertInternalLinks = frontmatter[`${key}.internals`];
 	if (frontmatter[`${key}.mdlinks`] !== undefined) settingsConversion.convertWiki = frontmatter[`${key}.mdlinks`];
 	if (frontmatter[`${key}.nonShared`] !== undefined) settingsConversion.unshared = frontmatter[`${key}.nonShared`];
+
+
 	if (frontmatter[smartKey ? `${smartKey}.mdlinks` : "mdlinks"] !== undefined) settingsConversion.convertWiki = frontmatter[smartKey ? `${smartKey}.mdlinks` : "mdlinks"];
 	if (frontmatter[smartKey ? `${smartKey}.internals` : "internals"] !== undefined) settingsConversion.convertInternalLinks = frontmatter[smartKey ? `${smartKey}.internals` : "internals"];
 	if (frontmatter[smartKey ? `${smartKey}.nonShared` : "nonShared"] !== undefined) settingsConversion.unshared = frontmatter[smartKey ? `${smartKey}.nonShared` : "nonShared"];
