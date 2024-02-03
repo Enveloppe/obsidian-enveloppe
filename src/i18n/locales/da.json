@@ -402,6 +402,7 @@
         "hardBreak": "Convert all linebreaks to markdown «hard break».",
         "internals": "Convert internals links to their counterpart in the website, with relative path. Disabled, the plugin will keep the internal link as is.",
         "mdlinks": "Convert all [[wikilinks]] to [markdown](links)",
+        "nestedKey": "",
         "nonShared": "Convert internal links pointing to a unshared file to their counterpart in the website, with relative path. Disabled, the plugin will keep the filename.",
         "path": "You can override all path settings using this key. The path will be relative to the root of your repository.",
         "repo": {
@@ -432,7 +433,8 @@
         "title": "Useful links"
       }
     },
-    "overrides": {},
+    "overrides": {
+    },
     "plugin": {
       "copyLink": {
         "baselink": {
