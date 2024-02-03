@@ -7,12 +7,14 @@ import {
 	KeyBasedOnSettings,
 	multipleRepoExplained,
 	supportMe,
-	usefulLinks} from "./settings/help";
+	usefulLinks
+} from "./settings/help";
 import {
-	EnumbSettingsTabId,	FolderSettings, GitHubPublisherSettings, GithubTiersVersion, Repository } from "./settings/interface";
+	EnumbSettingsTabId, FolderSettings, GitHubPublisherSettings, GithubTiersVersion, Repository
+} from "./settings/interface";
 import { migrateToken } from "./settings/migrate";
-import {ExportModal, ImportLoadPreset, ImportModal, loadAllPresets} from "./settings/modals/import_export";
-import {ModalAddingNewRepository} from "./settings/modals/manage_repo";
+import { ExportModal, ImportLoadPreset, ImportModal, loadAllPresets } from "./settings/modals/import_export";
+import { ModalAddingNewRepository } from "./settings/modals/manage_repo";
 import { ModalRegexFilePathName, ModalRegexOnContents, OverrideAttachmentsModal } from "./settings/modals/regex_edition";
 import { TokenEditPath } from "./settings/modals/token_path";
 import {
@@ -36,7 +38,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		this.settings = plugin.settings;
 	}
 
-	display(): void{
+	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
 		containerEl.addClass("github-publisher");
@@ -234,9 +236,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			);
 		const desc_ghToken = document.createDocumentFragment();
 		desc_ghToken.createEl("span", undefined, (span) => {
-			span.innerText = i18next.t("settings.github.ghToken.desc") ;
+			span.innerText = i18next.t("settings.github.ghToken.desc");
 			span.createEl("a", undefined, (link) => {
-				link.innerText = `${i18next.t("common.here")}.` ;
+				link.innerText = `${i18next.t("common.here")}.`;
 				link.href =
 					"https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
@@ -245,12 +247,12 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("common.ghToken"))
 			.setDesc(desc_ghToken)
 			.addText(async (text) => {
-				const decryptedToken:string = await this.plugin.loadToken();
+				const decryptedToken: string = await this.plugin.loadToken();
 				text
 					.setPlaceholder("ghp_15457498545647987987112184")
 					.setValue(decryptedToken)
 					.onChange(async (value) => {
-						if (value.trim().length === 0 ) {
+						if (value.trim().length === 0) {
 							tokenSettings.controlEl.addClass("error");
 							new Notice(i18next.t("settings.github.ghToken.error"));
 						} else {
@@ -329,7 +331,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setClass("connect-button")
 					.onClick(async () => {
 						const octokit = await this.plugin.reloadOctokit();
-						this.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, null,null);
+						this.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, null, null);
 						this.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.settings);
 						await this.plugin.saveSettings();
 					})
@@ -376,7 +378,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						if (value.length > 0) {
 							value = value.trim();
 							const yamlEndings = [".yml", ".yaml"];
-							if (! yamlEndings.some(ending => value.endsWith(ending))) {
+							if (!yamlEndings.some(ending => value.endsWith(ending))) {
 								value += yamlEndings[0];
 							}
 						}
@@ -400,10 +402,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				dropDown
 					.addOptions({
 						fixed: i18next.t(
-							"settings.upload.folderBehavior.fixedFolder") ,
-						yaml: i18next.t("settings.upload.folderBehavior.yaml") ,
+							"settings.upload.folderBehavior.fixedFolder"),
+						yaml: i18next.t("settings.upload.folderBehavior.yaml"),
 						obsidian: i18next.t(
-							"settings.upload.folderBehavior.obsidianPath") ,
+							"settings.upload.folderBehavior.obsidianPath"),
 					})
 					.setValue(uploadSettings.behavior)
 					.onChange(async (value: string) => {
@@ -511,7 +513,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 		}
 
-		const desc = uploadSettings.behavior === FolderSettings.fixed ? i18next.t("settings.upload.regexFilePathTitle.title.titleOnly") : i18next.t("settings.upload.regexFilePathTitle.title.FolderPathTitle") ;
+		const desc = uploadSettings.behavior === FolderSettings.fixed ? i18next.t("settings.upload.regexFilePathTitle.title.titleOnly") : i18next.t("settings.upload.regexFilePathTitle.title.FolderPathTitle");
 
 		new Setting(this.settingsPage)
 			.setName(desc)
@@ -527,8 +529,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							allRegex = allRegex.concat(uploadSettings.replacePath);
 						}
 						new ModalRegexFilePathName(this.app, this.settings, this.copy(allRegex), (async result => {
-							uploadSettings.replacePath = result.filter(title => {return title.type === "path";});
-							uploadSettings.replaceTitle = result.filter(title => {return title.type === "title";});
+							uploadSettings.replacePath = result.filter(title => { return title.type === "path"; });
+							uploadSettings.replaceTitle = result.filter(title => { return title.type === "title"; });
 							await this.plugin.saveSettings();
 						})).open();
 					});
@@ -610,7 +612,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		const condition =
 			(uploadSettings.behavior === FolderSettings.yaml &&
 				uploadSettings.rootFolder.length === 0) ||
-				uploadSettings.defaultName.length === 0;
+			uploadSettings.defaultName.length === 0;
 
 		const autoCleanSetting = new Setting(this.settingsPage)
 			.setName(i18next.t("settings.githubWorkflow.autoCleanUp.title"))
@@ -670,17 +672,17 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	renderTextConversion() {
 		const textSettings = this.settings.conversion;
 		this.settingsPage.createEl("p", {
-			text: i18next.t("settings.conversion.desc") ,
+			text: i18next.t("settings.conversion.desc"),
 		});
 
 		this.settingsPage.createEl("h5", {
-			text: i18next.t("settings.conversion.links.title") ,
+			text: i18next.t("settings.conversion.links.title"),
 		});
 		this.settingsPage.createEl("p", {
-			text: i18next.t("settings.conversion.links.desc") ,
+			text: i18next.t("settings.conversion.links.desc"),
 		});
 
-		const shareAll= this.settings.plugin.shareAll?.enable ? ` ${i18next.t("settings.conversion.links.internals.shareAll")}` : "";
+		const shareAll = this.settings.plugin.shareAll?.enable ? ` ${i18next.t("settings.conversion.links.internals.shareAll")}` : "";
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.links.internals.title"))
@@ -733,7 +735,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						this.renderSettingsPage("text-conversion");
 					});
 			});
-		const slugifySetting = typeof(textSettings.links.slugify)=="boolean" ? textSettings.links.slugify ? "strict" : "disable" : textSettings.links.slugify;
+		const slugifySetting = typeof (textSettings.links.slugify) == "boolean" ? textSettings.links.slugify ? "strict" : "disable" : textSettings.links.slugify;
 		if (textSettings.links.wiki || textSettings.links.internal) {
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.conversion.links.slugify.title"))
@@ -755,7 +757,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 
 		this.settingsPage.createEl("h5", {
-			text: i18next.t("settings.conversion.sectionTitle") ,
+			text: i18next.t("settings.conversion.sectionTitle"),
 		});
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.hardBreak.title"))
@@ -935,7 +937,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					});
 			});
 
-		this.settingsPage.createEl("h5", { text: i18next.t("settings.embed.notes"), cls: "center"});
+		this.settingsPage.createEl("h5", { text: i18next.t("settings.embed.notes"), cls: "center" });
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.embed.transferNotes.title"))
@@ -989,8 +991,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				}
 				await this.plugin.saveSettings();
-				this.settingsPage.createEl("h5", {text: i18next.t("settings.embed.bake.title"), cls: "border-bottom"});
-				this.settingsPage.createEl("p", {text: i18next.t("settings.embed.bake.text")});
+				this.settingsPage.createEl("h5", { text: i18next.t("settings.embed.bake.title"), cls: "border-bottom" });
+				this.settingsPage.createEl("p", { text: i18next.t("settings.embed.bake.text") });
 				this.settingsPage.createEl("p", undefined, (el) => {
 					el.createEl("span", {
 						text: i18next.t("settings.embed.bake.variable.desc"),
@@ -998,12 +1000,12 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					})
 						.createEl("ul", undefined, (ul) => {
 							ul.createEl("li", undefined, (li) => {
-								li.createEl("code", {text: "{{title}}"});
-								li.createEl("span", {text: i18next.t("settings.embed.bake.variable.title")});
+								li.createEl("code", { text: "{{title}}" });
+								li.createEl("span", { text: i18next.t("settings.embed.bake.variable.title") });
 							});
 							ul.createEl("li", undefined, (li) => {
-								li.createEl("code", {text: "{{url}}"});
-								li.createEl("span", {text: i18next.t("settings.embed.bake.variable.url")});
+								li.createEl("code", { text: "{{url}}" });
+								li.createEl("span", { text: i18next.t("settings.embed.bake.variable.url") });
 							});
 						});
 				});
@@ -1044,7 +1046,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	renderPluginSettings() {
 		const pluginSettings = this.settings.plugin;
 
-		this.settingsPage.createEl("h3", {text: i18next.t("settings.plugin.head.share")});
+		this.settingsPage.createEl("h3", { text: i18next.t("settings.plugin.head.share") });
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.shareKey.all.title"))
 			.setDesc(i18next.t("settings.plugin.shareKey.all.desc"))
@@ -1117,7 +1119,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					})
 			);
 
-		this.settingsPage.createEl("h3", {text: i18next.t("settings.plugin.head.menu")});
+		this.settingsPage.createEl("h3", { text: i18next.t("settings.plugin.head.menu") });
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.fileMenu.title"))
@@ -1141,7 +1143,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
-		this.settingsPage.createEl("h3", {text: i18next.t("settings.plugin.head.copyLinks")});
+		this.settingsPage.createEl("h3", { text: i18next.t("settings.plugin.head.copyLinks") });
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.copyLink.title"))
@@ -1195,7 +1197,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				);
 		}
 
-		this.settingsPage.createEl("h3", {text: i18next.t("settings.plugin.head.other")});
+		this.settingsPage.createEl("h3", { text: i18next.t("settings.plugin.head.other") });
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.embedEditRepo.title"))
@@ -1223,7 +1225,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			);
 
 
-		this.settingsPage.createEl("h4", {text: i18next.t("settings.plugin.head.log")});
+		this.settingsPage.createEl("h4", { text: i18next.t("settings.plugin.head.log") });
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.logNoticeHeader.title"))
@@ -1255,16 +1257,26 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	 */
 	renderHelp() {
 		this.settingsPage.createEl("h2", {
-			text: i18next.t("settings.help.usefulLinks.title") ,
+			text: i18next.t("settings.help.usefulLinks.title"),
 		});
 		this.settingsPage.appendChild(usefulLinks());
 		this.settingsPage.createEl("hr");
 		this.settingsPage.createEl("h2", {
-			text: i18next.t("settings.help.frontmatter.title") ,
+			text: i18next.t("settings.help.frontmatter.title"),
 		});
 		this.settingsPage.createEl("p", {
-			text: i18next.t("settings.help.frontmatter.desc") ,
+			text: i18next.t("settings.help.frontmatter.desc"),
 		});
+		this.settingsPage
+			.createEl("p", {
+				text: i18next.t("settings.help.frontmatter.nestedKey")
+			})
+			.createEl("code", {
+				text: "key.subkey: value",
+			})
+			.createEl("span", {
+				text: ".",
+			});
 		this.settingsPage
 			.createEl("pre", { cls: "language-yaml" })
 			.createEl("code", {
@@ -1273,7 +1285,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 		this.settingsPage.appendChild(help(this.settings));
 		this.settingsPage.createEl("h2", {
-			text: i18next.t("settings.help.multiRepoHelp.title") ,
+			text: i18next.t("settings.help.multiRepoHelp.title"),
 		});
 		this.settingsPage.appendChild(
 			multipleRepoExplained(this.settings)
