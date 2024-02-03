@@ -1,48 +1,56 @@
 name: Release obsidian plugin
 on:
-  workflow_dispatch:
-    inputs:
-      bump:
-        default: false
-        description: "Bump version based on semantic release"
-        type: boolean
-        required: false
-      beta:
-        default: false
-        description: "Make a beta release"
-        type: boolean
-        required: false
-  push:
-    tags:
-      - "*"
+    workflow_dispatch:
+        inputs:
+            bump:
+                default: false
+                description: "Bump version based on semantic release"
+                type: boolean
+                required: false
+            beta:
+                default: false
+                description: "Make a beta release"
+                type: boolean
+                required: false
+    push:
+        tags:
+            - "*"
 permissions:
-  contents: write
+    contents: write
 jobs:
-  echo:
-    if: ${{ github.event.ACT }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: echo
-        run: |
-          echo EVENT NAME =  ${{ github.event_name }}
-          echo BETA = ${{ inputs.beta || false}}
-          echo BUMP = ${{ inputs.bump || false}}
-  release:
-    if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && !inputs.bump)
-    uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-release.yaml@main
-    with:
-        PLUGIN_NAME: "obsidian-mkdocs-publisher"
-        STYLE: true
-        BETA: ${{ inputs.beta || false }}
-    secrets: 
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  bump-version-and-release:
-    if: ${{ inputs.bump }}
-    uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-bump-version.yaml@main
-    with:
-        PLUGIN_NAME: "obsidian-mkdocs-publisher"
-        STYLE: true
-        BETA: ${{ inputs.beta }}
-    secrets: 
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+    echo:
+        runs-on: ubuntu-latest
+        steps:
+            - name: echo
+              run: |
+                  echo EVENT NAME =  ${{ github.event_name }}
+                  echo BETA = ${{ inputs.beta || false}}
+                  echo BUMP = ${{ inputs.bump || false}}
+    release:
+        if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && !inputs.bump)
+        uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-release.yaml@main
+        with:
+            PLUGIN_NAME: "obsidian-mkdocs-publisher"
+            STYLE: true
+            BETA: ${{ inputs.beta || false }}
+        secrets:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    bump-version-and-release:
+        if: ${{ inputs.bump }}
+        uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-bump-version.yaml@main
+        with:
+            PLUGIN_NAME: "obsidian-mkdocs-publisher"
+            STYLE: true
+            BETA: ${{ inputs.beta }}
+        secrets:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    generate_changelog:
+        runs-on: ubuntu-latest
+        needs: []
+        name: Generate changelog
+        steps:
+            - uses: EsmerlinJM/gha-release-messages-improved@main
+              with:
+                  repository: ObsidianPublisher/obsidian-github-publisher
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  openai_api_key: ${{ secrets.OPENAI_KEY }}
