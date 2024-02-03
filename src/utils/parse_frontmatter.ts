@@ -7,6 +7,7 @@ import { FrontMatterCache, normalizePath, TFile } from "obsidian";
 import GithubPublisher from "src/main";
 
 import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, RepoFrontmatter, Repository } from "../settings/interface";
+import internal from "stream";
 
 /**
  * Retrieves the frontmatter settings for a given file.
@@ -463,11 +464,10 @@ function settingsLink(frontmatter: FrontMatterCache | null | undefined, settings
 	if (frontmatter[`${key}.internals`] !== undefined) settingsConversion.convertInternalLinks = frontmatter[`${key}.internals`];
 	if (frontmatter[`${key}.mdlinks`] !== undefined) settingsConversion.convertWiki = frontmatter[`${key}.mdlinks`];
 	if (frontmatter[`${key}.nonShared`] !== undefined) settingsConversion.unshared = frontmatter[`${key}.nonShared`];
-	if (!smartKey) {
-		if (frontmatter.mdlinks !== undefined) settingsConversion.convertWiki = frontmatter.mdlinks;
-		if (frontmatter.internals !== undefined) settingsConversion.convertInternalLinks = frontmatter.internals;
-		if (frontmatter.nonShared !== undefined) settingsConversion.unshared = frontmatter.nonShared;
-	}
+	if (frontmatter[smartKey ? `${smartKey}.mdlinks` : "mdlinks"] !== undefined) settingsConversion.convertWiki = frontmatter[smartKey ? `${smartKey}.mdlinks` : "mdlinks"];
+	if (frontmatter[smartKey ? `${smartKey}.internals` : "internals"] !== undefined) settingsConversion.convertInternalLinks = frontmatter[smartKey ? `${smartKey}.internals` : "internals"];
+	if (frontmatter[smartKey ? `${smartKey}.nonShared` : "nonShared"] !== undefined) settingsConversion.unshared = frontmatter[smartKey ? `${smartKey}.nonShared` : "nonShared"];
+
 	return settingsConversion;
 }
 
@@ -492,7 +492,8 @@ function settingsEmbed(frontmatter: FrontMatterCache | null | undefined, setting
 	if (frontmatter[`${key}.send`] !== undefined) settingsConversion.embed = frontmatter[`${key}.send`];
 	if (frontmatter[`${key}.remove`] !== undefined) settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter[`${key}.remove`]);
 	if (frontmatter[`${key}.char`] !== undefined) settingsConversion.charEmbedLinks = frontmatter[`${key}.char`];
-	if (!smartkey && frontmatter.removeEmbed !== undefined) settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter.removeEmbed);
+	const removeEmbedKey = smartkey ? `${smartkey}.removeEmbed` : "removeEmbed";
+	if (frontmatter[removeEmbedKey] !== undefined) settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter[removeEmbedKey]);
 
 	return settingsConversion;
 }
