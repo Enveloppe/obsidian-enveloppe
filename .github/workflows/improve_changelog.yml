@@ -2,7 +2,7 @@ name: Improve release message/changelog
 
 on:
   release:
-    types: [ created ]
+    types: [ created, published, edited ]
 
 jobs:
 
@@ -13,6 +13,6 @@ jobs:
       - name: Update release
         uses: EsmerlinJM/gha-release-messages-improved@main
         with:
-          repository: EsmerlinJM/gha-release-messages-improved
+          repository: ObsidianPublisher/obsidian-github-publisher
           openai_api_key: ${{ secrets.OPENAI_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
