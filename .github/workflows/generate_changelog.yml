@@ -1,0 +1,12 @@
+name: Generate changelog
+on:
+    workflow_dispatch:
+jobs:
+    generate:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: EsmerlinJM/gha-release-messages-improved@main
+              with:
+                  repository: ObsidianPublisher/obsidian-github-publisher
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  openai_api_key: ${{ secrets.OPENAI_KEY }}
