@@ -1,9 +1,8 @@
 name: Improve release message/changelog
 
 on:
-  release:
-    types: [ created, published, edited ]
-
+  release
+  
 jobs:
 
   improve-release:
