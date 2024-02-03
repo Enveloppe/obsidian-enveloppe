@@ -60,7 +60,7 @@ export function getFrontmatterSettings(
  * @param removeEmbed - The value to be translated. Can be a boolean value or a string representation of a boolean.
  * @returns The translated string value for the 'removeEmbed' setting. Possible values are 'keep', 'remove', 'links', or 'bake'.
  */
-function translateBooleanForRemoveEmbed(removeEmbed: unknown) {
+function booleanRemoveEmbed(removeEmbed: unknown) {
 	if (removeEmbed === "true") {
 		return "keep";
 	} else if (removeEmbed === "false") {
@@ -387,7 +387,7 @@ function getFrontmatterSettingRepository(
 	if (!repository) return frontConvert;
 	const smartKey = repository.smartKey;
 	frontConvert = settingsLink(frontmatter, frontConvert, smartKey);
-	frontConvert = settingsLink(frontmatter, frontConvert, smartKey);
+	frontConvert = settingAttachment(frontmatter, frontConvert, smartKey);
 	frontConvert = settingsEmbed(frontmatter, frontConvert, smartKey);
 
 	if (frontmatter?.[`${smartKey}.dataview`] !== undefined) {
@@ -475,12 +475,12 @@ function settingsEmbed(frontmatter: FrontMatterCache | null | undefined, setting
 	if (!frontmatter) return settingsConversion;
 	const key = smartkey ? `${smartkey}.embed` : "embed";
 	if (frontmatter[key] !== undefined) {
-		if (typeof frontmatter.embed === "object") {
+		if (typeof frontmatter[key] === "object") {
 			if (frontmatter[key].send !== undefined) {
 				settingsConversion.embed = frontmatter[key].send;
 			}
 			if (frontmatter[key].remove !== undefined) {
-				settingsConversion.removeEmbed = translateBooleanForRemoveEmbed(frontmatter[key].remove);
+				settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter[key].remove);
 			}
 			if (frontmatter[key].char !== undefined) {
 				settingsConversion.charEmbedLinks = frontmatter[key].char;
@@ -490,9 +490,9 @@ function settingsEmbed(frontmatter: FrontMatterCache | null | undefined, setting
 		}
 	}
 	if (frontmatter[`${key}.send`] !== undefined) settingsConversion.embed = frontmatter[`${key}.send`];
-	if (frontmatter[`${key}.remove`] !== undefined) settingsConversion.removeEmbed = translateBooleanForRemoveEmbed(frontmatter[`${key}.remove`]);
+	if (frontmatter[`${key}.remove`] !== undefined) settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter[`${key}.remove`]);
 	if (frontmatter[`${key}.char`] !== undefined) settingsConversion.charEmbedLinks = frontmatter[`${key}.char`];
-	if (!smartkey && frontmatter.removeEmbed !== undefined) settingsConversion.removeEmbed = translateBooleanForRemoveEmbed(frontmatter.removeEmbed);
+	if (!smartkey && frontmatter.removeEmbed !== undefined) settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter.removeEmbed);
 
 	return settingsConversion;
 }
