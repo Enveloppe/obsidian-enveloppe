@@ -402,7 +402,7 @@
         "hardBreak": "Convertit tous les sauts de lignes en \"hard break\" markdown.",
         "internals": "Convertit les liens internes vers leur homologue du dépôt, sous forme de liens relatifs. Désactivés, les liens seront conservés tels quels.",
         "mdlinks": "Convertir tous les liens [[wikilinks]] en [liens](Markdown)",
-        "nestedKey": "Il est aussi possible d'utiliser les syntaxes \\\"par point\\\", c'est à dire en notant les clés imbriqués par des points. Par exemple en utilisant ",
+        "nestedKey": "Il est aussi possible d'utiliser les syntaxes \"par point\", c'est-à-dire en notant les clés imbriquées par des points. Par exemple en utilisant ",
         "nonShared": "Convertit les liens internes pointant vers une notes non publiées vers son futur homologue. Désactivé, le plugin conservera le nom du fichier ou son texte alternatif.",
         "path": "Vous pouvez écraser tous les paramètres de chemins en utilisant cette clé. Le chemin sera créée à partir de la racine du dépôt.",
         "repo": {
@@ -433,8 +433,7 @@
         "title": "Liens utiles"
       }
     },
-    "overrides": {
-    },
+    "overrides": {},
     "plugin": {
       "copyLink": {
         "baselink": {
