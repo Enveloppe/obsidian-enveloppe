@@ -151,24 +151,24 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		}
 		this.settingsPage.empty();
 		switch (tabId) {
-			case "github-configuration":
-				this.renderGithubConfiguration();
-				break;
-			case "upload-configuration":
-				this.renderUploadConfiguration();
-				break;
-			case "text-conversion":
-				this.renderTextConversion();
-				break;
-			case "embed-configuration":
-				this.renderEmbedConfiguration();
-				break;
-			case "plugin-settings":
-				this.renderPluginSettings();
-				break;
-			case "help":
-				this.renderHelp();
-				break;
+		case "github-configuration":
+			this.renderGithubConfiguration();
+			break;
+		case "upload-configuration":
+			this.renderUploadConfiguration();
+			break;
+		case "text-conversion":
+			this.renderTextConversion();
+			break;
+		case "embed-configuration":
+			this.renderEmbedConfiguration();
+			break;
+		case "plugin-settings":
+			this.renderPluginSettings();
+			break;
+		case "help":
+			this.renderHelp();
+			break;
 		}
 	}
 

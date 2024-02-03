@@ -1,6 +1,6 @@
-import {Octokit} from "@octokit/core";
+import { Octokit } from "@octokit/core";
 import i18next from "i18next";
-import {FrontMatterCache, Menu, Plugin, TAbstractFile, TFile, TFolder} from "obsidian";
+import { FrontMatterCache, Menu, Plugin, TAbstractFile, TFile, TFolder } from "obsidian";
 import merge from "ts-deepmerge";
 
 import {
@@ -9,22 +9,23 @@ import {
 	purgeNotesRemoteCallback,
 	shareEditedOnlyCallback,
 	shareOneNoteCallback,
-	uploadAllEditedNotesCallback, 	uploadAllNotesCallback, 	uploadNewNotesCallback} from "./commands/callback";
-import {addMenuFile, addMenuFolder} from "./commands/file_menu";
-import {ChooseWhichRepoToRun} from "./commands/suggest_other_repo_commands_modal";
-import {getTitleField, regexOnFileName} from "./conversion/file_path";
-import {GithubBranch} from "./GitHub/branch";
+	uploadAllEditedNotesCallback, uploadAllNotesCallback, uploadNewNotesCallback
+} from "./commands/callback";
+import { addMenuFile, addMenuFolder } from "./commands/file_menu";
+import { ChooseWhichRepoToRun } from "./commands/suggest_other_repo_commands_modal";
+import { getTitleField, regexOnFileName } from "./conversion/file_path";
+import { GithubBranch } from "./GitHub/branch";
 import { resources, translationLanguage } from "./i18n/i18next";
-import {GithubPublisherSettingsTab} from "./settings";
+import { GithubPublisherSettingsTab } from "./settings";
 import {
 	DEFAULT_SETTINGS,
 	GitHubPublisherSettings,
 	GithubTiersVersion,
 	Repository,
 } from "./settings/interface";
-import { migrateSettings,OldSettings } from "./settings/migrate";
-import {createTokenPath, logs, monkeyPatchConsole, notif} from "./utils";
-import {checkRepositoryValidity, verifyRateLimitAPI} from "./utils/data_validation_test";
+import { migrateSettings, OldSettings } from "./settings/migrate";
+import { createTokenPath, logs, monkeyPatchConsole, notif } from "./utils";
+import { checkRepositoryValidity, verifyRateLimitAPI } from "./utils/data_validation_test";
 
 /**
 	* Main class of the plugin
@@ -41,17 +42,17 @@ export default class GithubPublisher extends Plugin {
 		* @param {FrontMatterCache} frontmatter - The frontmatter of the file
 		* @return {string} - The title field of the file
 		*/
-	getTitleFieldForCommand(file:TFile, frontmatter: FrontMatterCache | undefined | null): string {
+	getTitleFieldForCommand(file: TFile, frontmatter: FrontMatterCache | undefined | null): string {
 		return regexOnFileName(getTitleField(frontmatter, file, this.settings), this.settings);
 	}
 
-	async chargeAllCommands(repo: Repository|null, plugin: GithubPublisher) {
+	async chargeAllCommands(repo: Repository | null, plugin: GithubPublisher) {
 		if (plugin.settings.plugin.copyLink.addCmd) {
 			this.addCommand(await createLinkCallback(repo, this));
 		}
 		this.addCommand(await shareOneNoteCallback(repo, this));
 		if (plugin.settings.upload.autoclean.enable) {
-			logs({settings: this.settings}, "Adding purge command");
+			logs({ settings: this.settings }, "Adding purge command");
 			this.addCommand(await purgeNotesRemoteCallback(this, repo, this.branchName));
 		}
 		this.addCommand(await uploadAllNotesCallback(this, repo, this.branchName));
@@ -78,7 +79,7 @@ export default class GithubPublisher extends Plugin {
 	}
 
 	cleanOldCommands() {
-		const allRepo:Repository[] = this.settings.github?.otherRepo ?? [];
+		const allRepo: Repository[] = this.settings.github?.otherRepo ?? [];
 		//@ts-ignore
 		const allCommands = this.app.commands.listCommands();
 		for (const command of allCommands) {
@@ -95,7 +96,7 @@ export default class GithubPublisher extends Plugin {
 				}
 				if (!this.settings.upload.autoclean.enable) {
 					if (commandName === "publisher-delete-clean") {
-						logs({settings: this.settings}, "Removing purge/clean commands");
+						logs({ settings: this.settings }, "Removing purge/clean commands");
 						//@ts-ignore
 						this.app.commands.removeCommand(command.id);
 					}
@@ -106,8 +107,8 @@ export default class GithubPublisher extends Plugin {
 
 	async reloadCommands() {
 		//compare old and new repo to delete old commands
-		logs({settings: this.settings}, "Reloading commands");
-		const newRepo:Repository[] = this.settings.github?.otherRepo ?? [];
+		logs({ settings: this.settings }, "Reloading commands");
+		const newRepo: Repository[] = this.settings.github?.otherRepo ?? [];
 		this.cleanOldCommands();
 		for (const repo of newRepo) {
 			if (repo.createShortcuts) {
@@ -144,7 +145,7 @@ export default class GithubPublisher extends Plugin {
 				return tokenFile.split("=")[1];
 			}
 		} catch (e) {
-			notif({settings: this.settings, e: true}, e);
+			notif({ settings: this.settings, e: true }, e);
 			return "";
 		}
 		return "";
@@ -164,7 +165,7 @@ export default class GithubPublisher extends Plugin {
 					auth: token,
 				});
 		} else {
-			octokit = new Octokit({auth: token});
+			octokit = new Octokit({ auth: token });
 		}
 		return new GithubBranch(
 			octokit,
@@ -179,15 +180,16 @@ export default class GithubPublisher extends Plugin {
 		* @return {Promise<void>}
 		*/
 	async onload(): Promise<void> {
-		console.info(`[GITHUB PUBLISHER] v.${this.manifest.version} (lang: ${translationLanguage}) loaded`);
-		await this.loadSettings();
-
 		await i18next.init({
 			lng: translationLanguage,
 			fallbackLng: "en",
 			resources,
 			returnNull: false,
+			returnEmptyString: false,
 		});
+		
+		console.info(`[GITHUB PUBLISHER] v.${this.manifest.version} (lang: ${translationLanguage}) loaded`);
+		await this.loadSettings();
 
 		const oldSettings = this.settings;
 		await migrateSettings(oldSettings as unknown as OldSettings, this);
