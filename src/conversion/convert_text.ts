@@ -187,8 +187,8 @@ export async function mainConverting(
 	const { plugin } = properties;
 	if (properties.frontmatter.general.removeEmbed === "bake")
 		text = await bakeEmbeds(file, new Set(), properties, null, linkedFiles);
-	text = findAndReplaceText(text, plugin.settings, false);
 	text = await processYaml(file, frontmatter, text, properties);
+	text = findAndReplaceText(text, plugin.settings, false);
 	text = await convertToInternalGithub(
 		text,
 		linkedFiles,
