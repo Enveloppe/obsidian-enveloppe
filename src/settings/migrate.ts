@@ -306,7 +306,7 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 		}
 	};
 	//@ts-ignore
-	const token = old.GhToken ? old.GhToken : plugin.settings.github.token ? plugin.settings.github.token : "";
+	const token = old.GhToken ? old.GhToken : plugin.settings.github.token ? plugin.settings.github.token : undefined;
 	await migrateToken(plugin, token);
 	await plugin.saveSettings();
 }
