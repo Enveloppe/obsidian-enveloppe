@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.14.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.1...6.14.2) (2024-02-06)
+
+
+### Bug Fixes
+
+* duplicate yaml when using regexReplace ([9ff99da](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/9ff99da4f296ac574a31efa74aa311719651d691)), closes [#302](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/302)
+* erased token when migrating settings ([d80f696](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d80f6964ece992c541fa3b1fc4a0e00fee481ac7))
+
 ## 6.14.1 (2024-02-03)
 
 ## [6.14.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-7...6.14.0) (2024-02-03)
