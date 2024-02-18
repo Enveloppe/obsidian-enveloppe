@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.15.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.2...6.15.0) (2024-02-18)
+
+
+### Features
+
+* add more option for creating links ([#308](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/308)) ([1574fb0](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1574fb094f4f69f8021633af7c8b115636dff884))
+
 ## [6.14.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.1...6.14.2) (2024-02-06)
 
 
