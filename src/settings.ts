@@ -1211,12 +1211,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							pluginSettings.copyLink.transform.slugify = value as "disable" | "strict" | "lower";
 							await this.plugin.saveSettings();
 						});
-				})
-			
-				
-			
-				
-
+				});
+		
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.plugin.copyLink.applyRegex.title"))
 				.setHeading()
@@ -1231,7 +1227,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							});
 							await this.plugin.saveSettings();
 							this.renderSettingsPage(EnumbSettingsTabId.plugin);
-						})
+						});
 				});
 
 			for (const apply of pluginSettings.copyLink.transform.applyRegex) {
@@ -1247,19 +1243,19 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							.onChange(async (value) => {
 								apply.regex = value;
 								await this.plugin.saveSettings();
-							})
-						})
-						.setClass("max-width")
+							});
+					})
+					.setClass("max-width")
 					.addText((text) => {
 						text
-						.setPlaceholder("replacement")
+							.setPlaceholder("replacement")
 							.setValue(replacement)
 							.onChange(async (value) => {
 								apply.replacement = value;
 								await this.plugin.saveSettings();
-							})
-						})
-						.setClass("max-width")
+							});
+					})
+					.setClass("max-width")
 					.addExtraButton(button => {
 						button.setIcon("trash")
 							.onClick(async () => {
