@@ -1,12 +1,12 @@
 {
-    "id": "obsidian-mkdocs-publisher",
-    "name": "Github Publisher",
-    "version": "6.15.1",
-    "minAppVersion": "0.15.4",
-    "description": "Github Publisher helps you to publish your notes on a preconfigured GitHub repository, for free, and more!",
-    "author": "Mara-Li",
-    "authorUrl": "https://github.com/Mara-Li",
-    "fundingUrl": "https://ko-fi.com/lisandra_dev",
-    "isDesktopOnly": false,
-    "helpUrl": "https://obsidian-publisher.netlify.app"
+	"id": "obsidian-mkdocs-publisher",
+	"name": "Github Publisher",
+	"version": "6.14.2",
+	"minAppVersion": "0.15.4",
+	"description": "Github Publisher helps you to publish your notes on a preconfigured GitHub repository, for free, and more!",
+	"author": "Mara-Li",
+	"authorUrl": "https://github.com/Mara-Li",
+	"fundingUrl": "https://ko-fi.com/lisandra_dev",
+	"isDesktopOnly": false,
+	"helpUrl": "https://obsidian-publisher.netlify.app"
 }
