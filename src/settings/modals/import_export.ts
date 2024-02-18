@@ -32,16 +32,24 @@ export class ImportModal extends Modal {
 	plugin: GithubPublisher;
 	settingsPage: HTMLElement;
 	settingsTab: GithubPublisherSettingsTab;
+	settings: GitHubPublisherSettings;
 	constructor(app: App, plugin: GithubPublisher, settingsPage: HTMLElement, settingsTab: GithubPublisherSettingsTab) {
 		super(app);
 		this.plugin = plugin;
 		this.settingsPage = settingsPage;
 		this.settingsTab = settingsTab;
+		this.settings = plugin.settings;
 	}
 
 	async censorRepositoryData(original: GitHubPublisherSettings) {
 		logs({settings: original}, "original settings:", original);
-		this.plugin.settings.plugin = original.plugin;
+		this.settings.plugin.dev = original.plugin.dev;
+		this.settings.plugin.migrated = original.plugin.migrated;
+		this.settings.plugin.displayModalRepoEditing = original.plugin.displayModalRepoEditing;
+		this.settings.plugin.noticeError = original.plugin.noticeError;
+		this.settings.plugin.copyLink.addCmd = original.plugin.copyLink.addCmd;
+		this.settings.plugin.fileMenu = original.plugin.fileMenu;
+		this.settings.plugin.editorMenu = original.plugin.editorMenu;
 		this.plugin.settings.github.repo = original.github.repo;
 		this.plugin.settings.github.user = original.github.user;
 		this.plugin.settings.github.otherRepo = original.github.otherRepo;
@@ -193,7 +201,13 @@ export class ExportModal extends Modal {
 			delete github.otherRepo;
 			delete github.rateLimit;
 		}
-		delete cloneCensored.plugin;
+		delete cloneCensored.plugin.dev;
+		delete cloneCensored.plugin.migrated;
+		delete cloneCensored.plugin.displayModalRepoEditing;
+		delete cloneCensored.plugin.noticeError;
+		delete cloneCensored.plugin.copyLink.addCmd;
+		delete cloneCensored.plugin.fileMenu;
+		delete cloneCensored.plugin.editorMenu;
 		return cloneCensored;
 	}
 
@@ -312,7 +326,13 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 				// @ts-ignore
 				this.settings[key] = value;
 			}
-			this.settings.plugin = original.plugin;
+			this.settings.plugin.dev = original.plugin.dev;
+			this.settings.plugin.migrated = original.plugin.migrated;
+			this.settings.plugin.displayModalRepoEditing = original.plugin.displayModalRepoEditing;
+			this.settings.plugin.noticeError = original.plugin.noticeError;
+			this.settings.plugin.copyLink.addCmd = original.plugin.copyLink.addCmd;
+			this.settings.plugin.fileMenu = original.plugin.fileMenu;
+			this.settings.plugin.editorMenu = original.plugin.editorMenu;
 			this.settings.github.repo = original.github.repo;
 			this.settings.github.user = original.github.user;
 			this.settings.github.otherRepo = original.github.otherRepo;
