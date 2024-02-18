@@ -148,6 +148,14 @@ export interface GitHubPublisherSettings {
 			links: string;
 			removePart: string[];
 			addCmd: boolean;
+			transform: {
+				toUri: boolean;
+				slugify: "lower" | "strict" | "disable";
+				applyRegex: {
+					regex: string;
+					replacement: string;
+				}[]
+			}
 		}
 		noticeError: boolean;
 		dev?: boolean;
@@ -300,6 +308,11 @@ export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 			links: "",
 			removePart: [],
 			addCmd: false,
+			transform: {
+				toUri: true,
+				slugify: "lower",
+				applyRegex: [],
+			}
 		},
 		noticeError: false,
 		displayModalRepoEditing: false,

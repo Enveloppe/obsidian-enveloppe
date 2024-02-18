@@ -433,9 +433,14 @@
         "title": "Liens utiles"
       }
     },
-    "overrides": {},
+    "overrides": {
+    },
     "plugin": {
       "copyLink": {
+        "applyRegex": {
+          "desc": "Encapsuler avec \"//\" pour utiliser les expressions rationnelles",
+          "title": "Ajouter une transformation de texte à l'URL"
+        },
         "baselink": {
           "desc": "Permet de créer un lien dans le presse-papier avec cette base. Par défaut : \"https://username.github.io/repo/\"",
           "title": "Lien du dépôt/blog"
@@ -448,7 +453,20 @@
           "desc": "Supprimer cette partie des liens créés. Séparer par une virgule si plusieurs valeurs doivent être supprimées.",
           "title": "Suppression d'une partie du lien"
         },
-        "title": "Copie de lien"
+        "slugify": {
+          "disable": "Désactiver",
+          "lower": "Minuscule",
+          "strict": "Strict : Texte sans majuscules ni caractères spéciaux.",
+          "title": "Slugifier le lien"
+        },
+        "title": "Copie de lien",
+        "toLowerCase": {
+          "desc": "Convertir le lien en minuscule"
+        },
+        "toUri": {
+          "desc": "Convertir le lien en URI (remplacer par un encodage en \"percent-encoding\")",
+          "title": "Encoder en URI"
+        }
       },
       "dev": {
         "desc": "Utilisateur avancé seulement. Affichera sous forme de \"Notice\" selon le paramètre précédents.",

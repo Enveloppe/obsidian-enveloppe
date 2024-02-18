@@ -1,7 +1,7 @@
 
 import { logs } from "src/utils";
 
-import { GitHubPublisherSettings } from "../settings/interface";
+import { FIND_REGEX, GitHubPublisherSettings } from "../settings/interface";
 import { escapeRegex } from "./links";
 
 /**
@@ -41,7 +41,7 @@ export default function findAndReplaceText(
 		if (censor.entry.trim().length > 0) {
 			const toReplace = censor.entry;
 			const replaceWith = censor.replace;
-			if (toReplace.match(/^\/.+\/[gimy]*$/)) {
+			if (toReplace.match(FIND_REGEX)) {
 				const regex = createRegexFromText(toReplace, censor.flags);
 				text = censor.inCodeBlocks ? text.replace(regex, replaceWith) : replaceText(text, regex, replaceWith, settings);
 			} else {
