@@ -283,7 +283,7 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 		if (regexTitle.regex?.trim().length > 0) {
 			const toReplace = regexTitle.regex;
 			const replaceWith = regexTitle.replacement;
-			if (toReplace.match(/\/.+\//)) {
+			if (toReplace.match(FIND_REGEX)) {
 				const regex = createRegexFromText(toReplace);
 				fileName = fileName.replace(
 					regex,
@@ -314,10 +314,8 @@ export function regexOnPath(path: string, settings: GitHubPublisherSettings):str
 		if (regexTitle.regex.trim().length > 0) {
 			const toReplace = regexTitle.regex;
 			const replaceWith = regexTitle.replacement;
-			if (toReplace.match(/\/.+\//)) {
-				const flagsRegex = toReplace.match(/\/([gimy]+)$/);
-				const flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join("") : "";
-				const regex = new RegExp(toReplace.replace(/\/(.+)\/.*/, "$1"), flags);
+			if (toReplace.match(FIND_REGEX)) {
+				const regex = createRegexFromText(toReplace);
 				path = path.replace(
 					regex,
 					replaceWith

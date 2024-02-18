@@ -437,6 +437,10 @@
     },
     "plugin": {
       "copyLink": {
+        "applyRegex": {
+          "desc": "Encapsulate with \"//\" to use regexes",
+          "title": "Add a text transformation to the URL"
+        },
         "baselink": {
           "desc": "The base link of your website. By default : https://username.github.io/repo/",
           "title": "Base link"
@@ -449,7 +453,20 @@
           "desc": "Delete this part of the links created. Separate with a comma if several values are to be deleted.",
           "title": "Deleting part of the link"
         },
-        "title": "Copy link"
+        "slugify": {
+          "disable": "Disable",
+          "lower": "Lowercase",
+          "strict": "Strict: Text without capital letters or special characters.",
+          "title": "Link slugify"
+        },
+        "title": "Copy link",
+        "toLowerCase": {
+          "desc": "Convert the link to lowercase"
+        },
+        "toUri": {
+          "desc": "Convert the link to a URI (substitute into percent-encoding)",
+          "title": "Encode to URI"
+        }
       },
       "dev": {
         "desc": "Advanced user only. Will display as notice according to the previous setting.",

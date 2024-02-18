@@ -277,6 +277,10 @@ span.obsidian-publisher.icons {
 	display: none;
 }
 
+.github-publisher button.max-width {
+	width: 100%;
+}
+
 .github-publisher.github-publisher.modals.regex.file-path-name
 .disabled {
 	pointer-events: none;

@@ -1186,6 +1186,91 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				});
 
 			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.plugin.copyLink.toUri.title"))
+				.setDesc(i18next.t("settings.plugin.copyLink.toUri.desc"))
+				.addToggle((toggle) =>
+					toggle
+						.setValue(pluginSettings.copyLink.transform.toUri)
+						.onChange(async (value) => {
+							pluginSettings.copyLink.transform.toUri = value;
+							await this.plugin.saveSettings();
+						})
+				);
+			
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.plugin.copyLink.slugify.title"))
+				.addDropdown((dropdown) => {
+					dropdown
+						.addOptions({
+							disable: i18next.t("settings.plugin.copyLink.slugify.disable"),
+							strict: i18next.t("settings.plugin.copyLink.slugify.strict"),
+							lower: i18next.t("settings.plugin.copyLink.slugify.lower"),
+						})
+						.setValue(pluginSettings.copyLink.transform.slugify as "disable" | "strict" | "lower")
+						.onChange(async (value) => {
+							pluginSettings.copyLink.transform.slugify = value as "disable" | "strict" | "lower";
+							await this.plugin.saveSettings();
+						});
+				})
+			
+				
+			
+				
+
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.plugin.copyLink.applyRegex.title"))
+				.setHeading()
+				.setDesc(i18next.t("settings.plugin.copyLink.applyRegex.desc"))
+				.addExtraButton((button) => {
+					button
+						.setIcon("plus")
+						.onClick(async () => {
+							pluginSettings.copyLink.transform.applyRegex.push({
+								regex: "",
+								replacement: ""
+							});
+							await this.plugin.saveSettings();
+							this.renderSettingsPage(EnumbSettingsTabId.plugin);
+						})
+				});
+
+			for (const apply of pluginSettings.copyLink.transform.applyRegex) {
+				const regex = apply.regex;
+				const replacement = apply.replacement;
+
+				new Setting(this.settingsPage)
+					.setClass("no-display")
+					.addText((text) => {
+						text
+							.setPlaceholder("regex")
+							.setValue(regex)
+							.onChange(async (value) => {
+								apply.regex = value;
+								await this.plugin.saveSettings();
+							})
+						})
+						.setClass("max-width")
+					.addText((text) => {
+						text
+						.setPlaceholder("replacement")
+							.setValue(replacement)
+							.onChange(async (value) => {
+								apply.replacement = value;
+								await this.plugin.saveSettings();
+							})
+						})
+						.setClass("max-width")
+					.addExtraButton(button => {
+						button.setIcon("trash")
+							.onClick(async () => {
+								pluginSettings.copyLink.transform.applyRegex = pluginSettings.copyLink.transform.applyRegex.filter((item) => item !== apply);
+								await this.plugin.saveSettings();
+								this.renderSettingsPage(EnumbSettingsTabId.plugin);
+							});
+					});	
+			}
+
+			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.plugin.copyLink.command.desc"))
 				.addToggle((toggle) =>
 					toggle

@@ -6,6 +6,7 @@ import {getReceiptFolder} from "../conversion/file_path";
 import Publisher from "../GitHub/upload";
 import {
 	Deleted,
+	FIND_REGEX,
 	GitHubPublisherSettings,
 	ListEditedFiles,
 	MetadataExtractor,
@@ -14,6 +15,8 @@ import {
 	UploadedFiles} from "../settings/interface";
 import { HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 import { frontmatterFromFile } from "./parse_frontmatter";
+import { createRegexFromText } from "src/conversion/find_and_replace_text";
+import slugify from "slugify";
 
 type LogsParameters = {
 	settings: Partial<GitHubPublisherSettings>,
@@ -250,24 +253,19 @@ export async function createLink(
 	}
 	const frontmatter = frontmatterFromFile(file, plugin);
 	let removePart = copyLink.removePart;
-	const smartKey = otherRepo?.smartKey;
+	const smartKey = otherRepo?.smartKey ? `${otherRepo.smartKey}.` : "";
 	if (frontmatter) {
-		if (smartKey) {
-			if (frontmatter[`${smartKey}.baselink`] !== undefined) {
-				baseLink = frontmatter[`${smartKey}.baselink`];
-				removePart = [];
-			} else if (frontmatter[`${smartKey}.copylink`] && typeof frontmatter[`${smartKey}.copylink`] === "object") {
-				baseLink = frontmatter[`${smartKey}.copylink`].base;
-				removePart = frontmatter[`${smartKey}.copylink`].remove ?? [];
-			}
-		} else if (frontmatter["baselink"] !== undefined) {
-			baseLink = frontmatter["baselink"];
+		if (frontmatter[`${smartKey}baselink`] !== undefined) {
+			baseLink = frontmatter[`${smartKey}baselink`];
 			removePart = [];
-		} else if (frontmatter["copylink"] && typeof frontmatter["copylink"]==="object") {
-			baseLink = frontmatter["copylink"].base;
-			removePart = frontmatter["copylink"].remove ?? [];
+		} else if (frontmatter[`${smartKey}copylink`] && typeof frontmatter[`${smartKey}.copylink`] === "object") {
+			baseLink = frontmatter[`${smartKey}copylink`].base;
+			removePart = frontmatter[`${smartKey}copylink`].remove ?? [];
 		}
+		if (frontmatter[`${smartKey}copylink.base`]) baseLink = frontmatter[`${smartKey}copylink.base`];
+		if (frontmatter[`${smartKey}copylink.remove`]) removePart = frontmatter[`${smartKey}copylink.remove`];
 	}
+	
 	baseLink = checkSlash(baseLink);
 	if (removePart.length > 0) {
 		for (const part of removePart) {
@@ -277,7 +275,26 @@ export async function createLink(
 		}
 	}
 	filepath = checkSlash(filepath);
-	const url = checkSlash(encodeURI(baseLink + filepath));
+	let url = baseLink + filepath;
+	const transform = settings.plugin.copyLink.transform;
+	if (transform.toUri) {
+		url = encodeURI(url);
+	}
+	if (transform.slugify === "lower") {
+		url = url.toLowerCase();
+	} else if (transform.slugify === "strict") {
+		url = slugify(url, { lower: true, strict: true });
+	}
+	for (const apply of transform.applyRegex) {
+		//detect if text is encapsed by //
+		const {regex, replacement} = apply;
+		if (regex.match(FIND_REGEX)) {
+			const reg = createRegexFromText(regex);
+			url = url.replace(reg, replacement);
+		} else {
+			url = url.replace(new RegExp(regex, "g"), replacement);
+		}
+	}
 	await navigator.clipboard.writeText(url);
 	return;
 }
