@@ -376,16 +376,43 @@ export class ModalRegexOnContents extends Modal {
 				text: i18next.t("settings.regexReplacing.empty")});
 
 		for (const censorText of this.settings.conversion.censorText) {
-			const afterIcon = censorText.after ? "arrow-down" : "arrow-up";
+			const afterIcon = censorText.after ? "arrow-up-wide-narrow" : "arrow-down-wide-narrow";
 			const inCodeBlocks = censorText?.inCodeBlocks ? "code" : "scan";
 			const moment = censorText.after ? i18next.t("common.after").toLowerCase() : i18next.t("common.before").toLowerCase();
-			const desc = i18next.t("settings.regexReplacing.momentReplaceRegex", {moment: moment});
-			let toolTipCode = i18next.t("settings.regexReplacing.inCodeBlocks.runIn");
-			if (!censorText.inCodeBlocks) {
-				toolTipCode = i18next.t("settings.regexReplacing.inCodeBlocks.runOut");
-			}
-			const sett = new Setting(contentEl)
-				.setClass("entry")
+			const desc = i18next.t("settings.regexReplacing.momentReplaceRegex", {moment});
+			const toolTipCode = censorText.inCodeBlocks ? i18next.t("settings.regexReplacing.inCodeBlocks.runIn") : i18next.t("settings.regexReplacing.inCodeBlocks.runOut");
+			const sett = new Setting(contentEl);
+			const isLastInList = this.settings.conversion.censorText.indexOf(censorText) === this.settings.conversion.censorText.length - 1;
+			const isFirstInList = this.settings.conversion.censorText.indexOf(censorText) === 0;
+			sett.addExtraButton((btn) => {
+				btn
+					.setDisabled(isFirstInList)
+					.setIcon("arrow-up")
+					.onClick(async () => {
+						const index = this.settings.conversion.censorText.indexOf(censorText);
+						const newIndex = index - 1;
+						this.settings.conversion.censorText.splice(index, 1);
+						this.settings.conversion.censorText.splice(newIndex, 0, censorText);
+						this.onOpen();
+					});
+				btn.extraSettingsEl.classList.add("padding-0");
+			});
+			
+			sett.addExtraButton((btn) => {
+				btn
+					.setDisabled(isLastInList)
+					.setIcon("arrow-down")
+					.onClick(async () => {
+						const index = this.settings.conversion.censorText.indexOf(censorText);
+						const newIndex = index + 1;
+						this.settings.conversion.censorText.splice(index, 1);
+						this.settings.conversion.censorText.splice(newIndex, 0, censorText);
+						this.onOpen();
+					});	
+				btn.extraSettingsEl.classList.add("padding-0");
+			});
+			
+			sett.setClass("entry")
 				.addText((text) => {
 					text.setPlaceholder(i18next.t(
 						"regex.entry")
@@ -436,6 +463,7 @@ export class ModalRegexOnContents extends Modal {
 						});
 				});
 			sett.controlEl.setAttribute("value", censorText.entry);
+			sett.controlEl.classList.add("regex");
 		}
 		new Setting(contentEl)
 			.addButton((btn) => {
@@ -457,6 +485,7 @@ export class ModalRegexOnContents extends Modal {
 			.addButton((button) => {
 				button
 					.setButtonText(i18next.t("common.save"))
+					.setCta()
 					.onClick(() => {
 						const canBeValidated: boolean[] = [];
 						for (const censor of this.settings.conversion.censorText) {
