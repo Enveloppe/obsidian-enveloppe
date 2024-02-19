@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.16.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.15.1...6.16.0) (2024-02-19)
+
+
+### Features
+
+* allow same link transformation for other repo ([8be95ca](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/8be95caaf936351db772442572793915ef02d7fe))
+
 ## [6.15.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.3...6.15.1) (2024-02-18)
 
 
