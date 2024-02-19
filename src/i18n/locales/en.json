@@ -87,6 +87,7 @@
     "isEmpty": "{{- what}} is empty.",
     "mergeconflic": "Pull-request is not mergeable, you need to do it manually.",
     "normal": "The 404 error is normal ! It means that the file does not exist yet. Don't worry ❤️.",
+    "parseYaml": "Error adding tags or title to the frontmatter. \nDataview or another plugin must be interfering with it. \nStep skipped.",
     "reading-token-file": "Error: the path seems incorrect.",
     "unablePublishMultiNotes": "Unable to upload multiple notes, something went wrong.",
     "unablePublishNote": "Unable to upload note {{- file}}, skipping it",

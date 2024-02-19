@@ -1,6 +1,8 @@
+import i18next from "i18next";
 import {
 	FrontMatterCache,
 	MetadataCache,
+	Notice,
 	parseFrontMatterTags,
 	parseYaml,
 	stringifyYaml,
@@ -95,9 +97,13 @@ function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: an
  */
 
 export function addToYaml(text: string, toAdd: string[], plugin: GithubPublisher, folderNoteParaMeters: { properties: MultiProperties | null, file: TFile}): string {
+	const properties = folderNoteParaMeters?.properties;
+	if (!properties || (!properties.plugin.settings.conversion.tags.inline && !properties.plugin.settings.upload.folderNote.addTitle)) 
+		return text;
 	const { settings, app } = plugin;
 	const frontmatter = app.metadataCache.getFileCache(folderNoteParaMeters.file);
 	let yamlObject = parseYaml(stringifyYaml(frontmatter?.frontmatter ?? {}));
+	const yamlRegex = new RegExp(`---\n${escapeRegex(stringifyYaml(frontmatter?.frontmatter))}---\n`, "g");
 	try {
 		if (yamlObject && toAdd.length > 0) {
 			yamlObject = tagsToYaml(toAdd, settings, yamlObject);
@@ -105,19 +111,16 @@ export function addToYaml(text: string, toAdd: string[], plugin: GithubPublisher
 		if (folderNoteParaMeters?.properties) {
 			yamlObject = titleToYaml(yamlObject, folderNoteParaMeters.properties, folderNoteParaMeters.file);
 		}
-		
-		if (Object.keys(yamlObject).length > 0) {
+		if (yamlObject && Object.keys(yamlObject).length > 0) {
 			//check if valid yaml
 			const returnToYaml = stringifyYaml(yamlObject);
-			if (yamlObject) {
-				const yamlRegex = new RegExp(`---\n${escapeRegex(stringifyYaml(frontmatter?.frontmatter))}---\n`, "g");
-				const fileContentsOnly = text.replace(yamlRegex, "");
-				return `---\n${returnToYaml}---\n${fileContentsOnly}`;
-			} else return `---\n${returnToYaml}---\n${text}`;
+			return text.replace(yamlRegex, `---\n${returnToYaml}---\n`);
 		}
 	} catch (e) {
+		new Notice(i18next.t("error.parseYaml"));
 		return text; //not a valid yaml, skipping
 	}
+	new Notice(i18next.t("error.parseYaml"));
 	return text;
 }
 

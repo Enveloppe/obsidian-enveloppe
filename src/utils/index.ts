@@ -276,7 +276,11 @@ export async function createLink(
 	}
 	filepath = checkSlash(filepath);
 	let url = baseLink + filepath;
-	const transform = copyLink.transform;
+	let transform = copyLink.transform;
+	if (!transform) transform = settings.plugin.copyLink.transform;
+	if (transform.toUri === undefined) transform.toUri = settings.plugin.copyLink.transform.toUri;
+	if (transform.slugify === undefined) transform.slugify = settings.plugin.copyLink.transform.slugify;
+	if (transform.applyRegex === undefined) transform.applyRegex = settings.plugin.copyLink.transform.applyRegex;
 	if (transform.toUri) {
 		url = encodeURI(url);
 	}

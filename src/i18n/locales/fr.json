@@ -87,6 +87,7 @@
     "isEmpty": "{{- what}} est vide.",
     "mergeconflic": "La Pull-Request n'est pas fusionnable, vous avez besoin de le faire manuellement.",
     "normal": "L'erreur 404 est normale ! Elle signifie que le fichier n'existe pas encore. Ne vous inquiétez pas ❤️.",
+    "parseYaml": "Erreur durant l'ajout des tags ou du titre dans le frontmatter. Dataview ou un autre plugin doit interférer avec. Étape sautée.",
     "reading-token-file": "Erreur : Le chemin est incorrect.",
     "unablePublishMultiNotes": "Impossible de transférer plusieurs notes, quelque chose s'est mal passé.",
     "unablePublishNote": "Impossible de transférer {{- file}}, le fichier a été ignoré.",
