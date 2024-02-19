@@ -103,7 +103,6 @@ export function addToYaml(text: string, toAdd: string[], plugin: GithubPublisher
 	const { settings, app } = plugin;
 	const frontmatter = app.metadataCache.getFileCache(folderNoteParaMeters.file);
 	let yamlObject = parseYaml(stringifyYaml(frontmatter?.frontmatter ?? {}));
-	const yamlRegex = new RegExp(`---\n${escapeRegex(stringifyYaml(frontmatter?.frontmatter))}---\n`, "g");
 	try {
 		if (yamlObject && toAdd.length > 0) {
 			yamlObject = tagsToYaml(toAdd, settings, yamlObject);
@@ -114,7 +113,11 @@ export function addToYaml(text: string, toAdd: string[], plugin: GithubPublisher
 		if (yamlObject && Object.keys(yamlObject).length > 0) {
 			//check if valid yaml
 			const returnToYaml = stringifyYaml(yamlObject);
-			return text.replace(yamlRegex, `---\n${returnToYaml}---\n`);
+			const originalYaml = stringifyYaml(frontmatter?.frontmatter ?? {});
+			if (originalYaml.toString().trim() !== "{}") { //prevent empty & duplication
+				const yamlRegex = new RegExp(`---\n${escapeRegex(stringifyYaml(frontmatter?.frontmatter))}---\n`, "g");
+				return text.replace(yamlRegex, `---\n${returnToYaml}---\n`);
+			} return `---\n${returnToYaml}---\n${text}`;
 		}
 	} catch (e) {
 		new Notice(i18next.t("error.parseYaml"));
