@@ -16,6 +16,7 @@ export function createRegexFromText(toReplace: string, withflag?: string): RegEx
 	if (!withflag) {
 		const flagsRegex = toReplace.match(/\/([gimy]+)$/);
 		flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join("") : "";
+		console.log(flags);
 	}
 	return new RegExp(toReplace.replace(/\/(.+)\/.*/, "$1"), flags);
 }
@@ -43,6 +44,7 @@ export default function findAndReplaceText(
 			const replaceWith = censor.replace;
 			if (toReplace.match(FIND_REGEX)) {
 				const regex = createRegexFromText(toReplace, censor.flags);
+				console.log(regex);
 				text = censor.inCodeBlocks ? text.replace(regex, replaceWith) : replaceText(text, regex, replaceWith, settings);
 			} else {
 				text = censor.inCodeBlocks ? text.replace(toReplace, replaceWith) : replaceText(text, toReplace, replaceWith, settings);
@@ -75,7 +77,7 @@ export function replaceText(
 		regexWithString = "```[\\s\\S]*?```|`[^`]*`|";
 		if (links) regexWithString += "\\\\?!?";
 		regexWithString += pattern.source;
-		regex = new RegExp(regexWithString, `g${pattern.flags}`);
+		regex = new RegExp(regexWithString, `g${pattern.flags.replace("g", "")}`);
 	} else {
 		regexWithString = "```[\\s\\S]*?```|`[^`]*`|\\\\?!?";
 		if (links) regexWithString += "\\\\?!?";
