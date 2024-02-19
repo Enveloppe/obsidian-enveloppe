@@ -67,7 +67,12 @@ export class ModalAddingNewRepository extends Modal {
 			shareKey: this.settings.plugin.shareKey,
 			copyLink: {
 				links: this.settings.plugin.copyLink.links,
-				removePart: []
+				removePart: [],
+				transform: {
+					toUri: this.settings.plugin.copyLink.transform.toUri,
+					slugify: this.settings.plugin.copyLink.transform.slugify,
+					applyRegex: this.settings.plugin.copyLink.transform.applyRegex
+				}
 			}
 		};
 
@@ -427,6 +432,87 @@ class ModalEditingRepository extends Modal {
 							await this.plugin.saveSettings();
 						});
 				});
+			
+			new Setting(contentEl)
+				.setName(i18next.t("settings.plugin.copyLink.toUri.title"))
+				.setDesc(i18next.t("settings.plugin.copyLink.toUri.desc"))
+				.addToggle((toggle) =>
+					toggle
+						.setValue(this.repository.copyLink.transform.toUri)
+						.onChange(async (value) => {
+							this.repository.copyLink.transform.toUri = value;
+							await this.plugin.saveSettings();
+						})
+				);
+			
+			new Setting(contentEl)
+				.setName(i18next.t("settings.plugin.copyLink.slugify.title"))
+				.addDropdown((dropdown) => {
+					dropdown
+						.addOptions({
+							disable: i18next.t("settings.plugin.copyLink.slugify.disable"),
+							strict: i18next.t("settings.plugin.copyLink.slugify.strict"),
+							lower: i18next.t("settings.plugin.copyLink.slugify.lower"),
+						})
+						.setValue(this.repository.copyLink.transform.slugify as "disable" | "strict" | "lower")
+						.onChange(async (value) => {
+							this.repository.copyLink.transform.slugify = value as "disable" | "strict" | "lower";
+							await this.plugin.saveSettings();
+						});
+				});
+		
+			new Setting(contentEl)
+				.setName(i18next.t("settings.plugin.copyLink.applyRegex.title"))
+				.setHeading()
+				.setDesc(i18next.t("settings.plugin.copyLink.applyRegex.desc"))
+				.addExtraButton((button) => {
+					button
+						.setIcon("plus")
+						.onClick(async () => {
+							this.repository.copyLink.transform.applyRegex.push({
+								regex: "",
+								replacement: ""
+							});
+							await this.plugin.saveSettings();
+							this.onOpen();
+						});
+				});
+
+			for (const apply of this.repository.copyLink.transform.applyRegex) {
+				const regex = apply.regex;
+				const replacement = apply.replacement;
+
+				new Setting(contentEl)
+					.setClass("no-display")
+					.addText((text) => {
+						text
+							.setPlaceholder("regex")
+							.setValue(regex)
+							.onChange(async (value) => {
+								apply.regex = value;
+								await this.plugin.saveSettings();
+							});
+					})
+					.setClass("max-width")
+					.addText((text) => {
+						text
+							.setPlaceholder("replacement")
+							.setValue(replacement)
+							.onChange(async (value) => {
+								apply.replacement = value;
+								await this.plugin.saveSettings();
+							});
+					})
+					.setClass("max-width")
+					.addExtraButton(button => {
+						button.setIcon("trash")
+							.onClick(async () => {
+								this.repository.copyLink.transform.applyRegex = this.repository.copyLink.transform.applyRegex.filter((item) => item !== apply);
+								await this.plugin.saveSettings();
+								this.onOpen();
+							});
+					});	
+			}	
 		}
 
 		new Setting(contentEl)

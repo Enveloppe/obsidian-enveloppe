@@ -1,5 +1,7 @@
 import i18next from "i18next";
 import {App, normalizePath, Notice, Platform, TFile} from "obsidian";
+import slugify from "slugify";
+import { createRegexFromText } from "src/conversion/find_and_replace_text";
 import GithubPublisher from "src/main";
 
 import {getReceiptFolder} from "../conversion/file_path";
@@ -15,8 +17,6 @@ import {
 	UploadedFiles} from "../settings/interface";
 import { HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 import { frontmatterFromFile } from "./parse_frontmatter";
-import { createRegexFromText } from "src/conversion/find_and_replace_text";
-import slugify from "slugify";
 
 type LogsParameters = {
 	settings: Partial<GitHubPublisherSettings>,
@@ -227,6 +227,16 @@ function checkSlash(link: string): string {
 }
 
 /**
+ * Fix multiple/toomuch slash in URL
+ * @example https://www.xxxx.com//filename///removed -> https://www.xxxx.com/filename/removed
+ * @param link {string} - the link to fix
+ * @returns the fixed link {string}
+ */
+function fixSlashInURL(link: string): string {
+	return link.replace(/([^:]\/)\/+/g, "$1");
+}
+
+/**
  * Create the link for the file and add it to the clipboard
  * The path is based with the receipt folder but part can be removed using settings.
  * By default, use a github.io page for the link.
@@ -276,7 +286,7 @@ export async function createLink(
 	}
 	filepath = checkSlash(filepath);
 	let url = baseLink + filepath;
-	const transform = settings.plugin.copyLink.transform;
+	const transform = copyLink.transform;
 	if (transform.toUri) {
 		url = encodeURI(url);
 	}
@@ -295,7 +305,8 @@ export async function createLink(
 			url = url.replace(new RegExp(regex, "g"), replacement);
 		}
 	}
-	await navigator.clipboard.writeText(url);
+	//fix links like double slash
+	await navigator.clipboard.writeText(fixSlashInURL(url));
 	return;
 }
 

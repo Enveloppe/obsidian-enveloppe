@@ -46,6 +46,14 @@ export interface Repository {
 	copyLink: {
 		links: string;
 		removePart: string[];
+		transform: {
+			toUri: boolean;
+			slugify: "lower" | "strict" | "disable";
+			applyRegex: {
+				regex: string;
+				replacement: string;
+			}[]
+		}
 	}
 
 }
