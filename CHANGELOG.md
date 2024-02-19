@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.15.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.15.3...6.15.4) (2024-02-19)
+
+
+### Bug Fixes
+
+* allow to use function with empty frontmatter ([b0e1911](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b0e1911878b9b638c33281416e97e3df5b2699f3))
+
 ## [6.15.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.15.2...6.15.3) (2024-02-19)
 
 
