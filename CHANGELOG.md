@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.15.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.15.4...6.15.5) (2024-02-19)
+
+
+### Features
+
+* allow to reorder list of regex ([1264515](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1264515ca8b42e28c24c55e564c95f8bfa547b90))
+
+
+### Bug Fixes
+
+* a little optimization ([ac8118f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/ac8118f104840f62f80acc2d9c4e05fa06f98bbd))
+* codeblocks error with flags ([1aca74a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1aca74ab4097e0559f035083f85163cb7f77b4a6))
+
 ## [6.15.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.15.3...6.15.4) (2024-02-19)
 
 
