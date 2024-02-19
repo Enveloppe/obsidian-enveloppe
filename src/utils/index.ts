@@ -227,16 +227,6 @@ function checkSlash(link: string): string {
 }
 
 /**
- * Fix multiple/toomuch slash in URL
- * @example https://www.xxxx.com//filename///removed -> https://www.xxxx.com/filename/removed
- * @param link {string} - the link to fix
- * @returns the fixed link {string}
- */
-function fixSlashInURL(link: string): string {
-	return link.replace(/([^:]\/)\/+/g, "$1");
-}
-
-/**
  * Create the link for the file and add it to the clipboard
  * The path is based with the receipt folder but part can be removed using settings.
  * By default, use a github.io page for the link.
@@ -306,7 +296,7 @@ export async function createLink(
 		}
 	}
 	//fix links like double slash
-	await navigator.clipboard.writeText(fixSlashInURL(url));
+	await navigator.clipboard.writeText(url.replace(/([^:]\/)\/+/g, "$1"));
 	return;
 }
 
