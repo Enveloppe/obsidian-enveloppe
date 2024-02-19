@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.15.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.15.2...6.15.3) (2024-02-19)
+
+
+### Bug Fixes
+
+* add more condition to prevent "double" frontmatter & broken files ([d98ad4f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d98ad4fc53614dfe4a2e0e45f573241b5b97dc3a))
+
 ## [6.15.2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.15.1...6.15.2) (2024-02-19)
 
 
