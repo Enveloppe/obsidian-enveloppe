@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.15.7](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.15.6...6.15.7) (2024-02-21)
+
+
+### Bug Fixes
+
+* uploading attachment while using folder path replacer ([801a42c](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/801a42c17494177fa3aba419fe46a9ff77685f17)), closes [#314](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/314)
+
 ## [6.15.6](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.15.5...6.15.6) (2024-02-21)
 
 
