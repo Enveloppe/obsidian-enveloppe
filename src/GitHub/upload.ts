@@ -431,14 +431,15 @@ export default class Publisher {
 		imageFile: TFile,
 		properties: MonoProperties,
 	) {
-		const imageBin = await this.vault.readBinary(imageFile);
+		let imageBin = await this.vault.readBinary(imageFile);
 		const repoFrontmatter = properties.frontmatter.repo;
 		let image64 = arrayBufferToBase64(imageBin);
 		if (imageFile.name.includes("excalidraw")) {
-			const svg = await convertToHTMLSVG(imageFile, this.vault);
+			const svg = await convertToHTMLSVG(imageFile, this.plugin.app);
 			if (svg) {
 				//convert to base64
 				image64 = Base64.encode(svg).toString();
+				imageBin = Buffer.from(image64, "base64");
 			}
 		}
 		const path = getImagePath(

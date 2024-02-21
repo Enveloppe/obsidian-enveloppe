@@ -64,7 +64,7 @@
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
-		"@excalidraw/utils": "^0.1.2",
+		"@zsviczian/excalidraw": "0.17.1-obsidian-14",
 		"dedent": "^1.5.1",
 		"ts-deepmerge": "^6.2.0"
 	},

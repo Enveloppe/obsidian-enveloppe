@@ -1,30 +1,18 @@
 
-import { exportToSvg } from "@excalidraw/utils";
-import { TFile, Vault } from "obsidian";
 
-async function getJSONInFile(file: TFile, vault: Vault) {
-	const content = await vault.read(file);
-	//search ```json and ``` and get the content in between
-	const json = content.match(/```json(.|\n)*```/g);
-	if (json) {
-		return json[0].replace(/```json/g, "").replace(/```/g, "");
-	}
-	return null;
-}
+import { App,TFile } from "obsidian";
 
-async function getExcalidrawJSON(file: TFile, vault: Vault) {
-	const json = await getJSONInFile(file, vault);
-	if (json) {
-		return JSON.parse(json);
-	}
-	return null;
-}
 
-export async function convertToHTMLSVG(file: TFile, vault: Vault) {
-	const json = await getExcalidrawJSON(file, vault);
-	if (json) {
-		const svg = await exportToSvg(json);
+export async function convertToHTMLSVG(file: TFile, app: App) {
+	try {
+		// @ts-ignore
+		const excalidraw = app.plugins.plugins["obsidian-excalidraw-plugin"];
+		const ea = excalidraw.ea;
+		const svg = await ea.createSVG(file.path, ea.getExportSettings(true, true));
 		return svg.outerHTML as string;
+
+	} catch (e) {
+		console.error(e);
+		return null;
 	}
-	return null;
 }
