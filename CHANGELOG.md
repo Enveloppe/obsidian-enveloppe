@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.15.6](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.15.5...6.15.6) (2024-02-21)
+
+
+### Bug Fixes
+
+* **excalidraw:** export excalidraw using the plugin directly ([4edb728](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/4edb728eb9c2ad83613864494105bafa4156cba6))
+
 ## [6.15.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.15.4...6.15.5) (2024-02-19)
 
 
