@@ -416,7 +416,7 @@ export function getImagePath(
 ): string {
 	let imagePath = createImagePath(file, settings, sourceFrontmatter);
 	imagePath = regexOnPath(imagePath, settings);
-	return regexOnFileName(imagePath, settings);
+	return normalizePath(regexOnFileName(imagePath, settings));
 }
 
 
