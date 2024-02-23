@@ -16,7 +16,7 @@ import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
  * @param {Repository | null} repo - The data repository found in the file
  */
 export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchName: string, repo: Repository | null) {
-	const publisher = await plugin.reloadOctokit();
+	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const statusBarItems = plugin.addStatusBarItem();
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, null);
 	const monoProperties: MonoRepoProperties = {
@@ -146,12 +146,12 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 		item
 			.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
 				doc: fileName,
-				smartKey: getSharedKey?.smartKey.toUpperCase() || i18next.t("common.default").toUpperCase()
+				smartKey: getSharedKey?.smartKey?.toUpperCase() || i18next.t("common.default").toUpperCase()
 			}))
 			.setIcon("file-up")
 			.onClick(async () => {
 				await shareOneNote(
-					await plugin.reloadOctokit(),
+					await plugin.reloadOctokit(getSharedKey?.smartKey),
 					file,
 					getSharedKey,
 					fileName
@@ -214,7 +214,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 						.setIcon("file-up")
 						.onClick(async () => {
 							await shareOneNote(
-								await plugin.reloadOctokit(),
+								await plugin.reloadOctokit(otherRepo?.smartKey),
 								file,
 								otherRepo,
 								fileName
@@ -252,7 +252,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 			.onClick(async () => {
 				new ChooseRepoToRun(plugin.app, plugin, repo?.shareKey, branchName, "file", file.basename, async (item: Repository) => {
 					await shareOneNote(
-						await plugin.reloadOctokit(),
+						await plugin.reloadOctokit(item.smartKey),
 						file,
 						item,
 						fileName

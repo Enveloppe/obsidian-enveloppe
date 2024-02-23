@@ -143,6 +143,11 @@
       "unpublished": "Impossible à publier"
     }
   },
+  "ommands": {
+    "checkValidity": {
+      "error": "Configuration incorrecte"
+    }
+  },
   "publish": {
     "branch": {
       "alreadyExists": "La branche {{- branchName}} sur {{- repo.owner}}/{{- repo.repo}} existe déjà - Utilisation de celle-ci.",

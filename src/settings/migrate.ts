@@ -129,7 +129,7 @@ async function migrateWorFlow(plugin: GithubPublisher) {
 	await plugin.saveSettings();
 }
 
-export async function migrateToken(plugin: GithubPublisher, token?: string) {
+export async function migrateToken(plugin: GithubPublisher, token?: string, repo?: string) {
 	logs({ settings: plugin.settings }, "migrating token");
 	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
 	//@ts-ignore
@@ -144,18 +144,37 @@ export async function migrateToken(plugin: GithubPublisher, token?: string) {
 	if (token === undefined) {
 		return;
 	}
-	logs({ settings: plugin.settings }, `Moving the GitHub Token in the file : ${tokenPath}`);
+	logs({ settings: plugin.settings }, `Moving the GitHub Token in the file : ${tokenPath} for ${repo ?? "default"} repository`);
 	if (tokenPath.endsWith(".json")) {
-		const envToken = {
+		const envToken = repo ? {
+			"GITHUB_PUBLISHER_REPOS" : {
+				[repo] : token
+			}
+		} : {
 			GITHUB_PUBLISHER_TOKEN: token
 		};
 		if (!(await plugin.app.vault.adapter.exists(tokenPath))) {
 			await plugin.app.vault.adapter.mkdir(normalizePath(tokenPath).split("/").slice(0, -1).join("/"));
 		}
-		await plugin.app.vault.adapter.write(tokenPath, JSON.stringify(envToken));
+		const oldToken = JSON.parse(await plugin.app.vault.adapter.read(tokenPath));
+		const newToken = { ...oldToken, ...envToken };
+		await plugin.app.vault.adapter.write(tokenPath, JSON.stringify(newToken, null, 2));
+
 	} else {
-		const envToken = `GITHUB_TOKEN=${token}`;
-		await plugin.app.vault.adapter.write(tokenPath, envToken);
+		const envToken = repo ? `${repo}_TOKEN=${token}` : `GITHUB_TOKEN=${token}`;
+		const oldToken = (await plugin.app.vault.adapter.read(tokenPath)).split("\n");
+		//search if old token is already in the file, if yes, replace it
+		for (const key in oldToken) {
+			if (key.startsWith("GITHUB_TOKEN") && !repo) {
+				oldToken[key] = envToken;
+				await plugin.app.vault.adapter.write(tokenPath, oldToken.join("\n"));
+				return;
+			} else if (key.startsWith(`${repo}_TOKEN`) && repo) {
+				oldToken[key] = envToken;
+				await plugin.app.vault.adapter.write(tokenPath, oldToken.join("\n"));
+				return;
+			}
+		}
 	}
 	return;
 }
@@ -193,6 +212,11 @@ async function migrateOtherRepository(plugin: GithubPublisher) {
 			repo.copyLink = {
 				links: "",
 				removePart: [],
+				transform: {
+					toUri: false,
+					slugify: "disable",
+					applyRegex: []
+				}
 			};
 			await plugin.saveSettings();
 		}
@@ -299,6 +323,11 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 				links: old.mainLink,
 				removePart: old.linkRemover.split(/[,\n]\W*/).map((s) => s.trim()),
 				addCmd: false,
+				transform: {
+					toUri: true,
+					slugify: "lower",
+					applyRegex: [],
+				}
 			},
 			noticeError: old.logNotice,
 			displayModalRepoEditing: false,
