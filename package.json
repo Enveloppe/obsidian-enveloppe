@@ -53,7 +53,7 @@
 		"i18next": "^23.9.0",
 		"jest": "^29.7.0",
 		"js-base64": "^3.7.6",
-		"obsidian": "^1.4.11",
+		"obsidian": "1.5.7-1",
 		"obsidian-dataview": "^0.5.64",
 		"obsidian-plugin-cli": "^0.9.0",
 		"obsidian-undocumented": "^0.1.3",

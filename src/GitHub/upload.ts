@@ -12,7 +12,7 @@ import {
 } from "obsidian";
 
 import { convertToHTMLSVG } from "../conversion/compiler/excalidraw";
-import { mainConverting } from "../conversion/convert_text";
+import { mainConverting } from "../conversion";
 import {
 	getImagePath,
 	getReceiptFolder,
