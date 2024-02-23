@@ -114,8 +114,8 @@ devDependencies:
     specifier: ^3.7.6
     version: 3.7.6
   obsidian:
-    specifier: ^1.4.11
-    version: 1.4.11(@codemirror/state@6.4.0)(@codemirror/view@6.24.0)
+    specifier: 1.5.7-1
+    version: 1.5.7-1(@codemirror/state@6.4.0)(@codemirror/view@6.24.0)
   obsidian-dataview:
     specifier: ^0.5.64
     version: 0.5.64
@@ -124,7 +124,7 @@ devDependencies:
     version: 0.9.0
   obsidian-undocumented:
     specifier: ^0.1.3
-    version: 0.1.3(obsidian@1.4.11)
+    version: 0.1.3(obsidian@1.5.7-1)
   prettier:
     specifier: ^3.2.5
     version: 3.2.5
@@ -6808,7 +6808,7 @@ packages:
     resolution: {integrity: sha512-REKQtAuIOKDbvNH/th1C1gWmJWCP5tRn9T/mfZGZt4Zncgko7McXK0aSKFtEInipvgbZJ2nScivvyLdiWluSMw==}
     hasBin: true
     dependencies:
-      obsidian: github.com/obsidianmd/obsidian-api/da7309d0f22c073ca6eb0fe95c0eeee055a235a7(@codemirror/state@6.4.0)(@codemirror/view@6.24.0)
+      obsidian: github.com/obsidianmd/obsidian-api/9754fc87dd9a417f198a5cad7f08959206d2f69c(@codemirror/state@6.4.0)(@codemirror/view@6.24.0)
       tslib: 2.1.0
     transitivePeerDependencies:
       - '@codemirror/state'
@@ -6852,12 +6852,12 @@ packages:
       - supports-color
     dev: true
 
-  /obsidian-undocumented@0.1.3(obsidian@1.4.11):
+  /obsidian-undocumented@0.1.3(obsidian@1.5.7-1):
     resolution: {integrity: sha512-JjJuY8aepETPMumGwleq/lVa7gM7yfQxbVbk83sim21wZv6oo2v2GA/KZf62pO5Jri37Lj6XWVlqnxQKSQ/9Hw==}
     peerDependencies:
       obsidian: '>=1.0.0'
     dependencies:
-      obsidian: 1.4.11(@codemirror/state@6.4.0)(@codemirror/view@6.24.0)
+      obsidian: 1.5.7-1(@codemirror/state@6.4.0)(@codemirror/view@6.24.0)
     dev: true
 
   /obsidian-utils@0.10.2:
@@ -6872,8 +6872,8 @@ packages:
       - encoding
     dev: true
 
-  /obsidian@1.4.11(@codemirror/state@6.4.0)(@codemirror/view@6.24.0):
-    resolution: {integrity: sha512-BCVYTvaXxElJMl6MMbDdY/CGK+aq18SdtDY/7vH8v6BxCBQ6KF4kKxL0vG9UZ0o5qh139KpUoJHNm+6O5dllKA==}
+  /obsidian@1.5.7-1(@codemirror/state@6.4.0)(@codemirror/view@6.24.0):
+    resolution: {integrity: sha512-T5ZRuQ1FnfXqEoakTTHVDYvzUEEoT8zSPnQCW31PVgYwG4D4tZCQfKHN2hTz1ifnCe8upvwa6mBTAP2WUA5Vng==}
     peerDependencies:
       '@codemirror/state': ^6.0.0
       '@codemirror/view': ^6.0.0
@@ -8625,11 +8625,11 @@ packages:
       style-mod: 4.1.0
     dev: true
 
-  github.com/obsidianmd/obsidian-api/da7309d0f22c073ca6eb0fe95c0eeee055a235a7(@codemirror/state@6.4.0)(@codemirror/view@6.24.0):
-    resolution: {tarball: https://codeload.github.com/obsidianmd/obsidian-api/tar.gz/da7309d0f22c073ca6eb0fe95c0eeee055a235a7}
-    id: github.com/obsidianmd/obsidian-api/da7309d0f22c073ca6eb0fe95c0eeee055a235a7
+  github.com/obsidianmd/obsidian-api/9754fc87dd9a417f198a5cad7f08959206d2f69c(@codemirror/state@6.4.0)(@codemirror/view@6.24.0):
+    resolution: {tarball: https://codeload.github.com/obsidianmd/obsidian-api/tar.gz/9754fc87dd9a417f198a5cad7f08959206d2f69c}
+    id: github.com/obsidianmd/obsidian-api/9754fc87dd9a417f198a5cad7f08959206d2f69c
     name: obsidian
-    version: 1.5.1
+    version: 1.5.7
     peerDependencies:
       '@codemirror/state': ^6.0.0
       '@codemirror/view': ^6.0.0

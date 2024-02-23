@@ -22,7 +22,7 @@ import {
 	LinkedNotes,
 	MultiProperties} from "../../settings/interface";
 import {isShared} from "../../utils/data_validation_test";
-import { addToYaml } from "../convert_text";
+import { addToYaml } from "..";
 import { createRelativePath, getTitleField, regexOnFileName } from "../file_path";
 
 
