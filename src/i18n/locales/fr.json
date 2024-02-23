@@ -1,6 +1,7 @@
 {
   "commands": {
     "checkValidity": {
+      "error": "Configuration incorrecte",
       "inBranch": {
         "error403": "Erreur 403: {{- repo.owner}}/{{- repo.repo}} a été déplacé de manière permanente (depuis {{- repo.branch}}).",
         "error404": "Erreur 404 : La branche {{- repo.branch}} est introuvable depuis {{- repo.owner}}/{{- repo.repo}}."
@@ -145,7 +146,6 @@
   },
   "ommands": {
     "checkValidity": {
-      "error": "Configuration incorrecte"
     }
   },
   "publish": {
