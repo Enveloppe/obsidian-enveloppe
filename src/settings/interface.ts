@@ -29,7 +29,7 @@ export interface Repository {
 	branch: string;
 	automaticallyMergePR: boolean;
 	verifiedRepo?: boolean;
-	token?: string,
+	token?: string;
 	api: {
 		tiersForApi: GithubTiersVersion;
 		hostname: string;

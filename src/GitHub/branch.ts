@@ -324,7 +324,7 @@ export class GithubBranch extends FilesManagement {
 			} catch (e) {
 				logs({settings: this.settings, e: true}, e);
 				new Notice(
-					(i18next.t("ommands.checkValidity.error", {repo}))
+					(i18next.t("commands.checkValidity.error", {repo}))
 				);
 				break;
 			}
