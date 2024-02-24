@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.16.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.16.0-1...6.16.0-2) (2024-02-24)
+
+
+### Bug Fixes
+
+* forgot to add reading token in commands ([cbe67d4](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/cbe67d4422376e038d4d29bea74a3e2bf87c69bd))
+
 ## [6.16.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.16.0-0...6.16.0-1) (2024-02-24)
 
 
