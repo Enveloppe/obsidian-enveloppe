@@ -132,6 +132,7 @@ async function migrateWorFlow(plugin: GithubPublisher) {
 export async function migrateToken(plugin: GithubPublisher, token?: string, repo?: string) {
 	logs({ settings: plugin.settings }, "migrating token");
 	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
+	console.log("TOKEN", token);
 	//@ts-ignore
 	if (plugin.settings.github.token && !token) {
 		logs({ settings: plugin.settings }, `Moving the GitHub Token in the file : ${tokenPath}`);
@@ -145,6 +146,10 @@ export async function migrateToken(plugin: GithubPublisher, token?: string, repo
 		return;
 	}
 	logs({ settings: plugin.settings }, `Moving the GitHub Token in the file : ${tokenPath} for ${repo ?? "default"} repository`);
+	const exists = await plugin.app.vault.adapter.exists(tokenPath);
+	if (!exists) {
+		await plugin.app.vault.adapter.mkdir(normalizePath(tokenPath).split("/").slice(0, -1).join("/"));
+	}
 	if (tokenPath.endsWith(".json")) {
 		const envToken = repo ? {
 			"GITHUB_PUBLISHER_REPOS" : {
@@ -153,8 +158,9 @@ export async function migrateToken(plugin: GithubPublisher, token?: string, repo
 		} : {
 			GITHUB_PUBLISHER_TOKEN: token
 		};
-		if (!(await plugin.app.vault.adapter.exists(tokenPath))) {
-			await plugin.app.vault.adapter.mkdir(normalizePath(tokenPath).split("/").slice(0, -1).join("/"));
+		if (!exists) {
+			await plugin.app.vault.adapter.write(tokenPath, JSON.stringify(envToken, null, 2));
+			return;
 		}
 		const oldToken = JSON.parse(await plugin.app.vault.adapter.read(tokenPath));
 		const newToken = { ...oldToken, ...envToken };
@@ -162,19 +168,26 @@ export async function migrateToken(plugin: GithubPublisher, token?: string, repo
 
 	} else {
 		const envToken = repo ? `${repo}_TOKEN=${token}` : `GITHUB_TOKEN=${token}`;
+		console.log("ENV TOKEN", envToken, tokenPath, exists);
+		if (!exists) {
+			await plugin.app.vault.adapter.write(tokenPath, envToken);
+			return;
+		}
 		const oldToken = (await plugin.app.vault.adapter.read(tokenPath)).split("\n");
 		//search if old token is already in the file, if yes, replace it
-		for (const key in oldToken) {
-			if (key.startsWith("GITHUB_TOKEN") && !repo) {
-				oldToken[key] = envToken;
-				await plugin.app.vault.adapter.write(tokenPath, oldToken.join("\n"));
-				return;
-			} else if (key.startsWith(`${repo}_TOKEN`) && repo) {
-				oldToken[key] = envToken;
-				await plugin.app.vault.adapter.write(tokenPath, oldToken.join("\n"));
-				return;
+		for (let i = 0; i < oldToken.length; i++) {
+			if (oldToken[i].startsWith("GITHUB_TOKEN") && !repo) {
+				oldToken[i] = envToken;
+				break;
+			} else if (oldToken[i].startsWith(`${repo}_TOKEN`) && repo) {
+				oldToken[i] = envToken;
+				break;
+			} else if (i === oldToken.length - 1) {
+				oldToken.push(envToken);
 			}
 		}
+		await plugin.app.vault.adapter.write(tokenPath, oldToken.join("\n"));
+
 	}
 	return;
 }

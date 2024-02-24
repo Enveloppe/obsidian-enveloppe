@@ -330,7 +330,7 @@ class ModalEditingRepository extends Modal {
 				const decryptedToken: string = await this.plugin.loadToken(this.repository.smartKey);
 				text
 					.setPlaceholder("ghp_1234567890")
-					.setValue(this.repository.token ?? decryptedToken)
+					.setValue(decryptedToken)
 					.onChange(async (value) => {
 						await migrateToken(this.plugin, value.trim(), this.repository.smartKey);
 						await this.plugin.saveSettings();
