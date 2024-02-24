@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.16.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.16.0-0...6.16.0-1) (2024-02-24)
+
+
+### Bug Fixes
+
+* forgot to push token if not exists in env file ([bf7b50a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/bf7b50a64d97e9f1fd36827fee81b9089b70dbf8))
+
 ## [6.16.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.15.7...6.16.0-0) (2024-02-24)
 
 
