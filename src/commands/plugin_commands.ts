@@ -61,7 +61,7 @@ export async function shareActiveFile(plugin: GithubPublisher, repo: Repository 
 	const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
 	if (file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)) {
 		await shareOneNote(
-			await plugin.reloadOctokit(),
+			await plugin.reloadOctokit(repo?.smartKey),
 			file,
 			repo,
 		);
@@ -80,7 +80,7 @@ export async function shareActiveFile(plugin: GithubPublisher, repo: Repository 
  */
 export async function deleteCommands(plugin : GithubPublisher, repo: Repository | null, branchName: string): Promise<void> {
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
-	const publisher = await plugin.reloadOctokit();
+	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const mono: MonoRepoProperties = {
 		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 		repo
@@ -103,7 +103,7 @@ export async function deleteCommands(plugin : GithubPublisher, repo: Repository 
 
 export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository | null, branchName: string): Promise<void> {
 	const statusBarItems = plugin.addStatusBarItem();
-	const publisher = await plugin.reloadOctokit();
+	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const sharedFiles = publisher.getSharedFiles(repo);
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	const mono: MonoRepoProperties = {
@@ -130,7 +130,7 @@ export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository |
  */
 
 export async function uploadNewNotes(plugin: GithubPublisher, branchName: string, repo: Repository|null): Promise<void> {
-	const publisher = await plugin.reloadOctokit();
+	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	await shareNewNote(
 		publisher,
@@ -150,11 +150,11 @@ export async function uploadNewNotes(plugin: GithubPublisher, branchName: string
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @return {Promise<void>}
  */
-export async function repositoryValidityActiveFile(plugin:GithubPublisher, branchName: string, repo: Repository | null): Promise<void> {
+export async function repositoryValidityActiveFile(plugin:GithubPublisher, repo: Repository | null): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	if (file) {
 		await checkRepositoryValidity(
-			await plugin.reloadOctokit(),
+			await plugin.reloadOctokit(repo?.smartKey),
 			repo,
 			file,
 		);
@@ -171,7 +171,7 @@ export async function repositoryValidityActiveFile(plugin:GithubPublisher, branc
  * @return {Promise<void>}
  */
 export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: string, repo: Repository|null=null): Promise<void> {
-	const publisher = await plugin.reloadOctokit();
+	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 
 	await shareAllEditedNotes(
@@ -192,8 +192,8 @@ export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: 
  * @param {GithubPublisher} plugin
  * @return {Promise<void>}
  */
-export async function shareEditedOnly(branchName: string, repo: Repository|null, plugin: GithubPublisher) {
-	const publisher = await plugin.reloadOctokit();
+export async function shareEditedOnly(branchName: string, repo: Repository|null, plugin: GithubPublisher): Promise<void> {
+	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	await shareOnlyEdited(
 		publisher,
