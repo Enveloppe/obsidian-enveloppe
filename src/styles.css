@@ -65,6 +65,16 @@ hr.github-publisher-hr {
 	padding: 0;
 }
 
+.modal:has(.github-publisher.modals.manage-repo.edit) {
+	width: 100%;
+}
+
+.github-publisher.modals.manage-repo
+	.no-display
+	.setting-item-control:has(.mod-cta) {
+	margin: 0 100% 5px 0;
+}
+
 .github-publisher-import-input {
 	width: 0.1px;
 	height: 0.1px;

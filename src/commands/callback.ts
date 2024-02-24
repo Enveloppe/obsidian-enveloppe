@@ -83,7 +83,7 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 				repo,
 			};
 			//@ts-ignore
-			const publisher = await plugin.reloadOctokit();
+			const publisher = await plugin.reloadOctokit(repo?.smartKey);
 			await purgeNotesRemote(
 				publisher,
 				branchName,
@@ -106,7 +106,7 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 	let name = i18next.t("commands.shareActiveFile");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
-	const octokit = await plugin.reloadOctokit();
+	const octokit = await plugin.reloadOctokit(repo?.smartKey);
 	//@ts-ignore
 	return {
 		id,
@@ -232,7 +232,7 @@ export async function checkRepositoryValidityCallback(plugin: GithubPublisher, r
 	let name = i18next.t("commands.checkValidity.title");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
-	const octokit = await plugin.reloadOctokit();
+	const octokit = await plugin.reloadOctokit(repo?.smartKey);
 	//@ts-ignore
 	return {
 		id,

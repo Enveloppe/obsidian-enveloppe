@@ -397,6 +397,11 @@ export function defaultRepo(settings: GitHubPublisherSettings): Repository {
 		copyLink: {
 			links: settings.plugin.copyLink.links,
 			removePart: settings.plugin.copyLink.removePart,
+			transform: {
+				toUri: settings.plugin.copyLink.transform.toUri,
+				slugify: settings.plugin.copyLink.transform.slugify,
+				applyRegex: settings.plugin.copyLink.transform.applyRegex,
+			},
 		},
 	};
 }

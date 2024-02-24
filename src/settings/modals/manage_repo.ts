@@ -4,6 +4,7 @@ import {App, Modal, Notice, Setting} from "obsidian";
 import GithubPublisher from "../../main";
 import {checkRepositoryValidity, verifyRateLimitAPI} from "../../utils/data_validation_test";
 import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../interface";
+import { migrateToken } from "../migrate";
 
 /**
  * @description This class is used to add a new repo to the settings in the "otherRepo" in the github setting section
@@ -127,16 +128,17 @@ export class ModalAddingNewRepository extends Modal {
 			.addButton((button) => {
 				button
 					.setButtonText(i18next.t("common.save"))
+					.setCta()
 					.onClick(() => {
 						const error = this.foundError();
 						const input = error.repo.length > 0 ? this.containerEl.querySelector(`[smartkey="${error.repo}"] input`) : contentEl.querySelector("[placeholder=\"smartKey\"] input");
 						if (error.type === "None") {
 							//remove error
-							input?.classList.remove("error");
+							input?.classList?.remove("error");
 							this.onSubmit(this.repository);
 							this.close();
 						}
-						input?.classList.add("error");
+						input?.classList?.add("error");
 						if (error.type === "duplicate") {
 							new Notice(i18next.t("settings.github.smartRepo.modals.duplicate"));
 						} else if (error.type === "default") {
@@ -226,7 +228,26 @@ class ModalEditingRepository extends Modal {
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.empty();
-		contentEl.addClasses(["github-publisher", "modals", "manage-repo"]);
+		contentEl.addClasses(["github-publisher", "modals", "manage-repo" , "edit"]);
+		new Setting(contentEl)
+			.setClass("no-display")
+			.addButton((button) =>
+				button
+					.setCta()
+					.setButtonText(i18next.t("common.save"))
+					.onClick(async () => {
+						this.onSubmit(this.repository);
+						this.close();
+					})
+			)
+			.addButton((button) =>
+				button
+					.setWarning()
+					.setButtonText(i18next.t("common.cancel"))
+					.onClick(async () => {
+						this.close();
+					})
+			);
 		contentEl.createEl("h2", {text: i18next.t("common.edit", {things: this.repository.smartKey})});
 
 		new Setting(contentEl)
@@ -293,6 +314,28 @@ class ModalEditingRepository extends Modal {
 						this.repository.branch = value.trim();
 					})
 			);
+		const desc_ghToken = document.createDocumentFragment();
+		desc_ghToken.createEl("span", undefined, (span) => {
+			span.innerText = i18next.t("settings.github.ghToken.desc");
+			span.createEl("a", undefined, (link) => {
+				link.innerText = `${i18next.t("common.here")}.`;
+				link.href =
+						"https://github.com/settings/tokens/new?scopes=repo,workflow";
+			});
+		});
+		new Setting(contentEl)
+			.setName(i18next.t("common.ghToken"))
+			.setDesc(desc_ghToken)
+			.addText(async (text) => {
+				const decryptedToken: string = await this.plugin.loadToken(this.repository.smartKey);
+				text
+					.setPlaceholder("ghp_1234567890")
+					.setValue(this.repository.token ?? decryptedToken)
+					.onChange(async (value) => {
+						await migrateToken(this.plugin, value.trim(), this.repository.smartKey);
+						await this.plugin.saveSettings();
+					});
+			});
 		new Setting(contentEl)
 			.setName(i18next.t("settings.github.automaticallyMergePR"))
 			.addToggle((toggle) =>
@@ -303,13 +346,13 @@ class ModalEditingRepository extends Modal {
 					})
 			);
 		new Setting(contentEl)
-			.setClass("github-publisher-no-display")
+			.setClass("no-display")
 			.addButton((button) =>
 				button
 					.setButtonText(i18next.t("settings.github.testConnection"))
 					.setClass("connect")
 					.onClick(async () => {
-						const octokit = await this.plugin.reloadOctokit();
+						const octokit = await this.plugin.reloadOctokit(this.repository.smartKey);
 						this.repository.verifiedRepo = await checkRepositoryValidity(
 							octokit,
 							this.repository,
@@ -514,20 +557,10 @@ class ModalEditingRepository extends Modal {
 					});	
 			}	
 		}
-
-		new Setting(contentEl)
-			.addButton((button) =>
-				button
-					.setButtonText(i18next.t("common.save"))
-					.onClick(async () => {
-						this.onSubmit(this.repository);
-						this.close();
-					})
-			);
 	}
 	onClose() {
 		const {contentEl} = this;
 		contentEl.empty();
-		this.onSubmit(this.repository);
+		
 	}
 }

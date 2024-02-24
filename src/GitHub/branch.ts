@@ -282,15 +282,15 @@ export class GithubBranch extends FilesManagement {
 					//check the error code
 					if (e.status === 404) {
 						new Notice(
-							(i18next.t("commands.checkValidity.inRepo.error404", {repo: repo}))
+							(i18next.t("commands.checkValidity.inRepo.error404", {repo}))
 						);
 					} else if (e.status === 403) {
 						new Notice(
-							(i18next.t("commands.checkValidity.inRepo.error403", {repo: repo}))
+							(i18next.t("commands.checkValidity.inRepo.error403", {repo}))
 						);
 					} else if (e.status === 301) {
 						new Notice(
-							(i18next.t("commands.checkValidity.inRepo.error301", {repo:repo}))
+							(i18next.t("commands.checkValidity.inRepo.error301", {repo}))
 						);
 					}
 				});
@@ -323,6 +323,9 @@ export class GithubBranch extends FilesManagement {
 				}
 			} catch (e) {
 				logs({settings: this.settings, e: true}, e);
+				new Notice(
+					(i18next.t("commands.checkValidity.error", {repo}))
+				);
 				break;
 			}
 		}

@@ -128,7 +128,7 @@ export default class GithubPublisher extends Plugin {
 		* @returns {Promise<string>} - The token of the plugin
 		*/
 
-	async loadToken(): Promise<string> {
+	async loadToken(repo?: string): Promise<string> {
 		const tokenPath = createTokenPath(this, this.settings.github.tokenPath);
 
 		const tokenFileExists = await this.app.vault.adapter.exists(`${tokenPath}`);
@@ -139,10 +139,15 @@ export default class GithubPublisher extends Plugin {
 			const tokenFile = await this.app.vault.adapter.read(`${tokenPath}`);
 			if (tokenPath.endsWith(".json")) {
 				const tokenJSON = JSON.parse(tokenFile);
-				return tokenJSON.GITHUB_PUBLISHER_TOKEN;
+				const defaultToken = tokenJSON.GITHUB_PUBLISHER_TOKEN;
+				if (repo)
+					return tokenJSON.GITHUB_PUBLISHER_REPOS[repo] ?? defaultToken;
+				return defaultToken;
 			}
 			if (tokenFile) {
-				return tokenFile.split("=")[1];
+				const defaultToken=tokenFile.split("\n").find((line) => line.startsWith("GITHUB_TOKEN"))?.split("=")[1] ?? "";
+				if (repo) return tokenFile.split("\n").find((line) => line.startsWith(`${repo}_TOKEN`))?.split("=")[1] ?? defaultToken;
+				return defaultToken;
 			}
 		} catch (e) {
 			notif({ settings: this.settings, e: true }, e);
@@ -154,10 +159,10 @@ export default class GithubPublisher extends Plugin {
 	/**
 		* Create a new instance of Octokit to load a new instance of GithubBranch
 	*/
-	async reloadOctokit() {
+	async reloadOctokit(repo?: string) {
 		let octokit: Octokit;
 		const apiSettings = this.settings.github.api;
-		const token = await this.loadToken();
+		const token = await this.loadToken(repo);
 		if (apiSettings.tiersForApi === GithubTiersVersion.entreprise && apiSettings.hostname.length > 0) {
 			octokit = new Octokit(
 				{

@@ -1,6 +1,7 @@
 {
   "commands": {
     "checkValidity": {
+      "error": "Incorrect configuration",
       "inBranch": {
         "error403": "Error 403: {{- repo.owner}}/{{- repo.repo}} was moved permanently (from {{- repo.branch}}).",
         "error404": "Error 404: The branch {{- repo.branch}} was not found in {{- repo.owner}}/{{- repo.repo}}."
@@ -141,6 +142,10 @@
       "notDeleted": "Cannot be deleted",
       "title": "List of files edited in the repository",
       "unpublished": "Cannot be published"
+    }
+  },
+  "ommands": {
+    "checkValidity": {
     }
   },
   "publish": {
