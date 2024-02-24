@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.16.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.15.7...6.16.0-0) (2024-02-24)
+
+
+### Features
+
+* allow setting token for different repository ([7d69a75](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7d69a75c1276745bd9a28c5078cb0fd2548b812b))
+* allow setting token for different repository ([#319](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/319)) ([e464795](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/e4647950343f1a8a6c1f38d9001d81368a469b9c)), closes [#318](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/318)
+
+
+### Bug Fixes
+
+* duplicate frontmatter (with new Obsidian API) ([#317](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/317)) ([39e100c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/39e100c68fbd340cb2e9e1268e51208de38f1c88))
+* key error ([de9ca6e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/de9ca6e72895f7da0dcf9959c186ba7c59817b73))
+* practice ([62d418e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/62d418ea66ee521123aef61d93c19dc6c6171242))
+
 ## [6.14.0-7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.14.0-6...6.14.0-7) (2024-01-26)
 
 
