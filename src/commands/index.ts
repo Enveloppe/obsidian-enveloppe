@@ -37,11 +37,9 @@ export async function shareAllMarkedNotes(
 	const statusBar = new ShareStatusBar(statusBarItems, sharedFiles.length);
 	const repoFrontmatter = monoRepo.frontmatter;
 	try {
-		let errorCount = 0;
 		const fileError : string[] = [];
 		const listStateUploaded: UploadedFiles[] = [];
 		if (sharedFiles.length > 0) {
-			const publishedFiles = sharedFiles.map((file) => file.name);
 			if (createGithubBranch) {
 				const isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter, sharedFiles.length);
 				if (!isValid) return false;
@@ -59,7 +57,6 @@ export async function shareAllMarkedNotes(
 						listStateUploaded.push(...uploaded.uploaded);
 					}
 				} catch(e)  {
-					errorCount++;
 					fileError.push(sharedFile.name);
 					new Notice(
 						(i18next.t("error.unablePublishNote", {file: sharedFile.name})));
@@ -67,7 +64,7 @@ export async function shareAllMarkedNotes(
 				}
 			}
 			statusBar.finish(8000);
-			const noticeValue = `${publishedFiles.length - errorCount} notes`;
+			const noticeValue = `${listStateUploaded.length} notes`;
 			const deleted = await deleteFromGithub(
 				true,
 				branchName,

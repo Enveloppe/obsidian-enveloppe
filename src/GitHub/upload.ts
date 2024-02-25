@@ -11,8 +11,8 @@ import {
 	Vault,
 } from "obsidian";
 
-import { convertToHTMLSVG } from "../conversion/compiler/excalidraw";
 import { mainConverting } from "../conversion";
+import { convertToHTMLSVG } from "../conversion/compiler/excalidraw";
 import {
 	getImagePath,
 	getReceiptFolder,
