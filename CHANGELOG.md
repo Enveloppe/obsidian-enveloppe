@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.16.0-3...7.0.0) (2024-02-26)
+
+
+### Bug Fixes
+
+* error in value count in notification ([0ef8d29](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/0ef8d292ff3b3988c64d3800b8bcf14b5178ee6f))
+
 ## [6.15.7](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.15.6...6.15.7) (2024-02-21)
 
 
