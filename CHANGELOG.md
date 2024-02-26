@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.0...7.0.1) (2024-02-26)
+
+
+### Bug Fixes
+
+* return default key when not found ([df269d3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/df269d3c25893a9a1f9282543c1584cfffd47589))
+* token not found when default repo is used ([c864f9b](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c864f9befbca01352e77745aece6d02e6d2a76f2))
+
 ## [7.0.0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/6.16.0-3...7.0.0) (2024-02-26)
 
 
