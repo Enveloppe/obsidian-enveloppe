@@ -142,7 +142,7 @@ export default class GithubPublisher extends Plugin {
 				const tokenJSON = JSON.parse(tokenFile);
 				const defaultToken = tokenJSON.GITHUB_PUBLISHER_TOKEN;
 				if (repo)
-					return tokenJSON.GITHUB_PUBLISHER_REPOS[repo] ?? defaultToken;
+					return tokenJSON.GITHUB_PUBLISHER_REPOS?.[repo] ?? defaultToken;
 				return defaultToken;
 			}
 			if (tokenFile) {
