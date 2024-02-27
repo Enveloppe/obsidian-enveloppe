@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.2-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/7.0.1...7.0.2-0) (2024-02-27)
+
+
+### Bug Fixes
+
+* allow autoclean with fixed folder ([71e07d9](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/71e07d9a3084b4c2d43aca2bfb1b19efb33b47c5))
+* allow to auto-clean if empty root folder ([1aeccd9](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/1aeccd922e9cf7ebbc219e971827c94cca95d63e))
+* allow to autoclean with empty root / fixed folder ([d41cb1b](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/d41cb1b10ee9b61b7a2d098b6c0d001d154a6d81))
+
 ## [6.16.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/6.16.0-2...6.16.0-3) (2024-02-25)
 
 
