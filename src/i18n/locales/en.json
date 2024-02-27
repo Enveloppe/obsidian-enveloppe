@@ -56,6 +56,7 @@
     "files": "Files",
     "ghToken": "GitHub token",
     "here": "here",
+    "no": "No",
     "or": "or",
     "path": {
       "file": "File name",
@@ -70,7 +71,8 @@
     "save": "Save",
     "shared": "shared",
     "text": "text",
-    "warning": "Warning"
+    "warning": "Warning",
+    "yes": "Yes"
   },
   "deletion": {
     "defaultFolder": "You need a default folder name in the settings to use this command.",
@@ -357,6 +359,12 @@
     "githubWorkflow": {
       "autoCleanUp": {
         "desc": "Remove depublished files (stopped sharing or deleted) from GitHub",
+        "popup": {
+          "desc": "Enabling the auto-clean when the name of the {{- what}} is empty can delete all files within your repository, including template, workflows, icons or README.",
+          "exclude": "Don't forget to exclude the files and folders you need for your repository. \nAdditionally, you can always revert files deleted by GitHub's pull-request system.",
+          "sure": "Are you sure you want to enable this feature?",
+          "title": "Enable autoclean"
+        },
         "title": "Auto clean up"
       },
       "excludedFiles": {

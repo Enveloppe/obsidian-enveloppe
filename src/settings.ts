@@ -15,6 +15,7 @@ import {
 import { migrateToken } from "./settings/migrate";
 import { ExportModal, ImportLoadPreset, ImportModal, loadAllPresets } from "./settings/modals/import_export";
 import { ModalAddingNewRepository } from "./settings/modals/manage_repo";
+import { AutoCleanPopup } from "./settings/modals/popup";
 import { ModalRegexFilePathName, ModalRegexOnContents, OverrideAttachmentsModal } from "./settings/modals/regex_edition";
 import { TokenEditPath } from "./settings/modals/token_path";
 import {
@@ -347,7 +348,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						})
 						).open();
 					}));
-		this.settingsPage.createEl("h3", { text: "Github Workflow" });
+		this.settingsPage.createEl("h3", { text: "GitHub Workflow" });
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.githubWorkflow.prRequest.title"))
 			.setDesc(i18next.t("settings.githubWorkflow.prRequest.desc"))
@@ -615,7 +616,13 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				toggle
 					.setValue(uploadSettings.autoclean.enable)
 					.onChange(async (value) => {
-						uploadSettings.autoclean.enable = value;
+						if (value && (this.settings.upload.behavior === "yaml" && this.settings.upload.defaultName.length === 0 || this.settings.upload.rootFolder.length === 0))
+							new AutoCleanPopup(this.app, this.settings, (result => {
+								uploadSettings.autoclean.enable = result;
+								this.renderSettingsPage(EnumbSettingsTabId.upload);
+							})).open();
+						else
+							uploadSettings.autoclean.enable = value;	
 						await this.plugin.saveSettings();
 						this.renderSettingsPage(EnumbSettingsTabId.upload);
 						this.plugin.cleanOldCommands();

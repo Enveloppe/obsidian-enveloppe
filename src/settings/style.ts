@@ -71,7 +71,6 @@ export async function autoCleanCondition(
 			new Notice(i18next.t("error.autoClean", {what: translation}));
 		settings.autoclean.enable = false;
 		await plugin.saveSettings();
-		autoCleanSetting.setDisabled(true);
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
 		settingsTab.renderSettingsPage(EnumbSettingsTabId.upload);
@@ -83,12 +82,10 @@ export async function autoCleanCondition(
 		if (settings.autoclean.enable)
 			new Notice(i18next.t("error.autoClean", {what: i18next.t("common.defaultName")}),);
 		settings.autoclean.enable = false;
-		autoCleanSetting.setDisabled(true);
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
 		settingsTab.renderSettingsPage(EnumbSettingsTabId.upload);
 	}
-	autoCleanSetting.setDisabled(false);
 	if (settings.autoclean.enable) {
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.add("is-enabled");
@@ -121,14 +118,11 @@ export async function folderHideShowSettings(
 		showSettings(rootFolderSettings);
 		return;
 	}
-	if (settings.defaultName.length > 0) {
-		autoCleanSetting.setDisabled(false);
-		if (settings.autoclean.enable) {
-			// @ts-ignore
-			autoCleanSetting.components[0].toggleEl.classList.add(
-				"is-enabled"
-			);
-		}
+	if (settings.defaultName.length > 0 && settings.autoclean.enable) {
+		// @ts-ignore
+		autoCleanSetting.components[0].toggleEl.classList.add(
+			"is-enabled"
+		);
 	}
 	hideSettings(frontmatterKeySettings);
 	hideSettings(rootFolderSettings);
@@ -148,14 +142,12 @@ export function autoCleanUpSettingsOnCondition(
 ) {
 	const settings = plugin.settings.upload;
 	if (condition) {
-		autoCleanSetting.setDisabled(true);
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
 		settings.autoclean.enable = false;
 		plugin.saveSettings().then();
 		return;
 	}
-	autoCleanSetting.setDisabled(false);
 	if (settings.autoclean.enable) {
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.add("is-enabled");
@@ -172,5 +164,9 @@ export function shortcutsHideShow(
 	condition: string | boolean,
 	toDisplay: Setting
 ) {
-	condition ? showSettings(toDisplay) : hideSettings(toDisplay);
+	if (condition) {
+		showSettings(toDisplay);
+	} else {
+		hideSettings(toDisplay);
+	}
 }

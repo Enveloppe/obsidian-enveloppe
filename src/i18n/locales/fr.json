@@ -56,6 +56,7 @@
     "files": "Fichiers",
     "ghToken": "Token GitHub",
     "here": "ici",
+    "no": "Non",
     "or": "ou",
     "path": {
       "file": "Nom du fichier",
@@ -70,7 +71,8 @@
     "save": "Sauvegarder",
     "shared": "partagées",
     "text": "texte",
-    "warning": "Attention"
+    "warning": "Attention",
+    "yes": "Oui"
   },
   "deletion": {
     "defaultFolder": "Vous avez besoin d'un dossier par défaut dans les paramètres pour utiliser cette commande.",
@@ -357,6 +359,12 @@
     "githubWorkflow": {
       "autoCleanUp": {
         "desc": "Si le plugin doit supprimer de votre dépôt les fichiers dépubliés (arrêt du partage ou suppression).",
+        "popup": {
+          "desc": "L'activation du nettoyage automatique lorsque le nom du {{- what}} est vide peut supprimer tous les fichiers de votre dépôt, y compris les fichiers de votre template, les workflows, les icônes ou le README.",
+          "exclude": "N'oubliez pas d'exclure les fichiers et dossiers dont vous avez besoin pour votre dépôt. De plus, vous pouvez toujours rétablir les fichiers supprimés par le système de pull-request de GitHub.",
+          "sure": "Êtes-vous certain de vouloir activer cette fonctionnalité ?",
+          "title": "Activation de l'auto-nettoyage"
+        },
         "title": "Auto-nettoyage"
       },
       "excludedFiles": {
