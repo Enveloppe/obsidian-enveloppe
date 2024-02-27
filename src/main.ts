@@ -129,6 +129,7 @@ export default class GithubPublisher extends Plugin {
 		*/
 
 	async loadToken(repo?: string): Promise<string> {
+		if (repo=="default") repo = undefined;
 		const tokenPath = createTokenPath(this, this.settings.github.tokenPath);
 
 		const tokenFileExists = await this.app.vault.adapter.exists(`${tokenPath}`);
@@ -141,7 +142,7 @@ export default class GithubPublisher extends Plugin {
 				const tokenJSON = JSON.parse(tokenFile);
 				const defaultToken = tokenJSON.GITHUB_PUBLISHER_TOKEN;
 				if (repo)
-					return tokenJSON.GITHUB_PUBLISHER_REPOS[repo] ?? defaultToken;
+					return tokenJSON.GITHUB_PUBLISHER_REPOS?.[repo] ?? defaultToken;
 				return defaultToken;
 			}
 			if (tokenFile) {
