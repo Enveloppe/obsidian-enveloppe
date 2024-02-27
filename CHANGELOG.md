@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.2-2...7.0.2) (2024-02-27)
+
+
+### Bug Fixes
+
+* add pop-up for auto-clean information ([c472815](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c472815245a410c8d19de036ad5f0f40649a6b08))
+
 ## [7.0.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.0...7.0.1) (2024-02-26)
 
 
