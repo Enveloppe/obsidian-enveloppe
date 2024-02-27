@@ -132,7 +132,6 @@ async function migrateWorFlow(plugin: GithubPublisher) {
 export async function migrateToken(plugin: GithubPublisher, token?: string, repo?: string) {
 	logs({ settings: plugin.settings }, "migrating token");
 	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
-	console.log("TOKEN", token);
 	//@ts-ignore
 	if (plugin.settings.github.token && !token) {
 		logs({ settings: plugin.settings }, `Moving the GitHub Token in the file : ${tokenPath}`);
@@ -168,7 +167,6 @@ export async function migrateToken(plugin: GithubPublisher, token?: string, repo
 
 	} else {
 		const envToken = repo ? `${repo}_TOKEN=${token}` : `GITHUB_TOKEN=${token}`;
-		console.log("ENV TOKEN", envToken, tokenPath, exists);
 		if (!exists) {
 			await plugin.app.vault.adapter.write(tokenPath, envToken);
 			return;

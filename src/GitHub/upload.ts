@@ -329,7 +329,6 @@ export default class Publisher {
 
 		const embeddedUploaded = embeded.uploaded;
 		embeddedUploaded.push(uploaded);
-		console.log("AUTOCLEAN ?", autoclean || repo.dryRun.autoclean);
 		if (autoclean || repo.dryRun.autoclean) {
 			deleted = await deleteFromGithub(
 				true,

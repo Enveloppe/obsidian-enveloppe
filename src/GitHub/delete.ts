@@ -35,7 +35,6 @@ export async function deleteFromGithub(
 		? repoProperties.frontmatter
 		: [repoProperties.frontmatter];
 	const deleted: Deleted[] = [];
-	console.warn("REPO FRONTMATTER", repoFrontmatter);
 	for (const repo of repoFrontmatter) {
 		const monoProperties: MonoRepoProperties = {
 			frontmatter: repo,
@@ -67,7 +66,6 @@ async function deleteFromGithubOneRepo(
 ): Promise<Deleted> {
 	const repo = repoProperties.frontmatter;
 	if (repo.dryRun.autoclean) return cleanDryRun(silent, filesManagement, repoProperties);
-	console.warn("REPO AUTOCLEAN ?", repo.autoclean);
 	if (!repo.autoclean) return {success: false, deleted: [], undeleted: []};
 	const getAllFile = await filesManagement.getAllFileFromRepo(
 		branchName,
@@ -84,7 +82,7 @@ async function deleteFromGithubOneRepo(
 		return {success: false, deleted: [], undeleted: []};
 	}
 	if (filesInRepo.length === 0) {
-		console.log(`No file to delete in ${repo.owner}/${repo.repo}`);
+		logs({settings}, `No file to delete in ${repo.owner}/${repo.repo}`);
 		return {success: false, deleted: [], undeleted: []};
 	}
 	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repo);
@@ -114,7 +112,6 @@ async function deleteFromGithubOneRepo(
 		const isNeedToBeDeleted = isInObsidian
 			? isMarkdownForAnotherRepo
 			: true;
-		console.warn("IS NEED TO BE DELETED ?", isNeedToBeDeleted);	
 		if (isNeedToBeDeleted) {
 			const checkingIndex = file.file.contains(settings.upload.folderNote.rename)
 				? await checkIndexFiles(octokit, settings, file.file, repo)
