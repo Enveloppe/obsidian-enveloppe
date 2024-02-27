@@ -35,6 +35,7 @@ export async function deleteFromGithub(
 		? repoProperties.frontmatter
 		: [repoProperties.frontmatter];
 	const deleted: Deleted[] = [];
+	console.warn("REPO FRONTMATTER", repoFrontmatter);
 	for (const repo of repoFrontmatter) {
 		const monoProperties: MonoRepoProperties = {
 			frontmatter: repo,
@@ -66,6 +67,7 @@ async function deleteFromGithubOneRepo(
 ): Promise<Deleted> {
 	const repo = repoProperties.frontmatter;
 	if (repo.dryRun.autoclean) return cleanDryRun(silent, filesManagement, repoProperties);
+	console.warn("REPO AUTOCLEAN ?", repo.autoclean);
 	if (!repo.autoclean) return {success: false, deleted: [], undeleted: []};
 	const getAllFile = await filesManagement.getAllFileFromRepo(
 		branchName,
@@ -78,12 +80,13 @@ async function deleteFromGithubOneRepo(
 		(settings.github.rateLimit === 0 || filesInRepo.length > settings.github.rateLimit)
 		&& await verifyRateLimitAPI(octokit, settings, false, filesInRepo.length) === 0
 	) {
+		console.warn("Rate limited exceeded, please try again later");
 		return {success: false, deleted: [], undeleted: []};
 	}
 	const defaultName = repo.path?.defaultName ?? settings.upload.defaultName;
 	const behavior = repo.path?.type ?? settings.upload.behavior;
 	const root = repo.path?.rootFolder ?? settings.upload.rootFolder;
-	if (!filesInRepo) {
+	if (filesInRepo.length === 0) {
 		let errorMsg = "";
 		if (defaultName.length === 0) {
 			errorMsg = i18next.t("deletion.defaultFolder");
@@ -93,10 +96,8 @@ async function deleteFromGithubOneRepo(
 		) {
 			errorMsg = i18next.t("deletion.rootFolder");
 		}
-
-		if (!silent) {
-			new Notice(`Error : ${errorMsg}`);
-		}
+		new Notice(`Error : ${errorMsg}`);
+		console.warn("ERROR : ", errorMsg);
 		return {success: false, deleted: [], undeleted: []};
 	}
 	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repo);
@@ -126,6 +127,7 @@ async function deleteFromGithubOneRepo(
 		const isNeedToBeDeleted = isInObsidian
 			? isMarkdownForAnotherRepo
 			: true;
+		console.warn("IS NEED TO BE DELETED ?", isNeedToBeDeleted);	
 		if (isNeedToBeDeleted) {
 			const checkingIndex = file.file.contains(settings.upload.folderNote.rename)
 				? await checkIndexFiles(octokit, settings, file.file, repo)
@@ -225,13 +227,6 @@ export async function filterGithubFile(
 		const root = repoFrontmatter.path?.rootFolder ?? settings.upload.rootFolder;
 		const defaultName = repoFrontmatter.path?.defaultName ?? settings.upload.defaultName;
 		const attachmentFolder = repoFrontmatter.path?.attachment?.folder ?? settings.embed.folder;
-		if (
-			(behavior === FolderSettings.yaml &&
-				root.length === 0) ||
-			defaultName.length === 0 || behavior === FolderSettings.fixed
-		) {
-			return [];
-		}
 		if (
 			(file.file.includes(defaultName) ||
 				(behavior === FolderSettings.yaml &&
