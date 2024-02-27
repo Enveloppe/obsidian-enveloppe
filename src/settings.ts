@@ -19,7 +19,6 @@ import { ModalRegexFilePathName, ModalRegexOnContents, OverrideAttachmentsModal 
 import { TokenEditPath } from "./settings/modals/token_path";
 import {
 	autoCleanCondition,
-	autoCleanUpSettingsOnCondition,
 	folderHideShowSettings, showHideBasedOnFolder,
 } from "./settings/style";
 import { checkRepositoryValidity, verifyRateLimitAPI } from "./utils/data_validation_test";
@@ -609,15 +608,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				});
 		}
 
-		const condition =
-			(uploadSettings.behavior === FolderSettings.yaml &&
-				uploadSettings.rootFolder.length === 0) ||
-			uploadSettings.defaultName.length === 0;
-
 		const autoCleanSetting = new Setting(this.settingsPage)
 			.setName(i18next.t("settings.githubWorkflow.autoCleanUp.title"))
 			.setDesc(i18next.t("settings.githubWorkflow.autoCleanUp.desc"))
-			.setDisabled(condition)
 			.addToggle((toggle) => {
 				toggle
 					.setValue(uploadSettings.autoclean.enable)
@@ -629,7 +622,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await this.plugin.chargeAllCommands(null, this.plugin);
 					});
 			});
-		if (uploadSettings.autoclean.enable && !condition) {
+		if (uploadSettings.autoclean.enable) {
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.githubWorkflow.excludedFiles.title"))
 				.setDesc(i18next.t("settings.githubWorkflow.excludedFiles.desc"))
@@ -650,11 +643,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						});
 				});
 		}
-		autoCleanUpSettingsOnCondition(
-			condition,
-			autoCleanSetting,
-			this.plugin
-		);
+		
 
 		folderHideShowSettings(
 			frontmatterKeySettings,

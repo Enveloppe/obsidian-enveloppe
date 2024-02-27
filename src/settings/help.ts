@@ -132,7 +132,7 @@ export function help(settings: GitHubPublisherSettings) {
 				p.createEl("code", { text: "mdlinks" });
 				p.createEl("span", {
 					text: `: ${i18next.t("settings.help.frontmatter.mdlinks")
-						}`,
+					}`,
 				});
 			});
 			l.createEl("li", undefined, (p) => {
@@ -142,7 +142,7 @@ export function help(settings: GitHubPublisherSettings) {
 						text: `: ${i18next.t(
 							"settings.help.frontmatter.convert.enableOrDisable"
 						)
-							} `,
+						} `,
 					});
 					span.createEl("code", { text: " [[link]] " });
 					span.createEl("span", {
@@ -171,14 +171,14 @@ export function help(settings: GitHubPublisherSettings) {
 				p.createEl("code", { text: "send" });
 				p.createEl("span", {
 					text: `: ${i18next.t("settings.help.frontmatter.embed.send")
-						}`,
+					}`,
 				});
 			});
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "remove" });
 				p.createEl("span", {
 					text: `: ${i18next.t("settings.help.frontmatter.embed.remove.desc")
-						}`,
+					}`,
 				});
 				p.createEl("ul", undefined, (ul) => {
 					ul.createEl("li", undefined, (li) => {
@@ -226,7 +226,7 @@ export function help(settings: GitHubPublisherSettings) {
 					text: `: ${i18next.t(
 						"settings.help.frontmatter.attachment.send"
 					)
-						}`,
+					}`,
 				});
 			});
 			l.createEl("li", undefined, (p) => {
@@ -235,7 +235,7 @@ export function help(settings: GitHubPublisherSettings) {
 					text: `: ${i18next.t(
 						"settings.help.frontmatter.attachment.folder"
 					)
-						}`,
+					}`,
 				});
 			});
 		});
@@ -249,7 +249,7 @@ export function help(settings: GitHubPublisherSettings) {
 			span.createEl("code", { text: "hardbreak", cls: "code-title" });
 			span.createEl("span", {
 				text: `: ${i18next.t("settings.help.frontmatter.hardBreak")
-					}`,
+				}`,
 			});
 		});
 		span.createEl("li", undefined, (span) => {

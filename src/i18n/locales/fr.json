@@ -81,7 +81,7 @@
   },
   "error": {
     "alreadyExists": "{{- file}} existe déjà.",
-    "autoClean": "Le {{- what}} étant vide, l'auto-nettoyage est désactivée.",
+    "autoClean": "Le {{- what}} étant vide, l'auto-nettoyage est désactivée. Vous pouvez le réactiver si vous souhaitez l'utiliser, mais attention aux fichiers utilisés par votre template et qui peuvent être supprimés.",
     "dataview": "Impossible de convertir la requête Dataview. Veuillez mettre à jour le module Dataview à la dernière version;",
     "errorConfig": "Erreur de configuration pour {{- repo.owner}}/{{- repo.repo}}:{{- repo.branch}}. Merci de vérifier vos paramètres.",
     "errorPublish": "Erreur lors de la publication sur <u>{{- repo.owner}}/{{- repo.repo}}</u> : <i>{{- repo.branch}}</i>",

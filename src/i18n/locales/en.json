@@ -81,7 +81,7 @@
   },
   "error": {
     "alreadyExists": "{{- file}} already exists.",
-    "autoClean": "Since {{- what}} is empty, auto-cleaning is disabled.",
+    "autoClean": "Since {{- what}} is empty, auto-cleaning is disabled. You can reactive it, but beware of file deletion that your template needs.",
     "dataview": "Unable to render dataview query. Please update the dataview plugin to the last version.",
     "errorConfig": "Error configuring {{- repo.owner}}/{{- repo.repo}}. Please check your settings.",
     "errorPublish": "Error during upload to <u>{{- repo.owner}}/{{- repo.repo}}</u>: <i>{{- repo.branch}}</i>",

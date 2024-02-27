@@ -7,7 +7,6 @@ import { FrontMatterCache, normalizePath, TFile } from "obsidian";
 import GithubPublisher from "src/main";
 
 import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, RepoFrontmatter, Repository } from "../settings/interface";
-import internal from "stream";
 
 /**
  * Retrieves the frontmatter settings for a given file.

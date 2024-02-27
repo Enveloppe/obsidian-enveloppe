@@ -185,7 +185,7 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 			createLinkOnActiveFile(this.repo, this.plugin);
 			break;
 		case "checkRepositoryValidity":
-			repositoryValidityActiveFile(this.plugin, this.branchName, this.repo);
+			repositoryValidityActiveFile(this.plugin, this.repo);
 			break;
 		}
 		logs({ settings: this.plugin.settings }, `run command ${item.commands}`);
