@@ -636,7 +636,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						)
 						.onChange(async (value) => {
 							uploadSettings.autoclean.excluded = value
-								.split(/[,\n]\W*/)
+								.split(/[,\n]/)
 								.map((item) => item.trim())
 								.filter((item) => item.length > 0);
 							await this.plugin.saveSettings();
