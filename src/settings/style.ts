@@ -119,19 +119,19 @@ export async function folderHideShowSettings(
 	if (value === FolderSettings.yaml) {
 		showSettings(frontmatterKeySettings);
 		showSettings(rootFolderSettings);
-	} else {
-		if (settings.defaultName.length > 0) {
-			autoCleanSetting.setDisabled(false);
-			if (settings.autoclean.enable) {
-				// @ts-ignore
-				autoCleanSetting.components[0].toggleEl.classList.add(
-					"is-enabled"
-				);
-			}
-		}
-		hideSettings(frontmatterKeySettings);
-		hideSettings(rootFolderSettings);
+		return;
 	}
+	if (settings.defaultName.length > 0) {
+		autoCleanSetting.setDisabled(false);
+		if (settings.autoclean.enable) {
+			// @ts-ignore
+			autoCleanSetting.components[0].toggleEl.classList.add(
+				"is-enabled"
+			);
+		}
+	}
+	hideSettings(frontmatterKeySettings);
+	hideSettings(rootFolderSettings);
 }
 
 /**
@@ -153,12 +153,12 @@ export function autoCleanUpSettingsOnCondition(
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
 		settings.autoclean.enable = false;
 		plugin.saveSettings().then();
-	} else {
-		autoCleanSetting.setDisabled(false);
-		if (settings.autoclean.enable) {
-			// @ts-ignore
-			autoCleanSetting.components[0].toggleEl.classList.add("is-enabled");
-		}
+		return;
+	}
+	autoCleanSetting.setDisabled(false);
+	if (settings.autoclean.enable) {
+		// @ts-ignore
+		autoCleanSetting.components[0].toggleEl.classList.add("is-enabled");
 	}
 }
 

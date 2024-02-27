@@ -83,21 +83,8 @@ async function deleteFromGithubOneRepo(
 		console.warn("Rate limited exceeded, please try again later");
 		return {success: false, deleted: [], undeleted: []};
 	}
-	const defaultName = repo.path?.defaultName ?? settings.upload.defaultName;
-	const behavior = repo.path?.type ?? settings.upload.behavior;
-	const root = repo.path?.rootFolder ?? settings.upload.rootFolder;
 	if (filesInRepo.length === 0) {
-		let errorMsg = "";
-		if (defaultName.length === 0) {
-			errorMsg = i18next.t("deletion.defaultFolder");
-		} else if (
-			behavior === FolderSettings.yaml &&
-			root.length === 0
-		) {
-			errorMsg = i18next.t("deletion.rootFolder");
-		}
-		new Notice(`Error : ${errorMsg}`);
-		console.warn("ERROR : ", errorMsg);
+		console.log(`No file to delete in ${repo.owner}/${repo.repo}`);
 		return {success: false, deleted: [], undeleted: []};
 	}
 	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repo);
