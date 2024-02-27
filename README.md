@@ -31,15 +31,16 @@ Here, you will only get a quick setup!
 There are plenty of options available, some of which are pre-configured and others are optional.
 
 Before you begin, you will need to configure your GitHub repository.
+
 1. Fill in your username, repository name, and branch.
 2. Generate a GitHub token from the settings link and paste it here.
 3. Click the button to check if everything is working as intended.
 4. Now, let's try publishing your first note! To achieve this, you need to set the key `share: true` in the frontmatter of a file, like this:
-	```
-	---
-	share: true
-	---
-	```
+   ```
+   ---
+   share: true
+   ---
+   ```
 5. Now, run the command to publish: `Upload single current active note`
 6. If everything is good, a PR will be created on your repository and will be automatically merged (this can be disabled if desired!).
 
@@ -48,7 +49,8 @@ That's it! However, there are many options that a simple README cannot cover, so
 ## ⚙️ Usage
 
 The plugin adds 8 commands in the palette, one of which is also available in the right-click menu.
-- `Upload single current active note` (*available in the right-click menu*)
+
+- `Upload single current active note` (_available in the right-click menu_)
 - `Upload all notes`
 - `Upload unpublished notes`
 - `Refresh published and upload new notes`
@@ -57,7 +59,7 @@ The plugin adds 8 commands in the palette, one of which is also available in the
 - `Test the connection to the configured repository`
 - `Check the rate limit of the GitHub API`
 
-Each of the commands are explained [here](https://github.com/ObsidianPublisher/obsidian-github-publisher/blob/master/docs/COMMANDS.md).
+Each of the commands are explained [here](https://obsidian-publisher.netlify.app/Commands).
 
 ## 🤖 How it works
 
@@ -71,18 +73,17 @@ Each of the commands are explained [here](https://github.com/ObsidianPublisher/o
 ## 🪛 Developing
 
 You can :
-- [Maintaining the project and adding new function](https://obsidian-publisher.netlify.app/github%20publisher/developping/#general)
-- [Help with the translation](https://obsidian-publisher.netlify.app/github%20publisher/developping/#translation)
+
+- [Maintaining the project and adding new function](https://obsidian-publisher.netlify.app/developping/#general)
+- [Help with the translation](https://obsidian-publisher.netlify.app/developping/#translation)
 
 ## 🪧 Looking for something?
 
-→ [Settings explanation](https://obsidian-publisher.netlify.app/Github%20Publisher/Settings/)
-← [Commands references](https://obsidian-publisher.netlify.app/Github%20Publisher/Commands)
-→ [Template](https://obsidian-publisher.netlify.app/Mkdocs%20Template/)
-← [GitHub Discussion](https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions)
+→ [Settings explanation](https://obsidian-publisher.netlify.app/Plugin/Settings/)
+← [Commands references](https://obsidian-publisher.netlify.app/Commands)
+→ [GitHub Discussion](https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions)
 
 ---
+
 If you find this plugin and workflow useful, you can give me some coffee money!<br>
 <a href='https://ko-fi.com/X8X54ZYAV' target='_blank'><img height='36' style='border:0px;height:36px;display:block;margin-left:50%;' src='https://cdn.ko-fi.com/cdn/kofi1.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
-
-
