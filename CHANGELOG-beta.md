@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.2-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/7.0.2-0...7.0.2-1) (2024-02-27)
+
+
+### Bug Fixes
+
+* allow space in excluded folder ([263cd11](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/263cd11ca0c29ef19594e01eb58e9eb77f1432ce))
+
 ## [7.0.2-0](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/7.0.1...7.0.2-0) (2024-02-27)
 
 
