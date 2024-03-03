@@ -1,10 +1,11 @@
 import { Octokit } from "@octokit/core";
+import { RequestError } from "@octokit/request-error";
 import i18next from "i18next";
 import { FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
 import GithubPublisher from "src/main";
 
 import {GithubBranch} from "../GitHub/branch";
-import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, MultiProperties, RepoFrontmatter, Repository} from "../settings/interface";
+import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, RepoFrontmatter, Repository} from "../settings/interface";
 import {logs, notif} from ".";
 import { frontmatterFromFile, getLinkedFrontmatter, getRepoFrontmatter } from "./parse_frontmatter";
 
@@ -424,29 +425,37 @@ export async function verifyRateLimitAPI(
 	commands = false,
 	numberOfFile = 1
 ): Promise<number> {
-	const rateLimit = await octokit.request("GET /rate_limit");
-	const remaining = rateLimit.data.resources.core.remaining;
-	const reset = rateLimit.data.resources.core.reset;
-	const date = new Date(reset * 1000);
-	const time = date.toLocaleTimeString();
+	try {
+		const rateLimit = await octokit.request("GET /rate_limit");
+		const remaining = rateLimit.data.resources.core.remaining;
+		const reset = rateLimit.data.resources.core.reset;
+		const date = new Date(reset * 1000);
+		const time = date.toLocaleTimeString();
 
-	if (remaining <= numberOfFile) {
-		new Notice(i18next.t("commands.checkValidity.rateLimit.limited", { resetTime: time }));
+		if (remaining <= numberOfFile) {
+			new Notice(i18next.t("commands.checkValidity.rateLimit.limited", { resetTime: time }));
+			return 0;
+		}
+
+		const message = i18next.t("commands.checkValidity.rateLimit.notLimited", {
+			remaining,
+			resetTime: time
+		});
+
+		if (commands) {
+			new Notice(message);
+		} else {
+			notif({ settings }, message);
+		}
+
+		return remaining;
+	} catch (error) {
+		//if the error is 404 and user use enterprise, it's normal 
+		if (error instanceof RequestError && error.status === 404 && settings.github.api.tiersForApi === GithubTiersVersion.entreprise) return 5000;
+		notif({ settings, e: true }, error);
 		return 0;
+
 	}
-
-	const message = i18next.t("commands.checkValidity.rateLimit.notLimited", {
-		remaining,
-		resetTime: time
-	});
-
-	if (commands) {
-		new Notice(message);
-	} else {
-		notif({ settings }, message);
-	}
-
-	return remaining;
 }
 
 /**
