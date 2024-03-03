@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.3-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.2...7.0.3-0) (2024-03-03)
+
+
+### Bug Fixes
+
+* fix 404 error on enterprise with rateLimit disabled ([09d3c51](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/09d3c5116ed32e4a76d0c357b72e83ccb2a277c9))
+
 ## [7.0.2-2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/7.0.2-1...7.0.2-2) (2024-02-27)
 
 ## [7.0.2-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/7.0.2-0...7.0.2-1) (2024-02-27)
