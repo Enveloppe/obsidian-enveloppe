@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.3-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/7.0.3-0...7.0.3-1) (2024-03-04)
+
+
+### Bug Fixes
+
+* error instanceof RequestError is false ([647a87a](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/647a87a3631010317570d410595944c81c4ce549))
+
 ## [7.0.3-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.2...7.0.3-0) (2024-03-03)
 
 
