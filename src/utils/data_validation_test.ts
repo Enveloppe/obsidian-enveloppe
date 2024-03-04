@@ -453,7 +453,7 @@ export async function verifyRateLimitAPI(
 		//if the error is 404 and user use enterprise, it's normal 
 		if ((error as any).status === 404 
 			&& settings.github.api.tiersForApi === GithubTiersVersion.entreprise 
-			&& (error as any).response.data === "Rate limiting is not enabled." 
+			&& (error as any).response.message.data === "Rate limiting is not enabled." 
 			&& (error as any).name === "HttpError") return 5000;
 		notif({ settings, e: true }, error);
 		return 0;
