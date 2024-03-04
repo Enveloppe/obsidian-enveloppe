@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.3-2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/7.0.3-1...7.0.3-2) (2024-03-04)
+
+
+### Bug Fixes
+
+* **API:** another attempt to fix disabled rate limit ([c194e0b](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/c194e0b038cb1fe6d27a7a3ace76286d38c7445b)), closes [#321](https://github.com/ObsidianPublisher/obsidian-github-publisher/issues/321)
+
 ## [7.0.3-1](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/7.0.3-0...7.0.3-1) (2024-03-04)
 
 
