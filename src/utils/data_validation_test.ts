@@ -331,34 +331,25 @@ export async function checkRepositoryValidity(
 /**
  * Check the validity of the repository settings, from the frontmatter of the file or from the settings of the plugin
  * @param {GithubBranch} PublisherManager
- * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter
+ * @param {RepoFrontmatter} repoFrontmatter
  * @param {number} numberOfFile the number of file to publish
  * @return {Promise<boolean>}
  */
 export async function checkRepositoryValidityWithRepoFrontmatter(
 	PublisherManager: GithubBranch,
-	repoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
+	repoFrontmatter: RepoFrontmatter,
 	numberOfFile: number=1
 ): Promise<boolean> {
 	const settings = PublisherManager.settings;
 	if (settings.github.dryRun.enable) return true;
 	try {
-		/**
-		 * verify for each repoFrontmatter if verifiedRepo is true
-		 */
-		let verified = false;
-		if (repoFrontmatter instanceof Array) {
-			verified = repoFrontmatter.every((repo) => {
-				return repo.verifiedRepo;
-			});
-		} else if (repoFrontmatter.verifiedRepo) {
-			verified = true;
-		}
-		if (verified && settings.github.rateLimit > 0) return true;
+		const verified = repoFrontmatter.verifiedRepo;
+		const rateLimit = repoFrontmatter.rateLimit;
+		if (verified && rateLimit) return true;
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, true);
-			if (settings.github.rateLimit === 0 || numberOfFile > 20) {
+			if (repoFrontmatter?.rateLimit === 0 || numberOfFile > 20) {
 				return await verifyRateLimitAPI(PublisherManager.octokit, settings, false, numberOfFile) > 0;
 			}
 			return true;
@@ -385,6 +376,7 @@ export function defaultRepo(settings: GitHubPublisherSettings): Repository {
 		branch: settings.github.branch,
 		automaticallyMergePR: settings.github.automaticallyMergePR,
 		verifiedRepo: settings.github.verifiedRepo,
+		rateLimit: settings.github.rateLimit,
 		api: {
 			tiersForApi: settings.github.api.tiersForApi,
 			hostname: settings.github.api.hostname,

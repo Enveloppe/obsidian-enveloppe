@@ -174,7 +174,15 @@ export async function shareOneNote(
 	const frontmatter = frontmatterFromFile(file, PublisherManager.plugin);
 	try {
 		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
-		const isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter);
+		let isValid: boolean;
+		if (repoFrontmatter instanceof Array) {
+			const isValidArray = [];
+			for (const repo of repoFrontmatter) {
+				isValidArray.push(await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repo));
+			}
+			isValid = isValidArray.every((v) => v === true);
+		} else isValid = await checkRepositoryValidityWithRepoFrontmatter(PublisherManager, repoFrontmatter);
+		
 		const multiRepo: MultiRepoProperties = {
 			frontmatter: repoFrontmatter,
 			repo: repository

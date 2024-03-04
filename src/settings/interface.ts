@@ -29,6 +29,7 @@ export interface Repository {
 	branch: string;
 	automaticallyMergePR: boolean;
 	verifiedRepo?: boolean;
+	rateLimit?: number;
 	token?: string;
 	api: {
 		tiersForApi: GithubTiersVersion;
@@ -416,6 +417,7 @@ export interface RepoFrontmatter {
 	automaticallyMergePR: boolean;
 	verifiedRepo?: boolean;
 	path?: Path;
+	rateLimit?: number;
 	dryRun: {
 		enable: boolean;
 		folderName: string;

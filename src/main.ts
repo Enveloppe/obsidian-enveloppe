@@ -214,6 +214,14 @@ export default class GithubPublisher extends Plugin {
 			await this.saveSettings();
 		}
 
+		for (const repository of this.settings.github.otherRepo) {
+			const repoOctokit = await this.reloadOctokit(repository.smartKey);
+			repository.verifiedRepo = await checkRepositoryValidity(repoOctokit, repository, null, false);
+			repository.rateLimit = await verifyRateLimitAPI(repoOctokit.octokit, this.settings);
+		}
+		await this.saveSettings();
+
+
 		this.registerEvent(
 			//@ts-ignore
 			this.app.workspace.on("file-menu", (menu: Menu, folder: TAbstractFile) => {
