@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Octokit } from "@octokit/core";
-import { RequestError } from "@octokit/request-error";
 import i18next from "i18next";
 import { FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
 import GithubPublisher from "src/main";
@@ -451,7 +451,10 @@ export async function verifyRateLimitAPI(
 		return remaining;
 	} catch (error) {
 		//if the error is 404 and user use enterprise, it's normal 
-		if (error instanceof RequestError && error.status === 404 && settings.github.api.tiersForApi === GithubTiersVersion.entreprise) return 5000;
+		if ((error as any).status === 404 
+			&& settings.github.api.tiersForApi === GithubTiersVersion.entreprise 
+			&& (error as any).response.data === "Rate limiting is not enabled." 
+			&& (error as any).name === "HttpError") return 5000;
 		notif({ settings, e: true }, error);
 		return 0;
 

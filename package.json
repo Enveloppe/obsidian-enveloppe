@@ -27,7 +27,6 @@
 		"@babel/preset-typescript": "^7.23.3",
 		"@lisandra-dev/eslint-config": "^1.1.4",
 		"@octokit/core": "^4.2.4",
-		"@octokit/request-error": "^6.0.2",
 		"@types/luxon": "^3.4.2",
 		"@types/node": "^20.11.19",
 		"@typescript-eslint/eslint-plugin": "^7.0.1",

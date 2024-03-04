@@ -32,9 +32,6 @@ devDependencies:
   '@octokit/core':
     specifier: ^4.2.4
     version: 4.2.4
-  '@octokit/request-error':
-    specifier: ^6.0.2
-    version: 6.0.2
   '@types/luxon':
     specifier: ^3.4.2
     version: 3.4.2
@@ -2184,10 +2181,6 @@ packages:
     resolution: {integrity: sha512-VRaeH8nCDtF5aXWnjPuEMIYf1itK/s3JYyJcWFJT8X9pSNnBtriDf7wlEWsGuhPLl4QIH4xM8fqTXDwJ3Mu6sw==}
     dev: true
 
-  /@octokit/openapi-types@20.0.0:
-    resolution: {integrity: sha512-EtqRBEjp1dL/15V7WiX5LJMIxxkdiGJnabzYx5Apx4FkQIFgAfKumXeYAqqJCj1s+BMX4cPFIFC4OLCR6stlnA==}
-    dev: true
-
   /@octokit/request-error@3.0.3:
     resolution: {integrity: sha512-crqw3V5Iy2uOU5Np+8M/YexTlT8zxCfI+qu+LxUB7SZpje4Qmx3mub5DfEKSO8Ylyk0aogi6TYdf6kxzh2BguQ==}
     engines: {node: '>= 14'}
@@ -2195,13 +2188,6 @@ packages:
       '@octokit/types': 9.3.2
       deprecation: 2.3.1
       once: 1.4.0
-    dev: true
-
-  /@octokit/request-error@6.0.2:
-    resolution: {integrity: sha512-WtRVpoHcNXs84+s9s/wqfHaxM68NGMg8Av7h59B50OVO0PwwMx+2GgQ/OliUd0iQBSNWgR6N8afi/KjSHbXHWw==}
-    engines: {node: '>= 18'}
-    dependencies:
-      '@octokit/types': 12.6.0
     dev: true
 
   /@octokit/request@6.2.8:
@@ -2216,12 +2202,6 @@ packages:
       universal-user-agent: 6.0.1
     transitivePeerDependencies:
       - encoding
-    dev: true
-
-  /@octokit/types@12.6.0:
-    resolution: {integrity: sha512-1rhSOfRa6H9w4YwK0yrf5faDaDTb+yLyBUKOCV4xtCDB5VmIPqd/v9yr9o6SAzOAlRxMiRiCic6JVM1/kunVkw==}
-    dependencies:
-      '@octokit/openapi-types': 20.0.0
     dev: true
 
   /@octokit/types@9.3.2:
