@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.3-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.3-2...7.0.3-3) (2024-03-04)
+
+
+### Bug Fixes
+
+* save rateLimit for repository ([5b2e8d7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/5b2e8d796b2ce4d0a1a9214ce7a7caad7cd201c6))
+
 ## [7.0.3-2](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/7.0.3-1...7.0.3-2) (2024-03-04)
 
 
