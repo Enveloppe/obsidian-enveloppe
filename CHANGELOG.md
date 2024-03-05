@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.3-4...7.0.3) (2024-03-05)
+
+
+### Bug Fixes
+
+* adjust settings to add a better comprehension of regex & internal links conversion ([0e97ea5](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0e97ea54b61ceb5fdd52821a153b839a3e478dd5)), closes [#322](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/322) [#321](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/321)
+
 ## [7.0.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.2-2...7.0.2) (2024-02-27)
 
 
