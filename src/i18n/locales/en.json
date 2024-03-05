@@ -165,7 +165,7 @@
   "settings": {
     "conversion": {
       "dataview": {
-        "desc": "Convert dataview to markdown. Only works if Dataview is enabled.",
+        "desc": "Convert Dataview queries to markdown. \nOnly works if Dataview and internal link conversion are enabled.",
         "title": "Dataview"
       },
       "desc": "Theses option won't change the content of the file in your Obsidian Vault, but will change the content of the file in GitHub.",
@@ -180,6 +180,7 @@
           "title": "Folder note"
         },
         "internals": {
+          "dataview": "Mandatory if you want to convert links in dataview blocks!",
           "desc": "Convert internal links to their counterpart in the repository, with relative path.",
           "shareAll": "Includes all links for the \"share all\" settings, as it impossible without frontmatter to know the sharing state of a file.",
           "title": "Internals links"
@@ -452,7 +453,7 @@
     "plugin": {
       "copyLink": {
         "applyRegex": {
-          "desc": "Encapsulate with \"//\" to use regexes",
+          "desc": "Encapsulate between \"/\" to use regexes (ie: /regex/).",
           "title": "Add a text transformation to the URL"
         },
         "baselink": {
@@ -545,7 +546,7 @@
       },
       "invalidRegex": "An error has occurred: {{- e}}",
       "modal": {
-        "desc": "Replace text in the file with the given value. Enclose the text with \"//\" to use regex.",
+        "desc": "Replace text in the file with the given value. Enclose the text between \"/\" to use regex (ie: /regex/).",
         "force": "Force push",
         "keywords": "Keywords",
         "name": "Use {{name}} to use the filename.",
@@ -584,7 +585,7 @@
         "title": "Property key"
       },
       "regexFilePathTitle": {
-        "desc": "If the text is between \"//\", it will be used as a regex. Otherwise, it will be used as a string.",
+        "desc": "If the text is between \"/\" (ie: /regex/), it will be used as a regex. Otherwise, it will be used as a string.",
         "title": {
           "FolderPathTitle": "Apply edit on the folder path or the filename (automatically)",
           "titleOnly": "Apply edit on the filename (automatically)"

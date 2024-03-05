@@ -679,12 +679,13 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		});
 
 		const shareAll = this.settings.plugin.shareAll?.enable ? ` ${i18next.t("settings.conversion.links.internals.shareAll")}` : "";
+		const internalLinksDesc = document.createDocumentFragment();
+		internalLinksDesc.createEl("p", {text: i18next.t("settings.conversion.links.internals.desc") + shareAll, cls: "no-margin"});
+		internalLinksDesc.createEl("p", {text: i18next.t("settings.conversion.links.internals.dataview"), cls: "no-margin"});
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.links.internals.title"))
-			.setDesc(
-				i18next.t("settings.conversion.links.internals.desc") + shareAll
-			)
+			.setDesc(internalLinksDesc)
 			.addToggle((toggle) => {
 				toggle
 					.setValue(textSettings.links.internal)
@@ -773,8 +774,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setDesc(i18next.t("settings.conversion.dataview.desc"))
 			.addToggle((toggle) => {
 				toggle
-					.setValue(textSettings.dataview && isDataviewEnabled)
-					.setDisabled(!isDataviewEnabled)
+					.setValue(textSettings.dataview && isDataviewEnabled && textSettings.links.internal)
+					.setDisabled(!isDataviewEnabled || !textSettings.links.internal)
 					.onChange(async (value) => {
 						textSettings.dataview = value;
 						await this.plugin.saveSettings();

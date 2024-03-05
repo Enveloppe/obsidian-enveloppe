@@ -36,6 +36,7 @@ export async function convertDataviewQueries(
 	properties: MultiProperties,
 ): Promise<string> {
 	const plugin = properties.plugin;
+	const app = plugin.app;
 	const settings = plugin.settings;
 	let replacedText = text;
 	const dataViewRegex = /```dataview\s(.+?)```/gsm;
@@ -201,7 +202,7 @@ async function convertDataviewLinks(
 		sourceFile,
 		frontmatter,
 		properties
-	);
+	);	
 	return convertWikilinks(
 		md,
 		properties.frontmatter.general,

@@ -29,6 +29,10 @@ hr.github-publisher-hr {
 	opacity: 0.1;
 }
 
+.github-publisher .no-margin {
+	margin: 0;
+}
+
 /* --------- EXPORT IMPORT --------- */
 
 .github-publisher .setting-item.import-export {

@@ -165,7 +165,7 @@
   "settings": {
     "conversion": {
       "dataview": {
-        "desc": "Convertir les requêtes Dataview en markdown. Ne fonctionne que si Dataview est activé.",
+        "desc": "Convertir les requêtes Dataview en markdown. Ne fonctionne que si Dataview et la conversion des liens internes sont activés.",
         "title": "Dataview"
       },
       "desc": "Ces options ne changent pas le contenu du fichier dans votre coffre Obsidian, mais changeront le contenu du fichier publié sur GitHub.",
@@ -180,6 +180,7 @@
           "title": "Folder Note"
         },
         "internals": {
+          "dataview": "Obligatoire si vous voulez convertir les liens dans les blocs dataview !",
           "desc": "Convertir les liens internes pointant vers les notes publiées vers leur homologue dans le dépôt, sous forme de chemin relatif.",
           "shareAll": "Inclut tous les liens pour les paramètres \"partager tout\", car il est impossible sans frontmatter de connaître l'état de partage d'un fichier.",
           "title": "Liens internes"
@@ -452,7 +453,7 @@
     "plugin": {
       "copyLink": {
         "applyRegex": {
-          "desc": "Encapsuler avec \"//\" pour utiliser les expressions rationnelles",
+          "desc": "Encapsuler entre \"/\" pour utiliser les expressions rationnelles (ie: /regex/).",
           "title": "Ajouter une transformation de texte à l'URL"
         },
         "baselink": {
@@ -495,7 +496,7 @@
         "title": "Afficher les éditions sur le dépôt"
       },
       "excludedFolder": {
-        "desc": "Les fichiers dans ses dossiers ne seront jamais publiés, quelle que soit l'état de la clé de partage. Séparez les noms de dossier par une virgule. Les regex sont supportés en les encadrant par \"//\"",
+        "desc": "Les fichiers dans ses dossiers ne seront jamais publiés, quelle que soit l'état de la clé de partage. Séparez les noms de dossier par une virgule. Les regex sont supportés en les encadrant entre \"/\" (ie : /regex/).",
         "title": "Dossiers exclus"
       },
       "fileMenu": {
@@ -545,7 +546,7 @@
       },
       "invalidRegex": "Une erreur est survenue : {{- e}}",
       "modal": {
-        "desc": "Replace des textes dans le fichier par la valeur donnée. Vous pouvez encadrer le texte à remplacer avec \"//\" pour utiliser un regex.",
+        "desc": "Replace des textes dans le fichier par la valeur donnée. Vous pouvez encadrer le texte à remplacer avec \"/\" (ie : /regex/) pour utiliser un regex.",
         "force": "Forcer l'envoi",
         "keywords": "Mots clés",
         "name": "Utiliser {{name}} pour utiliser le nom du fichier.",
@@ -584,7 +585,7 @@
         "title": "Clé de propriété"
       },
       "regexFilePathTitle": {
-        "desc": "Si le texte est entre \"//\", il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut.",
+        "desc": "Si le texte est entre \"/\" (ie : /regex/), il sera interprété comme une expression régulière. Sinon, il sera interprété comme du texte brut.",
         "title": {
           "FolderPathTitle": "Éditer le titre et le chemin du dossier (automatiquement)",
           "titleOnly": "Éditer le titre (automatiquement)"
