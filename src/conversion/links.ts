@@ -203,7 +203,7 @@ function createMarkdownLinks(fileName: string, isEmbed: string, altLink: string,
 		? fileName.replace(/#.*/, "").trim() + ".md"
 		: fileName.trim();
 	const anchorMatch = fileName.match(/(#.*)/);
-	let anchor = anchorMatch ? anchorMatch[0] : null;
+	let anchor = anchorMatch ? anchorMatch[0].replace(/^#\^/, "user-content-") : null;
 	const encodedURI = encodeURI(markdownName);
 	anchor = slugifyAnchor(anchor, settings);
 	return `${isEmbed}[${altLink}](${encodedURI}${anchor})`;
