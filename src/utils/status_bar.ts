@@ -1,6 +1,7 @@
 import i18next from "i18next";
 import { Notice } from "obsidian";
 
+import { RepoFrontmatter } from "../settings/interface";
 import { noticeMobile } from ".";
 import { ERROR_ICONS, FOUND_ATTACHMENTS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 
@@ -106,12 +107,12 @@ export class ShareStatusBar {
 	 * Remove the status bar if error occurs
 	 */
 
-	error() {
+	error(repoFrontmatter: RepoFrontmatter) {
 		this.statusBarItem.addClass("error");
 		this.statusBarItem.removeClass("sharing");
 		this.statusBarItem.removeClass("found-attachments");
 		this.icon.innerHTML = ERROR_ICONS;
-		this.status.innerHTML = i18next.t("error.errorPublish");
+		this.status.innerHTML = i18next.t("error.errorPublish", {repo: repoFrontmatter});
 		this.noticeMobile?.hide();
 		setTimeout(() => {
 			this.statusBarItem.remove();

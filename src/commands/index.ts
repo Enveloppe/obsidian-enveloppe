@@ -114,7 +114,7 @@ export async function shareAllMarkedNotes(
 		const errorFrag = document.createDocumentFragment();
 		errorFrag.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"] }).innerHTML = ERROR_ICONS;
 		errorFrag.createSpan({ cls: ["error", "obsidian-publisher", "notification"], text: i18next.t("error.unablePublishMultiNotes") });
-		statusBar.error();
+		statusBar.error(repoFrontmatter);
 	}
 }
 
