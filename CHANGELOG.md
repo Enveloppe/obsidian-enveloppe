@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.3...7.0.4) (2024-03-31)
+
+
+### Bug Fixes
+
+* notification without proper name ([c5dd498](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c5dd498a9ac3452b049ab05fd40322e374241346))
+
 ## [7.0.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.3-4...7.0.3) (2024-03-05)
 
 
