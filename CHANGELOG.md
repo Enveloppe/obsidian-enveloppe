@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.4...7.0.5) (2024-04-01)
+
+
+### Bug Fixes
+
+* error when merge conflic ([c78c0fe](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/c78c0fe90fbc710dbc89a5495a5d40503b81d79c))
+
 ## [7.0.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.3...7.0.4) (2024-03-31)
 
 
