@@ -31,6 +31,7 @@ import {
 	logs,
 	noticeMobile,
 	notif,
+	notifError,
 } from "../utils";
 import {
 	checkEmptyConfiguration,
@@ -39,7 +40,7 @@ import {
 	isAttachment,
 	isShared,
 } from "../utils/data_validation_test";
-import { ERROR_ICONS, LOADING_ICON } from "../utils/icons";
+import { LOADING_ICON } from "../utils/icons";
 import { frontmatterFromFile, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import { ShareStatusBar } from "../utils/status_bar";
 import { deleteFromGithub } from "./delete";
@@ -146,9 +147,7 @@ export default class Publisher {
 				statusBar.finish(8000);
 			} catch (e) {
 				logs({ settings: this.settings, e: true }, e);
-				const notif = document.createDocumentFragment();
-				notif.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"] }).innerHTML = ERROR_ICONS;
-				notif.createSpan({ cls: ["error", "obsidian-publisher", "notification"] }).innerHTML = i18next.t("error.errorPublish", { repo: repoFrontmatter });
+				notifError(repoFrontmatter);
 				statusBar.error(repoFrontmatter);
 			}
 		}

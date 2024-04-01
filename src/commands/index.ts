@@ -11,7 +11,7 @@ import {
 	createListEdited,
 	getSettingsOfMetadataExtractor,
 	logs,
-	notif,	publisherNotification} from "../utils";
+	notif,	notifError,	publisherNotification} from "../utils";
 import {checkRepositoryValidityWithRepoFrontmatter} from "../utils/data_validation_test";
 import { frontmatterFromFile, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import { ShareStatusBar } from "../utils/status_bar";
@@ -102,11 +102,7 @@ export async function shareAllMarkedNotes(
 					new ListChangedFiles(PublisherManager.plugin.app, listEdited).open();
 				}
 			} else {
-				const errorFrag = document.createDocumentFragment();
-				errorFrag.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"]}).innerHTML = ERROR_ICONS;
-				errorFrag.createSpan({ cls: ["error", "obsidian-publisher", "notification"] }).innerHTML = i18next.t("error.errorPublish", { repo: repoFrontmatter });
-
-				new Notice(errorFrag);
+				notifError(repoFrontmatter);
 			}
 		}
 	} catch (error) {
@@ -234,19 +230,13 @@ export async function shareOneNote(
 				}
 
 			} else {
-				const notif = document.createDocumentFragment();
-				notif.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"] }).innerHTML = ERROR_ICONS;
-				notif.createSpan({ cls: ["error", "obsidian-publisher", "notification"] }).innerHTML = i18next.t("error.errorPublish", { repo: repoFrontmatter });
-				new Notice(notif);
+				notifError(repoFrontmatter);
 			}
 		}
 	} catch (error) {
 		if (!(error instanceof DOMException)) {
 			logs({settings, e: true}, error);
-			const notif = document.createDocumentFragment();
-			notif.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"] }).innerHTML = ERROR_ICONS;
-			notif.createSpan({ cls: ["error", "obsidian-publisher", "notification"] }).innerHTML = i18next.t("error.errorPublish", { repo: getRepoFrontmatter(settings, repository, frontmatter) });
-			new Notice(notif);
+			notifError(getRepoFrontmatter(settings, repository, frontmatter));
 		}
 	}
 }

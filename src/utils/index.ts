@@ -15,7 +15,7 @@ import {
 	MultiRepoProperties,
 	RepoFrontmatter, TOKEN_PATH,
 	UploadedFiles} from "../settings/interface";
-import { HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
+import { ERROR_ICONS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 import { frontmatterFromFile } from "./parse_frontmatter";
 
 type LogsParameters = {
@@ -327,6 +327,16 @@ export async function publisherNotification(
 			settings,
 			repository
 		);
+	}
+}
+
+export function notifError(repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]) {
+	const repo = Array.isArray(repoFrontmatter) ? repoFrontmatter : [repoFrontmatter];
+	for (const repository of repo) {
+		const notif = document.createDocumentFragment();
+		notif.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"] }).innerHTML = ERROR_ICONS;
+		notif.createSpan({ cls: ["error", "obsidian-publisher", "notification"] }).innerHTML = i18next.t("error.errorPublish", { repo: repository });
+		new Notice(notif);
 	}
 }
 
