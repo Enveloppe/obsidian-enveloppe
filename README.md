@@ -78,8 +78,8 @@ Each of the commands are explained [here](https://obsidian-publisher.netlify.app
 
 You can :
 
-- [Maintaining the project and adding new function](https://obsidian-publisher.netlify.app/developping/#general)
-- [Help with the translation](https://obsidian-publisher.netlify.app/developping/#translation)
+- [Maintaining the project and adding new function](https://obsidian-publisher.netlify.app/Developing#general)
+- [Help with the translation](https://obsidian-publisher.netlify.app/Developing#translation)
 
 ## 🪧 Looking for something?
 
