@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.0.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.5...7.0.6) (2024-04-28)
+
+
+### Bug Fixes
+
+* broken link ([609080f](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/609080f8f62483773d5847ce11bad37dd3d998bb))
+* strict encoding remove # in anchor ([24c920e](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/24c920e9c90e8d40a3a79728f8174fab291ed960)), closes [#334](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/334)
+
 ## [7.0.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.4...7.0.5) (2024-04-01)
 
 
