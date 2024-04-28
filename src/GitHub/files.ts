@@ -203,7 +203,7 @@ export class FilesManagement extends Publisher {
 							 * In case there's a frontmatter configuration, pass along
 							 * `filename` so we can later use that to convert wikilinks.
 							 */
-							if (frontmatter && frontmatter[this.settings.upload.frontmatterTitle.key]) {
+							if (frontmatter?.[this.settings.upload.frontmatterTitle.key]) {
 								frontmatterDestinationFilePath = frontmatter[this.settings.upload.frontmatterTitle.key];
 								if (altText === linkedFile.basename) {
 									altText = frontmatterDestinationFilePath;

@@ -150,14 +150,10 @@ export function convertWikilinks(
 						conditionConvert.removeEmbed === "remove" &&
 						isEmbedBool;
 					if (isEmbedBool && conditionConvert.removeEmbed === "links" && !isAttachment(fileName.trim())) {
-						isEmbed = conditionConvert.charEmbedLinks + " ";
+						isEmbed = `${conditionConvert.charEmbedLinks} `;
 						linkCreator = linkCreator.replace("!", isEmbed);
 					}
-					if (convertWikilink) {
-						linkCreator = createMarkdownLinks(fileName, isEmbed, altLink, settings);
-					} else {
-						linkCreator = addAltForWikilinks(altMatch as RegExpMatchArray, linkCreator);
-					}
+					linkCreator = convertWikilink ? createMarkdownLinks(fileName, isEmbed, altLink, settings) : addAltForWikilinks(altMatch as RegExpMatchArray, linkCreator);
 					if (
 						!isAttachment(fileName.trim()) &&
 						!convertLinks &&
@@ -199,9 +195,9 @@ function addAltForWikilinks(altMatch: RegExpMatchArray, linkCreator: string) {
 
 
 function createMarkdownLinks(fileName: string, isEmbed: string, altLink: string, settings: GitHubPublisherSettings) {
-	const markdownName = !isAttachment(fileName.trim())
-		? fileName.replace(/#.*/, "").trim() + ".md"
-		: fileName.trim();
+	const markdownName = isAttachment(fileName.trim())
+		? fileName.trim()
+		: `${fileName.replace(/#.*/, "").trim()}.md`;
 	const anchorMatch = fileName.match(/(#.*)/);
 	let anchor = anchorMatch ? anchorMatch[0] : null;
 	const encodedURI = encodeURI(markdownName);
@@ -217,7 +213,8 @@ function slugifyAnchor(anchor: string | null, settings: GitHubPublisherSettings)
 		case "lower":
 			return anchor.toLowerCase().replaceAll(" ", "-");
 		case "strict":
-			return slugify(anchor, { lower: true, strict: true });
+			return `#${slugify(anchor, { lower: true, strict: true })}`;
+		
 		default:
 			return anchor;
 		}
@@ -300,6 +297,7 @@ export async function convertToInternalGithub(
 					pathInGithub = pathInGithub.replace(/#.*/, "");
 					pathInGithubWithAnchor += linkedFile.anchor;
 				}
+
 				let newLink = link.replace(regToReplace, pathInGithubWithAnchor); //strict replacement of link
 				if (link.match(/\[.*\]\(.*\)/)) {
 					if (linkedFile.linked.extension === "md" && !linkedFile.linked.name.includes("excalidraw")) {
