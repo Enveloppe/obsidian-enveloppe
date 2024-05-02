@@ -206,10 +206,8 @@ export default class Publisher {
 			embedFiles = await shareFiles.getMetadataLinks(
 				file,
 				embedFiles,
-				frontmatter,
 				frontmatterSettings
 			);
-			console.warn("EMBEDS FILES", embedFiles);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
 			
 			let text = await this.vault.cachedRead(file);

@@ -1,5 +1,5 @@
 import { Octokit } from "@octokit/core";
-import { EmbedCache, FrontMatterCache, LinkCache, TFile, TFolder} from "obsidian";
+import { EmbedCache, LinkCache, TFile, TFolder} from "obsidian";
 import { getAPI, Link } from "obsidian-dataview";
 
 import {
@@ -454,7 +454,6 @@ export class FilesManagement extends Publisher {
 	async getMetadataLinks(
 		file: TFile,
 		embedFiles: TFile[],
-		frontmatterSourceFile: FrontMatterCache | undefined | null,
 		frontmatterSettings: FrontmatterConvert
 	): Promise<TFile[]> {
 		for (const field of this.settings.embed.keySendFile) {

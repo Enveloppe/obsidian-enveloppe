@@ -322,7 +322,8 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 			charConvert: "->",
 			convertEmbedToLinks: "keep",
 			overrideAttachments: [],
-
+			unHandledObsidianExt: [],
+			sendSimpleLinks: true,
 		},
 		plugin: {
 			shareKey: old.shareKey,
