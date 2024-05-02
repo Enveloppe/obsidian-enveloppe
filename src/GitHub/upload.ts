@@ -123,7 +123,7 @@ export default class Publisher {
 								isAttachment(file.name, this.settings.embed.unHandledObsidianExt) &&
 								properties.frontmatter.general.attachment
 							) {
-								const published = await this.uploadImage(
+								const published =  await this.uploadImage(
 									file,
 									properties
 								);
@@ -201,7 +201,7 @@ export default class Publisher {
 			);
 			let embedFiles = shareFiles.getSharedEmbed(
 				file,
-				frontmatterSettings
+				frontmatterSettings,
 			);
 			embedFiles = await shareFiles.getMetadataLinks(
 				file,
@@ -209,8 +209,9 @@ export default class Publisher {
 				frontmatter,
 				frontmatterSettings
 			);
+			console.warn("EMBEDS FILES", embedFiles);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
-
+			
 			let text = await this.vault.cachedRead(file);
 			const multiProperties: MultiProperties = {
 				plugin: this.plugin,
@@ -628,6 +629,10 @@ export default class Publisher {
 	): Promise<TFile[]> {
 		const newLinkedFiles: TFile[] = [];
 		for (const file of embedFiles) {
+			if (!isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
+				newLinkedFiles.push(file);
+				continue;
+			}
 			if (isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
 				const imagePath = getImagePath(
 					file,

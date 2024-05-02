@@ -1,5 +1,5 @@
 import { Octokit } from "@octokit/core";
-import {FrontMatterCache, TFile, TFolder} from "obsidian";
+import { EmbedCache, FrontMatterCache, LinkCache, TFile, TFolder} from "obsidian";
 import { getAPI, Link } from "obsidian-dataview";
 
 import {
@@ -245,30 +245,48 @@ export class FilesManagement extends Publisher {
 	 */
 	getSharedEmbed(
 		file: TFile,
-		frontmatterSourceFile: FrontmatterConvert
+		frontmatterSourceFile: FrontmatterConvert,
 	): TFile[] {
-		const embedCaches = this.metadataCache.getCache(file.path)?.embeds;
+		const embedCaches = this.metadataCache.getCache(file.path)?.embeds ?? [];
+		const cacheLinks = this.metadataCache.getCache(file.path)?.links ?? [];
 		const imageList: TFile[] = [];
-		if (embedCaches != undefined) {
-			for (const embed of embedCaches) {
-				try {
-					const imageLink = this.metadataCache.getFirstLinkpathDest(
-						embed.link.replace(/#(.*)/, ""),
-						file.path
-					);
-					if (imageLink) imageList.push(this.imageSharedOrNote(imageLink as TFile, frontmatterSourceFile) as TFile);
-				} catch (e) {
-					logs(
-						{settings: this.settings, e: true},
-						`Error with this file : ${embed.displayText}`,
-						e
-					);
-				}
-			}
-			return [...new Set(imageList)].filter((x) => x !== null);
+		
+		for(const embed of embedCaches) {
+			const embedFile = this.checkIfFileIsShared(embed, file, frontmatterSourceFile, "embed");
+			if (embedFile) imageList.push(embedFile);
 		}
-		return [];
+		
+		for(const link of cacheLinks) {
+			const linkFile = this.checkIfFileIsShared(link, file, frontmatterSourceFile, "link");
+			if (linkFile) imageList.push(linkFile);
+		}
+		
+		return [...new Set(imageList)].filter((x) => x !== null);
+		
 	}
+
+	
+	private checkIfFileIsShared(
+		embed: EmbedCache | LinkCache, 
+		file: TFile, 
+		frontmatterSourceFile: FrontmatterConvert,
+		fromWhat: "link" | "embed"): TFile | undefined{
+		try {
+			const imageLink = this.metadataCache.getFirstLinkpathDest(
+				embed.link.replace(/#(.*)/, ""),
+				file.path
+			);
+			if (imageLink) return(this.imageSharedOrNote(imageLink as TFile, frontmatterSourceFile, fromWhat) as TFile);
+		} catch (e) {
+			logs(
+				{settings: this.settings, e: true},
+				`Error with this file : ${embed.displayText}`,
+				e
+			);
+		}
+		return undefined;
+	}
+
 	/**
 	 * Get the last time the file from the github Repo was edited
 	 * @param {GithubRepo} githubRepo
@@ -410,10 +428,11 @@ export class FilesManagement extends Publisher {
 
 	private imageSharedOrNote(
 		file: TFile,
-		settingsConversion: FrontmatterConvert
+		settingsConversion: FrontmatterConvert,
+		fromWhat: "embed" | "link" = "embed"
 	): undefined | TFile {
-		const transferImage = settingsConversion.attachment;
-		const transferEmbeds = settingsConversion.embed;
+		const transferImage = fromWhat === "embed" ? settingsConversion.attachment : settingsConversion.includeLinks;
+		const transferEmbeds = fromWhat === "embed" ? settingsConversion.embed : settingsConversion.includeLinks;
 		if (
 			(isAttachment(file.name, this.settings.embed.unHandledObsidianExt) && transferImage) ||
 			(transferEmbeds && file.extension === "md")

@@ -856,10 +856,22 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	 */
 	async renderEmbedConfiguration() {
 		this.settingsPage.empty();
-
+		const embedSettings = this.settings.embed;
+		new Setting(this.settingsPage)
+			.setName(i18next.t("settings.embed.sendSimpleLinks.title"))
+			.setDesc(i18next.t("settings.embed.sendSimpleLinks.desc"))
+			.addToggle((toggle) => {
+				toggle
+					.setValue(embedSettings.sendSimpleLinks)
+					.onChange(async (value) => {
+						embedSettings.sendSimpleLinks = value;
+						await this.plugin.saveSettings();
+						await this.renderEmbedConfiguration();
+					});
+			});
 		this.settingsPage.createEl("h5", { text: i18next.t("settings.embed.attachment"), cls: "center" });
 
-		const embedSettings = this.settings.embed;
+		
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.embed.transferImage.title"))
 			.addToggle((toggle) => {

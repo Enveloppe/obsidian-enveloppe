@@ -143,6 +143,7 @@ export interface GitHubPublisherSettings {
 			textAfter: string;
 		};
 		unHandledObsidianExt: string[];
+		sendSimpleLinks: boolean;
 	}
 	plugin:
 	{
@@ -309,6 +310,7 @@ export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 		convertEmbedToLinks: "keep",
 		charConvert: "->",
 		unHandledObsidianExt: [],
+		sendSimpleLinks: true,
 	},
 	plugin: {
 		shareKey: "share",
@@ -407,6 +409,7 @@ export interface FrontmatterConvert {
 	hardbreak: boolean;
 	unshared: boolean;
 	convertInternalLinks: boolean;
+	includeLinks: boolean;
 }
 
 export interface RepoFrontmatter {

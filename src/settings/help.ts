@@ -73,6 +73,8 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings): DocumentF
 	spanBoolean(settings.conversion.dataview, code);
 	spanAtRule("hardBreak: ", code);
 	spanBoolean(settings.conversion.hardbreak, code);
+	spanAtRule("includeLinks: ", code);
+	spanBoolean(settings.embed.sendSimpleLinks, code);
 	if (settings.github.otherRepo.length > 0) {
 		spanAtRule("shortRepo: ", code);
 		spanString(settings.github.otherRepo[0].smartKey.length > 0 ? settings.github.otherRepo[0].smartKey : "smartkey", code);
@@ -105,7 +107,7 @@ export function help(settings: GitHubPublisherSettings) {
 	explanation.createEl("ul", undefined, (span) => {
 		span.createEl("li", undefined, (span) => {
 			span.createEl("code", {
-				text: `${settings.plugin.shareKey}:`,
+				text: `${settings.plugin.shareKey}${i18next.t("common.points")}`,
 				cls: "code-title",
 			});
 			span.createEl("span", {
@@ -117,7 +119,7 @@ export function help(settings: GitHubPublisherSettings) {
 		});
 		span.createEl("li", undefined, (span) => {
 			span.createEl("code", {
-				text: "path:",
+				text: `path${i18next.t("common.points")}`,
 				cls: "code-title",
 			});
 			span.createEl("span", {
@@ -125,21 +127,26 @@ export function help(settings: GitHubPublisherSettings) {
 			});
 		});
 		span.createEl("li", undefined, (span) => {
-			span.createEl("code", { text: "links:", cls: "code-title" });
+			span.createEl("code", { text: `links${i18next.t("common.points")}`, cls: "code-title" });
 		});
 		span.createEl("ul", undefined, (l) => {
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "mdlinks" });
 				p.createEl("span", {
-					text: `: ${i18next.t("settings.help.frontmatter.mdlinks")
+					text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.mdlinks")
 					}`,
 				});
+				p.createEl("code", {
+					text: " [[markdown|alias]] ",
+				});
+				p.createEl("span", { text: i18next.t("common.in")});
+				p.createEl("code", { text: " [alias](markdown) " });
 			});
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "convert" });
 				p.createEl("span", undefined, (span) => {
 					span.createEl("span", {
-						text: `: ${i18next.t(
+						text: `${i18next.t("common.points")}${i18next.t(
 							"settings.help.frontmatter.convert.enableOrDisable"
 						)
 						} `,
@@ -157,55 +164,55 @@ export function help(settings: GitHubPublisherSettings) {
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "internals" });
 				p.createEl("span", {
-					text: `: ${i18next.t("settings.help.frontmatter.internals")}`
+					text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.internals")}`
 				});
 			});
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "nonShared" });
-				p.createEl("span", { text: `: ${i18next.t("settings.help.frontmatter.nonShared")}` });
+				p.createEl("span", { text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.nonShared")}` });
 			});
 		});
-		span.createEl("li", { text: "embed:", cls: "code code-title" });
+		span.createEl("li", { text: `embed${i18next.t("common.points")}`, cls: "code code-title" });
 		span.createEl("ul", undefined, (l) => {
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "send" });
 				p.createEl("span", {
-					text: `: ${i18next.t("settings.help.frontmatter.embed.send")
+					text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.embed.send")
 					}`,
 				});
 			});
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "remove" });
 				p.createEl("span", {
-					text: `: ${i18next.t("settings.help.frontmatter.embed.remove.desc")
+					text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.embed.remove.desc")
 					}`,
 				});
 				p.createEl("ul", undefined, (ul) => {
 					ul.createEl("li", undefined, (li) => {
 						li.createEl("code", { text: "remove | true" });
 						li.createEl("span", {
-							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.remove")}`
+							text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.embed.remove.remove")}`
 						},
 						);
 					});
 					ul.createEl("li", undefined, (li) => {
 						li.createEl("code", { text: "keep | false" });
 						li.createEl("span", {
-							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.keep")}`
+							text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.embed.remove.keep")}`
 						},
 						);
 					});
 					ul.createEl("li", undefined, (li) => {
 						li.createEl("code", { text: "links" });
 						li.createEl("span", {
-							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.links")}`
+							text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.embed.remove.links")}`
 						},
 						);
 					});
 					ul.createEl("li", undefined, (li) => {
 						li.createEl("code", { text: "bake" });
 						li.createEl("span", {
-							text: `: ${i18next.t("settings.help.frontmatter.embed.remove.bake")}`
+							text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.embed.remove.bake")}`
 						},
 						);
 					});
@@ -214,16 +221,16 @@ export function help(settings: GitHubPublisherSettings) {
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "char" });
 				p.createEl("span", {
-					text: `: ${i18next.t("settings.help.frontmatter.embed.char")}`,
+					text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.embed.char")}`,
 				});
 			});
 		});
-		span.createEl("li", { text: "attachment:", cls: "code code-title" });
+		span.createEl("li", { text: `attachment${i18next.t("common.points")}`, cls: "code code-title" });
 		span.createEl("ul", undefined, (l) => {
 			l.createEl("li", undefined, (span) => {
 				span.createEl("code", { text: "send" });
 				span.createEl("span", {
-					text: `: ${i18next.t(
+					text: `${i18next.t("common.points")}${i18next.t(
 						"settings.help.frontmatter.attachment.send"
 					)
 					}`,
@@ -232,7 +239,7 @@ export function help(settings: GitHubPublisherSettings) {
 			l.createEl("li", undefined, (p) => {
 				p.createEl("code", { text: "folder" });
 				p.createEl("span", {
-					text: `: ${i18next.t(
+					text: `${i18next.t("common.points")}${i18next.t(
 						"settings.help.frontmatter.attachment.folder"
 					)
 					}`,
@@ -242,44 +249,54 @@ export function help(settings: GitHubPublisherSettings) {
 		span.createEl("li", undefined, (span) => {
 			span.createEl("code", { text: "dataview", cls: "code-title" });
 			span.createEl("span", {
-				text: `: ${i18next.t("settings.help.frontmatter.dataview")}`,
+				text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.dataview")}`,
 			});
 		});
 		span.createEl("li", undefined, (span) => {
 			span.createEl("code", { text: "hardbreak", cls: "code-title" });
 			span.createEl("span", {
-				text: `: ${i18next.t("settings.help.frontmatter.hardBreak")
+				text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.hardBreak")
 				}`,
 			});
 		});
 		span.createEl("li", undefined, (span) => {
+			span.createEl("code", { text: "includeLinks", cls: "code-title" });
+			span.createEl("span", {
+				text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.includeLinks")}`,
+			});
+			span.createEl("code", { text: "[[markdown]]", cls: "code-title" });
+			span.createEl("span", { text: i18next.t("common.or")});
+			span.createEl("code", { text: "[](markdown)", cls: "code-title" });
+			
+		});
+		span.createEl("li", undefined, (span) => {
 			span.createEl("code", { text: "shortRepo", cls: "code-title" });
 			span.createEl("span", {
-				text: `: ${i18next.t("settings.help.frontmatter.shortRepo")}`,
+				text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.shortRepo")}`,
 			});
 		});
 		span.createEl("li", undefined, (span) => {
 			span.createEl("code", { text: "repo", cls: "code-title" });
 			span.createEl("span", {
-				text: `: ${i18next.t("settings.help.frontmatter.repo.desc")}`,
+				text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.repo.desc")}`,
 			});
 			span.createEl("ul", undefined, (ul) => {
 				ul.createEl("li", undefined, (li) => {
 					li.createEl("code", { text: "owner" });
 					li.createEl("span", {
-						text: `: ${i18next.t("settings.help.frontmatter.repo.owner")}`,
+						text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.repo.owner")}`,
 					});
 				});
 				ul.createEl("li", undefined, (li) => {
 					li.createEl("code", { text: "repo" });
 					li.createEl("span", {
-						text: `: ${i18next.t("settings.github.repoName.title")}`,
+						text: `${i18next.t("common.points")}${i18next.t("settings.github.repoName.title")}`,
 					});
 				});
 				ul.createEl("li", undefined, (li) => {
 					li.createEl("code", { text: "branch" });
 					li.createEl("span", {
-						text: `: ${i18next.t(
+						text: `${i18next.t("common.points")}${i18next.t(
 							"settings.help.frontmatter.repo.branch"
 						)}`,
 					});
@@ -287,7 +304,7 @@ export function help(settings: GitHubPublisherSettings) {
 				ul.createEl("li", undefined, (li) => {
 					li.createEl("code", { text: "autoclean" });
 					li.createEl("span", {
-						text: `: ${i18next.t("settings.help.frontmatter.autoclean")}`,
+						text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.autoclean")}`,
 					});
 				});
 			});
@@ -298,26 +315,26 @@ export function help(settings: GitHubPublisherSettings) {
 				cls: "code-title",
 			});
 			span.createEl("span", {
-				text: `: ${i18next.t("settings.help.frontmatter.titleKey")}`,
+				text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.titleKey")}`,
 			});
 		});
 		span.createEl("li", undefined, (span) => {
 			span.createEl("code", { text: "baseLink", cls: "code-title" });
 			span.createEl("span", {
-				text: `: ${i18next.t("settings.help.frontmatter.baselink.desc")}`,
+				text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.baselink.desc")}`,
 			});
 			span.createEl("code", { text: "copylink:", cls: "code-title" });
 			span.createEl("ul", undefined, (ul) => {
 				ul.createEl("li", undefined, (li) => {
 					li.createEl("code", { text: "base" });
 					li.createEl("span", {
-						text: `: ${i18next.t("settings.plugin.copyLink.baselink.title")}`,
+						text: `${i18next.t("common.points")}${i18next.t("settings.plugin.copyLink.baselink.title")}`,
 					});
 				});
 				ul.createEl("li", undefined, (li) => {
 					li.createEl("code", { text: "remove" });
 					li.createEl("span", {
-						text: `: ${i18next.t("settings.help.frontmatter.baselink.remove")}`,
+						text: `${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.baselink.remove")}`,
 					});
 				});
 			});
@@ -376,7 +393,7 @@ export function multipleRepoExplained(
 		});
 		el.createEl("code", { text: "multipleRepo" });
 		el.createEl("span", {
-			text: ` ${i18next.t("settings.help.multiRepoHelp.desc2")}:`,
+			text: ` ${i18next.t("settings.help.multiRepoHelp.desc2")}`,
 		});
 		el.createEl("ul", undefined, (el) => {
 			el.createEl("li", { text: "owner" }).addClass("code");

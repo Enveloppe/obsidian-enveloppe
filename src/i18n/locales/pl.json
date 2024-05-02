@@ -56,6 +56,7 @@
     "files": "",
     "ghToken": "",
     "here": "",
+    "in": "",
     "no": "",
     "or": "",
     "path": {
@@ -63,6 +64,7 @@
       "folder": "",
       "full": ""
     },
+    "points": "",
     "published": "",
     "regex": "",
     "rename": "",
@@ -271,6 +273,10 @@
           "title": ""
         }
       },
+      "sendSimpleLinks": {
+        "desc": "",
+        "title": ""
+      },
       "title": "",
       "transferImage": {
         "title": ""
@@ -417,6 +423,7 @@
           "send": ""
         },
         "hardBreak": "",
+        "includeLinks": "",
         "internals": "",
         "mdlinks": "",
         "nestedKey": "",
