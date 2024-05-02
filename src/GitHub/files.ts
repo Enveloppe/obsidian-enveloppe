@@ -92,7 +92,7 @@ export class FilesManagement extends Publisher {
 		const files = this.vault.getFiles().filter((x) => !x.path.startsWith(this.settings.github.dryRun.folderName));
 		const allFileWithPath: ConvertedLink[] = [];
 		for (const file of files) {
-			if (isAttachment(file.name)) {
+			if (isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
 				const filepath = getImagePath(file, this.settings, null);
 				allFileWithPath.push({
 					converted: filepath,
@@ -415,7 +415,7 @@ export class FilesManagement extends Publisher {
 		const transferImage = settingsConversion.attachment;
 		const transferEmbeds = settingsConversion.embed;
 		if (
-			(isAttachment(file.name) && transferImage) ||
+			(isAttachment(file.name, this.settings.embed.unHandledObsidianExt) && transferImage) ||
 			(transferEmbeds && file.extension === "md")
 		) {
 			return file;

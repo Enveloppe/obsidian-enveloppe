@@ -288,6 +288,12 @@
         "title": "Transfer embedded notes"
       }
     },
+    "embeds": {
+      "unHandledObsidianExt": {
+        "desc": "Separate extensions with a comma. \nRegexes are supported when enclosed by /, such as /regex/. \nDon't include the period!",
+        "title": "Allow extensions not natively supported by Obsidian"
+      }
+    },
     "github": {
       "apiType": {
         "desc": "Choose between the GitHub API or the GitHub Enterprise API (only GitHub Enterprise users — Advanced user!).",

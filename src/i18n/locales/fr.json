@@ -288,6 +288,12 @@
         "title": "Transférer les notes intégrées"
       }
     },
+    "embeds": {
+      "unHandledObsidianExt": {
+        "desc": "Séparer les extensions par une virgule. Les regex sont supportées quand encadrés par /, tel que /regex/. N'incluez pas le point !",
+        "title": "Autoriser des extensions non-supportés nativement par Obsidian"
+      }
+    },
     "github": {
       "apiType": {
         "desc": "Choisir entre l'API GitHub ou l'API pour GitHub Entreprise (uniquement pour les utilisateurs de GitHub Enterprise — Utilisateur avancé !).",

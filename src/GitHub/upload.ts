@@ -120,7 +120,7 @@ export default class Publisher {
 									uploadedFile.push(...published.uploaded);
 								}
 							} else if (
-								isAttachment(file.name) &&
+								isAttachment(file.name, this.settings.embed.unHandledObsidianExt) &&
 								properties.frontmatter.general.attachment
 							) {
 								const published = await this.uploadImage(
@@ -374,7 +374,7 @@ export default class Publisher {
 		}
 		const octokit = this.octokit;
 		let msg = `PUSH NOTE : ${title}`;
-		if (isAttachment(path)) {
+		if (isAttachment(path, this.settings.embed.unHandledObsidianExt)) {
 			title = path.split("/")[path.split("/").length - 1];
 			msg = `PUSH ATTACHMENT : ${title}`;
 		}
@@ -628,7 +628,7 @@ export default class Publisher {
 	): Promise<TFile[]> {
 		const newLinkedFiles: TFile[] = [];
 		for (const file of embedFiles) {
-			if (isAttachment(file.name)) {
+			if (isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
 				const imagePath = getImagePath(
 					file,
 					this.settings,

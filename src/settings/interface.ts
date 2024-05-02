@@ -142,6 +142,7 @@ export interface GitHubPublisherSettings {
 			textBefore: string;
 			textAfter: string;
 		};
+		unHandledObsidianExt: string[];
 	}
 	plugin:
 	{
@@ -307,6 +308,7 @@ export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 		folder: "",
 		convertEmbedToLinks: "keep",
 		charConvert: "->",
+		unHandledObsidianExt: [],
 	},
 	plugin: {
 		shareKey: "share",

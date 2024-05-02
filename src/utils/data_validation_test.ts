@@ -186,8 +186,17 @@ export function multipleSharedKey(frontmatter: FrontMatterCache | undefined | nu
  * @return {RegExpMatchArray}
  */
 
-export function isAttachment(filename: string): RegExpMatchArray | null {
+export function isAttachment(filename: string, attachmentExtern?: string[]): RegExpMatchArray | null {
 	if (filename.includes("excalidraw")) return filename.match(/excalidraw\.md$/i);
+	if (attachmentExtern && attachmentExtern.length > 0) {
+		for (const att of attachmentExtern) {
+			const isRegex = att.match(FIND_REGEX);
+			if (isRegex) {
+				const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
+				if (regex?.test(filename)) return filename.match(regex);
+			} else if (filename.match(att)) return filename.match(att);
+		}
+	}
 	return filename.match(
 		/(png|jpe?g|gif|bmp|svg|mp[34]|web[mp]|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf|excalidraw)$/i
 	);

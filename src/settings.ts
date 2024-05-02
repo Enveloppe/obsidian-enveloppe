@@ -915,6 +915,21 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							})).open();
 						});
 				});
+			
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.embeds.unHandledObsidianExt.title"))
+				.setDesc(i18next.t("settings.embeds.unHandledObsidianExt.desc"))
+				.addTextArea((text) => {
+					text.setPlaceholder("py, mdx")
+						.setValue(embedSettings.unHandledObsidianExt.join(", "))
+						.onChange(async (value) => {
+							embedSettings.unHandledObsidianExt = value
+								.split(/[,\n]\W*/)
+								.map((item) => item.trim())
+								.filter((item) => item.length > 0);
+							await this.plugin.saveSettings();
+						});
+				});
 		}
 
 		new Setting(this.settingsPage)

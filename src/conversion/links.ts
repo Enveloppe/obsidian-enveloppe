@@ -74,6 +74,8 @@ export function convertWikilinks(
 				const linkedFile = linkedFiles.find(
 					(item) => item.linkFrom.replace(/#.*/, "") === StrictFileName
 				);
+				const isNotAttachment = !isAttachment(fileName.trim(), settings.embed.unHandledObsidianExt);	
+
 				if (linkedFile && !linkIsInFormatter(linkedFile, sourceFrontmatter)) {
 					let altText: string;
 					if (linkedFile.linked.extension !== "md") {
@@ -125,7 +127,7 @@ export function convertWikilinks(
 					}
 					if (
 						(!imageSettings &&
-							isAttachment(linkedFile.linked.extension)) ||
+							!isNotAttachment) ||
 						removeEmbed
 					) {
 						linkCreator = "";
@@ -146,23 +148,23 @@ export function convertWikilinks(
 						.replace("#", " > ")
 						.replace(/ > \^\w*/, "");
 					const removeEmbed =
-						!isAttachment(fileName.trim()) &&
+						isNotAttachment &&
 						conditionConvert.removeEmbed === "remove" &&
 						isEmbedBool;
-					if (isEmbedBool && conditionConvert.removeEmbed === "links" && !isAttachment(fileName.trim())) {
+					if (isEmbedBool && conditionConvert.removeEmbed === "links" && isNotAttachment) {
 						isEmbed = `${conditionConvert.charEmbedLinks} `;
 						linkCreator = linkCreator.replace("!", isEmbed);
 					}
 					linkCreator = convertWikilink ? createMarkdownLinks(fileName, isEmbed, altLink, settings) : addAltForWikilinks(altMatch as RegExpMatchArray, linkCreator);
 					if (
-						!isAttachment(fileName.trim()) &&
+						isNotAttachment &&
 						!convertLinks &&
 						!isEmbedBool
 					) {
 						linkCreator = altLink;
 					}
 					if (
-						(!imageSettings && isAttachment(fileName.trim())) ||
+						(!imageSettings && !isNotAttachment) ||
 						removeEmbed
 					) {
 						linkCreator = "";
@@ -195,7 +197,7 @@ function addAltForWikilinks(altMatch: RegExpMatchArray, linkCreator: string) {
 
 
 function createMarkdownLinks(fileName: string, isEmbed: string, altLink: string, settings: GitHubPublisherSettings) {
-	const markdownName = isAttachment(fileName.trim())
+	const markdownName = isAttachment(fileName.trim(), settings.embed.unHandledObsidianExt)
 		? fileName.trim()
 		: `${fileName.replace(/#.*/, "").trim()}.md`;
 	const anchorMatch = fileName.match(/(#.*)/);
