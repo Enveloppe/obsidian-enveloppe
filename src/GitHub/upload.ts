@@ -123,7 +123,7 @@ export default class Publisher {
 								isAttachment(file.name, this.settings.embed.unHandledObsidianExt) &&
 								properties.frontmatter.general.attachment
 							) {
-								const published =  await this.uploadImage(
+								const published = await this.uploadImage(
 									file,
 									properties
 								);
@@ -627,10 +627,6 @@ export default class Publisher {
 	): Promise<TFile[]> {
 		const newLinkedFiles: TFile[] = [];
 		for (const file of embedFiles) {
-			if (!isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
-				newLinkedFiles.push(file);
-				continue;
-			}
 			if (isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
 				const imagePath = getImagePath(
 					file,
@@ -679,8 +675,10 @@ export default class Publisher {
 				} catch (e) {
 					newLinkedFiles.push(file);
 				}
+			//pass non image file as they are updated basically by GitHub with checking the content (basic git behavior)
+			} else {
+				newLinkedFiles.push(file);
 			}
-
 		}
 		return newLinkedFiles;
 	}
