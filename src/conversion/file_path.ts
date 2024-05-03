@@ -84,7 +84,6 @@ export async function createRelativePath(
 		properties,
 		targetFile.linked,
 	);
-
 	logs({settings}, `Shared: ${shared} for ${targetFile.linked.path}`);
 	if (
 		targetFile.linked.extension === "md" && !targetFile.linked.name.includes("excalidraw") && (!isFromAnotherRepo || !shared)
@@ -227,9 +226,8 @@ function folderNoteIndexYAML(
 	repoFrontmatter?: RepoFrontmatter,
 ): string {
 	const category = repoFrontmatter?.path?.category?.value ?? getCategory(frontmatter, settings, repoFrontmatter?.path);
-	logs({settings}, `Category: ${category}`);
 	const catSplit = category.split("/");
-	const parentCatFolder = !category.endsWith("/") ? catSplit.at(-1) as string : catSplit.at(-2) as string;
+	const parentCatFolder = category.endsWith("/") ? catSplit.at(-2) as string : catSplit.at(-1) as string;
 
 	if (!settings.upload.folderNote.enable) return regexOnFileName(fileName, settings);
 	if (

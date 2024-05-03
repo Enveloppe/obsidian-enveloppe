@@ -79,7 +79,7 @@ async function migrateReplaceTitle(plugin: GithubPublisher) {
 
 async function migrateSubFolder(plugin: GithubPublisher) {
 	//@ts-ignore
-	if (plugin.settings.upload.subFolder && (!plugin.settings.upload.replacePath.find((e) => e.regex === "/" + plugin.settings.upload.subFolder))) {
+	if (plugin.settings.upload.subFolder && (!plugin.settings.upload.replacePath.find((e) => e.regex === `/${plugin.settings.upload.subFolder}`))) {
 		logs({ settings: plugin.settings }, i18next.t("informations.migrating.subFolder"));
 		//@ts-ignore
 		if (plugin.settings.upload.subFolder.length > 0) {

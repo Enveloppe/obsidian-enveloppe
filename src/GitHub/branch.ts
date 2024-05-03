@@ -76,7 +76,6 @@ export class GithubBranch extends FilesManagement {
 		} catch (e) {
 			// catch the old branch
 			try {
-				logs({settings: this.settings, e: true}, e);
 				const allBranch = await this.octokit.request(
 					"GET /repos/{owner}/{repo}/branches",
 					{

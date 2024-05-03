@@ -24,7 +24,7 @@ import {
 	Repository,
 } from "./settings/interface";
 import { migrateSettings, OldSettings } from "./settings/migrate";
-import { createTokenPath, logs, monkeyPatchConsole, notif } from "./utils";
+import { createTokenPath, monkeyPatchConsole, notif } from "./utils";
 import { checkRepositoryValidity, verifyRateLimitAPI } from "./utils/data_validation_test";
 
 /**
@@ -52,7 +52,6 @@ export default class GithubPublisher extends Plugin {
 		}
 		this.addCommand(await shareOneNoteCallback(repo, this));
 		if (plugin.settings.upload.autoclean.enable) {
-			logs({ settings: this.settings }, "Adding purge command");
 			this.addCommand(await purgeNotesRemoteCallback(this, repo, this.branchName));
 		}
 		this.addCommand(await uploadAllNotesCallback(this, repo, this.branchName));
@@ -94,12 +93,9 @@ export default class GithubPublisher extends Plugin {
 						this.app.commands.removeCommand(command.id);
 					}
 				}
-				if (!this.settings.upload.autoclean.enable) {
-					if (commandName === "publisher-delete-clean") {
-						logs({ settings: this.settings }, "Removing purge/clean commands");
-						//@ts-ignore
-						this.app.commands.removeCommand(command.id);
-					}
+				if (!this.settings.upload.autoclean.enable && commandName === "publisher-delete-clean") {
+					//@ts-ignore
+					this.app.commands.removeCommand(command.id);
 				}
 			}
 		}
@@ -107,7 +103,6 @@ export default class GithubPublisher extends Plugin {
 
 	async reloadCommands() {
 		//compare old and new repo to delete old commands
-		logs({ settings: this.settings }, "Reloading commands");
 		const newRepo: Repository[] = this.settings.github?.otherRepo ?? [];
 		this.cleanOldCommands();
 		for (const repo of newRepo) {

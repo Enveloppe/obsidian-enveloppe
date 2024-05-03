@@ -4,7 +4,6 @@ import { defaultRepo } from "src/utils/data_validation_test";
 
 import GithubPublisher from "../main";
 import { FolderSettings, Repository } from "../settings/interface";
-import { logs } from "../utils";
 import {
 	createLinkOnActiveFile,
 	deleteCommands, repositoryValidityActiveFile, shareActiveFile,
@@ -188,7 +187,6 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 			repositoryValidityActiveFile(this.plugin, this.repo);
 			break;
 		}
-		logs({ settings: this.plugin.settings }, `run command ${item.commands}`);
 	}
 }
 

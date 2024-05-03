@@ -37,7 +37,6 @@ export function isInternalShared(
 	if (!frontmatter) return false;
 	if (isExcludedPath(properties.plugin.settings, file, properties.repository)) return false;
 	const shareKey = properties.repository?.shareKey || properties.plugin.settings.plugin.shareKey;
-	logs({settings: properties.plugin.settings}, "shareKey", shareKey, "frontmatter", frontmatter[shareKey]);
 	if (frontmatter[shareKey] == null || frontmatter[shareKey] === undefined || ["false", "0", "no"].includes(frontmatter[shareKey].toString().toLowerCase())) return false;
 	return ["true", "1", "yes"].includes(frontmatter[shareKey].toString().toLowerCase());
 

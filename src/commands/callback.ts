@@ -9,7 +9,7 @@ import {Command, Notice } from "obsidian";
 
 import GithubPublisher from "../main";
 import {MonoRepoProperties, MultiRepoProperties, Repository} from "../settings/interface";
-import {createLink, logs} from "../utils";
+import {createLink} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
 import { frontmatterFromFile, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {purgeNotesRemote, shareOneNote} from ".";
@@ -76,7 +76,6 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 		hotkeys: [],
 		//@ts-ignore
 		callback: async () => {
-			logs({settings: plugin.settings}, "Enabling purge command");
 			const frontmatter = getRepoFrontmatter(plugin.settings, repo);
 			const monoRepo: MonoRepoProperties = {
 				frontmatter: Array.isArray(frontmatter) ? frontmatter[0] : frontmatter,

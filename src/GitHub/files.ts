@@ -78,8 +78,6 @@ export class FilesManagement extends Publisher {
 				}
 			}
 		}
-
-		logs({settings: this.settings}, files);
 		return files;
 	}
 
@@ -481,7 +479,6 @@ export class FilesManagement extends Publisher {
 		}
 
 		embedFiles = [...new Set(embedFiles)].filter((x) => x != null);
-		logs({settings: this.settings}, embedFiles);
 		// @ts-ignore
 		if (this.plugin.app.plugins.enabledPlugins.has("dataview")) {
 			const dvApi = getAPI();
