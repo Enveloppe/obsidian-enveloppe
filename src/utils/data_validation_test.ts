@@ -165,7 +165,9 @@ export function multipleSharedKey(frontmatter: FrontMatterCache | undefined | nu
 }
 
 /**
- * Check if the file is an attachment file and return the regexMatchArray
+ * Check if the file is an attachment file and return the regexMatchArray.
+ * It also supports for external attachment (not handled natively by Obsidian) from the settings
+ * @info
  * Attachment files are :
  * - png
  * - jpg et jpeg
@@ -182,7 +184,8 @@ export function multipleSharedKey(frontmatter: FrontMatterCache | undefined | nu
  * - mov
  * - mkv
  * - ogv
- * @param {string} filename
+ * @param {string} filename - The name of the file (extension, or full path. Extension is included)
+ * @param {string[]} [attachmentExtern] - The list of external attachment from settings
  * @return {RegExpMatchArray}
  */
 
