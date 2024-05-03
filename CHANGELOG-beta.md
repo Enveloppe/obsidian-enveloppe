@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.1.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.6...7.1.0-0) (2024-05-03)
+
+
+### Features
+
+* Add unhandled obsidian extension as attachments + send file by links ([31087c6](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/31087c656039b4ff84f112210be0bcb70ef2cddd))
+
 ## [7.0.3-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.3-3...7.0.3-4) (2024-03-04)
 
 
