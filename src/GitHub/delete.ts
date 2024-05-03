@@ -218,7 +218,7 @@ export async function filterGithubFile(
 				(attachmentFolder.length > 0 &&
 					file.file.includes(attachmentFolder))) &&
 			!excludedFileFromDelete(file.file, settings) &&
-			(isAttachment(file.file) || file.file.match("md$"))
+			(isAttachment(file.file, settings.embed.unHandledObsidianExt) || file.file.match("md$"))
 		) {
 			sharedFilesInRepo.push(file);
 		}
@@ -305,7 +305,7 @@ function cleanDryRun(
 	if (!dryRunFolder || dryRunFolder instanceof TFile) return {success: false, deleted: [], undeleted: []};
 	const dryRunFiles:TFile[] = [];
 	Vault.recurseChildren(dryRunFolder as TFolder, (file: TAbstractFile) => {
-		if (!excludedFileFromDelete(normalizePath(file.path.replace(dryRunFolderPath, "")), settings) && (isAttachment(file.path) || file.path.match("md$")) && file instanceof TFile) dryRunFiles.push(file);
+		if (!excludedFileFromDelete(normalizePath(file.path.replace(dryRunFolderPath, "")), settings) && (isAttachment(file.path, settings.embed.unHandledObsidianExt) || file.path.match("md$")) && file instanceof TFile) dryRunFiles.push(file);
 	});
 	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repo).map((file) => {
 		return { converted: file.converted, repo: file.repoFrontmatter };

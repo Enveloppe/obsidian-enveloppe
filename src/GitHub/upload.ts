@@ -120,7 +120,7 @@ export default class Publisher {
 									uploadedFile.push(...published.uploaded);
 								}
 							} else if (
-								isAttachment(file.name) &&
+								isAttachment(file.name, this.settings.embed.unHandledObsidianExt) &&
 								properties.frontmatter.general.attachment
 							) {
 								const published = await this.uploadImage(
@@ -201,16 +201,15 @@ export default class Publisher {
 			);
 			let embedFiles = shareFiles.getSharedEmbed(
 				file,
-				frontmatterSettings
+				frontmatterSettings,
 			);
 			embedFiles = await shareFiles.getMetadataLinks(
 				file,
 				embedFiles,
-				frontmatter,
 				frontmatterSettings
 			);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
-
+			
 			let text = await this.vault.cachedRead(file);
 			const multiProperties: MultiProperties = {
 				plugin: this.plugin,
@@ -374,7 +373,7 @@ export default class Publisher {
 		}
 		const octokit = this.octokit;
 		let msg = `PUSH NOTE : ${title}`;
-		if (isAttachment(path)) {
+		if (isAttachment(path, this.settings.embed.unHandledObsidianExt)) {
 			title = path.split("/")[path.split("/").length - 1];
 			msg = `PUSH ATTACHMENT : ${title}`;
 		}
@@ -618,8 +617,9 @@ export default class Publisher {
 
 	/**
 	 * Remove all image embed in the note if they are already in the repo (same path)
-	 * @param embedFiles {TFile[]} File embedded in the note
-	 * @param properties {MonoProperties} Properties of the note
+	 * Skip for files, as they are updated by GitHub directly (basic git behavior)
+	 * @param {TFile[]} embedFiles  File embedded in the note
+	 * @param {MonoProperties} properties Properties of the note
 	 * @returns {Promise<TFile[]>} New list of embed files
 	 */
 	async cleanLinkedImageIfAlreadyInRepo(
@@ -628,7 +628,7 @@ export default class Publisher {
 	): Promise<TFile[]> {
 		const newLinkedFiles: TFile[] = [];
 		for (const file of embedFiles) {
-			if (isAttachment(file.name)) {
+			if (isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
 				const imagePath = getImagePath(
 					file,
 					this.settings,
@@ -676,8 +676,10 @@ export default class Publisher {
 				} catch (e) {
 					newLinkedFiles.push(file);
 				}
+			//pass non image file as they are updated basically by GitHub with checking the content (basic git behavior)
+			} else {
+				newLinkedFiles.push(file);
 			}
-
 		}
 		return newLinkedFiles;
 	}

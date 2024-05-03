@@ -33,6 +33,7 @@ export function getFrontmatterSettings(
 		hardbreak: settings.conversion.hardbreak,
 		unshared: settings.conversion.links.unshared,
 		convertInternalLinks: settings.conversion.links.internal,
+		includeLinks: settings.embed.sendSimpleLinks
 	};
 
 	const shareAll = repo ? repo.shareAll?.enable : settings.plugin.shareAll?.enable;
@@ -390,12 +391,15 @@ function getFrontmatterSettingRepository(
 	frontConvert = settingsLink(frontmatter, frontConvert, smartKey);
 	frontConvert = settingAttachment(frontmatter, frontConvert, smartKey);
 	frontConvert = settingsEmbed(frontmatter, frontConvert, smartKey);
-
-	if (frontmatter?.[`${smartKey}.dataview`] !== undefined) {
+	const key = smartKey ? "" : `${smartKey}.`;
+	if (frontmatter?.[`${key}dataview`] !== undefined) {
 		frontConvert.dataview = frontmatter[`${smartKey}.dataview`];
 	}
-	if (frontmatter?.[`${smartKey}.hardbreak`] !== undefined) {
+	if (frontmatter?.[`${key}hardbreak`] !== undefined) {
 		frontConvert.hardbreak = frontmatter[`${smartKey}.hardbreak`];
+	}
+	if (frontmatter?.[`${key}includeLinks`] !== undefined) {
+		frontConvert.includeLinks = frontmatter[`${smartKey}.includeLinks`];
 	}
 
 	return frontConvert;

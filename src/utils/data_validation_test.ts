@@ -165,7 +165,9 @@ export function multipleSharedKey(frontmatter: FrontMatterCache | undefined | nu
 }
 
 /**
- * Check if the file is an attachment file and return the regexMatchArray
+ * Check if the file is an attachment file and return the regexMatchArray.
+ * It also supports for external attachment (not handled natively by Obsidian) from the settings
+ * @info
  * Attachment files are :
  * - png
  * - jpg et jpeg
@@ -182,16 +184,27 @@ export function multipleSharedKey(frontmatter: FrontMatterCache | undefined | nu
  * - mov
  * - mkv
  * - ogv
- * @param {string} filename
+ * @param {string} filename - The name of the file (extension, or full path. Extension is included)
+ * @param {string[]} [attachmentExtern] - The list of external attachment from settings
  * @return {RegExpMatchArray}
  */
 
-export function isAttachment(filename: string): RegExpMatchArray | null {
+export function isAttachment(filename: string, attachmentExtern?: string[]): RegExpMatchArray | null {
 	if (filename.includes("excalidraw")) return filename.match(/excalidraw\.md$/i);
+	if (attachmentExtern && attachmentExtern.length > 0) {
+		for (const att of attachmentExtern) {
+			const isRegex = att.match(FIND_REGEX);
+			if (isRegex) {
+				const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
+				if (regex?.test(filename)) return filename.match(regex);
+			} else if (filename.match(att)) return filename.match(att);
+		}
+	}
 	return filename.match(
 		/(png|jpe?g|gif|bmp|svg|mp[34]|web[mp]|wav|m4a|ogg|3gp|flac|ogv|mov|mkv|pdf|excalidraw)$/i
 	);
 }
+
 
 /**
  * Check if a target Repository === source Repository

@@ -856,10 +856,22 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	 */
 	async renderEmbedConfiguration() {
 		this.settingsPage.empty();
-
+		const embedSettings = this.settings.embed;
+		new Setting(this.settingsPage)
+			.setName(i18next.t("settings.embed.sendSimpleLinks.title"))
+			.setDesc(i18next.t("settings.embed.sendSimpleLinks.desc"))
+			.addToggle((toggle) => {
+				toggle
+					.setValue(embedSettings.sendSimpleLinks)
+					.onChange(async (value) => {
+						embedSettings.sendSimpleLinks = value;
+						await this.plugin.saveSettings();
+						await this.renderEmbedConfiguration();
+					});
+			});
 		this.settingsPage.createEl("h5", { text: i18next.t("settings.embed.attachment"), cls: "center" });
 
-		const embedSettings = this.settings.embed;
+		
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.embed.transferImage.title"))
 			.addToggle((toggle) => {
@@ -913,6 +925,21 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 								embedSettings.overrideAttachments = result;
 								await this.plugin.saveSettings();
 							})).open();
+						});
+				});
+			
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.embeds.unHandledObsidianExt.title"))
+				.setDesc(i18next.t("settings.embeds.unHandledObsidianExt.desc"))
+				.addTextArea((text) => {
+					text.setPlaceholder("py, mdx")
+						.setValue(embedSettings.unHandledObsidianExt.join(", "))
+						.onChange(async (value) => {
+							embedSettings.unHandledObsidianExt = value
+								.split(/[,\n]\W*/)
+								.map((item) => item.trim())
+								.filter((item) => item.length > 0);
+							await this.plugin.saveSettings();
 						});
 				});
 		}
