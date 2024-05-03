@@ -617,8 +617,9 @@ export default class Publisher {
 
 	/**
 	 * Remove all image embed in the note if they are already in the repo (same path)
-	 * @param embedFiles {TFile[]} File embedded in the note
-	 * @param properties {MonoProperties} Properties of the note
+	 * Skip for files, as they are updated by GitHub directly (basic git behavior)
+	 * @param {TFile[]} embedFiles  File embedded in the note
+	 * @param {MonoProperties} properties Properties of the note
 	 * @returns {Promise<TFile[]>} New list of embed files
 	 */
 	async cleanLinkedImageIfAlreadyInRepo(
