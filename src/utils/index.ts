@@ -78,6 +78,10 @@ function callFunction(type?: boolean):string {
 export function logs(args: LogsParameters, ...messages: unknown[]) {
 	const settings = args.settings as GitHubPublisherSettings;
 	args.logs = true;
+	if (args.e) {
+		notif(args, ...messages);
+		return;
+	}
 	if (settings.plugin?.dev) {
 		notif(args, ...messages);
 	}
