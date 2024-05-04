@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.1.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-1...7.1.0-2) (2024-05-04)
+
+
+### Bug Fixes
+
+* **imagePath:** regex on title was applied on path ([8d5a441](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/8d5a441baa4a27bce9fca2b8dddacdc10f244f89)), closes [#338](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/338)
+
 ## [7.1.0-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-0...7.1.0-1) (2024-05-03)
 
 ## [7.1.0-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.6...7.1.0-0) (2024-05-03)
