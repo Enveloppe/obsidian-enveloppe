@@ -89,10 +89,10 @@ export class FilesManagement extends Publisher {
 	getAllFileWithPath(repo: Repository | null, convert: FrontmatterConvert): ConvertedLink[] {
 		const files = this.vault.getFiles().filter((x) => !x.path.startsWith(this.settings.github.dryRun.folderName));
 		const allFileWithPath: ConvertedLink[] = [];
+		const sourceFrontmatter = getRepoFrontmatter(this.plugin, repo, null, true);
 		for (const file of files) {
 			if (isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
-				
-				const filepath = getImagePath(file, this.plugin, convert, repo );
+				const filepath = getImagePath(file, this.plugin, convert, sourceFrontmatter );
 				allFileWithPath.push({
 					converted: filepath,
 					real: file.path,

@@ -82,7 +82,6 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 				repo,
 				convert: frontmatterSettingsRepository(plugin, repo)
 			};
-			//@ts-ignore
 			const publisher = await plugin.reloadOctokit(repo?.smartKey);
 			await purgeNotesRemote(
 				publisher,

@@ -77,7 +77,7 @@ export async function createRelativePath(
 	const settings = properties.plugin.settings;
 	const shortRepo = properties.repository;
 	const sourcePath = getReceiptFolder(sourceFile, shortRepo, properties.plugin, properties.frontmatter.repo);
-	const frontmatterTarget = frontmatterFromFile(targetFile.linked, properties.plugin);
+	const frontmatterTarget = frontmatterFromFile(targetFile.linked, properties.plugin, properties.repository);
 	const targetRepo = getRepoFrontmatter(properties.plugin, shortRepo, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(properties.frontmatter.repo, targetRepo);
 	const shared = isInternalShared(
@@ -98,6 +98,7 @@ export async function createRelativePath(
 	const frontmatterSettingsFromFile = getFrontmatterSettings(frontmatter, settings, shortRepo);
 	const frontmatterSettingsFromRepository = frontmatterSettingsRepository(properties.plugin, shortRepo);
 	const frontmatterSettings = merge(frontmatterSettingsFromRepository, frontmatterSettingsFromFile);
+
 	const targetPath =
 		targetFile.linked.extension === "md" && !targetFile.linked.name.includes("excalidraw")
 			? getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo)
@@ -105,7 +106,7 @@ export async function createRelativePath(
 				targetFile.linked,
 				properties.plugin,
 				frontmatterSettings,
-				shortRepo
+				targetRepo
 			);
 	const sourceList = sourcePath.split("/");
 	const targetList = targetPath.split("/");
@@ -373,7 +374,7 @@ export function getReceiptFolder(
 	const { vault} = plugin.app;
 	const settings = plugin.settings;
 	if (file.extension === "md") {
-		const frontmatter = frontmatterFromFile(file, plugin);
+		const frontmatter = frontmatterFromFile(file, plugin, otherRepo);
 		if (!repoFrontmatter) repoFrontmatter = getRepoFrontmatter(plugin, otherRepo, frontmatter);
 		repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
 		let targetRepo = repoFrontmatter.find((repo) => repo.path?.smartkey === otherRepo?.smartKey || "default");
@@ -416,19 +417,10 @@ export function getImagePath(
 	file: TFile,
 	plugin: GithubPublisher,
 	sourceFrontmatter: FrontmatterConvert | null,
-	repository: Repository | null,
+	repository: RepoFrontmatter | RepoFrontmatter[],
 ): string {
 	const settings = plugin.settings;
-	let overridePath: undefined | RepoFrontmatter;
-	if (repository?.set) {
-		const file = plugin.app.vault.getAbstractFileByPath(repository.set) instanceof TFile ? plugin.app.vault.getAbstractFileByPath(repository.set) : null;
-		if (file) {
-			const frontmatter = plugin.app.metadataCache.getFileCache(file as TFile)?.frontmatter;
-			const repoFrontmatter = getRepoFrontmatter(plugin, repository, frontmatter);
-			overridePath = repoFrontmatter instanceof Array ? repoFrontmatter[0] : repoFrontmatter;
-		}
-	}
-	
+	const overridePath = repository instanceof Array ? repository[0] : repository;
 	const imagePath = createImagePath(file, settings, sourceFrontmatter, overridePath);
 	const path = regexOnPath(imagePath.path, settings);
 	const name = regexOnFileName(imagePath.name, settings);
