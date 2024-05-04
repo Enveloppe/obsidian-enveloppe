@@ -5,6 +5,7 @@
 
 import { FrontMatterCache, normalizePath, TFile } from "obsidian";
 import GithubPublisher from "src/main";
+import merge from "ts-deepmerge";
 
 import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, RepoFrontmatter, Repository } from "../settings/interface";
 
@@ -110,11 +111,11 @@ export function getRepoFrontmatter(
 ): RepoFrontmatter[] | RepoFrontmatter {
 	const settings = plugin.settings;
 	let github = repository ?? settings.github;
-	console.warn("github", settings.github);
-	if (!frontmatter && repository?.set && repository.set.length > 0) {
+	if (repository?.set && repository.set.length > 0) {
 		const file = plugin.app.vault.getAbstractFileByPath(repository.set) instanceof TFile ? plugin.app.vault.getAbstractFileByPath(repository.set) : null;
 		if (file) {
-			frontmatter = plugin.app.metadataCache.getFileCache(file as TFile)?.frontmatter;
+			const setFrontmatter = plugin.app.metadataCache.getFileCache(file as TFile)?.frontmatter;
+			frontmatter = frontmatter && setFrontmatter ? merge(frontmatter, setFrontmatter) : setFrontmatter ?? frontmatter ;
 		}
 	}
 	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"] !== "default") {
@@ -479,6 +480,7 @@ export function getLinkedFrontmatter(
 
 export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher) {
 	let frontmatter = null;
+	
 	if (file) {
 		frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);

@@ -91,7 +91,8 @@ export class FilesManagement extends Publisher {
 		const allFileWithPath: ConvertedLink[] = [];
 		for (const file of files) {
 			if (isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
-				const filepath = getImagePath(file, this.settings, convert, );
+				
+				const filepath = getImagePath(file, this.plugin, convert, repo );
 				allFileWithPath.push({
 					converted: filepath,
 					real: file.path,

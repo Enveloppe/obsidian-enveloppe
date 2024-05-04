@@ -103,8 +103,9 @@ export async function createRelativePath(
 			? getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo)
 			: getImagePath(
 				targetFile.linked,
-				settings,
-				frontmatterSettings
+				properties.plugin,
+				frontmatterSettings,
+				shortRepo
 			);
 	const sourceList = sourcePath.split("/");
 	const targetList = targetPath.split("/");
@@ -413,10 +414,21 @@ export function getReceiptFolder(
 
 export function getImagePath(
 	file: TFile,
-	settings: GitHubPublisherSettings,
+	plugin: GithubPublisher,
 	sourceFrontmatter: FrontmatterConvert | null,
-	overridePath?: string,
+	repository: Repository | null,
 ): string {
+	const settings = plugin.settings;
+	let overridePath: undefined | RepoFrontmatter;
+	if (repository?.set) {
+		const file = plugin.app.vault.getAbstractFileByPath(repository.set) instanceof TFile ? plugin.app.vault.getAbstractFileByPath(repository.set) : null;
+		if (file) {
+			const frontmatter = plugin.app.metadataCache.getFileCache(file as TFile)?.frontmatter;
+			const repoFrontmatter = getRepoFrontmatter(plugin, repository, frontmatter);
+			overridePath = repoFrontmatter instanceof Array ? repoFrontmatter[0] : repoFrontmatter;
+		}
+	}
+	
 	const imagePath = createImagePath(file, settings, sourceFrontmatter, overridePath);
 	const path = regexOnPath(imagePath.path, settings);
 	const name = regexOnFileName(imagePath.name, settings);
@@ -435,7 +447,7 @@ export function getImagePath(
 function createImagePath(file: TFile,
 	settings: GitHubPublisherSettings,
 	sourceFrontmatter: FrontmatterConvert | null,
-	overridePath?: string,
+	overridePath?: RepoFrontmatter,
 ): { path: string, name: string } {
 	let fileName = file.name;
 	let filePath = file.path;
@@ -444,18 +456,21 @@ function createImagePath(file: TFile,
 		filePath = filePath.replace(".excalidraw.md", ".svg");
 	}
 	const result : { path: string, name: string } = { path: filePath, name: fileName };
+	const behavior = overridePath?.path?.type ? overridePath.path.type : settings.upload.behavior;
+	const rootFolder = overridePath?.path?.rootFolder ? overridePath.path.rootFolder : settings.upload.rootFolder;
+	const defaultFolderName = overridePath?.path?.defaultName ? overridePath.path.defaultName : settings.upload.defaultName;
 	if (!sourceFrontmatter || !sourceFrontmatter.attachmentLinks) {
 		if (settings.embed.useObsidianFolder) {
-			if (settings.upload.behavior === FolderSettings.yaml) {
-				result.path = settings.upload.rootFolder.length > 0 ? normalizePath(`${settings.upload.rootFolder}/${filePath}`) : filePath;
+			if (behavior === FolderSettings.yaml) {
+				result.path = rootFolder.length > 0 ? normalizePath(`${rootFolder}/${filePath}`) : filePath;
 			}
 			else {
 				//no root, but default folder name
-				result.path = settings.upload.defaultName.length > 0 ? normalizePath(`${settings.upload.defaultName}/${filePath}`) : filePath;
+				result.path = defaultFolderName.length > 0 ? normalizePath(`${defaultFolderName}/${filePath}`) : filePath;
 			}
 			return result;
 		}
-		const defaultImageFolder = overridePath ? overridePath : settings.embed.folder;
+		const defaultImageFolder = overridePath?.path?.attachment?.folder ? overridePath.path?.attachment?.folder : settings.embed.folder;
 		//find in override
 		const isOverridden = settings.embed.overrideAttachments.filter((override) => {
 			const isRegex = override.path.match(FIND_REGEX);
@@ -476,10 +491,9 @@ function createImagePath(file: TFile,
 			result.path = filePath;
 		}
 		else if (defaultImageFolder.length > 0) {
-			result.path = normalizePath(`${defaultImageFolder}/${filePath}`);
-			
-		} else if (settings.upload.defaultName.length > 0) {
-			result.path = normalizePath(`${settings.upload.defaultName}/${fileName}`);
+			result.path = normalizePath(`${defaultImageFolder}/${fileName}`);
+		} else if (defaultFolderName.length > 0) {
+			result.path = normalizePath(`${defaultFolderName}/${fileName}`);
 		} else {
 			result.path = filePath;
 		}

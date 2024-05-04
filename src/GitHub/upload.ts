@@ -447,8 +447,9 @@ export default class Publisher {
 		}
 		const path = getImagePath(
 			imageFile,
-			this.settings,
-			properties.frontmatter.general
+			this.plugin,
+			properties.frontmatter.general,
+			properties.repository
 		);
 		if (this.settings.github.dryRun.enable) {
 			const folderName = this.settings.github.dryRun.folderName
@@ -636,8 +637,9 @@ export default class Publisher {
 			if (isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
 				const imagePath = getImagePath(
 					file,
-					this.settings,
-					properties.frontmatter.general
+					this.plugin,
+					properties.frontmatter.general,
+					properties.repository
 				);
 				const repoFrontmatter = properties.frontmatter;
 				if (this.settings.github.dryRun.enable) {
