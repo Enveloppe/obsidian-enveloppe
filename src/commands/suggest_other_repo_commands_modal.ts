@@ -3,7 +3,7 @@ import { App, FuzzySuggestModal } from "obsidian";
 import { defaultRepo } from "src/utils/data_validation_test";
 
 import GithubPublisher from "../main";
-import { FolderSettings, Repository } from "../settings/interface";
+import { FolderSettings, GitHubPublisherSettings, Repository } from "../settings/interface";
 import {
 	createLinkOnActiveFile,
 	deleteCommands, repositoryValidityActiveFile, shareActiveFile,
@@ -29,15 +29,17 @@ interface GithubPublisherCommands {
 export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
 	plugin: GithubPublisher;
 	branchName: string;
+	settings: GitHubPublisherSettings;
 
 	constructor(app: App, plugin: GithubPublisher, branchName: string) {
 		super(app);
 		this.plugin = plugin;
 		this.branchName = branchName;
+		this.settings = plugin.settings;
 	}
 
 	getItems(): Repository[] {
-		return this.plugin.settings.github.otherRepo;
+		return this.settings.github.otherRepo;
 	}
 	getItemText(item: Repository): string {
 		return item.smartKey;
@@ -56,6 +58,7 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 	branchName: string;
 	keyToFind: string | null;
 	type: "folder" | "file";
+	settings: GitHubPublisherSettings;
 	fileName: string | null;
 	onSubmit: (item: Repository) => void;
 
@@ -67,28 +70,28 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 		this.onSubmit = onSubmit;
 		this.fileName = fileName;
 		this.type = type;
+		this.settings = plugin.settings;
 	}
 
 	getItems(): Repository[] {
 		let repoFound: Repository[] = [];
-		const defRepo = defaultRepo(this.plugin.settings);
+		const defRepo = defaultRepo(this.settings);
 		if (this.type === "file") {
-			if (this.plugin.settings.plugin.shareAll?.enable && !this.fileName?.startsWith(this.plugin.settings.plugin.shareAll?.excludedFileName)) {
+			if (this.settings.plugin.shareAll?.enable && !this.fileName?.startsWith(this.settings.plugin.shareAll?.excludedFileName)) {
 				repoFound.push(defRepo);
 			}
 			if (this.keyToFind) {
-				repoFound = repoFound.concat(this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.shareKey == this.keyToFind));
+				repoFound = repoFound.concat(this.settings.github.otherRepo.filter((repo: Repository) => repo.shareKey == this.keyToFind));
 				if (this.keyToFind === defRepo.shareKey) {
 					repoFound.push(defRepo);
 				}
 			}
 		}
-		repoFound = repoFound.concat(this.plugin.settings.github.otherRepo.filter((repo: Repository) => repo.shareAll?.enable && !this.fileName?.startsWith(repo.shareAll?.excludedFileName)));
-		repoFound.push(defRepo);
-		repoFound = [...new Set(repoFound)];
+		repoFound = repoFound.concat(this.settings.github.otherRepo.filter((repo: Repository) => repo.shareAll?.enable && !this.fileName?.startsWith(repo.shareAll?.excludedFileName)));
 		if (repoFound.length === 0)
-			return this.plugin.settings.github.otherRepo;
-		return repoFound;
+			return [defRepo, ...this.settings.github.otherRepo];
+		repoFound.push(defRepo);
+		return [...new Set(repoFound)];
 	}
 	getItemText(item: Repository): string {
 		return item.smartKey;
@@ -108,11 +111,13 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 	plugin: GithubPublisher;
 	branchName: string;
 	repo: Repository;
+	settings: GitHubPublisherSettings;
 	constructor(app: App, plugin: GithubPublisher, branchName: string, repo: Repository) {
 		super(app);
 		this.plugin = plugin;
 		this.branchName = branchName;
 		this.repo = repo;
+		this.settings = plugin.settings;
 	}
 	getItems(): GithubPublisherCommands[] {
 		const cmd = [
@@ -141,13 +146,13 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 				name: i18next.t("commands.checkValidity.title")
 			},
 		];
-		if (this.plugin.settings.plugin.copyLink) {
+		if (this.settings.plugin.copyLink) {
 			cmd.push({
 				commands: "createLink",
 				name: i18next.t("commands.copyLink.title"),
 			});
 		}
-		if (this.plugin.settings.upload.autoclean.enable && this.plugin.settings.upload.behavior !== FolderSettings.fixed) {
+		if (this.settings.upload.autoclean.enable && this.settings.upload.behavior !== FolderSettings.fixed) {
 			cmd.push({
 				commands: "deleteUnsharedDeletedNotes",
 				name: i18next.t("commands.publisherDeleteClean")
