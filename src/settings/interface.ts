@@ -223,6 +223,7 @@ export interface MonoProperties {
 export interface MonoRepoProperties {
 	frontmatter: RepoFrontmatter;
 	repo: Repository | null;
+	convert: FrontmatterConvert;
 }
 
 export interface MultiRepoProperties {

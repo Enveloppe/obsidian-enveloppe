@@ -10,7 +10,7 @@ import GithubPublisher from "../main";
 import {MonoRepoProperties, MultiRepoProperties, Repository} from "../settings/interface";
 import {createLink} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
-import { frontmatterFromFile, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {
 	purgeNotesRemote,
 	shareAllEditedNotes,
@@ -83,7 +83,12 @@ export async function deleteCommands(plugin : GithubPublisher, repo: Repository 
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const mono: MonoRepoProperties = {
 		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
-		repo
+		repo,
+		convert: getFrontmatterSettings(
+			null,
+			plugin.settings,
+			repo
+		)
 	};
 	await purgeNotesRemote(
 		publisher,
@@ -108,7 +113,12 @@ export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository |
 	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
 	const mono: MonoRepoProperties = {
 		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
-		repo
+		repo,
+		convert: getFrontmatterSettings(
+			null,
+			plugin.settings,
+			repo
+		)
 	};
 	await shareAllMarkedNotes(
 		publisher,
@@ -137,8 +147,9 @@ export async function uploadNewNotes(plugin: GithubPublisher, branchName: string
 		branchName,
 		{
 			frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
-			repo
-		} as MonoRepoProperties,
+			repo,
+			convert: getFrontmatterSettings(null, plugin.settings, repo)
+		},
 	);
 }
 
@@ -179,8 +190,9 @@ export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: 
 		branchName,
 		{
 			frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
-			repo
-		} as MonoRepoProperties,
+			repo,
+			convert: getFrontmatterSettings(null, plugin.settings, repo)
+		},
 	);
 }
 
@@ -200,7 +212,8 @@ export async function shareEditedOnly(branchName: string, repo: Repository|null,
 		branchName,
 		{
 			frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
-			repo
-		} as MonoRepoProperties,
+			repo,
+			convert: getFrontmatterSettings(null, plugin.settings, repo)
+		},
 	);
 }

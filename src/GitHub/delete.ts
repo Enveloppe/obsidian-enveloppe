@@ -39,6 +39,7 @@ export async function deleteFromGithub(
 		const monoProperties: MonoRepoProperties = {
 			frontmatter: repo,
 			repo: repoProperties.repo,
+			convert: repoProperties.convert,
 		};
 		deleted.push(await deleteFromGithubOneRepo(
 			silent,
@@ -85,7 +86,7 @@ async function deleteFromGithubOneRepo(
 		logs({settings}, `No file to delete in ${repo.owner}/${repo.repo}`);
 		return {success: false, deleted: [], undeleted: []};
 	}
-	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repo);
+	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repo, repoProperties.convert);
 	const allSharedConverted = allSharedFiles.map((file) => {
 		return { converted: file.converted, repo: file.repoFrontmatter };
 	});
@@ -307,7 +308,7 @@ function cleanDryRun(
 	Vault.recurseChildren(dryRunFolder as TFolder, (file: TAbstractFile) => {
 		if (!excludedFileFromDelete(normalizePath(file.path.replace(dryRunFolderPath, "")), settings) && (isAttachment(file.path, settings.embed.unHandledObsidianExt) || file.path.match("md$")) && file instanceof TFile) dryRunFiles.push(file);
 	});
-	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repo).map((file) => {
+	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repo, repoProperties.convert).map((file) => {
 		return { converted: file.converted, repo: file.repoFrontmatter };
 	});
 	let deletedSuccess = 0;

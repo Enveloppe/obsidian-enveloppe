@@ -255,7 +255,7 @@ export async function shareNewNote(
 ): Promise<void|boolean> {
 	const plugin = PublisherManager.plugin;
 	new Notice(i18next.t("informations.scanningRepo") );
-	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(monoRepo.repo);
+	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(monoRepo.repo, monoRepo.convert);
 	// Get all file in the repo before the creation of the branch
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
 		monoRepo.frontmatter.branch, // we need to take the master branch because the branch to create doesn't exist yet
@@ -301,7 +301,7 @@ export async function shareAllEditedNotes(
 ) {
 	const plugin = PublisherManager.plugin;
 	new Notice(i18next.t("informations.scanningRepo") );
-	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(monoRepo.repo);
+	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(monoRepo.repo, monoRepo.convert);
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
 		monoRepo.frontmatter.branch,
 		monoRepo.frontmatter
@@ -352,7 +352,7 @@ export async function shareOnlyEdited(
 	const shortRepo = monoRepo.repo;
 	const repoFrontmatter = monoRepo.frontmatter;
 	new Notice(i18next.t("informations.scanningRepo") );
-	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(shortRepo);
+	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(shortRepo, monoRepo.convert);
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
 		repoFrontmatter.branch,
 		repoFrontmatter

@@ -102,6 +102,7 @@ export default class Publisher {
 			const repoProperties: MonoRepoProperties = {
 				frontmatter: properties.frontmatter.repo,
 				repo: properties.repository,
+				convert: properties.frontmatter.general,
 			};
 			try {
 				for (const file of linkedFiles) {
@@ -335,7 +336,8 @@ export default class Publisher {
 				{
 					frontmatter: repo,
 					repo: properties.repository,
-				} as MonoRepoProperties
+					convert: properties.frontmatter.general,
+				}
 			);
 		}
 		return {

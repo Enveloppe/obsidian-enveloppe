@@ -11,7 +11,7 @@ import GithubPublisher from "../main";
 import {MonoRepoProperties, MultiRepoProperties, Repository} from "../settings/interface";
 import {createLink} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
-import { frontmatterFromFile, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {purgeNotesRemote, shareOneNote} from ".";
 import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} from "./plugin_commands";
 
@@ -80,6 +80,11 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 			const monoRepo: MonoRepoProperties = {
 				frontmatter: Array.isArray(frontmatter) ? frontmatter[0] : frontmatter,
 				repo,
+				convert: getFrontmatterSettings(
+					null,
+					plugin.settings,
+					repo
+				)
 			};
 			//@ts-ignore
 			const publisher = await plugin.reloadOctokit(repo?.smartKey);
