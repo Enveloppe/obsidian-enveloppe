@@ -466,7 +466,6 @@ function createImagePath(file: TFile,
 				const dest = override.destination.replace("{{name}}", fileName);
 				filePath = regex ? normalizePath(filePath.replace(regex, dest)) : normalizePath(filePath.replace(override.path, dest));
 			}
-			logs({settings}, `Overridden path for ${fileName} : ${filePath}`);
 			result.path = filePath;
 		}
 		else if (defaultImageFolder.length > 0) {
