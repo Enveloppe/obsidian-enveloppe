@@ -255,7 +255,7 @@ export async function createLink(
 	let removePart = copyLink.removePart;
 	const smartKey = otherRepo?.smartKey ? `${otherRepo.smartKey}.` : "";
 	if (frontmatter) {
-		if (frontmatter[`${smartKey}baselink`] !== undefined) {
+		if (frontmatter[`${smartKey}baselink`] != undefined) {
 			baseLink = frontmatter[`${smartKey}baselink`];
 			removePart = [];
 		} else if (frontmatter[`${smartKey}copylink`] && typeof frontmatter[`${smartKey}.copylink`] === "object") {

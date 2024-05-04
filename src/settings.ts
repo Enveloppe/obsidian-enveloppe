@@ -44,7 +44,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		containerEl.addClass("github-publisher");
 		const defaultTabId = EnumbSettingsTabId.github;
 		let savedId = this.settings.tabsID ?? defaultTabId;
-		if (this.settings.plugin.saveTabId !== undefined && !this.settings.plugin.saveTabId) { //real false
+		if (this.settings.plugin.saveTabId != undefined && !this.settings.plugin.saveTabId) { //real false
 			this.settings.tabsID = defaultTabId;
 			savedId = defaultTabId;
 			this.plugin.saveSettings();

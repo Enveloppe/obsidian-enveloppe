@@ -46,10 +46,10 @@ export function getFrontmatterSettings(
 	settingsConversion = settingsEmbed(frontmatter, settingsConversion);
 	settingsConversion = settingAttachment(frontmatter, settingsConversion);
 
-	if (frontmatter.dataview !== undefined) {
+	if (frontmatter.dataview != undefined) {
 		settingsConversion.dataview = frontmatter.dataview;
 	}
-	if (frontmatter.hardbreak !== undefined) {
+	if (frontmatter.hardbreak != undefined) {
 		settingsConversion.hardbreak = frontmatter.hardbreak;
 	}
 
@@ -122,16 +122,16 @@ export function getRepoFrontmatter(
 		return parsePath(settings, repository, multipleRepo, frontmatter);
 	} else if (frontmatter.repo) {
 		if (typeof frontmatter.repo === "object") {
-			if (frontmatter.repo.branch !== undefined) {
+			if (frontmatter.repo.branch != undefined) {
 				repoFrontmatter.branch = frontmatter.repo.branch;
 			}
-			if (frontmatter.repo.repo !== undefined) {
+			if (frontmatter.repo.repo != undefined) {
 				repoFrontmatter.repo = frontmatter.repo.repo;
 			}
-			if (frontmatter.repo.owner !== undefined) {
+			if (frontmatter.repo.owner != undefined) {
 				repoFrontmatter.owner = frontmatter.repo.owner;
 			}
-			if (frontmatter.repo.autoclean !== undefined) {
+			if (frontmatter.repo.autoclean != undefined) {
 				repoFrontmatter.autoclean = frontmatter.repo.autoclean;
 				isFrontmatterAutoClean = true;
 			}
@@ -143,7 +143,7 @@ export function getRepoFrontmatter(
 	} else if (frontmatter.shortRepo instanceof Array) {
 		return multipleShortKeyRepo(frontmatter, settings.github.otherRepo, repoFrontmatter, settings);
 	}
-	if (frontmatter.autoclean !== undefined && isFrontmatterAutoClean === null) {
+	if (frontmatter.autoclean != undefined && isFrontmatterAutoClean === null) {
 		repoFrontmatter.autoclean = frontmatter.autoclean;
 	}
 	return parsePath(settings, repository, repoFrontmatter);
@@ -178,16 +178,16 @@ function parseMultipleRepo(
 		for (const repo of frontmatter.multipleRepo) {
 			if (typeof repo === "object") {
 				const repository: RepoFrontmatter = structuredClone(repoFrontmatter);
-				if (repo.branch !== undefined) {
+				if (repo.branch != undefined) {
 					repository.branch = repo.branch;
 				}
-				if (repo.repo !== undefined) {
+				if (repo.repo != undefined) {
 					repository.repo = repo.repo;
 				}
-				if (repo.owner !== undefined) {
+				if (repo.owner != undefined) {
 					repository.owner = repo.owner;
 				}
-				if (repo.autoclean !== undefined) {
+				if (repo.autoclean != undefined) {
 					repository.autoclean = repo.autoclean;
 				}
 				multipleRepo.push(repository);
@@ -310,7 +310,7 @@ export function getCategory(
 	settings: GitHubPublisherSettings,
 	paths: Path | undefined): string {
 	const key = paths?.category?.key ?? settings.upload.yamlFolderKey;
-	const category = frontmatter && frontmatter[key] !== undefined ? frontmatter[key] : paths?.defaultName ?? settings.upload.defaultName;
+	const category = frontmatter && frontmatter[key] != undefined ? frontmatter[key] : paths?.defaultName ?? settings.upload.defaultName;
 	if (category instanceof Array) {
 		return category.join("/");
 	}
@@ -405,13 +405,13 @@ function getFrontmatterSettingRepository(
 	frontConvert = settingAttachment(frontmatter, frontConvert, smartKey);
 	frontConvert = settingsEmbed(frontmatter, frontConvert, smartKey);
 	const key = smartKey ? "" : `${smartKey}.`;
-	if (frontmatter?.[`${key}dataview`] !== undefined) {
+	if (frontmatter?.[`${key}dataview`] != undefined) {
 		frontConvert.dataview = frontmatter[`${smartKey}.dataview`];
 	}
-	if (frontmatter?.[`${key}hardbreak`] !== undefined) {
+	if (frontmatter?.[`${key}hardbreak`] != undefined) {
 		frontConvert.hardbreak = frontmatter[`${smartKey}.hardbreak`];
 	}
-	if (frontmatter?.[`${key}includeLinks`] !== undefined) {
+	if (frontmatter?.[`${key}includeLinks`] != undefined) {
 		frontConvert.includeLinks = frontmatter[`${smartKey}.includeLinks`];
 	}
 
@@ -459,33 +459,33 @@ function settingsLink(frontmatter: FrontMatterCache | null | undefined, settings
 	let key = "links";
 	if (smartKey) key = `${smartKey}.${key}`;
 	if (!frontmatter) return settingsConversion;
-	if (frontmatter[key] !== undefined) {
+	if (frontmatter[key] != undefined) {
 		if (typeof frontmatter[key] === "object") {
-			if (frontmatter[key].convert !== undefined) {
+			if (frontmatter[key].convert != undefined) {
 				settingsConversion.links = frontmatter[key].convert;
 			}
-			if (frontmatter[key].internals !== undefined) {
+			if (frontmatter[key].internals != undefined) {
 				settingsConversion.convertInternalLinks = frontmatter[key].internals;
 			}
-			if (frontmatter[key].mdlinks !== undefined) {
+			if (frontmatter[key].mdlinks != undefined) {
 				settingsConversion.convertWiki = frontmatter[key].mdlinks;
 			}
-			if (frontmatter[key].nonShared !== undefined) {
+			if (frontmatter[key].nonShared != undefined) {
 				settingsConversion.unshared = frontmatter[key].nonShared;
 			}
 		} else {
 			settingsConversion.links = frontmatter[key];
 		}
 	}
-	if (frontmatter[`${key}.convert`] !== undefined) settingsConversion.links = frontmatter[`${key}.convert`];
-	if (frontmatter[`${key}.internals`] !== undefined) settingsConversion.convertInternalLinks = frontmatter[`${key}.internals`];
-	if (frontmatter[`${key}.mdlinks`] !== undefined) settingsConversion.convertWiki = frontmatter[`${key}.mdlinks`];
-	if (frontmatter[`${key}.nonShared`] !== undefined) settingsConversion.unshared = frontmatter[`${key}.nonShared`];
+	if (frontmatter[`${key}.convert`] != undefined) settingsConversion.links = frontmatter[`${key}.convert`];
+	if (frontmatter[`${key}.internals`] != undefined) settingsConversion.convertInternalLinks = frontmatter[`${key}.internals`];
+	if (frontmatter[`${key}.mdlinks`] != undefined) settingsConversion.convertWiki = frontmatter[`${key}.mdlinks`];
+	if (frontmatter[`${key}.nonShared`] != undefined) settingsConversion.unshared = frontmatter[`${key}.nonShared`];
 
 
-	if (frontmatter[smartKey ? `${smartKey}.mdlinks` : "mdlinks"] !== undefined) settingsConversion.convertWiki = frontmatter[smartKey ? `${smartKey}.mdlinks` : "mdlinks"];
-	if (frontmatter[smartKey ? `${smartKey}.internals` : "internals"] !== undefined) settingsConversion.convertInternalLinks = frontmatter[smartKey ? `${smartKey}.internals` : "internals"];
-	if (frontmatter[smartKey ? `${smartKey}.nonShared` : "nonShared"] !== undefined) settingsConversion.unshared = frontmatter[smartKey ? `${smartKey}.nonShared` : "nonShared"];
+	if (frontmatter[smartKey ? `${smartKey}.mdlinks` : "mdlinks"] != undefined) settingsConversion.convertWiki = frontmatter[smartKey ? `${smartKey}.mdlinks` : "mdlinks"];
+	if (frontmatter[smartKey ? `${smartKey}.internals` : "internals"] != undefined) settingsConversion.convertInternalLinks = frontmatter[smartKey ? `${smartKey}.internals` : "internals"];
+	if (frontmatter[smartKey ? `${smartKey}.nonShared` : "nonShared"] != undefined) settingsConversion.unshared = frontmatter[smartKey ? `${smartKey}.nonShared` : "nonShared"];
 
 	return settingsConversion;
 }
@@ -493,26 +493,26 @@ function settingsLink(frontmatter: FrontMatterCache | null | undefined, settings
 function settingsEmbed(frontmatter: FrontMatterCache | null | undefined, settingsConversion: FrontmatterConvert, smartkey?: string) {
 	if (!frontmatter) return settingsConversion;
 	const key = smartkey ? `${smartkey}.embed` : "embed";
-	if (frontmatter[key] !== undefined) {
+	if (frontmatter[key] != undefined) {
 		if (typeof frontmatter[key] === "object") {
-			if (frontmatter[key].send !== undefined) {
+			if (frontmatter[key].send != undefined) {
 				settingsConversion.embed = frontmatter[key].send;
 			}
-			if (frontmatter[key].remove !== undefined) {
+			if (frontmatter[key].remove != undefined) {
 				settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter[key].remove);
 			}
-			if (frontmatter[key].char !== undefined) {
+			if (frontmatter[key].char != undefined) {
 				settingsConversion.charEmbedLinks = frontmatter[key].char;
 			}
 		} else {
 			settingsConversion.embed = frontmatter[key];
 		}
 	}
-	if (frontmatter[`${key}.send`] !== undefined) settingsConversion.embed = frontmatter[`${key}.send`];
-	if (frontmatter[`${key}.remove`] !== undefined) settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter[`${key}.remove`]);
-	if (frontmatter[`${key}.char`] !== undefined) settingsConversion.charEmbedLinks = frontmatter[`${key}.char`];
+	if (frontmatter[`${key}.send`] != undefined) settingsConversion.embed = frontmatter[`${key}.send`];
+	if (frontmatter[`${key}.remove`] != undefined) settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter[`${key}.remove`]);
+	if (frontmatter[`${key}.char`] != undefined) settingsConversion.charEmbedLinks = frontmatter[`${key}.char`];
 	const removeEmbedKey = smartkey ? `${smartkey}.removeEmbed` : "removeEmbed";
-	if (frontmatter[removeEmbedKey] !== undefined) settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter[removeEmbedKey]);
+	if (frontmatter[removeEmbedKey] != undefined) settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter[removeEmbedKey]);
 
 	return settingsConversion;
 }
@@ -521,12 +521,12 @@ function settingAttachment(frontmatter: FrontMatterCache | undefined | null, set
 	if (!frontmatter) return settingsConversion;
 	let key = "attachment";
 	if (smartKey) key = `${smartKey}.${key}`;
-	if (frontmatter[key] !== undefined) {
+	if (frontmatter[key]) {
 		if (typeof frontmatter[key] === "object") {
-			if (frontmatter[key].send !== undefined) {
+			if (frontmatter[key].send != undefined) {
 				settingsConversion.attachment = frontmatter[key].send;
 			}
-			if (frontmatter[key].folder !== undefined) {
+			if (frontmatter[key].folder != undefined) {
 				settingsConversion.attachmentLinks = frontmatter[key].folder;
 			}
 		} else {
@@ -534,8 +534,8 @@ function settingAttachment(frontmatter: FrontMatterCache | undefined | null, set
 		}
 	}
 
-	if (frontmatter[`${key}.send`] !== undefined) settingsConversion.attachment = frontmatter[`${key}.send`];
-	if (frontmatter[`${key}.folder`] !== undefined) settingsConversion.attachmentLinks = frontmatter[`${key}.folder`];
+	if (frontmatter[`${key}.send`] != undefined) settingsConversion.attachment = frontmatter[`${key}.send`];
+	if (frontmatter[`${key}.folder`] != undefined) settingsConversion.attachmentLinks = frontmatter[`${key}.folder`];
 
 	if (settingsConversion.attachmentLinks) {
 		settingsConversion.attachmentLinks = normalizePath(settingsConversion.attachmentLinks
