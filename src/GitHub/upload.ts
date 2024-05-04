@@ -10,6 +10,7 @@ import {
 	TFolder,
 	Vault,
 } from "obsidian";
+import merge from "ts-deepmerge";
 
 import { mainConverting } from "../conversion";
 import { convertToHTMLSVG } from "../conversion/compiler/excalidraw";
@@ -41,7 +42,7 @@ import {
 	isShared,
 } from "../utils/data_validation_test";
 import { LOADING_ICON } from "../utils/icons";
-import { frontmatterFromFile, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, frontmatterSettingsRepository, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import { ShareStatusBar } from "../utils/status_bar";
 import { deleteFromGithub } from "./delete";
 import { FilesManagement } from "./files";
@@ -195,11 +196,13 @@ export default class Publisher {
 		try {
 			logs({ settings: this.settings }, `Publishing file: ${file.path}`);
 			fileHistory.push(file);
-			const frontmatterSettings = getFrontmatterSettings(
+			const frontmatterSettingsFromFile = getFrontmatterSettings(
 				frontmatter,
 				this.settings,
 				repo.repo
 			);
+			const frontmatterRepository = frontmatterSettingsRepository(this.plugin, repo.repo);
+			const frontmatterSettings = merge(frontmatterRepository, frontmatterSettingsFromFile);
 			let embedFiles = shareFiles.getSharedEmbed(
 				file,
 				frontmatterSettings,

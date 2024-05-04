@@ -4,7 +4,7 @@ import { Menu, MenuItem, Platform, TFile, TFolder} from "obsidian";
 import GithubPublisher from "../main";
 import {MonoRepoProperties, Repository} from "../settings/interface";
 import {defaultRepo, getRepoSharedKey, isExcludedPath, isInDryRunFolder, isShared, multipleSharedKey} from "../utils/data_validation_test";
-import { frontmatterFromFile, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, frontmatterSettingsRepository, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {shareAllMarkedNotes, shareOneNote} from ".";
 import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 
@@ -18,15 +18,11 @@ import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchName: string, repo: Repository | null) {
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const statusBarItems = plugin.addStatusBarItem();
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, null);
+	const repoFrontmatter = getRepoFrontmatter(plugin, repo, null);
 	const monoProperties: MonoRepoProperties = {
 		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 		repo,
-		convert: getFrontmatterSettings(
-			null,
-			plugin.settings,
-			repo
-		)
+		convert: frontmatterSettingsRepository(plugin, repo)
 	};
 	await shareAllMarkedNotes(
 		publisher,
@@ -112,7 +108,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 		plugin.settings.plugin.fileMenu)
 	) return;
 
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, getSharedKey, frontmatter);
+	const repoFrontmatter = getRepoFrontmatter(plugin, getSharedKey, frontmatter);
 
 	menu.addItem((item) => {
 		/**
@@ -181,7 +177,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	//@ts-ignore
 	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
-	let repoFrontmatter = getRepoFrontmatter(plugin.settings, repo, frontmatter);
+	let repoFrontmatter = getRepoFrontmatter(plugin, repo, frontmatter);
 	repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
 	/**
 	 * default repo

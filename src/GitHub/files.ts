@@ -91,7 +91,7 @@ export class FilesManagement extends Publisher {
 		const allFileWithPath: ConvertedLink[] = [];
 		for (const file of files) {
 			if (isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
-				const filepath = getImagePath(file, this.settings, convert);
+				const filepath = getImagePath(file, this.settings, convert, );
 				allFileWithPath.push({
 					converted: filepath,
 					real: file.path,
@@ -100,7 +100,7 @@ export class FilesManagement extends Publisher {
 				const frontMatter = frontmatterFromFile(file, this.plugin);
 				if (isShared(frontMatter, this.settings, file, repo)) {
 					const repoFrontmatter = getRepoFrontmatter(
-						this.settings,
+						this.plugin,
 						repo,
 						frontMatter
 					);
@@ -108,7 +108,7 @@ export class FilesManagement extends Publisher {
 					allFileWithPath.push({
 						converted: filepath,
 						real: file.path,
-						repoFrontmatter: repoFrontmatter,
+						repoFrontmatter,
 					});
 				}
 			}

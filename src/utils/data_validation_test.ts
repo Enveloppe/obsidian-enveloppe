@@ -326,7 +326,7 @@ export async function checkRepositoryValidity(
 	const settings = PublisherManager.settings;
 	try {
 		const frontmatter = frontmatterFromFile(file, PublisherManager.plugin);
-		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
+		const repoFrontmatter = getRepoFrontmatter(PublisherManager.plugin, repository, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin, silent);
 		if (isNotEmpty) {
 			await PublisherManager.checkRepository(repoFrontmatter, silent);
@@ -408,6 +408,7 @@ export function defaultRepo(settings: GitHubPublisherSettings): Repository {
 				applyRegex: settings.plugin.copyLink.transform.applyRegex,
 			},
 		},
+		set: ""
 	};
 }
 

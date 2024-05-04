@@ -56,8 +56,8 @@ export interface Repository {
 				replacement: string;
 			}[]
 		}
-	}
-
+	},
+	set: string;
 }
 
 /**

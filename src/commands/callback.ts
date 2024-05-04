@@ -11,7 +11,7 @@ import GithubPublisher from "../main";
 import {MonoRepoProperties, MultiRepoProperties, Repository} from "../settings/interface";
 import {createLink} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
-import { frontmatterFromFile, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, frontmatterSettingsRepository, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {purgeNotesRemote, shareOneNote} from ".";
 import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} from "./plugin_commands";
 
@@ -38,7 +38,7 @@ export async function createLinkCallback(repo: Repository | null, plugin: Github
 			) {
 				if (!checking) {
 					const multiRepo: MultiRepoProperties = {
-						frontmatter: getRepoFrontmatter(plugin.settings, repo, frontmatter),
+						frontmatter: getRepoFrontmatter(plugin, repo, frontmatter),
 						repo,
 					};
 					createLink(
@@ -76,15 +76,11 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 		hotkeys: [],
 		//@ts-ignore
 		callback: async () => {
-			const frontmatter = getRepoFrontmatter(plugin.settings, repo);
+			const frontmatter = getRepoFrontmatter(plugin, repo);
 			const monoRepo: MonoRepoProperties = {
 				frontmatter: Array.isArray(frontmatter) ? frontmatter[0] : frontmatter,
 				repo,
-				convert: getFrontmatterSettings(
-					null,
-					plugin.settings,
-					repo
-				)
+				convert: frontmatterSettingsRepository(plugin, repo)
 			};
 			//@ts-ignore
 			const publisher = await plugin.reloadOctokit(repo?.smartKey);

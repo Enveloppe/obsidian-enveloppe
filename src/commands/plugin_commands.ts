@@ -10,7 +10,7 @@ import GithubPublisher from "../main";
 import {MonoRepoProperties, MultiRepoProperties, Repository} from "../settings/interface";
 import {createLink} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
-import { frontmatterFromFile, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, frontmatterSettingsRepository, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {
 	purgeNotesRemote,
 	shareAllEditedNotes,
@@ -34,7 +34,7 @@ export async function createLinkOnActiveFile(repo: Repository | null, plugin: Gi
 		file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 	) {
 		const multiRepo: MultiRepoProperties = {
-			frontmatter: getRepoFrontmatter(plugin.settings, repo, frontmatter),
+			frontmatter: getRepoFrontmatter(plugin, repo, frontmatter),
 			repo
 		};
 		await createLink(
@@ -79,16 +79,12 @@ export async function shareActiveFile(plugin: GithubPublisher, repo: Repository 
  * @return {Promise<void>}
  */
 export async function deleteCommands(plugin : GithubPublisher, repo: Repository | null, branchName: string): Promise<void> {
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
+	const repoFrontmatter = getRepoFrontmatter(plugin, repo);
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const mono: MonoRepoProperties = {
 		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 		repo,
-		convert: getFrontmatterSettings(
-			null,
-			plugin.settings,
-			repo
-		)
+		convert: frontmatterSettingsRepository(plugin, repo)
 	};
 	await purgeNotesRemote(
 		publisher,
@@ -110,13 +106,12 @@ export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository |
 	const statusBarItems = plugin.addStatusBarItem();
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const sharedFiles = publisher.getSharedFiles(repo);
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
+	const repoFrontmatter = getRepoFrontmatter(plugin, repo);
 	const mono: MonoRepoProperties = {
 		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 		repo,
-		convert: getFrontmatterSettings(
-			null,
-			plugin.settings,
+		convert: frontmatterSettingsRepository(
+			plugin,
 			repo
 		)
 	};
@@ -141,14 +136,14 @@ export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository |
 
 export async function uploadNewNotes(plugin: GithubPublisher, branchName: string, repo: Repository|null): Promise<void> {
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
+	const repoFrontmatter = getRepoFrontmatter(plugin, repo);
 	await shareNewNote(
 		publisher,
 		branchName,
 		{
 			frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 			repo,
-			convert: getFrontmatterSettings(null, plugin.settings, repo)
+			convert: frontmatterSettingsRepository(plugin, repo)
 		},
 	);
 }
@@ -183,7 +178,7 @@ export async function repositoryValidityActiveFile(plugin:GithubPublisher, repo:
  */
 export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: string, repo: Repository|null=null): Promise<void> {
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
+	const repoFrontmatter = getRepoFrontmatter(plugin, repo);
 
 	await shareAllEditedNotes(
 		publisher,
@@ -191,7 +186,7 @@ export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: 
 		{
 			frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 			repo,
-			convert: getFrontmatterSettings(null, plugin.settings, repo)
+			convert: frontmatterSettingsRepository(plugin, repo)
 		},
 	);
 }
@@ -206,14 +201,14 @@ export async function uploadAllEditedNotes(plugin: GithubPublisher ,branchName: 
  */
 export async function shareEditedOnly(branchName: string, repo: Repository|null, plugin: GithubPublisher): Promise<void> {
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
-	const repoFrontmatter = getRepoFrontmatter(plugin.settings, repo);
+	const repoFrontmatter = getRepoFrontmatter(plugin, repo);
 	await shareOnlyEdited(
 		publisher,
 		branchName,
 		{
 			frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 			repo,
-			convert: getFrontmatterSettings(null, plugin.settings, repo)
+			convert: frontmatterSettingsRepository(plugin, repo)
 		},
 	);
 }
