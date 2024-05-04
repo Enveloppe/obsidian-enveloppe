@@ -277,6 +277,7 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 	if (fileName === uploadSettings.folderNote.rename && uploadSettings.folderNote.enable || uploadSettings.replaceTitle.length === 0) return fileName;
 	const extension = fileName.match(/\.[0-9a-z]+$/i)?.at(-1) ?? "";
 	fileName = fileName.replace(extension, "");
+	console.warn(`${fileName} and ${extension} and ${JSON.stringify(uploadSettings.replaceTitle)}`);
 	for (const regexTitle of uploadSettings.replaceTitle) {
 		if (regexTitle.regex?.trim().length > 0) {
 			const toReplace = regexTitle.regex;
@@ -412,9 +413,10 @@ export function getImagePath(
 	settings: GitHubPublisherSettings,
 	sourceFrontmatter: FrontmatterConvert | null
 ): string {
-	let imagePath = createImagePath(file, settings, sourceFrontmatter);
-	imagePath = regexOnPath(imagePath, settings);
-	return normalizePath(regexOnFileName(imagePath, settings));
+	const imagePath = createImagePath(file, settings, sourceFrontmatter);
+	const path = regexOnPath(imagePath.path, settings);
+	const name = regexOnFileName(imagePath.name, settings);
+	return normalizePath(path.replace(file.name, name));
 }
 
 
@@ -428,22 +430,24 @@ export function getImagePath(
 
 function createImagePath(file: TFile,
 	settings: GitHubPublisherSettings,
-	sourceFrontmatter: FrontmatterConvert | null): string {
+	sourceFrontmatter: FrontmatterConvert | null): { path: string, name: string } {
 	let fileName = file.name;
 	let filePath = file.path;
 	if (file.name.includes(".excalidraw")) {
 		fileName = fileName.replace(".excalidraw.md", ".svg");
 		filePath = filePath.replace(".excalidraw.md", ".svg");
 	}
+	const result : { path: string, name: string } = { path: filePath, name: fileName };
 	if (!sourceFrontmatter || !sourceFrontmatter.attachmentLinks) {
 		if (settings.embed.useObsidianFolder) {
 			if (settings.upload.behavior === FolderSettings.yaml) {
-				return settings.upload.rootFolder.length > 0 ? normalizePath(`${settings.upload.rootFolder}/${filePath}`) : filePath;
+				result.path = settings.upload.rootFolder.length > 0 ? normalizePath(`${settings.upload.rootFolder}/${filePath}`) : filePath;
 			}
 			else {
 				//no root, but default folder name
-				return settings.upload.defaultName.length > 0 ? normalizePath(`${settings.upload.defaultName}/${filePath}`) : filePath;
+				result.path = settings.upload.defaultName.length > 0 ? normalizePath(`${settings.upload.defaultName}/${filePath}`) : filePath;
 			}
+			return result;
 		}
 		const defaultImageFolder = settings.embed.folder;
 		//find in override
@@ -464,19 +468,20 @@ function createImagePath(file: TFile,
 				filePath = regex ? normalizePath(filePath.replace(regex, dest)) : normalizePath(filePath.replace(override.path, dest));
 			}
 			logs({settings}, `Overridden path for ${fileName} : ${filePath}`);
-			return filePath;
+			result.path = filePath;
 		}
 		else if (defaultImageFolder.length > 0) {
-			return normalizePath(`${defaultImageFolder}/${fileName}`);
+			result.path = normalizePath(`${defaultImageFolder}/${filePath}`);
+			
 		} else if (settings.upload.defaultName.length > 0) {
-			return normalizePath(`${settings.upload.defaultName}/${fileName}`);
+			result.path = normalizePath(`${settings.upload.defaultName}/${fileName}`);
 		} else {
-			return filePath;
+			result.path = filePath;
 		}
 	} else if (
 		sourceFrontmatter?.attachmentLinks
 	) {
-		return normalizePath(`${sourceFrontmatter.attachmentLinks}/${fileName}`);
+		result.path = normalizePath(`${sourceFrontmatter.attachmentLinks}/${fileName}`);
 	}
-	return filePath;
+	return result;
 }
