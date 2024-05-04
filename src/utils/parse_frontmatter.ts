@@ -486,7 +486,7 @@ export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher,
 	if (file) {
 		frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
-		frontmatter = linkedFrontmatter && frontmatter ? merge(frontmatter, linkedFrontmatter) : linkedFrontmatter ?? frontmatter;
+		frontmatter = merge(linkedFrontmatter ?? {}, frontmatter ?? {});
 	}
 	if (repo && repo.set.length > 0) {
 		const fileAsTFile = plugin.app.vault.getFileByPath(repo.set);
