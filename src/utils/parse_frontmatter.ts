@@ -5,8 +5,30 @@
 
 import { FrontMatterCache, normalizePath, TFile } from "obsidian";
 import GithubPublisher from "src/main";
+import merge from "ts-deepmerge";
 
 import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, RepoFrontmatter, Repository } from "../settings/interface";
+
+export function frontmatterSettingsRepository(plugin: GithubPublisher, repo: Repository | null) {
+	const defaultConvert = getFrontmatterSettings(null, plugin.settings, repo);
+	if (!repo?.set) return defaultConvert;
+	const fileAsTFile = plugin.app.vault.getFileByPath(repo.set);
+	if (!fileAsTFile) return defaultConvert;
+	return getFrontmatterSettings(
+		plugin.app.metadataCache.getFileCache(fileAsTFile)?.frontmatter,
+		plugin.settings,
+		repo
+	);
+}
+
+export function getDefaultRepoFrontmatter(repository: Repository | null, plugin: GithubPublisher) {
+	const defaultSettings = getRepoFrontmatter(plugin, repository);
+	if (!repository) return defaultSettings;
+	const fileAsTFile = plugin.app.vault.getFileByPath(repository.set);
+	if (!fileAsTFile) return defaultSettings;
+	return getRepoFrontmatter(plugin, repository, plugin.app.metadataCache.getFileCache(fileAsTFile)?.frontmatter);
+}
+
 
 /**
  * Retrieves the frontmatter settings for a given file.
@@ -73,20 +95,31 @@ function booleanRemoveEmbed(removeEmbed: unknown) {
 	} else return "keep";
 }
 
+
 /**
  * Retrieves the repository frontmatter based on the provided settings and repository information.
  *
- * @param {GitHubPublisherSettings} settings - The GitHub Publisher settings.
+ * @param {GithubPublisher} plugin - The plugin instance
  * @param {Repository | null} repository - The repository information.
  * @param {FrontMatterCache | null} frontmatter - The frontmatter cache.
+ * @param {boolean} [checkSet] - Whether to check the set file for frontmatter (preventing multiple reading of the same file)
  * @returns {RepoFrontmatter[] | RepoFrontmatter} - The repository frontmatter.
  */
 export function getRepoFrontmatter(
-	settings: GitHubPublisherSettings,
+	plugin: GithubPublisher,
 	repository: Repository | null,
 	frontmatter?: FrontMatterCache | null,
+	checkSet?: boolean
 ): RepoFrontmatter[] | RepoFrontmatter {
+	const settings = plugin.settings;
 	let github = repository ?? settings.github;
+	if (checkSet && repository?.set && repository.set.length > 0) {
+		const file = plugin.app.vault.getAbstractFileByPath(repository.set) instanceof TFile ? plugin.app.vault.getAbstractFileByPath(repository.set) : null;
+		if (file) {
+			const setFrontmatter = plugin.app.metadataCache.getFileCache(file as TFile)?.frontmatter;
+			frontmatter = frontmatter && setFrontmatter ? merge(frontmatter, setFrontmatter) : setFrontmatter ?? frontmatter ;
+		}
+	}
 	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"] !== "default") {
 		const smartKey = frontmatter.shortRepo.toLowerCase();
 		const allOtherRepo = settings.github.otherRepo;
@@ -114,12 +147,12 @@ export function getRepoFrontmatter(
 		repoFrontmatter.autoclean = false;
 	}
 	if (!frontmatter || (frontmatter.multipleRepo === undefined && frontmatter.repo === undefined && frontmatter.shortRepo === undefined)) {
-		return parsePath(settings, repository, repoFrontmatter, frontmatter);
+		return parsePath(plugin, repository, repoFrontmatter, frontmatter);
 	}
 	let isFrontmatterAutoClean = null;
 	if (frontmatter.multipleRepo) {
 		const multipleRepo = parseMultipleRepo(frontmatter, repoFrontmatter);
-		return parsePath(settings, repository, multipleRepo, frontmatter);
+		return parsePath(plugin, repository, multipleRepo, frontmatter);
 	} else if (frontmatter.repo) {
 		if (typeof frontmatter.repo === "object") {
 			if (frontmatter.repo.branch != undefined) {
@@ -141,12 +174,12 @@ export function getRepoFrontmatter(
 			repoFrontmatter = repositoryStringSlice(repo, repoFrontmatter);
 		}
 	} else if (frontmatter.shortRepo instanceof Array) {
-		return multipleShortKeyRepo(frontmatter, settings.github.otherRepo, repoFrontmatter, settings);
+		return multipleShortKeyRepo(frontmatter, settings.github.otherRepo, repoFrontmatter, plugin);
 	}
 	if (frontmatter.autoclean != undefined && isFrontmatterAutoClean === null) {
 		repoFrontmatter.autoclean = frontmatter.autoclean;
 	}
-	return parsePath(settings, repository, repoFrontmatter);
+	return parsePath(plugin, repository, repoFrontmatter);
 }
 
 /**
@@ -230,7 +263,7 @@ function removeDuplicateRepo(multipleRepo: RepoFrontmatter[]) {
  * @param {Repository[]} allRepo - The list of all repo from the settings
  * @param {RepoFrontmatter} repoFrontmatter - The default repoFrontmatter (from the default settings)
  */
-function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository[], repoFrontmatter: RepoFrontmatter, setting: GitHubPublisherSettings) {
+function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository[], repoFrontmatter: RepoFrontmatter, plugin: GithubPublisher) {
 	if (frontmatter.shortRepo instanceof Array) {
 		const multipleRepo: RepoFrontmatter[] = [];
 		for (const repo of frontmatter.shortRepo) {
@@ -252,7 +285,7 @@ function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository
 						commitMsg: shortRepo.workflow.commitMessage,
 						dryRun: repoFrontmatter.dryRun
 					} as RepoFrontmatter;
-					const parsedPath = parsePath(setting, shortRepo, repo);
+					const parsedPath = parsePath(plugin, shortRepo, repo);
 					repo = Array.isArray(parsedPath) ? parsedPath[0] : parsedPath;
 					multipleRepo.push(repo);
 				}
@@ -318,12 +351,13 @@ export function getCategory(
 }
 
 export function parsePath(
-	settings: GitHubPublisherSettings,
+	plugin: GithubPublisher,
 	repository: Repository | null,
 	repoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
 	frontmatter?: FrontMatterCache | null | undefined
 ): RepoFrontmatter[] | RepoFrontmatter {
 	repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
+	const settings = plugin.settings;
 	const splitArrayPath = (path?: string[] | string):string|undefined => {
 		if (!path) return;
 		if (path instanceof Array) {
@@ -340,6 +374,7 @@ export function parsePath(
 
 	for (const repo of repoFrontmatter) {
 		const smartKey = repository ? repository.smartKey : "default";
+		
 		const path: Path = {
 			type: matchType(frontmatter?.type),
 			defaultName: frontmatter?.defaultName ?? settings.upload.defaultName,
@@ -414,7 +449,7 @@ function getFrontmatterSettingRepository(
 	if (frontmatter?.[`${key}includeLinks`] != undefined) {
 		frontConvert.includeLinks = frontmatter[`${smartKey}.includeLinks`];
 	}
-
+	
 	return frontConvert;
 
 }
@@ -445,12 +480,20 @@ export function getLinkedFrontmatter(
 	return linked;
 }
 
-export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher) {
+export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher, repo: Repository | null) {
 	let frontmatter = null;
+	
 	if (file) {
 		frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
-		frontmatter = linkedFrontmatter ? { ...linkedFrontmatter, ...frontmatter } : frontmatter;
+		frontmatter = merge(linkedFrontmatter ?? {}, frontmatter ?? {});
+	}
+	if (repo && repo.set.length > 0) {
+		const fileAsTFile = plugin.app.vault.getFileByPath(repo.set);
+		if (fileAsTFile) {
+			const setFrontmatter = plugin.app.metadataCache.getFileCache(fileAsTFile)?.frontmatter;
+			frontmatter = frontmatter && setFrontmatter ? merge(frontmatter, setFrontmatter) : setFrontmatter ?? frontmatter;
+		}
 	}
 	return frontmatter;
 }

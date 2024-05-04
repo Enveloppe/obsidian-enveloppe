@@ -6,6 +6,7 @@ import {
 	Vault,
 } from "obsidian";
 import GithubPublisher from "src/main";
+import merge from "ts-deepmerge";
 
 import {
 	FIND_REGEX,
@@ -21,7 +22,7 @@ import {
 	logs,
 } from "../utils";
 import {checkIfRepoIsInAnother, isInternalShared, isShared} from "../utils/data_validation_test";
-import { frontmatterFromFile, getCategory, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, frontmatterSettingsRepository, getCategory, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import { createRegexFromText } from "./find_and_replace_text";
 
 
@@ -76,8 +77,8 @@ export async function createRelativePath(
 	const settings = properties.plugin.settings;
 	const shortRepo = properties.repository;
 	const sourcePath = getReceiptFolder(sourceFile, shortRepo, properties.plugin, properties.frontmatter.repo);
-	const frontmatterTarget = frontmatterFromFile(targetFile.linked, properties.plugin);
-	const targetRepo = getRepoFrontmatter(settings, shortRepo, frontmatterTarget);
+	const frontmatterTarget = frontmatterFromFile(targetFile.linked, properties.plugin, properties.repository);
+	const targetRepo = getRepoFrontmatter(properties.plugin, shortRepo, frontmatterTarget);
 	const isFromAnotherRepo = checkIfRepoIsInAnother(properties.frontmatter.repo, targetRepo);
 	const shared = isInternalShared(
 		frontmatterTarget,
@@ -94,13 +95,18 @@ export async function createRelativePath(
 		return getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo).split("/").at(-1) as string;
 	}
 
+	const frontmatterSettingsFromFile = getFrontmatterSettings(frontmatter, settings, shortRepo);
+	const frontmatterSettingsFromRepository = frontmatterSettingsRepository(properties.plugin, shortRepo);
+	const frontmatterSettings = merge(frontmatterSettingsFromRepository, frontmatterSettingsFromFile);
+
 	const targetPath =
 		targetFile.linked.extension === "md" && !targetFile.linked.name.includes("excalidraw")
 			? getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo)
 			: getImagePath(
 				targetFile.linked,
-				settings,
-				getFrontmatterSettings(frontmatter, settings, shortRepo)
+				properties.plugin,
+				frontmatterSettings,
+				targetRepo
 			);
 	const sourceList = sourcePath.split("/");
 	const targetList = targetPath.split("/");
@@ -368,8 +374,8 @@ export function getReceiptFolder(
 	const { vault} = plugin.app;
 	const settings = plugin.settings;
 	if (file.extension === "md") {
-		const frontmatter = frontmatterFromFile(file, plugin);
-		if (!repoFrontmatter) repoFrontmatter = getRepoFrontmatter(settings, otherRepo, frontmatter);
+		const frontmatter = frontmatterFromFile(file, plugin, otherRepo);
+		if (!repoFrontmatter) repoFrontmatter = getRepoFrontmatter(plugin, otherRepo, frontmatter);
 		repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
 		let targetRepo = repoFrontmatter.find((repo) => repo.path?.smartkey === otherRepo?.smartKey || "default");
 		if (!targetRepo) targetRepo = repoFrontmatter[0];
@@ -409,10 +415,13 @@ export function getReceiptFolder(
 
 export function getImagePath(
 	file: TFile,
-	settings: GitHubPublisherSettings,
-	sourceFrontmatter: FrontmatterConvert | null
+	plugin: GithubPublisher,
+	sourceFrontmatter: FrontmatterConvert | null,
+	repository: RepoFrontmatter | RepoFrontmatter[],
 ): string {
-	const imagePath = createImagePath(file, settings, sourceFrontmatter);
+	const settings = plugin.settings;
+	const overridePath = repository instanceof Array ? repository[0] : repository;
+	const imagePath = createImagePath(file, settings, sourceFrontmatter, overridePath);
 	const path = regexOnPath(imagePath.path, settings);
 	const name = regexOnFileName(imagePath.name, settings);
 	return normalizePath(path.replace(file.name, name));
@@ -429,7 +438,9 @@ export function getImagePath(
 
 function createImagePath(file: TFile,
 	settings: GitHubPublisherSettings,
-	sourceFrontmatter: FrontmatterConvert | null): { path: string, name: string } {
+	sourceFrontmatter: FrontmatterConvert | null,
+	overridePath?: RepoFrontmatter,
+): { path: string, name: string } {
 	let fileName = file.name;
 	let filePath = file.path;
 	if (file.name.includes(".excalidraw")) {
@@ -437,18 +448,21 @@ function createImagePath(file: TFile,
 		filePath = filePath.replace(".excalidraw.md", ".svg");
 	}
 	const result : { path: string, name: string } = { path: filePath, name: fileName };
+	const behavior = overridePath?.path?.type ? overridePath.path.type : settings.upload.behavior;
+	const rootFolder = overridePath?.path?.rootFolder ? overridePath.path.rootFolder : settings.upload.rootFolder;
+	const defaultFolderName = overridePath?.path?.defaultName ? overridePath.path.defaultName : settings.upload.defaultName;
 	if (!sourceFrontmatter || !sourceFrontmatter.attachmentLinks) {
 		if (settings.embed.useObsidianFolder) {
-			if (settings.upload.behavior === FolderSettings.yaml) {
-				result.path = settings.upload.rootFolder.length > 0 ? normalizePath(`${settings.upload.rootFolder}/${filePath}`) : filePath;
+			if (behavior === FolderSettings.yaml) {
+				result.path = rootFolder.length > 0 ? normalizePath(`${rootFolder}/${filePath}`) : filePath;
 			}
 			else {
 				//no root, but default folder name
-				result.path = settings.upload.defaultName.length > 0 ? normalizePath(`${settings.upload.defaultName}/${filePath}`) : filePath;
+				result.path = defaultFolderName.length > 0 ? normalizePath(`${defaultFolderName}/${filePath}`) : filePath;
 			}
 			return result;
 		}
-		const defaultImageFolder = settings.embed.folder;
+		const defaultImageFolder = overridePath?.path?.attachment?.folder ? overridePath.path?.attachment?.folder : settings.embed.folder;
 		//find in override
 		const isOverridden = settings.embed.overrideAttachments.filter((override) => {
 			const isRegex = override.path.match(FIND_REGEX);
@@ -469,10 +483,9 @@ function createImagePath(file: TFile,
 			result.path = filePath;
 		}
 		else if (defaultImageFolder.length > 0) {
-			result.path = normalizePath(`${defaultImageFolder}/${filePath}`);
-			
-		} else if (settings.upload.defaultName.length > 0) {
-			result.path = normalizePath(`${settings.upload.defaultName}/${fileName}`);
+			result.path = normalizePath(`${defaultImageFolder}/${fileName}`);
+		} else if (defaultFolderName.length > 0) {
+			result.path = normalizePath(`${defaultFolderName}/${fileName}`);
 		} else {
 			result.path = filePath;
 		}

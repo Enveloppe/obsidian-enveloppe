@@ -535,6 +535,10 @@
         "desc": "Choisissez la clé de propriété que vous souhaitez utiliser pour lier la propriété d'un fichier à un autre, sans les réécrire à chaque fois. Ne fonctionne que pour les fichiers liés par un lien wiki dans le frontmatter.",
         "title": "Set d'options"
       },
+      "setImport": {
+        "desc": "Importer un set d'options depuis le frontmatter d'un fichier",
+        "title": "Importer un groupe d'option"
+      },
       "shareKey": {
         "all": {
           "desc": "Autoriser le partage de tous les fichiers et ignorer l'état de la clé de partage",

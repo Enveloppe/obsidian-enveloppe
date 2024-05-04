@@ -11,7 +11,7 @@ import GithubPublisher from "../main";
 import {MonoRepoProperties, MultiRepoProperties, Repository} from "../settings/interface";
 import {createLink} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";
-import { frontmatterFromFile, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, frontmatterSettingsRepository, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {purgeNotesRemote, shareOneNote} from ".";
 import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} from "./plugin_commands";
 
@@ -32,13 +32,13 @@ export async function createLinkCallback(repo: Repository | null, plugin: Github
 		hotkeys: [],
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
-			const frontmatter = frontmatterFromFile(file, plugin);
+			const frontmatter = frontmatterFromFile(file, plugin, repo);
 			if (
 				file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 			) {
 				if (!checking) {
 					const multiRepo: MultiRepoProperties = {
-						frontmatter: getRepoFrontmatter(plugin.settings, repo, frontmatter),
+						frontmatter: getRepoFrontmatter(plugin, repo, frontmatter, true),
 						repo,
 					};
 					createLink(
@@ -76,17 +76,12 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 		hotkeys: [],
 		//@ts-ignore
 		callback: async () => {
-			const frontmatter = getRepoFrontmatter(plugin.settings, repo);
+			const frontmatter = getRepoFrontmatter(plugin, repo, undefined, true);
 			const monoRepo: MonoRepoProperties = {
 				frontmatter: Array.isArray(frontmatter) ? frontmatter[0] : frontmatter,
 				repo,
-				convert: getFrontmatterSettings(
-					null,
-					plugin.settings,
-					repo
-				)
+				convert: frontmatterSettingsRepository(plugin, repo)
 			};
-			//@ts-ignore
 			const publisher = await plugin.reloadOctokit(repo?.smartKey);
 			await purgeNotesRemote(
 				publisher,
@@ -102,7 +97,6 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
  * @call shareOneNote
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {GithubPublisher} plugin - The plugin instance
- * @param {string} branchName - The branch name to upload the file
  * @return {Promise<Command>}
  */
 export async function shareOneNoteCallback(repo: Repository|null, plugin: GithubPublisher): Promise<Command> {
@@ -118,7 +112,7 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 		hotkeys: [],
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
-			const frontmatter = frontmatterFromFile(file, plugin);
+			const frontmatter = frontmatterFromFile(file, plugin, repo);
 			if (
 				file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 			) {
@@ -127,6 +121,7 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 						octokit,
 						file,
 						repo,
+						frontmatter,
 						file.basename,
 					);
 				}

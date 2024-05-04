@@ -1,10 +1,43 @@
 import i18next from "i18next";
-import {App, Modal, Notice, Setting} from "obsidian";
+import {AbstractInputSuggest, App, Modal, Notice, Setting} from "obsidian";
 
 import GithubPublisher from "../../main";
 import {checkRepositoryValidity, verifyRateLimitAPI} from "../../utils/data_validation_test";
 import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../interface";
 import { migrateToken } from "../migrate";
+
+
+class SetClassSuggester extends AbstractInputSuggest<string> {
+	plugin: GithubPublisher;
+	constructor(private inputEl: HTMLInputElement, plugin: GithubPublisher, private onSubmit: (value: string) => void) {
+		super(plugin.app, inputEl);
+		this.plugin = plugin;
+	}
+
+	renderSuggestion(value: string, el: HTMLElement): void {
+		el.setText(value);
+	}
+
+	getSuggestions(query: string): string[] {
+		const markdownFile = this.plugin.app.vault.getFiles().filter((file) => {
+			if (file.extension === "md" && file.path.toLowerCase().contains(query.toLowerCase())) {
+				const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+				if (frontmatter) return true;
+			}
+			return false;
+		});
+		return markdownFile.map((file) => file.path);
+	}
+
+	//eslint-disable-next-line @typescript-eslint/no-unused-vars
+	selectSuggestion(value: string, evt: MouseEvent | KeyboardEvent): void {
+		this.onSubmit(value);
+		this.inputEl.value = value;
+		this.inputEl.focus();
+		this.inputEl.trigger("input");
+		this.close();
+	}
+}
 
 /**
  * @description This class is used to add a new repo to the settings in the "otherRepo" in the github setting section
@@ -74,7 +107,8 @@ export class ModalAddingNewRepository extends Modal {
 					slugify: this.settings.plugin.copyLink.transform.slugify,
 					applyRegex: this.settings.plugin.copyLink.transform.applyRegex
 				}
-			}
+			},
+			set: ""
 		};
 
 		new Setting(contentEl)
@@ -409,6 +443,18 @@ class ModalEditingRepository extends Modal {
 
 		contentEl.createEl("h3", { text: i18next.t("settings.github.smartRepo.modals.otherConfig") });
 
+		new Setting(contentEl)
+			.setName(i18next.t("settings.plugin.setImport.title"))
+			.setDesc(i18next.t("settings.plugin.setImport.desc"))
+			.addSearch((search) => {
+				search
+					.setValue("")
+					.setPlaceholder("path/to/file.md");
+				new SetClassSuggester(search.inputEl, this.plugin, (result) => {
+					this.repository.set = result;
+				});
+			});
+			
 		new Setting(contentEl)
 			.setName(i18next.t("settings.plugin.shareKey.all.title"))
 			.setDesc(i18next.t("settings.plugin.shareKey.all.desc"))

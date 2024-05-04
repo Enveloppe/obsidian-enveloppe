@@ -14,6 +14,7 @@ import {
 } from "../settings/interface";
 import { logs, notif, trimObject} from "../utils";
 import {isAttachment, verifyRateLimitAPI} from "../utils/data_validation_test";
+import { frontmatterSettingsRepository } from "../utils/parse_frontmatter";
 import { FilesManagement } from "./files";
 
 /**
@@ -39,7 +40,7 @@ export async function deleteFromGithub(
 		const monoProperties: MonoRepoProperties = {
 			frontmatter: repo,
 			repo: repoProperties.repo,
-			convert: repoProperties.convert,
+			convert: frontmatterSettingsRepository(filesManagement.plugin, repo),
 		};
 		deleted.push(await deleteFromGithubOneRepo(
 			silent,

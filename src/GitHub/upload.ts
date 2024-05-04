@@ -3,6 +3,7 @@ import i18next from "i18next";
 import { Base64 } from "js-base64";
 import {
 	arrayBufferToBase64,
+	FrontMatterCache,
 	MetadataCache,
 	normalizePath,
 	Notice,
@@ -10,6 +11,7 @@ import {
 	TFolder,
 	Vault,
 } from "obsidian";
+import merge from "ts-deepmerge";
 
 import { mainConverting } from "../conversion";
 import { convertToHTMLSVG } from "../conversion/compiler/excalidraw";
@@ -41,7 +43,7 @@ import {
 	isShared,
 } from "../utils/data_validation_test";
 import { LOADING_ICON } from "../utils/icons";
-import { frontmatterFromFile, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, frontmatterSettingsRepository, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import { ShareStatusBar } from "../utils/status_bar";
 import { deleteFromGithub } from "./delete";
 import { FilesManagement } from "./files";
@@ -88,6 +90,7 @@ export default class Publisher {
 		fileHistory: TFile[],
 		deepScan: boolean,
 		properties: MonoProperties,
+
 	) {
 		const uploadedFile: UploadedFiles[] = [];
 		const fileError: string[] = [];
@@ -115,7 +118,8 @@ export default class Publisher {
 									false,
 									repoProperties,
 									fileHistory,
-									true
+									true,
+									properties.frontmatter.source
 								);
 								if (published) {
 									uploadedFile.push(...published.uploaded);
@@ -173,13 +177,15 @@ export default class Publisher {
 		repo: MultiRepoProperties | MonoRepoProperties,
 		fileHistory: TFile[] = [],
 		deepScan: boolean = false,
+		sourceFrontmatter: FrontMatterCache | null | undefined,
 	) {
 		const shareFiles = new FilesManagement(
 			this.octokit,
 			this.plugin,
 		);
-		const frontmatter = frontmatterFromFile(file, this.plugin);
-		const repoFrontmatter = getRepoFrontmatter(this.settings, repo.repo, frontmatter);
+		let frontmatter = frontmatterFromFile(file, this.plugin, null);
+		if (sourceFrontmatter && frontmatter) frontmatter = merge(frontmatter, sourceFrontmatter);
+		const repoFrontmatter = getRepoFrontmatter(this.plugin, repo.repo, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, this.plugin);
 		repo.frontmatter = repoFrontmatter;
 		if (
@@ -195,11 +201,13 @@ export default class Publisher {
 		try {
 			logs({ settings: this.settings }, `Publishing file: ${file.path}`);
 			fileHistory.push(file);
-			const frontmatterSettings = getFrontmatterSettings(
+			const frontmatterSettingsFromFile = getFrontmatterSettings(
 				frontmatter,
 				this.settings,
 				repo.repo
 			);
+			const frontmatterRepository = frontmatterSettingsRepository(this.plugin, repo.repo);
+			const frontmatterSettings = merge(frontmatterRepository, frontmatterSettingsFromFile);
 			let embedFiles = shareFiles.getSharedEmbed(
 				file,
 				frontmatterSettings,
@@ -240,7 +248,8 @@ export default class Publisher {
 					plugin: this.plugin,
 					frontmatter: {
 						general: frontmatterSettings,
-						repo
+						repo,
+						source: sourceFrontmatter
 					},
 					repository: multiProperties.repository,
 					filepath: multiProperties.filepath,
@@ -444,8 +453,9 @@ export default class Publisher {
 		}
 		const path = getImagePath(
 			imageFile,
-			this.settings,
-			properties.frontmatter.general
+			this.plugin,
+			properties.frontmatter.general,
+			properties.frontmatter.repo
 		);
 		if (this.settings.github.dryRun.enable) {
 			const folderName = this.settings.github.dryRun.folderName
@@ -633,8 +643,9 @@ export default class Publisher {
 			if (isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
 				const imagePath = getImagePath(
 					file,
-					this.settings,
-					properties.frontmatter.general
+					this.plugin,
+					properties.frontmatter.general,
+					properties.frontmatter.repo
 				);
 				const repoFrontmatter = properties.frontmatter;
 				if (this.settings.github.dryRun.enable) {

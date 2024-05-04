@@ -1,6 +1,7 @@
 import i18next from "i18next";
-import { Notice, Platform, TFile } from "obsidian";
+import { FrontMatterCache, Notice, Platform, TFile } from "obsidian";
 import { ERROR_ICONS } from "src/utils/icons";
+import merge from "ts-deepmerge";
 
 import { GithubBranch } from "../GitHub/branch";
 import { deleteFromGithub } from "../GitHub/delete";
@@ -33,6 +34,7 @@ export async function shareAllMarkedNotes(
 	monoRepo: MonoRepoProperties,
 	sharedFiles: TFile[],
 	createGithubBranch: boolean = true,
+	sourceFrontmatter: FrontMatterCache | undefined | null = null,
 ) {
 	const statusBar = new ShareStatusBar(statusBarItems, sharedFiles.length);
 	const repoFrontmatter = monoRepo.frontmatter;
@@ -51,7 +53,10 @@ export async function shareAllMarkedNotes(
 					const uploaded = await PublisherManager.publish(
 						sharedFile,
 						false,
-						monoRepo
+						monoRepo,
+						undefined,
+						undefined,
+						sourceFrontmatter,
 					) ;
 					if (uploaded) {
 						listStateUploaded.push(...uploaded.uploaded);
@@ -163,13 +168,15 @@ export async function shareOneNote(
 	PublisherManager: GithubBranch,
 	file: TFile,
 	repository: Repository | null = null,
-	title?: string
+	sourceFrontmatter: FrontMatterCache | undefined | null,
+	title?: string,
 ): Promise<void|false> {
 	const {settings, plugin} = PublisherManager;
 	const app = PublisherManager.plugin.app;
-	const frontmatter = frontmatterFromFile(file, PublisherManager.plugin);
+	let frontmatter = frontmatterFromFile(file, PublisherManager.plugin, null);
+	if (sourceFrontmatter && frontmatter) frontmatter = merge(sourceFrontmatter, frontmatter);
 	try {
-		const repoFrontmatter = getRepoFrontmatter(settings, repository, frontmatter);
+		const repoFrontmatter = getRepoFrontmatter(plugin, repository, frontmatter);
 		let isValid: boolean;
 		if (repoFrontmatter instanceof Array) {
 			const isValidArray = [];
@@ -191,7 +198,8 @@ export async function shareOneNote(
 			true,
 			multiRepo,
 			[],
-			true
+			true,
+			sourceFrontmatter
 		);
 		if (publishSuccess) {
 			if (
@@ -236,7 +244,7 @@ export async function shareOneNote(
 	} catch (error) {
 		if (!(error instanceof DOMException)) {
 			logs({settings, e: true}, error);
-			notifError(getRepoFrontmatter(settings, repository, frontmatter));
+			notifError(getRepoFrontmatter(plugin, repository, frontmatter, true));
 		}
 	}
 }

@@ -89,18 +89,19 @@ export class FilesManagement extends Publisher {
 	getAllFileWithPath(repo: Repository | null, convert: FrontmatterConvert): ConvertedLink[] {
 		const files = this.vault.getFiles().filter((x) => !x.path.startsWith(this.settings.github.dryRun.folderName));
 		const allFileWithPath: ConvertedLink[] = [];
+		const sourceFrontmatter = getRepoFrontmatter(this.plugin, repo, null, true);
 		for (const file of files) {
 			if (isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
-				const filepath = getImagePath(file, this.settings, convert);
+				const filepath = getImagePath(file, this.plugin, convert, sourceFrontmatter );
 				allFileWithPath.push({
 					converted: filepath,
 					real: file.path,
 				});
 			} else if (file.extension == "md") {
-				const frontMatter = frontmatterFromFile(file, this.plugin);
+				const frontMatter = frontmatterFromFile(file, this.plugin, repo);
 				if (isShared(frontMatter, this.settings, file, repo)) {
 					const repoFrontmatter = getRepoFrontmatter(
-						this.settings,
+						this.plugin,
 						repo,
 						frontMatter
 					);
@@ -108,7 +109,7 @@ export class FilesManagement extends Publisher {
 					allFileWithPath.push({
 						converted: filepath,
 						real: file.path,
-						repoFrontmatter: repoFrontmatter,
+						repoFrontmatter,
 					});
 				}
 			}
