@@ -18,7 +18,7 @@ import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchName: string, repo: Repository | null) {
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const statusBarItems = plugin.addStatusBarItem();
-	const repoFrontmatter = getRepoFrontmatter(plugin, repo, null);
+	const repoFrontmatter = getRepoFrontmatter(plugin, repo, null, true);
 	const monoProperties: MonoRepoProperties = {
 		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
 		repo,
@@ -108,7 +108,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 		plugin.settings.plugin.fileMenu)
 	) return;
 
-	const repoFrontmatter = getRepoFrontmatter(plugin, getSharedKey, frontmatter);
+	const repoFrontmatter = getRepoFrontmatter(plugin, getSharedKey, frontmatter, true);
 
 	menu.addItem((item) => {
 		/**
@@ -177,7 +177,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	//@ts-ignore
 	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
-	let repoFrontmatter = getRepoFrontmatter(plugin, repo, frontmatter);
+	let repoFrontmatter = getRepoFrontmatter(plugin, repo, frontmatter, true);
 	repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
 	/**
 	 * default repo

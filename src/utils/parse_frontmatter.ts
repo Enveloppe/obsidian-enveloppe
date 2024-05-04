@@ -99,19 +99,21 @@ function booleanRemoveEmbed(removeEmbed: unknown) {
 /**
  * Retrieves the repository frontmatter based on the provided settings and repository information.
  *
- * @param {GitHubPublisherSettings} settings - The GitHub Publisher settings.
+ * @param {GithubPublisher} plugin - The plugin instance
  * @param {Repository | null} repository - The repository information.
  * @param {FrontMatterCache | null} frontmatter - The frontmatter cache.
+ * @param {boolean} [checkSet] - Whether to check the set file for frontmatter (preventing multiple reading of the same file)
  * @returns {RepoFrontmatter[] | RepoFrontmatter} - The repository frontmatter.
  */
 export function getRepoFrontmatter(
 	plugin: GithubPublisher,
 	repository: Repository | null,
 	frontmatter?: FrontMatterCache | null,
+	checkSet?: boolean
 ): RepoFrontmatter[] | RepoFrontmatter {
 	const settings = plugin.settings;
 	let github = repository ?? settings.github;
-	if (repository?.set && repository.set.length > 0) {
+	if (checkSet && repository?.set && repository.set.length > 0) {
 		const file = plugin.app.vault.getAbstractFileByPath(repository.set) instanceof TFile ? plugin.app.vault.getAbstractFileByPath(repository.set) : null;
 		if (file) {
 			const setFrontmatter = plugin.app.metadataCache.getFileCache(file as TFile)?.frontmatter;

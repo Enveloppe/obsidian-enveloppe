@@ -169,7 +169,7 @@ export async function shareOneNote(
 	const app = PublisherManager.plugin.app;
 	const frontmatter = frontmatterFromFile(file, PublisherManager.plugin);
 	try {
-		const repoFrontmatter = getRepoFrontmatter(plugin, repository, frontmatter);
+		const repoFrontmatter = getRepoFrontmatter(plugin, repository, frontmatter, true);
 		let isValid: boolean;
 		if (repoFrontmatter instanceof Array) {
 			const isValidArray = [];
@@ -236,7 +236,7 @@ export async function shareOneNote(
 	} catch (error) {
 		if (!(error instanceof DOMException)) {
 			logs({settings, e: true}, error);
-			notifError(getRepoFrontmatter(plugin, repository, frontmatter));
+			notifError(getRepoFrontmatter(plugin, repository, frontmatter, true));
 		}
 	}
 }
