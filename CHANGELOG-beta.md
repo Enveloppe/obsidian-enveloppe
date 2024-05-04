@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.1.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-3...7.1.0-4) (2024-05-04)
+
+
+### Features
+
+* **repository:** allow to set a file in settings ([eba4d78](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/eba4d786f6d3df1e2d9efacd04fe64beb9fcc639))
+
+
+### Bug Fixes
+
+* if using set, clean was broken ([1ea27f7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1ea27f77ca439819b86b24bce641a5a12cec7169))
+
 ## [7.1.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-2...7.1.0-3) (2024-05-04)
 
 
