@@ -58,12 +58,13 @@ export async function createLinkOnActiveFile(repo: Repository | null, plugin: Gi
  */
 export async function shareActiveFile(plugin: GithubPublisher, repo: Repository | null): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
-	const frontmatter = file ? plugin.app.metadataCache.getFileCache(file)?.frontmatter : null;
+	const frontmatter = frontmatterFromFile(file, plugin, repo);
 	if (file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)) {
 		await shareOneNote(
 			await plugin.reloadOctokit(repo?.smartKey),
 			file,
 			repo,
+			frontmatter,
 		);
 	} else {
 		new Notice(i18next.t("commands.runOtherRepo.noFile"));

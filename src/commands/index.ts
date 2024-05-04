@@ -1,6 +1,7 @@
 import i18next from "i18next";
-import { Notice, Platform, TFile } from "obsidian";
+import { FrontMatterCache, Notice, Platform, TFile } from "obsidian";
 import { ERROR_ICONS } from "src/utils/icons";
+import merge from "ts-deepmerge";
 
 import { GithubBranch } from "../GitHub/branch";
 import { deleteFromGithub } from "../GitHub/delete";
@@ -163,11 +164,13 @@ export async function shareOneNote(
 	PublisherManager: GithubBranch,
 	file: TFile,
 	repository: Repository | null = null,
-	title?: string
+	sourceFrontmatter: FrontMatterCache | undefined | null,
+	title?: string,
 ): Promise<void|false> {
 	const {settings, plugin} = PublisherManager;
 	const app = PublisherManager.plugin.app;
-	const frontmatter = frontmatterFromFile(file, PublisherManager.plugin, repository);
+	let frontmatter = frontmatterFromFile(file, PublisherManager.plugin, null);
+	if (sourceFrontmatter && frontmatter) frontmatter = merge(sourceFrontmatter, frontmatter);
 	try {
 		const repoFrontmatter = getRepoFrontmatter(plugin, repository, frontmatter);
 		let isValid: boolean;

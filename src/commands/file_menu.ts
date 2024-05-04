@@ -156,6 +156,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 					await plugin.reloadOctokit(getSharedKey?.smartKey),
 					file,
 					getSharedKey,
+					frontmatter,
 					fileName
 				);
 			});
@@ -197,6 +198,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 						await plugin.reloadOctokit(),
 						file,
 						defaultRepo(plugin.settings),
+						null,
 						fileName
 					);
 				});
@@ -219,6 +221,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 								await plugin.reloadOctokit(otherRepo?.smartKey),
 								file,
 								otherRepo,
+								frontmatter,
 								fileName
 							);
 						});
@@ -240,6 +243,7 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 							await plugin.reloadOctokit(),
 							file,
 							repo,
+							frontmatter,
 							fileName
 						);
 					});
@@ -253,10 +257,12 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 			.setIcon("file-input")
 			.onClick(async () => {
 				new ChooseRepoToRun(plugin.app, plugin, repo?.shareKey, branchName, "file", file.basename, async (item: Repository) => {
+					const sourceFrontmatter = frontmatterFromFile(file, plugin, item);
 					await shareOneNote(
 						await plugin.reloadOctokit(item.smartKey),
 						file,
 						item,
+						sourceFrontmatter,
 						fileName
 					);
 				}).open();

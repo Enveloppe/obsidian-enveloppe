@@ -98,7 +98,6 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
  * @call shareOneNote
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {GithubPublisher} plugin - The plugin instance
- * @param {string} branchName - The branch name to upload the file
  * @return {Promise<Command>}
  */
 export async function shareOneNoteCallback(repo: Repository|null, plugin: GithubPublisher): Promise<Command> {
@@ -123,6 +122,7 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 						octokit,
 						file,
 						repo,
+						frontmatter,
 						file.basename,
 					);
 				}
