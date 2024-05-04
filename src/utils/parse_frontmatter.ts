@@ -324,48 +324,61 @@ export function parsePath(
 	frontmatter?: FrontMatterCache | null | undefined
 ): RepoFrontmatter[] | RepoFrontmatter {
 	repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
+	const splitArrayPath = (path?: string[] | string):string|undefined => {
+		if (!path) return;
+		if (path instanceof Array) {
+			return path.join("/");
+		}
+		return path;
+	};
+
+	const matchType = (type?: string) => {
+		if (!type) return settings.upload.behavior;
+		if (type.match(/^(fixed|obsidian|yaml)$/i)) return type as FolderSettings;
+		return settings.upload.behavior;
+	};
+
 	for (const repo of repoFrontmatter) {
 		const smartKey = repository ? repository.smartKey : "default";
 		const path: Path = {
-			type: settings.upload.behavior,
-			defaultName: settings.upload.defaultName,
-			rootFolder: settings.upload.rootFolder,
+			type: matchType(frontmatter?.type),
+			defaultName: frontmatter?.defaultName ?? settings.upload.defaultName,
+			rootFolder: frontmatter?.rootFolder ?? settings.upload.rootFolder,
 			category: {
-				key: settings.upload.yamlFolderKey,
-				value: settings.upload.defaultName,
+				key: splitArrayPath(frontmatter?.category?.key ?? frontmatter?.["category.key"]) ?? settings.upload.yamlFolderKey,
+				value: frontmatter?.category?.value ?? frontmatter?.["category.value"] ?? settings.upload.defaultName,
 			},
-			override: frontmatter?.path,
+			override: splitArrayPath(frontmatter?.path),
 			smartkey: smartKey,
 			attachment: {
-				send: settings.embed.attachments,
-				folder: settings.embed.folder,
+				send: frontmatter?.attachment?.send ?? frontmatter?.["attachment.send"] ?? settings.embed.attachments,
+				folder: splitArrayPath(frontmatter?.attachment?.send ?? frontmatter?.["attachment.folder"]) ?? settings.embed.folder,
 			}
 		};
 
 		if (frontmatter?.[`${smartKey}.path`]) {
-			path.override = frontmatter[`${smartKey}.path`] instanceof Array ? frontmatter[`${smartKey}.path`].join("/") : frontmatter[`${smartKey}.path`];
+			path.override = splitArrayPath(frontmatter[`${smartKey}.path`]);
 			continue;
 		}
 		if (frontmatter?.[`${smartKey}.${path.category!.key}`]) {
 			const category = frontmatter[`${smartKey}.${path.category!.key}`];
-			path.category!.value = category instanceof Array ? category.join("/") : category;
+			path.category!.value = splitArrayPath(category) as string;
 		}
 		if (frontmatter?.[`${smartKey}.rootFolder`]) {
-			const rootFolder = frontmatter[`${smartKey}.rootFolder`] instanceof Array ? frontmatter[`${smartKey}.rootFolder`].join("/") : frontmatter[`${smartKey}.rootFolder`];
+			const rootFolder = splitArrayPath(frontmatter[`${smartKey}.rootFolder`]) as string;
 			path.rootFolder = rootFolder;
 		}
 		if (frontmatter?.[`${smartKey}.defaultName`]) {
-			path.defaultName = frontmatter[`${smartKey}.defaultName`] instanceof Array ? frontmatter[`${smartKey}.defaultName`].join("/") : frontmatter[`${smartKey}.defaultName`];
+			path.defaultName = splitArrayPath(frontmatter[`${smartKey}.defaultName`]) as string;
 		}
 		if (frontmatter?.[`${smartKey}.type`]) {
-			const type = frontmatter[`${smartKey}.type`].toLowerCase();
-			if (type.match(/^(fixed|obsidian|yaml)$/i)) path.type = frontmatter[`${smartKey}.type`] as FolderSettings;
+			path.type = matchType(frontmatter[`${smartKey}.type`].toLowerCase());
 		}
 		if (frontmatter?.[`${smartKey}.attachment`]) {
 			if (typeof frontmatter?.[`${smartKey}.attachment`] === "object") {
 				path.attachment = {
 					send: frontmatter[`${smartKey}.attachment`]?.send ?? path.attachment?.send,
-					folder: frontmatter[`${smartKey}.attachment`]?.folder ?? path.attachment?.folder,
+					folder: splitArrayPath(frontmatter[`${smartKey}.attachment`]?.folder) ?? path.attachment!.folder,
 				};
 			} else {
 				path.attachment!.send = frontmatter[`${smartKey}.attachment`];

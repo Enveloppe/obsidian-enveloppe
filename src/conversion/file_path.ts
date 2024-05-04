@@ -277,7 +277,6 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 	if (fileName === uploadSettings.folderNote.rename && uploadSettings.folderNote.enable || uploadSettings.replaceTitle.length === 0) return fileName;
 	const extension = fileName.match(/\.[0-9a-z]+$/i)?.at(-1) ?? "";
 	fileName = fileName.replace(extension, "");
-	console.warn(`${fileName} and ${extension} and ${JSON.stringify(uploadSettings.replaceTitle)}`);
 	for (const regexTitle of uploadSettings.replaceTitle) {
 		if (regexTitle.regex?.trim().length > 0) {
 			const toReplace = regexTitle.regex;
