@@ -167,9 +167,9 @@ export async function shareOneNote(
 ): Promise<void|false> {
 	const {settings, plugin} = PublisherManager;
 	const app = PublisherManager.plugin.app;
-	const frontmatter = frontmatterFromFile(file, PublisherManager.plugin);
+	const frontmatter = frontmatterFromFile(file, PublisherManager.plugin, repository);
 	try {
-		const repoFrontmatter = getRepoFrontmatter(plugin, repository, frontmatter, true);
+		const repoFrontmatter = getRepoFrontmatter(plugin, repository, frontmatter);
 		let isValid: boolean;
 		if (repoFrontmatter instanceof Array) {
 			const isValidArray = [];

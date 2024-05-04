@@ -179,7 +179,7 @@ export default class Publisher {
 			this.octokit,
 			this.plugin,
 		);
-		const frontmatter = frontmatterFromFile(file, this.plugin);
+		const frontmatter = frontmatterFromFile(file, this.plugin, repo.repo);
 		const repoFrontmatter = getRepoFrontmatter(this.plugin, repo.repo, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, this.plugin);
 		repo.frontmatter = repoFrontmatter;

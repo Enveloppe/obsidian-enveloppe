@@ -480,13 +480,20 @@ export function getLinkedFrontmatter(
 	return linked;
 }
 
-export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher) {
+export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher, repo: Repository | null) {
 	let frontmatter = null;
 	
 	if (file) {
 		frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
-		frontmatter = linkedFrontmatter ? { ...linkedFrontmatter, ...frontmatter } : frontmatter;
+		frontmatter = linkedFrontmatter && frontmatter ? merge(frontmatter, linkedFrontmatter) : linkedFrontmatter ?? frontmatter;
+	}
+	if (repo && repo.set.length > 0) {
+		const fileAsTFile = plugin.app.vault.getFileByPath(repo.set);
+		if (fileAsTFile) {
+			const setFrontmatter = plugin.app.metadataCache.getFileCache(fileAsTFile)?.frontmatter;
+			frontmatter = frontmatter && setFrontmatter ? merge(frontmatter, setFrontmatter) : setFrontmatter ?? frontmatter;
+		}
 	}
 	return frontmatter;
 }

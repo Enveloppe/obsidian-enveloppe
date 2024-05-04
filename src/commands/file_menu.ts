@@ -100,8 +100,9 @@ export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem
  * @param {Menu} menu - The menu to add the item to
  */
 export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: string, menu: Menu) {
-	const frontmatter = frontmatterFromFile(file, plugin);
-	let getSharedKey = getRepoSharedKey(plugin, frontmatter, file);
+	const frontmatterSharedKey = frontmatterFromFile(file, plugin, null);
+	let getSharedKey = getRepoSharedKey(plugin, frontmatterSharedKey, file);
+	const frontmatter = frontmatterFromFile(file, plugin, getSharedKey);
 	const allKeysFromFile = multipleSharedKey(frontmatter, file, plugin);
 	if (
 		!(isShared(frontmatter, plugin.settings, file, getSharedKey) &&
@@ -173,7 +174,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
  * @return {Menu} - The submenu created
  */
 export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository | null, originalMenu: Menu): Menu {
-	const frontmatter = frontmatterFromFile(file, plugin);
+	const frontmatter = frontmatterFromFile(file, plugin, repo);
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	//@ts-ignore
 	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;

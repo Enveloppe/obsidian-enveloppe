@@ -98,7 +98,7 @@ export class FilesManagement extends Publisher {
 					real: file.path,
 				});
 			} else if (file.extension == "md") {
-				const frontMatter = frontmatterFromFile(file, this.plugin);
+				const frontMatter = frontmatterFromFile(file, this.plugin, repo);
 				if (isShared(frontMatter, this.settings, file, repo)) {
 					const repoFrontmatter = getRepoFrontmatter(
 						this.plugin,

@@ -32,7 +32,7 @@ export async function createLinkCallback(repo: Repository | null, plugin: Github
 		hotkeys: [],
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
-			const frontmatter = frontmatterFromFile(file, plugin);
+			const frontmatter = frontmatterFromFile(file, plugin, repo);
 			if (
 				file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 			) {
@@ -114,7 +114,7 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 		hotkeys: [],
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
-			const frontmatter = frontmatterFromFile(file, plugin);
+			const frontmatter = frontmatterFromFile(file, plugin, repo);
 			if (
 				file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 			) {

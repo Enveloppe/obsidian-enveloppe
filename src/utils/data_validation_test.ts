@@ -326,7 +326,7 @@ export async function checkRepositoryValidity(
 	silent: boolean=false): Promise<boolean> {
 	const settings = PublisherManager.settings;
 	try {
-		const frontmatter = frontmatterFromFile(file, PublisherManager.plugin);
+		const frontmatter = frontmatterFromFile(file, PublisherManager.plugin, repository);
 		const repoFrontmatter = getRepoFrontmatter(PublisherManager.plugin, repository, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin, silent);
 		if (isNotEmpty) {

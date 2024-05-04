@@ -28,13 +28,13 @@ import {
  */
 export async function createLinkOnActiveFile(repo: Repository | null, plugin: GithubPublisher): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
-	const frontmatter = frontmatterFromFile(file, plugin);
+	const frontmatter = frontmatterFromFile(file, plugin, repo);
 
 	if (
 		file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
 	) {
 		const multiRepo: MultiRepoProperties = {
-			frontmatter: getRepoFrontmatter(plugin, repo, frontmatter, true),
+			frontmatter: getRepoFrontmatter(plugin, repo, frontmatter),
 			repo
 		};
 		await createLink(
