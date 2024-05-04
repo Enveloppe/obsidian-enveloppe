@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.1.0-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-2...7.1.0-3) (2024-05-04)
+
+
+### Bug Fixes
+
+* adjust the possibility around per files settings with override path ([17f96d3](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/17f96d39bc717275824eac91536fa1422329c474))
+* in some conditions, repo doesn't appear in modal ([223bf40](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/223bf401d3c7f0f6f2dd0b1e6a340930b20f0c5f))
+* unexpected null ([7c16e24](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7c16e2471b299f48e3531501f68334b6586f2340))
+
 ## [7.1.0-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-1...7.1.0-2) (2024-05-04)
 
 
