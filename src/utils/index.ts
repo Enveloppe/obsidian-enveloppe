@@ -255,7 +255,7 @@ export async function createLink(
 	if (baseLink.length === 0) {
 		baseLink = repo instanceof Array ? `https://${github.user}.github.io/${settings.github.repo}/` : `https://${repo.owner}.github.io/${repo.repo}/`;
 	}
-	const frontmatter = frontmatterFromFile(file, plugin);
+	const frontmatter = frontmatterFromFile(file, plugin, otherRepo);
 	let removePart = copyLink.removePart;
 	const smartKey = otherRepo?.smartKey ? `${otherRepo.smartKey}.` : "";
 	if (frontmatter) {

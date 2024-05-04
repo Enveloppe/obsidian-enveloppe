@@ -1,4 +1,4 @@
-import { TFile } from "obsidian";
+import { FrontMatterCache, TFile } from "obsidian";
 
 import GithubPublisher from "../main";
 
@@ -214,10 +214,12 @@ export interface MonoProperties {
 	plugin: GithubPublisher;
 	frontmatter: {
 		general: FrontmatterConvert;
-		repo: RepoFrontmatter
+		repo: RepoFrontmatter;
+		source: FrontMatterCache | null | undefined;
 	},
 	repository: Repository | null;
 	filepath: string;
+
 }
 
 export interface MonoRepoProperties {
@@ -229,6 +231,7 @@ export interface MonoRepoProperties {
 export interface MultiRepoProperties {
 	frontmatter: RepoFrontmatter[] | RepoFrontmatter;
 	repo: Repository | null;
+
 }
 
 

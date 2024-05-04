@@ -3,6 +3,7 @@ import i18next from "i18next";
 import { Base64 } from "js-base64";
 import {
 	arrayBufferToBase64,
+	FrontMatterCache,
 	MetadataCache,
 	normalizePath,
 	Notice,
@@ -89,6 +90,7 @@ export default class Publisher {
 		fileHistory: TFile[],
 		deepScan: boolean,
 		properties: MonoProperties,
+
 	) {
 		const uploadedFile: UploadedFiles[] = [];
 		const fileError: string[] = [];
@@ -116,7 +118,8 @@ export default class Publisher {
 									false,
 									repoProperties,
 									fileHistory,
-									true
+									true,
+									properties.frontmatter.source
 								);
 								if (published) {
 									uploadedFile.push(...published.uploaded);
@@ -174,12 +177,14 @@ export default class Publisher {
 		repo: MultiRepoProperties | MonoRepoProperties,
 		fileHistory: TFile[] = [],
 		deepScan: boolean = false,
+		sourceFrontmatter: FrontMatterCache | null | undefined,
 	) {
 		const shareFiles = new FilesManagement(
 			this.octokit,
 			this.plugin,
 		);
-		const frontmatter = frontmatterFromFile(file, this.plugin, repo.repo);
+		let frontmatter = frontmatterFromFile(file, this.plugin, null);
+		if (sourceFrontmatter && frontmatter) frontmatter = merge(frontmatter, sourceFrontmatter);
 		const repoFrontmatter = getRepoFrontmatter(this.plugin, repo.repo, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, this.plugin);
 		repo.frontmatter = repoFrontmatter;
@@ -243,7 +248,8 @@ export default class Publisher {
 					plugin: this.plugin,
 					frontmatter: {
 						general: frontmatterSettings,
-						repo
+						repo,
+						source: sourceFrontmatter
 					},
 					repository: multiProperties.repository,
 					filepath: multiProperties.filepath,
@@ -449,7 +455,7 @@ export default class Publisher {
 			imageFile,
 			this.plugin,
 			properties.frontmatter.general,
-			properties.repository
+			properties.frontmatter.repo
 		);
 		if (this.settings.github.dryRun.enable) {
 			const folderName = this.settings.github.dryRun.folderName
@@ -639,7 +645,7 @@ export default class Publisher {
 					file,
 					this.plugin,
 					properties.frontmatter.general,
-					properties.repository
+					properties.frontmatter.repo
 				);
 				const repoFrontmatter = properties.frontmatter;
 				if (this.settings.github.dryRun.enable) {

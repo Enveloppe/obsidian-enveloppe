@@ -34,6 +34,7 @@ export async function shareAllMarkedNotes(
 	monoRepo: MonoRepoProperties,
 	sharedFiles: TFile[],
 	createGithubBranch: boolean = true,
+	sourceFrontmatter: FrontMatterCache | undefined | null = null,
 ) {
 	const statusBar = new ShareStatusBar(statusBarItems, sharedFiles.length);
 	const repoFrontmatter = monoRepo.frontmatter;
@@ -52,7 +53,10 @@ export async function shareAllMarkedNotes(
 					const uploaded = await PublisherManager.publish(
 						sharedFile,
 						false,
-						monoRepo
+						monoRepo,
+						undefined,
+						undefined,
+						sourceFrontmatter,
 					) ;
 					if (uploaded) {
 						listStateUploaded.push(...uploaded.uploaded);
@@ -194,7 +198,8 @@ export async function shareOneNote(
 			true,
 			multiRepo,
 			[],
-			true
+			true,
+			sourceFrontmatter
 		);
 		if (publishSuccess) {
 			if (
