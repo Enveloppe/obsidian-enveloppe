@@ -229,6 +229,7 @@ export class GithubBranch extends FilesManagement {
 	async updateRepositoryOnOne(
 		repoFrontmatter: RepoFrontmatter
 	): Promise<boolean> {
+		if (this.settings.github.dryRun.enable) return true;
 		try {
 			const pullRequest = await this.pullRequestOnRepo(
 				repoFrontmatter
