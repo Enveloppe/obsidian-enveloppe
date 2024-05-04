@@ -110,6 +110,13 @@ export function getRepoFrontmatter(
 ): RepoFrontmatter[] | RepoFrontmatter {
 	const settings = plugin.settings;
 	let github = repository ?? settings.github;
+	console.warn("github", settings.github);
+	if (!frontmatter && repository?.set && repository.set.length > 0) {
+		const file = plugin.app.vault.getAbstractFileByPath(repository.set) instanceof TFile ? plugin.app.vault.getAbstractFileByPath(repository.set) : null;
+		if (file) {
+			frontmatter = plugin.app.metadataCache.getFileCache(file as TFile)?.frontmatter;
+		}
+	}
 	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"] !== "default") {
 		const smartKey = frontmatter.shortRepo.toLowerCase();
 		const allOtherRepo = settings.github.otherRepo;
@@ -364,12 +371,7 @@ export function parsePath(
 
 	for (const repo of repoFrontmatter) {
 		const smartKey = repository ? repository.smartKey : "default";
-		if (!frontmatter && repository?.set) {
-			const file = plugin.app.vault.getAbstractFileByPath(repository.set) instanceof TFile ? plugin.app.vault.getAbstractFileByPath(repository.set) : null;
-			if (file) {
-				frontmatter = plugin.app.metadataCache.getFileCache(file as TFile)?.frontmatter;
-			}
-		}
+		
 		const path: Path = {
 			type: matchType(frontmatter?.type),
 			defaultName: frontmatter?.defaultName ?? settings.upload.defaultName,
