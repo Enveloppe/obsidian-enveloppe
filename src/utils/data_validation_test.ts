@@ -3,6 +3,7 @@ import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
 import GithubPublisher from "src/main";
+import merge from "ts-deepmerge";
 
 import {GithubBranch} from "../GitHub/branch";
 import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, RepoFrontmatter, Repository} from "../settings/interface";
@@ -55,7 +56,7 @@ export function getRepoSharedKey(plugin: GithubPublisher, frontmatter?: FrontMat
 		return defaultRepo(settings);
 	} else if (!frontmatter) return null;
 	const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
-	frontmatter = linkedFrontmatter ? {...linkedFrontmatter, ...frontmatter} : frontmatter;
+	frontmatter = linkedFrontmatter ? merge(linkedFrontmatter, frontmatter) : frontmatter;
 	for (const repo of allOtherRepo) {
 		if (frontmatter[repo.shareKey]) {
 			return repo;
@@ -150,7 +151,7 @@ export function multipleSharedKey(frontmatter: FrontMatterCache | undefined | nu
 	}
 	if (!frontmatter) return keysInFile;
 	const linkedRepo = getLinkedFrontmatter(frontmatter, file, plugin);
-	frontmatter = linkedRepo ? {...linkedRepo, ...frontmatter} : frontmatter;
+	frontmatter = linkedRepo ? merge(linkedRepo, frontmatter) : frontmatter;
 	const allKey = settings.github.otherRepo.map((repo) => repo.shareKey);
 	allKey.push(settings.plugin.shareKey);
 
