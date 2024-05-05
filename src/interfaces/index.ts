@@ -1,20 +1,7 @@
 import { FrontMatterCache, TFile } from "obsidian";
 
-import GithubPublisher from "../main";
-
-export enum TypeOfEditRegex {
-	path = "path",
-	title = "title",
-}
-
-export enum EnumbSettingsTabId {
-	github = "github-configuration",
-	upload = "upload-configuration",
-	text = "text-conversion",
-	embed = "embed-configuration",
-	plugin = "plugin-settings",
-	help = "help",
-}
+import { EnumbSettingsTabId, FolderSettings,TypeOfEditRegex  } from "./enum";
+import { Api, Conversion, CopyLink, Embed, GitHub, PluginBehavior, ShareAll, Upload, Workflow } from "./settings";
 
 export interface RegexReplace {
 	regex: string;
@@ -58,31 +45,11 @@ export interface Repository {
 	/**
 	 * The github API hostname
 	 */
-	api: {
-		/**
-		 * The tier of the API
-		 * @default GithubTiersVersion.free
-		 */
-		tiersForApi: GithubTiersVersion;
-		/**
-		 * The hostname of the API
-		 */
-		hostname: string;
-	}
+	api: Api;
 	/**
 	 * The workflow settings for merging the PR or active a github action
 	 */
-	workflow: {
-		/**
-		 * The commit message when the PR is merged
-		 */
-		commitMessage: string;
-		/**
-		 * The path of the github action file
-		 * The github action needs to be set on "workflow_dispatch" to be able to be triggered
-		 */
-		name: string;
-	}
+	workflow: Workflow;
 	/**
 	 * Create a shortcut in obsidian menus (right-click / file menu / editor menu) for action on this repository
 	 */
@@ -94,49 +61,11 @@ export interface Repository {
 	/**
 	 * Share all file without a sharing key
 	 */
-	shareAll?: {
-		enable: boolean;
-		/**
-		 * The name of the files to exclude
-		 */
-		excludedFileName: string;
-	}
+	shareAll?: ShareAll;
 	/**
 	 * Setting for copy link commands
 	 */
-	copyLink: {
-		/**
-		 * Link to made the copy link command
-		 */
-		links: string;
-		/**
-		 * Remove part of the link
-		 */
-		removePart: string[];
-		/**
-		 * Adjust the created link
-		 */
-		transform: {
-			/**
-			 * Transform the link to an uri
-			 */
-			toUri: boolean;
-			/**
-			 * Slugify the link
-			 * - `lower` : slugify the link in lower case
-			 * - `strict` : slugify the link in lower case and remove all special characters (including chinese or russian one)
-			 * - `disable` : do not slugify the link
-			 */
-			slugify: "lower" | "strict" | "disable";
-			/**
-			 * Apply a regex to the link
-			 */
-			applyRegex: {
-				regex: string;
-				replacement: string;
-			}[]
-		}
-	},
+	copyLink: CopyLink,
 	/**
 	 * Allow to set a file for settings that override for example path, dataview, hardbreak... 
 	 * Useful for autoclean settings, but also for other settings without needing to change the frontmatter and use the set function
@@ -156,390 +85,16 @@ export interface GitHubPublisherSettings {
 	/**
 	 * GitHub settings for the default repository
 	 */
-	github: {
-		/** The user that belongs to the repository, can be also a community (like obsidian-publisher) */
-		user: string;
-		/** The name of the repository */
-		repo: string;
-		/**
-		 * The branch of the repository (default: main)
-		 */
-		branch: string;
-		/**
-		 * The path where the token is stored (as the token is not saved in the settings directly, to prevent mistake and security issue)
-		 * @default `%configDir%/plugins/%pluginID%/env`
-		 */
-		tokenPath: string;
-		/**
-		 * If the PR should be automatically merged
-		 */
-		automaticallyMergePR: boolean;
-		/**
-		 * Don't push the changes to the repository, or make any action on the repository
-		 * It will use a local folder instead to mimic the behavior of the plugin
-		 */
-		dryRun: {
-			enable: boolean;
-			/** The folder name that mimic the folder, allow special keys to mimic multiple repository 
-			 * @key `%owner%` the owner of the repository (equivalent to `user`)
-			 * @key `%repo%` the name of the repository
-			 * @key `%branch%` the branch of the repository
-			*/
-			folderName: string;
-		}
-		/**
-		 * The settings for the github API
-		 */
-		api: {
-			/**
-			 * The tier of the API
-			 * @default GithubTiersVersion.free
-			 */
-			tiersForApi: GithubTiersVersion;
-			/** hostname for api
-			 * @default `api.github.com`
-			 * @important if you use a self-hosted github, you need to set the hostname
-			 */
-			hostname: string;
-		}
-		/** workflow and action of the plugin in github */
-		workflow: {
-			/** Commit message when the PR is merged
-			 * @default `[PUBLISHER] Merge`
-			 */
-			commitMessage: string;
-			/** The name of the github action file */
-			name: string;
-		},
-		/** Enable the usage of different repository */
-		otherRepo: Repository[];
-		/** If the default repository is verified */
-		verifiedRepo?: boolean;
-		/** The rate limit of the Github API */
-		rateLimit: number;
-	}
+	github: GitHub;
 	/** Path settings, including converting like, replace path (with regex), folder note support... */
-	upload: {
-		/** The behavior of the folder settings 
-		 * - `yaml` : use a yaml frontmatter to set the path
-		 * - `obsidian` : use the obsidian path 
-		 * - `fixed` : use a fixed folder and send all in it
-		*/
-		behavior: FolderSettings;
-		/** The default name of the folder 
-		 * Used only with `yaml` behavior, when the `category: XXX` is not set in the frontmatter.
-		*/
-		defaultName: string;
-		/** The root folder of the repository
-		 * Used with all behavior
-		 */
-		rootFolder: string;
-		/** The "category" key name if used with YAML behavior */
-		yamlFolderKey: string;
-		/** Generate the filename using a frontmatter key, to change it in the repository.
-		 */
-		frontmatterTitle: {
-			enable: boolean;
-			/** @default `title` */
-			key: string;
-		}
-		/** Edit the title by using regex */
-		replaceTitle: RegexReplace[],
-		/** Edit the path by using regex; apply also on attachment path (will be applied on all path)*/
-		replacePath: RegexReplace[],
-		/** Auto remove file that was unshared (deleted in Obsidian or removed by set `share: false`) */
-		autoclean: {
-			enable: boolean;
-			/** Prevent deleting files */
-			excluded: string[];
-		}
-		/** Allow to set a folder note in `index.md` (example) when some settings are met
-		 * For example, auto-rename to `index.md` when the file name and the folder name are the same.
-		 */
-		folderNote: {
-			enable: boolean;
-			/** The name of the index, by default `index.md`*/
-			rename: string;
-			/** save the old title in the frontmatter */
-			addTitle: {
-				enable: boolean;
-				key: string;
-			};
-		}
-		/** The path to the metadata extractor plugin */
-		metadataExtractorPath: string;
-	}
+	upload: Upload;
 	/**
 	 * Settings for the content like hardbreak, dataview, censor text, tags, links...
 	 */
-	conversion: {
-		/** Add the two markdown space at the end of each line */
-		hardbreak: boolean;
-		/** Convert dataview queries to markdown */
-		dataview: boolean;
-		/** Allow to edit the content of files with regex */
-		censorText: TextCleaner[];
-		/** Add tags into frontmatter */
-		tags: {
-			/** Allow to add inline tags into the frontmatter, like #tags into tags: [] */
-			inline: boolean;
-			/** Exclude some tags from that */
-			exclude: string[];
-			/** add the fields value into tags too */
-			fields: string[];
-		}
-		/** Settings for the links */
-		links: {
-			/** Convert internal links to their proper path into Obsidian */
-			internal: boolean;
-			/** Also convert the internal path for unshared files */
-			unshared: boolean;
-			/** Convert wikilinks to markdown links */
-			wiki: boolean;
-			/** Slugify links if needed
-			 * - `disable` : do not slugify the link
-			 * - `strict` : slugify the link in lower case and remove all special characters (including chinese or russian one)
-			 * - `lower` : slugify the link in lower case
-			 * @default `disable`
-			 */
-			slugify: "disable" | "strict" | "lower" | boolean;
-		}
-	}
+	conversion: Conversion;
 	/** Files attached to other files by embedded or links. Include attachments settings (image...) */
-	embed: {
-		/** Allow to send attachments */
-		attachments: boolean;
-		/** Force push attachments and change their path */
-		overrideAttachments: OverrideAttachments[];
-		/** Use the obsidian folder for the attachments */
-		useObsidianFolder?: boolean;
-		/** Send files linkeds to a frontmatter keys */
-		keySendFile: string[];
-		/** Also send embeddednotes */
-		notes: boolean;
-		/** The folder where the attachments are stored */
-		folder: string;
-		/** Modify the embeds:
-		 * - `links` : convert the embed to links
-		 * - `remove` : remove the embed
-		 * - `keep` : keep the embed
-		 * - `bake` : bake the embed into the text
-		 */
-		convertEmbedToLinks: "links" | "remove" | "keep" | "bake";
-		/** Allow to insert character(s) before the link
-		 * @example `->` allow to convert `[[file]]` to `-> [[file]]`
-		 */
-		charConvert: string;
-		/** Baking settings when including the text of the embed directly into the notes */
-		bake?: {
-			/** Allow  */
-			textBefore: string;
-			textAfter: string;
-		};
-		unHandledObsidianExt: string[];
-		sendSimpleLinks: boolean;
-	}
-	plugin:
-	{
-		shareKey: string;
-		shareAll?: {
-			enable: boolean;
-			excludedFileName: string;
-		}
-		fileMenu: boolean;
-		editorMenu: boolean;
-		excludedFolder: string[];
-		copyLink: {
-			enable: boolean;
-			links: string;
-			removePart: string[];
-			addCmd: boolean;
-			transform: {
-				toUri: boolean;
-				slugify: "lower" | "strict" | "disable";
-				applyRegex: {
-					regex: string;
-					replacement: string;
-				}[]
-			}
-		}
-		noticeError: boolean;
-		dev?: boolean;
-		displayModalRepoEditing: boolean;
-		migrated?: boolean;
-		saveTabId?: boolean;
-		setFrontmatterKey: string;
-
-	}
-}
-
-
-
-/**
- * Allow to set a value for the folder settings
- * @enum FolderSettings
- */
-export enum FolderSettings {
-	yaml = "yaml",
-	obsidian = "obsidian",
-	fixed = "fixed",
-}
-
-/**
- * @enum GithubTiersVersion
- * @description Allow to set a value for the github tiers
- */
-export enum GithubTiersVersion {
-	free = "Github Free/Pro/Team (default)",
-	entreprise = "Enterprise",
-}
-
-export interface MultiProperties {
-	plugin: GithubPublisher;
-	frontmatter: {
-		general: FrontmatterConvert;
-		repo: RepoFrontmatter | RepoFrontmatter[];
-	},
-	repository: Repository | null;
-	filepath: string;
-}
-
-export interface MonoProperties {
-	plugin: GithubPublisher;
-	frontmatter: {
-		general: FrontmatterConvert;
-		repo: RepoFrontmatter;
-		source: FrontMatterCache | null | undefined;
-	},
-	repository: Repository | null;
-	filepath: string;
-
-}
-
-export interface MonoRepoProperties {
-	frontmatter: RepoFrontmatter;
-	repo: Repository | null;
-	convert: FrontmatterConvert;
-}
-
-export interface MultiRepoProperties {
-	frontmatter: RepoFrontmatter[] | RepoFrontmatter;
-	repo: Repository | null;
-
-}
-
-
-/**
- * Just a constant for the token path
- * @type {string} TOKEN_PATH
- */
-export const TOKEN_PATH: string = "%configDir%/plugins/%pluginID%/env";
-
-export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
-	github: {
-		user: "",
-		repo: "",
-		branch: "main",
-		automaticallyMergePR: true,
-		dryRun: {
-			enable: false,
-			folderName: "github-publisher",
-		},
-		tokenPath: TOKEN_PATH,
-		api: {
-			tiersForApi: GithubTiersVersion.free,
-			hostname: "",
-		},
-		workflow: {
-			commitMessage: "[PUBLISHER] Merge",
-			name: "",
-		},
-		otherRepo: [],
-		verifiedRepo: false,
-		rateLimit: 0,
-	},
-	upload: {
-		behavior: FolderSettings.fixed,
-		defaultName: "",
-		rootFolder: "",
-		yamlFolderKey: "",
-		frontmatterTitle: {
-			enable: false,
-			key: "title",
-		},
-		replaceTitle: [],
-		replacePath: [],
-		autoclean: {
-			enable: false,
-			excluded: [],
-		},
-		folderNote: {
-			enable: false,
-			rename: "index.md",
-			addTitle: {
-				enable: false,
-				key: "title",
-			}
-		},
-		metadataExtractorPath: "",
-	},
-	conversion: {
-		hardbreak: false,
-		dataview: true,
-		censorText: [],
-		tags: {
-			inline: false,
-			exclude: [],
-			fields: [],
-		},
-		links: {
-			internal: false,
-			unshared: false,
-			wiki: false,
-			slugify: "disable",
-		},
-	},
-	embed: {
-		attachments: true,
-		overrideAttachments: [],
-		keySendFile: [],
-		notes: false,
-		folder: "",
-		convertEmbedToLinks: "keep",
-		charConvert: "->",
-		unHandledObsidianExt: [],
-		sendSimpleLinks: true,
-	},
-	plugin: {
-		shareKey: "share",
-		fileMenu: false,
-		editorMenu: false,
-		excludedFolder: [],
-		copyLink: {
-			enable: false,
-			links: "",
-			removePart: [],
-			addCmd: false,
-			transform: {
-				toUri: true,
-				slugify: "lower",
-				applyRegex: [],
-			}
-		},
-		noticeError: false,
-		displayModalRepoEditing: false,
-		setFrontmatterKey: "Set"
-	}
-};
-
-/**
- * @interface MetadataExtractor
- * @description Interface for the metadata extractor plugin
- */
-export interface MetadataExtractor {
-	allExceptMdFile: string | null;
-	metadataFile: string | null;
-	tagsFile: string | null;
+	embed: Embed;
+	plugin: PluginBehavior;
 }
 
 
@@ -628,35 +183,15 @@ export interface RepoFrontmatter {
 	}
 }
 
-export interface ListEditedFiles {
-	edited: string[];
-	deleted: string[];
-	added: string[];
-	unpublished: string[];
-	notDeleted: string[];
-}
-
-export interface UploadedFiles {
-	isUpdated: boolean;
-	file: string;
-}
-
-export interface Deleted {
-	success: boolean;
-	deleted: string[];
-	undeleted: string[];
-}
-
 export interface Preset {
 	name: string;
 	settings: GitHubPublisherSettings;
 }
+
+export type SetRepositoryFrontmatter = {[repository: string] : FrontMatterCache | null | undefined};
 
 export interface OverrideAttachments {
 	path: string;
 	destination: string;
 	forcePush: boolean;
 }
-
-export const FIND_REGEX = /^\/(.*)\/[igmsuy]*$/;
-export type SetRepositoryFrontmatter = {[repository: string] : FrontMatterCache | null | undefined};
