@@ -6,7 +6,6 @@ import {
 	getImagePath,
 	getReceiptFolder,
 } from "../conversion/file_path";
-import GithubPublisher from "../main";
 import {
 	ConvertedLink,
 	FrontmatterConvert,
@@ -14,6 +13,7 @@ import {
 	LinkedNotes,
 	RepoFrontmatter, Repository,
 } from "../interface";
+import GithubPublisher from "../main";
 import {logs} from "../utils";
 import { isAttachment, isShared } from "../utils/data_validation_test";
 import { frontmatterFromFile, getRepoFrontmatter } from "../utils/parse_frontmatter";
@@ -62,7 +62,7 @@ export class FilesManagement extends Publisher {
 	 * @param {Repository | null} repo The repository
 	 * @return {TFile[]} The shared files
 	 */
-	getSharedFileOfFolder(folder: TFolder, repo: Repository | null): TFile[] {
+	getSharedFileOfFolder(folder: TFolder, repo: Repository | null, addFolderNote?: boolean): TFile[] {
 		const files: TFile[] = [];
 		for (const file of folder.children) {
 			if (file instanceof TFolder) {
@@ -78,6 +78,17 @@ export class FilesManagement extends Publisher {
 				}
 			}
 		}
+		/* get if external folder note exists */
+		if (addFolderNote) {
+			const folderNote = this.vault.getAbstractFileByPath(`${folder.path}.md`);
+			if (folderNote && folderNote instanceof TFile) {
+				const frontMatter = this.metadataCache.getCache(folderNote.path)?.frontmatter;
+				if (isShared(frontMatter, this.settings, folderNote, repo) && !files.includes(folderNote)) {
+					files.push(folderNote);
+				}
+			} 
+		}
+		console.warn(files);
 		return files;
 	}
 

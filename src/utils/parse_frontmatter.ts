@@ -482,7 +482,7 @@ export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher,
 		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
 		frontmatter = merge(linkedFrontmatter ?? {}, frontmatter ?? {});
 	}
-	if (repo?.set.frontmatter) {
+	if (repo?.set?.frontmatter) {
 		const setFrontmatter = repo.set.frontmatter;
 		frontmatter = frontmatter && setFrontmatter ? merge(frontmatter, setFrontmatter) : setFrontmatter ?? frontmatter;
 	}

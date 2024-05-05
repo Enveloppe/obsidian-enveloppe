@@ -450,6 +450,7 @@ class ModalEditingRepository extends Modal {
 				search
 					.setValue("")
 					.setPlaceholder("path/to/file.md");
+				if (typeof this.repository.set === "string") this.repository.set = {path: "", frontmatter: {}}; //migrate from string to object
 				new SetClassSuggester(search.inputEl, this.plugin, (result) => {
 					this.repository.set.path = result.path;
 					this.repository.set.frontmatter = this.plugin.app.metadataCache.getFileCache(result)?.frontmatter;

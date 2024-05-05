@@ -213,9 +213,14 @@ export default class GithubPublisher extends Plugin {
 			const repoOctokit = await this.reloadOctokit(repository.smartKey);
 			repository.verifiedRepo = await checkRepositoryValidity(repoOctokit, repository, null, false);
 			repository.rateLimit = await verifyRateLimitAPI(repoOctokit.octokit, this.settings);
-			if (repository.set.frontmatter) {
+			if (repository.set && typeof repository.set === "string") repository.set = {
+				//@ts-ignore
+				path: repository.set,
+				frontmatter: {}
+			};
+			if (repository.set?.frontmatter) {
 				//take the file and update the frontmatter
-				const file = this.app.vault.getAbstractFileByPath(repository.set.frontmatter.path);
+				const file = this.app.vault.getAbstractFileByPath(repository.set.path);
 				if (file && file instanceof TFile) {
 					const frontmatter = this.app.metadataCache.getFileCache(file as TFile);
 					if (frontmatter) {
