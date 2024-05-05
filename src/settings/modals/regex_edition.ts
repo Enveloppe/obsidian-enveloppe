@@ -2,7 +2,7 @@ import i18next from "i18next";
 import {App, Modal, Notice, Setting} from "obsidian";
 import { escapeRegex } from "src/conversion/links";
 
-import {FolderSettings, GitHubPublisherSettings, OverrideAttachments, RegexReplace, TextCleaner, TypeOfEditRegex} from "../../interface";
+import {FolderSettings, GitHubPublisherSettings, OverrideAttachments, RegexReplace, TextCleaner, TypeOfEditRegex} from "../../interfaces";
 
 function isRegexValid(regexString: string) {
 	try {

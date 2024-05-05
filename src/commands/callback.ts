@@ -7,7 +7,7 @@
 import i18next from "i18next";
 import {Command, Notice } from "obsidian";
 
-import {MonoRepoProperties, MultiRepoProperties, Repository} from "../interface";
+import {MonoRepoProperties, MultiRepoProperties, Repository} from "../interfaces";
 import GithubPublisher from "../main";
 import {createLink} from "../utils";
 import {checkRepositoryValidity, isShared} from "../utils/data_validation_test";

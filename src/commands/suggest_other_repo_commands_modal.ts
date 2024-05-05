@@ -2,7 +2,7 @@ import i18next from "i18next";
 import { App, FuzzySuggestModal } from "obsidian";
 import { defaultRepo } from "src/utils/data_validation_test";
 
-import { FolderSettings, GitHubPublisherSettings, Repository } from "../interface";
+import { FolderSettings, GitHubPublisherSettings, Repository } from "../interfaces";
 import GithubPublisher from "../main";
 import {
 	createLinkOnActiveFile,

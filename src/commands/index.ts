@@ -5,7 +5,7 @@ import merge from "ts-deepmerge";
 
 import { GithubBranch } from "../GitHub/branch";
 import { deleteFromGithub } from "../GitHub/delete";
-import { MonoRepoProperties, MultiRepoProperties, Repository, UploadedFiles} from "../interface";
+import { MonoRepoProperties, MultiRepoProperties, Repository, UploadedFiles} from "../interfaces";
 import { ListChangedFiles } from "../settings/modals/list_changed";
 import {
 	createLink,

@@ -279,28 +279,58 @@ export interface GitHubPublisherSettings {
 		dataview: boolean;
 		/** Allow to edit the content of files with regex */
 		censorText: TextCleaner[];
-		/** Add  */
+		/** Add tags into frontmatter */
 		tags: {
+			/** Allow to add inline tags into the frontmatter, like #tags into tags: [] */
 			inline: boolean;
+			/** Exclude some tags from that */
 			exclude: string[];
+			/** add the fields value into tags too */
 			fields: string[];
 		}
+		/** Settings for the links */
 		links: {
+			/** Convert internal links to their proper path into Obsidian */
 			internal: boolean;
+			/** Also convert the internal path for unshared files */
 			unshared: boolean;
+			/** Convert wikilinks to markdown links */
 			wiki: boolean;
+			/** Slugify links if needed
+			 * - `disable` : do not slugify the link
+			 * - `strict` : slugify the link in lower case and remove all special characters (including chinese or russian one)
+			 * - `lower` : slugify the link in lower case
+			 * @default `disable`
+			 */
 			slugify: "disable" | "strict" | "lower" | boolean;
 		}
 	}
+	/** Files attached to other files by embedded or links. Include attachments settings (image...) */
 	embed: {
+		/** Allow to send attachments */
 		attachments: boolean;
+		/** Force push attachments and change their path */
 		overrideAttachments: OverrideAttachments[];
+		/** Use the obsidian folder for the attachments */
 		useObsidianFolder?: boolean;
+		/** Send files linkeds to a frontmatter keys */
 		keySendFile: string[];
+		/** Also send embeddednotes */
 		notes: boolean;
+		/** The folder where the attachments are stored */
 		folder: string;
+		/** Modify the embeds:
+		 * - `links` : convert the embed to links
+		 * - `remove` : remove the embed
+		 * - `keep` : keep the embed
+		 * - `bake` : bake the embed into the text
+		 */
 		convertEmbedToLinks: "links" | "remove" | "keep" | "bake";
+		/** Allow to insert character(s) before the link
+		 * @example `->` allow to convert `[[file]]` to `-> [[file]]`
+		 */
 		charConvert: string;
+		/** */
 		bake?: {
 			textBefore: string;
 			textAfter: string;

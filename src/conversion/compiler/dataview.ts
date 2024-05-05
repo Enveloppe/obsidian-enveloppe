@@ -9,7 +9,7 @@ import { getAPI, isPluginEnabled,Literal, Success } from "obsidian-dataview";
 import GithubPublisher from "src/main";
 import { logs, notif } from "src/utils";
 
-import { FrontmatterConvert, LinkedNotes, MultiProperties } from "../../interface";
+import { FrontmatterConvert, LinkedNotes, MultiProperties } from "../../interfaces/interface";
 import { convertToInternalGithub, convertWikilinks, escapeRegex } from "../links";
 
 /**

@@ -6,7 +6,7 @@ import GithubPublisher from "src/main";
 import merge from "ts-deepmerge";
 
 import {GithubBranch} from "../GitHub/branch";
-import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, RepoFrontmatter, Repository} from "../interface";
+import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, RepoFrontmatter, Repository} from "../interfaces";
 import { notif} from ".";
 import { frontmatterFromFile, getLinkedFrontmatter, getRepoFrontmatter } from "./parse_frontmatter";
 

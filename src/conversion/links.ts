@@ -6,7 +6,7 @@ import {
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
-} from "../interface";
+} from "../interfaces";
 import { isAttachment, noTextConversion } from "../utils/data_validation_test";
 import { createRelativePath, linkIsInFormatter, textIsInFrontmatter } from "./file_path";
 import { replaceText } from "./find_and_replace_text";
