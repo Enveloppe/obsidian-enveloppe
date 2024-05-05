@@ -88,8 +88,7 @@ export class FilesManagement extends Publisher {
 				}
 			} 
 		}
-		console.warn(files);
-		return files;
+		return [...new Set(files)]; //prevent duplicate;
 	}
 
 	/**
