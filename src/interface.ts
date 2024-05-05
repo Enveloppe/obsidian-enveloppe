@@ -23,42 +23,131 @@ export interface RegexReplace {
 }
 
 export interface Repository {
+	/**
+	 * The smart key of the repository (used to identify the repository)
+	 */
 	smartKey: string;
+	/**
+	 * The user of the repository (can be a real user or a community)
+	 */
 	user: string;
+	/**
+	 * The repository name
+	 */
 	repo: string;
+	/**
+	 * The branch of the repository (default: main)
+	 */
 	branch: string;
+	/**
+	 * If the PR should be automatically merged
+	 */
 	automaticallyMergePR: boolean;
+	/**
+	 * if the validity of the repository was checked and valide
+	 */
 	verifiedRepo?: boolean;
+	/**
+	 * The rate limit of the GitHub API
+	 */
 	rateLimit?: number;
+	/**
+	 * The github token if needed ; use the default one if not set
+	 */
 	token?: string;
+	/**
+	 * The github API hostname
+	 */
 	api: {
+		/**
+		 * The tier of the API
+		 * @default GithubTiersVersion.free
+		 */
 		tiersForApi: GithubTiersVersion;
+		/**
+		 * The hostname of the API
+		 */
 		hostname: string;
 	}
+	/**
+	 * The workflow settings for merging the PR or active a github action
+	 */
 	workflow: {
+		/**
+		 * The commit message when the PR is merged
+		 */
 		commitMessage: string;
+		/**
+		 * The path of the github action file
+		 * The github action needs to be set on "workflow_dispatch" to be able to be triggered
+		 */
 		name: string;
 	}
+	/**
+	 * Create a shortcut in obsidian menus (right-click / file menu / editor menu) for action on this repository
+	 */
 	createShortcuts: boolean;
+	/**
+	 * The name of the share key
+	 */
 	shareKey: string;
+	/**
+	 * Share all file without a sharing key
+	 */
 	shareAll?: {
 		enable: boolean;
+		/**
+		 * The name of the files to exclude
+		 */
 		excludedFileName: string;
 	}
+	/**
+	 * Setting for copy link commands
+	 */
 	copyLink: {
+		/**
+		 * Link to made the copy link command
+		 */
 		links: string;
+		/**
+		 * Remove part of the link
+		 */
 		removePart: string[];
+		/**
+		 * Adjust the created link
+		 */
 		transform: {
+			/**
+			 * Transform the link to an uri
+			 */
 			toUri: boolean;
+			/**
+			 * Slugify the link
+			 * - `lower` : slugify the link in lower case
+			 * - `strict` : slugify the link in lower case and remove all special characters (including chinese or russian one)
+			 * - `disable` : do not slugify the link
+			 */
 			slugify: "lower" | "strict" | "disable";
+			/**
+			 * Apply a regex to the link
+			 */
 			applyRegex: {
 				regex: string;
 				replacement: string;
 			}[]
 		}
 	},
+	/**
+	 * Allow to set a file for settings that override for example path, dataview, hardbreak... 
+	 * Useful for autoclean settings, but also for other settings without needing to change the frontmatter and use the set function
+	 */
 	set: {
+		/** Path to the set file, needs to have a valid frontmatter. Repository can be enabled and made some strange behavior. */
 		path: string;
+		/**
+		 * The default frontmatter to apply
+		 * @important the frontmatter is registered when the plugin is loaded or when the set is changed/added (settings saved), so the frontmatter is not updated when the file is changed in Obsidian.
+		 */
 		frontmatter?: FrontMatterCache | null;
 	};
 }
@@ -68,52 +157,124 @@ export interface Repository {
  * @description Interface for the settings of the plugin
  */
 export interface GitHubPublisherSettings {
+	/**
+	 * Save the tabs id when the settings was closed, pretty useful when quick tests are done
+	 */
 	tabsID?: EnumbSettingsTabId;
+	/**
+	 * GitHub settings for the default repository
+	 */
 	github: {
+		/** The user that belongs to the repository, can be also a community (like obsidian-publisher) */
 		user: string;
+		/** The name of the repository */
 		repo: string;
+		/**
+		 * The branch of the repository (default: main)
+		 */
 		branch: string;
+		/**
+		 * The path where the token is stored (as the token is not saved in the settings directly, to prevent mistake and security issue)
+		 * @default `%configDir%/plugins/%pluginID%/env`
+		 */
 		tokenPath: string;
+		/**
+		 * If the PR should be automatically merged
+		 */
 		automaticallyMergePR: boolean;
+		/**
+		 * Don't push the changes to the repository, or make any action on the repository
+		 * It will use a local folder instead to mimic the behavior of the plugin
+		 */
 		dryRun: {
 			enable: boolean;
+			/** The folder name that mimic the folder, allow special keys to mimic multiple repository 
+			 * @key `%owner%` the owner of the repository (equivalent to `user`)
+			 * @key `%repo%` the name of the repository
+			 * @key `%branch%` the branch of the repository
+			*/
 			folderName: string;
 		}
+		/**
+		 * The settings for the github API
+		 */
 		api: {
+			/**
+			 * The tier of the API
+			 * @default GithubTiersVersion.free
+			 */
 			tiersForApi: GithubTiersVersion;
+			/** hostname for api
+			 * @default `api.github.com`
+			 * @important if you use a self-hosted github, you need to set the hostname
+			 */
 			hostname: string;
 		}
+		/** workflow and action of the plugin in github */
 		workflow: {
+			/** Commit message when the PR is merged
+			 * @default `[PUBLISHER] Merge`
+			 */
 			commitMessage: string;
+			/** The name of the github action file */
 			name: string;
 		},
+		/** Enable the usage of different repository */
 		otherRepo: Repository[];
+		/** If the default repository is verified */
 		verifiedRepo?: boolean;
+		/** The rate limit of the Github API */
 		rateLimit: number;
 	}
+	/** Upload settings, including converting like, replace text, folder note support... */
 	upload: {
+		/** The behavior of the folder settings 
+		 * - `yaml` : use a yaml frontmatter to set the path
+		 * - `obsidian` : use the obsidian path 
+		 * - `fixed` : use a fixed folder and send all in it
+		*/
 		behavior: FolderSettings;
+		/** The default name of the folder 
+		 * Used only with `yaml` behavior, when the `category: XXX` is not set in the frontmatter.
+		*/
 		defaultName: string;
+		/** The root folder of the repository
+		 * Used with all behavior
+		 */
 		rootFolder: string;
+		/** The "category" key name if used with YAML behavior */
 		yamlFolderKey: string;
+		/** Generate the filename using a frontmatter key, to change it in the repository.
+		 */
 		frontmatterTitle: {
 			enable: boolean;
+			/** @default `title` */
 			key: string;
 		}
+		/** Edit the title by using regex */
 		replaceTitle: RegexReplace[],
+		/** Edit the path by using regex; apply also on attachment path (will be applied on all path)*/
 		replacePath: RegexReplace[],
+		/** Auto remove file that was unshared (deleted in Obsidian or removed by set `share: false`) */
 		autoclean: {
 			enable: boolean;
+			/** Prevent deleting files */
 			excluded: string[];
 		}
+		/** Allow to set a folder note in `index.md` (example) when some settings are met
+		 * For example, auto-rename to `index.md` when the file name and the folder name are the same.
+		 */
 		folderNote: {
 			enable: boolean;
+			/** The name of the index, by default `index.md`*/
 			rename: string;
+			/** save the old title in the frontmatter */
 			addTitle: {
 				enable: boolean;
 				key: string;
 			};
 		}
+		/** The path to the metadata extractor plugin */
 		metadataExtractorPath: string;
 	}
 	conversion: {
