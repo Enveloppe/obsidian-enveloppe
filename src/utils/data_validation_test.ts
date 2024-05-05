@@ -57,7 +57,7 @@ export function getRepoSharedKey(plugin: GithubPublisher, frontmatter?: FrontMat
 	} else if (!frontmatter) return null;
 	const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
 	frontmatter = linkedFrontmatter ? merge(linkedFrontmatter, frontmatter) : frontmatter;
-	return allOtherRepo.find(repo => frontmatter[repo.shareKey]) ?? defaultRepo(settings);
+	return allOtherRepo.find(repo => frontmatter?.[repo.shareKey]) ?? defaultRepo(settings);
 	
 }
 
