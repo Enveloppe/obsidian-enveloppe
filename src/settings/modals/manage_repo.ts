@@ -3,7 +3,7 @@ import {AbstractInputSuggest, App, Modal, Notice, Setting} from "obsidian";
 
 import GithubPublisher from "../../main";
 import {checkRepositoryValidity, verifyRateLimitAPI} from "../../utils/data_validation_test";
-import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../interface";
+import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../../interface";
 import { migrateToken } from "../migrate";
 
 

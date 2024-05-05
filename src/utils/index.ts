@@ -14,7 +14,7 @@ import {
 	MetadataExtractor,
 	MultiRepoProperties,
 	RepoFrontmatter, TOKEN_PATH,
-	UploadedFiles} from "../settings/interface";
+	UploadedFiles} from "../interface";
 import { ERROR_ICONS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 import { frontmatterFromFile } from "./parse_frontmatter";
 

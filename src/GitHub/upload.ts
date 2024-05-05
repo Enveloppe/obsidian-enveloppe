@@ -28,7 +28,7 @@ import {
 	MultiProperties,
 	MultiRepoProperties,
 	RepoFrontmatter, UploadedFiles,
-} from "../settings/interface";
+} from "../interface";
 import {
 	logs,
 	noticeMobile,

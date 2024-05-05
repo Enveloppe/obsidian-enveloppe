@@ -17,7 +17,7 @@ import {
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
-} from "../settings/interface";
+} from "../interface";
 import { notif } from "../utils";
 import { convertDataviewQueries } from "./compiler/dataview";
 import { bakeEmbeds, convertInlineDataview } from "./compiler/embeds";

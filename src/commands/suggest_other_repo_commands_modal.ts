@@ -3,7 +3,7 @@ import { App, FuzzySuggestModal } from "obsidian";
 import { defaultRepo } from "src/utils/data_validation_test";
 
 import GithubPublisher from "../main";
-import { FolderSettings, GitHubPublisherSettings, Repository } from "../settings/interface";
+import { FolderSettings, GitHubPublisherSettings, Repository } from "../interface";
 import {
 	createLinkOnActiveFile,
 	deleteCommands, repositoryValidityActiveFile, shareActiveFile,

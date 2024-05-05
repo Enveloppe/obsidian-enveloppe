@@ -3,7 +3,7 @@ import { normalizePath } from "obsidian";
 
 import GithubPublisher from "../main";
 import { createTokenPath, logs } from "../utils";
-import { FolderSettings, GithubTiersVersion, TextCleaner, TOKEN_PATH, TypeOfEditRegex } from "./interface";
+import { FolderSettings, GithubTiersVersion, TextCleaner, TOKEN_PATH, TypeOfEditRegex } from "../interface";
 
 export interface OldSettings {
 	githubRepo: string;

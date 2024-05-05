@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { App, Modal, Setting } from "obsidian";
 
-import { GitHubPublisherSettings } from "../interface";
+import { GitHubPublisherSettings } from "../../interface";
 
 
 export class AutoCleanPopup extends Modal {

@@ -11,7 +11,7 @@ import {
 } from "./settings/help";
 import {
 	EnumbSettingsTabId, FolderSettings, GitHubPublisherSettings, GithubTiersVersion, Repository
-} from "./settings/interface";
+} from "./interface";
 import { migrateToken } from "./settings/migrate";
 import { ExportModal, ImportLoadPreset, ImportModal, loadAllPresets } from "./settings/modals/import_export";
 import { ModalAddingNewRepository } from "./settings/modals/manage_repo";

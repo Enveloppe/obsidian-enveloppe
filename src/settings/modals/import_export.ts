@@ -13,7 +13,7 @@ import {
 import GithubPublisher from "../../main";
 import {GithubPublisherSettingsTab} from "../../settings";
 import {logs, notif} from "../../utils";
-import {GitHubPublisherSettings, Preset} from "../interface";
+import {GitHubPublisherSettings, Preset} from "../../interface";
 import { migrateSettings,OldSettings } from "../migrate";
 
 

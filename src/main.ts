@@ -22,7 +22,7 @@ import {
 	GitHubPublisherSettings,
 	GithubTiersVersion,
 	Repository,
-} from "./settings/interface";
+} from "./interface";
 import { migrateSettings, OldSettings } from "./settings/migrate";
 import { createTokenPath, monkeyPatchConsole, notif } from "./utils";
 import { checkRepositoryValidity, verifyRateLimitAPI } from "./utils/data_validation_test";

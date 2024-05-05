@@ -13,7 +13,7 @@ import {
 	GithubRepo,
 	LinkedNotes,
 	RepoFrontmatter, Repository,
-} from "../settings/interface";
+} from "../interface";
 import {logs} from "../utils";
 import { isAttachment, isShared } from "../utils/data_validation_test";
 import { frontmatterFromFile, getRepoFrontmatter } from "../utils/parse_frontmatter";

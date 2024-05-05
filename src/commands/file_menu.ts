@@ -2,7 +2,7 @@ import i18next from "i18next";
 import { Menu, MenuItem, Platform, TFile, TFolder} from "obsidian";
 
 import GithubPublisher from "../main";
-import {MonoRepoProperties, Repository} from "../settings/interface";
+import {MonoRepoProperties, Repository} from "../interface";
 import {defaultRepo, getRepoSharedKey, isExcludedPath, isInDryRunFolder, isShared, multipleSharedKey} from "../utils/data_validation_test";
 import { frontmatterFromFile, frontmatterSettingsRepository, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {shareAllMarkedNotes, shareOneNote} from ".";

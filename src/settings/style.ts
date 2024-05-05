@@ -3,7 +3,7 @@ import { Notice, Setting } from "obsidian";
 import { GithubPublisherSettingsTab } from "src/settings";
 
 import GithubPublisher from "../main";
-import {EnumbSettingsTabId, FolderSettings, GitHubPublisherSettings} from "./interface";
+import {EnumbSettingsTabId, FolderSettings, GitHubPublisherSettings} from "../interface";
 /**
  * show a settings
  * @param {Setting} containerEl setting to show
