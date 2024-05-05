@@ -213,7 +213,9 @@ export interface Conversion {
 export interface Embed {
 	/** Allow to send attachments */
 	attachments: boolean;
-	/** Force push attachments and change their path */
+	/** Force push attachments and change their path.
+	 * Will be before the replacePath settings
+	 */
 	overrideAttachments: OverrideAttachments[];
 	/** Use the obsidian folder for the attachments */
 	useObsidianFolder?: boolean;

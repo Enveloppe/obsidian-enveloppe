@@ -286,7 +286,11 @@ export type SetRepositoryFrontmatter = {[repository: string] : FrontMatterCache 
  * Override attachments settings, allowing force push and changing the destination
  */
 export interface OverrideAttachments {
+	/** Path to override. 
+	 * Support `{{all}}` special keys for handled all attachment */
 	path: string;
+	/** Destination of the files, use `{{default}}` to send into their default repository */
 	destination: string;
+	/** Force push the attachments */
 	forcePush: boolean;
 }
