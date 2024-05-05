@@ -1,6 +1,9 @@
 import i18next from "i18next";
 import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
 
+import {
+	EnumbSettingsTabId, FolderSettings, GitHubPublisherSettings, GithubTiersVersion, Repository
+} from "./interface";
 import GithubPublisherPlugin from "./main";
 import {
 	help,
@@ -9,9 +12,6 @@ import {
 	supportMe,
 	usefulLinks
 } from "./settings/help";
-import {
-	EnumbSettingsTabId, FolderSettings, GitHubPublisherSettings, GithubTiersVersion, Repository
-} from "./interface";
 import { migrateToken } from "./settings/migrate";
 import { ExportModal, ImportLoadPreset, ImportModal, loadAllPresets } from "./settings/modals/import_export";
 import { ModalAddingNewRepository } from "./settings/modals/manage_repo";

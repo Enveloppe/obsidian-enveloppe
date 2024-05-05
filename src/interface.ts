@@ -57,7 +57,10 @@ export interface Repository {
 			}[]
 		}
 	},
-	set: string;
+	set: {
+		path: string;
+		frontmatter?: FrontMatterCache | null;
+	};
 }
 
 /**
