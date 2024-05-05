@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { App,Modal } from "obsidian";
 
-import { Deleted, ListEditedFiles } from "../../interfaces/interface";
+import { Deleted, ListEditedFiles } from "../../interfaces";
 
 
 export class ListChangedFiles extends Modal {

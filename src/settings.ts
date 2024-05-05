@@ -3,7 +3,7 @@ import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
 
 import {
 	EnumbSettingsTabId, FolderSettings, GitHubPublisherSettings, GithubTiersVersion, Repository
-} from "./interface";
+} from "./interfaces";
 import GithubPublisherPlugin from "./main";
 import {
 	help,

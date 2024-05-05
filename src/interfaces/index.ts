@@ -1,6 +1,6 @@
 import { FrontMatterCache, TFile } from "obsidian";
 
-import GithubPublisher from "./main";
+import GithubPublisher from "../main";
 
 export enum TypeOfEditRegex {
 	path = "path",
@@ -330,8 +330,9 @@ export interface GitHubPublisherSettings {
 		 * @example `->` allow to convert `[[file]]` to `-> [[file]]`
 		 */
 		charConvert: string;
-		/** */
+		/** Baking settings when including the text of the embed directly into the notes */
 		bake?: {
+			/** Allow  */
 			textBefore: string;
 			textAfter: string;
 		};

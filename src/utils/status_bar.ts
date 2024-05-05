@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { Notice } from "obsidian";
 
-import { RepoFrontmatter } from "../interfaces/interface";
+import { RepoFrontmatter } from "../interfaces";
 import { noticeMobile } from ".";
 import { ERROR_ICONS, FOUND_ATTACHMENTS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 

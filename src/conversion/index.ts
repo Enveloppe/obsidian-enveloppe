@@ -16,7 +16,7 @@ import {
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
-} from "../interfaces/interface";
+} from "../interfaces";
 import GithubPublisher from "../main";
 import { notif } from "../utils";
 import { convertDataviewQueries } from "./compiler/dataview";
