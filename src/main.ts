@@ -21,6 +21,7 @@ import {
 	GitHubPublisherSettings,
 	GithubTiersVersion,
 	Repository,
+	SetRepositoryFrontmatter,
 } from "./interface";
 import { GithubPublisherSettingsTab } from "./settings";
 import { migrateSettings, OldSettings } from "./settings/migrate";
@@ -35,7 +36,7 @@ import { checkRepositoryValidity, verifyRateLimitAPI } from "./utils/data_valida
 export default class GithubPublisher extends Plugin {
 	settings!: GitHubPublisherSettings;
 	branchName: string = "";
-	repositoryFrontmatter: { [repository: string]: FrontMatterCache | null | undefined } = {};
+	repositoryFrontmatter: SetRepositoryFrontmatter = {};
 
 	/**
 		* Get the title field of a file

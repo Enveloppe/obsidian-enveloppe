@@ -218,7 +218,7 @@ export interface GitHubPublisherSettings {
 		/** The rate limit of the Github API */
 		rateLimit: number;
 	}
-	/** Upload settings, including converting like, replace text, folder note support... */
+	/** Path settings, including converting like, replace path (with regex), folder note support... */
 	upload: {
 		/** The behavior of the folder settings 
 		 * - `yaml` : use a yaml frontmatter to set the path
@@ -269,10 +269,17 @@ export interface GitHubPublisherSettings {
 		/** The path to the metadata extractor plugin */
 		metadataExtractorPath: string;
 	}
+	/**
+	 * Settings for the content like hardbreak, dataview, censor text, tags, links...
+	 */
 	conversion: {
+		/** Add the two markdown space at the end of each line */
 		hardbreak: boolean;
+		/** Convert dataview queries to markdown */
 		dataview: boolean;
+		/** Allow to edit the content of files with regex */
 		censorText: TextCleaner[];
+		/** Add  */
 		tags: {
 			inline: boolean;
 			exclude: string[];
@@ -621,3 +628,4 @@ export interface OverrideAttachments {
 }
 
 export const FIND_REGEX = /^\/(.*)\/[igmsuy]*$/;
+export type SetRepositoryFrontmatter = {[repository: string] : FrontMatterCache | null | undefined};

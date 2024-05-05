@@ -11,13 +11,13 @@ import {
 } from "obsidian";
 import { isFolderNote } from "src/utils/data_validation_test";
 
-import GithubPublisher from "../main";
 import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
 } from "../interface";
+import GithubPublisher from "../main";
 import { notif } from "../utils";
 import { convertDataviewQueries } from "./compiler/dataview";
 import { bakeEmbeds, convertInlineDataview } from "./compiler/embeds";
