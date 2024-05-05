@@ -10,10 +10,10 @@ import {
 	Setting,
 	TextAreaComponent} from "obsidian";
 
+import {GitHubPublisherSettings, Preset} from "../../interfaces/main";
 import GithubPublisher from "../../main";
 import {GithubPublisherSettingsTab} from "../../settings";
 import {logs, notif} from "../../utils";
-import {GitHubPublisherSettings, Preset} from "../interface";
 import { migrateSettings,OldSettings } from "../migrate";
 
 
@@ -351,29 +351,33 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 
 export async function loadAllPresets(octokit: Octokit, plugin: GithubPublisher): Promise<Preset[]> {
 	//load from gitHub repository
+	try {
+		const githubPreset = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+			owner: "ObsidianPublisher",
+			repo: "plugin-presets",
+			path: "presets",
+		});
 
-	const githubPreset = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
-		owner: "ObsidianPublisher",
-		repo: "plugin-presets",
-		path: "presets",
-	});
-
-	//create a list
-	const presetList: Preset[] = [];
-	if (!Array.isArray(githubPreset.data)) {
-		return presetList;
-	}
-	logs({settings: plugin.settings}, "LoadAllPreset", githubPreset);
-	for (const preset of githubPreset.data) {
-		if (preset.name.endsWith(".json")) {
-			const presetName = preset.name.replace(".json", "");
-			presetList.push({
-				name: presetName,
-				settings: await loadPresetContent(preset.path, octokit, plugin),
-			});
+		//create a list
+		const presetList: Preset[] = [];
+		if (!Array.isArray(githubPreset.data)) {
+			return presetList;
 		}
+		logs({settings: plugin.settings}, "LoadAllPreset", githubPreset);
+		for (const preset of githubPreset.data) {
+			if (preset.name.endsWith(".json")) {
+				const presetName = preset.name.replace(".json", "");
+				presetList.push({
+					name: presetName,
+					settings: await loadPresetContent(preset.path, octokit, plugin),
+				});
+			}
+		}
+		return presetList;
+	} catch (e) {
+		notif({settings: plugin.settings, e: true}, "Couldn't load preset. Error:", e);
+		return [];
 	}
-	return presetList;
 }
 
 export async function loadPresetContent(path: string, octokit: Octokit, plugin: GithubPublisher): Promise<GitHubPublisherSettings> {

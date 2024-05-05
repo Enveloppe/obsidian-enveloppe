@@ -2,10 +2,10 @@ import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import {Notice } from "obsidian";
 
-import GithubPublisher from "../main";
 import {
 	RepoFrontmatter,
-} from "../settings/interface";
+} from "../interfaces/main";
+import GithubPublisher from "../main";
 import { logs, notif } from "../utils";
 import { FilesManagement } from "./files";
 

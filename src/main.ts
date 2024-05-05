@@ -16,13 +16,14 @@ import { ChooseWhichRepoToRun } from "./commands/suggest_other_repo_commands_mod
 import { getTitleField, regexOnFileName } from "./conversion/file_path";
 import { GithubBranch } from "./GitHub/branch";
 import { resources, translationLanguage } from "./i18n/i18next";
-import { GithubPublisherSettingsTab } from "./settings";
 import {
 	DEFAULT_SETTINGS,
 	GitHubPublisherSettings,
 	GithubTiersVersion,
 	Repository,
-} from "./settings/interface";
+	SetRepositoryFrontmatter,
+} from "./interfaces";
+import { GithubPublisherSettingsTab } from "./settings";
 import { migrateSettings, OldSettings } from "./settings/migrate";
 import { createTokenPath, monkeyPatchConsole, notif } from "./utils";
 import { checkRepositoryValidity, verifyRateLimitAPI } from "./utils/data_validation_test";
@@ -35,6 +36,7 @@ import { checkRepositoryValidity, verifyRateLimitAPI } from "./utils/data_valida
 export default class GithubPublisher extends Plugin {
 	settings!: GitHubPublisherSettings;
 	branchName: string = "";
+	repositoryFrontmatter: SetRepositoryFrontmatter = {};
 
 	/**
 		* Get the title field of a file
@@ -213,6 +215,17 @@ export default class GithubPublisher extends Plugin {
 			const repoOctokit = await this.reloadOctokit(repository.smartKey);
 			repository.verifiedRepo = await checkRepositoryValidity(repoOctokit, repository, null, false);
 			repository.rateLimit = await verifyRateLimitAPI(repoOctokit.octokit, this.settings);
+			
+			if (repository.set) {
+				//take the file and update the frontmatter
+				const file = this.app.vault.getAbstractFileByPath(repository.set);
+				if (file && file instanceof TFile) {
+					const frontmatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
+					if (frontmatter) {
+						this.repositoryFrontmatter[repository.smartKey] = frontmatter;
+					}
+				}
+			}
 		}
 		await this.saveSettings();
 

@@ -6,8 +6,8 @@ import GithubPublisher from "src/main";
 import merge from "ts-deepmerge";
 
 import {GithubBranch} from "../GitHub/branch";
-import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, RepoFrontmatter, Repository} from "../settings/interface";
-import {logs, notif} from ".";
+import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, RepoFrontmatter, Repository} from "../interfaces";
+import { notif} from ".";
 import { frontmatterFromFile, getLinkedFrontmatter, getRepoFrontmatter } from "./parse_frontmatter";
 
 /**
@@ -57,13 +57,8 @@ export function getRepoSharedKey(plugin: GithubPublisher, frontmatter?: FrontMat
 	} else if (!frontmatter) return null;
 	const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
 	frontmatter = linkedFrontmatter ? merge(linkedFrontmatter, frontmatter) : frontmatter;
-	for (const repo of allOtherRepo) {
-		if (frontmatter[repo.shareKey]) {
-			return repo;
-		}
-	}
-	logs({settings}, "No other repo found, using default repo");
-	return defaultRepo(settings);
+	return allOtherRepo.find(repo => frontmatter?.[repo.shareKey]) ?? defaultRepo(settings);
+	
 }
 
 /**
@@ -87,7 +82,7 @@ export function isShared(
 		return false;
 	}
 	const otherRepoWithShareAll = settings.github.otherRepo.filter((repo) => repo.shareAll?.enable);
-	if (!settings.plugin.shareAll?.enable && otherRepoWithShareAll.length === 0) {
+	if (!settings.plugin.shareAll?.enable && !otherRepoWithShareAll.length) {
 		const shareKey = otherRepo ? otherRepo.shareKey : settings.plugin.shareKey;
 		if ( meta == null || !meta[shareKey] || meta[shareKey] == null || isExcludedPath(settings, file, otherRepo) || meta[shareKey] === undefined || ["false", "0", "no"].includes(meta[shareKey].toString().toLowerCase())) {
 			return false;
@@ -409,7 +404,7 @@ export function defaultRepo(settings: GitHubPublisherSettings): Repository {
 				applyRegex: settings.plugin.copyLink.transform.applyRegex,
 			},
 		},
-		set: ""
+		set: null
 	};
 }
 

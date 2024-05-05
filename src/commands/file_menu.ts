@@ -1,8 +1,8 @@
 import i18next from "i18next";
 import { Menu, MenuItem, Platform, TFile, TFolder} from "obsidian";
 
+import {MonoRepoProperties, Repository} from "../interfaces";
 import GithubPublisher from "../main";
-import {MonoRepoProperties, Repository} from "../settings/interface";
 import {defaultRepo, getRepoSharedKey, isExcludedPath, isInDryRunFolder, isShared, multipleSharedKey} from "../utils/data_validation_test";
 import { frontmatterFromFile, frontmatterSettingsRepository, getRepoFrontmatter } from "../utils/parse_frontmatter";
 import {shareAllMarkedNotes, shareOneNote} from ".";
@@ -29,7 +29,7 @@ export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, 
 		statusBarItems,
 		branchName,
 		monoProperties,
-		publisher.getSharedFileOfFolder(folder, repo),
+		publisher.getSharedFileOfFolder(folder, repo, true),
 		true,
 	);
 }

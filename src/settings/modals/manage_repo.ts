@@ -1,38 +1,37 @@
 import i18next from "i18next";
-import {AbstractInputSuggest, App, Modal, Notice, Setting} from "obsidian";
+import {AbstractInputSuggest, App, Modal, Notice, Setting, TFile} from "obsidian";
 
+import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../../interfaces";
 import GithubPublisher from "../../main";
 import {checkRepositoryValidity, verifyRateLimitAPI} from "../../utils/data_validation_test";
-import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../interface";
 import { migrateToken } from "../migrate";
 
 
-class SetClassSuggester extends AbstractInputSuggest<string> {
+class SetClassSuggester extends AbstractInputSuggest<TFile> {
 	plugin: GithubPublisher;
-	constructor(private inputEl: HTMLInputElement, plugin: GithubPublisher, private onSubmit: (value: string) => void) {
+	constructor(private inputEl: HTMLInputElement, plugin: GithubPublisher, private onSubmit: (value: TFile) => void) {
 		super(plugin.app, inputEl);
 		this.plugin = plugin;
 	}
 
-	renderSuggestion(value: string, el: HTMLElement): void {
-		el.setText(value);
+	renderSuggestion(value: TFile, el: HTMLElement): void {
+		el.setText(value.path);
 	}
 
-	getSuggestions(query: string): string[] {
-		const markdownFile = this.plugin.app.vault.getFiles().filter((file) => {
+	getSuggestions(query: string): TFile[] {
+		return this.plugin.app.vault.getFiles().filter((file) => {
 			if (file.extension === "md" && file.path.toLowerCase().contains(query.toLowerCase())) {
 				const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 				if (frontmatter) return true;
 			}
 			return false;
 		});
-		return markdownFile.map((file) => file.path);
 	}
 
 	//eslint-disable-next-line @typescript-eslint/no-unused-vars
-	selectSuggestion(value: string, evt: MouseEvent | KeyboardEvent): void {
+	selectSuggestion(value: TFile, evt: MouseEvent | KeyboardEvent): void {
 		this.onSubmit(value);
-		this.inputEl.value = value;
+		this.inputEl.value = value.path;
 		this.inputEl.focus();
 		this.inputEl.trigger("input");
 		this.close();
@@ -108,7 +107,7 @@ export class ModalAddingNewRepository extends Modal {
 					applyRegex: this.settings.plugin.copyLink.transform.applyRegex
 				}
 			},
-			set: ""
+			set: null
 		};
 
 		new Setting(contentEl)
@@ -367,7 +366,6 @@ class ModalEditingRepository extends Modal {
 					.setValue(decryptedToken)
 					.onChange(async (value) => {
 						await migrateToken(this.plugin, value.trim(), this.repository.smartKey);
-						await this.plugin.saveSettings();
 					});
 			});
 		new Setting(contentEl)
@@ -448,10 +446,12 @@ class ModalEditingRepository extends Modal {
 			.setDesc(i18next.t("settings.plugin.setImport.desc"))
 			.addSearch((search) => {
 				search
-					.setValue("")
+					.setValue(this.repository.set ?? "")
 					.setPlaceholder("path/to/file.md");
 				new SetClassSuggester(search.inputEl, this.plugin, (result) => {
-					this.repository.set = result;
+					this.repository.set = result.path;
+					const frontmatter = this.plugin.app.metadataCache.getFileCache(result)?.frontmatter;
+					this.plugin.repositoryFrontmatter[this.repository.smartKey] = frontmatter;			
 				});
 			});
 			
@@ -479,7 +479,7 @@ class ModalEditingRepository extends Modal {
 						.setValue(this.repository.shareKey)
 						.onChange(async (value) => {
 							this.repository.shareKey = value.trim();
-							await this.plugin.saveSettings();
+							
 						})
 				);
 		} else {
@@ -518,7 +518,7 @@ class ModalEditingRepository extends Modal {
 						.setValue(this.repository.copyLink.removePart.join(", "))
 						.onChange(async (value) => {
 							this.repository.copyLink.removePart = value.split(/[,\n]\s*/).map((item) => item.trim()).filter((item) => item.length > 0);
-							await this.plugin.saveSettings();
+							
 						});
 				});
 			
@@ -530,7 +530,7 @@ class ModalEditingRepository extends Modal {
 						.setValue(this.repository.copyLink.transform.toUri)
 						.onChange(async (value) => {
 							this.repository.copyLink.transform.toUri = value;
-							await this.plugin.saveSettings();
+							
 						})
 				);
 			
@@ -546,7 +546,7 @@ class ModalEditingRepository extends Modal {
 						.setValue(this.repository.copyLink.transform.slugify as "disable" | "strict" | "lower")
 						.onChange(async (value) => {
 							this.repository.copyLink.transform.slugify = value as "disable" | "strict" | "lower";
-							await this.plugin.saveSettings();
+							
 						});
 				});
 		
@@ -562,7 +562,7 @@ class ModalEditingRepository extends Modal {
 								regex: "",
 								replacement: ""
 							});
-							await this.plugin.saveSettings();
+							
 							this.onOpen();
 						});
 				});
@@ -579,7 +579,7 @@ class ModalEditingRepository extends Modal {
 							.setValue(regex)
 							.onChange(async (value) => {
 								apply.regex = value;
-								await this.plugin.saveSettings();
+								
 							});
 					})
 					.setClass("max-width")
@@ -589,7 +589,7 @@ class ModalEditingRepository extends Modal {
 							.setValue(replacement)
 							.onChange(async (value) => {
 								apply.replacement = value;
-								await this.plugin.saveSettings();
+								
 							});
 					})
 					.setClass("max-width")
@@ -597,7 +597,7 @@ class ModalEditingRepository extends Modal {
 						button.setIcon("trash")
 							.onClick(async () => {
 								this.repository.copyLink.transform.applyRegex = this.repository.copyLink.transform.applyRegex.filter((item) => item !== apply);
-								await this.plugin.saveSettings();
+								
 								this.onOpen();
 							});
 					});	

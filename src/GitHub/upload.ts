@@ -19,7 +19,6 @@ import {
 	getImagePath,
 	getReceiptFolder,
 } from "../conversion/file_path";
-import GithubPublisher from "../main";
 import {
 	Deleted,
 	GitHubPublisherSettings,
@@ -28,7 +27,8 @@ import {
 	MultiProperties,
 	MultiRepoProperties,
 	RepoFrontmatter, UploadedFiles,
-} from "../settings/interface";
+} from "../interfaces";
+import GithubPublisher from "../main";
 import {
 	logs,
 	noticeMobile,

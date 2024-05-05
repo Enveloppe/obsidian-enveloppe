@@ -11,7 +11,7 @@ import {
 	GithubRepo,
 	MonoRepoProperties,
 	RepoFrontmatter,
-} from "../settings/interface";
+} from "../interfaces";
 import { logs, notif, trimObject} from "../utils";
 import {isAttachment, verifyRateLimitAPI} from "../utils/data_validation_test";
 import { frontmatterSettingsRepository } from "../utils/parse_frontmatter";

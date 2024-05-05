@@ -7,15 +7,13 @@ import { FrontMatterCache, normalizePath, TFile } from "obsidian";
 import GithubPublisher from "src/main";
 import merge from "ts-deepmerge";
 
-import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, RepoFrontmatter, Repository } from "../settings/interface";
+import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, RepoFrontmatter, Repository } from "../interfaces";
 
 export function frontmatterSettingsRepository(plugin: GithubPublisher, repo: Repository | null) {
 	const defaultConvert = getFrontmatterSettings(null, plugin.settings, repo);
-	if (!repo?.set) return defaultConvert;
-	const fileAsTFile = plugin.app.vault.getFileByPath(repo.set);
-	if (!fileAsTFile) return defaultConvert;
+	if (!repo?.set || !plugin.repositoryFrontmatter[repo.smartKey]) return defaultConvert;
 	return getFrontmatterSettings(
-		plugin.app.metadataCache.getFileCache(fileAsTFile)?.frontmatter,
+		plugin.repositoryFrontmatter[repo.smartKey],
 		plugin.settings,
 		repo
 	);
@@ -23,10 +21,8 @@ export function frontmatterSettingsRepository(plugin: GithubPublisher, repo: Rep
 
 export function getDefaultRepoFrontmatter(repository: Repository | null, plugin: GithubPublisher) {
 	const defaultSettings = getRepoFrontmatter(plugin, repository);
-	if (!repository) return defaultSettings;
-	const fileAsTFile = plugin.app.vault.getFileByPath(repository.set);
-	if (!fileAsTFile) return defaultSettings;
-	return getRepoFrontmatter(plugin, repository, plugin.app.metadataCache.getFileCache(fileAsTFile)?.frontmatter);
+	if (!repository?.set || (repository && !plugin.repositoryFrontmatter[repository.smartKey])) return defaultSettings;
+	return getRepoFrontmatter(plugin, repository, plugin.repositoryFrontmatter[repository.smartKey]);
 }
 
 
@@ -113,12 +109,10 @@ export function getRepoFrontmatter(
 ): RepoFrontmatter[] | RepoFrontmatter {
 	const settings = plugin.settings;
 	let github = repository ?? settings.github;
-	if (checkSet && repository?.set && repository.set.length > 0) {
-		const file = plugin.app.vault.getAbstractFileByPath(repository.set) instanceof TFile ? plugin.app.vault.getAbstractFileByPath(repository.set) : null;
-		if (file) {
-			const setFrontmatter = plugin.app.metadataCache.getFileCache(file as TFile)?.frontmatter;
-			frontmatter = frontmatter && setFrontmatter ? merge(frontmatter, setFrontmatter) : setFrontmatter ?? frontmatter ;
-		}
+	if (checkSet && repository && plugin.repositoryFrontmatter[repository.smartKey]) {
+		const setFrontmatter = plugin.repositoryFrontmatter[repository.smartKey];
+		frontmatter = frontmatter && setFrontmatter ? merge(frontmatter, setFrontmatter) : setFrontmatter ?? frontmatter ;
+		
 	}
 	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"] !== "default") {
 		const smartKey = frontmatter.shortRepo.toLowerCase();
@@ -488,12 +482,9 @@ export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher,
 		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
 		frontmatter = merge(linkedFrontmatter ?? {}, frontmatter ?? {});
 	}
-	if (repo && repo.set.length > 0) {
-		const fileAsTFile = plugin.app.vault.getFileByPath(repo.set);
-		if (fileAsTFile) {
-			const setFrontmatter = plugin.app.metadataCache.getFileCache(fileAsTFile)?.frontmatter;
-			frontmatter = frontmatter && setFrontmatter ? merge(frontmatter, setFrontmatter) : setFrontmatter ?? frontmatter;
-		}
+	if (repo?.set && plugin.repositoryFrontmatter[repo.smartKey]) {
+		const setFrontmatter = plugin.repositoryFrontmatter[repo.smartKey];
+		frontmatter = frontmatter && setFrontmatter ? merge(frontmatter, setFrontmatter) : setFrontmatter ?? frontmatter;
 	}
 	return frontmatter;
 }
