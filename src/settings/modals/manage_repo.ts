@@ -107,9 +107,7 @@ export class ModalAddingNewRepository extends Modal {
 					applyRegex: this.settings.plugin.copyLink.transform.applyRegex
 				}
 			},
-			set: {
-				path: "",
-			}
+			set: null
 		};
 
 		new Setting(contentEl)
@@ -450,10 +448,10 @@ class ModalEditingRepository extends Modal {
 				search
 					.setValue("")
 					.setPlaceholder("path/to/file.md");
-				if (typeof this.repository.set === "string") this.repository.set = {path: "", frontmatter: {}}; //migrate from string to object
 				new SetClassSuggester(search.inputEl, this.plugin, (result) => {
-					this.repository.set.path = result.path;
-					this.repository.set.frontmatter = this.plugin.app.metadataCache.getFileCache(result)?.frontmatter;
+					this.repository.set = result;
+					const frontmatter = this.plugin.app.metadataCache.getFileCache(result)?.frontmatter;
+					this.plugin.repositoryFrontmatter[this.repository.smartKey] = frontmatter;			
 				});
 			});
 			

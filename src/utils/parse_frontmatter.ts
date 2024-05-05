@@ -11,9 +11,9 @@ import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, Repo
 
 export function frontmatterSettingsRepository(plugin: GithubPublisher, repo: Repository | null) {
 	const defaultConvert = getFrontmatterSettings(null, plugin.settings, repo);
-	if (!repo?.set || !repo.set.frontmatter) return defaultConvert;
+	if (!repo?.set || !plugin.repositoryFrontmatter[repo.smartKey]) return defaultConvert;
 	return getFrontmatterSettings(
-		repo.set?.frontmatter,
+		plugin.repositoryFrontmatter[repo.smartKey],
 		plugin.settings,
 		repo
 	);
@@ -21,8 +21,8 @@ export function frontmatterSettingsRepository(plugin: GithubPublisher, repo: Rep
 
 export function getDefaultRepoFrontmatter(repository: Repository | null, plugin: GithubPublisher) {
 	const defaultSettings = getRepoFrontmatter(plugin, repository);
-	if (!repository || !repository.set.frontmatter) return defaultSettings;
-	return getRepoFrontmatter(plugin, repository, repository.set.frontmatter);
+	if (!repository?.set || (repository && !plugin.repositoryFrontmatter[repository.smartKey])) return defaultSettings;
+	return getRepoFrontmatter(plugin, repository, plugin.repositoryFrontmatter[repository.smartKey]);
 }
 
 
@@ -109,8 +109,8 @@ export function getRepoFrontmatter(
 ): RepoFrontmatter[] | RepoFrontmatter {
 	const settings = plugin.settings;
 	let github = repository ?? settings.github;
-	if (checkSet && repository?.set && repository.set.frontmatter) {
-		const setFrontmatter = repository.set.frontmatter;
+	if (checkSet && repository && plugin.repositoryFrontmatter[repository.smartKey]) {
+		const setFrontmatter = plugin.repositoryFrontmatter[repository.smartKey];
 		frontmatter = frontmatter && setFrontmatter ? merge(frontmatter, setFrontmatter) : setFrontmatter ?? frontmatter ;
 		
 	}
@@ -482,8 +482,8 @@ export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher,
 		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
 		frontmatter = merge(linkedFrontmatter ?? {}, frontmatter ?? {});
 	}
-	if (repo?.set?.frontmatter) {
-		const setFrontmatter = repo.set.frontmatter;
+	if (repo?.set && plugin.repositoryFrontmatter[repo.smartKey]) {
+		const setFrontmatter = plugin.repositoryFrontmatter[repo.smartKey];
 		frontmatter = frontmatter && setFrontmatter ? merge(frontmatter, setFrontmatter) : setFrontmatter ?? frontmatter;
 	}
 	return frontmatter;

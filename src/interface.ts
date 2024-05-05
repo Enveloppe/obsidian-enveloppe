@@ -141,15 +141,7 @@ export interface Repository {
 	 * Allow to set a file for settings that override for example path, dataview, hardbreak... 
 	 * Useful for autoclean settings, but also for other settings without needing to change the frontmatter and use the set function
 	 */
-	set: {
-		/** Path to the set file, needs to have a valid frontmatter. Repository can be enabled and made some strange behavior. */
-		path: string;
-		/**
-		 * The default frontmatter to apply
-		 * @important the frontmatter is registered when the plugin is loaded or when the set is changed/added (settings saved), so the frontmatter is not updated when the file is changed in Obsidian.
-		 */
-		frontmatter?: FrontMatterCache | null;
-	};
+	set: TFile | null;
 }
 
 /**

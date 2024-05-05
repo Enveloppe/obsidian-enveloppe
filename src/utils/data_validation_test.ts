@@ -409,9 +409,7 @@ export function defaultRepo(settings: GitHubPublisherSettings): Repository {
 				applyRegex: settings.plugin.copyLink.transform.applyRegex,
 			},
 		},
-		set: {
-			path: ""
-		}
+		set: null
 	};
 }
 
