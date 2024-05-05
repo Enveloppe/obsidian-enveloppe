@@ -17,7 +17,7 @@ import {
 	MultiProperties,
 	RepoFrontmatter,
 	Repository,
-} from "../interfaces";
+} from "../interfaces/main";
 import {
 	logs,
 } from "../utils";

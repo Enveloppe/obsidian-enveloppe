@@ -12,7 +12,7 @@ import {
 	GithubRepo,
 	LinkedNotes,
 	RepoFrontmatter, Repository,
-} from "../interfaces";
+} from "../interfaces/main";
 import GithubPublisher from "../main";
 import {logs} from "../utils";
 import { isAttachment, isShared } from "../utils/data_validation_test";

@@ -1,7 +1,7 @@
 import { FrontMatterCache } from "obsidian";
 
 import GithubPublisher from "../main";
-import { FrontmatterConvert, RepoFrontmatter, Repository } from ".";
+import { FrontmatterConvert, RepoFrontmatter, Repository } from "./main";
 
 export interface MultiProperties {
 	plugin: GithubPublisher;

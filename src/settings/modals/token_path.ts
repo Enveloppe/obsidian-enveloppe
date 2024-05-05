@@ -3,7 +3,7 @@ import { App, Modal, Notice,Setting } from "obsidian";
 import GithubPublisher from "src/main";
 import { createTokenPath, logs } from "src/utils";
 
-import { TOKEN_PATH } from "../../interfaces";
+import { TOKEN_PATH } from "../../interfaces/main";
 import { migrateToken } from "../migrate";
 
 export class TokenEditPath extends Modal {

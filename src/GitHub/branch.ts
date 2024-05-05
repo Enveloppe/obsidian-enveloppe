@@ -4,7 +4,7 @@ import {Notice } from "obsidian";
 
 import {
 	RepoFrontmatter,
-} from "../interfaces";
+} from "../interfaces/main";
 import GithubPublisher from "../main";
 import { logs, notif } from "../utils";
 import { FilesManagement } from "./files";

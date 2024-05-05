@@ -10,7 +10,7 @@ import {
 	Setting,
 	TextAreaComponent} from "obsidian";
 
-import {GitHubPublisherSettings, Preset} from "../../interfaces";
+import {GitHubPublisherSettings, Preset} from "../../interfaces/main";
 import GithubPublisher from "../../main";
 import {GithubPublisherSettingsTab} from "../../settings";
 import {logs, notif} from "../../utils";

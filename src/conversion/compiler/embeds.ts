@@ -20,7 +20,7 @@ import GithubPublisher from "src/main";
 import {
 	GitHubPublisherSettings,
 	LinkedNotes,
-	MultiProperties} from "../../interfaces";
+	MultiProperties} from "../../interfaces/main";
 import {isShared} from "../../utils/data_validation_test";
 import { addToYaml } from "..";
 import { createRelativePath, getTitleField, regexOnFileName } from "../file_path";

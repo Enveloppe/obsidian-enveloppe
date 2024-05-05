@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import {AbstractInputSuggest, App, Modal, Notice, Setting, TFile} from "obsidian";
 
-import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../../interfaces";
+import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "../../interfaces/main";
 import GithubPublisher from "../../main";
 import {checkRepositoryValidity, verifyRateLimitAPI} from "../../utils/data_validation_test";
 import { migrateToken } from "../migrate";
