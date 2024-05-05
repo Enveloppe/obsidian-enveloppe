@@ -446,10 +446,10 @@ class ModalEditingRepository extends Modal {
 			.setDesc(i18next.t("settings.plugin.setImport.desc"))
 			.addSearch((search) => {
 				search
-					.setValue("")
+					.setValue(this.repository.set ?? "")
 					.setPlaceholder("path/to/file.md");
 				new SetClassSuggester(search.inputEl, this.plugin, (result) => {
-					this.repository.set = result;
+					this.repository.set = result.path;
 					const frontmatter = this.plugin.app.metadataCache.getFileCache(result)?.frontmatter;
 					this.plugin.repositoryFrontmatter[this.repository.smartKey] = frontmatter;			
 				});

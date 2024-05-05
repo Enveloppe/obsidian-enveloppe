@@ -1400,6 +1400,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 	// eslint-disable-next-line
 	copy(object: any) {
-		return JSON.parse(JSON.stringify(object));
+		try {
+			return JSON.parse(JSON.stringify(object));
+		} catch (e) {
+			console.log("error with stringify for", object);
+		}
 	}
 }

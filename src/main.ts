@@ -218,9 +218,9 @@ export default class GithubPublisher extends Plugin {
 			
 			if (repository.set) {
 				//take the file and update the frontmatter
-				const file = this.app.vault.getAbstractFileByPath(repository.set.path);
+				const file = this.app.vault.getAbstractFileByPath(repository.set);
 				if (file && file instanceof TFile) {
-					const frontmatter = this.app.metadataCache.getFileCache(file as TFile);
+					const frontmatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
 					if (frontmatter) {
 						this.repositoryFrontmatter[repository.smartKey] = frontmatter;
 					}

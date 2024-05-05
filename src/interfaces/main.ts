@@ -78,7 +78,7 @@ export interface Repository {
 	 * Allow to set a file for settings that override for example path, dataview, hardbreak... 
 	 * Useful for autoclean settings, but also for other settings without needing to change the frontmatter and use the set function
 	 */
-	set: TFile | null;
+	set: string | null;
 }
 
 /**
