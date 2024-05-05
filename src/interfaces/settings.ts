@@ -105,27 +105,9 @@ export interface GitHub {
 		/**
 		 * The settings for the github API
 		 */
-		api: {
-			/**
-			 * The tier of the API
-			 * @default GithubTiersVersion.free
-			 */
-			tiersForApi: GithubTiersVersion;
-			/** hostname for api
-			 * @default `api.github.com`
-			 * @important if you use a self-hosted github, you need to set the hostname
-			 */
-			hostname: string;
-		}
+		api: Api,
 		/** workflow and action of the plugin in github */
-		workflow: {
-			/** Commit message when the PR is merged
-			 * @default `[PUBLISHER] Merge`
-			 */
-			commitMessage: string;
-			/** The name of the github action file */
-			name: string;
-		},
+		workflow: Workflow,
 		/** Enable the usage of different repository */
 		otherRepo: Repository[];
 		/** If the default repository is verified */
@@ -258,7 +240,13 @@ export interface Embed {
 		textBefore: string;
 		textAfter: string;
 	};
+	/** Allow send file not natively supported by obsidian
+	 * Support regex (with `/regex/flags` format)
+	 */
 	unHandledObsidianExt: string[];
+	/** Also send files /attachments linkeds by links (ie [[file]])
+	 * Will apply all previous settings
+	 */
 	sendSimpleLinks: boolean;
 }
 
@@ -267,20 +255,41 @@ export interface Embed {
  * Allow to set the behavior of the plugin, like commands added, share all, logs...
  */
 export interface PluginBehavior {
+	/** The native key for sharing
+	 * @default `share`
+	 */
 	shareKey: string;
+	/** Allow to share all file without using a frontmatter key */
 	shareAll?: ShareAll;
+	/** Allow to create shortcuts in the file menu (right click in explorer)*/
 	fileMenu: boolean;
+	/** Allow to create shortcuts in the editor menu (right click in editor)*/
 	editorMenu: boolean;
+	/** The folder to exclude from the plugin */
 	excludedFolder: string[];
+	/** Allow to create a commands to copy the link */
 	copyLink: {
+		/** Enable globally the creator when a file is created => send it in the clipboard */
 		enable: boolean;
+		/** Create a commands in the palette */
 		addCmd: boolean;
 	} & CopyLink;
+	/** Send an obsidian notification on error */
 	noticeError: boolean;
+	/** Send all logs in the console */
 	dev?: boolean;
+	/** Display a strange modal when a file is send, resuming the action of the plugin */
 	displayModalRepoEditing: boolean;
+	/** If the settings was migrated from previous version. */
 	migrated?: boolean;
+	/** Allow to save the tabsId.
+	 * If disabled, the user will always return to the default tab when the settings are closed.
+	 */
 	saveTabId?: boolean;
+	/** Key used for "link" a frontmatter (overriding default settings) into another frontmatter 
+	 * @default `Set` 
+	 * @example `Set: [[frontmatter]]`
+	 */
 	setFrontmatterKey: string;
 }
 
