@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { Menu, MenuItem, Platform, TFile, TFolder} from "obsidian";
 
-import {MonoRepoProperties, Repository} from "../interfaces/main";
+import {MonoRepoProperties, Repository} from "../interfaces";
 import GithubPublisher from "../main";
 import {defaultRepo, getRepoSharedKey, isExcludedPath, isInDryRunFolder, isShared, multipleSharedKey} from "../utils/data_validation_test";
 import { frontmatterFromFile, frontmatterSettingsRepository, getRepoFrontmatter } from "../utils/parse_frontmatter";

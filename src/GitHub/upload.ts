@@ -27,7 +27,7 @@ import {
 	MultiProperties,
 	MultiRepoProperties,
 	RepoFrontmatter, UploadedFiles,
-} from "../interfaces/main";
+} from "../interfaces";
 import GithubPublisher from "../main";
 import {
 	logs,

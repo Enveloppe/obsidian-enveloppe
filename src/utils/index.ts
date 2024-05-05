@@ -14,7 +14,7 @@ import {
 	MetadataExtractor,
 	MultiRepoProperties,
 	RepoFrontmatter, TOKEN_PATH,
-	UploadedFiles} from "../interfaces/main";
+	UploadedFiles} from "../interfaces";
 import { ERROR_ICONS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 import { frontmatterFromFile } from "./parse_frontmatter";
 
@@ -419,7 +419,7 @@ export function trimObject(obj: { [p: string]: string }) {
  * @param {string} tokenPath - The path of the token as entered by the user
  * @return {string} - The final path of the token
  */
-export function createTokenPath(plugin: GithubPublisher, tokenPath?: string) {
+export function createTokenPath(plugin: GithubPublisher, tokenPath?: string): string {
 	const vault = plugin.app.vault;
 	if (!tokenPath) {
 		tokenPath = TOKEN_PATH;

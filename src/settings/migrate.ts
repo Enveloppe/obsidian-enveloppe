@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { normalizePath } from "obsidian";
 
-import { FolderSettings, GithubTiersVersion, TextCleaner, TOKEN_PATH, TypeOfEditRegex } from "../interfaces/main";
+import { FolderSettings, GithubTiersVersion, TextCleaner, TOKEN_PATH, TypeOfEditRegex } from "../interfaces";
 import GithubPublisher from "../main";
 import { createTokenPath, logs } from "../utils";
 
