@@ -7,6 +7,8 @@ import {
 	checkRepositoryValidityCallback,
 	createLinkCallback,
 	purgeNotesRemoteCallback,
+	refreshAllSets,
+	refreshOpenedSet,
 	shareEditedOnlyCallback,
 	shareOneNoteCallback,
 	uploadAllEditedNotesCallback, uploadAllNotesCallback, uploadNewNotesCallback
@@ -273,6 +275,8 @@ export default class GithubPublisher extends Plugin {
 		for (const repo of repoWithShortcuts) {
 			await this.chargeAllCommands(repo, this);
 		}
+		this.addCommand(refreshOpenedSet(this));
+		this.addCommand(refreshAllSets(this));
 
 		monkeyPatchConsole(this);
 	}

@@ -25,6 +25,8 @@
       "title": ""
     },
     "publisherDeleteClean": "",
+    "refreshAllSets": "",
+    "refreshOpenedSet": "",
     "runOtherRepo": {
       "noFile": "",
       "title": ""
@@ -113,8 +115,8 @@
     "scanningRepo": "",
     "sendMessage": "",
     "startingClean": "",
-    "successfulPublish": "",
     "successPublishOneNote": "",
+    "successfulPublish": "",
     "waitingWorkflow": ""
   },
   "modals": {

@@ -5,7 +5,7 @@
  */
 
 import i18next from "i18next";
-import {Command, Notice } from "obsidian";
+import {Command, Notice, TFile } from "obsidian";
 
 import {MonoRepoProperties,MultiRepoProperties,Repository} from "../interfaces";
 import GithubPublisher from "../main";
@@ -253,5 +253,41 @@ export async function checkRepositoryValidityCallback(plugin: GithubPublisher, r
 	} as Command;
 }
 
+export function refreshOpenedSet(plugin: GithubPublisher) {
+	const findRepo= (file: TFile | null) => {
+		if (!file) return [];
+		return plugin.settings.github.otherRepo.filter((repo) => repo.set === file.path);
+	};
+	const file = plugin.app.workspace.getActiveFile();
+	return {
+		id: "publisher-refresh-opened-set",
+		name: i18next.t("commands.refreshOpenedSet"),
+		checkCallback: (checking) => {
+			if (file && findRepo(file).length > 0) {
+				if (!checking) {
+					const repos = findRepo(file);
+					repos.forEach((repo) => {
+						plugin.repositoryFrontmatter[repo.smartKey] = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+					});
+				}
+				return true;
+			}
+			return false;
+		},
+	} as Command;
+}
 
-
+export function refreshAllSets(plugin: GithubPublisher) {
+	return {
+		id: "publisher-refresh-all-sets",
+		name: i18next.t("commands.refreshAllSets"),
+		callback: () => {
+			plugin.settings.github.otherRepo.forEach((repo) => {
+				if (!repo.set) return;
+				const file = plugin.app.vault.getAbstractFileByPath(repo.set);
+				if (!file || !(file instanceof TFile)) return;
+				plugin.repositoryFrontmatter[repo.smartKey] = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+			});
+		}
+	} as Command;
+}

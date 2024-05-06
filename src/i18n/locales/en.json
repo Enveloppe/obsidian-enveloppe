@@ -25,6 +25,8 @@
       "title": "Create a link to this note"
     },
     "publisherDeleteClean": "Purge depublished and deleted files",
+    "refreshAllSets": "Update all saved sets",
+    "refreshOpenedSet": "Refresh opened frontmatter",
     "runOtherRepo": {
       "noFile": "No file is active or the file is not shared",
       "title": "Run command for a repository"
@@ -113,8 +115,8 @@
     "scanningRepo": "Scanning the repository, may take a while...",
     "sendMessage": "Upload <i>{{- nbNotes}}</i> notes to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
     "startingClean": "Starting cleaning <u>{{- repo.owner}}/{{- repo.repo}}</u>",
-    "successfulPublish": "Successfully uploaded <i>{{- nbNotes}}</i> to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
     "successPublishOneNote": "Successfully uploaded <i><u>{{- file}}</u></i> to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "successfulPublish": "Successfully uploaded <i>{{- nbNotes}}</i> to <u>{{- repo.owner}}/{{- repo.repo}}</u>",
     "waitingWorkflow": "Now, waiting for the workflow to be completed..."
   },
   "modals": {

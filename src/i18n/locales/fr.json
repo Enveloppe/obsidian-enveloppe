@@ -25,6 +25,8 @@
       "title": "Créer un lien vers cette note"
     },
     "publisherDeleteClean": "Purger les fichiers dépubliés et supprimés",
+    "refreshAllSets": "Actualiser tous les sets enregistrés",
+    "refreshOpenedSet": "Actualiser le frontmatter ouvert",
     "runOtherRepo": {
       "noFile": "Aucun fichier actif, ou le fichier n'est pas partagé.",
       "title": "Lancer une commande pour un dépôt"
@@ -113,8 +115,8 @@
     "scanningRepo": "Scan du dépôt, veuillez patienter...",
     "sendMessage": "Transfert de <i>{{- nbNotes}}</i> notes vers <u>{{- repo.owner}}/{{- repo.repo}}</u>",
     "startingClean": "Début du nettoyage de <u>{{- repo.owner}}/{{- repo.repo}}</u>",
-    "successfulPublish": "Transfert réussi de <i>{{- nbNotes}}</i> notes vers <u>{{- repo.owner}}/{{- repo.repo}}</u>",
     "successPublishOneNote": "Transfert réussi de <i><u>{{- file}}</u></i> vers <u>{{- repo.owner}}/{{- repo.repo}}</u>",
+    "successfulPublish": "Transfert réussi de <i>{{- nbNotes}}</i> notes vers <u>{{- repo.owner}}/{{- repo.repo}}</u>",
     "waitingWorkflow": "Maintenant, attente de la fin du workflow..."
   },
   "modals": {
