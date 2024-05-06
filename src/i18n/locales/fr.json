@@ -25,8 +25,8 @@
       "title": "Créer un lien vers cette note"
     },
     "publisherDeleteClean": "Purger les fichiers dépubliés et supprimés",
-    "refreshAllSets": "Actualiser tous les sets enregistrés",
-    "refreshOpenedSet": "Actualiser le frontmatter ouvert",
+    "refreshAllSets": "(Autres dépôts): Recharger tous les sets enregistrés",
+    "refreshOpenedSet": "(Autres dépôts): Recharger le frontmatter ouvert",
     "runOtherRepo": {
       "noFile": "Aucun fichier actif, ou le fichier n'est pas partagé.",
       "title": "Lancer une commande pour un dépôt"

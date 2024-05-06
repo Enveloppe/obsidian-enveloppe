@@ -260,7 +260,7 @@ export function refreshOpenedSet(plugin: GithubPublisher) {
 	};
 	
 	return {
-		id: "publisher-refresh-opened-set",
+		id: "publisher-reload-opened-set",
 		name: i18next.t("commands.refreshOpenedSet"),
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
@@ -280,7 +280,7 @@ export function refreshOpenedSet(plugin: GithubPublisher) {
 
 export function refreshAllSets(plugin: GithubPublisher) {
 	return {
-		id: "publisher-refresh-all-sets",
+		id: "publisher-reload-all-sets",
 		name: i18next.t("commands.refreshAllSets"),
 		checkCallback: (checking) => {
 			const allSets = plugin.settings.github.otherRepo.filter((repo) => repo.set !== "" || repo.set !== null);

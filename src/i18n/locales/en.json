@@ -25,8 +25,8 @@
       "title": "Create a link to this note"
     },
     "publisherDeleteClean": "Purge depublished and deleted files",
-    "refreshAllSets": "Update all saved sets",
-    "refreshOpenedSet": "Refresh opened frontmatter",
+    "refreshAllSets": "(Others repositories): Reload all saved sets",
+    "refreshOpenedSet": "(Other repositories): Reload opened frontmatter",
     "runOtherRepo": {
       "noFile": "No file is active or the file is not shared",
       "title": "Run command for a repository"
