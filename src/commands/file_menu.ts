@@ -137,7 +137,6 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 			return;
 		}
 		const fileName = plugin.getTitleFieldForCommand(file, plugin.app.metadataCache.getFileCache(file)?.frontmatter).replace(".md", "");
-
 		if (!frontmatter || !frontmatter[plugin.settings.plugin.shareKey]) {
 			const otherRepo = plugin.settings.github.otherRepo.find((repo) => repo.shareAll?.enable);
 			if (otherRepo) getSharedKey = otherRepo;

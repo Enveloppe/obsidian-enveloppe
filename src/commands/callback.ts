@@ -258,14 +258,15 @@ export function refreshOpenedSet(plugin: GithubPublisher) {
 		if (!file) return [];
 		return plugin.settings.github.otherRepo.filter((repo) => repo.set === file.path);
 	};
-	const file = plugin.app.workspace.getActiveFile();
+	
 	return {
 		id: "publisher-refresh-opened-set",
 		name: i18next.t("commands.refreshOpenedSet"),
 		checkCallback: (checking) => {
-			if (file && findRepo(file).length > 0) {
+			const file = plugin.app.workspace.getActiveFile();
+			const repos = findRepo(file);
+			if (file && repos.length > 0) {
 				if (!checking) {
-					const repos = findRepo(file);
 					repos.forEach((repo) => {
 						plugin.repositoryFrontmatter[repo.smartKey] = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 					});
@@ -281,13 +282,20 @@ export function refreshAllSets(plugin: GithubPublisher) {
 	return {
 		id: "publisher-refresh-all-sets",
 		name: i18next.t("commands.refreshAllSets"),
-		callback: () => {
-			plugin.settings.github.otherRepo.forEach((repo) => {
-				if (!repo.set) return;
-				const file = plugin.app.vault.getAbstractFileByPath(repo.set);
-				if (!file || !(file instanceof TFile)) return;
-				plugin.repositoryFrontmatter[repo.smartKey] = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
-			});
+		checkCallback: (checking) => {
+			const allSets = plugin.settings.github.otherRepo.filter((repo) => repo.set !== "" || repo.set !== null);
+			if (allSets.length > 0) {
+				if (!checking) {
+					allSets.forEach((repo) => {
+						if (!repo.set) return;
+						const file = plugin.app.vault.getAbstractFileByPath(repo.set);
+						if (!file || !(file instanceof TFile)) return;
+						plugin.repositoryFrontmatter[repo.smartKey] = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+					});
+				}
+				return true;
+			}
+			return false;
 		}
 	} as Command;
 }
