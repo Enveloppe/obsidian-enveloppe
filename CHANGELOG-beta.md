@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.1.0-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-5...7.1.0-6) (2024-05-06)
+
+
+### Features
+
+* allow two commands to refresh set without reloading the plugin or obsidian ([0c8fed2](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0c8fed2543ee1413baff4c739c960831c8424835))
+
 ## [7.1.0-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-4...7.1.0-5) (2024-05-05)
 
 ## [7.1.0-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-3...7.1.0-4) (2024-05-04)
