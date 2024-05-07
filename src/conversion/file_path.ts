@@ -451,48 +451,63 @@ function createImagePath(file: TFile,
 	const behavior = overridePath?.path?.type ? overridePath.path.type : settings.upload.behavior;
 	const rootFolder = overridePath?.path?.rootFolder ? overridePath.path.rootFolder : settings.upload.rootFolder;
 	const defaultFolderName = overridePath?.path?.defaultName ? overridePath.path.defaultName : settings.upload.defaultName;
-	if (!sourceFrontmatter || !sourceFrontmatter.attachmentLinks) {
-		if (settings.embed.useObsidianFolder) {
-			if (behavior === FolderSettings.yaml) {
-				result.path = rootFolder.length > 0 ? normalizePath(`${rootFolder}/${filePath}`) : filePath;
-			}
-			else {
-				//no root, but default folder name
-				result.path = defaultFolderName.length > 0 ? normalizePath(`${defaultFolderName}/${filePath}`) : filePath;
-			}
-			return result;
-		}
-		const defaultImageFolder = overridePath?.path?.attachment?.folder ? overridePath.path?.attachment?.folder : settings.embed.folder;
-		//find in override
-		const isOverridden = settings.embed.overrideAttachments.filter((override) => {
-			const isRegex = override.path.match(FIND_REGEX);
-			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : undefined;
-			return (
-				regex?.test(filePath)
-				|| filePath === override.path
-				|| override.path.contains("{{all}}"))
-				&& !override.destination.contains("{{default}}");
-		});
-		if (isOverridden.length > 0) {
-			for (const override of isOverridden) {
-				const isRegex = override.path.match(FIND_REGEX);
-				const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
-				const dest = override.destination.replace("{{name}}", fileName);
-				filePath = regex ? normalizePath(filePath.replace(regex, dest)) : normalizePath(filePath.replace(override.path, dest));
-			}
-			result.path = filePath;
-		}
-		else if (defaultImageFolder.length > 0) {
-			result.path = normalizePath(`${defaultImageFolder}/${fileName}`);
-		} else if (defaultFolderName.length > 0) {
-			result.path = normalizePath(`${defaultFolderName}/${fileName}`);
-		} else {
-			result.path = filePath;
-		}
-	} else if (
-		sourceFrontmatter?.attachmentLinks
-	) {
+	if (sourceFrontmatter?.attachmentLinks && sourceFrontmatter.attachmentLinks.length > 0) {
 		result.path = normalizePath(`${sourceFrontmatter.attachmentLinks}/${fileName}`);
+		return result;
+	}
+	if (settings.embed.useObsidianFolder) {
+		if (behavior === FolderSettings.yaml) {
+			result.path = rootFolder.length > 0 ? normalizePath(`${rootFolder}/${filePath}`) : filePath;
+		}
+		else {
+			//no root, but default folder name
+			result.path = defaultFolderName.length > 0 ? normalizePath(`${defaultFolderName}/${filePath}`) : filePath;
+		}
+		result.path = applyOverriddenPath(fileName, result.path, settings).filePath;
+		return result;
+	}
+	const defaultImageFolder = overridePath?.path?.attachment?.folder ? overridePath.path?.attachment?.folder : settings.embed.folder;
+	//find in override
+	const overriddenPath = applyOverriddenPath(fileName, filePath, settings);
+	if (overriddenPath.overridden) {
+		result.path = overriddenPath.filePath;
+	}
+	else if (defaultImageFolder.length > 0) {
+		result.path = normalizePath(`${defaultImageFolder}/${fileName}`);
+	} else if (defaultFolderName.length > 0) {
+		result.path = normalizePath(`${defaultFolderName}/${fileName}`);
+	} else {
+		result.path = filePath;
 	}
 	return result;
+}
+
+/**
+ * Override the path of an attachment using the settings (regex or string replace) 
+ * @param fileName - The name of the file
+ * @param filePath - The (original) path of the file
+ * @param settings - The settings of the plugin
+ * @returns The new path of the file and whether it was overridden
+ */
+function applyOverriddenPath(fileName: string, filePath: string, settings: GitHubPublisherSettings): {filePath: string, overridden: boolean} {
+	let overridden = false;
+	const isOverridden = settings.embed.overrideAttachments.filter((override) => {
+		const isRegex = override.path.match(FIND_REGEX);
+		const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : undefined;
+		return (
+			regex?.test(filePath)
+			|| filePath === override.path
+			|| override.path.contains("{{all}}"))
+			&& !override.destination.contains("{{default}}");
+	});
+	if (isOverridden.length > 0) {
+		overridden = true;
+		for (const override of isOverridden) {
+			const isRegex = override.path.match(FIND_REGEX);
+			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
+			const dest = override.destination.replace("{{name}}", fileName);
+			filePath = regex ? normalizePath(filePath.replace(regex, dest)) : normalizePath(filePath.replace(override.path, dest));
+		}
+	}
+	return {filePath, overridden};
 }
