@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.1.0-7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-6...7.1.0-7) (2024-05-07)
+
+
+### Bug Fixes
+
+* useObsidianFolder should allow overriding Path ([fafed25](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/fafed25a7409e69935dbd47c18fd16b41d12974a))
+
 ## [7.1.0-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-5...7.1.0-6) (2024-05-06)
 
 
