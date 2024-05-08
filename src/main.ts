@@ -97,7 +97,7 @@ export default class GithubPublisher extends Plugin {
 						this.app.commands.removeCommand(command.id);
 					}
 				}
-				if (!this.settings.upload.autoclean.enable && commandName === "publisher-delete-clean") {
+				if (!this.settings.upload.autoclean.enable && commandName === "delete-clean") {
 					//@ts-ignore
 					this.app.commands.removeCommand(command.id);
 				}
