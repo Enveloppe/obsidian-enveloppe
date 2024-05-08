@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.1.0-9](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-8...7.1.0-9) (2024-05-08)
+
 ## [7.1.0-8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-7...7.1.0-8) (2024-05-08)
 
 ## [7.1.0-7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-6...7.1.0-7) (2024-05-07)
