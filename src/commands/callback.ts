@@ -22,7 +22,7 @@ import {shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} f
  * @return {Promise<Command>}
  */
 export async function createLinkCallback(repo: Repository | null, plugin: GithubPublisher): Promise<Command> {
-	const id = repo ? `publisher-copy-link-K${repo.smartKey}` : "publisher-copy-link";
+	const id = repo ? `copy-link-K${repo.smartKey}` : "copy-link";
 	const common = i18next.t("common.repository");
 	let name = i18next.t("commands.copyLink.title");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
@@ -65,7 +65,7 @@ export async function createLinkCallback(repo: Repository | null, plugin: Github
  * @return {Promise<Command>}
  */
 export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Repository | null, branchName: string): Promise<Command> {
-	const id = repo ? `publisher-delete-clean-K${repo.smartKey}` : "publisher-delete-clean";
+	const id = repo ? `delete-clean-K${repo.smartKey}` : "delete-clean";
 	let name = i18next.t("commands.publisherDeleteClean");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
@@ -100,7 +100,7 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
  * @return {Promise<Command>}
  */
 export async function shareOneNoteCallback(repo: Repository|null, plugin: GithubPublisher): Promise<Command> {
-	const id = repo ? `publisher-one-K${repo.smartKey}` : "publisher-one";
+	const id = repo ? `share-one-K${repo.smartKey}` : "share-one";
 	let name = i18next.t("commands.shareActiveFile");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
@@ -141,7 +141,7 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
  * @return {Promise<Command>}
  */
 export async function uploadAllNotesCallback(plugin: GithubPublisher, repo: Repository|null, branchName: string): Promise<Command> {
-	const id = repo ? `publisher-publish-all-K${repo.smartKey}` : "publisher-publish-all";
+	const id = repo ? `publish-all-K${repo.smartKey}` : "publish-all";
 	let name = i18next.t("commands.uploadAllNotes");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
@@ -162,7 +162,7 @@ export async function uploadAllNotesCallback(plugin: GithubPublisher, repo: Repo
  * @returns {Promise<Command>}
  */
 export async function uploadNewNotesCallback(plugin: GithubPublisher, repo: Repository | null, branchName: string): Promise<Command> {
-	const id = repo ? `publisher-upload-new-K${repo.smartKey}` : "publisher-upload-new";
+	const id = repo ? `upload-new-K${repo.smartKey}` : "upload-new";
 	let name = i18next.t("commands.uploadNewNotes");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
@@ -184,7 +184,7 @@ export async function uploadNewNotesCallback(plugin: GithubPublisher, repo: Repo
  * @return {Promise<Command>}
  */
 export async function uploadAllEditedNotesCallback(plugin: GithubPublisher, repo: Repository|null, branchName: string): Promise<Command> {
-	const id = repo ? `publisher-upload-all-edited-new-K${repo.smartKey}` : "publisher-upload-all-edited-new";
+	const id = repo ? `upload-all-edited-new-K${repo.smartKey}` : "upload-all-edited-new";
 	let name = i18next.t("commands.uploadAllNewEditedNote");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
@@ -206,7 +206,7 @@ export async function uploadAllEditedNotesCallback(plugin: GithubPublisher, repo
  * @return {Promise<Command>}
  */
 export async function shareEditedOnlyCallback(repo: Repository|null, branchName: string, plugin: GithubPublisher): Promise<Command> {
-	const id = repo ? `publisher-upload-edited-K${repo.smartKey}` : "publisher-upload-edited";
+	const id = repo ? `upload-edited-K${repo.smartKey}` : "upload-edited";
 	let name = i18next.t("commands.uploadAllEditedNote");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
@@ -260,7 +260,7 @@ export function refreshOpenedSet(plugin: GithubPublisher) {
 	};
 	
 	return {
-		id: "publisher-reload-opened-set",
+		id: "reload-opened-set",
 		name: i18next.t("commands.refreshOpenedSet"),
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
@@ -280,7 +280,7 @@ export function refreshOpenedSet(plugin: GithubPublisher) {
 
 export function refreshAllSets(plugin: GithubPublisher) {
 	return {
-		id: "publisher-reload-all-sets",
+		id: "reload-all-sets",
 		name: i18next.t("commands.refreshAllSets"),
 		checkCallback: (checking) => {
 			const allSets = plugin.settings.github.otherRepo.filter((repo) => repo.set !== "" || repo.set !== null);
