@@ -157,21 +157,17 @@ export default class GithubPublisher extends Plugin {
 	}
 
 	/**
-		* Create a new instance of Octokit to load a new instance of GithubBranch
+	* Create a new instance of Octokit to load a new instance of GithubBranch
+	* @param {string} repo - The repository to load the Octokit for
 	*/
 	async reloadOctokit(repo?: string) {
-		let octokit: Octokit;
 		const apiSettings = this.settings.github.api;
 		const token = await this.loadToken(repo);
-		if (apiSettings.tiersForApi === GithubTiersVersion.entreprise && apiSettings.hostname.length > 0) {
-			octokit = new Octokit(
-				{
-					baseUrl: `${apiSettings.hostname}/api/v3`,
-					auth: token,
-				});
-		} else {
-			octokit = new Octokit({ auth: token });
-		}
+		const octokit = apiSettings.tiersForApi === GithubTiersVersion.entreprise && apiSettings.hostname.length > 0 ? new Octokit(
+			{
+				baseUrl: `${apiSettings.hostname}/api/v3`,
+				auth: token,
+			}) : new Octokit({ auth: token });
 		return new GithubBranch(
 			octokit,
 			this,
@@ -214,9 +210,12 @@ export default class GithubPublisher extends Plugin {
 		}
 
 		for (const repository of this.settings.github.otherRepo) {
-			const repoOctokit = await this.reloadOctokit(repository.smartKey);
-			repository.verifiedRepo = await checkRepositoryValidity(repoOctokit, repository, null, false);
-			repository.rateLimit = await verifyRateLimitAPI(repoOctokit.octokit, this.settings);
+			if (!repository.verifiedRepo && (await this.loadToken(repository.smartKey)) !== "")
+			{
+				const repoOctokit = await this.reloadOctokit(repository.smartKey);
+				repository.verifiedRepo = await checkRepositoryValidity(repoOctokit, repository, null, false);
+				repository.rateLimit = await verifyRateLimitAPI(repoOctokit.octokit, this.settings);
+			}
 			
 			if (repository.set) {
 				//take the file and update the frontmatter
