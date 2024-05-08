@@ -143,7 +143,7 @@ export interface ConvertedLink {
 	/** Path in Obsidian */
 	real: string;
 	/** The repoFrontmatter */
-	repoFrontmatter?: RepoFrontmatter | RepoFrontmatter[];
+	repoFrontmatter?: Properties | Properties[];
 }
 
 /**
@@ -211,7 +211,7 @@ export interface Path {
 }
 
 /** A sort of extension of RepoFrontmatter, but include settings like bake embed, dataview or unshared links conversion */
-export interface FrontmatterConvert {
+export interface PropertiesConversion {
 	/** Convert links */
 	links: boolean;
 	/** Send attachment */
@@ -241,7 +241,7 @@ export interface FrontmatterConvert {
 /** A very important interface that handle a repository from the frontmatter and a lot of usefull settings that override the default plugin behavior, including {@link Path}. 
  * RepoFrontmatter also handle {@link Repository} settings.
 */
-export interface RepoFrontmatter {
+export interface Properties {
 	/** Branch name */
 	branch: string;
 	/** The repository name */

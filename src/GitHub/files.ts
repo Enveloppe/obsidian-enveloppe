@@ -8,10 +8,10 @@ import {
 } from "../conversion/file_path";
 import {
 	ConvertedLink,
-	FrontmatterConvert,
 	GithubRepo,
 	LinkedNotes,
-	RepoFrontmatter, Repository,
+	Properties, 	PropertiesConversion,
+	Repository,
 } from "../interfaces/main";
 import GithubPublisher from "../main";
 import {logs} from "../utils";
@@ -96,7 +96,7 @@ export class FilesManagement extends Publisher {
 	 * @return {ConvertedLink[]} The shared files
 	 */
 
-	getAllFileWithPath(repo: Repository | null, convert: FrontmatterConvert): ConvertedLink[] {
+	getAllFileWithPath(repo: Repository | null, convert: PropertiesConversion): ConvertedLink[] {
 		const files = this.vault.getFiles().filter((x) => !x.path.startsWith(this.settings.github.dryRun.folderName));
 		const allFileWithPath: ConvertedLink[] = [];
 		const sourceFrontmatter = getRepoFrontmatter(this.plugin, repo, null, true);
@@ -249,12 +249,12 @@ export class FilesManagement extends Publisher {
 	 * If the settings are true, allowing to publish the files (for attachments)
 	 * Markdown files attachments are always verified using the main publish function
 	 * @param {TFile} file The file shared
-	 * @param {FrontmatterConvert} frontmatterSourceFile frontmatter of the file
+	 * @param {PropertiesConversion} frontmatterSourceFile frontmatter of the file
 	 * @return {TFile[]} the file embedded & shared in form of an array of TFile
 	 */
 	getSharedEmbed(
 		file: TFile,
-		frontmatterSourceFile: FrontmatterConvert,
+		frontmatterSourceFile: PropertiesConversion,
 	): TFile[] {
 		const embedCaches = this.metadataCache.getCache(file.path)?.embeds ?? [];
 		const cacheLinks = this.metadataCache.getCache(file.path)?.links ?? [];
@@ -278,7 +278,7 @@ export class FilesManagement extends Publisher {
 	private checkIfFileIsShared(
 		embed: EmbedCache | LinkCache, 
 		file: TFile, 
-		frontmatterSourceFile: FrontmatterConvert,
+		frontmatterSourceFile: PropertiesConversion,
 		fromWhat: "link" | "embed"): TFile | undefined{
 		try {
 			const imageLink = this.metadataCache.getFirstLinkpathDest(
@@ -326,7 +326,7 @@ export class FilesManagement extends Publisher {
 
 	async getAllFileFromRepo(
 		branchToScan: string,
-		repo: RepoFrontmatter
+		repo: Properties
 	): Promise<GithubRepo[]> {
 		const filesInRepo: GithubRepo[] = [];
 		try {
@@ -401,14 +401,14 @@ export class FilesManagement extends Publisher {
 	 * Get the filepath of a file shared in a dataview field and return the file if it exists in the vault
 	 * @param {Link | string} source
 	 * @param {Link | string} field
-	 * @param {FrontmatterConvert} frontmatterSourceFile
+	 * @param {PropertiesConversion} frontmatterSourceFile
 	 * @return {TFile}
 	 */
 
 	getImageByPath(
 		source: Link | string,
 		field: Link | string,
-		frontmatterSourceFile: FrontmatterConvert
+		frontmatterSourceFile: PropertiesConversion
 	): TFile | undefined {
 		if (field.constructor.name === "Link") {
 			// @ts-ignore
@@ -430,14 +430,14 @@ export class FilesManagement extends Publisher {
 	 * Check if the file is a image or a note based on the extension
 	 * Check if the sharing is allowing based on the frontmatter
 	 * @param {TFile} file
-	 * @param {FrontmatterConvert} settingsConversion
+	 * @param {PropertiesConversion} settingsConversion
 	 * @return {null | TFile}
 	 * @private
 	 */
 
 	private imageSharedOrNote(
 		file: TFile,
-		settingsConversion: FrontmatterConvert,
+		settingsConversion: PropertiesConversion,
 		fromWhat: "embed" | "link" = "embed"
 	): undefined | TFile {
 		const transferImage = fromWhat === "embed" ? settingsConversion.attachment : settingsConversion.includeLinks;
@@ -457,13 +457,13 @@ export class FilesManagement extends Publisher {
 	 * @param {TFile} file
 	 * @param {TFile[]} embedFiles
 	 * @param {FrontMatterCache} frontmatterSourceFile
-	 * @param {FrontmatterConvert} frontmatterSettings
+	 * @param {PropertiesConversion} frontmatterSettings
 	 * @return {Promise<TFile[]>}
 	 */
 	async getMetadataLinks(
 		file: TFile,
 		embedFiles: TFile[],
-		frontmatterSettings: FrontmatterConvert
+		frontmatterSettings: PropertiesConversion
 	): Promise<TFile[]> {
 		for (const field of this.settings.embed.keySendFile) {
 			const frontmatterLink = this.metadataCache.getFileCache(file)?.frontmatterLinks;

@@ -3,7 +3,7 @@
 import { DEFAULT_SETTINGS,FIND_REGEX, TOKEN_PATH } from "./constant";
 import {EnumbSettingsTabId,FolderSettings, GithubTiersVersion, TypeOfEditRegex  } from "./enum";
 import { Deleted, ListEditedFiles, UploadedFiles } from "./list_edited_files";
-import { FrontmatterConvert, GitHubPublisherSettings,GithubRepo,LinkedNotes, OverrideAttachments, Path, RegexReplace, RepoFrontmatter,Repository, SetRepositoryFrontmatter, TextCleaner } from "./main";
+import { GitHubPublisherSettings,GithubRepo,LinkedNotes, OverrideAttachments, Path, Properties,PropertiesConversion, RegexReplace, Repository, SetRepositoryFrontmatter, TextCleaner } from "./main";
 import { MonoProperties,MonoRepoProperties,MultiProperties, MultiRepoProperties } from "./properties";
 import { MetadataExtractor } from "./settings";
 
@@ -12,7 +12,7 @@ export {DEFAULT_SETTINGS,EnumbSettingsTabId,FIND_REGEX,FolderSettings,GithubTier
 
 export type {
 	Deleted,
-	FrontmatterConvert,
+	PropertiesConversion as FrontmatterConvert,
 	GitHubPublisherSettings,
 	GithubRepo,
 	LinkedNotes,
@@ -25,7 +25,7 @@ export type {
 	OverrideAttachments,
 	Path,
 	RegexReplace,
-	RepoFrontmatter,
+	Properties as RepoFrontmatter,
 	Repository,
 	SetRepositoryFrontmatter,
 	TextCleaner,

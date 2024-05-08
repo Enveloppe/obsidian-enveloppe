@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { Notice } from "obsidian";
 
-import { RepoFrontmatter } from "../interfaces/main";
+import { Properties } from "../interfaces/main";
 import { noticeMobile } from ".";
 import { ERROR_ICONS, FOUND_ATTACHMENTS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 
@@ -107,7 +107,7 @@ export class ShareStatusBar {
 	 * Remove the status bar if error occurs
 	 */
 
-	error(repoFrontmatter: RepoFrontmatter) {
+	error(repoFrontmatter: Properties) {
 		this.statusBarItem.addClass("error");
 		this.statusBarItem.removeClass("sharing");
 		this.statusBarItem.removeClass("found-attachments");

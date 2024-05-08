@@ -3,7 +3,7 @@ import i18next from "i18next";
 import {Notice } from "obsidian";
 
 import {
-	RepoFrontmatter,
+	Properties,
 } from "../interfaces/main";
 import GithubPublisher from "../main";
 import { logs, notif } from "../utils";
@@ -21,11 +21,11 @@ export class GithubBranch extends FilesManagement {
 
 	/**
 	 * Check if RepoFrontmatter is an array or not and run the newBranchOnRepo function on each repo
-	 * @param {RepoFrontmatter[] | RepoFrontmatter} repoFrontmatter The repo to use
+	 * @param {Properties[] | Properties} repoFrontmatter The repo to use
 	 */
 
 	async newBranch(
-		repoFrontmatter: RepoFrontmatter[] | RepoFrontmatter
+		repoFrontmatter: Properties[] | Properties
 	) {
 		repoFrontmatter = Array.isArray(repoFrontmatter)
 			? repoFrontmatter
@@ -39,12 +39,12 @@ export class GithubBranch extends FilesManagement {
 	 * Create a new branch on the repo named "Vault-date"
 	 * Pass if the branch already exists
 	 * Run in a loop in the newBranch function if RepoFrontmatter[] is passed
-	 * @param {RepoFrontmatter} repoFrontmatter The repo to use
+	 * @param {Properties} repoFrontmatter The repo to use
 	 * @return {Promise<boolean>} True if the branch is created
 	 */
 
 	async newBranchOnRepo(
-		repoFrontmatter: RepoFrontmatter
+		repoFrontmatter: Properties
 	): Promise<boolean> {
 		const allBranch = await this.octokit.request(
 			"GET /repos/{owner}/{repo}/branches",
@@ -98,12 +98,12 @@ export class GithubBranch extends FilesManagement {
 	/**
 	 * Create a pull request on repoFrontmatter.branch with the branchName
 	 * Run in a loop in the pullRequest function if RepoFrontmatter[] is passed
-	 * @param {RepoFrontmatter} repoFrontmatter The repo to use
+	 * @param {Properties} repoFrontmatter The repo to use
 	 * @return {Promise<number>} False in case of error, the pull request number otherwise
 	 */
 
 	async pullRequestOnRepo(
-		repoFrontmatter: RepoFrontmatter,
+		repoFrontmatter: Properties,
 	): Promise<number> {
 		try {
 			const PR = await this.octokit.request(
@@ -145,12 +145,12 @@ export class GithubBranch extends FilesManagement {
 	/**
 	 * After the merge, delete the new branch on the repo
 	 * Run in a loop in the updateRepository function if RepoFrontmatter[] is passed
-	 * @param {RepoFrontmatter} repoFrontmatter The repo to use
+	 * @param {Properties} repoFrontmatter The repo to use
 	 * @return {Promise<boolean>} true if the branch is deleted
 	 */
 
 	async deleteBranchOnRepo(
-		repoFrontmatter: RepoFrontmatter
+		repoFrontmatter: Properties
 	): Promise<boolean> {
 		try {
 			const branch = await this.octokit.request(
@@ -173,12 +173,12 @@ export class GithubBranch extends FilesManagement {
 	 * Automatically merge pull request from the plugin (only if the settings allow it)
 	 * Run in a loop in the updateRepository function if RepoFrontmatter[] is passed
 	 * @param {number} pullRequestNumber  number of the new pullrequest
-	 * @param {RepoFrontmatter} repoFrontmatter The repo to use
+	 * @param {Properties} repoFrontmatter The repo to use
 	 */
 
 	async mergePullRequestOnRepo(
 		pullRequestNumber: number,
-		repoFrontmatter: RepoFrontmatter
+		repoFrontmatter: Properties
 	) {
 		const commitMsg = repoFrontmatter.commitMsg || repoFrontmatter.commitMsg.trim().length > 0 ? `${repoFrontmatter.commitMsg} #${pullRequestNumber}` : `[PUBLISHER] Merge #${pullRequestNumber}`;
 		try {
@@ -201,11 +201,11 @@ export class GithubBranch extends FilesManagement {
 	}
 	/**
 	 * Update the repository with the new branch : PR, merging and deleting the branch if allowed by the global settings
-	 * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter The repo to use
+	 * @param {Properties | Properties[]} repoFrontmatter The repo to use
 	 * @returns {Promise<boolean>} True if the update is successful
 	 */
 	async updateRepository(
-		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
+		repoFrontmatter: Properties | Properties[],
 		dryRun = false
 	): Promise<boolean> {
 		if (dryRun) return true;
@@ -222,12 +222,12 @@ export class GithubBranch extends FilesManagement {
 	/**
 	 * Run merging + deleting branch in once, for one repo
 	 * Run in a loop in the updateRepository function if RepoFrontmatter[] is passed
-	 * @param {RepoFrontmatter} repoFrontmatter The repo to use
+	 * @param {Properties} repoFrontmatter The repo to use
 	 * @returns {Promise<boolean>} true if the update is successful
 	 */
 
 	async updateRepositoryOnOne(
-		repoFrontmatter: RepoFrontmatter
+		repoFrontmatter: Properties
 	): Promise<boolean> {
 		if (this.settings.github.dryRun.enable) return true;
 		try {
@@ -262,12 +262,12 @@ export class GithubBranch extends FilesManagement {
 	 * - the main branch exists
 	 * Send a notice if the repo doesn't exist or if the main branch doesn't exist
 	 * Note: If one of the repo defined in the list doesn't exist, the rest of the list will not be checked because the octokit request throws an error
-	 * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter
+	 * @param {Properties | Properties[]} repoFrontmatter
 	 * @param silent Send a notice if the repo is valid
 	 * @return {Promise<void>}
 	 */
 	async checkRepository(
-		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
+		repoFrontmatter: Properties | Properties[],
 		silent= true): Promise<void>
 	{
 		repoFrontmatter = Array.isArray(repoFrontmatter)
