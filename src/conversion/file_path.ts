@@ -15,14 +15,14 @@ import {
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
-	RepoFrontmatter,
+	Properties,
 	Repository,
 } from "../interfaces";
 import {
 	logs,
 } from "../utils";
 import {checkIfRepoIsInAnother, isInternalShared, isShared} from "../utils/data_validation_test";
-import { frontmatterFromFile, frontmatterSettingsRepository, getCategory, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, frontmatterSettingsRepository, getCategory, getFrontmatterSettings, getProperties } from "../utils/parse_frontmatter";
 import { createRegexFromText } from "./find_and_replace_text";
 
 
@@ -76,10 +76,10 @@ export async function createRelativePath(
 ): Promise<string> {
 	const settings = properties.plugin.settings;
 	const shortRepo = properties.repository;
-	const sourcePath = getReceiptFolder(sourceFile, shortRepo, properties.plugin, properties.frontmatter.repo);
+	const sourcePath = getReceiptFolder(sourceFile, shortRepo, properties.plugin, properties.frontmatter.prop);
 	const frontmatterTarget = frontmatterFromFile(targetFile.linked, properties.plugin, properties.repository);
-	const targetRepo = getRepoFrontmatter(properties.plugin, shortRepo, frontmatterTarget);
-	const isFromAnotherRepo = checkIfRepoIsInAnother(properties.frontmatter.repo, targetRepo);
+	const targetRepo = getProperties(properties.plugin, shortRepo, frontmatterTarget);
+	const isFromAnotherRepo = checkIfRepoIsInAnother(properties.frontmatter.prop, targetRepo);
 	const shared = isInternalShared(
 		frontmatterTarget,
 		properties,
@@ -200,12 +200,12 @@ function createObsidianPath(
 	settings: GitHubPublisherSettings,
 	vault: Vault,
 	fileName: string,
-	repoFrontmatter?: RepoFrontmatter,
+	prop?: Properties,
 ): string {
 	fileName = folderNoteIndexOBS(file, vault, settings, fileName);
 
-	const defaultFolder = repoFrontmatter?.path?.defaultName && repoFrontmatter.path.defaultName.length > 0 ?
-		repoFrontmatter.path.defaultName : settings.upload.defaultName.length > 0 ?
+	const defaultFolder = prop?.path?.defaultName && prop.path.defaultName.length > 0 ?
+		prop.path.defaultName : settings.upload.defaultName.length > 0 ?
 			settings.upload.defaultName : "";
 	const path = defaultFolder + fileName;
 	//remove last word from path splitted with /
@@ -229,9 +229,9 @@ function folderNoteIndexYAML(
 	fileName: string,
 	frontmatter: FrontMatterCache | undefined | null,
 	settings: GitHubPublisherSettings,
-	repoFrontmatter?: RepoFrontmatter,
+	prop?: Properties,
 ): string {
-	const category = repoFrontmatter?.path?.category?.value ?? getCategory(frontmatter, settings, repoFrontmatter?.path);
+	const category = prop?.path?.category?.value ?? getCategory(frontmatter, settings, prop?.path);
 	const catSplit = category.split("/");
 	const parentCatFolder = category.endsWith("/") ? catSplit.at(-2) as string : catSplit.at(-1) as string;
 
@@ -256,13 +256,13 @@ function createFrontmatterPath(
 	settings: GitHubPublisherSettings,
 	frontmatter: FrontMatterCache | null | undefined,
 	fileName: string,
-	repoFrontmatter?: RepoFrontmatter,
+	prop?: Properties,
 ): string {
 
 	const uploadSettings = settings.upload;
-	const folderCategory = repoFrontmatter?.path?.category?.value ?? getCategory(frontmatter, settings, repoFrontmatter?.path);
-	const path = repoFrontmatter?.path;
-	const folderNote = folderNoteIndexYAML(fileName, frontmatter, settings, repoFrontmatter);
+	const folderCategory = prop?.path?.category?.value ?? getCategory(frontmatter, settings, prop?.path);
+	const path = prop?.path;
+	const folderNote = folderNoteIndexYAML(fileName, frontmatter, settings, prop);
 	const root = path?.rootFolder && path.rootFolder.length > 0 ? path.rootFolder : uploadSettings.rootFolder.length > 0 ? uploadSettings.rootFolder : undefined;
 	const folderRoot = root && !folderCategory.includes(root) ? `${root}/` : "";
 	if (folderCategory.trim().length === 0) return folderNote;
@@ -369,16 +369,16 @@ export function getReceiptFolder(
 	file: TFile,
 	otherRepo: Repository | null,
 	plugin: GithubPublisher,
-	repoFrontmatter?: RepoFrontmatter | RepoFrontmatter[],
+	prop?: Properties | Properties[],
 ): string {
 	const { vault} = plugin.app;
 	const settings = plugin.settings;
 	if (file.extension === "md") {
 		const frontmatter = frontmatterFromFile(file, plugin, otherRepo);
-		if (!repoFrontmatter) repoFrontmatter = getRepoFrontmatter(plugin, otherRepo, frontmatter);
-		repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
-		let targetRepo = repoFrontmatter.find((repo) => repo.path?.smartkey === otherRepo?.smartKey || "default");
-		if (!targetRepo) targetRepo = repoFrontmatter[0];
+		if (!prop) prop = getProperties(plugin, otherRepo, frontmatter);
+		prop = prop instanceof Array ? prop : [prop];
+		let targetRepo = prop.find((repo) => repo.path?.smartkey === otherRepo?.smartKey || "default");
+		if (!targetRepo) targetRepo = prop[0];
 		const fileName = getTitleField(frontmatter, file, settings);
 		const editedFileName = regexOnFileName(fileName, settings);
 		if (
@@ -417,7 +417,7 @@ export function getImagePath(
 	file: TFile,
 	plugin: GithubPublisher,
 	sourceFrontmatter: FrontmatterConvert | null,
-	repository: RepoFrontmatter | RepoFrontmatter[],
+	repository: Properties | Properties[],
 ): string {
 	const settings = plugin.settings;
 	const overridePath = repository instanceof Array ? repository[0] : repository;
@@ -439,7 +439,7 @@ export function getImagePath(
 function createImagePath(file: TFile,
 	settings: GitHubPublisherSettings,
 	sourceFrontmatter: FrontmatterConvert | null,
-	overridePath?: RepoFrontmatter,
+	overridePath?: Properties,
 ): { path: string, name: string } {
 	let fileName = file.name;
 	let filePath = file.path;

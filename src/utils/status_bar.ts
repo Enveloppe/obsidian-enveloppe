@@ -107,12 +107,12 @@ export class ShareStatusBar {
 	 * Remove the status bar if error occurs
 	 */
 
-	error(repoFrontmatter: Properties) {
+	error(prop: Properties) {
 		this.statusBarItem.addClass("error");
 		this.statusBarItem.removeClass("sharing");
 		this.statusBarItem.removeClass("found-attachments");
 		this.icon.innerHTML = ERROR_ICONS;
-		this.status.innerHTML = i18next.t("error.errorPublish", {repo: repoFrontmatter});
+		this.status.innerHTML = i18next.t("error.errorPublish", {repo: prop});
 		this.noticeMobile?.hide();
 		setTimeout(() => {
 			this.statusBarItem.remove();

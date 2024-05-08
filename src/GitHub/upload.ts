@@ -26,7 +26,7 @@ import {
 	MonoRepoProperties,
 	MultiProperties,
 	MultiRepoProperties,
-	RepoFrontmatter, UploadedFiles,
+	Properties, UploadedFiles,
 } from "../interfaces";
 import GithubPublisher from "../main";
 import {
@@ -43,7 +43,7 @@ import {
 	isShared,
 } from "../utils/data_validation_test";
 import { LOADING_ICON } from "../utils/icons";
-import { frontmatterFromFile, frontmatterSettingsRepository, getFrontmatterSettings, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, frontmatterSettingsRepository, getFrontmatterSettings, getProperties } from "../utils/parse_frontmatter";
 import { ShareStatusBar } from "../utils/status_bar";
 import { deleteFromGithub } from "./delete";
 import { FilesManagement } from "./files";
@@ -101,10 +101,10 @@ export default class Publisher {
 				linkedFiles.length,
 				true
 			);
-			const repoFrontmatter = properties.frontmatter.repo;
+			const prop = properties.frontmatter.prop;
 			const repoProperties: MonoRepoProperties = {
-				frontmatter: properties.frontmatter.repo,
-				repo: properties.repository,
+				frontmatter: properties.frontmatter.prop,
+				repository: properties.repository,
 				convert: properties.frontmatter.general,
 			};
 			try {
@@ -152,8 +152,8 @@ export default class Publisher {
 				statusBar.finish(8000);
 			} catch (e) {
 				logs({ settings: this.settings, e: true }, e);
-				notifError(repoFrontmatter);
-				statusBar.error(repoFrontmatter);
+				notifError(prop);
+				statusBar.error(prop);
 			}
 		}
 		return {
@@ -185,14 +185,14 @@ export default class Publisher {
 		);
 		let frontmatter = frontmatterFromFile(file, this.plugin, null);
 		if (sourceFrontmatter && frontmatter) frontmatter = merge(frontmatter, sourceFrontmatter);
-		const repoFrontmatter = getRepoFrontmatter(this.plugin, repo.repo, frontmatter);
-		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, this.plugin);
-		repo.frontmatter = repoFrontmatter;
+		const prop = getProperties(this.plugin, repo.repository, frontmatter);
+		const isNotEmpty = await checkEmptyConfiguration(prop, this.plugin);
+		repo.frontmatter = prop;
 		if (
-			!isShared(frontmatter, this.settings, file, repo.repo) ||
+			!isShared(frontmatter, this.settings, file, repo.repository) ||
 			fileHistory.includes(file) ||
 			!checkIfRepoIsInAnother(
-				repoFrontmatter,
+				prop,
 				repo.frontmatter
 			) || !isNotEmpty
 		) {
@@ -204,9 +204,9 @@ export default class Publisher {
 			const frontmatterSettingsFromFile = getFrontmatterSettings(
 				frontmatter,
 				this.settings,
-				repo.repo
+				repo.repository
 			);
-			const frontmatterRepository = frontmatterSettingsRepository(this.plugin, repo.repo);
+			const frontmatterRepository = frontmatterSettingsRepository(this.plugin, repo.repository);
 			const frontmatterSettings = merge(frontmatterRepository, frontmatterSettingsFromFile);
 			let embedFiles = shareFiles.getSharedEmbed(
 				file,
@@ -224,18 +224,18 @@ export default class Publisher {
 				plugin: this.plugin,
 				frontmatter: {
 					general: frontmatterSettings,
-					repo: repo.frontmatter,
+					prop: repo.frontmatter,
 				},
-				repository: repo.repo,
-				filepath: getReceiptFolder(file, repo.repo, this.plugin, repo.frontmatter),
+				repository: repo.repository,
+				filepath: getReceiptFolder(file, repo.repository, this.plugin, repo.frontmatter),
 			};
 			text = await mainConverting(text, file, frontmatter, linkedFiles, multiProperties);
 			const path = multiProperties.filepath;
-			const repoFrontmatter = Array.isArray(repo.frontmatter)
+			const prop = Array.isArray(repo.frontmatter)
 				? repo.frontmatter
 				: [repo.frontmatter];
 			let multiRepMsg = "";
-			for (const repo of repoFrontmatter) {
+			for (const repo of prop) {
 				multiRepMsg += `[${repo.owner}/${repo.repo}/${repo.branch}] `;
 			}
 			const msg = `Publishing ${file.name} to ${multiRepMsg}`;
@@ -243,12 +243,12 @@ export default class Publisher {
 			const fileDeleted: Deleted[] = [];
 			const updated: UploadedFiles[][] = [];
 			const fileError: string[] = [];
-			for (const repo of repoFrontmatter) {
+			for (const repo of prop) {
 				const monoProperties: MonoProperties = {
 					plugin: this.plugin,
 					frontmatter: {
 						general: frontmatterSettings,
-						repo,
+						prop: repo,
 						source: sourceFrontmatter
 					},
 					repository: multiProperties.repository,
@@ -307,7 +307,7 @@ export default class Publisher {
 		load.createEl("span", { cls: ["obsidian-publisher", "loading", "icons"] }).innerHTML = LOADING_ICON;
 		load.createEl("span", { text: i18next.t("statusBar.loading"), cls: ["obsidian-publisher", "loading", "icons"] });
 		embedFiles = await this.cleanLinkedImageIfAlreadyInRepo(embedFiles, properties);
-		const repo = properties.frontmatter.repo;
+		const repo = properties.frontmatter.prop;
 		notif(
 			{ settings: this.settings },
 			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${this.branchName}`
@@ -344,7 +344,7 @@ export default class Publisher {
 				shareFiles,
 				{
 					frontmatter: repo,
-					repo: properties.repository,
+					repository: properties.repository,
 					convert: properties.frontmatter.general,
 				}
 			);
@@ -361,22 +361,22 @@ export default class Publisher {
 	 * @param {string} content Contents of the file sent
 	 * @param {string} title for commit message, name of the file
 	 * @param {string} path path in GitHub
-	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 * @param {Properties} prop frontmatter settings
 	 */
 
 	async upload(
 		content: string,
 		path: string,
 		title: string = "",
-		repoFrontmatter: RepoFrontmatter
+		prop: Properties
 	) {
-		if (!repoFrontmatter.repo) {
+		if (!prop.repo) {
 			new Notice(
 				"Config error : You need to define a github repo in the plugin settings"
 			);
 			throw {};
 		}
-		if (!repoFrontmatter.owner) {
+		if (!prop.owner) {
 			new Notice(
 				"Config error : You need to define your github username in the plugin settings"
 			);
@@ -389,8 +389,8 @@ export default class Publisher {
 			msg = `PUSH ATTACHMENT : ${title}`;
 		}
 		const payload = {
-			owner: repoFrontmatter.owner,
-			repo: repoFrontmatter.repo,
+			owner: prop.owner,
+			repo: prop.repo,
 			path,
 			message: `Adding ${title}`,
 			content,
@@ -405,8 +405,8 @@ export default class Publisher {
 			const response = await octokit.request(
 				"GET /repos/{owner}/{repo}/contents/{path}",
 				{
-					owner: repoFrontmatter.owner,
-					repo: repoFrontmatter.repo,
+					owner: prop.owner,
+					repo: prop.repo,
 					path,
 					ref: this.branchName,
 				}
@@ -441,7 +441,7 @@ export default class Publisher {
 		properties: MonoProperties,
 	) {
 		let imageBin = await this.vault.readBinary(imageFile);
-		const repoFrontmatter = properties.frontmatter.repo;
+		const prop = properties.frontmatter.prop;
 		let image64 = arrayBufferToBase64(imageBin);
 		if (imageFile.name.includes("excalidraw")) {
 			const svg = await convertToHTMLSVG(imageFile, this.plugin.app);
@@ -455,13 +455,13 @@ export default class Publisher {
 			imageFile,
 			this.plugin,
 			properties.frontmatter.general,
-			properties.frontmatter.repo
+			properties.frontmatter.prop
 		);
 		if (this.settings.github.dryRun.enable) {
 			const folderName = this.settings.github.dryRun.folderName
-				.replace("{{repo}}", repoFrontmatter.repo)
-				.replace("{{branch}}", repoFrontmatter.branch)
-				.replace("{{owner}}", repoFrontmatter.owner);
+				.replace("{{repo}}", prop.repo)
+				.replace("{{branch}}", prop.branch)
+				.replace("{{owner}}", prop.owner);
 			const dryRunPath = normalizePath(`${folderName}/${path}`);
 			const isAlreadyExist = this.vault.getAbstractFileByPath(dryRunPath);
 			if (isAlreadyExist && isAlreadyExist instanceof TFile) {
@@ -484,7 +484,7 @@ export default class Publisher {
 				file: imageFile.name
 			};
 		}
-		return await this.upload(image64, path, "", properties.frontmatter.repo);
+		return await this.upload(image64, path, "", properties.frontmatter.prop);
 
 	}
 
@@ -493,7 +493,7 @@ export default class Publisher {
 	 * @param {string} text contents of the note
 	 * @param {string} path new Path in GitHub
 	 * @param {string} title name note for message commit
-	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 * @param {Properties} prop frontmatter settings
 	 * @return {Promise<void>}
 	 */
 
@@ -501,14 +501,14 @@ export default class Publisher {
 		text: string,
 		path: string,
 		title: string = "",
-		repoFrontmatter: RepoFrontmatter,
+		prop: Properties,
 	): Promise<UploadedFiles | undefined> {
 		if (this.settings.github.dryRun.enable) {
 			//create a new file in the vault
 			const folderName = this.settings.github.dryRun.folderName
-				.replace("{{repo}}", repoFrontmatter.repo)
-				.replace("{{branch}}", repoFrontmatter.branch)
-				.replace("{{owner}}", repoFrontmatter.owner);
+				.replace("{{repo}}", prop.repo)
+				.replace("{{branch}}", prop.branch)
+				.replace("{{owner}}", prop.owner);
 
 			const newPath = normalizePath(`${folderName}/${path}`);
 			const isAlreadyExist = this.vault.getAbstractFileByPath(newPath);
@@ -536,7 +536,7 @@ export default class Publisher {
 				contentBase64,
 				path,
 				title,
-				repoFrontmatter
+				prop
 			);
 		} catch (e) {
 			notif({ settings: this.settings, e: true }, e);
@@ -547,13 +547,13 @@ export default class Publisher {
 	/**
 	 * Upload the metadataExtractor json file
 	 * @param {MetadataExtractor} metadataExtractor metadataExtractor
-	 * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter frontmatter settings
+	 * @param {Properties | Properties[]} prop frontmatter settings
 	 * @return {Promise<void>}
 	 */
 
 	async uploadMetadataExtractorFiles(
 		metadataExtractor: MetadataExtractor,
-		repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]
+		prop: Properties | Properties[]
 	): Promise<void> {
 		if (metadataExtractor) {
 			if (this.settings.github.dryRun.enable) return;
@@ -564,10 +564,10 @@ export default class Publisher {
 						this.settings.upload.metadataExtractorPath +
 						"/" +
 						file.split("/").pop();
-					repoFrontmatter = Array.isArray(repoFrontmatter)
-						? repoFrontmatter
-						: [repoFrontmatter];
-					for (const repo of repoFrontmatter) {
+					prop = Array.isArray(prop)
+						? prop
+						: [prop];
+					for (const repo of prop) {
 						await this.uploadText(
 							contents,
 							path,
@@ -582,24 +582,24 @@ export default class Publisher {
 
 	/**
 	 * Allow to activate a workflow dispatch github actions
-	 * @param {RepoFrontmatter} repoFrontmatter frontmatter settings
+	 * @param {Properties} prop frontmatter settings
 	 * @return {Promise<boolean>}
 	 */
 
-	async workflowGestion(repoFrontmatter: RepoFrontmatter): Promise<boolean> {
+	async workflowGestion(prop: Properties): Promise<boolean> {
 		if (this.settings.github.dryRun.enable) return false;
 		let finished = false;
-		if (repoFrontmatter.workflowName.length === 0) {
+		if (prop.workflowName.length === 0) {
 			return false;
 		}
 		const octokit = this.octokit;
 		await octokit.request(
 			"POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
 			{
-				owner: repoFrontmatter.owner,
-				repo: repoFrontmatter.repo,
-				workflow_id: repoFrontmatter.workflowName,
-				ref: repoFrontmatter.branch,
+				owner: prop.owner,
+				repo: prop.repo,
+				workflow_id: prop.workflowName,
+				ref: prop.branch,
 			}
 		);
 		while (!finished) {
@@ -607,15 +607,15 @@ export default class Publisher {
 			const workflowGet = await octokit.request(
 				"GET /repos/{owner}/{repo}/actions/runs",
 				{
-					owner: repoFrontmatter.owner,
-					repo: repoFrontmatter.repo,
+					owner: prop.owner,
+					repo: prop.repo,
 				}
 			);
 			if (workflowGet.data.workflow_runs.length > 0) {
 				const build = workflowGet.data.workflow_runs.find(
 					(run) =>
 						run.name ===
-						repoFrontmatter.workflowName.replace(".yml", "").replace(".yaml", "")
+						prop.workflowName.replace(".yml", "").replace(".yaml", "")
 				);
 				if (build && build.status === "completed") {
 					finished = true;
@@ -645,9 +645,9 @@ export default class Publisher {
 					file,
 					this.plugin,
 					properties.frontmatter.general,
-					properties.frontmatter.repo
+					properties.frontmatter.prop
 				);
-				const repoFrontmatter = properties.frontmatter;
+				const prop = properties.frontmatter;
 				if (this.settings.github.dryRun.enable) {
 					newLinkedFiles.push(file);
 					continue;
@@ -661,8 +661,8 @@ export default class Publisher {
 					const response = await this.octokit.request(
 						"GET /repos/{owner}/{repo}/contents/{path}",
 						{
-							owner: repoFrontmatter.repo.owner,
-							repo: repoFrontmatter.repo.repo,
+							owner: prop.prop.owner,
+							repo: prop.prop.repo,
 							path: imagePath,
 							ref: this.branchName,
 						});
@@ -670,8 +670,8 @@ export default class Publisher {
 						const reply =  await this.octokit.request(
 							"GET /repos/{owner}/{repo}/commits",
 							{
-								owner: repoFrontmatter.repo.owner,
-								repo: repoFrontmatter.repo.repo,
+								owner: prop.prop.owner,
+								repo: prop.prop.repo,
 								path: imagePath,
 								sha: this.branchName,
 							});

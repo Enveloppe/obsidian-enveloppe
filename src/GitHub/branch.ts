@@ -20,17 +20,17 @@ export class GithubBranch extends FilesManagement {
 	}
 
 	/**
-	 * Check if RepoFrontmatter is an array or not and run the newBranchOnRepo function on each repo
-	 * @param {Properties[] | Properties} repoFrontmatter The repo to use
+	 * Check if Properties is an array or not and run the newBranchOnRepo function on each repo
+	 * @param {Properties[] | Properties} prop The repo to use
 	 */
 
 	async newBranch(
-		repoFrontmatter: Properties[] | Properties
+		prop: Properties[] | Properties
 	) {
-		repoFrontmatter = Array.isArray(repoFrontmatter)
-			? repoFrontmatter
-			: [repoFrontmatter];
-		for (const repo of repoFrontmatter) {
+		prop = Array.isArray(prop)
+			? prop
+			: [prop];
+		for (const repo of prop) {
 			await this.newBranchOnRepo(repo);
 		}
 	}
@@ -38,23 +38,23 @@ export class GithubBranch extends FilesManagement {
 	/**
 	 * Create a new branch on the repo named "Vault-date"
 	 * Pass if the branch already exists
-	 * Run in a loop in the newBranch function if RepoFrontmatter[] is passed
-	 * @param {Properties} repoFrontmatter The repo to use
+	 * Run in a loop in the newBranch function if Properties[] is passed
+	 * @param {Properties} prop The repo to use
 	 * @return {Promise<boolean>} True if the branch is created
 	 */
 
 	async newBranchOnRepo(
-		repoFrontmatter: Properties
+		prop: Properties
 	): Promise<boolean> {
 		const allBranch = await this.octokit.request(
 			"GET /repos/{owner}/{repo}/branches",
 			{
-				owner: repoFrontmatter.owner,
-				repo: repoFrontmatter.repo,
+				owner: prop.owner,
+				repo: prop.repo,
 			}
 		);
 		const mainBranch = allBranch.data.find(
-			(branch: { name: string }) => branch.name === repoFrontmatter.branch
+			(branch: { name: string }) => branch.name === prop.branch
 		);
 		if (!mainBranch) return false;
 		try {
@@ -62,15 +62,15 @@ export class GithubBranch extends FilesManagement {
 			const branch = await this.octokit.request(
 				"POST /repos/{owner}/{repo}/git/refs",
 				{
-					owner: repoFrontmatter.owner,
-					repo: repoFrontmatter.repo,
+					owner: prop.owner,
+					repo: prop.repo,
 					ref: `refs/heads/${this.branchName}`,
 					sha: shaMainBranch,
 				}
 			);
 			notif(
 				{settings: this.settings},
-				i18next.t("publish.branch.success", {branchStatus: branch.status, repo: repoFrontmatter})
+				i18next.t("publish.branch.success", {branchStatus: branch.status, repo: prop})
 			);
 			return branch.status === 201;
 		} catch (e) {
@@ -79,14 +79,14 @@ export class GithubBranch extends FilesManagement {
 				const allBranch = await this.octokit.request(
 					"GET /repos/{owner}/{repo}/branches",
 					{
-						owner: repoFrontmatter.owner,
-						repo: repoFrontmatter.repo,
+						owner: prop.owner,
+						repo: prop.repo,
 					}
 				);
 				const mainBranch = allBranch.data.find(
 					(branch: { name: string }) => branch.name === this.branchName
 				);
-				notif({settings: this.settings}, i18next.t("publish.branch.alreadyExists", {branchName:this.branchName, repo: repoFrontmatter}));
+				notif({settings: this.settings}, i18next.t("publish.branch.alreadyExists", {branchName:this.branchName, repo: prop}));
 				return !!mainBranch;
 			} catch (e) {
 				notif({settings: this.settings, e: true}, e);
@@ -96,25 +96,25 @@ export class GithubBranch extends FilesManagement {
 	}
 
 	/**
-	 * Create a pull request on repoFrontmatter.branch with the branchName
-	 * Run in a loop in the pullRequest function if RepoFrontmatter[] is passed
-	 * @param {Properties} repoFrontmatter The repo to use
+	 * Create a pull request on prop.branch with the branchName
+	 * Run in a loop in the pullRequest function if Properties[] is passed
+	 * @param {Properties} prop The repo to use
 	 * @return {Promise<number>} False in case of error, the pull request number otherwise
 	 */
 
 	async pullRequestOnRepo(
-		repoFrontmatter: Properties,
+		prop: Properties,
 	): Promise<number> {
 		try {
 			const PR = await this.octokit.request(
 				"POST /repos/{owner}/{repo}/pulls",
 				{
-					owner: repoFrontmatter.owner,
-					repo: repoFrontmatter.repo,
+					owner: prop.owner,
+					repo: prop.repo,
 					title: i18next.t("publish.branch.prMessage", {branchName:this.branchName}),
 					body: "",
 					head: this.branchName,
-					base: repoFrontmatter.branch,
+					base: prop.branch,
 				}
 			);
 			return PR.data.number;
@@ -125,8 +125,8 @@ export class GithubBranch extends FilesManagement {
 				const PR = await this.octokit.request(
 					"GET /repos/{owner}/{repo}/pulls",
 					{
-						owner: repoFrontmatter.owner,
-						repo: repoFrontmatter.repo,
+						owner: prop.owner,
+						repo: prop.repo,
 						state: "open",
 					}
 				);
@@ -135,7 +135,7 @@ export class GithubBranch extends FilesManagement {
 				// there is no open PR and impossible to create a new one
 				notif(
 					{settings: this.settings, e: true},
-					i18next.t("publish.branch.error", {error: e, repo: repoFrontmatter})
+					i18next.t("publish.branch.error", {error: e, repo: prop})
 				);
 				return 0;
 			}
@@ -144,13 +144,13 @@ export class GithubBranch extends FilesManagement {
 
 	/**
 	 * After the merge, delete the new branch on the repo
-	 * Run in a loop in the updateRepository function if RepoFrontmatter[] is passed
-	 * @param {Properties} repoFrontmatter The repo to use
+	 * Run in a loop in the updateRepository function if Properties[] is passed
+	 * @param {Properties} prop The repo to use
 	 * @return {Promise<boolean>} true if the branch is deleted
 	 */
 
 	async deleteBranchOnRepo(
-		repoFrontmatter: Properties
+		prop: Properties
 	): Promise<boolean> {
 		try {
 			const branch = await this.octokit.request(
@@ -158,8 +158,8 @@ export class GithubBranch extends FilesManagement {
 					" /repos/{owner}/{repo}/git/refs/heads/" +
 					this.branchName,
 				{
-					owner: repoFrontmatter.owner,
-					repo: repoFrontmatter.repo,
+					owner: prop.owner,
+					repo: prop.repo,
 				}
 			);
 			return branch.status === 200;
@@ -171,22 +171,22 @@ export class GithubBranch extends FilesManagement {
 
 	/**
 	 * Automatically merge pull request from the plugin (only if the settings allow it)
-	 * Run in a loop in the updateRepository function if RepoFrontmatter[] is passed
+	 * Run in a loop in the updateRepository function if Properties[] is passed
 	 * @param {number} pullRequestNumber  number of the new pullrequest
-	 * @param {Properties} repoFrontmatter The repo to use
+	 * @param {Properties} prop The repo to use
 	 */
 
 	async mergePullRequestOnRepo(
 		pullRequestNumber: number,
-		repoFrontmatter: Properties
+		prop: Properties
 	) {
-		const commitMsg = repoFrontmatter.commitMsg || repoFrontmatter.commitMsg.trim().length > 0 ? `${repoFrontmatter.commitMsg} #${pullRequestNumber}` : `[PUBLISHER] Merge #${pullRequestNumber}`;
+		const commitMsg = prop.commitMsg || prop.commitMsg.trim().length > 0 ? `${prop.commitMsg} #${pullRequestNumber}` : `[PUBLISHER] Merge #${pullRequestNumber}`;
 		try {
 			const branch = await this.octokit.request(
 				"PUT /repos/{owner}/{repo}/pulls/{pull_number}/merge",
 				{
-					owner: repoFrontmatter.owner,
-					repo: repoFrontmatter.repo,
+					owner: prop.owner,
+					repo: prop.repo,
 					pull_number: pullRequestNumber,
 					commit_title: commitMsg,
 					merge_method: "squash",
@@ -201,19 +201,19 @@ export class GithubBranch extends FilesManagement {
 	}
 	/**
 	 * Update the repository with the new branch : PR, merging and deleting the branch if allowed by the global settings
-	 * @param {Properties | Properties[]} repoFrontmatter The repo to use
+	 * @param {Properties | Properties[]} prop The repo to use
 	 * @returns {Promise<boolean>} True if the update is successful
 	 */
 	async updateRepository(
-		repoFrontmatter: Properties | Properties[],
+		prop: Properties | Properties[],
 		dryRun = false
 	): Promise<boolean> {
 		if (dryRun) return true;
-		repoFrontmatter = Array.isArray(repoFrontmatter)
-			? repoFrontmatter
-			: [repoFrontmatter];
+		prop = Array.isArray(prop)
+			? prop
+			: [prop];
 		const success: boolean[] = [];
-		for (const repo of repoFrontmatter) {
+		for (const repo of prop) {
 			success.push(await this.updateRepositoryOnOne(repo));
 		}
 		return !success.every((value) => value === false);
@@ -221,26 +221,26 @@ export class GithubBranch extends FilesManagement {
 
 	/**
 	 * Run merging + deleting branch in once, for one repo
-	 * Run in a loop in the updateRepository function if RepoFrontmatter[] is passed
-	 * @param {Properties} repoFrontmatter The repo to use
+	 * Run in a loop in the updateRepository function if Properties[] is passed
+	 * @param {Properties} prop The repo to use
 	 * @returns {Promise<boolean>} true if the update is successful
 	 */
 
 	async updateRepositoryOnOne(
-		repoFrontmatter: Properties
+		prop: Properties
 	): Promise<boolean> {
 		if (this.settings.github.dryRun.enable) return true;
 		try {
 			const pullRequest = await this.pullRequestOnRepo(
-				repoFrontmatter
+				prop
 			);
-			if (repoFrontmatter.automaticallyMergePR && pullRequest !== 0) {
+			if (prop.automaticallyMergePR && pullRequest !== 0) {
 				const PRSuccess = await this.mergePullRequestOnRepo(
 					pullRequest,
-					repoFrontmatter
+					prop
 				);
 				if (PRSuccess) {
-					await this.deleteBranchOnRepo(repoFrontmatter);
+					await this.deleteBranchOnRepo(prop);
 					return true;
 				}
 				return false;
@@ -248,7 +248,7 @@ export class GithubBranch extends FilesManagement {
 			return true;
 		} catch (e) {
 			logs({settings: this.settings, e: true}, e);
-			new Notice(i18next.t("error.errorConfig", {repo: repoFrontmatter})
+			new Notice(i18next.t("error.errorConfig", {repo: prop})
 			);
 			return false;
 		}
@@ -262,18 +262,18 @@ export class GithubBranch extends FilesManagement {
 	 * - the main branch exists
 	 * Send a notice if the repo doesn't exist or if the main branch doesn't exist
 	 * Note: If one of the repo defined in the list doesn't exist, the rest of the list will not be checked because the octokit request throws an error
-	 * @param {Properties | Properties[]} repoFrontmatter
+	 * @param {Properties | Properties[]} prop
 	 * @param silent Send a notice if the repo is valid
 	 * @return {Promise<void>}
 	 */
 	async checkRepository(
-		repoFrontmatter: Properties | Properties[],
+		prop: Properties | Properties[],
 		silent= true): Promise<void>
 	{
-		repoFrontmatter = Array.isArray(repoFrontmatter)
-			? repoFrontmatter
-			: [repoFrontmatter];
-		for (const repo of repoFrontmatter) {
+		prop = Array.isArray(prop)
+			? prop
+			: [prop];
+		for (const repo of prop) {
 			try {
 				const repoExist = await this.octokit.request("GET /repos/{owner}/{repo}", {
 					owner: repo.owner,

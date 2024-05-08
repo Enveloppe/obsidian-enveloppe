@@ -4,7 +4,7 @@ import { Menu, MenuItem, Platform, TFile, TFolder} from "obsidian";
 import {MonoRepoProperties, Repository} from "../interfaces";
 import GithubPublisher from "../main";
 import {defaultRepo, getRepoSharedKey, isExcludedPath, isInDryRunFolder, isShared, multipleSharedKey} from "../utils/data_validation_test";
-import { frontmatterFromFile, frontmatterSettingsRepository, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, frontmatterSettingsRepository, getProperties } from "../utils/parse_frontmatter";
 import {shareAllMarkedNotes, shareOneNote} from ".";
 import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 
@@ -18,10 +18,10 @@ import {ChooseRepoToRun} from "./suggest_other_repo_commands_modal";
 export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchName: string, repo: Repository | null) {
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const statusBarItems = plugin.addStatusBarItem();
-	const repoFrontmatter = getRepoFrontmatter(plugin, repo, null, true);
+	const prop = getProperties(plugin, repo, null, true);
 	const monoProperties: MonoRepoProperties = {
-		frontmatter: Array.isArray(repoFrontmatter) ? repoFrontmatter[0] : repoFrontmatter,
-		repo,
+		frontmatter: Array.isArray(prop) ? prop[0] : prop,
+		repository: repo,
 		convert: frontmatterSettingsRepository(plugin, repo)
 	};
 	await shareAllMarkedNotes(
@@ -109,14 +109,14 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 		plugin.settings.plugin.fileMenu)
 	) return;
 
-	const repoFrontmatter = getRepoFrontmatter(plugin, getSharedKey, frontmatter, true);
+	const prop = getProperties(plugin, getSharedKey, frontmatter, true);
 
 	menu.addItem((item) => {
 		/**
 			* Create a submenu if multiple repo exists in the settings & platform is desktop
 			*/
 
-		if (allKeysFromFile.length > 1 || (repoFrontmatter instanceof Array && repoFrontmatter.length > 1)) {
+		if (allKeysFromFile.length > 1 || (prop instanceof Array && prop.length > 1)) {
 			if (Platform.isDesktop) {
 				item
 					.setTitle("Github Publisher")
@@ -178,8 +178,8 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	//@ts-ignore
 	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
-	let repoFrontmatter = getRepoFrontmatter(plugin, repo, frontmatter, true);
-	repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
+	let prop = getProperties(plugin, repo, frontmatter, true);
+	prop = prop instanceof Array ? prop : [prop];
 	/**
 	 * default repo
 	 */
@@ -228,8 +228,8 @@ export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, fil
 			}
 		});
 	}
-	if (repoFrontmatter.length > 1) {
-		repoFrontmatter.forEach((repoFront) => {
+	if (prop.length > 1) {
+		prop.forEach((repoFront) => {
 			subMenu.addItem((item) => {
 				item
 					.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {

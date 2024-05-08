@@ -7,7 +7,7 @@ import { FrontMatterCache, normalizePath, TFile } from "obsidian";
 import GithubPublisher from "src/main";
 import merge from "ts-deepmerge";
 
-import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, RepoFrontmatter, Repository } from "../interfaces";
+import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, Properties, Repository } from "../interfaces";
 
 export function frontmatterSettingsRepository(plugin: GithubPublisher, repo: Repository | null) {
 	const defaultConvert = getFrontmatterSettings(null, plugin.settings, repo);
@@ -19,10 +19,10 @@ export function frontmatterSettingsRepository(plugin: GithubPublisher, repo: Rep
 	);
 }
 
-export function getDefaultRepoFrontmatter(repository: Repository | null, plugin: GithubPublisher) {
-	const defaultSettings = getRepoFrontmatter(plugin, repository);
+export function getDefaultProperties(repository: Repository | null, plugin: GithubPublisher) {
+	const defaultSettings = getProperties(plugin, repository);
 	if (!repository?.set || (repository && !plugin.repositoryFrontmatter[repository.smartKey])) return defaultSettings;
-	return getRepoFrontmatter(plugin, repository, plugin.repositoryFrontmatter[repository.smartKey]);
+	return getProperties(plugin, repository, plugin.repositoryFrontmatter[repository.smartKey]);
 }
 
 
@@ -99,14 +99,14 @@ function booleanRemoveEmbed(removeEmbed: unknown) {
  * @param {Repository | null} repository - The repository information.
  * @param {FrontMatterCache | null} frontmatter - The frontmatter cache.
  * @param {boolean} [checkSet] - Whether to check the set file for frontmatter (preventing multiple reading of the same file)
- * @returns {RepoFrontmatter[] | RepoFrontmatter} - The repository frontmatter.
+ * @returns {Properties[] | Properties} - The repository frontmatter.
  */
-export function getRepoFrontmatter(
+export function getProperties(
 	plugin: GithubPublisher,
 	repository: Repository | null,
 	frontmatter?: FrontMatterCache | null,
 	checkSet?: boolean
-): RepoFrontmatter[] | RepoFrontmatter {
+): Properties[] | Properties {
 	const settings = plugin.settings;
 	let github = repository ?? settings.github;
 	if (checkSet && repository && plugin.repositoryFrontmatter[repository.smartKey]) {
@@ -122,7 +122,7 @@ export function getRepoFrontmatter(
 		});
 		github = shortRepo ?? github;
 	}
-	let repoFrontmatter: RepoFrontmatter = {
+	let Properties: Properties = {
 		branch: github.branch,
 		repo: github.repo,
 		owner: github.user,
@@ -138,46 +138,46 @@ export function getRepoFrontmatter(
 		}
 	};
 	if (settings.upload.behavior === FolderSettings.fixed) {
-		repoFrontmatter.autoclean = false;
+		Properties.autoclean = false;
 	}
 	if (!frontmatter || (frontmatter.multipleRepo === undefined && frontmatter.repo === undefined && frontmatter.shortRepo === undefined)) {
-		return parsePath(plugin, repository, repoFrontmatter, frontmatter);
+		return parsePath(plugin, repository, Properties, frontmatter);
 	}
 	let isFrontmatterAutoClean = null;
 	if (frontmatter.multipleRepo) {
-		const multipleRepo = parseMultipleRepo(frontmatter, repoFrontmatter);
+		const multipleRepo = parseMultipleRepo(frontmatter, Properties);
 		return parsePath(plugin, repository, multipleRepo, frontmatter);
 	} else if (frontmatter.repo) {
 		if (typeof frontmatter.repo === "object") {
 			if (frontmatter.repo.branch != undefined) {
-				repoFrontmatter.branch = frontmatter.repo.branch;
+				Properties.branch = frontmatter.repo.branch;
 			}
 			if (frontmatter.repo.repo != undefined) {
-				repoFrontmatter.repo = frontmatter.repo.repo;
+				Properties.repo = frontmatter.repo.repo;
 			}
 			if (frontmatter.repo.owner != undefined) {
-				repoFrontmatter.owner = frontmatter.repo.owner;
+				Properties.owner = frontmatter.repo.owner;
 			}
 			if (frontmatter.repo.autoclean != undefined) {
-				repoFrontmatter.autoclean = frontmatter.repo.autoclean;
+				Properties.autoclean = frontmatter.repo.autoclean;
 				isFrontmatterAutoClean = true;
 			}
 		} else {
 			const repo = frontmatter.repo.split("/");
 			isFrontmatterAutoClean = repo.length > 4 ? true : null;
-			repoFrontmatter = repositoryStringSlice(repo, repoFrontmatter);
+			Properties = repositoryStringSlice(repo, Properties);
 		}
 	} else if (frontmatter.shortRepo instanceof Array) {
-		return multipleShortKeyRepo(frontmatter, settings.github.otherRepo, repoFrontmatter, plugin);
+		return multipleShortKeyRepo(frontmatter, settings.github.otherRepo, Properties, plugin);
 	}
 	if (frontmatter.autoclean != undefined && isFrontmatterAutoClean === null) {
-		repoFrontmatter.autoclean = frontmatter.autoclean;
+		Properties.autoclean = frontmatter.autoclean;
 	}
-	return parsePath(plugin, repository, repoFrontmatter);
+	return parsePath(plugin, repository, Properties);
 }
 
 /**
- * Get the repoFrontmatter array from the frontmatter
+ * Get the Properties array from the frontmatter
  * @example
  * multipleRepo:
  *   - repo: repo1
@@ -189,22 +189,22 @@ export function getRepoFrontmatter(
  *     branch: branch2
  *     autoclean: false
  * @param {FrontMatterCache} frontmatter
- * @param {RepoFrontmatter} repoFrontmatter
- * @return {RepoFrontmatter[]}
+ * @param {Properties} Properties
+ * @return {Properties[]}
  */
 
 function parseMultipleRepo(
 	frontmatter: FrontMatterCache,
-	repoFrontmatter: RepoFrontmatter
+	Properties: Properties
 ) {
-	const multipleRepo: RepoFrontmatter[] = [];
+	const multipleRepo: Properties[] = [];
 	if (
 		frontmatter.multipleRepo instanceof Array &&
 		frontmatter.multipleRepo.length > 0
 	) {
 		for (const repo of frontmatter.multipleRepo) {
 			if (typeof repo === "object") {
-				const repository: RepoFrontmatter = structuredClone(repoFrontmatter);
+				const repository: Properties = structuredClone(Properties);
 				if (repo.branch != undefined) {
 					repository.branch = repo.branch;
 				}
@@ -221,7 +221,7 @@ function parseMultipleRepo(
 			} else {
 				//is string
 				const repoString = repo.split("/");
-				const repository: RepoFrontmatter = structuredClone(repoFrontmatter);
+				const repository: Properties = structuredClone(Properties);
 				multipleRepo.push(
 					repositoryStringSlice(repoString, repository)
 				);
@@ -232,12 +232,12 @@ function parseMultipleRepo(
 }
 
 /**
- * Removes duplicate repositories from the given array of RepoFrontmatter objects.
+ * Removes duplicate repositories from the given array of Properties objects.
  * Only the {repo, owner, branch, autoclean} properties are compared.
- * @param multipleRepo - An array of RepoFrontmatter objects representing multiple repositories.
- * @returns An array of RepoFrontmatter objects with duplicate repositories removed.
+ * @param multipleRepo - An array of Properties objects representing multiple repositories.
+ * @returns An array of Properties objects with duplicate repositories removed.
  */
-function removeDuplicateRepo(multipleRepo: RepoFrontmatter[]) {
+function removeDuplicateRepo(multipleRepo: Properties[]) {
 	return multipleRepo.filter(
 		(v, i, a) =>
 			a.findIndex(
@@ -251,19 +251,19 @@ function removeDuplicateRepo(multipleRepo: RepoFrontmatter[]) {
 }
 
 /**
- * Get the repoFrontmatter from the `shortRepo` string ;
- * Using the `default` key will put the default repoFrontmatter in the list
+ * Get the Properties from the `shortRepo` string ;
+ * Using the `default` key will put the default Properties in the list
  * @param {FrontMatterCache} frontmatter - The frontmatter of the file
  * @param {Repository[]} allRepo - The list of all repo from the settings
- * @param {RepoFrontmatter} repoFrontmatter - The default repoFrontmatter (from the default settings)
+ * @param {Properties} properties - The default Properties (from the default settings)
  */
-function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository[], repoFrontmatter: RepoFrontmatter, plugin: GithubPublisher) {
+function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository[], properties: Properties, plugin: GithubPublisher) {
 	if (frontmatter.shortRepo instanceof Array) {
-		const multipleRepo: RepoFrontmatter[] = [];
+		const multipleRepo: Properties[] = [];
 		for (const repo of frontmatter.shortRepo) {
 			const smartKey = repo.toLowerCase();
 			if (smartKey === "default") {
-				multipleRepo.push(repoFrontmatter);
+				multipleRepo.push(properties);
 			} else {
 				const shortRepo = allRepo.find((repo) => {
 					return repo.smartKey.toLowerCase() === smartKey;
@@ -273,12 +273,12 @@ function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository
 						branch: shortRepo.branch,
 						repo: shortRepo.repo,
 						owner: shortRepo.user,
-						autoclean: repoFrontmatter.autoclean,
+						autoclean: properties.autoclean,
 						automaticallyMergePR: shortRepo.automaticallyMergePR,
 						workflowName: shortRepo.workflow.name,
 						commitMsg: shortRepo.workflow.commitMessage,
-						dryRun: repoFrontmatter.dryRun
-					} as RepoFrontmatter;
+						dryRun: properties.dryRun
+					} as Properties;
 					const parsedPath = parsePath(plugin, shortRepo, repo);
 					repo = Array.isArray(parsedPath) ? parsedPath[0] : parsedPath;
 					multipleRepo.push(repo);
@@ -287,7 +287,7 @@ function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository
 		}
 		return multipleRepo;
 	}
-	return repoFrontmatter;
+	return properties;
 }
 
 /**
@@ -301,12 +301,12 @@ function multipleShortKeyRepo(frontmatter: FrontMatterCache, allRepo: Repository
  * @example
  * repo: repo1
  * @param {string} repo
- * @param {RepoFrontmatter} repoFrontmatter
- * @return {RepoFrontmatter}
+ * @param {Properties} properties
+ * @return {Properties}
  */
 
-function repositoryStringSlice(repo: string, repoFrontmatter: RepoFrontmatter): RepoFrontmatter {
-	const newRepo: RepoFrontmatter = structuredClone(repoFrontmatter);
+function repositoryStringSlice(repo: string, properties: Properties): Properties {
+	const newRepo: Properties = structuredClone(properties);
 	if (repo.length === 4) {
 		newRepo.branch = repo[2];
 		newRepo.repo = repo[1];
@@ -347,10 +347,10 @@ export function getCategory(
 export function parsePath(
 	plugin: GithubPublisher,
 	repository: Repository | null,
-	repoFrontmatter: RepoFrontmatter | RepoFrontmatter[],
+	properties: Properties | Properties[],
 	frontmatter?: FrontMatterCache | null | undefined
-): RepoFrontmatter[] | RepoFrontmatter {
-	repoFrontmatter = repoFrontmatter instanceof Array ? repoFrontmatter : [repoFrontmatter];
+): Properties[] | Properties {
+	properties = properties instanceof Array ? properties : [properties];
 	const settings = plugin.settings;
 	const splitArrayPath = (path?: string[] | string):string|undefined => {
 		if (!path) return;
@@ -366,7 +366,7 @@ export function parsePath(
 		return settings.upload.behavior;
 	};
 
-	for (const repo of repoFrontmatter) {
+	for (const repo of properties) {
 		const smartKey = repository ? repository.smartKey : "default";
 		
 		const path: Path = {
@@ -421,7 +421,7 @@ export function parsePath(
 		path.category!.value = getCategory(frontmatter, settings, path);
 		repo.path = path;
 	}
-	return repoFrontmatter;
+	return properties;
 }
 
 function getFrontmatterSettingRepository(

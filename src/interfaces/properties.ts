@@ -12,7 +12,7 @@ export interface MultiProperties {
 	plugin: GithubPublisher;
 	frontmatter: {
 		general: PropertiesConversion;
-		repo: Properties | Properties[];
+		prop: Properties | Properties[];
 	},
 	repository: Repository | null;
 	filepath: string;
@@ -26,7 +26,7 @@ export interface MonoProperties {
 	plugin: GithubPublisher;
 	frontmatter: {
 		general: PropertiesConversion;
-		repo: Properties;
+		prop: Properties;
 		source: FrontMatterCache | null | undefined;
 	},
 	repository: Repository | null;
@@ -36,19 +36,19 @@ export interface MonoProperties {
 
 /**
  * @interface MonoRepoProperties
- * A resume of {@link MonoProperties} and {@link MultiProperties} for a single repoFrontmatter
+ * A resume of {@link MonoProperties} and {@link MultiProperties} for a single properties
  */
 export interface MonoRepoProperties {
 	frontmatter: Properties;
-	repo: Repository | null;
+	repository: Repository | null;
 	convert: PropertiesConversion;
 }
 
 /**
  * @interface MultiRepoProperties
- * A resume of {@link MonoProperties} and {@link MultiProperties} for multiple repoFrontmatter
+ * A resume of {@link MonoProperties} and {@link MultiProperties} for multiple properties
  */
 export interface MultiRepoProperties {
 	frontmatter: Properties[] | Properties;
-	repo: Repository | null;
+	repository: Repository | null;
 }

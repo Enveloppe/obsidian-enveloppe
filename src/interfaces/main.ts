@@ -135,15 +135,15 @@ export interface LinkedNotes {
 
 /**
  * @interface ConvertedLink
- * A type for the shared files in the vault that includes the repoFrontmatter, but also the real path in Obsidian and the converted path in GitHub
+ * A type for the shared files in the vault that includes the prop, but also the real path in Obsidian and the converted path in GitHub
  */
 export interface ConvertedLink {
 	/** Path in GitHub */
 	converted: string;
 	/** Path in Obsidian */
 	real: string;
-	/** The repoFrontmatter */
-	repoFrontmatter?: Properties | Properties[];
+	/** The prop */
+	prop?: Properties | Properties[];
 }
 
 /**
@@ -210,7 +210,7 @@ export interface Path {
 	};
 }
 
-/** A sort of extension of RepoFrontmatter, but include settings like bake embed, dataview or unshared links conversion */
+/** A sort of extension of Properties, but include settings like bake embed, dataview or unshared links conversion */
 export interface PropertiesConversion {
 	/** Convert links */
 	links: boolean;
@@ -239,7 +239,7 @@ export interface PropertiesConversion {
 }
 
 /** A very important interface that handle a repository from the frontmatter and a lot of usefull settings that override the default plugin behavior, including {@link Path}. 
- * RepoFrontmatter also handle {@link Repository} settings.
+ * Properties also handle {@link Repository} settings.
 */
 export interface Properties {
 	/** Branch name */

@@ -16,7 +16,7 @@ import {
 import GithubPublisher from "../main";
 import {logs} from "../utils";
 import { isAttachment, isShared } from "../utils/data_validation_test";
-import { frontmatterFromFile, getRepoFrontmatter } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, getProperties } from "../utils/parse_frontmatter";
 import Publisher from "./upload";
 
 export class FilesManagement extends Publisher {
@@ -99,7 +99,7 @@ export class FilesManagement extends Publisher {
 	getAllFileWithPath(repo: Repository | null, convert: PropertiesConversion): ConvertedLink[] {
 		const files = this.vault.getFiles().filter((x) => !x.path.startsWith(this.settings.github.dryRun.folderName));
 		const allFileWithPath: ConvertedLink[] = [];
-		const sourceFrontmatter = getRepoFrontmatter(this.plugin, repo, null, true);
+		const sourceFrontmatter = getProperties(this.plugin, repo, null, true);
 		for (const file of files) {
 			if (isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
 				const filepath = getImagePath(file, this.plugin, convert, sourceFrontmatter );
@@ -110,16 +110,16 @@ export class FilesManagement extends Publisher {
 			} else if (file.extension == "md") {
 				const frontMatter = frontmatterFromFile(file, this.plugin, repo);
 				if (isShared(frontMatter, this.settings, file, repo)) {
-					const repoFrontmatter = getRepoFrontmatter(
+					const prop = getProperties(
 						this.plugin,
 						repo,
 						frontMatter
 					);
-					const filepath = getReceiptFolder(file, repo, this.plugin, repoFrontmatter);
+					const filepath = getReceiptFolder(file, repo, this.plugin, prop);
 					allFileWithPath.push({
 						converted: filepath,
 						real: file.path,
-						repoFrontmatter,
+						prop,
 					});
 				}
 			}

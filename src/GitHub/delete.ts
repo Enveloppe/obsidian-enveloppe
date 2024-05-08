@@ -10,7 +10,7 @@ import {
 	GitHubPublisherSettings,
 	GithubRepo,
 	MonoRepoProperties,
-	RepoFrontmatter,
+	Properties,
 } from "../interfaces";
 import { logs, notif, trimObject} from "../utils";
 import {isAttachment, verifyRateLimitAPI} from "../utils/data_validation_test";
@@ -22,7 +22,7 @@ import { FilesManagement } from "./files";
  * @param {boolean} silent - default false, if true, no notice will be displayed
  * @param {string} branchName
  * @param {FilesManagement} filesManagement
- * @param {MonoRepoProperties} repoProperties - frontmatter can be an array of RepoFrontmatter or a single RepoFrontmatter
+ * @param {MonoRepoProperties} repoProperties - frontmatter can be an array of Properties or a single Properties
  * @return {Promise<Deleted>} deleted : list of deleted file, undeleted : list of undeleted file, success : true if all file are deleted
  */
 export async function deleteFromGithub(
@@ -32,14 +32,14 @@ export async function deleteFromGithub(
 	repoProperties: MonoRepoProperties,
 ): Promise<Deleted> {
 
-	const repoFrontmatter = Array.isArray(repoProperties.frontmatter)
+	const prop = Array.isArray(repoProperties.frontmatter)
 		? repoProperties.frontmatter
 		: [repoProperties.frontmatter];
 	const deleted: Deleted[] = [];
-	for (const repo of repoFrontmatter) {
+	for (const repo of prop) {
 		const monoProperties: MonoRepoProperties = {
 			frontmatter: repo,
-			repo: repoProperties.repo,
+			repository: repoProperties.repository,
 			convert: frontmatterSettingsRepository(filesManagement.plugin, repo),
 		};
 		deleted.push(await deleteFromGithubOneRepo(
@@ -57,7 +57,7 @@ export async function deleteFromGithub(
  * @param {boolean} silent - default false, if true, no notice will be displayed
  * @param {string} branchName
  * @param {FilesManagement} filesManagement
- * @param {MonoRepoProperties} repoProperties - frontmatter must be a single RepoFrontmatter so we use the MonoRepoProperties interface
+ * @param {MonoRepoProperties} repoProperties - frontmatter must be a single Properties so we use the MonoRepoProperties interface
  */
 
 async function deleteFromGithubOneRepo(
@@ -87,9 +87,9 @@ async function deleteFromGithubOneRepo(
 		logs({settings}, `No file to delete in ${repo.owner}/${repo.repo}`);
 		return {success: false, deleted: [], undeleted: []};
 	}
-	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repo, repoProperties.convert);
+	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repository, repoProperties.convert);
 	const allSharedConverted = allSharedFiles.map((file) => {
-		return { converted: file.converted, repo: file.repoFrontmatter };
+		return { converted: file.converted, repo: file.prop };
 	});
 	let deletedSuccess = 0;
 	let deletedFailed = 0;
@@ -105,10 +105,10 @@ async function deleteFromGithubOneRepo(
 		const isMarkdownForAnotherRepo = file.file.trim().endsWith(".md")
 			? !allSharedConverted.some(
 				(f) => {
-					let repoFrontmatter = f.repo;
-					if (Array.isArray(repoFrontmatter)) {
-						repoFrontmatter = repoFrontmatter.find((r) => JSON.stringify(r.repo) === JSON.stringify(repo.repo));
-					} return f.converted === file.file && repoFrontmatter;
+					let prop = f.repo;
+					if (Array.isArray(prop)) {
+						prop = prop.find((r) => JSON.stringify(r.repo) === JSON.stringify(repo.repo));
+					} return f.converted === file.file && prop;
 				})
 			: false;
 		const isNeedToBeDeleted = isInObsidian
@@ -205,14 +205,14 @@ function excludedFileFromDelete(
 export async function filterGithubFile(
 	fileInRepo: GithubRepo[],
 	settings: GitHubPublisherSettings,
-	repoFrontmatter: RepoFrontmatter
+	prop: Properties
 ): Promise<GithubRepo[]> {
 	const sharedFilesInRepo: GithubRepo[] = [];
 	for (const file of fileInRepo) {
-		const behavior = repoFrontmatter.path?.type ?? settings.upload.behavior;
-		const root = repoFrontmatter.path?.rootFolder ?? settings.upload.rootFolder;
-		const defaultName = repoFrontmatter.path?.defaultName ?? settings.upload.defaultName;
-		const attachmentFolder = repoFrontmatter.path?.attachment?.folder ?? settings.embed.folder;
+		const behavior = prop.path?.type ?? settings.upload.behavior;
+		const root = prop.path?.rootFolder ?? settings.upload.rootFolder;
+		const defaultName = prop.path?.defaultName ?? settings.upload.defaultName;
+		const attachmentFolder = prop.path?.attachment?.folder ?? settings.embed.folder;
 		if (
 			(file.file.includes(defaultName) ||
 				(behavior === FolderSettings.yaml &&
@@ -249,7 +249,7 @@ function parseYamlFrontmatter(contents: string): unknown {
  * @param {Octokit} octokit GitHub API
  * @param {GitHubPublisherSettings} settings Settings of the plugin
  * @param {string} path path of the file to check
- * @param {RepoFrontmatter} repoFrontmatter repository informations
+ * @param {Properties} prop repository informations
  * @return {Promise<boolean>} true if the file must be deleted
  */
 
@@ -257,14 +257,14 @@ async function checkIndexFiles(
 	octokit: Octokit,
 	settings: GitHubPublisherSettings,
 	path: string,
-	repoFrontmatter: RepoFrontmatter
+	prop: Properties
 ): Promise<boolean> {
 	try {
 		const fileRequest = await octokit.request(
 			"GET /repos/{owner}/{repo}/contents/{path}",
 			{
-				owner: repoFrontmatter.owner,
-				repo: repoFrontmatter.repo,
+				owner: prop.owner,
+				repo: prop.repo,
 				path,
 			}
 		);
@@ -309,8 +309,8 @@ function cleanDryRun(
 	Vault.recurseChildren(dryRunFolder as TFolder, (file: TAbstractFile) => {
 		if (!excludedFileFromDelete(normalizePath(file.path.replace(dryRunFolderPath, "")), settings) && (isAttachment(file.path, settings.embed.unHandledObsidianExt) || file.path.match("md$")) && file instanceof TFile) dryRunFiles.push(file);
 	});
-	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repo, repoProperties.convert).map((file) => {
-		return { converted: file.converted, repo: file.repoFrontmatter };
+	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repository, repoProperties.convert).map((file) => {
+		return { converted: file.converted, repo: file.prop };
 	});
 	let deletedSuccess = 0;
 	const result: Deleted = {
@@ -327,10 +327,10 @@ function cleanDryRun(
 		const isMarkdownForAnotherRepo = file.path.trim().endsWith(".md") ?
 			!allSharedFiles.some(
 				(f) => {
-					let repoFrontmatter = f.repo;
-					if (Array.isArray(repoFrontmatter)) {
-						repoFrontmatter = repoFrontmatter.find((r) => JSON.stringify(r.repo) === JSON.stringify(repo.repo));
-					} return f.converted === convertedPath && repoFrontmatter;
+					let prop = f.repo;
+					if (Array.isArray(prop)) {
+						prop = prop.find((r) => JSON.stringify(r.repo) === JSON.stringify(repo.repo));
+					} return f.converted === convertedPath && prop;
 				})
 			: false;
 		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;

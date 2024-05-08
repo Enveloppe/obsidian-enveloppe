@@ -13,7 +13,7 @@ import {
 	ListEditedFiles,
 	MetadataExtractor,
 	MultiRepoProperties,
-	RepoFrontmatter, TOKEN_PATH,
+	Properties, TOKEN_PATH,
 	UploadedFiles} from "../interfaces";
 import { ERROR_ICONS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 import { frontmatterFromFile } from "./parse_frontmatter";
@@ -48,7 +48,15 @@ export function notif(args: LogsParameters, ...messages: unknown[]) {
 		console.log(prefix, ...messages);
 }
 
-export function noticeMobile(cls:"error"|"load"|"success"|"wait", icon: string, message: string) {
+/**
+ * Notify the user with a message in the console and a message in the notification
+ * Only for mobile
+ * @param cls {"error"|"load"|"success"|"wait"} To adjust css style in function of the type of message
+ * @param icon {string} The icon to display
+ * @param message {string} The message to display
+ * @returns {Notice | undefined}
+ */
+export function noticeMobile(cls:"error"|"load"|"success"|"wait", icon: string, message: string): Notice | undefined {
 	if (!Platform.isMobile) {
 		return;
 	}
@@ -58,6 +66,11 @@ export function noticeMobile(cls:"error"|"load"|"success"|"wait", icon: string, 
 	return new Notice(noticeFrag, 0);
 }
 
+/**
+ * Detect the function that call the function
+ * @param type {boolean} if true, return the function that call the function that call the function
+ * @returns {string}
+ */
 function callFunction(type?: boolean):string {
 	const index = type ? 4 : 3;
 	let callFunction = new Error().stack?.split("\n")[index].trim();
@@ -74,6 +87,8 @@ function callFunction(type?: boolean):string {
  * Will make appear ALL the logs in the console
  * Not just the logs for normal process
  * For advanced users only
+ * @param args {LogsParameters} the settings and the error type
+ * @param messages {unknown[]} the message to display
  */
 export function logs(args: LogsParameters, ...messages: unknown[]) {
 	const settings = args.settings as GitHubPublisherSettings;
@@ -87,7 +102,12 @@ export function logs(args: LogsParameters, ...messages: unknown[]) {
 	}
 }
 
-export function monkeyPatchConsole(plugin: GithubPublisher) {
+/**
+ * Monkey patch the console to log all the messages in a file in the plugin folder
+ * @param plugin {GithubPublisher} the plugin instance
+ * @returns {void}
+ */
+export function monkeyPatchConsole(plugin: GithubPublisher): void {
 	const stack = new Error().stack?.split("\n")?.[3];
 	if (!stack?.includes("obsidian-mkdocs-publisher") || !plugin.settings.plugin.dev) {
 		return;
@@ -196,7 +216,7 @@ export async function getSettingsOfMetadataExtractor(
 	const path = `${app.vault.configDir}/plugins/metadata-extractor`;
 	// @ts-ignore
 	const plugin = app.plugins.plugins["metadata-extractor"];
-	if (plugin && plugin.settings) {
+	if (plugin?.settings) {
 		if (plugin.settings["allExceptMdFile"].length > 0) {
 			//get file from plugins folder in .obsidian folder
 			metadataExtractor.allExceptMdFile =
@@ -241,7 +261,7 @@ export async function createLink(
 	multiRepo: MultiRepoProperties,
 	plugin: GithubPublisher,
 ): Promise<void> {
-	const otherRepo = multiRepo.repo;
+	const otherRepo = multiRepo.repository;
 	const settings = plugin.settings;
 	const repo = multiRepo.frontmatter;
 	const copyLink = otherRepo ? otherRepo.copyLink : settings.plugin.copyLink;
@@ -314,17 +334,17 @@ export async function createLink(
  * @param {Publisher} PublisherManager
  * @param {TFile | string} file
  * @param {GitHubPublisherSettings} settings
- * @param {RepoFrontmatter | RepoFrontmatter[]} repo
+ * @param {Properties | Properties[]} prop
  */
 
 export async function publisherNotification(
 	PublisherManager: Publisher,
 	file: TFile | string | undefined,
 	settings: GitHubPublisherSettings,
-	repo: RepoFrontmatter | RepoFrontmatter[]
+	prop: Properties | Properties[]
 ) {
-	repo = Array.isArray(repo) ? repo : [repo];
-	for (const repository of repo) {
+	prop = Array.isArray(prop) ? prop : [prop];
+	for (const repository of prop) {
 		await publisherNotificationOneRepo(
 			PublisherManager,
 			file,
@@ -334,8 +354,12 @@ export async function publisherNotification(
 	}
 }
 
-export function notifError(repoFrontmatter: RepoFrontmatter | RepoFrontmatter[]) {
-	const repo = Array.isArray(repoFrontmatter) ? repoFrontmatter : [repoFrontmatter];
+/**
+ * Notify the user with a message in the console and a message in the notification
+ * @param properties 
+ */
+export function notifError(properties: Properties | Properties[]) {
+	const repo = Array.isArray(properties) ? properties : [properties];
 	for (const repository of repo) {
 		const notif = document.createDocumentFragment();
 		notif.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"] }).innerHTML = ERROR_ICONS;
@@ -349,7 +373,7 @@ export function notifError(repoFrontmatter: RepoFrontmatter | RepoFrontmatter[])
  * @param {Publisher} PublisherManager
  * @param {TFile | string} file
  * @param {GitHubPublisherSettings} settings
- * @param {RepoFrontmatter} repo
+ * @param {Properties} prop
  * @return {Promise<void>}
  */
 
@@ -357,14 +381,14 @@ async function publisherNotificationOneRepo(
 	PublisherManager: Publisher,
 	file: TFile | string | undefined,
 	settings: GitHubPublisherSettings,
-	repo: RepoFrontmatter
+	prop: Properties
 ): Promise<void> {
 	const noticeValue =
 		file instanceof TFile ? `"${file.basename}"` : file;
 	const docSuccess = document.createDocumentFragment();
 	const successMsg = file instanceof String ? 
-		i18next.t("informations.successfulPublish", { nbNotes: noticeValue, repo }) 
-		: i18next.t("informations.successPublishOneNote", { file: noticeValue, repo });
+		i18next.t("informations.successfulPublish", { nbNotes: noticeValue, repo: prop }) 
+		: i18next.t("informations.successPublishOneNote", { file: noticeValue, repo: prop });
 	docSuccess.createEl("span", { text: successMsg, cls: ["obsidian-publisher", "success", "icons"] }).innerHTML = SUCCESS_ICON;
 	docSuccess.createEl("span", { cls: ["obsidian-publisher", "success", "notification"] }).innerHTML = successMsg;
 	if (settings.github.workflow.name.length === 0) {
@@ -372,11 +396,11 @@ async function publisherNotificationOneRepo(
 		return;
 	}
 	const workflowSuccess = document.createDocumentFragment();
-	workflowSuccess.createEl("span", { text: i18next.t("informations.successfulPublish", { nbNotes: noticeValue, repo }), cls: ["obsidian-publisher", "wait", "icons"] }).innerHTML = HOURGLASS_ICON;
-	const msg = `${i18next.t("informations.sendMessage", {nbNotes: noticeValue, repo})}.<br>${i18next.t("informations.waitingWorkflow")}`;
+	workflowSuccess.createEl("span", { text: i18next.t("informations.successfulPublish", { nbNotes: noticeValue, repo: prop }), cls: ["obsidian-publisher", "wait", "icons"] }).innerHTML = HOURGLASS_ICON;
+	const msg = `${i18next.t("informations.sendMessage", {nbNotes: noticeValue, repo: prop})}.<br>${i18next.t("informations.waitingWorkflow")}`;
 	workflowSuccess.createEl("span", { cls: ["obsidian-publisher", "wait", "notification"] }).innerHTML = msg;
 	new Notice(workflowSuccess);
-	const successWorkflow = await PublisherManager.workflowGestion(repo);
+	const successWorkflow = await PublisherManager.workflowGestion(prop);
 	if (successWorkflow) {
 		new Notice(docSuccess, 0);
 	}

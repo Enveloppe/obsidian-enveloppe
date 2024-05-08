@@ -6,9 +6,9 @@ import GithubPublisher from "src/main";
 import merge from "ts-deepmerge";
 
 import {GithubBranch} from "../GitHub/branch";
-import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, RepoFrontmatter, Repository} from "../interfaces";
+import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, Properties, Repository} from "../interfaces";
 import { notif} from ".";
-import { frontmatterFromFile, getLinkedFrontmatter, getRepoFrontmatter } from "./parse_frontmatter";
+import { frontmatterFromFile, getLinkedFrontmatter, getProperties } from "./parse_frontmatter";
 
 /**
  * - Check if the file is a valid file to publish
@@ -129,7 +129,6 @@ export function isExcludedPath(settings: GitHubPublisherSettings, file: TFile | 
  * @param {FrontMatterCache | undefined} frontmatter - The frontmatter of the file.
  * @param {GitHubPublisherSettings} settings - The GitHub Publisher settings.
  * @param {TFile | null} file - The file to get the shared keys from.
- * @param {App} app - The Obsidian app instance.
  * @returns {string[]} - An array of shared keys found in the file.
  */
 export function multipleSharedKey(frontmatter: FrontMatterCache | undefined | null, file: TFile | null, plugin: GithubPublisher): string[] {
@@ -203,24 +202,24 @@ export function isAttachment(filename: string, attachmentExtern?: string[]): Reg
 
 /**
  * Check if a target Repository === source Repository
- * @param {RepoFrontmatter | RepoFrontmatter[]} source
- * @param {RepoFrontmatter | RepoFrontmatter[]} target
+ * @param {Properties | Properties[]} source
+ * @param {Properties | Properties[]} target
  * @return {boolean} if they are the same
  */
 export function checkIfRepoIsInAnother(
-	source: RepoFrontmatter | RepoFrontmatter[],
-	target: RepoFrontmatter | RepoFrontmatter[]
+	source: Properties | Properties[],
+	target: Properties | Properties[]
 ): boolean {
 	source = source instanceof Array ? source : [source];
 	target = target instanceof Array ? target : [target];
 
 	/**
-	 * A function to compare two repoFrontmatter
-	 * @param {RepoFrontmatter} source
-	 * @param {RepoFrontmatter} target
+	 * A function to compare two prop
+	 * @param {Properties} source
+	 * @param {Properties} target
 	 * @return {boolean}
 	 */
-	const isSame = (source: RepoFrontmatter, target: RepoFrontmatter) => {
+	const isSame = (source: Properties, target: Properties) => {
 		return (
 			source.owner === target.owner &&
 			source.repo === target.repo &&
@@ -249,15 +248,15 @@ export function checkIfRepoIsInAnother(
 /**
  * Verify if the Repository configuration is not empty
  * Permit to send a special notice for each empty configuration
- * @param {RepoFrontmatter | RepoFrontmatter[]} repoFrontmatter the repoFrontmatter to check
+ * @param {Properties | Properties[]} prop the prop to check
  * @param {GithubPublisher} plugin the plugin instance
  * @param silent
  * @return {Promise<boolean>}
  */
-export async function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter | RepoFrontmatter[], plugin: GithubPublisher, silent= false): Promise<boolean> {
-	repoFrontmatter = Array.isArray(repoFrontmatter)
-		? repoFrontmatter
-		: [repoFrontmatter];
+export async function checkEmptyConfiguration(prop: Properties | Properties[], plugin: GithubPublisher, silent= false): Promise<boolean> {
+	prop = Array.isArray(prop)
+		? prop
+		: [prop];
 	const isEmpty: boolean[] = [];
 	const token = await plugin.loadToken();
 	if (token.length === 0) {
@@ -266,7 +265,7 @@ export async function checkEmptyConfiguration(repoFrontmatter: RepoFrontmatter |
 		if (!silent) new Notice(i18next.t("error.isEmpty", {what: whatIsEmpty}));
 	}
 	else {
-		for (const repo of repoFrontmatter) {
+		for (const repo of prop) {
 			if (repo.repo.length === 0) {
 				isEmpty.push(true);
 				const whatIsEmpty = i18next.t("common.repository") ;
@@ -322,10 +321,10 @@ export async function checkRepositoryValidity(
 	const settings = PublisherManager.settings;
 	try {
 		const frontmatter = frontmatterFromFile(file, PublisherManager.plugin, repository);
-		const repoFrontmatter = getRepoFrontmatter(PublisherManager.plugin, repository, frontmatter);
-		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin, silent);
+		const prop = getProperties(PublisherManager.plugin, repository, frontmatter);
+		const isNotEmpty = await checkEmptyConfiguration(prop, PublisherManager.plugin, silent);
 		if (isNotEmpty) {
-			await PublisherManager.checkRepository(repoFrontmatter, silent);
+			await PublisherManager.checkRepository(prop, silent);
 			return true;
 		}
 	}
@@ -339,25 +338,25 @@ export async function checkRepositoryValidity(
 /**
  * Check the validity of the repository settings, from the frontmatter of the file or from the settings of the plugin
  * @param {GithubBranch} PublisherManager
- * @param {RepoFrontmatter} repoFrontmatter
+ * @param {Properties} prop
  * @param {number} numberOfFile the number of file to publish
  * @return {Promise<boolean>}
  */
-export async function checkRepositoryValidityWithRepoFrontmatter(
+export async function checkRepositoryValidityWithProperties(
 	PublisherManager: GithubBranch,
-	repoFrontmatter: RepoFrontmatter,
+	prop: Properties,
 	numberOfFile: number=1
 ): Promise<boolean> {
 	const settings = PublisherManager.settings;
 	if (settings.github.dryRun.enable) return true;
 	try {
-		const verified = repoFrontmatter.verifiedRepo;
-		const rateLimit = repoFrontmatter.rateLimit;
+		const verified = prop.verifiedRepo;
+		const rateLimit = prop.rateLimit;
 		if (verified && rateLimit) return true;
-		const isNotEmpty = await checkEmptyConfiguration(repoFrontmatter, PublisherManager.plugin);
+		const isNotEmpty = await checkEmptyConfiguration(prop, PublisherManager.plugin);
 		if (isNotEmpty) {
-			await PublisherManager.checkRepository(repoFrontmatter, true);
-			if (repoFrontmatter?.rateLimit === 0 || numberOfFile > 20) {
+			await PublisherManager.checkRepository(prop, true);
+			if (prop?.rateLimit === 0 || numberOfFile > 20) {
 				return await verifyRateLimitAPI(PublisherManager.octokit, settings, false, numberOfFile) > 0;
 			}
 			return true;
