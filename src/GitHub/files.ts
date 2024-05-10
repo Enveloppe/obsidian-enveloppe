@@ -10,13 +10,14 @@ import {
 	ConvertedLink,
 	GithubRepo,
 	LinkedNotes,
-	Properties, 	PropertiesConversion,
+	Properties,
+	PropertiesConversion,
 	Repository,
 } from "../interfaces/main";
 import GithubPublisher from "../main";
 import {logs} from "../utils";
 import { isAttachment, isShared } from "../utils/data_validation_test";
-import { frontmatterFromFile, getProperties } from "../utils/parse_frontmatter";
+import { frontmatterFromFile, getFrontmatterSettings, getProperties } from "../utils/parse_frontmatter";
 import Publisher from "./upload";
 
 export class FilesManagement extends Publisher {
@@ -93,19 +94,23 @@ export class FilesManagement extends Publisher {
 
 	/**
 	 * Get all shared file in the vault, but create an ConvertedLink object with the real path and the converted path
+	 * @param {Repository | null} repo The repository
+	 * @param {PropertiesConversion} convert The frontmatter settings
+	 * @param {boolean} withBackLinks If the backlinks should be included (only used for cleaning purpose, as backlinks can be pretty slow to get)
 	 * @return {ConvertedLink[]} The shared files
 	 */
 
-	getAllFileWithPath(repo: Repository | null, convert: PropertiesConversion): ConvertedLink[] {
+	getAllFileWithPath(repo: Repository | null, convert: PropertiesConversion, withBackLinks?: boolean): ConvertedLink[] {
 		const files = this.vault.getFiles().filter((x) => !x.path.startsWith(this.settings.github.dryRun.folderName));
 		const allFileWithPath: ConvertedLink[] = [];
 		const sourceFrontmatter = getProperties(this.plugin, repo, null, true);
 		for (const file of files) {
 			if (isAttachment(file.name, this.settings.embed.unHandledObsidianExt)) {
-				const filepath = getImagePath(file, this.plugin, convert, sourceFrontmatter );
+				const filepath = getImagePath(file, this.plugin, convert, sourceFrontmatter);
 				allFileWithPath.push({
 					converted: filepath,
-					real: file.path,
+					real: file,
+					otherPaths: this.getBackLinksOfImage(file, repo, withBackLinks)
 				});
 			} else if (file.extension == "md") {
 				const frontMatter = frontmatterFromFile(file, this.plugin, repo);
@@ -118,7 +123,7 @@ export class FilesManagement extends Publisher {
 					const filepath = getReceiptFolder(file, repo, this.plugin, prop);
 					allFileWithPath.push({
 						converted: filepath,
-						real: file.path,
+						real: file,
 						prop,
 					});
 				}
@@ -126,6 +131,27 @@ export class FilesManagement extends Publisher {
 		}
 		return allFileWithPath;
 	}
+
+	getBackLinksOfImage(file: TFile, repository: Repository | null, withBackLinks?: boolean): string[] | undefined {
+		if (!withBackLinks) return undefined;
+		const backlinks = this.metadataCache.getBacklinksForFile(file);
+		if (backlinks.count() === 0) return undefined;
+		const otherPath: string[] = [];
+		for (const backlink of backlinks.keys()) {
+			//get tfile of theses files
+			const tfile = this.vault.getAbstractFileByPath(backlink);
+			if (tfile && tfile instanceof TFile) {
+				const frontmatter = this.metadataCache.getFileCache(tfile)?.frontmatter;
+				if (!frontmatter) continue;
+				const propertiesConversion = getFrontmatterSettings(frontmatter, this.settings, repository);
+				const properties = getProperties(this.plugin, repository, frontmatter);
+				const path = getImagePath(file, this.plugin, propertiesConversion, properties);
+				otherPath.push(path);
+			}
+		}
+		return otherPath.length > 0 ? otherPath : undefined;
+	}
+
 
 	/**
 	 * Create a database with every internal links and embedded image and files
@@ -383,7 +409,7 @@ export class FilesManagement extends Publisher {
 			) {
 				//get TFile from file
 				const fileInVault = this.vault.getAbstractFileByPath(
-					file.real.trim()
+					file.real.path.trim()
 				);
 				if (
 					fileInVault &&
@@ -549,7 +575,7 @@ export class FilesManagement extends Publisher {
 				if (!githubSharedFile) continue;
 				const repoEditedTime = await this.getLastEditedTimeRepo(githubSharedFile);
 				const fileInVault = this.vault.getAbstractFileByPath(
-					file.real.trim()
+					file.real.path.trim()
 				);
 				if (
 					fileInVault &&
