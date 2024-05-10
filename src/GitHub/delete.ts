@@ -214,6 +214,7 @@ export async function filterGithubFile(
 		const root = prop.path?.rootFolder ?? settings.upload.rootFolder;
 		const defaultName = prop.path?.defaultName ?? settings.upload.defaultName;
 		const attachmentFolder = prop.path?.attachment?.folder ?? settings.embed.folder;
+		const enabledAttachments = settings.upload.autoclean.includeAttachments && isAttachment(file.file, settings.embed.unHandledObsidianExt);
 		if (
 			(file.file.includes(defaultName) ||
 				(behavior === FolderSettings.yaml &&
@@ -221,7 +222,7 @@ export async function filterGithubFile(
 				(attachmentFolder.length > 0 &&
 					file.file.includes(attachmentFolder))) &&
 			!excludedFileFromDelete(file.file, settings) &&
-			(isAttachment(file.file, settings.embed.unHandledObsidianExt) || file.file.match("md$"))
+			(enabledAttachments || file.file.match("md$"))
 		) {
 			sharedFilesInRepo.push(file);
 		}
@@ -308,7 +309,11 @@ function cleanDryRun(
 	if (!dryRunFolder || dryRunFolder instanceof TFile) return {success: false, deleted: [], undeleted: []};
 	const dryRunFiles:TFile[] = [];
 	Vault.recurseChildren(dryRunFolder as TFolder, (file: TAbstractFile) => {
-		if (!excludedFileFromDelete(normalizePath(file.path.replace(dryRunFolderPath, "")), settings) && (isAttachment(file.path, settings.embed.unHandledObsidianExt) || file.path.match("md$")) && file instanceof TFile) dryRunFiles.push(file);
+		const enabledAttachments = settings.upload.autoclean.includeAttachments && isAttachment(file.path, settings.embed.unHandledObsidianExt);
+		if (
+			!excludedFileFromDelete(normalizePath(file.path.replace(dryRunFolderPath, "")), settings) 
+			&& (enabledAttachments || file.path.match("md$")) 
+			&& file instanceof TFile) dryRunFiles.push(file);
 	});
 	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repository, repoProperties.convert, true).map((file) => {
 		return { converted: file.converted, repo: file.prop, otherPath: file.otherPaths };

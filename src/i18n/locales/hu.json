@@ -115,8 +115,8 @@
     "scanningRepo": "",
     "sendMessage": "",
     "startingClean": "",
-    "successfulPublish": "",
     "successPublishOneNote": "",
+    "successfulPublish": "",
     "waitingWorkflow": ""
   },
   "modals": {
@@ -383,6 +383,10 @@
         "title": ""
       },
       "githubAction": {
+        "desc": "",
+        "title": ""
+      },
+      "includeAttachments": {
         "desc": "",
         "title": ""
       },

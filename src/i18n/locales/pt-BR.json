@@ -115,8 +115,8 @@
     "scanningRepo": "",
     "sendMessage": "",
     "startingClean": "",
-    "successfulPublish": "",
     "successPublishOneNote": "",
+    "successfulPublish": "",
     "waitingWorkflow": ""
   },
   "modals": {
@@ -386,6 +386,10 @@
         "desc": "",
         "title": ""
       },
+      "includeAttachments": {
+        "desc": "",
+        "title": ""
+      },
       "prRequest": {
         "desc": "",
         "error": "",
@@ -458,8 +462,6 @@
         "links": "",
         "title": ""
       }
-    },
-    "overrides": {
     },
     "plugin": {
       "copyLink": {
