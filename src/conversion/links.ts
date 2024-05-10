@@ -45,9 +45,7 @@ export function convertWikilinks(
 			let isEmbed = wikiMatch.startsWith("!") ? "!" : "";
 			const isEmbedBool = wikiMatch.startsWith("!");
 			if (fileMatch) {
-				// @ts-ignore
 				let linkCreator = wikiMatch;
-
 				/**
 				 * In order to compare linked files with files that we have cached in
 				 * memory, we have sanitize their link name to matching.

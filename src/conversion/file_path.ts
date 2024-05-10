@@ -405,14 +405,13 @@ export function getReceiptFolder(
 	return file.path;
 }
 
+
 /**
  * Create filepath in github Repository based on settings and frontmatter for image
  * @param {TFile} file : Source file
- * @param {GitHubPublisherSettings} settings Settings
  * @param {FrontmatterConvert | null} sourceFrontmatter
  * @return {string} the new filepath
  */
-
 export function getImagePath(
 	file: TFile,
 	plugin: GithubPublisher,
@@ -421,6 +420,7 @@ export function getImagePath(
 ): string {
 	const settings = plugin.settings;
 	const overridePath = repository instanceof Array ? repository[0] : repository;
+
 	const imagePath = createImagePath(file, settings, sourceFrontmatter, overridePath);
 	const path = regexOnPath(imagePath.path, settings);
 	const name = regexOnFileName(imagePath.name, settings);

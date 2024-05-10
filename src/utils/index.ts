@@ -198,11 +198,9 @@ export function createListEdited(listUploaded: UploadedFiles[], deleted: Deleted
 export async function getSettingsOfMetadataExtractor(
 	app: App,
 	settings: GitHubPublisherSettings
-) {
-	// @ts-ignore
+): Promise<MetadataExtractor | null> {
 	if (
 		Platform.isMobile ||
-		//@ts-ignore
 		!app.plugins.enabledPlugins.has("metadata-extractor") ||
 		settings.upload.metadataExtractorPath.length === 0
 	)
@@ -214,21 +212,24 @@ export async function getSettingsOfMetadataExtractor(
 	};
 
 	const path = `${app.vault.configDir}/plugins/metadata-extractor`;
-	// @ts-ignore
-	const plugin = app.plugins.plugins["metadata-extractor"];
+	const plugin = app.plugins.getPlugin("metadata-extractor");
+	//@ts-ignore
 	if (plugin?.settings) {
-		if (plugin.settings["allExceptMdFile"].length > 0) {
+		//@ts-ignore
+		if (plugin.settings.allExceptMdFile.length > 0) {
 			//get file from plugins folder in .obsidian folder
-			metadataExtractor.allExceptMdFile =
-				path + "/" + plugin.settings["allExceptMdFile"];
+			//@ts-ignore
+			metadataExtractor.allExceptMdFile = path + "/" + plugin.settings.allExceptMdFile;
 		}
+		//@ts-ignore
 		if (plugin.settings["metadataFile"].length > 0) {
-			metadataExtractor.metadataFile =
-				path + "/" + plugin.settings["metadataFile"];
+			//@ts-ignore
+			metadataExtractor.metadataFile = path + "/" + plugin.settings.metadataFile;
 		}
-		if (plugin.settings["tagFile"].length > 0) {
-			metadataExtractor.tagsFile =
-				path + "/" + plugin.settings["tagFile"];
+		//@ts-ignore
+		if (plugin.settings.tagFile.length > 0) {
+			//@ts-ignore
+			metadataExtractor.tagsFile = path + "/" + plugin.settings.tagFile;
 		}
 		return metadataExtractor;
 	}

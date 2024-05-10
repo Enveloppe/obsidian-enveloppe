@@ -141,9 +141,11 @@ export interface ConvertedLink {
 	/** Path in GitHub */
 	converted: string;
 	/** Path in Obsidian */
-	real: string;
+	real: TFile;
 	/** The prop */
 	prop?: Properties | Properties[];
+	/** @important Only if Attachment ; list all possible path using the backlinks */
+	otherPaths?: string[];
 }
 
 /**

@@ -87,9 +87,9 @@ async function deleteFromGithubOneRepo(
 		logs({settings}, `No file to delete in ${repo.owner}/${repo.repo}`);
 		return {success: false, deleted: [], undeleted: []};
 	}
-	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repository, repoProperties.convert);
+	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repository, repoProperties.convert, true);
 	const allSharedConverted = allSharedFiles.map((file) => {
-		return { converted: file.converted, repo: file.prop };
+		return { converted: file.converted, repo: file.prop, otherPath: file.otherPaths };
 	});
 	let deletedSuccess = 0;
 	let deletedFailed = 0;
@@ -100,7 +100,7 @@ async function deleteFromGithubOneRepo(
 	};
 	for (const file of filesInRepo) {
 		const isInObsidian = allSharedConverted.some(
-			(f) => f.converted === file.file
+			(f) => f.converted === file.file || f.otherPath?.includes(file.file)
 		);
 		const isMarkdownForAnotherRepo = file.file.trim().endsWith(".md")
 			? !allSharedConverted.some(
@@ -108,7 +108,7 @@ async function deleteFromGithubOneRepo(
 					let prop = f.repo;
 					if (Array.isArray(prop)) {
 						prop = prop.find((r) => JSON.stringify(r.repo) === JSON.stringify(repo.repo));
-					} return f.converted === file.file && prop;
+					} return (f.converted === file.file || f.otherPath?.includes(file.file)) && prop;
 				})
 			: false;
 		const isNeedToBeDeleted = isInObsidian
@@ -190,6 +190,7 @@ function excludedFileFromDelete(
 	}
 	return false;
 }
+
 
 /**
  * Scan all file in repo, and excluding some from the list. Also check for some parameters.
@@ -309,8 +310,8 @@ function cleanDryRun(
 	Vault.recurseChildren(dryRunFolder as TFolder, (file: TAbstractFile) => {
 		if (!excludedFileFromDelete(normalizePath(file.path.replace(dryRunFolderPath, "")), settings) && (isAttachment(file.path, settings.embed.unHandledObsidianExt) || file.path.match("md$")) && file instanceof TFile) dryRunFiles.push(file);
 	});
-	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repository, repoProperties.convert).map((file) => {
-		return { converted: file.converted, repo: file.prop };
+	const allSharedFiles = filesManagement.getAllFileWithPath(repoProperties.repository, repoProperties.convert, true).map((file) => {
+		return { converted: file.converted, repo: file.prop, otherPath: file.otherPaths };
 	});
 	let deletedSuccess = 0;
 	const result: Deleted = {
@@ -322,7 +323,7 @@ function cleanDryRun(
 	for (const file of dryRunFiles) {
 		const convertedPath = normalizePath(file.path.replace(dryRunFolderPath, ""));
 		const isInObsidian = allSharedFiles.some(
-			(f) => f.converted === convertedPath
+			(f) => f.converted === convertedPath || f.otherPath?.includes(convertedPath)
 		);
 		const isMarkdownForAnotherRepo = file.path.trim().endsWith(".md") ?
 			!allSharedFiles.some(
@@ -330,7 +331,7 @@ function cleanDryRun(
 					let prop = f.repo;
 					if (Array.isArray(prop)) {
 						prop = prop.find((r) => JSON.stringify(r.repo) === JSON.stringify(repo.repo));
-					} return f.converted === convertedPath && prop;
+					} return (f.converted === convertedPath || f.otherPath?.includes(convertedPath)) && prop;
 				})
 			: false;
 		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;

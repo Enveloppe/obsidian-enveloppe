@@ -40,7 +40,6 @@ export async function convertDataviewQueries(
 	const settings = plugin.settings;
 	let replacedText = text;
 	const dataViewRegex = /```dataview\s(.+?)```/gsm;
-	//@ts-ignore
 	const isDataviewEnabled = app.plugins.plugins.dataview;
 	if (!isDataviewEnabled || !isPluginEnabled(app)) return replacedText;
 	const dvApi = getAPI();

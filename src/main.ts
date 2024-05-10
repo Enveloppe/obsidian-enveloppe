@@ -66,7 +66,6 @@ export default class GithubPublisher extends Plugin {
 	}
 
 	cleanSpecificCommands(repo: Repository) {
-		//@ts-ignore
 		const allCommands = this.app.commands.listCommands();
 		for (const command of allCommands) {
 			if (command.id.startsWith("obsidian-mkdocs-publisher")) {
@@ -74,7 +73,6 @@ export default class GithubPublisher extends Plugin {
 				//repo will be the last element of the array
 				const repoCmd = publisherCMDsName[publisherCMDsName.length - 1];
 				if (repoCmd.startsWith("K") && repo.smartKey === repoCmd.replace("K", "")) {
-					//@ts-ignore
 					this.app.commands.removeCommand(command.id);
 				}
 			}
@@ -83,7 +81,6 @@ export default class GithubPublisher extends Plugin {
 
 	cleanOldCommands() {
 		const allRepo: Repository[] = this.settings.github?.otherRepo ?? [];
-		//@ts-ignore
 		const allCommands = this.app.commands.listCommands();
 		for (const command of allCommands) {
 			if (command.id.startsWith("obsidian-mkdocs-publisher")) {
@@ -93,12 +90,10 @@ export default class GithubPublisher extends Plugin {
 				if (repoCmd.startsWith("K")) {
 					const repoIndex = allRepo.findIndex((repo) => repo.smartKey === repoCmd.replace("K", ""));
 					if (repoIndex === -1) {
-						//@ts-ignore
 						this.app.commands.removeCommand(command.id);
 					}
 				}
 				if (!this.settings.upload.autoclean.enable && commandName === "delete-clean") {
-					//@ts-ignore
 					this.app.commands.removeCommand(command.id);
 				}
 			}
@@ -232,7 +227,6 @@ export default class GithubPublisher extends Plugin {
 
 
 		this.registerEvent(
-			//@ts-ignore
 			this.app.workspace.on("file-menu", (menu: Menu, folder: TAbstractFile) => {
 				if (this.settings.plugin.fileMenu && folder instanceof TFolder) {
 					addMenuFolder(menu, folder, this.branchName, this);
