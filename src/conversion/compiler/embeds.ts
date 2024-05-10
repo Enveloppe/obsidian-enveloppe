@@ -270,10 +270,8 @@ export async function convertInlineDataview(
 	sourceFile: TFile,
 ): Promise<string> {
 	const {settings, app} = plugin;
-	// @ts-ignore
 	if (
 		settings.conversion.tags.fields.length === 0 ||
-		// @ts-ignore
 		!app.plugins.enabledPlugins.has("dataview")
 	) {
 		return text;

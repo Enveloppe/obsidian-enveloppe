@@ -45,7 +45,6 @@ export async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, 
  * @return {Menu} - The submenu created
  */
 export function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem, folder: TFolder, branchName: string, originalMenu: Menu): Menu {
-	//@ts-ignore
 	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
 	if (!isExcludedPath(plugin.settings, folder, defaultRepo(plugin.settings))) {
 		subMenu.addItem((subItem) => {
@@ -176,7 +175,6 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
 export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository | null, originalMenu: Menu): Menu {
 	const frontmatter = frontmatterFromFile(file, plugin, repo);
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
-	//@ts-ignore
 	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
 	let prop = getProperties(plugin, repo, frontmatter, true);
 	prop = prop instanceof Array ? prop : [prop];

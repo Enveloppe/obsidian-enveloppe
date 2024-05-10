@@ -516,7 +516,6 @@ export class FilesManagement extends Publisher {
 		}
 
 		embedFiles = [...new Set(embedFiles)].filter((x) => x != null);
-		// @ts-ignore
 		if (this.plugin.app.plugins.enabledPlugins.has("dataview")) {
 			const dvApi = getAPI();
 			if (!dvApi) return embedFiles;
