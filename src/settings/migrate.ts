@@ -287,6 +287,7 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 			autoclean: {
 				enable: old.autoCleanUp,
 				excluded: old.autoCleanUpExcluded,
+				includeAttachments: old.autoCleanUp,
 			},
 			folderNote: {
 				enable: old.folderNote,
