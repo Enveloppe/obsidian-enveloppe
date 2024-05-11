@@ -485,9 +485,9 @@ export function getLinkedFrontmatter(
 	const { settings } = plugin;
 	const { metadataCache, vault } = plugin.app;
 	const linkedKey = settings.plugin.setFrontmatterKey;
-	if (!linkedKey || !originalFrontmatter || !sourceFile) return originalFrontmatter;
+	if (!linkedKey || !originalFrontmatter || !sourceFile) return undefined;
 	const linkedFrontmatter = originalFrontmatter?.[linkedKey];
-	if (!linkedFrontmatter) return originalFrontmatter;
+	if (!linkedFrontmatter) return undefined;
 	let linkedFile: undefined | string;
 	metadataCache.getFileCache(sourceFile)?.frontmatterLinks?.forEach((link) => {
 		const fieldRegex = new RegExp(`${linkedKey}(\\.\\d+)?`, "g");
@@ -495,12 +495,10 @@ export function getLinkedFrontmatter(
 			linkedFile = link.link;
 		}
 	});
-	if (!linkedFile) return originalFrontmatter;
+	if (!linkedFile) return undefined;
 	const linkedFrontmatterFile = metadataCache.getFirstLinkpathDest(linkedFile, sourceFile.path) ?? vault.getAbstractFileByPath(linkedFile);
-	if (!linkedFrontmatterFile || !(linkedFrontmatterFile instanceof TFile)) return originalFrontmatter;
-	const linked = metadataCache.getFileCache(linkedFrontmatterFile)?.frontmatter;
-	if (!linked) return originalFrontmatter;
-	return linked;
+	if (!linkedFrontmatterFile || !(linkedFrontmatterFile instanceof TFile)) return undefined;
+	return metadataCache.getFileCache(linkedFrontmatterFile)?.frontmatter;
 }
 
 export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher, repo: Repository | null) {
