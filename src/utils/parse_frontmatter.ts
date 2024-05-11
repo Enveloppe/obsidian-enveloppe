@@ -365,12 +365,11 @@ export function parsePath(
 		if (type.match(/^(fixed|obsidian|yaml)$/i)) return type as FolderSettings;
 		return settings.upload.behavior;
 	};
-
 	for (const repo of properties) {
 		const smartKey = repository ? repository.smartKey : "default";
 		
 		const path: Path = {
-			type: matchType(frontmatter?.type),
+			type: matchType(frontmatter?.behavior),
 			defaultName: frontmatter?.defaultName ?? settings.upload.defaultName,
 			rootFolder: frontmatter?.rootFolder ?? settings.upload.rootFolder,
 			category: {
@@ -400,7 +399,7 @@ export function parsePath(
 		if (frontmatter?.[`${smartKey}.defaultName`]) {
 			path.defaultName = splitArrayPath(frontmatter[`${smartKey}.defaultName`]) as string;
 		}
-		if (frontmatter?.[`${smartKey}.type`]) {
+		if (frontmatter?.[`${smartKey}.behavior`]) {
 			path.type = matchType(frontmatter[`${smartKey}.type`].toLowerCase());
 		}
 		if (frontmatter?.[`${smartKey}.attachment`]) {
