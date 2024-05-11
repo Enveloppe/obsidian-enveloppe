@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.2.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.3...7.2.4) (2024-05-11)
+
+
+### Bug Fixes
+
+* **path:** urgent fix for category key ([7a055ca](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7a055ca5e0eef489eaa7ef6c5d82a6a58b0a2600))
+
 ## [7.2.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.2...7.2.3) (2024-05-11)
 
 
