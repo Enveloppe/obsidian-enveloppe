@@ -46,6 +46,7 @@ export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 		replaceTitle: [],
 		replacePath: [],
 		autoclean: {
+			includeAttachments: true,
 			enable: false,
 			excluded: [],
 		},

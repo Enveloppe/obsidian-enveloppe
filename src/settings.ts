@@ -648,6 +648,18 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							await this.plugin.saveSettings();
 						});
 				});
+			
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.githubWorkflow.includeAttachments.title"))
+				.setDesc(i18next.t("settings.githubWorkflow.includeAttachments.desc"))
+				.addToggle((toggle) => {
+					toggle
+						.setValue(uploadSettings.autoclean.includeAttachments)
+						.onChange(async (value) => {
+							uploadSettings.autoclean.includeAttachments = value;
+							await this.plugin.saveSettings();
+						});
+				});	
 		}
 		
 

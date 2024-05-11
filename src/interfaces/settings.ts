@@ -154,6 +154,7 @@ export interface Upload {
 			enable: boolean;
 			/** Prevent deleting files */
 			excluded: string[];
+			includeAttachments: boolean;
 		}
 		/** Allow to set a folder note in `index.md` (example) when some settings are met
 		 * For example, auto-rename to `index.md` when the file name and the folder name are the same.

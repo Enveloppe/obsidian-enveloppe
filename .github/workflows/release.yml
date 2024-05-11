@@ -33,6 +33,7 @@ jobs:
             PLUGIN_NAME: "obsidian-mkdocs-publisher"
             STYLE: true
             BETA: ${{ inputs.beta || false }}
+            SUBMODULE: true
         secrets:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     bump-version-and-release:
@@ -42,5 +43,6 @@ jobs:
             PLUGIN_NAME: "obsidian-mkdocs-publisher"
             STYLE: true
             BETA: ${{ inputs.beta }}
+            SUBMODULE: true
         secrets:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
