@@ -381,45 +381,57 @@ export function parsePath(
 			}
 		};
 
-		if (frontmatter?.[`${smartKey}.path`]) {
-			path.override = splitArrayPath(frontmatter[`${smartKey}.path`]);
+		const smartkeys = {
+			path: frontmatter?.[`${smartKey}.path`],
+			category: frontmatter?.[`${smartKey}.category`],
+			behavior: frontmatter?.[`${smartKey}.behavior`],
+			attachment: frontmatter?.[`${smartKey}.attachment`],
+			attachmentLinks: frontmatter?.[`${smartKey}.attachmentLinks`],
+			rootFolder: frontmatter?.[`${smartKey}.rootFolder`],
+			defaultName: {
+				direct: frontmatter?.[`${smartKey}.defaultName`],
+				asCategoryValue: frontmatter?.[`${smartKey}.category.value`]
+			},
+			categoryKey: {
+				direct: frontmatter?.[`${smartKey}.${path.category}`],
+				asKey: frontmatter?.[`${smartKey}.category.key`]
+			}
+		};
+
+		if (smartkeys.path) {
+			path.override = splitArrayPath(smartkeys.path);
 			continue;
 		}
-		if (frontmatter?.[`${smartKey}.${path.category}`]) {
-			path.category = frontmatter[`${smartKey}.${path.category}`];
-		}
-		if (frontmatter?.[`${smartKey}.category.key`]) {
-			path.category = splitArrayPath(frontmatter[`${smartKey}.category.key`]) ?? path.category;
-		}
-		
-		if (frontmatter?.[`${smartKey}.rootFolder`]) {
-			const rootFolder = splitArrayPath(frontmatter[`${smartKey}.rootFolder`]) as string;
+		if (smartkeys.categoryKey.direct) path.category = smartkeys.categoryKey.direct;
+		if (smartkeys.categoryKey.asKey ) path.category = splitArrayPath(smartkeys.categoryKey.asKey) ?? path.category;
+		if (smartkeys.rootFolder) {
+			const rootFolder = splitArrayPath(smartkeys.rootFolder) as string;
 			path.rootFolder = rootFolder;
 		}
-		if (frontmatter?.[`${smartKey}.defaultName`]) {
-			path.defaultName = splitArrayPath(frontmatter[`${smartKey}.defaultName`]) as string;
+		if (smartkeys.defaultName.direct) path.defaultName = splitArrayPath(smartkeys.defaultName.direct) as string;
+		
+		if (smartkeys.defaultName.asCategoryValue) path.defaultName = splitArrayPath(smartkeys.defaultName.asCategoryValue) ?? path.defaultName;
+		
+		if (smartkeys.category) {
+			if (typeof smartkeys.category === "object") {
+				if (smartkeys.category.value) path.defaultName = splitArrayPath(smartkeys.category.value) ?? path.defaultName;
+				if (smartkeys.category.key) path.category = splitArrayPath(smartkeys.category.key) ?? path.category;
+			} else path.category = splitArrayPath(smartkeys.category) ?? path.category;
 		}
-		if (frontmatter?.[`${smartKey}.category.value`]) {
-			path.defaultName = splitArrayPath(frontmatter[`${smartKey}.category.value`]) ?? path.defaultName;
-		}
-		if (frontmatter?.[`${smartKey}.behavior`]) {
-			path.type = matchType(frontmatter[`${smartKey}.type`].toLowerCase());
-		}
-		if (frontmatter?.[`${smartKey}.attachment`]) {
-			if (typeof frontmatter?.[`${smartKey}.attachment`] === "object") {
+		if (smartkeys.behavior) path.type = matchType(smartkeys.behavior.toLowerCase());
+		
+		if (smartkeys.attachment) {
+			if (typeof smartkeys.attachment === "object") {
 				path.attachment = {
-					send: frontmatter[`${smartKey}.attachment`]?.send ?? path.attachment?.send,
-					folder: splitArrayPath(frontmatter[`${smartKey}.attachment`]?.folder) ?? path.attachment!.folder,
+					send: smartkeys.attachment?.send ?? path.attachment?.send,
+					folder: splitArrayPath(smartkeys.attachment?.folder) ?? path.attachment!.folder,
 				};
-			} else {
-				path.attachment!.send = frontmatter[`${smartKey}.attachment`];
-			}
+			} else path.attachment!.send = smartkeys.attachment;
+			
 		}
-		if (frontmatter?.[`${smartKey}.attachmentLinks`]) {
-			path.attachment!.folder = normalizePath(frontmatter[`${smartKey}.attachmentLinks`]
-				.toString()
-				.replace(/\/$/, ""));
-		}
+		if (smartkeys.attachmentLinks) path.attachment!.folder = normalizePath(smartkeys.attachmentLinks
+			.toString()
+			.replace(/\/$/, ""));
 		path.category = getCategory(frontmatter, settings, path);
 		repo.path = path;
 	}
