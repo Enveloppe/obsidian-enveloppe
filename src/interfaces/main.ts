@@ -193,7 +193,12 @@ export interface Path {
 	/** The root folde */
 	rootFolder: string;
 	/** If the category key is overridden */
-	category?: string;
+	category: {
+		/** The key to override */
+		key?: string;
+		/** The value to override */
+		value?: string;
+	};
 	/** Override the entire path, from root and must include the extension */
 	override?: string;
 	/** If a smartkey is found, for repository settings */

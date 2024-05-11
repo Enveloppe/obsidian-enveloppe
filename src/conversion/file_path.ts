@@ -63,8 +63,7 @@ export function textIsInFrontmatter(
  * @param {TFile} sourceFile the shared file containing all links, embed etc
  * @param {LinkedNotes} targetFile The target file
  * @param {FrontMatterCache | null} frontmatter FrontmatterCache or null
- * @param {plugin} GithubPublisher
- * @param properties
+ * @param properties - The properties of the source file
  * @return {string} relative path
  */
 

@@ -335,7 +335,7 @@ export function getCategory(
 	frontmatter: FrontMatterCache | null | undefined,
 	settings: GitHubPublisherSettings,
 	paths: Path | undefined): string {
-	const key = paths?.category ?? settings.upload.yamlFolderKey;
+	const key = paths?.category?.key ?? settings.upload.yamlFolderKey;
 	const category = frontmatter && frontmatter[key] != undefined ? frontmatter[key] : paths?.defaultName ?? settings.upload.defaultName;
 	if (category instanceof Array) {
 		return category.join("/");
@@ -364,7 +364,6 @@ export function parsePath(
 		if (type.match(/^(fixed|obsidian|yaml)$/i)) return type as FolderSettings;
 		return settings.upload.behavior;
 	};
-	console.log("0", frontmatter);
 	for (const repo of properties) {
 		const smartKey = repository ? repository.smartKey : "default";
 		
@@ -372,7 +371,10 @@ export function parsePath(
 			type: matchType(frontmatter?.behavior),
 			defaultName: frontmatter?.defaultName ?? frontmatter?.category?.value ?? frontmatter?.["category.value"] ?? settings.upload.defaultName,
 			rootFolder: frontmatter?.rootFolder ?? settings.upload.rootFolder,
-			category: splitArrayPath(frontmatter?.category?.key ?? frontmatter?.["category.key"]) ?? settings.upload.yamlFolderKey,
+			category: {
+				key: splitArrayPath(frontmatter?.category?.key ?? frontmatter?.["category.key"]) ?? settings.upload.yamlFolderKey,
+				value: getCategory(frontmatter, settings, undefined)
+			},
 			override: splitArrayPath(frontmatter?.path),
 			smartkey: smartKey,
 			attachment: {
@@ -380,7 +382,6 @@ export function parsePath(
 				folder: splitArrayPath(frontmatter?.attachment?.send ?? frontmatter?.["attachment.folder"]) ?? settings.embed.folder,
 			}
 		};
-		console.log("1", path);
 		/** List of alias for path generation */
 		const smartkeys = {
 			/** Overriding path, will skip the rest if exists */
@@ -415,8 +416,8 @@ export function parsePath(
 			path.override = splitArrayPath(smartkeys.path);
 			continue;
 		}
-		if (smartkeys.categoryKey.direct) path.category = smartkeys.categoryKey.direct;
-		if (smartkeys.categoryKey.asKey ) path.category = splitArrayPath(smartkeys.categoryKey.asKey) ?? path.category;
+		if (smartkeys.categoryKey.direct) path.category.key = smartkeys.categoryKey.direct;
+		if (smartkeys.categoryKey.asKey) path.category.key = splitArrayPath(smartkeys.categoryKey.asKey) ?? path.category.key;
 		if (smartkeys.rootFolder) {
 			const rootFolder = splitArrayPath(smartkeys.rootFolder) as string;
 			path.rootFolder = rootFolder;
@@ -428,8 +429,8 @@ export function parsePath(
 		if (smartkeys.category) {
 			if (typeof smartkeys.category === "object") {
 				if (smartkeys.category.value) path.defaultName = splitArrayPath(smartkeys.category.value) ?? path.defaultName;
-				if (smartkeys.category.key) path.category = splitArrayPath(smartkeys.category.key) ?? path.category;
-			} else path.category = splitArrayPath(smartkeys.category) ?? path.category;
+				if (smartkeys.category.key) path.category.key = splitArrayPath(smartkeys.category.key) ?? path.category.key;
+			} else path.category.key = splitArrayPath(smartkeys.category) ?? path.category.key;
 		}
 		if (smartkeys.behavior) path.type = matchType(smartkeys.behavior.toLowerCase());
 		
@@ -445,9 +446,8 @@ export function parsePath(
 		if (smartkeys.attachmentLinks) path.attachment!.folder = normalizePath(smartkeys.attachmentLinks
 			.toString()
 			.replace(/\/$/, ""));
-		path.category = getCategory(frontmatter, settings, path);
+		path.category.value = getCategory(frontmatter, settings, path);
 		repo.path = path;
-		console.log(path);
 	}
 	
 	return properties;
