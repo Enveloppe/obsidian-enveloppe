@@ -505,16 +505,13 @@ export function getLinkedFrontmatter(
 
 export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher, repo: Repository | null) {
 	let frontmatter = null;
-	
+	const setFrontmatter = repo?.set && plugin.repositoryFrontmatter[repo.smartKey] ? plugin.repositoryFrontmatter[repo.smartKey] : null;
 	if (file) {
 		frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
-		frontmatter = merge(linkedFrontmatter ?? {}, frontmatter ?? {});
+		frontmatter = merge(setFrontmatter ?? {}, linkedFrontmatter ?? {}, frontmatter ?? {});
 	}
-	if (repo?.set && plugin.repositoryFrontmatter[repo.smartKey]) {
-		const setFrontmatter = plugin.repositoryFrontmatter[repo.smartKey];
-		frontmatter = merge(setFrontmatter ?? {}, frontmatter ?? {});
-	}
+	
 	return frontmatter;
 }
 
