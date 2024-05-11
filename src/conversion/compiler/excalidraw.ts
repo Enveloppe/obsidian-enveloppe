@@ -5,7 +5,6 @@ import { App,TFile } from "obsidian";
 
 export async function convertToHTMLSVG(file: TFile, app: App) {
 	try {
-		// @ts-ignore
 		const excalidraw = app.plugins.getPlugin("obsidian-excalidraw-plugin");
 		// @ts-ignore
 		const ea = excalidraw.ea;
