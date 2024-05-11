@@ -381,19 +381,32 @@ export function parsePath(
 			}
 		};
 
+		/** List of alias for path generation */
 		const smartkeys = {
+			/** Overriding path, will skip the rest if exists */
 			path: frontmatter?.[`${smartKey}.path`],
+			/** Overriding the default category name. Can be a literal string or an object */
 			category: frontmatter?.[`${smartKey}.category`],
+			/** Overriding the default behavior, can be only yaml | obsidian | fixed */
 			behavior: frontmatter?.[`${smartKey}.behavior`],
+			/** Overriding attachment */
 			attachment: frontmatter?.[`${smartKey}.attachment`],
+			/** Alias of attachment.folder */
 			attachmentLinks: frontmatter?.[`${smartKey}.attachmentLinks`],
+			/** Overriding the root folder */
 			rootFolder: frontmatter?.[`${smartKey}.rootFolder`],
+			/** DefaultName is only used if yaml, but we parse it in case */
 			defaultName: {
+				/** Direct with smartkey.defaultName */
 				direct: frontmatter?.[`${smartKey}.defaultName`],
+				/** Is used in the category.value as literal string */
 				asCategoryValue: frontmatter?.[`${smartKey}.category.value`]
 			},
+			/** Overriding of the category key */
 			categoryKey: {
+				/** Can be direct with smarkey.<categoryName> like smartkey.folder: category */
 				direct: frontmatter?.[`${smartKey}.${path.category}`],
+				/** Can be a key in a literal string: smartkey.category.key: category will rename the category  */
 				asKey: frontmatter?.[`${smartKey}.category.key`]
 			}
 		};
