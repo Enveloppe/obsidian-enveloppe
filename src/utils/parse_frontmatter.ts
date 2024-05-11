@@ -507,7 +507,7 @@ export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher,
 	if (file) {
 		frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
-		frontmatter = merge(setFrontmatter ?? {}, linkedFrontmatter ?? {}, frontmatter ?? {});
+		frontmatter = merge(setFrontmatter ?? {}, linkedFrontmatter ?? {}, frontmatter ?? {}) as FrontMatterCache;
 	}
 	
 	return frontmatter;
