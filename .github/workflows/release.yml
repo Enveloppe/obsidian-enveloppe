@@ -34,6 +34,7 @@ jobs:
             STYLE: true
             BETA: ${{ inputs.beta || false }}
             SUBMODULE: true
+            CACHE: "pnpm"
         secrets:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     bump-version-and-release:
@@ -44,5 +45,6 @@ jobs:
             STYLE: true
             BETA: ${{ inputs.beta }}
             SUBMODULE: true
+            CACHE: "pnpm"
         secrets:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
