@@ -418,7 +418,7 @@ export default class Publisher {
 				result.isUpdated = true;
 			}
 		} catch {
-			notif(
+			logs(
 				{ settings: this.settings },
 				i18next.t("error.normal")
 			);

@@ -281,14 +281,14 @@ export async function createLink(
 	const smartKey = otherRepo?.smartKey ? `${otherRepo.smartKey}.` : "";
 	if (frontmatter) {
 		if (frontmatter[`${smartKey}baselink`] != undefined) {
-			baseLink = frontmatter[`${smartKey}baselink`];
+			baseLink = frontmatter[`${smartKey}baselink`] as unknown as string;
 			removePart = [];
 		} else if (frontmatter[`${smartKey}copylink`] && typeof frontmatter[`${smartKey}.copylink`] === "object") {
-			baseLink = frontmatter[`${smartKey}copylink`].base;
-			removePart = frontmatter[`${smartKey}copylink`].remove ?? [];
+			baseLink = frontmatter[`${smartKey}copylink`].base as unknown as string;
+			removePart = frontmatter[`${smartKey}copylink`].remove as unknown as string[] ?? [];
 		}
-		if (frontmatter[`${smartKey}copylink.base`]) baseLink = frontmatter[`${smartKey}copylink.base`];
-		if (frontmatter[`${smartKey}copylink.remove`]) removePart = frontmatter[`${smartKey}copylink.remove`];
+		if (frontmatter[`${smartKey}copylink.base`]) baseLink = frontmatter[`${smartKey}copylink.base`] as unknown as string;
+		if (frontmatter[`${smartKey}copylink.remove`]) removePart = frontmatter[`${smartKey}copylink.remove`] as unknown as string[] ?? [];
 	}
 	
 	baseLink = checkSlash(baseLink);

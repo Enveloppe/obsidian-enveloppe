@@ -1,4 +1,5 @@
 import { Octokit } from "@octokit/core";
+import dedent from "dedent";
 import i18next from "i18next";
 import { FrontMatterCache, Menu, Plugin, TAbstractFile, TFile, TFolder } from "obsidian";
 import merge from "ts-deepmerge";
@@ -184,7 +185,9 @@ export default class GithubPublisher extends Plugin {
 			returnEmptyString: false,
 		});
 		
-		console.info(`[GITHUB PUBLISHER] v.${this.manifest.version} (lang: ${translationLanguage}) loaded`);
+		console.info(dedent(`[GITHUB PUBLISHER] v.${this.manifest.version} (lang: ${translationLanguage}) loaded.
+		* You can hide HTTP logs in the console with checking the "Hide network" in the console settings.
+		* See here: https://developer.chrome.com/docs/devtools/console/reference#network`));
 		await this.loadSettings();
 
 		const oldSettings = this.settings;
@@ -278,7 +281,7 @@ export default class GithubPublisher extends Plugin {
 	* Called when the plugin is disabled
 	*/
 	onunload() {
-		console.info("[Github Publisher] unloaded");
+		console.info("[Github Publisher] Unloaded");
 	}
 
 	/**
