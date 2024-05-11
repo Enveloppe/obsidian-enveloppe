@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.2.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.0...7.2.1) (2024-05-11)
+
+
+### Bug Fixes
+
+* translation are emptied ([4889bca](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/4889bcafc50f4e1c53bdbf92b5cce86aaa239ef7))
+* translation(2) ([2746eec](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/2746eec7d2af8d3c25be44e95e6f2bb08924ae57))
+
 ## [7.2.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0...7.2.0) (2024-05-11)
 
 
