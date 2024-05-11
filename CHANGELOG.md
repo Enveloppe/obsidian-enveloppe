@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.2.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0...7.2.0) (2024-05-11)
+
+
+### Features
+
+* **autoclean:** add option to auto-clean attachments or not ([#344](https://github.com/obsidianMkdocs/obsidian-github-publisher/issues/344)) ([bf76043](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/bf760432bf977b68dd71c2f8600da4da9e4a88f5))
+
+
+### Bug Fixes
+
+* **cleanup:** better handling image deletion ([b87e25d](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/b87e25da3d710bcf254293dc5db85945ed5d9d83))
+
 ## [7.1.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-9...7.1.0) (2024-05-08)
 
 ## [7.0.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.0.5...7.0.6) (2024-04-28)
