@@ -184,7 +184,7 @@ export default class Publisher {
 			this.plugin,
 		);
 		let frontmatter = frontmatterFromFile(file, this.plugin, null);
-		if (sourceFrontmatter && frontmatter) frontmatter = merge(frontmatter, sourceFrontmatter);
+		if (sourceFrontmatter && frontmatter) frontmatter = merge(sourceFrontmatter, frontmatter);
 		const prop = getProperties(this.plugin, repo.repository, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(prop, this.plugin);
 		repo.frontmatter = prop;

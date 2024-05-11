@@ -111,10 +111,9 @@ export function getProperties(
 	let github = repository ?? settings.github;
 	if (checkSet && repository && plugin.repositoryFrontmatter[repository.smartKey]) {
 		const setFrontmatter = plugin.repositoryFrontmatter[repository.smartKey];
-		frontmatter = frontmatter && setFrontmatter ? merge(frontmatter, setFrontmatter) : setFrontmatter ?? frontmatter ;
-		
+		frontmatter = merge(setFrontmatter ?? {}, frontmatter ?? {});
 	}
-	if (frontmatter && typeof frontmatter["shortRepo"] === "string" && frontmatter["shortRepo"] !== "default") {
+	if (frontmatter && typeof frontmatter.shortRepo === "string" && frontmatter.shortRepo !== "default") {
 		const smartKey = frontmatter.shortRepo.toLowerCase();
 		const allOtherRepo = settings.github.otherRepo;
 		const shortRepo = allOtherRepo.find((repo) => {
@@ -365,6 +364,7 @@ export function parsePath(
 		if (type.match(/^(fixed|obsidian|yaml)$/i)) return type as FolderSettings;
 		return settings.upload.behavior;
 	};
+	console.log("0", frontmatter);
 	for (const repo of properties) {
 		const smartKey = repository ? repository.smartKey : "default";
 		
@@ -380,7 +380,7 @@ export function parsePath(
 				folder: splitArrayPath(frontmatter?.attachment?.send ?? frontmatter?.["attachment.folder"]) ?? settings.embed.folder,
 			}
 		};
-
+		console.log("1", path);
 		/** List of alias for path generation */
 		const smartkeys = {
 			/** Overriding path, will skip the rest if exists */
@@ -447,7 +447,9 @@ export function parsePath(
 			.replace(/\/$/, ""));
 		path.category = getCategory(frontmatter, settings, path);
 		repo.path = path;
+		console.log(path);
 	}
+	
 	return properties;
 }
 
@@ -511,7 +513,7 @@ export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher,
 	}
 	if (repo?.set && plugin.repositoryFrontmatter[repo.smartKey]) {
 		const setFrontmatter = plugin.repositoryFrontmatter[repo.smartKey];
-		frontmatter = frontmatter && setFrontmatter ? merge(frontmatter, setFrontmatter) : setFrontmatter ?? frontmatter;
+		frontmatter = merge(setFrontmatter ?? {}, frontmatter ?? {});
 	}
 	return frontmatter;
 }
