@@ -336,7 +336,7 @@ export function getCategory(
 	frontmatter: FrontMatterCache | null | undefined,
 	settings: GitHubPublisherSettings,
 	paths: Path | undefined): string {
-	const key = paths?.category?.key ?? settings.upload.yamlFolderKey;
+	const key = paths?.category ?? settings.upload.yamlFolderKey;
 	const category = frontmatter && frontmatter[key] != undefined ? frontmatter[key] : paths?.defaultName ?? settings.upload.defaultName;
 	if (category instanceof Array) {
 		return category.join("/");
@@ -370,12 +370,9 @@ export function parsePath(
 		
 		const path: Path = {
 			type: matchType(frontmatter?.behavior),
-			defaultName: frontmatter?.defaultName ?? settings.upload.defaultName,
+			defaultName: frontmatter?.defaultName ?? frontmatter?.category?.value ?? frontmatter?.["category.value"] ?? settings.upload.defaultName,
 			rootFolder: frontmatter?.rootFolder ?? settings.upload.rootFolder,
-			category: {
-				key: splitArrayPath(frontmatter?.category?.key ?? frontmatter?.["category.key"]) ?? settings.upload.yamlFolderKey,
-				value: frontmatter?.category?.value ?? frontmatter?.["category.value"] ?? settings.upload.defaultName,
-			},
+			category: splitArrayPath(frontmatter?.category?.key ?? frontmatter?.["category.key"]) ?? settings.upload.yamlFolderKey,
 			override: splitArrayPath(frontmatter?.path),
 			smartkey: smartKey,
 			attachment: {
@@ -388,16 +385,22 @@ export function parsePath(
 			path.override = splitArrayPath(frontmatter[`${smartKey}.path`]);
 			continue;
 		}
-		if (frontmatter?.[`${smartKey}.${path.category!.key}`]) {
-			const category = frontmatter[`${smartKey}.${path.category!.key}`];
-			path.category!.value = splitArrayPath(category) as string;
+		if (frontmatter?.[`${smartKey}.${path.category}`]) {
+			path.category = frontmatter[`${smartKey}.${path.category}`];
 		}
+		if (frontmatter?.[`${smartKey}.category.key`]) {
+			path.category = splitArrayPath(frontmatter[`${smartKey}.category.key`]) ?? path.category;
+		}
+		
 		if (frontmatter?.[`${smartKey}.rootFolder`]) {
 			const rootFolder = splitArrayPath(frontmatter[`${smartKey}.rootFolder`]) as string;
 			path.rootFolder = rootFolder;
 		}
 		if (frontmatter?.[`${smartKey}.defaultName`]) {
 			path.defaultName = splitArrayPath(frontmatter[`${smartKey}.defaultName`]) as string;
+		}
+		if (frontmatter?.[`${smartKey}.category.value`]) {
+			path.defaultName = splitArrayPath(frontmatter[`${smartKey}.category.value`]) ?? path.defaultName;
 		}
 		if (frontmatter?.[`${smartKey}.behavior`]) {
 			path.type = matchType(frontmatter[`${smartKey}.type`].toLowerCase());
@@ -417,7 +420,7 @@ export function parsePath(
 				.toString()
 				.replace(/\/$/, ""));
 		}
-		path.category!.value = getCategory(frontmatter, settings, path);
+		path.category = getCategory(frontmatter, settings, path);
 		repo.path = path;
 	}
 	return properties;
