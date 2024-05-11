@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.2.3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.2...7.2.3) (2024-05-11)
+
+
+### Bug Fixes
+
+* missing default value ([070a851](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/070a851236fde0aa23a0cdd7757e1f4e4d0be079))
+* ordering of set/frontmatter shared files ([d23b09a](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/d23b09a7ccc6a98982742b29e3fed207d4393c79))
+
 ## [7.2.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.1...7.2.2) (2024-05-11)
 
 
