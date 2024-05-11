@@ -1,0 +1,3 @@
+[submodule "src/i18n/locales"]
+	path = src/i18n/locales
+	url = git@github.com:ObsidianPublisher/locales.git
