@@ -13,7 +13,7 @@ import {
 	shareEditedOnlyCallback,
 	shareOneNoteCallback,
 	uploadAllEditedNotesCallback, uploadAllNotesCallback, uploadNewNotesCallback
-} from "./commands/callback";
+} from "./commands";
 import { addMenuFile, addMenuFolder } from "./commands/file_menu";
 import { ChooseWhichRepoToRun } from "./commands/suggest_other_repo_commands_modal";
 import { getTitleField, regexOnFileName } from "./conversion/file_path";

@@ -4,14 +4,8 @@ import { defaultRepo } from "src/utils/data_validation_test";
 
 import { FolderSettings, GitHubPublisherSettings, Repository } from "../interfaces";
 import GithubPublisher from "../main";
-import {
-	createLinkOnActiveFile,
-	deleteCommands, repositoryValidityActiveFile, shareActiveFile,
-	shareEditedOnly,
-	uploadAllEditedNotes,
-	uploadAllNotes,
-	uploadNewNotes
-} from "./plugin_commands";
+import {createLinkOnActiveFile, deleteCommands, repositoryValidityActiveFile, shareActiveFile, shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} from "./index";
+
 
 interface GithubPublisherCommands {
 	commands: string;

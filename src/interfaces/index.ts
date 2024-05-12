@@ -7,7 +7,14 @@ import { GitHubPublisherSettings,GithubRepo,LinkedNotes, OverrideAttachments, Pa
 import { MonoProperties,MonoRepoProperties,MultiProperties, MultiRepoProperties } from "./properties";
 import { MetadataExtractor } from "./settings";
 
-export {DEFAULT_SETTINGS,EnumbSettingsTabId,FIND_REGEX,FolderSettings,GithubTiersVersion,TOKEN_PATH, 	TypeOfEditRegex,
+export {
+	DEFAULT_SETTINGS,
+	EnumbSettingsTabId,
+	FIND_REGEX,
+	FolderSettings,
+	GithubTiersVersion,
+	TOKEN_PATH, 
+	TypeOfEditRegex,
 };
 
 export type {
