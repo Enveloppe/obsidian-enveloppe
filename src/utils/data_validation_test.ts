@@ -3,12 +3,11 @@ import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, GithubTiersVers
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
+import {GithubBranch} from "src/GitHub/branch";
 import GithubPublisher from "src/main";
+import { notif} from "src/utils";
+import { frontmatterFromFile, getLinkedFrontmatter, getProperties } from "src/utils/parse_frontmatter";
 import merge from "ts-deepmerge";
-
-import {GithubBranch} from "../GitHub/branch";
-import { notif} from ".";
-import { frontmatterFromFile, getLinkedFrontmatter, getProperties } from "./parse_frontmatter";
 
 /**
  * - Check if the file is a valid file to publish

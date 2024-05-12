@@ -7,7 +7,7 @@ import GithubPublisher from "src/main";
 import { ListChangedFiles } from "src/settings/modals/list_changed";
 import { createListEdited, getSettingsOfMetadataExtractor, logs, notifError,publisherNotification } from "src/utils";
 import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
-import { ERROR_ICONS } from "src/utils/icons";
+import { ERROR_ICONS } from "@interfaces/icons";
 import { frontmatterSettingsRepository,getProperties } from "src/utils/parse_frontmatter";
 import { ShareStatusBar } from "src/utils/status_bar";
 

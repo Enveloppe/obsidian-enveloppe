@@ -42,7 +42,7 @@ import {
 	isAttachment,
 	isShared,
 } from "src/utils/data_validation_test";
-import { LOADING_ICON } from "src/utils/icons";
+import { LOADING_ICON } from "@interfaces/icons";
 import { frontmatterFromFile, frontmatterSettingsRepository, getFrontmatterSettings, getProperties } from "src/utils/parse_frontmatter";
 import { ShareStatusBar } from "src/utils/status_bar";
 import merge from "ts-deepmerge";

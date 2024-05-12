@@ -3,7 +3,7 @@ import i18next from "i18next";
 import { Notice } from "obsidian";
 
 import { noticeMobile } from ".";
-import { ERROR_ICONS, FOUND_ATTACHMENTS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
+import { ERROR_ICONS, FOUND_ATTACHMENTS, HOURGLASS_ICON, SUCCESS_ICON } from "../interfaces/icons";
 
 // Credit : https://github.com/oleeskild/obsidian-digital-garden/ @oleeskild
 

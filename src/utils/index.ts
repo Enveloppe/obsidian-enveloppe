@@ -5,18 +5,18 @@ import {
 	ListEditedFiles,
 	MetadataExtractor,
 	MultiRepoProperties,
-	Properties, TOKEN_PATH,
+	Properties, 
+	TOKEN_PATH,
 	UploadedFiles} from "@interfaces";
+import { ERROR_ICONS, HOURGLASS_ICON, SUCCESS_ICON } from "@interfaces/icons";
 import i18next from "i18next";
 import {App, normalizePath, Notice, Platform, TFile} from "obsidian";
 import slugify from "slugify";
+import {getReceiptFolder} from "src/conversion/file_path";
 import { createRegexFromText } from "src/conversion/find_and_replace_text";
+import Publisher from "src/GitHub/upload";
 import GithubPublisher from "src/main";
-
-import {getReceiptFolder} from "../conversion/file_path";
-import Publisher from "../GitHub/upload";
-import { ERROR_ICONS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
-import { frontmatterFromFile } from "./parse_frontmatter";
+import { frontmatterFromFile } from "src/utils/parse_frontmatter";
 
 type LogsParameters = {
 	settings: Partial<GitHubPublisherSettings>,
