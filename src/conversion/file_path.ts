@@ -1,11 +1,11 @@
 import {
 	FIND_REGEX,
 	FolderSettings,
-	FrontmatterConvert,
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
 	Properties,
+	PropertiesConversion,
 	Repository,
 } from "@interfaces";
 import {
@@ -407,13 +407,13 @@ export function getReceiptFolder(
 /**
  * Create filepath in github Repository based on settings and frontmatter for image
  * @param {TFile} file : Source file
- * @param {FrontmatterConvert | null} sourceFrontmatter
+ * @param {PropertiesConversion | null} sourceFrontmatter
  * @return {string} the new filepath
  */
 export function getImagePath(
 	file: TFile,
 	plugin: GithubPublisher,
-	sourceFrontmatter: FrontmatterConvert | null,
+	sourceFrontmatter: PropertiesConversion | null,
 	repository: Properties | Properties[],
 ): string {
 	const settings = plugin.settings;
@@ -430,13 +430,13 @@ export function getImagePath(
  * Create filepath in github Repository based on settings and frontmatter for image
  * @param {TFile} file : Source file
  * @param {GitHubPublisherSettings} settings Settings
- * @param {FrontmatterConvert | null} sourceFrontmatter
+ * @param {PropertiesConversion | null} sourceFrontmatter
  * @return {string} the new filepath
  */
 
 function createImagePath(file: TFile,
 	settings: GitHubPublisherSettings,
-	sourceFrontmatter: FrontmatterConvert | null,
+	sourceFrontmatter: PropertiesConversion | null,
 	overridePath?: Properties,
 ): { path: string, name: string } {
 	let fileName = file.name;

@@ -21,7 +21,6 @@ export {
 
 export type {
 	Deleted,
-	PropertiesConversion as FrontmatterConvert,
 	GitHubPublisherSettings,
 	GithubRepo,
 	LinkedNotes,
@@ -34,6 +33,7 @@ export type {
 	OverrideAttachments,
 	Path,
 	Properties,
+	PropertiesConversion,
 	RegexReplace,
 	Repository,
 	SetRepositoryFrontmatter,

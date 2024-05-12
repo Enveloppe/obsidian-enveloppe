@@ -1,8 +1,8 @@
 import {
-	FrontmatterConvert,
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
+	PropertiesConversion,
 } from "@interfaces";
 import { FrontMatterCache, TFile } from "obsidian";
 import slugify from "slugify";
@@ -10,11 +10,12 @@ import { createRelativePath, linkIsInFormatter, textIsInFrontmatter } from "src/
 import { replaceText } from "src/conversion/find_and_replace_text";
 import { isAttachment, noTextConversion } from "src/utils/data_validation_test";
 
+
 /**
- * Convert wikilinks to markdown
+ * Convert wikilinks to markdown links
  * Pretty cursed
  * @param {string} fileContent the text to convert
- * @param {FrontmatterConvert} conditionConvert  the frontmatter settings
+ * @param {PropertiesConversion} conditionConvert  the frontmatter settings
  * @param {GitHubPublisherSettings} settings  global settings
  * @param {LinkedNotes[]} linkedFiles the list of linked files
  * @return {string} the converted text
@@ -22,7 +23,7 @@ import { isAttachment, noTextConversion } from "src/utils/data_validation_test";
 
 export function convertWikilinks(
 	fileContent: string,
-	conditionConvert: FrontmatterConvert,
+	conditionConvert: PropertiesConversion,
 	linkedFiles: LinkedNotes[],
 	settings: GitHubPublisherSettings,
 	sourceFrontmatter: FrontMatterCache | undefined | null,
@@ -41,137 +42,184 @@ export function convertWikilinks(
 		const fileRegex = /(\[\[).*?([\]|])/;
 		for (const wikiMatch of wikiMatches) {
 			const fileMatch = wikiMatch.match(fileRegex);
-			let isEmbed = wikiMatch.startsWith("!") ? "!" : "";
+			const isEmbed = wikiMatch.startsWith("!") ? "!" : "";
 			const isEmbedBool = wikiMatch.startsWith("!");
 			if (fileMatch) {
-				let linkCreator = wikiMatch;
-				/**
-				 * In order to compare linked files with files that we have cached in
-				 * memory, we have sanitize their link name to matching.
-				 *
-				 * For example, if we have a [[./wikilink.md|My Incredible Link Title]],
-				 * we want to match `wikilink.md` with the cached files we have in
-				 * memory. In this case, we'd strip [[, | and ./ to have wikilink.md as
-				 * result.
-				 */
-				const fileName = fileMatch[0]
-					.replaceAll("[", "")
-					.replaceAll("|", "")
-					.replaceAll("]", "")
-					.replaceAll("\\", "");
-				const StrictFileName = fileMatch[0]
-					.replaceAll("[", "")
-					.replaceAll("|", "")
-					.replaceAll("]", "")
-					.replaceAll("\\", "")
-					.replaceAll("../", "")
-					.replaceAll("./", "")
-					.replace(/#.*/, "");
-				//get last from path
+				const fileName = sanitizeLinkFileName(fileMatch[0]);
+				const strictFileName = sanitizeStrictFileName(fileMatch[0]);
 				const linkedFile = linkedFiles.find(
-					(item) => item.linkFrom.replace(/#.*/, "") === StrictFileName
+					(item) => item.linkFrom.replace(/#.*/, "") === strictFileName
 				);
 				const isNotAttachment = !isAttachment(fileName.trim(), settings.embed.unHandledObsidianExt);	
 
 				if (linkedFile && !linkIsInFormatter(linkedFile, sourceFrontmatter)) {
-					let altText: string;
-					if (linkedFile.linked.extension !== "md") {
-						altText =
-							linkedFile.altText
-								? linkedFile.altText
-								: "";
-					} else {
-						altText =
-							linkedFile.altText
-								? linkedFile.altText
-								: linkedFile.linked.basename;
-						altText = altText
-							.replace("#", " > ")
-							.replace(/ > \^\w*/, "");
-					}
-					const removeEmbed =
-						(conditionConvert.removeEmbed === "remove" || conditionConvert.removeEmbed === "bake") &&
-						isEmbedBool &&
-						linkedFile.linked.extension === "md";
-					if (isEmbedBool && linkedFile.linked.extension === "md" && conditionConvert.removeEmbed === "links") {
-						isEmbed = `${conditionConvert.charEmbedLinks} `;
-						linkCreator = linkCreator.replace("!", isEmbed);
-					}
-					if (convertWikilink) {
-						const altMatch = wikiMatch.match(/(\|).*(]])/);
-						const altCreator = fileName.split("/");
-						let altLink = creatorAltLink(
-							altMatch as RegExpMatchArray,
-							altCreator,
-							fileName.split(".").at(-1) as string,
-							fileName
-						);
-
-						altLink = altLink
-							.replace("#", " > ")
-							.replace(/ > \^\w*/, "");
-						linkCreator = createMarkdownLinks(fileName, isEmbed, altLink, settings);
-					} else {
-						const altMatch = wikiMatch.match(/(\|).*(]])/);
-						linkCreator = addAltForWikilinks(altMatch as RegExpMatchArray, linkCreator);
-					}
-					if (
-						linkedFile.linked.extension === "md" &&
-						!convertLinks &&
-						!isEmbedBool
-					) {
-						linkCreator = altText;
-					}
-					if (
-						(!imageSettings &&
-							!isNotAttachment) ||
-						removeEmbed
-					) {
-						linkCreator = "";
-					}
-					fileContent = replaceText(fileContent, wikiMatch, linkCreator, settings, true);
-
+					fileContent = isLinkedFile(linkedFile, conditionConvert, {
+						isEmbedBool,
+						isNotAttachment,
+						convertWikilink,
+						convertLinks,
+						imageSettings,
+					}, isEmbed, settings, fileContent, wikiMatch, fileName);
 				} else if (!fileName.startsWith("http") && !textIsInFrontmatter(fileName, sourceFrontmatter)) {
-					const altMatch = wikiMatch.match(/(\|).*(]])/);
-					const altCreator = fileName.split("/");
-
-					let altLink = creatorAltLink(
-						altMatch as RegExpMatchArray,
-						altCreator,
-						fileName.split(".").at(-1) as string,
-						fileName
+					fileContent = strictStringConversion({
+						convertWikilink,
+						isNotAttachment,
+						isEmbedBool,
+						convertLinks,
+						imageSettings,
+					}, wikiMatch, fileName, conditionConvert, isEmbed, settings, fileContent
 					);
-					altLink = altLink
-						.replace("#", " > ")
-						.replace(/ > \^\w*/, "");
-					const removeEmbed =
-						isNotAttachment &&
-						conditionConvert.removeEmbed === "remove" &&
-						isEmbedBool;
-					if (isEmbedBool && conditionConvert.removeEmbed === "links" && isNotAttachment) {
-						isEmbed = `${conditionConvert.charEmbedLinks} `;
-						linkCreator = linkCreator.replace("!", isEmbed);
-					}
-					linkCreator = convertWikilink ? createMarkdownLinks(fileName, isEmbed, altLink, settings) : addAltForWikilinks(altMatch as RegExpMatchArray, linkCreator);
-					if (
-						isNotAttachment &&
-						!convertLinks &&
-						!isEmbedBool
-					) {
-						linkCreator = altLink;
-					}
-					if (
-						(!imageSettings && !isNotAttachment) ||
-						removeEmbed
-					) {
-						linkCreator = "";
-					}
-					fileContent = replaceText(fileContent, wikiMatch, linkCreator, settings, true);
 				}
 			}
 		}
 	}
 	return fileContent;
+}
+
+
+function sanitizeLinkFileName(link: string) {
+	return link
+		.replaceAll("[", "")
+		.replaceAll("|", "")
+		.replaceAll("]", "")
+		.replaceAll("\\", "");
+}
+/**
+ * In order to compare linked files with files that we have cached in
+ * memory, we have sanitize their link name to matching.
+ *
+ * For example, if we have a [[./wikilink.md|My Incredible Link Title]],
+ * we want to match `wikilink.md` with the cached files we have in
+ * memory. In this case, we'd strip [[, | and ./ to have wikilink.md as
+ * result.
+ */
+function sanitizeStrictFileName(link: string) {
+	return link.replaceAll("[", "")
+		.replaceAll("|", "")
+		.replaceAll("]", "")
+		.replaceAll("\\", "")
+		.replaceAll("../", "")
+		.replaceAll("./", "")
+		.replace(/#.*/, "");
+}
+
+function isLinkedFile(
+	linkedFile: LinkedNotes, 
+	conditionConvert: PropertiesConversion, 
+	condition: {
+		isEmbedBool: boolean;
+		isNotAttachment: boolean;
+		convertWikilink: boolean;
+		convertLinks: boolean;
+		imageSettings: boolean;
+	},
+	isEmbed: string, 
+	settings: GitHubPublisherSettings, 
+	fileContent: string, 
+	wikiMatch: string, 
+	fileName: string) {
+	let altText: string;
+	let linkCreator = wikiMatch;
+	const { isEmbedBool, isNotAttachment, convertWikilink, convertLinks, imageSettings } = condition;
+	if (linkedFile.linked.extension !== "md") {
+		altText = linkedFile.altText ? linkedFile.altText : "";
+	} else {
+		altText = linkedFile.altText ? linkedFile.altText : linkedFile.linked.basename;
+		altText = altText .replace("#", " > ").replace(/ > \^\w*/, "");
+	}
+	const removeEmbed = (conditionConvert.removeEmbed === "remove" || conditionConvert.removeEmbed === "bake") &&
+		isEmbedBool &&
+		linkedFile.linked.extension === "md";
+	if (isEmbedBool && linkedFile.linked.extension === "md" && conditionConvert.removeEmbed === "links") {
+		isEmbed = `${conditionConvert.charEmbedLinks} `;
+		linkCreator = wikiMatch.replace("!", isEmbed);
+	}
+	if (convertWikilink) {
+		const altMatch = wikiMatch.match(/(\|).*(]])/);
+		const altCreator = fileName.split("/");
+		let altLink = creatorAltLink(
+			altMatch as RegExpMatchArray,
+			altCreator,
+			fileName.split(".").at(-1) as string,
+			fileName
+		);
+
+		altLink = altLink
+			.replace("#", " > ")
+			.replace(/ > \^\w*/, "");
+		linkCreator = createMarkdownLinks(fileName, isEmbed, altLink, settings);
+	} else {
+		const altMatch = wikiMatch.match(/(\|).*(]])/);
+		linkCreator = addAltForWikilinks(altMatch as RegExpMatchArray, linkCreator);
+	}
+	if (
+		linkedFile.linked.extension === "md" &&
+		!convertLinks &&
+		!isEmbedBool
+	) {
+		linkCreator = altText;
+	}
+	if (
+		(!imageSettings && !isNotAttachment) || removeEmbed
+	) {
+		linkCreator = "";
+	}
+	return replaceText(fileContent, wikiMatch, linkCreator, settings, true);
+
+					
+}
+
+function strictStringConversion(
+	condition: {
+		convertWikilink: boolean;
+		isNotAttachment: boolean;
+		isEmbedBool: boolean;
+		convertLinks: boolean;
+		imageSettings: boolean;
+	},
+	wikiMatch: string, 
+	fileName: string, 
+	conditionConvert: PropertiesConversion, 
+	isEmbed: string, 
+	settings: GitHubPublisherSettings, 
+	fileContent: string) {
+	const { convertWikilink, isNotAttachment, isEmbedBool, convertLinks, imageSettings } = condition;
+	const altMatch = wikiMatch.match(/(\|).*(]])/);
+	const altCreator = fileName.split("/");
+
+	let altLink = creatorAltLink(
+		altMatch as RegExpMatchArray,
+		altCreator,
+		fileName.split(".").at(-1) as string,
+		fileName
+	);
+	altLink = altLink
+		.replace("#", " > ")
+		.replace(/ > \^\w*/, "");
+	const removeEmbed =
+		isNotAttachment &&
+		conditionConvert.removeEmbed === "remove" &&
+		isEmbedBool;
+	let linkCreator = wikiMatch;	
+	if (isEmbedBool && conditionConvert.removeEmbed === "links" && isNotAttachment) {
+		isEmbed = `${conditionConvert.charEmbedLinks} `;
+		linkCreator = linkCreator.replace("!", isEmbed);
+	}
+	linkCreator = convertWikilink ? createMarkdownLinks(fileName, isEmbed, altLink, settings) : addAltForWikilinks(altMatch as RegExpMatchArray, linkCreator);
+	if (
+		isNotAttachment &&
+		!convertLinks &&
+		!isEmbedBool
+	) {
+		linkCreator = altLink;
+	}
+	if (
+		(!imageSettings && !isNotAttachment) ||
+		removeEmbed
+	) {
+		linkCreator = "";
+	}
+	return replaceText(fileContent, wikiMatch, linkCreator, settings, true);
 }
 
 /**

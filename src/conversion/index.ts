@@ -1,8 +1,8 @@
 import {
-	FrontmatterConvert,
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
+	PropertiesConversion,
 } from "@interfaces";
 import i18next from "i18next";
 import {
@@ -38,7 +38,7 @@ import findAndReplaceText from "./find_and_replace_text";
 export function addHardLineBreak(
 	text: string,
 	settings: GitHubPublisherSettings,
-	frontmatter: FrontmatterConvert
+	frontmatter: PropertiesConversion
 ): string {
 	try {
 		text = text.replace(/^\s*\\\s*$/gim, "<br/>");

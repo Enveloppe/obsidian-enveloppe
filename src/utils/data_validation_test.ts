@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, Properties, Repository} from "@interfaces";
+import {FIND_REGEX, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, Properties, PropertiesConversion, Repository} from "@interfaces";
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
@@ -288,10 +288,10 @@ export async function checkEmptyConfiguration(prop: Properties | Properties[], p
 
 /**
  * Verify if the text need to bee converted or not
- * @param {FrontmatterConvert} conditionConvert The frontmatter option to check
+ * @param {PropertiesConversion} conditionConvert The frontmatter option to check
  * @return {boolean} if the text need to be converted
  */
-export function noTextConversion(conditionConvert: FrontmatterConvert): boolean {
+export function noTextConversion(conditionConvert: PropertiesConversion): boolean {
 	const convertWikilink = conditionConvert.convertWiki;
 	const imageSettings = conditionConvert.attachment;
 	const embedSettings = conditionConvert.embed;

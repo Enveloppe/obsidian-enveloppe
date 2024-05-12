@@ -3,7 +3,7 @@
  * @link https://github.com/oleeskild/obsidian-digital-garden/blob/main/src/compiler/DataviewCompiler.ts
  */
 
-import { FrontmatterConvert, LinkedNotes, MultiProperties } from "@interfaces";
+import { LinkedNotes, MultiProperties,PropertiesConversion } from "@interfaces";
 import i18next from "i18next";
 import { Component, FrontMatterCache, htmlToMarkdown,TFile } from "obsidian";
 import { getAPI, isPluginEnabled,Literal, Success } from "obsidian-dataview";
@@ -170,10 +170,10 @@ export async function convertDataviewQueries(
 /**
  * Remove dataview queries from text
  * @param dataviewMarkdown : string the dataview converted in markdown
- * @param {@link FrontmatterConvert} frontmatterSettings the settings
+ * @param {@link PropertiesConversion} frontmatterSettings the settings
  * @return {string} the text without dataview queries or the dataview queries in markdown
  */
-function removeDataviewQueries(dataviewMarkdown: Literal, frontmatterSettings: FrontmatterConvert): string {
+function removeDataviewQueries(dataviewMarkdown: Literal, frontmatterSettings: PropertiesConversion): string {
 	const toString = dataviewMarkdown?.toString();
 	return frontmatterSettings.dataview && dataviewMarkdown && toString ? toString : "";
 }
