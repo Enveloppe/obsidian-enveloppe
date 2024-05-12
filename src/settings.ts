@@ -3,26 +3,25 @@ import {
 } from "@interfaces";
 import i18next from "i18next";
 import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
-
-import GithubPublisherPlugin from "./main";
+import GithubPublisherPlugin from "src/main";
 import {
 	help,
 	KeyBasedOnSettings,
 	multipleRepoExplained,
 	supportMe,
 	usefulLinks
-} from "./settings/help";
-import { migrateToken } from "./settings/migrate";
-import { ExportModal, ImportLoadPreset, ImportModal, loadAllPresets } from "./settings/modals/import_export";
-import { ModalAddingNewRepository } from "./settings/modals/manage_repo";
-import { AutoCleanPopup } from "./settings/modals/popup";
-import { ModalRegexFilePathName, ModalRegexOnContents, OverrideAttachmentsModal } from "./settings/modals/regex_edition";
-import { TokenEditPath } from "./settings/modals/token_path";
+} from "src/settings/help";
+import { migrateToken } from "src/settings/migrate";
+import { ExportModal, ImportLoadPreset, ImportModal, loadAllPresets } from "src/settings/modals/import_export";
+import { ModalAddingNewRepository } from "src/settings/modals/manage_repo";
+import { AutoCleanPopup } from "src/settings/modals/popup";
+import { ModalRegexFilePathName, ModalRegexOnContents, OverrideAttachmentsModal } from "src/settings/modals/regex_edition";
+import { TokenEditPath } from "src/settings/modals/token_path";
 import {
 	autoCleanCondition,
 	folderHideShowSettings, showHideBasedOnFolder,
-} from "./settings/style";
-import { checkRepositoryValidity, verifyRateLimitAPI } from "./utils/data_validation_test";
+} from "src/settings/style";
+import { checkRepositoryValidity, verifyRateLimitAPI } from "src/utils/data_validation_test";
 
 
 export class GithubPublisherSettingsTab extends PluginSettingTab {

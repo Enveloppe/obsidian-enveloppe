@@ -7,15 +7,17 @@ import { GitHubPublisherSettings,GithubRepo,LinkedNotes, OverrideAttachments, Pa
 import { MonoProperties,MonoRepoProperties,MultiProperties, MultiRepoProperties } from "src/interfaces/properties";
 import { MetadataExtractor } from "src/interfaces/settings";
 
+import { ERROR_ICONS, FOUND_ATTACHMENTS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
+
 export {
 	DEFAULT_SETTINGS,
 	EnumbSettingsTabId,
-	FIND_REGEX,
+	ERROR_ICONS, 	FIND_REGEX,
 	FolderSettings,
-	GithubTiersVersion,
+	FOUND_ATTACHMENTS, 	GithubTiersVersion,
+	HOURGLASS_ICON, SUCCESS_ICON,
 	TOKEN_PATH, 
-	TypeOfEditRegex,
-};
+	TypeOfEditRegex};
 
 export type {
 	Deleted,

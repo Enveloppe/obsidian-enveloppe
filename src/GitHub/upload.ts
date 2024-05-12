@@ -7,6 +7,7 @@ import {
 	MultiRepoProperties,
 	Properties, UploadedFiles,
 } from "@interfaces";
+import { LOADING_ICON } from "@interfaces/icons";
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
@@ -42,7 +43,6 @@ import {
 	isAttachment,
 	isShared,
 } from "src/utils/data_validation_test";
-import { LOADING_ICON } from "@interfaces/icons";
 import { frontmatterFromFile, frontmatterSettingsRepository, getFrontmatterSettings, getProperties } from "src/utils/parse_frontmatter";
 import { ShareStatusBar } from "src/utils/status_bar";
 import merge from "ts-deepmerge";
