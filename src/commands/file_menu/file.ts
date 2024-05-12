@@ -89,7 +89,7 @@ export function addMenuFile(plugin: GithubPublisher, file: TFile, branchName: st
  * @param {Repository} repo - The data repository found in the file
  * @return {Menu} - The submenu created
  */
-export function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository | null, originalMenu: Menu): Menu {
+function subMenuCommandsFile(plugin: GithubPublisher, item: MenuItem, file: TFile, branchName: string, repo: Repository | null, originalMenu: Menu): Menu {
 	const frontmatter = frontmatterFromFile(file, plugin, repo);
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
 	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
