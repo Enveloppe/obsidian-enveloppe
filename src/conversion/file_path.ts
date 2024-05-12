@@ -15,15 +15,14 @@ import {
 	TFolder,
 	Vault,
 } from "obsidian";
+import { createRegexFromText } from "src/conversion/find_and_replace_text";
 import GithubPublisher from "src/main";
-import merge from "ts-deepmerge";
-
 import {
 	logs,
-} from "../utils";
-import {checkIfRepoIsInAnother, isInternalShared, isShared} from "../utils/data_validation_test";
-import { frontmatterFromFile, frontmatterSettingsRepository, getCategory, getFrontmatterSettings, getProperties } from "../utils/parse_frontmatter";
-import { createRegexFromText } from "./find_and_replace_text";
+} from "src/utils";
+import {checkIfRepoIsInAnother, isInternalShared, isShared} from "src/utils/data_validation_test";
+import { frontmatterFromFile, frontmatterSettingsRepository, getCategory, getFrontmatterSettings, getProperties } from "src/utils/parse_frontmatter";
+import merge from "ts-deepmerge";
 
 
 /** Search a link in the entire frontmatter value */
