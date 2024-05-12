@@ -1,11 +1,10 @@
 import { MultiRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
 import { Command, Notice } from "obsidian";
-
-import GithubPublisher from "../main";
-import { createLink } from "../utils";
-import { isShared } from "../utils/data_validation_test";
-import { frontmatterFromFile, getProperties } from "../utils/parse_frontmatter";
+import GithubPublisher from "src/main";
+import { createLink } from "src/utils";
+import { isShared } from "src/utils/data_validation_test";
+import { frontmatterFromFile, getProperties } from "src/utils/parse_frontmatter";
 
 /**
  * Create the command to create a link to the note in the repo

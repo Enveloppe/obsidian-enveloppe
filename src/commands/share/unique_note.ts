@@ -1,14 +1,13 @@
 import { MultiRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
 import { Command, FrontMatterCache, Notice, Platform, TFile } from "obsidian";
+import { GithubBranch } from "src/GitHub/branch";
+import GithubPublisher from "src/main";
+import { ListChangedFiles } from "src/settings/modals/list_changed";
+import { createLink, createListEdited, getSettingsOfMetadataExtractor, logs,notifError, publisherNotification } from "src/utils";
+import { checkRepositoryValidityWithProperties, isShared } from "src/utils/data_validation_test";
+import { frontmatterFromFile, getProperties } from "src/utils/parse_frontmatter";
 import merge from "ts-deepmerge";
-
-import { GithubBranch } from "../../GitHub/branch";
-import GithubPublisher from "../../main";
-import { ListChangedFiles } from "../../settings/modals/list_changed";
-import { createLink, createListEdited, getSettingsOfMetadataExtractor, logs,notifError, publisherNotification } from "../../utils";
-import { checkRepositoryValidityWithProperties, isShared } from "../../utils/data_validation_test";
-import { frontmatterFromFile, getProperties } from "../../utils/parse_frontmatter";
 
 /**
  * Command to upload the active file ; use checkCallback to check if the file is shared and if they are a active file
@@ -52,7 +51,6 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 
 /**
 	* Share only **one** note and their embedded contents, including note and attachments
-	* @param {string} branchName - The branch name created by the plugin
 	* @param {GithubBranch} PublisherManager
 	* @param {TFile} file - The file to share
 	* @param {Repository|null} repository

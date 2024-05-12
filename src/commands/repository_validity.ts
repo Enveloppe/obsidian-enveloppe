@@ -1,9 +1,8 @@
 import { Repository } from "@interfaces";
 import i18next from "i18next";
 import { Command, Notice } from "obsidian";
-
-import GithubPublisher from "../main";
-import { checkRepositoryValidity } from "../utils/data_validation_test";
+import GithubPublisher from "src/main";
+import { checkRepositoryValidity } from "src/utils/data_validation_test";
 
 /**
  * Command to check the validity of the repository

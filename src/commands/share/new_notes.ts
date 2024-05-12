@@ -1,12 +1,11 @@
 import { MonoRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
 import { Command, Notice } from "obsidian";
-
-import { GithubBranch } from "../../GitHub/branch";
-import GithubPublisher from "../../main";
-import { checkRepositoryValidityWithProperties } from "../../utils/data_validation_test";
-import { frontmatterSettingsRepository,getProperties } from "../../utils/parse_frontmatter";
-import { shareAllMarkedNotes } from "./all_notes";
+import { shareAllMarkedNotes } from "src/commands";
+import { GithubBranch } from "src/GitHub/branch";
+import GithubPublisher from "src/main";
+import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
+import { frontmatterSettingsRepository,getProperties } from "src/utils/parse_frontmatter";
 
 /**
  * Upload all new notes only

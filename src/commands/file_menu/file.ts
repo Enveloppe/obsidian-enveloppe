@@ -1,12 +1,11 @@
 import { Repository } from "@interfaces";
 import i18next from "i18next";
 import { Menu, MenuItem,Platform, TFile } from "obsidian";
-
-import GithubPublisher from "../../main";
-import { defaultRepo,getRepoSharedKey, isShared, multipleSharedKey } from "../../utils/data_validation_test";
-import { frontmatterFromFile, getProperties } from "../../utils/parse_frontmatter";
-import { shareOneNote } from "../share/unique_note";
-import { ChooseRepoToRun } from "../suggest_other_repo_commands_modal";
+import { shareOneNote } from "src/commands";
+import { ChooseRepoToRun } from "src/commands/suggest_other_repo_commands_modal";
+import GithubPublisher from "src/main";
+import { defaultRepo,getRepoSharedKey, isShared, multipleSharedKey } from "src/utils/data_validation_test";
+import { frontmatterFromFile, getProperties } from "src/utils/parse_frontmatter";
 
 /**
  * Create a menu for a shared file

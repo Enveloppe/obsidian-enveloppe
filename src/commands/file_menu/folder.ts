@@ -1,12 +1,11 @@
 import { MonoRepoProperties,Repository } from "@interfaces";
 import i18next from "i18next";
 import { Menu, MenuItem, Platform, TFolder } from "obsidian";
+import { shareAllMarkedNotes } from "src/commands";
+import { ChooseRepoToRun } from "src/commands/suggest_other_repo_commands_modal";
 import GithubPublisher from "src/main";
-
-import { defaultRepo, getRepoSharedKey, isExcludedPath, isInDryRunFolder } from "../../utils/data_validation_test";
-import { frontmatterSettingsRepository,getProperties } from "../../utils/parse_frontmatter";
-import { shareAllMarkedNotes } from "../share/all_notes";
-import { ChooseRepoToRun } from "../suggest_other_repo_commands_modal";
+import { defaultRepo, getRepoSharedKey, isExcludedPath, isInDryRunFolder } from "src/utils/data_validation_test";
+import { frontmatterSettingsRepository,getProperties } from "src/utils/parse_frontmatter";
 
 /**
  * Share the shared file of a folder to a repository

@@ -1,16 +1,15 @@
 import { MonoRepoProperties, Repository, UploadedFiles } from "@interfaces";
 import i18next from "i18next";
 import { Command, FrontMatterCache, Notice, Platform, TFile } from "obsidian";
-
-import { GithubBranch } from "../../GitHub/branch";
-import { deleteFromGithub } from "../../GitHub/delete";
-import GithubPublisher from "../../main";
-import { ListChangedFiles } from "../../settings/modals/list_changed";
-import { createListEdited, getSettingsOfMetadataExtractor, logs, notifError,publisherNotification } from "../../utils";
-import { checkRepositoryValidityWithProperties } from "../../utils/data_validation_test";
-import { ERROR_ICONS } from "../../utils/icons";
-import { frontmatterSettingsRepository,getProperties } from "../../utils/parse_frontmatter";
-import { ShareStatusBar } from "../../utils/status_bar";
+import { GithubBranch } from "src/GitHub/branch";
+import { deleteFromGithub } from "src/GitHub/delete";
+import GithubPublisher from "src/main";
+import { ListChangedFiles } from "src/settings/modals/list_changed";
+import { createListEdited, getSettingsOfMetadataExtractor, logs, notifError,publisherNotification } from "src/utils";
+import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
+import { ERROR_ICONS } from "src/utils/icons";
+import { frontmatterSettingsRepository,getProperties } from "src/utils/parse_frontmatter";
+import { ShareStatusBar } from "src/utils/status_bar";
 
 /**
  * Upload all note

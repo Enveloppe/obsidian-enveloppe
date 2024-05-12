@@ -1,14 +1,13 @@
 import { MonoRepoProperties,Repository } from "@interfaces";
 import i18next from "i18next";
 import { Command, Notice } from "obsidian";
-
-import { GithubBranch } from "../GitHub/branch";
-import { deleteFromGithub } from "../GitHub/delete";
-import GithubPublisher from "../main";
-import { ListChangedFiles } from "../settings/modals/list_changed";
-import { notif } from "../utils";
-import { checkRepositoryValidityWithProperties } from "../utils/data_validation_test";
-import { frontmatterSettingsRepository,getProperties } from "../utils/parse_frontmatter";
+import { GithubBranch } from "src/GitHub/branch";
+import { deleteFromGithub } from "src/GitHub/delete";
+import GithubPublisher from "src/main";
+import { ListChangedFiles } from "src/settings/modals/list_changed";
+import { notif } from "src/utils";
+import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
+import { frontmatterSettingsRepository,getProperties } from "src/utils/parse_frontmatter";
 
 /**
  * Command to delete file on the repo
