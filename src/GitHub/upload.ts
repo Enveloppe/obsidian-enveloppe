@@ -20,33 +20,32 @@ import {
 	TFolder,
 	Vault,
 } from "obsidian";
-import merge from "ts-deepmerge";
-
-import { mainConverting } from "../conversion";
-import { convertToHTMLSVG } from "../conversion/compiler/excalidraw";
+import { mainConverting } from "src/conversion";
+import { convertToHTMLSVG } from "src/conversion/compiler/excalidraw";
 import {
 	getImagePath,
 	getReceiptFolder,
-} from "../conversion/file_path";
-import GithubPublisher from "../main";
+} from "src/conversion/file_path";
+import { deleteFromGithub } from "src/GitHub/delete";
+import { FilesManagement } from "src/GitHub/files";
+import GithubPublisher from "src/main";
 import {
 	logs,
 	noticeMobile,
 	notif,
 	notifError,
-} from "../utils";
+} from "src/utils";
 import {
 	checkEmptyConfiguration,
 	checkIfRepoIsInAnother,
 	forcePushAttachment,
 	isAttachment,
 	isShared,
-} from "../utils/data_validation_test";
-import { LOADING_ICON } from "../utils/icons";
-import { frontmatterFromFile, frontmatterSettingsRepository, getFrontmatterSettings, getProperties } from "../utils/parse_frontmatter";
-import { ShareStatusBar } from "../utils/status_bar";
-import { deleteFromGithub } from "./delete";
-import { FilesManagement } from "./files";
+} from "src/utils/data_validation_test";
+import { LOADING_ICON } from "src/utils/icons";
+import { frontmatterFromFile, frontmatterSettingsRepository, getFrontmatterSettings, getProperties } from "src/utils/parse_frontmatter";
+import { ShareStatusBar } from "src/utils/status_bar";
+import merge from "ts-deepmerge";
 
 /** Class to manage the branch
  * @extends FilesManagement

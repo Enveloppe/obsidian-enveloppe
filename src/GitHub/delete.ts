@@ -11,11 +11,10 @@ import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
 import { MetadataCache, normalizePath, Notice, parseYaml, TAbstractFile, TFile, TFolder, Vault } from "obsidian";
-
-import { logs, notif, trimObject} from "../utils";
-import {isAttachment, verifyRateLimitAPI} from "../utils/data_validation_test";
-import { frontmatterSettingsRepository } from "../utils/parse_frontmatter";
-import { FilesManagement } from "./files";
+import { FilesManagement } from "src/GitHub/files";
+import { logs, notif, trimObject} from "src/utils";
+import {isAttachment, verifyRateLimitAPI} from "src/utils/data_validation_test";
+import { frontmatterSettingsRepository } from "src/utils/parse_frontmatter";
 
 /**
  * Delete file from github, based on a list of file in the original vault

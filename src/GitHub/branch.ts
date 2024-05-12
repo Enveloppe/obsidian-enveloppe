@@ -4,10 +4,9 @@ import {
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import {Notice } from "obsidian";
-
-import GithubPublisher from "../main";
-import { logs, notif } from "../utils";
-import { FilesManagement } from "./files";
+import { FilesManagement } from "src/GitHub/files";
+import GithubPublisher from "src/main";
+import { logs, notif } from "src/utils";
 
 
 export class GithubBranch extends FilesManagement {
