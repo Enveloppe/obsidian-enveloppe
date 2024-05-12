@@ -1,9 +1,9 @@
+import { MonoRepoProperties,Repository } from "@interfaces";
 import i18next from "i18next";
 import { Command, Notice } from "obsidian";
 
 import { GithubBranch } from "../GitHub/branch";
 import { deleteFromGithub } from "../GitHub/delete";
-import { MonoRepoProperties,Repository } from "../interfaces";
 import GithubPublisher from "../main";
 import { ListChangedFiles } from "../settings/modals/list_changed";
 import { notif } from "../utils";

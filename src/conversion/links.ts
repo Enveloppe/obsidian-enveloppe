@@ -1,12 +1,12 @@
-import { FrontMatterCache, TFile } from "obsidian";
-import slugify from "slugify";
-
 import {
 	FrontmatterConvert,
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
-} from "../interfaces";
+} from "@interfaces";
+import { FrontMatterCache, TFile } from "obsidian";
+import slugify from "slugify";
+
 import { isAttachment, noTextConversion } from "../utils/data_validation_test";
 import { createRelativePath, linkIsInFormatter, textIsInFrontmatter } from "./file_path";
 import { replaceText } from "./find_and_replace_text";

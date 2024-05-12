@@ -1,9 +1,9 @@
+import { MultiRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
 import { Command, FrontMatterCache, Notice, Platform, TFile } from "obsidian";
 import merge from "ts-deepmerge";
 
 import { GithubBranch } from "../../GitHub/branch";
-import { MultiRepoProperties, Repository } from "../../interfaces";
 import GithubPublisher from "../../main";
 import { ListChangedFiles } from "../../settings/modals/list_changed";
 import { createLink, createListEdited, getSettingsOfMetadataExtractor, logs,notifError, publisherNotification } from "../../utils";

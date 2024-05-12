@@ -1,8 +1,8 @@
+import { MonoRepoProperties,Repository } from "@interfaces";
 import i18next from "i18next";
 import { Menu, MenuItem, Platform, TFolder } from "obsidian";
+import GithubPublisher from "src/main";
 
-import { MonoRepoProperties,Repository } from "../../interfaces";
-import GithubPublisher from "../../main";
 import { defaultRepo, getRepoSharedKey, isExcludedPath, isInDryRunFolder } from "../../utils/data_validation_test";
 import { frontmatterSettingsRepository,getProperties } from "../../utils/parse_frontmatter";
 import { shareAllMarkedNotes } from "../share/all_notes";

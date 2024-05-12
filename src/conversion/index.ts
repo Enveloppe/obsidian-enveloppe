@@ -1,3 +1,9 @@
+import {
+	FrontmatterConvert,
+	GitHubPublisherSettings,
+	LinkedNotes,
+	MultiProperties,
+} from "@interfaces";
 import i18next from "i18next";
 import {
 	FrontMatterCache,
@@ -11,12 +17,6 @@ import {
 } from "obsidian";
 import { isFolderNote } from "src/utils/data_validation_test";
 
-import {
-	FrontmatterConvert,
-	GitHubPublisherSettings,
-	LinkedNotes,
-	MultiProperties,
-} from "../interfaces";
 import GithubPublisher from "../main";
 import { notif } from "../utils";
 import { convertDataviewQueries } from "./compiler/dataview";

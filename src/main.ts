@@ -1,3 +1,10 @@
+import {
+	DEFAULT_SETTINGS,
+	GitHubPublisherSettings,
+	GithubTiersVersion,
+	Repository,
+	SetRepositoryFrontmatter,
+} from "@interfaces";
 import { Octokit } from "@octokit/core";
 import dedent from "dedent";
 import i18next from "i18next";
@@ -19,13 +26,6 @@ import { ChooseWhichRepoToRun } from "./commands/suggest_other_repo_commands_mod
 import { getTitleField, regexOnFileName } from "./conversion/file_path";
 import { GithubBranch } from "./GitHub/branch";
 import { resources, translationLanguage } from "./i18n/i18next";
-import {
-	DEFAULT_SETTINGS,
-	GitHubPublisherSettings,
-	GithubTiersVersion,
-	Repository,
-	SetRepositoryFrontmatter,
-} from "./interfaces";
 import { GithubPublisherSettingsTab } from "./settings";
 import { migrateSettings, OldSettings } from "./settings/migrate";
 import { createTokenPath, monkeyPatchConsole, notif } from "./utils";

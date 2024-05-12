@@ -1,11 +1,3 @@
-import i18next from "i18next";
-import {App, normalizePath, Notice, Platform, TFile} from "obsidian";
-import slugify from "slugify";
-import { createRegexFromText } from "src/conversion/find_and_replace_text";
-import GithubPublisher from "src/main";
-
-import {getReceiptFolder} from "../conversion/file_path";
-import Publisher from "../GitHub/upload";
 import {
 	Deleted,
 	FIND_REGEX,
@@ -14,7 +6,15 @@ import {
 	MetadataExtractor,
 	MultiRepoProperties,
 	Properties, TOKEN_PATH,
-	UploadedFiles} from "../interfaces";
+	UploadedFiles} from "@interfaces";
+import i18next from "i18next";
+import {App, normalizePath, Notice, Platform, TFile} from "obsidian";
+import slugify from "slugify";
+import { createRegexFromText } from "src/conversion/find_and_replace_text";
+import GithubPublisher from "src/main";
+
+import {getReceiptFolder} from "../conversion/file_path";
+import Publisher from "../GitHub/upload";
 import { ERROR_ICONS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 import { frontmatterFromFile } from "./parse_frontmatter";
 

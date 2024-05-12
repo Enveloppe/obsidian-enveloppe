@@ -7,6 +7,10 @@
  */
 
 import {
+	GitHubPublisherSettings,
+	LinkedNotes,
+	MultiProperties} from "@interfaces";
+import {
 	App,
 	BlockSubpathResult,
 	CachedMetadata,
@@ -17,10 +21,6 @@ import {
 import { getAPI, Link } from "obsidian-dataview";
 import GithubPublisher from "src/main";
 
-import {
-	GitHubPublisherSettings,
-	LinkedNotes,
-	MultiProperties} from "../../interfaces";
 import {isShared} from "../../utils/data_validation_test";
 import { addToYaml } from "..";
 import { createRelativePath, getTitleField, regexOnFileName } from "../file_path";

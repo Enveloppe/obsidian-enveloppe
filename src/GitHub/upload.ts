@@ -1,3 +1,12 @@
+import {
+	Deleted,
+	GitHubPublisherSettings,
+	MetadataExtractor, MonoProperties,
+	MonoRepoProperties,
+	MultiProperties,
+	MultiRepoProperties,
+	Properties, UploadedFiles,
+} from "@interfaces";
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
@@ -19,15 +28,6 @@ import {
 	getImagePath,
 	getReceiptFolder,
 } from "../conversion/file_path";
-import {
-	Deleted,
-	GitHubPublisherSettings,
-	MetadataExtractor, MonoProperties,
-	MonoRepoProperties,
-	MultiProperties,
-	MultiRepoProperties,
-	Properties, UploadedFiles,
-} from "../interfaces";
 import GithubPublisher from "../main";
 import {
 	logs,

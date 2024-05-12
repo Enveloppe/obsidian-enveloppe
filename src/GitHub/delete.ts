@@ -1,8 +1,3 @@
-import { Octokit } from "@octokit/core";
-import i18next from "i18next";
-import { Base64 } from "js-base64";
-import { MetadataCache, normalizePath, Notice, parseYaml, TAbstractFile, TFile, TFolder, Vault } from "obsidian";
-
 import {
 	Deleted,
 	FIND_REGEX,
@@ -11,7 +6,12 @@ import {
 	GithubRepo,
 	MonoRepoProperties,
 	Properties,
-} from "../interfaces";
+} from "@interfaces";
+import { Octokit } from "@octokit/core";
+import i18next from "i18next";
+import { Base64 } from "js-base64";
+import { MetadataCache, normalizePath, Notice, parseYaml, TAbstractFile, TFile, TFolder, Vault } from "obsidian";
+
 import { logs, notif, trimObject} from "../utils";
 import {isAttachment, verifyRateLimitAPI} from "../utils/data_validation_test";
 import { frontmatterSettingsRepository } from "../utils/parse_frontmatter";

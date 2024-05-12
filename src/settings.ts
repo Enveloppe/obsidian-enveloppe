@@ -1,9 +1,9 @@
+import {
+	EnumbSettingsTabId, FolderSettings, GitHubPublisherSettings, GithubTiersVersion, Repository
+} from "@interfaces";
 import i18next from "i18next";
 import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
 
-import {
-	EnumbSettingsTabId, FolderSettings, GitHubPublisherSettings, GithubTiersVersion, Repository
-} from "./interfaces";
 import GithubPublisherPlugin from "./main";
 import {
 	help,

@@ -1,3 +1,4 @@
+import {GitHubPublisherSettings, Preset} from "@interfaces/main";
 import {Octokit} from "@octokit/core";
 import i18next from "i18next";
 import {
@@ -10,7 +11,6 @@ import {
 	Setting,
 	TextAreaComponent} from "obsidian";
 
-import {GitHubPublisherSettings, Preset} from "../../interfaces/main";
 import GithubPublisher from "../../main";
 import {GithubPublisherSettingsTab} from "../../settings";
 import {logs, notif} from "../../utils";

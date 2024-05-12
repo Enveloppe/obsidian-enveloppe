@@ -1,7 +1,7 @@
 
+import { FIND_REGEX, GitHubPublisherSettings } from "@interfaces";
 import { logs } from "src/utils";
 
-import { FIND_REGEX, GitHubPublisherSettings } from "../interfaces";
 import { escapeRegex } from "./links";
 
 /**

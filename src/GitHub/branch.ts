@@ -1,10 +1,10 @@
+import {
+	Properties,
+} from "@interfaces/main";
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import {Notice } from "obsidian";
 
-import {
-	Properties,
-} from "../interfaces/main";
 import GithubPublisher from "../main";
 import { logs, notif } from "../utils";
 import { FilesManagement } from "./files";

@@ -1,3 +1,11 @@
+import {
+	ConvertedLink,
+	GithubRepo,
+	LinkedNotes,
+	Properties,
+	PropertiesConversion,
+	Repository,
+} from "@interfaces/main";
 import { Octokit } from "@octokit/core";
 import { EmbedCache, LinkCache, TFile, TFolder} from "obsidian";
 import { getAPI, Link } from "obsidian-dataview";
@@ -6,14 +14,6 @@ import {
 	getImagePath,
 	getReceiptFolder,
 } from "../conversion/file_path";
-import {
-	ConvertedLink,
-	GithubRepo,
-	LinkedNotes,
-	Properties,
-	PropertiesConversion,
-	Repository,
-} from "../interfaces/main";
 import GithubPublisher from "../main";
 import {logs} from "../utils";
 import { isAttachment, isShared } from "../utils/data_validation_test";

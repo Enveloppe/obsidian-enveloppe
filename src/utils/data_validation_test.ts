@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, Properties, Repository} from "@interfaces";
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
@@ -6,7 +7,6 @@ import GithubPublisher from "src/main";
 import merge from "ts-deepmerge";
 
 import {GithubBranch} from "../GitHub/branch";
-import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, Properties, Repository} from "../interfaces";
 import { notif} from ".";
 import { frontmatterFromFile, getLinkedFrontmatter, getProperties } from "./parse_frontmatter";
 

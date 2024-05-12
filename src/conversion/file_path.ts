@@ -1,4 +1,14 @@
 import {
+	FIND_REGEX,
+	FolderSettings,
+	FrontmatterConvert,
+	GitHubPublisherSettings,
+	LinkedNotes,
+	MultiProperties,
+	Properties,
+	Repository,
+} from "@interfaces";
+import {
 	FrontMatterCache,
 	normalizePath,
 	TFile,
@@ -8,16 +18,6 @@ import {
 import GithubPublisher from "src/main";
 import merge from "ts-deepmerge";
 
-import {
-	FIND_REGEX,
-	FolderSettings,
-	FrontmatterConvert,
-	GitHubPublisherSettings,
-	LinkedNotes,
-	MultiProperties,
-	Properties,
-	Repository,
-} from "../interfaces";
 import {
 	logs,
 } from "../utils";

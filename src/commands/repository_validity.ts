@@ -1,7 +1,7 @@
+import { Repository } from "@interfaces";
 import i18next from "i18next";
 import { Command, Notice } from "obsidian";
 
-import { Repository } from "../interfaces";
 import GithubPublisher from "../main";
 import { checkRepositoryValidity } from "../utils/data_validation_test";
 

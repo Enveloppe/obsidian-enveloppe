@@ -3,11 +3,10 @@
  * See docs for all the condition
  */
 
+import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, Properties, Repository } from "@interfaces";
 import { FrontMatterCache, normalizePath, TFile } from "obsidian";
 import GithubPublisher from "src/main";
 import merge from "ts-deepmerge";
-
-import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, Properties, Repository } from "../interfaces";
 
 export function frontmatterSettingsRepository(plugin: GithubPublisher, repo: Repository | null) {
 	const defaultConvert = getFrontmatterSettings(null, plugin.settings, repo);
