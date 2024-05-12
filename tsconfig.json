@@ -27,6 +27,7 @@
         "./src/interfaces/index.ts"
       ],
     },
+    "noEmit": true,
     "inlineSourceMap": true,
     "inlineSources": true,
     "module": "ESNext",
