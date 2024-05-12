@@ -6,10 +6,9 @@ import {
 } from "@interfaces";
 import { FrontMatterCache, TFile } from "obsidian";
 import slugify from "slugify";
-
-import { isAttachment, noTextConversion } from "../utils/data_validation_test";
-import { createRelativePath, linkIsInFormatter, textIsInFrontmatter } from "./file_path";
-import { replaceText } from "./find_and_replace_text";
+import { createRelativePath, linkIsInFormatter, textIsInFrontmatter } from "src/conversion/file_path";
+import { replaceText } from "src/conversion/find_and_replace_text";
+import { isAttachment, noTextConversion } from "src/utils/data_validation_test";
 
 /**
  * Convert wikilinks to markdown

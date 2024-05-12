@@ -7,10 +7,9 @@ import { FrontmatterConvert, LinkedNotes, MultiProperties } from "@interfaces";
 import i18next from "i18next";
 import { Component, FrontMatterCache, htmlToMarkdown,TFile } from "obsidian";
 import { getAPI, isPluginEnabled,Literal, Success } from "obsidian-dataview";
+import { convertToInternalGithub, convertWikilinks, escapeRegex } from "src/conversion/links";
 import GithubPublisher from "src/main";
 import { logs, notif } from "src/utils";
-
-import { convertToInternalGithub, convertWikilinks, escapeRegex } from "../links";
 
 /**
  * Convert dataview queries to markdown

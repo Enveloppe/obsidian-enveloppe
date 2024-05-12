@@ -1,8 +1,7 @@
 
 import { FIND_REGEX, GitHubPublisherSettings } from "@interfaces";
+import { escapeRegex } from "src/conversion/links";
 import { logs } from "src/utils";
-
-import { escapeRegex } from "./links";
 
 /**
  * Convert a string to a regex object when the string is in the form of a regex (enclosed by /)

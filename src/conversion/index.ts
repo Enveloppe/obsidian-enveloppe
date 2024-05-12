@@ -15,14 +15,14 @@ import {
 	stringifyYaml,
 	TFile,
 } from "obsidian";
+import { convertDataviewQueries } from "src/conversion/compiler/dataview";
+import { bakeEmbeds, convertInlineDataview } from "src/conversion/compiler/embeds";
+import { convertToInternalGithub, convertWikilinks } from "src/conversion/links";
+import GithubPublisher from "src/main";
+import { notif } from "src/utils";
 import { isFolderNote } from "src/utils/data_validation_test";
 
-import GithubPublisher from "../main";
-import { notif } from "../utils";
-import { convertDataviewQueries } from "./compiler/dataview";
-import { bakeEmbeds, convertInlineDataview } from "./compiler/embeds";
 import findAndReplaceText from "./find_and_replace_text";
-import { convertToInternalGithub, convertWikilinks } from "./links";
 
 /**
  * Convert soft line breaks to hard line breaks, adding two space at the end of the line.

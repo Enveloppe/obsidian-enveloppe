@@ -19,11 +19,10 @@ import {
 	resolveSubpath,
 	TFile} from "obsidian";
 import { getAPI, Link } from "obsidian-dataview";
+import { addToYaml } from "src/conversion";
+import { createRelativePath, getTitleField, regexOnFileName } from "src/conversion/file_path";
 import GithubPublisher from "src/main";
-
-import {isShared} from "../../utils/data_validation_test";
-import { addToYaml } from "..";
-import { createRelativePath, getTitleField, regexOnFileName } from "../file_path";
+import {isShared} from "src/utils/data_validation_test";
 
 
 /**
