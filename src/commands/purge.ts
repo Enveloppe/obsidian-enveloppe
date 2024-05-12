@@ -18,7 +18,7 @@ import { frontmatterSettingsRepository,getProperties } from "../utils/parse_fron
  * @param {string} branchName - The branch name to delete the file
  * @return {Promise<Command>}
  */
-export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Repository | null, branchName: string): Promise<Command> {
+export async function purgeCallback(plugin: GithubPublisher, repo: Repository | null, branchName: string): Promise<Command> {
 	const id = repo ? `delete-clean-K${repo.smartKey}` : "delete-clean";
 	let name = i18next.t("commands.publisherDeleteClean");
 	const common = i18next.t("common.repository");
@@ -35,7 +35,7 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 				convert: frontmatterSettingsRepository(plugin, repo)
 			};
 			const publisher = await plugin.reloadOctokit(repo?.smartKey);
-			await purgeNotesRemote(
+			await purge(
 				publisher,
 				branchName,
 				monoRepo
@@ -51,7 +51,7 @@ export async function purgeNotesRemoteCallback(plugin: GithubPublisher, repo: Re
 	* @param {MonoRepoProperties} monoRepo - The repo where to delete the files
 	* @returns {Promise<void>}
 	*/
-export async function purgeNotesRemote(
+async function purge(
 	PublisherManager: GithubBranch,
 	branchName: string,
 	monoRepo: MonoRepoProperties,
@@ -87,7 +87,7 @@ export async function purgeNotesRemote(
  * @param {string} branchName
  * @return {Promise<void>}
  */
-export async function deleteCommands(plugin : GithubPublisher, repo: Repository | null, branchName: string): Promise<void> {
+export async function purgeForRepo(plugin : GithubPublisher, repo: Repository | null, branchName: string): Promise<void> {
 	const prop = getProperties(plugin, repo, null, true);
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const mono: MonoRepoProperties = {
@@ -95,7 +95,7 @@ export async function deleteCommands(plugin : GithubPublisher, repo: Repository 
 		repository: repo,
 		convert: frontmatterSettingsRepository(plugin, repo)
 	};
-	await purgeNotesRemote(
+	await purge(
 		publisher,
 		branchName,
 		mono

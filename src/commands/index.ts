@@ -1,5 +1,5 @@
 import { createLinkCallback, createLinkOnActiveFile } from "./create_link";
-import { deleteCommands, purgeNotesRemoteCallback } from "./purge";
+import { purgeCallback,purgeForRepo } from "./purge";
 import { checkRepositoryValidityCallback, repositoryValidityActiveFile } from "./repository_validity";
 import { refreshAllSets, refreshOpenedSet } from "./set";
 import { uploadAllNotes, uploadAllNotesCallback } from "./share/all_notes";
@@ -11,8 +11,8 @@ export {
 	checkRepositoryValidityCallback,
 	createLinkCallback,
 	createLinkOnActiveFile,
-	deleteCommands,
-	purgeNotesRemoteCallback,
+	purgeForRepo as deleteCommands,
+	purgeCallback as purgeNotesRemoteCallback,
 	refreshAllSets,
 	refreshOpenedSet,
 	repositoryValidityActiveFile,
