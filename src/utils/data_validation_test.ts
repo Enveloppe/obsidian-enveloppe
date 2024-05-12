@@ -83,7 +83,12 @@ export function isShared(
 	const otherRepoWithShareAll = settings.github.otherRepo.filter((repo) => repo.shareAll?.enable);
 	if (!settings.plugin.shareAll?.enable && !otherRepoWithShareAll.length) {
 		const shareKey = otherRepo ? otherRepo.shareKey : settings.plugin.shareKey;
-		if ( meta == null || !meta[shareKey] || meta[shareKey] == null || isExcludedPath(settings, file, otherRepo) || meta[shareKey] === undefined || ["false", "0", "no"].includes(meta[shareKey].toString().toLowerCase())) {
+		if ( meta == null 
+			|| !meta[shareKey] 
+			|| meta[shareKey] == null 
+			|| isExcludedPath(settings, file, otherRepo) 
+			|| meta[shareKey] === undefined 
+			|| ["false", "0", "no"].includes(meta[shareKey].toString().toLowerCase())) {
 			return false;
 		}
 		const shareKeyInFrontmatter:string = meta[shareKey].toString().toLowerCase();
@@ -91,7 +96,11 @@ export function isShared(
 	} else if (settings.plugin.shareAll?.enable || otherRepoWithShareAll.length > 0) {
 		const allExcludedFileName = otherRepoWithShareAll.map((repo) => repo.shareAll!.excludedFileName);
 		allExcludedFileName.push(settings.plugin.shareAll!.excludedFileName);
-		if (allExcludedFileName.some(prefix => prefix.trim().length > 0 && !file.basename.startsWith(prefix) || prefix.trim().length === 0)) {
+		if (
+			allExcludedFileName.some(prefix => prefix.trim().length > 0 
+			&& !file.basename.startsWith(prefix) 
+			|| prefix.trim().length === 0)
+		) {
 			return !isExcludedPath(settings, file, otherRepo);
 		}
 	}
