@@ -169,8 +169,8 @@ export async function convertDataviewQueries(
 
 /**
  * Remove dataview queries from text
- * @param dataviewMarkdown : string the dataview converted in markdown
- * @param {@link PropertiesConversion} frontmatterSettings the settings
+ * @param dataviewMarkdown string the dataview converted in markdown
+ * @param {PropertiesConversion} frontmatterSettings the settings
  * @return {string} the text without dataview queries or the dataview queries in markdown
  */
 function removeDataviewQueries(dataviewMarkdown: Literal, frontmatterSettings: PropertiesConversion): string {
@@ -270,10 +270,7 @@ function sanitizeQuery(query: string): {isInsideCallout: boolean, finalQuery: st
 			sanitized.push(part);
 		}
 	}
-	let finalQuery = query;
-	if (isInsideCallout) {
-		finalQuery = sanitized.join("\n");
-	}
+	const finalQuery = isInsideCallout ? sanitized.join("\n") : query;
 	return {isInsideCallout, finalQuery};
 }
 
