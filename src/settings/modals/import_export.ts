@@ -1,3 +1,4 @@
+import {GitHubPublisherSettings, Preset} from "@interfaces/main";
 import {Octokit} from "@octokit/core";
 import i18next from "i18next";
 import {
@@ -9,12 +10,10 @@ import {
 	Platform,
 	Setting,
 	TextAreaComponent} from "obsidian";
-
-import {GitHubPublisherSettings, Preset} from "../../interfaces/main";
-import GithubPublisher from "../../main";
-import {GithubPublisherSettingsTab} from "../../settings";
-import {logs, notif} from "../../utils";
-import { migrateSettings,OldSettings } from "../migrate";
+import GithubPublisher from "src/main";
+import {GithubPublisherSettingsTab} from "src/settings";
+import { migrateSettings,OldSettings } from "src/settings/migrate";
+import {logs, notif} from "src/utils";
 
 
 export type SettingValue = number | string | boolean | unknown;

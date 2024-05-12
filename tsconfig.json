@@ -1,25 +1,47 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "paths" :{
-      "data-model/*" : ["./node_modules/obsidian-dataview/lib/data-model/*"],
-      "api/*" : ["./node_modules/obsidian-dataview/lib/api/*"],
-      "data-index/*" : ["./node_modules/obsidian-dataview/lib/data-index/*"],
-      "query/*" : ["./node_modules/obsidian-dataview/lib/query/*"],
-      "expression/*" : ["./node_modules/obsidian-dataview/lib/expression/*"],
-      "settings" : ["./node_modules/obsidian-dataview/lib/settings"]
+    "paths": {
+      "data-model/*": [
+        "./node_modules/obsidian-dataview/lib/data-model/*"
+      ],
+      "api/*": [
+        "./node_modules/obsidian-dataview/lib/api/*"
+      ],
+      "data-index/*": [
+        "./node_modules/obsidian-dataview/lib/data-index/*"
+      ],
+      "query/*": [
+        "./node_modules/obsidian-dataview/lib/query/*"
+      ],
+      "expression/*": [
+        "./node_modules/obsidian-dataview/lib/expression/*"
+      ],
+      "settings": [
+        "./node_modules/obsidian-dataview/lib/settings"
+      ],
+      "@interfaces/*": [
+        "./src/interfaces/*"
+      ],
+      "@interfaces": [
+        "./src/interfaces/index.ts"
+      ],
     },
+    "noEmit": true,
     "inlineSourceMap": true,
     "inlineSources": true,
     "module": "ESNext",
-    "target": "ES6",
+    "target": "ESNEXT",
     "allowJs": true,
     "noImplicitAny": true,
+    "skipLibCheck": true,
+    "removeComments": true,
+    "sourceMap": false,
     "moduleResolution": "node",
     "importHelpers": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "strict":true,
+    "strict": true,
     "allowSyntheticDefaultImports": true,
     "lib": [
       "DOM",

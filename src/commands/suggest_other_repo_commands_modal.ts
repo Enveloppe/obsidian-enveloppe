@@ -1,17 +1,10 @@
+import { FolderSettings, GitHubPublisherSettings, Repository } from "@interfaces";
 import i18next from "i18next";
 import { App, FuzzySuggestModal } from "obsidian";
+import {createLinkOnActiveFile, deleteCommands, repositoryValidityActiveFile, shareActiveFile, shareEditedOnly, uploadAllEditedNotes, uploadAllNotes, uploadNewNotes} from "src/commands";
+import GithubPublisher from "src/main";
 import { defaultRepo } from "src/utils/data_validation_test";
 
-import { FolderSettings, GitHubPublisherSettings, Repository } from "../interfaces";
-import GithubPublisher from "../main";
-import {
-	createLinkOnActiveFile,
-	deleteCommands, repositoryValidityActiveFile, shareActiveFile,
-	shareEditedOnly,
-	uploadAllEditedNotes,
-	uploadAllNotes,
-	uploadNewNotes
-} from "./plugin_commands";
 
 interface GithubPublisherCommands {
 	commands: string;

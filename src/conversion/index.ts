@@ -1,3 +1,9 @@
+import {
+	GitHubPublisherSettings,
+	LinkedNotes,
+	MultiProperties,
+	PropertiesConversion,
+} from "@interfaces";
 import i18next from "i18next";
 import {
 	FrontMatterCache,
@@ -9,20 +15,14 @@ import {
 	stringifyYaml,
 	TFile,
 } from "obsidian";
+import { convertDataviewQueries } from "src/conversion/compiler/dataview";
+import { bakeEmbeds, convertInlineDataview } from "src/conversion/compiler/embeds";
+import { convertToInternalGithub, convertWikilinks } from "src/conversion/links";
+import GithubPublisher from "src/main";
+import { notif } from "src/utils";
 import { isFolderNote } from "src/utils/data_validation_test";
 
-import {
-	FrontmatterConvert,
-	GitHubPublisherSettings,
-	LinkedNotes,
-	MultiProperties,
-} from "../interfaces";
-import GithubPublisher from "../main";
-import { notif } from "../utils";
-import { convertDataviewQueries } from "./compiler/dataview";
-import { bakeEmbeds, convertInlineDataview } from "./compiler/embeds";
 import findAndReplaceText from "./find_and_replace_text";
-import { convertToInternalGithub, convertWikilinks } from "./links";
 
 /**
  * Convert soft line breaks to hard line breaks, adding two space at the end of the line.
@@ -38,7 +38,7 @@ import { convertToInternalGithub, convertWikilinks } from "./links";
 export function addHardLineBreak(
 	text: string,
 	settings: GitHubPublisherSettings,
-	frontmatter: FrontmatterConvert
+	frontmatter: PropertiesConversion
 ): string {
 	try {
 		text = text.replace(/^\s*\\\s*$/gim, "<br/>");

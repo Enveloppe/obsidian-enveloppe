@@ -1,5 +1,5 @@
-import { FolderSettings, GithubTiersVersion } from "./enum";
-import { OverrideAttachments,RegexReplace, Repository, TextCleaner } from "./main";
+import { FolderSettings, GithubTiersVersion } from "src/interfaces/enum";
+import { OverrideAttachments,RegexReplace, Repository, TextCleaner } from "src/interfaces/main";
 
 export type Api = {
 	/**

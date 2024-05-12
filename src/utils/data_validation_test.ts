@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {FIND_REGEX, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, Properties, PropertiesConversion, Repository} from "@interfaces";
 import { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { FrontMatterCache, normalizePath,Notice, TFile, TFolder} from "obsidian";
+import {GithubBranch} from "src/GitHub/branch";
 import GithubPublisher from "src/main";
+import { notif} from "src/utils";
+import { frontmatterFromFile, getLinkedFrontmatter, getProperties } from "src/utils/parse_frontmatter";
 import merge from "ts-deepmerge";
-
-import {GithubBranch} from "../GitHub/branch";
-import {FIND_REGEX, FrontmatterConvert, GitHubPublisherSettings, GithubTiersVersion, MultiProperties, Properties, Repository} from "../interfaces";
-import { notif} from ".";
-import { frontmatterFromFile, getLinkedFrontmatter, getProperties } from "./parse_frontmatter";
 
 /**
  * - Check if the file is a valid file to publish
@@ -84,7 +83,12 @@ export function isShared(
 	const otherRepoWithShareAll = settings.github.otherRepo.filter((repo) => repo.shareAll?.enable);
 	if (!settings.plugin.shareAll?.enable && !otherRepoWithShareAll.length) {
 		const shareKey = otherRepo ? otherRepo.shareKey : settings.plugin.shareKey;
-		if ( meta == null || !meta[shareKey] || meta[shareKey] == null || isExcludedPath(settings, file, otherRepo) || meta[shareKey] === undefined || ["false", "0", "no"].includes(meta[shareKey].toString().toLowerCase())) {
+		if ( meta == null 
+			|| !meta[shareKey] 
+			|| meta[shareKey] == null 
+			|| isExcludedPath(settings, file, otherRepo) 
+			|| meta[shareKey] === undefined 
+			|| ["false", "0", "no"].includes(meta[shareKey].toString().toLowerCase())) {
 			return false;
 		}
 		const shareKeyInFrontmatter:string = meta[shareKey].toString().toLowerCase();
@@ -92,7 +96,11 @@ export function isShared(
 	} else if (settings.plugin.shareAll?.enable || otherRepoWithShareAll.length > 0) {
 		const allExcludedFileName = otherRepoWithShareAll.map((repo) => repo.shareAll!.excludedFileName);
 		allExcludedFileName.push(settings.plugin.shareAll!.excludedFileName);
-		if (allExcludedFileName.some(prefix => prefix.trim().length > 0 && !file.basename.startsWith(prefix) || prefix.trim().length === 0)) {
+		if (
+			allExcludedFileName.some(prefix => prefix.trim().length > 0 
+			&& !file.basename.startsWith(prefix) 
+			|| prefix.trim().length === 0)
+		) {
 			return !isExcludedPath(settings, file, otherRepo);
 		}
 	}
@@ -289,10 +297,10 @@ export async function checkEmptyConfiguration(prop: Properties | Properties[], p
 
 /**
  * Verify if the text need to bee converted or not
- * @param {FrontmatterConvert} conditionConvert The frontmatter option to check
+ * @param {PropertiesConversion} conditionConvert The frontmatter option to check
  * @return {boolean} if the text need to be converted
  */
-export function noTextConversion(conditionConvert: FrontmatterConvert): boolean {
+export function noTextConversion(conditionConvert: PropertiesConversion): boolean {
 	const convertWikilink = conditionConvert.convertWiki;
 	const imageSettings = conditionConvert.attachment;
 	const embedSettings = conditionConvert.embed;

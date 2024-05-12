@@ -1,9 +1,8 @@
+import { FolderSettings, GithubTiersVersion, TextCleaner, TOKEN_PATH, TypeOfEditRegex } from "@interfaces";
 import i18next from "i18next";
 import { normalizePath } from "obsidian";
-
-import { FolderSettings, GithubTiersVersion, TextCleaner, TOKEN_PATH, TypeOfEditRegex } from "../interfaces";
-import GithubPublisher from "../main";
-import { createTokenPath, logs } from "../utils";
+import GithubPublisher from "src/main";
+import { createTokenPath, logs } from "src/utils";
 
 export interface OldSettings {
 	githubRepo: string;

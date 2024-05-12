@@ -1,9 +1,14 @@
+import {
+	DEFAULT_SETTINGS,
+	GitHubPublisherSettings,
+	GithubTiersVersion,
+	Repository,
+	SetRepositoryFrontmatter,
+} from "@interfaces";
 import { Octokit } from "@octokit/core";
 import dedent from "dedent";
 import i18next from "i18next";
 import { FrontMatterCache, Menu, Plugin, TAbstractFile, TFile, TFolder } from "obsidian";
-import merge from "ts-deepmerge";
-
 import {
 	checkRepositoryValidityCallback,
 	createLinkCallback,
@@ -13,23 +18,17 @@ import {
 	shareEditedOnlyCallback,
 	shareOneNoteCallback,
 	uploadAllEditedNotesCallback, uploadAllNotesCallback, uploadNewNotesCallback
-} from "./commands/callback";
-import { addMenuFile, addMenuFolder } from "./commands/file_menu";
-import { ChooseWhichRepoToRun } from "./commands/suggest_other_repo_commands_modal";
-import { getTitleField, regexOnFileName } from "./conversion/file_path";
-import { GithubBranch } from "./GitHub/branch";
-import { resources, translationLanguage } from "./i18n/i18next";
-import {
-	DEFAULT_SETTINGS,
-	GitHubPublisherSettings,
-	GithubTiersVersion,
-	Repository,
-	SetRepositoryFrontmatter,
-} from "./interfaces";
-import { GithubPublisherSettingsTab } from "./settings";
-import { migrateSettings, OldSettings } from "./settings/migrate";
-import { createTokenPath, monkeyPatchConsole, notif } from "./utils";
-import { checkRepositoryValidity, verifyRateLimitAPI } from "./utils/data_validation_test";
+} from "src/commands";
+import { addMenuFile, addMenuFolder } from "src/commands/file_menu";
+import { ChooseWhichRepoToRun } from "src/commands/suggest_other_repo_commands_modal";
+import { getTitleField, regexOnFileName } from "src/conversion/file_path";
+import { GithubBranch } from "src/GitHub/branch";
+import { resources, translationLanguage } from "src/i18n/i18next";
+import { GithubPublisherSettingsTab } from "src/settings";
+import { migrateSettings, OldSettings } from "src/settings/migrate";
+import { createTokenPath, monkeyPatchConsole, notif } from "src/utils";
+import { checkRepositoryValidity, verifyRateLimitAPI } from "src/utils/data_validation_test";
+import merge from "ts-deepmerge";
 
 /**
 	* Main class of the plugin

@@ -3,14 +3,13 @@
  * @link https://github.com/oleeskild/obsidian-digital-garden/blob/main/src/compiler/DataviewCompiler.ts
  */
 
+import { LinkedNotes, MultiProperties,PropertiesConversion } from "@interfaces";
 import i18next from "i18next";
 import { Component, FrontMatterCache, htmlToMarkdown,TFile } from "obsidian";
 import { getAPI, isPluginEnabled,Literal, Success } from "obsidian-dataview";
+import { convertToInternalGithub, convertWikilinks, escapeRegex } from "src/conversion/links";
 import GithubPublisher from "src/main";
 import { logs, notif } from "src/utils";
-
-import { FrontmatterConvert, LinkedNotes, MultiProperties } from "../../interfaces";
-import { convertToInternalGithub, convertWikilinks, escapeRegex } from "../links";
 
 /**
  * Convert dataview queries to markdown
@@ -170,11 +169,11 @@ export async function convertDataviewQueries(
 
 /**
  * Remove dataview queries from text
- * @param dataviewMarkdown : string the dataview converted in markdown
- * @param {@link FrontmatterConvert} frontmatterSettings the settings
+ * @param dataviewMarkdown string the dataview converted in markdown
+ * @param {PropertiesConversion} frontmatterSettings the settings
  * @return {string} the text without dataview queries or the dataview queries in markdown
  */
-function removeDataviewQueries(dataviewMarkdown: Literal, frontmatterSettings: FrontmatterConvert): string {
+function removeDataviewQueries(dataviewMarkdown: Literal, frontmatterSettings: PropertiesConversion): string {
 	const toString = dataviewMarkdown?.toString();
 	return frontmatterSettings.dataview && dataviewMarkdown && toString ? toString : "";
 }
@@ -271,10 +270,7 @@ function sanitizeQuery(query: string): {isInsideCallout: boolean, finalQuery: st
 			sanitized.push(part);
 		}
 	}
-	let finalQuery = query;
-	if (isInsideCallout) {
-		finalQuery = sanitized.join("\n");
-	}
+	const finalQuery = isInsideCallout ? sanitized.join("\n") : query;
 	return {isInsideCallout, finalQuery};
 }
 

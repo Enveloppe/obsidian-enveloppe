@@ -1,5 +1,5 @@
-import { FolderSettings, GithubTiersVersion } from "./enum";
-import { GitHubPublisherSettings } from "./main";
+import { FolderSettings, GithubTiersVersion } from "src/interfaces/enum";
+import { GitHubPublisherSettings } from "src/interfaces/main";
 
 /** Find a regex encapsuled in // */
 export const FIND_REGEX = /^\/(.*)\/[igmsuy]*$/;

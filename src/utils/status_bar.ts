@@ -1,9 +1,7 @@
+import { ERROR_ICONS, FOUND_ATTACHMENTS, HOURGLASS_ICON, Properties,  SUCCESS_ICON } from "@interfaces";
 import i18next from "i18next";
 import { Notice } from "obsidian";
-
-import { Properties } from "../interfaces/main";
-import { noticeMobile } from ".";
-import { ERROR_ICONS, FOUND_ATTACHMENTS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
+import { noticeMobile } from "src/utils";
 
 // Credit : https://github.com/oleeskild/obsidian-digital-garden/ @oleeskild
 

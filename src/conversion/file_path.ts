@@ -1,29 +1,28 @@
 import {
+	FIND_REGEX,
+	FolderSettings,
+	GitHubPublisherSettings,
+	LinkedNotes,
+	MultiProperties,
+	Properties,
+	PropertiesConversion,
+	Repository,
+} from "@interfaces";
+import {
 	FrontMatterCache,
 	normalizePath,
 	TFile,
 	TFolder,
 	Vault,
 } from "obsidian";
+import { createRegexFromText } from "src/conversion/find_and_replace_text";
 import GithubPublisher from "src/main";
-import merge from "ts-deepmerge";
-
-import {
-	FIND_REGEX,
-	FolderSettings,
-	FrontmatterConvert,
-	GitHubPublisherSettings,
-	LinkedNotes,
-	MultiProperties,
-	Properties,
-	Repository,
-} from "../interfaces";
 import {
 	logs,
-} from "../utils";
-import {checkIfRepoIsInAnother, isInternalShared, isShared} from "../utils/data_validation_test";
-import { frontmatterFromFile, frontmatterSettingsRepository, getCategory, getFrontmatterSettings, getProperties } from "../utils/parse_frontmatter";
-import { createRegexFromText } from "./find_and_replace_text";
+} from "src/utils";
+import {checkIfRepoIsInAnother, isInternalShared, isShared} from "src/utils/data_validation_test";
+import { frontmatterFromFile, frontmatterSettingsRepository, getCategory, getFrontmatterSettings, getProperties } from "src/utils/parse_frontmatter";
+import merge from "ts-deepmerge";
 
 
 /** Search a link in the entire frontmatter value */
@@ -408,13 +407,13 @@ export function getReceiptFolder(
 /**
  * Create filepath in github Repository based on settings and frontmatter for image
  * @param {TFile} file : Source file
- * @param {FrontmatterConvert | null} sourceFrontmatter
+ * @param {PropertiesConversion | null} sourceFrontmatter
  * @return {string} the new filepath
  */
 export function getImagePath(
 	file: TFile,
 	plugin: GithubPublisher,
-	sourceFrontmatter: FrontmatterConvert | null,
+	sourceFrontmatter: PropertiesConversion | null,
 	repository: Properties | Properties[],
 ): string {
 	const settings = plugin.settings;
@@ -431,13 +430,13 @@ export function getImagePath(
  * Create filepath in github Repository based on settings and frontmatter for image
  * @param {TFile} file : Source file
  * @param {GitHubPublisherSettings} settings Settings
- * @param {FrontmatterConvert | null} sourceFrontmatter
+ * @param {PropertiesConversion | null} sourceFrontmatter
  * @return {string} the new filepath
  */
 
 function createImagePath(file: TFile,
 	settings: GitHubPublisherSettings,
-	sourceFrontmatter: FrontmatterConvert | null,
+	sourceFrontmatter: PropertiesConversion | null,
 	overridePath?: Properties,
 ): { path: string, name: string } {
 	let fileName = file.name;

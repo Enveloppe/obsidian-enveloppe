@@ -3,11 +3,10 @@
  * See docs for all the condition
  */
 
+import { FolderSettings, GitHubPublisherSettings, Path, Properties, PropertiesConversion, Repository } from "@interfaces";
 import { FrontMatterCache, normalizePath, TFile } from "obsidian";
 import GithubPublisher from "src/main";
 import merge from "ts-deepmerge";
-
-import { FolderSettings, FrontmatterConvert, GitHubPublisherSettings, Path, Properties, Repository } from "../interfaces";
 
 export function frontmatterSettingsRepository(plugin: GithubPublisher, repo: Repository | null) {
 	const defaultConvert = getFrontmatterSettings(null, plugin.settings, repo);
@@ -40,7 +39,7 @@ export function getFrontmatterSettings(
 	repo: Repository | null
 ) {
 
-	let settingsConversion: FrontmatterConvert = {
+	let settingsConversion: PropertiesConversion = {
 		convertWiki: settings.conversion.links.wiki,
 		attachment: settings.embed.attachments,
 		embed: settings.embed.notes,
@@ -456,7 +455,7 @@ export function parsePath(
 function getFrontmatterSettingRepository(
 	repository: Repository | null,
 	frontmatter: FrontMatterCache | null | undefined,
-	frontConvert: FrontmatterConvert) {
+	frontConvert: PropertiesConversion) {
 	if (!repository) return frontConvert;
 	const smartKey = repository.smartKey;
 	frontConvert = settingsLink(frontmatter, frontConvert, smartKey);
@@ -513,7 +512,7 @@ export function frontmatterFromFile(file: TFile | null, plugin: GithubPublisher,
 	return frontmatter;
 }
 
-function settingsLink(frontmatter: FrontMatterCache | null | undefined, settingsConversion: FrontmatterConvert, smartKey?: string) {
+function settingsLink(frontmatter: FrontMatterCache | null | undefined, settingsConversion: PropertiesConversion, smartKey?: string) {
 	let key = "links";
 	if (smartKey) key = `${smartKey}.${key}`;
 	if (!frontmatter) return settingsConversion;
@@ -548,7 +547,7 @@ function settingsLink(frontmatter: FrontMatterCache | null | undefined, settings
 	return settingsConversion;
 }
 
-function settingsEmbed(frontmatter: FrontMatterCache | null | undefined, settingsConversion: FrontmatterConvert, smartkey?: string) {
+function settingsEmbed(frontmatter: FrontMatterCache | null | undefined, settingsConversion: PropertiesConversion, smartkey?: string) {
 	if (!frontmatter) return settingsConversion;
 	const key = smartkey ? `${smartkey}.embed` : "embed";
 	if (frontmatter[key] != undefined) {
@@ -575,7 +574,7 @@ function settingsEmbed(frontmatter: FrontMatterCache | null | undefined, setting
 	return settingsConversion;
 }
 
-function settingAttachment(frontmatter: FrontMatterCache | undefined | null, settingsConversion: FrontmatterConvert, smartKey?: string) {
+function settingAttachment(frontmatter: FrontMatterCache | undefined | null, settingsConversion: PropertiesConversion, smartKey?: string) {
 	if (!frontmatter) return settingsConversion;
 	let key = "attachment";
 	if (smartKey) key = `${smartKey}.${key}`;

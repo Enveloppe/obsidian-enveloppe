@@ -1,11 +1,3 @@
-import { Octokit } from "@octokit/core";
-import { EmbedCache, LinkCache, TFile, TFolder} from "obsidian";
-import { getAPI, Link } from "obsidian-dataview";
-
-import {
-	getImagePath,
-	getReceiptFolder,
-} from "../conversion/file_path";
 import {
 	ConvertedLink,
 	GithubRepo,
@@ -13,12 +5,19 @@ import {
 	Properties,
 	PropertiesConversion,
 	Repository,
-} from "../interfaces/main";
-import GithubPublisher from "../main";
-import {logs} from "../utils";
-import { isAttachment, isShared } from "../utils/data_validation_test";
-import { frontmatterFromFile, getFrontmatterSettings, getProperties } from "../utils/parse_frontmatter";
-import Publisher from "./upload";
+} from "@interfaces/main";
+import { Octokit } from "@octokit/core";
+import { EmbedCache, LinkCache, TFile, TFolder} from "obsidian";
+import { getAPI, Link } from "obsidian-dataview";
+import {
+	getImagePath,
+	getReceiptFolder,
+} from "src/conversion/file_path";
+import Publisher from "src/GitHub/upload";
+import GithubPublisher from "src/main";
+import {logs} from "src/utils";
+import { isAttachment, isShared } from "src/utils/data_validation_test";
+import { frontmatterFromFile, getFrontmatterSettings, getProperties } from "src/utils/parse_frontmatter";
 
 export class FilesManagement extends Publisher {
 
