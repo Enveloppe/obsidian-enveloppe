@@ -31,7 +31,7 @@
     "inlineSourceMap": true,
     "inlineSources": true,
     "module": "ESNext",
-    "target": "ES6",
+    "target": "ESNEXT",
     "allowJs": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
