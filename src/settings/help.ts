@@ -1,8 +1,7 @@
 import { FolderSettings, GitHubPublisherSettings } from "@interfaces";
 import i18next from "i18next";
 import { normalizePath } from "obsidian";
-
-import { regexOnPath } from "../conversion/file_path";
+import { regexOnPath } from "src/conversion/file_path";
 
 function spanAtRule(text: string, code: DocumentFragment, br: boolean = true): HTMLElement {
 	if (br) code.createEl("br");

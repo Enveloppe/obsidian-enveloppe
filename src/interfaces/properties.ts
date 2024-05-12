@@ -1,7 +1,6 @@
 import { FrontMatterCache } from "obsidian";
-
-import GithubPublisher from "../main";
-import { Properties, PropertiesConversion, Repository } from "./main";
+import { Properties, PropertiesConversion, Repository } from "src/interfaces/main";
+import GithubPublisher from "src/main";
 
 /**
  * @interface MultiProperties

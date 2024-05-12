@@ -1,10 +1,9 @@
 import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "@interfaces";
 import i18next from "i18next";
 import {AbstractInputSuggest, App, Modal, Notice, Setting, TFile} from "obsidian";
-
-import GithubPublisher from "../../main";
-import {checkRepositoryValidity, verifyRateLimitAPI} from "../../utils/data_validation_test";
-import { migrateToken } from "../migrate";
+import GithubPublisher from "src/main";
+import { migrateToken } from "src/settings/migrate";
+import {checkRepositoryValidity, verifyRateLimitAPI} from "src/utils/data_validation_test";
 
 
 class SetClassSuggester extends AbstractInputSuggest<TFile> {
