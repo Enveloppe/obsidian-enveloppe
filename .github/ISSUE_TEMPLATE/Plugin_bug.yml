@@ -1,5 +1,5 @@
-name: "[Obsidian Github Publisher] Bug report"
-description: Fill a bug report for Obsidian Github Publisher (Plugin)
+name: "Bug report"
+description: Fill a bug report for the plugin
 title: "[Bug]: "
 labels: ["🐛 Bug"]
 assignees:
@@ -54,8 +54,6 @@ body:
         - label: "I checked the issue to prevent duplicate"
           required: true
         - label: "I checked my configurations files and the documentation"
-          required: true
-        - label: "My issue concern doesn't concern the [Mkdocs template](https://github.com/ObsidianPublisher/template-main/)"
           required: true
   - type: dropdown
     id: commands
