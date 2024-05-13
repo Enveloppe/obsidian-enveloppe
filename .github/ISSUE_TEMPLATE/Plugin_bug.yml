@@ -46,6 +46,12 @@ body:
         6. Now, you need to open : A local terminal console (if you have git installed) or a codespace (if you have any) for this repository. Don't forget to `git pull` if you have already cloned the repository.
         7. You need to be on your main branch, so first : `git checkout main` ; After, you have to run `git checkout revert <path to edited file or folder>`. If you want to take an entire folder, for example `docs`, just type `docs/.`. It will take all file
         8. `git commit -am "restoring folder" && git push`. If you use VScode, you can also use the menu to ordering your file restoration.
+
+        ---
+        ## Contacts
+        - [Discord](https://discord.gg/6DyY779Nbn): Have some ressource for user, bug resolve and quick communication about update and bug.
+        - Mail: lisandra-dev@yahoo.com
+
   - type: checkboxes
     attributes:
       label: Issue validation
