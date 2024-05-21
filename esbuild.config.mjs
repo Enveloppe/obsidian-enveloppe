@@ -68,8 +68,8 @@ const exportToVaultFunc = {
 				return;
 			}
 			
-			fs.copyFileSync("./main.js", path.join(folderPlugin, "main.js"));
-			if (fs.existsSync("./styles.css")) fs.copyFileSync("./styles.css", path.join(folderPlugin, "styles.css"));
+			fs.copyFileSync(`${outdir}/main.js`, path.join(folderPlugin, "main.js"));
+			if (fs.existsSync(`${outdir}/styles.css`)) fs.copyFileSync("./styles.css", path.join(folderPlugin, "styles.css"));
 			fs.copyFileSync("./manifest.json", path.join(folderPlugin, "manifest.json"));
 		});
 	}
@@ -82,12 +82,6 @@ const exportToDist = {
 			if (!prod) {
 				return;
 			}
-			if (!fs.existsSync(outdir)) {
-				fs.mkdirSync(outdir);
-			}
-			fs.copyFileSync("main.js", path.join(outdir, "main.js"));
-			if (fs.existsSync("styles.css"))
-				fs.copyFileSync("styles.css", path.join(outdir, "styles.css"));
 			fs.copyFileSync("manifest.json", path.join(outdir, "manifest.json"));
 		});
 	}
@@ -115,11 +109,12 @@ const context = await esbuild.context({
 		"@lezer/lr",
 		...builtins],
 	format: "cjs",
-	target: "es2018",
+	target: "esnext",
 	logLevel: "info",
 	sourcemap: prod ? false : "inline",
 	treeShaking: true,
-	minify: prod ? true : false,
+	minifySyntax: prod,
+	minifyWhitespace: prod,
 	outdir,
 	plugins: [moveStyles, exportToDist, exportToVaultFunc],
 });
