@@ -3,28 +3,129 @@
  * @link https://github.com/oleeskild/obsidian-digital-garden/blob/main/src/compiler/DataviewCompiler.ts
  */
 
-import { LinkedNotes, MultiProperties,PropertiesConversion } from "@interfaces";
+import { GitHubPublisherSettings, LinkedNotes, MultiProperties,PropertiesConversion } from "@interfaces";
 import i18next from "i18next";
 import { Component, FrontMatterCache, htmlToMarkdown,TFile } from "obsidian";
-import { getAPI, isPluginEnabled,Literal, Success } from "obsidian-dataview";
+import { DataviewApi,getAPI, isPluginEnabled,Literal, Success  } from "obsidian-dataview";
 import { convertToInternalGithub, convertWikilinks, escapeRegex } from "src/conversion/links";
 import GithubPublisher from "src/main";
 import { logs, notif } from "src/utils";
+
+
+
+class DataviewCompiler {
+	settings: GitHubPublisherSettings;
+	properties: MultiProperties;
+	path: string;
+	dvApi: DataviewApi;
+	sourceText: string;
+
+	constructor(settings: GitHubPublisherSettings, properties: MultiProperties, path: string, dvApi: DataviewApi, sourceText: string) {
+		this.settings = settings;
+		this.properties = properties;
+		this.path = path;
+		this.dvApi = dvApi;
+		this.sourceText = sourceText;
+	}
+
+	dvJsMatch () {
+		const dataviewJsPrefix = this.dvApi.settings.dataviewJsKeyword || "dataviewjs";
+		const dataViewJsRegex = new RegExp(`\`\`\`${escapeRegex(dataviewJsPrefix)}\\s(.+?)\`\`\``, "gsm");
+		return this.sourceText.matchAll(dataViewJsRegex);
+	}
+
+	dvInlineQueryMatches(){
+		const inlineQueryPrefix = this.dvApi.settings.inlineQueryPrefix || "=";
+		const inlineDataViewRegex = new RegExp(`\`${escapeRegex(inlineQueryPrefix)}(.+?)\``, "gsm");
+		return this.sourceText.matchAll(inlineDataViewRegex);
+	}
+	
+	dvInlineJSMatches() {
+		const inlineJsQueryPrefix = this.dvApi.settings.inlineJsQueryPrefix ||"$=";
+		const inlineJsDataViewRegex = new RegExp(`\`${escapeRegex(inlineJsQueryPrefix)}(.+?)\``, "gsm");
+		return this.sourceText.matchAll(inlineJsDataViewRegex);
+	}
+
+	matches() {
+		return {
+			dataviewJsMatches: this.dvJsMatch(),
+			inlineMatches: this.dvInlineQueryMatches(),
+			inlineJsMatches: this.dvInlineJSMatches()
+		};
+	}
+	/**
+	 * DQL Dataview - The SQL-like Dataview Query Language
+	 * Are in **code blocks**
+	 * @link https://blacksmithgu.github.io/obsidian-dataview/queries/dql-js-inline/#dataview-query-language-dql
+	*/
+	async DQLDataview(query: string) {
+		const {isInsideCallout, finalQuery} = sanitizeQuery(query);
+		const markdown = removeDataviewQueries(await this.dvApi.tryQueryMarkdown(finalQuery, this.path) as string, this.properties.frontmatter.general);
+		if (isInsideCallout) {
+			return surroundWithCalloutBlock(markdown);
+		}
+		return markdown;
+	}
+	/**
+	 * DataviewJS - JavaScript API for Dataview
+	 * Are in **CODE BLOCKS**
+	 * @link https://blacksmithgu.github.io/obsidian-dataview/api/intro/
+	 */
+	async DataviewJS(query: string) {
+		const div = createEl("div");
+		const component = new Component();
+		await this.dvApi.executeJs(query, div, component, this.path);
+		component.load();
+		return removeDataviewQueries(div.innerHTML, this.properties.frontmatter.general);
+	}
+
+	/**
+	 * Inline DQL Dataview - The SQL-like Dataview Query Language in inline
+	 * Syntax : `= query`
+	 * (the prefix can be changed in the settings)
+	 * @source https://blacksmithgu.github.io/obsidian-dataview/queries/dql-js-inline/#inline-dql
+	*/
+
+	async inlineDQLDataview(query: string) {
+		let dataviewResult = this.dvApi.evaluateInline(query, this.path);
+		if (dataviewResult.successful) {
+			dataviewResult = dataviewResult as Success<Literal, string>;
+			return removeDataviewQueries(dataviewResult.value, this.properties.frontmatter.general);
+		} else {
+			return removeDataviewQueries(this.dvApi.settings.renderNullAs, this.properties.frontmatter.general);
+		}
+	}
+	/**
+	 * Inline DataviewJS - JavaScript API for Dataview in inline
+	 * Syntax : `$=js query`
+	 * For the moment, it is not possible to properly process the inlineJS.
+	 * Temporary solution : encapsulate the query into "pure" JS :
+	 * ```ts
+	 * const query = queryFound;
+	 * dv.paragraph(query);
+	 * ```
+	 * After the evaluation, the div is converted to markdown with {@link htmlToMarkdown()} and the dataview queries are removed
+	 */
+	async inlineDataviewJS(query: string) {
+		const evaluateQuery = `
+				const query = ${query};
+				dv.paragraph(query);
+			`;
+		const div = createEl("div");
+		const component = new Component();
+		await this.dvApi.executeJs(evaluateQuery, div, component, this.path);
+		component.load();
+		return removeDataviewQueries(htmlToMarkdown(div.innerHTML), this.properties.frontmatter.general);
+	}
+}
 
 /**
  * Convert dataview queries to markdown
  * Empty the block if settings.convertDataview is false or if the frontmatter key dataview is false
  * The global settings can be overrides by the frontmatter key dataview
  * Also convert links using convertDataviewLinks
- * @param {string} text the text to convert
- * @param {string} path the path of the file to convert
- * @param {GithubPublisher} plugin GithubPublisher plugin
- * @param {FrontMatterCache} frontmatter the frontmatter cache
- * @param {TFile} sourceFile the file to process
- * @param {MultiProperties} properties the properties of the plugins (settings, repository, frontmatter)
- * @returns {Promise<string>} the converted text
  * @author Ole Eskid Steensen
- * @link https://github.com/oleeskild/obsidian-digital-garden/blob/4cdf2791e24b2a0c2a30e7d39965b7b9b50e2ab0/src/Publisher.ts#L297
+ * @link https://github.com/oleeskild/obsidian-digital-garden/blob/main/src/compiler/DataviewCompiler.ts
  */
 
 export async function convertDataviewQueries(
@@ -41,21 +142,12 @@ export async function convertDataviewQueries(
 	const dataViewRegex = /```dataview\s(.+?)```/gsm;
 	const isDataviewEnabled = app.plugins.plugins.dataview;
 	if (!isDataviewEnabled || !isPluginEnabled(app)) return replacedText;
-	const dvApi = getAPI();
-	if (!dvApi) return replacedText;
+	const dvApi = getAPI(app);
+	if (!dvApi || dvApi === undefined) return replacedText;
 	const matches = text.matchAll(dataViewRegex);
+	const compiler = new DataviewCompiler(settings, properties, path, dvApi, text);
+	const {dataviewJsMatches, inlineMatches, inlineJsMatches} = compiler.matches();
 
-	const dataviewJsPrefix = dvApi.settings.dataviewJsKeyword || "dataviewjs";
-	const dataViewJsRegex = new RegExp(`\`\`\`${escapeRegex(dataviewJsPrefix)}\\s(.+?)\`\`\``, "gsm");
-	const dataviewJsMatches = text.matchAll(dataViewJsRegex);
-
-	const inlineQueryPrefix = dvApi.settings.inlineQueryPrefix || "=";
-	const inlineDataViewRegex = new RegExp(`\`${escapeRegex(inlineQueryPrefix)}(.+?)\``, "gsm");
-	const inlineMatches = text.matchAll(inlineDataViewRegex);
-
-	const inlineJsQueryPrefix = dvApi.settings.inlineJsQueryPrefix ||"$=";
-	const inlineJsDataViewRegex = new RegExp(`\`${escapeRegex(inlineJsQueryPrefix)}(.+?)\``, "gsm");
-	const inlineJsMatches = text.matchAll(inlineJsDataViewRegex);
 	if (!matches && !inlineMatches && !dataviewJsMatches && !inlineJsMatches) {
 		logs({ settings }, "No dataview queries found");
 		return replacedText;
@@ -64,18 +156,11 @@ export async function convertDataviewQueries(
 
 	/**
 	 * DQL Dataview - The SQL-like Dataview Query Language
-	 * Are in **code blocks**
-	 * @link https://blacksmithgu.github.io/obsidian-dataview/queries/dql-js-inline/#dataview-query-language-dql
 	*/
 	for (const queryBlock of matches) {
 		try {
 			const block = queryBlock[0];
-			const query = queryBlock[1];
-			const {isInsideCallout, finalQuery} = sanitizeQuery(query);
-			let markdown = removeDataviewQueries(await dvApi.tryQueryMarkdown(finalQuery, path) as string, properties.frontmatter.general);
-			if (isInsideCallout) {
-				markdown = surroundWithCalloutBlock(markdown);
-			}
+			const markdown = await compiler.DQLDataview(queryBlock[1]);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
 			logs({ settings, e: true }, e);
@@ -84,21 +169,10 @@ export async function convertDataviewQueries(
 		}
 	}
 
-	/**
-	 * DataviewJS - JavaScript API for Dataview
-	 * Are in **CODE BLOCKS**
-	 * @link https://blacksmithgu.github.io/obsidian-dataview/api/intro/
-	 */
 	for (const queryBlock of dataviewJsMatches) {
 		try {
 			const block = queryBlock[0];
-			const query = queryBlock[1];
-
-			const div = createEl("div");
-			const component = new Component();
-			await dvApi.executeJs(query, div, component, path);
-			component.load();
-			const markdown = removeDataviewQueries(div.innerHTML, properties.frontmatter.general);
+			const markdown = await compiler.DataviewJS(queryBlock[1]);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
 			logs({ settings, e: true }, e);
@@ -108,24 +182,12 @@ export async function convertDataviewQueries(
 	}
 
 	//Inline queries
-
-	/**
-	 * Inline DQL Dataview - The SQL-like Dataview Query Language in inline
-	 * Syntax : `= query`
-	 * (the prefix can be changed in the settings)
-	 * @source https://blacksmithgu.github.io/obsidian-dataview/queries/dql-js-inline/#inline-dql
-	*/
 	for (const inlineQuery of inlineMatches) {
 		try {
 			const code = inlineQuery[0];
 			const query = inlineQuery[1].trim();
-			let dataviewResult = dvApi.evaluateInline(query, path);
-			if (dataviewResult.successful) {
-				dataviewResult = dataviewResult as Success<Literal, string>;
-				replacedText = replacedText.replace(code, removeDataviewQueries(dataviewResult.value, properties.frontmatter.general));
-			} else {
-				replacedText = replacedText.replace(code, removeDataviewQueries(dvApi.settings.renderNullAs, properties.frontmatter.general));
-			}
+			const markdown = await compiler.inlineDQLDataview(query);
+			replacedText = replacedText.replace(code, markdown);
 		} catch (e) {
 			logs({ settings, e: true }, e);
 			notif({ settings }, error);
@@ -133,30 +195,10 @@ export async function convertDataviewQueries(
 		}
 	}
 
-	/**
-	 * Inline DataviewJS - JavaScript API for Dataview in inline
-	 * Syntax : `$=js query`
-	 * For the moment, it is not possible to properly process the inlineJS.
-	 * Temporary solution : encapsulate the query into "pure" JS :
-	 * ```ts
-	 * const query = queryFound;
-	 * dv.paragraph(query);
-	 * ```
-	 * After the evaluation, the div is converted to markdown with {@link htmlToMarkdown()} and the dataview queries are removed
-	 */
 	for (const inlineJsQuery of inlineJsMatches) {
 		try {
 			const code = inlineJsQuery[0];
-			const query = inlineJsQuery[1].trim();
-			const evaluateQuery = `
-				const query = ${query};
-				dv.paragraph(query);
-			`;
-			const div = createEl("div");
-			const component = new Component();
-			await dvApi.executeJs(evaluateQuery, div, component, path);
-			component.load();
-			const markdown = removeDataviewQueries(htmlToMarkdown(div.innerHTML), properties.frontmatter.general);
+			const markdown = await compiler.inlineDataviewJS(inlineJsQuery[1].trim());
 			replacedText = replacedText.replace(code, markdown);
 		} catch (e) {
 			logs({ settings, e: true }, e);
@@ -180,12 +222,6 @@ function removeDataviewQueries(dataviewMarkdown: Literal, frontmatterSettings: P
 
 /**
  * Wrapper to prevent writing 15 lines of code every time
- * @param {string} md the text to convert
- * @param {FrontMatterCache | undefined | null} frontmatter the frontmatter cache
- * @param {TFile} sourceFile the file to process
- * @param {GithubPublisher} plugin obsidian app
- * @param {MultiProperties} properties the properties of the plugins (settings, repository, frontmatter)
- * @returns {Promise<string>} the converted text
  */
 async function convertDataviewLinks(
 	md: string,
@@ -212,12 +248,7 @@ async function convertDataviewLinks(
 
 /**
  * Get the dataview path from a markdown file
- * @param {string} markdown Markdown file content
- * @param {GitHubPublisherSettings} settings Settings
- * @param {Vault} vault Vault
- * @returns {LinkedNotes[]} Array of linked notes
  */
-
 export function getDataviewPath(
 	markdown: string,
 	plugin: GithubPublisher
@@ -282,5 +313,5 @@ function sanitizeQuery(query: string): {isInsideCallout: boolean, finalQuery: st
 function surroundWithCalloutBlock(input: string): string {
 	const tmp = input.split("\n");
 
-	return " " + tmp.join("\n> ");
+	return ` ${tmp.join("\n> ")}`;
 }
