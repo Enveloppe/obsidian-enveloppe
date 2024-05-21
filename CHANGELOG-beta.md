@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.2.5-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.4...7.2.5-0) (2024-05-21)
+
+
+### Bug Fixes
+
+* dist folder ([7133bb0](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/7133bb08d93ae8ad421d994f919a6ca3358ee751))
+* frontmatterFromFile must return FrontMatterCache ([1f84c02](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1f84c027b4e28a05c195409bc9bcd17c8bbacd0b))
+* optimize the reading of linkedfrontmatter ([3580a4c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/3580a4c96888a7b75313de01c4c586ed6fb9f14e))
+
 ## [7.1.0-9](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-8...7.1.0-9) (2024-05-08)
 
 ## [7.1.0-8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.1.0-7...7.1.0-8) (2024-05-08)
