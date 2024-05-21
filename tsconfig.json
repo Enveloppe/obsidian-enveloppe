@@ -8,6 +8,9 @@
       "@interfaces": [
         "./src/interfaces/index.ts"
       ],
+      "obsidian-dataview": [
+        "node_modules/@obsidian_publisher/obsidian-dataview"
+      ],
     },
     "noEmit": true,
     "inlineSourceMap": true,
