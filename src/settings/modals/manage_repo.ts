@@ -1,14 +1,20 @@
-import {GitHubPublisherSettings, GithubTiersVersion, Repository} from "@interfaces";
+import { GitHubPublisherSettings, GithubTiersVersion, Repository } from "@interfaces";
 import i18next from "i18next";
-import {AbstractInputSuggest, App, Modal, Notice, Setting, TFile} from "obsidian";
+import { AbstractInputSuggest, App, Modal, Notice, Setting, TFile } from "obsidian";
 import GithubPublisher from "src/main";
 import { migrateToken } from "src/settings/migrate";
-import {checkRepositoryValidity, verifyRateLimitAPI} from "src/utils/data_validation_test";
-
+import {
+	checkRepositoryValidity,
+	verifyRateLimitAPI,
+} from "src/utils/data_validation_test";
 
 class SetClassSuggester extends AbstractInputSuggest<TFile> {
 	plugin: GithubPublisher;
-	constructor(private inputEl: HTMLInputElement, plugin: GithubPublisher, private onSubmit: (value: TFile) => void) {
+	constructor(
+		private inputEl: HTMLInputElement,
+		plugin: GithubPublisher,
+		private onSubmit: (value: TFile) => void
+	) {
 		super(plugin.app, inputEl);
 		this.plugin = plugin;
 	}
@@ -19,7 +25,10 @@ class SetClassSuggester extends AbstractInputSuggest<TFile> {
 
 	getSuggestions(query: string): TFile[] {
 		return this.plugin.app.vault.getFiles().filter((file) => {
-			if (file.extension === "md" && file.path.toLowerCase().contains(query.toLowerCase())) {
+			if (
+				file.extension === "md" &&
+				file.path.toLowerCase().contains(query.toLowerCase())
+			) {
 				const frontmatter = this.plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 				if (frontmatter) return true;
 			}
@@ -62,7 +71,8 @@ export class ModalAddingNewRepository extends Modal {
 		branchName: string,
 		plugin: GithubPublisher,
 		repository: Repository[],
-		onSubmit: (result: Repository[]) => void) {
+		onSubmit: (result: Repository[]) => void
+	) {
 		super(app);
 		this.settings = settings;
 		this.repository = repository;
@@ -72,14 +82,17 @@ export class ModalAddingNewRepository extends Modal {
 	}
 
 	onOpen() {
-		const {contentEl} = this;
+		const { contentEl } = this;
 		contentEl.empty();
 		contentEl.addClasses(["github-publisher", "modals", "manage-repo", "add"]);
-		contentEl.createEl("h2", {text: i18next.t("settings.github.smartRepo.modals.title")});
-		contentEl.createEl("p", {text: i18next.t("settings.github.smartRepo.modals.desc")});
-		contentEl.createEl("p", {text: i18next.t("settings.github.smartRepo.modals.frontmatterInfo")});
-		contentEl.createEl("p", {text: i18next.t("settings.plugin.shareKey.otherRepo")});
-
+		contentEl.createEl("h2", {
+			text: i18next.t("settings.github.smartRepo.modals.title"),
+		});
+		contentEl.createEl("p", { text: i18next.t("settings.github.smartRepo.modals.desc") });
+		contentEl.createEl("p", {
+			text: i18next.t("settings.github.smartRepo.modals.frontmatterInfo"),
+		});
+		contentEl.createEl("p", { text: i18next.t("settings.plugin.shareKey.otherRepo") });
 
 		const defaultRepository: Repository = {
 			smartKey: "smartkey",
@@ -103,10 +116,10 @@ export class ModalAddingNewRepository extends Modal {
 				transform: {
 					toUri: this.settings.plugin.copyLink.transform.toUri,
 					slugify: this.settings.plugin.copyLink.transform.slugify,
-					applyRegex: this.settings.plugin.copyLink.transform.applyRegex
-				}
+					applyRegex: this.settings.plugin.copyLink.transform.applyRegex,
+				},
 			},
-			set: null
+			set: null,
 		};
 
 		new Setting(contentEl)
@@ -115,7 +128,11 @@ export class ModalAddingNewRepository extends Modal {
 			.addButton((button) => {
 				button
 
-					.setButtonText(i18next.t("common.add", {things: i18next.t("settings.github.smartRepo.modals.newRepo").toLowerCase()}))
+					.setButtonText(
+						i18next.t("common.add", {
+							things: i18next.t("settings.github.smartRepo.modals.newRepo").toLowerCase(),
+						})
+					)
 					.onClick(() => {
 						this.repository.push(defaultRepository);
 						this.onOpen();
@@ -134,68 +151,71 @@ export class ModalAddingNewRepository extends Modal {
 							repo.smartKey = value.toLowerCase();
 							sett.controlEl.setAttribute("smartKey", value.toLowerCase());
 						});
-
 				})
 
 				.addExtraButton((btn) => {
-					btn
-						.setIcon("trash")
-						.onClick(() => {
-							this.repository.splice(this.repository.indexOf(repo), 1);
-							this.onOpen();
-						});
-				})
-				.addExtraButton((btn) => {
-					btn
-						.setIcon("pencil")
-						.onClick(() => {
-							new ModalEditingRepository(this.app, repo, this.plugin, this.branchName, (result) => {
-								this.repository[this.repository.indexOf(repo)] = result;
-							}).open();
-						});
-				});
-
-		}
-		new Setting(contentEl)
-			.addButton((button) => {
-				button
-					.setButtonText(i18next.t("common.save"))
-					.setCta()
-					.onClick(() => {
-						const error = this.foundError();
-						const input = error.repo.length > 0 ? this.containerEl.querySelector(`[smartkey="${error.repo}"] input`) : contentEl.querySelector("[placeholder=\"smartKey\"] input");
-						if (error.type === "None") {
-							//remove error
-							input?.classList?.remove("error");
-							this.onSubmit(this.repository);
-							this.close();
-						}
-						input?.classList?.add("error");
-						if (error.type === "duplicate") {
-							new Notice(i18next.t("settings.github.smartRepo.modals.duplicate"));
-						} else if (error.type === "default") {
-							new Notice(i18next.t("settings.github.smartRepo.modals.default"));
-						} else if (error.type === "empty") {
-							new Notice(i18next.t("settings.github.smartRepo.modals.empty"));
-						}
+					btn.setIcon("trash").onClick(() => {
+						this.repository.splice(this.repository.indexOf(repo), 1);
+						this.onOpen();
 					});
-			});
+				})
+				.addExtraButton((btn) => {
+					btn.setIcon("pencil").onClick(() => {
+						new ModalEditingRepository(
+							this.app,
+							repo,
+							this.plugin,
+							this.branchName,
+							(result) => {
+								this.repository[this.repository.indexOf(repo)] = result;
+							}
+						).open();
+					});
+				});
+		}
+		new Setting(contentEl).addButton((button) => {
+			button
+				.setButtonText(i18next.t("common.save"))
+				.setCta()
+				.onClick(() => {
+					const error = this.foundError();
+					const input =
+						error.repo.length > 0
+							? this.containerEl.querySelector(`[smartkey="${error.repo}"] input`)
+							: contentEl.querySelector('[placeholder="smartKey"] input');
+					if (error.type === "None") {
+						//remove error
+						input?.classList?.remove("error");
+						this.onSubmit(this.repository);
+						this.close();
+					}
+					input?.classList?.add("error");
+					if (error.type === "duplicate") {
+						new Notice(i18next.t("settings.github.smartRepo.modals.duplicate"));
+					} else if (error.type === "default") {
+						new Notice(i18next.t("settings.github.smartRepo.modals.default"));
+					} else if (error.type === "empty") {
+						new Notice(i18next.t("settings.github.smartRepo.modals.empty"));
+					}
+				});
+		});
 	}
 
-	foundError(): { repo: string; type: "duplicate" | "default" | "empty" | "None"} {
+	foundError(): { repo: string; type: "duplicate" | "default" | "empty" | "None" } {
 		for (const repo of this.repository) {
-			if (this.plugin.settings.github.otherRepo.filter((r) => r.smartKey === repo.smartKey).length > 1) {
-				return {repo: repo.smartKey, type: "duplicate"};
+			if (
+				this.plugin.settings.github.otherRepo.filter((r) => r.smartKey === repo.smartKey)
+					.length > 1
+			) {
+				return { repo: repo.smartKey, type: "duplicate" };
 			} else if (repo.smartKey === "default") {
-				return {repo: repo.smartKey, type: "default"};
+				return { repo: repo.smartKey, type: "default" };
 			} else if (repo.smartKey.length === 0) {
-				return {repo: "", type: "empty"};
+				return { repo: "", type: "empty" };
 			}
 		}
-		return {repo: "", type: "None"};
-
+		return { repo: "", type: "None" };
 	}
-
 
 	onClose() {
 		const { contentEl } = this;
@@ -206,14 +226,22 @@ export class ModalAddingNewRepository extends Modal {
 			for (let i = 0; i < repo.length; i++) {
 				repo[i].smartKey = `smartkey-${i}`;
 			}
-			new Notice(`${i18next.t("settings.github.smartRepo.modals.empty")} ${i18next.t("common.rename")}`);
+			new Notice(
+				`${i18next.t("settings.github.smartRepo.modals.empty")} ${i18next.t(
+					"common.rename"
+				)}`
+			);
 		} else if (error.type === "duplicate") {
 			//rename the repo
 			const repo = this.repository.filter((r) => r.smartKey === error.repo);
 			for (let i = 0; i < repo.length; i++) {
 				repo[i].smartKey = `${repo[i].smartKey}-${i}`;
 			}
-			new Notice(`${i18next.t("settings.github.smartRepo.modals.duplicate")} ${i18next.t("common.rename")}`);
+			new Notice(
+				`${i18next.t("settings.github.smartRepo.modals.duplicate")} ${i18next.t(
+					"common.rename"
+				)}`
+			);
 		} else if (error.type === "default") {
 			//rename the repo
 			const repo = this.repository.filter((r) => r.smartKey === error.repo);
@@ -221,7 +249,11 @@ export class ModalAddingNewRepository extends Modal {
 				const randomKey = Math.random().toString(36).substring(2, 8);
 				r.smartKey = `${r.smartKey}-${randomKey}`;
 			}
-			new Notice(`${i18next.t("settings.github.smartRepo.modals.default")} ${i18next.t("common.rename")}`);
+			new Notice(
+				`${i18next.t("settings.github.smartRepo.modals.default")} ${i18next.t(
+					"common.rename"
+				)}`
+			);
 		}
 		this.onSubmit(this.repository);
 		contentEl.empty();
@@ -249,7 +281,8 @@ class ModalEditingRepository extends Modal {
 		repository: Repository,
 		GithubPublisher: GithubPublisher,
 		brancheName: string,
-		onSubmit: (result: Repository) => void) {
+		onSubmit: (result: Repository) => void
+	) {
 		super(app);
 		this.repository = repository;
 		this.onSubmit = onSubmit;
@@ -258,9 +291,9 @@ class ModalEditingRepository extends Modal {
 	}
 
 	onOpen() {
-		const {contentEl} = this;
+		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClasses(["github-publisher", "modals", "manage-repo" , "edit"]);
+		contentEl.addClasses(["github-publisher", "modals", "manage-repo", "edit"]);
 		new Setting(contentEl)
 			.setClass("no-display")
 			.addButton((button) =>
@@ -280,15 +313,23 @@ class ModalEditingRepository extends Modal {
 						this.close();
 					})
 			);
-		contentEl.createEl("h2", {text: i18next.t("common.edit", {things: this.repository.smartKey})});
+		contentEl.createEl("h2", {
+			text: i18next.t("common.edit", { things: this.repository.smartKey }),
+		});
 
 		new Setting(contentEl)
 			.setName(i18next.t("settings.github.apiType.title"))
 			.setDesc(i18next.t("settings.github.apiType.desc"))
 			.addDropdown((dropdown) => {
 				dropdown
-					.addOption(GithubTiersVersion.free, i18next.t("settings.github.apiType.dropdown.free"))
-					.addOption(GithubTiersVersion.entreprise, i18next.t("settings.github.apiType.dropdown.enterprise"))
+					.addOption(
+						GithubTiersVersion.free,
+						i18next.t("settings.github.apiType.dropdown.free")
+					)
+					.addOption(
+						GithubTiersVersion.entreprise,
+						i18next.t("settings.github.apiType.dropdown.enterprise")
+					)
 					.setValue(this.repository.api.tiersForApi)
 					.onChange((value) => {
 						this.repository.api.tiersForApi = value as GithubTiersVersion;
@@ -314,9 +355,7 @@ class ModalEditingRepository extends Modal {
 			.setDesc(i18next.t("settings.github.username.desc"))
 			.addText((text) =>
 				text
-					.setPlaceholder(
-						i18next.t("settings.github.username.title")
-					)
+					.setPlaceholder(i18next.t("settings.github.username.title"))
 					.setValue(this.repository.user)
 					.onChange(async (value) => {
 						this.repository.user = value.trim();
@@ -351,15 +390,16 @@ class ModalEditingRepository extends Modal {
 			span.innerText = i18next.t("settings.github.ghToken.desc");
 			span.createEl("a", undefined, (link) => {
 				link.innerText = `${i18next.t("common.here")}.`;
-				link.href =
-						"https://github.com/settings/tokens/new?scopes=repo,workflow";
+				link.href = "https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
 		});
 		new Setting(contentEl)
 			.setName(i18next.t("common.ghToken"))
 			.setDesc(desc_ghToken)
 			.addText(async (text) => {
-				const decryptedToken: string = await this.plugin.loadToken(this.repository.smartKey);
+				const decryptedToken: string = await this.plugin.loadToken(
+					this.repository.smartKey
+				);
 				text
 					.setPlaceholder("ghp_1234567890")
 					.setValue(decryptedToken)
@@ -370,36 +410,34 @@ class ModalEditingRepository extends Modal {
 		new Setting(contentEl)
 			.setName(i18next.t("settings.github.automaticallyMergePR"))
 			.addToggle((toggle) =>
-				toggle
-					.setValue(this.repository.automaticallyMergePR)
-					.onChange(async (value) => {
-						this.repository.automaticallyMergePR = value;
-					})
+				toggle.setValue(this.repository.automaticallyMergePR).onChange(async (value) => {
+					this.repository.automaticallyMergePR = value;
+				})
 			);
-		new Setting(contentEl)
-			.setClass("no-display")
-			.addButton((button) =>
-				button
-					.setButtonText(i18next.t("settings.github.testConnection"))
-					.setClass("connect")
-					.onClick(async () => {
-						const octokit = await this.plugin.reloadOctokit(this.repository.smartKey);
-						this.repository.verifiedRepo = await checkRepositoryValidity(
-							octokit,
-							this.repository,
-							null);
-						this.plugin.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.plugin.settings);
-					})
-			);
+		new Setting(contentEl).setClass("no-display").addButton((button) =>
+			button
+				.setButtonText(i18next.t("settings.github.testConnection"))
+				.setClass("connect")
+				.onClick(async () => {
+					const octokit = await this.plugin.reloadOctokit(this.repository.smartKey);
+					this.repository.verifiedRepo = await checkRepositoryValidity(
+						octokit,
+						this.repository,
+						null
+					);
+					this.plugin.settings.github.rateLimit = await verifyRateLimitAPI(
+						octokit.octokit,
+						this.plugin.settings
+					);
+				})
+		);
 		new Setting(contentEl)
 			.setName(i18next.t("settings.github.smartRepo.modals.shortcuts.title"))
 			.setDesc(i18next.t("settings.github.smartRepo.modals.shortcuts.desc"))
 			.addToggle((toggle) =>
-				toggle
-					.setValue(this.repository.createShortcuts)
-					.onChange(async (value) => {
-						this.repository.createShortcuts = value;
-					})
+				toggle.setValue(this.repository.createShortcuts).onChange(async (value) => {
+					this.repository.createShortcuts = value;
+				})
 			);
 
 		contentEl.createEl("h3", { text: "GitHub Workflow" });
@@ -420,17 +458,16 @@ class ModalEditingRepository extends Modal {
 			);
 		new Setting(contentEl)
 			.setName(i18next.t("settings.githubWorkflow.githubAction.title"))
-			.setDesc(
-				i18next.t("settings.githubWorkflow.githubAction.desc")
-			)
+			.setDesc(i18next.t("settings.githubWorkflow.githubAction.desc"))
 			.addText((text) => {
-				text.setPlaceholder("ci")
+				text
+					.setPlaceholder("ci")
 					.setValue(this.repository.workflow.name)
 					.onChange(async (value) => {
 						if (value.length > 0) {
 							value = value.trim();
 							const yamlEndings = [".yml", ".yaml"];
-							if (! yamlEndings.some(ending => value.endsWith(ending))) {
+							if (!yamlEndings.some((ending) => value.endsWith(ending))) {
 								value += yamlEndings[0];
 							}
 						}
@@ -438,22 +475,23 @@ class ModalEditingRepository extends Modal {
 					});
 			});
 
-		contentEl.createEl("h3", { text: i18next.t("settings.github.smartRepo.modals.otherConfig") });
+		contentEl.createEl("h3", {
+			text: i18next.t("settings.github.smartRepo.modals.otherConfig"),
+		});
 
 		new Setting(contentEl)
 			.setName(i18next.t("settings.plugin.setImport.title"))
 			.setDesc(i18next.t("settings.plugin.setImport.desc"))
 			.addSearch((search) => {
-				search
-					.setValue(this.repository.set ?? "")
-					.setPlaceholder("path/to/file.md");
+				search.setValue(this.repository.set ?? "").setPlaceholder("path/to/file.md");
 				new SetClassSuggester(search.inputEl, this.plugin, (result) => {
 					this.repository.set = result.path;
-					const frontmatter = this.plugin.app.metadataCache.getFileCache(result)?.frontmatter;
-					this.plugin.repositoryFrontmatter[this.repository.smartKey] = frontmatter;			
+					const frontmatter =
+						this.plugin.app.metadataCache.getFileCache(result)?.frontmatter;
+					this.plugin.repositoryFrontmatter[this.repository.smartKey] = frontmatter;
 				});
 			});
-			
+
 		new Setting(contentEl)
 			.setName(i18next.t("settings.plugin.shareKey.all.title"))
 			.setDesc(i18next.t("settings.plugin.shareKey.all.desc"))
@@ -463,7 +501,8 @@ class ModalEditingRepository extends Modal {
 					.onChange(async (value) => {
 						this.repository.shareAll = {
 							enable: value,
-							excludedFileName: this.plugin.settings.plugin.shareAll?.excludedFileName ?? "DRAFT"
+							excludedFileName:
+								this.plugin.settings.plugin.shareAll?.excludedFileName ?? "DRAFT",
 						};
 						this.onOpen();
 					})
@@ -478,7 +517,6 @@ class ModalEditingRepository extends Modal {
 						.setValue(this.repository.shareKey)
 						.onChange(async (value) => {
 							this.repository.shareKey = value.trim();
-							
 						})
 				);
 		} else {
@@ -487,7 +525,11 @@ class ModalEditingRepository extends Modal {
 				.addText((text) =>
 					text
 						.setPlaceholder("DRAFT")
-						.setValue(this.repository.shareAll?.excludedFileName ?? this.plugin.settings.plugin.shareAll?.excludedFileName ?? "DRAFT")
+						.setValue(
+							this.repository.shareAll?.excludedFileName ??
+								this.plugin.settings.plugin.shareAll?.excludedFileName ??
+								"DRAFT"
+						)
 						.onChange(async (value) => {
 							this.repository.shareAll!.excludedFileName = value.trim();
 						})
@@ -509,18 +551,19 @@ class ModalEditingRepository extends Modal {
 
 			new Setting(contentEl)
 				.setName(i18next.t("settings.plugin.copyLink.linkPathRemover.title"))
-				.setDesc(
-					i18next.t("settings.plugin.copyLink.linkPathRemover.desc")
-				)
+				.setDesc(i18next.t("settings.plugin.copyLink.linkPathRemover.desc"))
 				.addText((text) => {
-					text.setPlaceholder("docs")
+					text
+						.setPlaceholder("docs")
 						.setValue(this.repository.copyLink.removePart.join(", "))
 						.onChange(async (value) => {
-							this.repository.copyLink.removePart = value.split(/[,\n]\s*/).map((item) => item.trim()).filter((item) => item.length > 0);
-							
+							this.repository.copyLink.removePart = value
+								.split(/[,\n]\s*/)
+								.map((item) => item.trim())
+								.filter((item) => item.length > 0);
 						});
 				});
-			
+
 			new Setting(contentEl)
 				.setName(i18next.t("settings.plugin.copyLink.toUri.title"))
 				.setDesc(i18next.t("settings.plugin.copyLink.toUri.desc"))
@@ -529,10 +572,9 @@ class ModalEditingRepository extends Modal {
 						.setValue(this.repository.copyLink.transform.toUri)
 						.onChange(async (value) => {
 							this.repository.copyLink.transform.toUri = value;
-							
 						})
 				);
-			
+
 			new Setting(contentEl)
 				.setName(i18next.t("settings.plugin.copyLink.slugify.title"))
 				.addDropdown((dropdown) => {
@@ -542,28 +584,30 @@ class ModalEditingRepository extends Modal {
 							strict: i18next.t("settings.plugin.copyLink.slugify.strict"),
 							lower: i18next.t("settings.plugin.copyLink.slugify.lower"),
 						})
-						.setValue(this.repository.copyLink.transform.slugify as "disable" | "strict" | "lower")
+						.setValue(
+							this.repository.copyLink.transform.slugify as "disable" | "strict" | "lower"
+						)
 						.onChange(async (value) => {
-							this.repository.copyLink.transform.slugify = value as "disable" | "strict" | "lower";
-							
+							this.repository.copyLink.transform.slugify = value as
+								| "disable"
+								| "strict"
+								| "lower";
 						});
 				});
-		
+
 			new Setting(contentEl)
 				.setName(i18next.t("settings.plugin.copyLink.applyRegex.title"))
 				.setHeading()
 				.setDesc(i18next.t("settings.plugin.copyLink.applyRegex.desc"))
 				.addExtraButton((button) => {
-					button
-						.setIcon("plus")
-						.onClick(async () => {
-							this.repository.copyLink.transform.applyRegex.push({
-								regex: "",
-								replacement: ""
-							});
-							
-							this.onOpen();
+					button.setIcon("plus").onClick(async () => {
+						this.repository.copyLink.transform.applyRegex.push({
+							regex: "",
+							replacement: "",
 						});
+
+						this.onOpen();
+					});
 				});
 
 			for (const apply of this.repository.copyLink.transform.applyRegex) {
@@ -578,7 +622,6 @@ class ModalEditingRepository extends Modal {
 							.setValue(regex)
 							.onChange(async (value) => {
 								apply.regex = value;
-								
 							});
 					})
 					.setClass("max-width")
@@ -588,24 +631,24 @@ class ModalEditingRepository extends Modal {
 							.setValue(replacement)
 							.onChange(async (value) => {
 								apply.replacement = value;
-								
 							});
 					})
 					.setClass("max-width")
-					.addExtraButton(button => {
-						button.setIcon("trash")
-							.onClick(async () => {
-								this.repository.copyLink.transform.applyRegex = this.repository.copyLink.transform.applyRegex.filter((item) => item !== apply);
-								
-								this.onOpen();
-							});
-					});	
-			}	
+					.addExtraButton((button) => {
+						button.setIcon("trash").onClick(async () => {
+							this.repository.copyLink.transform.applyRegex =
+								this.repository.copyLink.transform.applyRegex.filter(
+									(item) => item !== apply
+								);
+
+							this.onOpen();
+						});
+					});
+			}
 		}
 	}
 	onClose() {
-		const {contentEl} = this;
+		const { contentEl } = this;
 		contentEl.empty();
-		
 	}
 }

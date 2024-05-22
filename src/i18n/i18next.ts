@@ -61,4 +61,8 @@ export const resources = {
 	"zh-CN": { translation: zhCN },
 } as const;
 
-export const translationLanguage = Object.keys(resources).find(i => i.toLocaleLowerCase() == moment.locale()) ? moment.locale() : "en";
+export const translationLanguage = Object.keys(resources).find(
+	(i) => i.toLocaleLowerCase() == moment.locale()
+)
+	? moment.locale()
+	: "en";

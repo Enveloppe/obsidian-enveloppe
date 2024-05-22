@@ -4,7 +4,6 @@ import { GitHubPublisherSettings } from "src/interfaces/main";
 /** Find a regex encapsuled in // */
 export const FIND_REGEX = /^\/(.*)\/[igmsuy]*$/;
 
-
 /**
  * Just a constant for the token path
  * @type {string} TOKEN_PATH
@@ -56,7 +55,7 @@ export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 			addTitle: {
 				enable: false,
 				key: "title",
-			}
+			},
 		},
 		metadataExtractorPath: "",
 	},
@@ -101,10 +100,10 @@ export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 				toUri: true,
 				slugify: "lower",
 				applyRegex: [],
-			}
+			},
 		},
 		noticeError: false,
 		displayModalRepoEditing: false,
-		setFrontmatterKey: "Set"
-	}
+		setFrontmatterKey: "Set",
+	},
 };

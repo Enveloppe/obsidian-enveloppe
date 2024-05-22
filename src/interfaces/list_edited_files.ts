@@ -1,4 +1,3 @@
-
 /**
  * Interface for list edited files
  * Allow to know which files was edited, deleted, added, unpublished, not deleted
@@ -18,7 +17,7 @@ export interface ListEditedFiles {
 
 /**
  * Interface for uploaded files
- * Used in ListEditedFiles to create it 
+ * Used in ListEditedFiles to create it
  */
 export interface UploadedFiles {
 	/** Know if the file was updated on the repo or created */
@@ -29,7 +28,7 @@ export interface UploadedFiles {
 
 /**
  * Interface for deleted files
- * Used in ListEditedFiles to create it 
+ * Used in ListEditedFiles to create it
  * List deleted and undeleted file
  */
 export interface Deleted {
@@ -37,6 +36,3 @@ export interface Deleted {
 	deleted: string[];
 	undeleted: string[];
 }
-
-
-

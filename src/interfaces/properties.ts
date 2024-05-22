@@ -12,7 +12,7 @@ export interface MultiProperties {
 	frontmatter: {
 		general: PropertiesConversion;
 		prop: Properties | Properties[];
-	},
+	};
 	repository: Repository | null;
 	filepath: string;
 }
@@ -27,10 +27,9 @@ export interface MonoProperties {
 		general: PropertiesConversion;
 		prop: Properties;
 		source: FrontMatterCache | null | undefined;
-	},
+	};
 	repository: Repository | null;
 	filepath: string;
-
 }
 
 /**

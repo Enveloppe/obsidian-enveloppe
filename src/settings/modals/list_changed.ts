@@ -1,13 +1,12 @@
 import { Deleted, ListEditedFiles } from "@interfaces";
 import i18next from "i18next";
-import { App,Modal } from "obsidian";
-
+import { App, Modal } from "obsidian";
 
 export class ListChangedFiles extends Modal {
 	listChanged: ListEditedFiles | Deleted;
 	constructor(app: App, listChanged: ListEditedFiles | Deleted) {
 		super(app);
-		this.listChanged = listChanged ;
+		this.listChanged = listChanged;
 	}
 
 	displayListOfFile(toDisplay: string[], contentEl: HTMLElement) {
@@ -29,49 +28,71 @@ export class ListChangedFiles extends Modal {
 			}
 			const li = ul.createEl("li");
 			li.createEl("span", { text: emoji, cls: "emoji" });
-			li.createEl("code", { text: file, cls: "code-title"});
+			li.createEl("code", { text: file, cls: "code-title" });
 		});
 	}
 
 	onOpen() {
-		/** 
-		 * a modal is open and the user can read what files was : 
-			* - added
-			* - modified
-			* - deleted
-			* - Not uploaded
-		*/
+		/**
+		 * a modal is open and the user can read what files was :
+		 * - added
+		 * - modified
+		 * - deleted
+		 * - Not uploaded
+		 */
 		const { contentEl } = this;
 		contentEl.empty();
 		contentEl.addClasses(["github-publisher", "modals", "list-changed"]);
-		contentEl.createEl("h2", { text: i18next.t("modals.listChangedFiles.title"), cls: "success"});
+		contentEl.createEl("h2", {
+			text: i18next.t("modals.listChangedFiles.title"),
+			cls: "success",
+		});
 		if (Object.keys(this.listChanged).contains("edited")) {
 			this.listChanged = this.listChanged as ListEditedFiles;
-			contentEl.createEl("h3", { text: `📤 ${i18next.t("modals.listChangedFiles.added")}`});
+			contentEl.createEl("h3", {
+				text: `📤 ${i18next.t("modals.listChangedFiles.added")}`,
+			});
 			this.displayListOfFile(this.listChanged.added, contentEl);
-			contentEl.createEl("h3", { text: `✒️ ${i18next.t("modals.listChangedFiles.edited")}`});
+			contentEl.createEl("h3", {
+				text: `✒️ ${i18next.t("modals.listChangedFiles.edited")}`,
+			});
 			this.displayListOfFile(this.listChanged.edited, contentEl);
-			contentEl.createEl("h3", { text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`});
+			contentEl.createEl("h3", {
+				text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`,
+			});
 			this.displayListOfFile(this.listChanged.deleted, contentEl);
-			
-			contentEl.createEl("h2", { text: `❌ ${i18next.t("modals.listChangedFiles.error")}`, cls: "error"});
-			contentEl.createEl("h3", { text: `📤 ${i18next.t("modals.listChangedFiles.unpublished")}`});
+
+			contentEl.createEl("h2", {
+				text: `❌ ${i18next.t("modals.listChangedFiles.error")}`,
+				cls: "error",
+			});
+			contentEl.createEl("h3", {
+				text: `📤 ${i18next.t("modals.listChangedFiles.unpublished")}`,
+			});
 			this.displayListOfFile(this.listChanged.unpublished, contentEl);
-			contentEl.createEl("h3", { text: `♻️ ${i18next.t("modals.listChangedFiles.notDeleted")}`});
+			contentEl.createEl("h3", {
+				text: `♻️ ${i18next.t("modals.listChangedFiles.notDeleted")}`,
+			});
 			this.displayListOfFile(this.listChanged.notDeleted, contentEl);
 		} else {
 			this.listChanged = this.listChanged as Deleted;
-			contentEl.createEl("h3", { text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`});
+			contentEl.createEl("h3", {
+				text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`,
+			});
 			this.displayListOfFile(this.listChanged.deleted, contentEl);
-			contentEl.createEl("h3", { text: `❌ ${i18next.t("modals.listChangedFiles.error")}`, cls: "error"});
-			contentEl.createEl("h3", { text: `♻️ ${i18next.t("modals.listChangedFiles.notDeleted")}`});
+			contentEl.createEl("h3", {
+				text: `❌ ${i18next.t("modals.listChangedFiles.error")}`,
+				cls: "error",
+			});
+			contentEl.createEl("h3", {
+				text: `♻️ ${i18next.t("modals.listChangedFiles.notDeleted")}`,
+			});
 			this.displayListOfFile(this.listChanged.undeleted, contentEl);
 		}
 	}
-	
+
 	onClose() {
 		const { contentEl } = this;
 		contentEl.empty();
 	}
-
 }

@@ -59,9 +59,7 @@ function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: an
 			toAdd = [
 				...new Set([
 					...toAdd,
-					...yaml.tag.map((tag: string) =>
-						tag.replaceAll("/", "_")
-					),
+					...yaml.tag.map((tag: string) => tag.replaceAll("/", "_")),
 				]),
 			];
 			delete yaml.tag;
@@ -73,9 +71,7 @@ function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: an
 		try {
 			yaml.tags = [
 				...new Set([
-					...yaml.tags.map((tag: string) =>
-						tag.replaceAll("/", "_")
-					),
+					...yaml.tags.map((tag: string) => tag.replaceAll("/", "_")),
 					...toAdd,
 				]),
 			];
@@ -97,22 +93,37 @@ function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: an
  * @returns {Promise<string>} the converted text
  */
 
-export function addToYaml(text: string, toAdd: string[], plugin: GithubPublisher, folderNoteParaMeters: { properties: MultiProperties | null, file: TFile}): string {
+export function addToYaml(
+	text: string,
+	toAdd: string[],
+	plugin: GithubPublisher,
+	folderNoteParaMeters: { properties: MultiProperties | null; file: TFile }
+): string {
 	const properties = folderNoteParaMeters?.properties;
-	const {contentStart, exists, frontmatter} = getFrontMatterInfo(text);
-	if (!properties || (!properties.plugin.settings.conversion.tags.inline && !properties.plugin.settings.upload.folderNote.addTitle)) 
+	const { contentStart, exists, frontmatter } = getFrontMatterInfo(text);
+	if (
+		!properties ||
+		(!properties.plugin.settings.conversion.tags.inline &&
+			!properties.plugin.settings.upload.folderNote.addTitle)
+	)
 		return text;
 	const { settings } = plugin;
-	let yamlObject = parseYaml(exists ? frontmatter:"{}");
+	let yamlObject = parseYaml(exists ? frontmatter : "{}");
 	try {
 		if (yamlObject && toAdd.length > 0) {
 			yamlObject = tagsToYaml(toAdd, settings, yamlObject);
 		}
 		if (folderNoteParaMeters?.properties) {
-			yamlObject = titleToYaml(yamlObject, folderNoteParaMeters.properties, folderNoteParaMeters.file);
+			yamlObject = titleToYaml(
+				yamlObject,
+				folderNoteParaMeters.properties,
+				folderNoteParaMeters.file
+			);
 		}
 		if (yamlObject && Object.keys(yamlObject).length > 0) {
-			return `---\n${stringifyYaml(yamlObject)}---\n${(exists ? text.slice(contentStart) : text)}`;
+			return `---\n${stringifyYaml(yamlObject)}---\n${
+				exists ? text.slice(contentStart) : text
+			}`;
 		}
 	} catch (e) {
 		new Notice(i18next.t("error.parseYaml"));
@@ -134,7 +145,12 @@ function titleToYaml(yaml: any, properties: MultiProperties, file: TFile) {
 	return yaml;
 }
 
-function inlineTags(settings: GitHubPublisherSettings, file: TFile, metadataCache: MetadataCache, frontmatter: FrontMatterCache | undefined | null) {
+function inlineTags(
+	settings: GitHubPublisherSettings,
+	file: TFile,
+	metadataCache: MetadataCache,
+	frontmatter: FrontMatterCache | undefined | null
+) {
 	if (!settings.conversion.tags.inline) {
 		return [];
 	}
@@ -172,43 +188,33 @@ export async function processYaml(
 	return addToYaml(text, toAdd, plugin, folderNoteParaMeters);
 }
 
-
 /**
  * Main function to convert the text
-*/
+ */
 
 export async function mainConverting(
 	text: string,
 	file: TFile,
 	frontmatter: FrontMatterCache | undefined | null,
 	linkedFiles: LinkedNotes[],
-	properties: MultiProperties,
-
+	properties: MultiProperties
 ): Promise<string> {
 	const { plugin } = properties;
 	if (properties.frontmatter.general.removeEmbed === "bake")
 		text = await bakeEmbeds(file, new Set(), properties, null, linkedFiles);
 	text = findAndReplaceText(text, plugin.settings, false);
 	text = await processYaml(file, frontmatter, text, properties);
-	text = await convertToInternalGithub(
+	text = await convertToInternalGithub(text, linkedFiles, file, frontmatter, properties);
+	text = convertWikilinks(
 		text,
+		properties.frontmatter.general,
 		linkedFiles,
-		file,
-		frontmatter,
-		properties
+		plugin.settings,
+		frontmatter
 	);
-	text = convertWikilinks(text, properties.frontmatter.general, linkedFiles, plugin.settings, frontmatter);
-	text = await convertDataviewQueries(
-		text,
-		file.path,
-		frontmatter,
-		file,
-		properties
-	);
+	text = await convertDataviewQueries(text, file.path, frontmatter, file, properties);
 	text = await convertInlineDataview(text, plugin, file);
 	text = addHardLineBreak(text, plugin.settings, properties.frontmatter.general);
 
 	return findAndReplaceText(text, plugin.settings, true);
 }
-
-

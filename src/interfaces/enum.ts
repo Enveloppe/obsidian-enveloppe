@@ -1,4 +1,3 @@
-
 /**
  * @enum TypeOfEditRegex
  * @description Allow to set a value for the regex replace settings, to replace the path or the title of a file with a regex

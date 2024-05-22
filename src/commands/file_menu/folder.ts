@@ -1,11 +1,19 @@
-import { MonoRepoProperties,Repository } from "@interfaces";
+import { MonoRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
 import { Menu, MenuItem, Platform, TFolder } from "obsidian";
 import { shareAllMarkedNotes } from "src/commands";
 import { ChooseRepoToRun } from "src/commands/suggest_other_repo_commands_modal";
 import GithubPublisher from "src/main";
-import { defaultRepo, getRepoSharedKey, isExcludedPath, isInDryRunFolder } from "src/utils/data_validation_test";
-import { frontmatterSettingsRepository,getProperties } from "src/utils/parse_frontmatter";
+import {
+	defaultRepo,
+	getRepoSharedKey,
+	isExcludedPath,
+	isInDryRunFolder,
+} from "src/utils/data_validation_test";
+import {
+	frontmatterSettingsRepository,
+	getProperties,
+} from "src/utils/parse_frontmatter";
 
 /**
  * Share the shared file of a folder to a repository
@@ -14,14 +22,19 @@ import { frontmatterSettingsRepository,getProperties } from "src/utils/parse_fro
  * @param {string} branchName - The branch name for the repository
  * @param {Repository | null} repo - The data repository found in the file
  */
-async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchName: string, repo: Repository | null) {
+async function shareFolderRepo(
+	plugin: GithubPublisher,
+	folder: TFolder,
+	branchName: string,
+	repo: Repository | null
+) {
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const statusBarItems = plugin.addStatusBarItem();
 	const prop = getProperties(plugin, repo, null, true);
 	const monoProperties: MonoRepoProperties = {
 		frontmatter: Array.isArray(prop) ? prop[0] : prop,
 		repository: repo,
-		convert: frontmatterSettingsRepository(plugin, repo)
+		convert: frontmatterSettingsRepository(plugin, repo),
 	};
 	await shareAllMarkedNotes(
 		publisher,
@@ -29,7 +42,7 @@ async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchN
 		branchName,
 		monoProperties,
 		publisher.getSharedFileOfFolder(folder, repo, true),
-		true,
+		true
 	);
 }
 
@@ -43,15 +56,23 @@ async function shareFolderRepo(plugin: GithubPublisher, folder: TFolder, branchN
  * @param {string} branchName - The branch name for the repository
  * @return {Menu} - The submenu created
  */
-function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem, folder: TFolder, branchName: string, originalMenu: Menu): Menu {
-	const subMenu = Platform.isDesktop ? item.setSubmenu() as Menu : originalMenu;
+function addSubMenuCommandsFolder(
+	plugin: GithubPublisher,
+	item: MenuItem,
+	folder: TFolder,
+	branchName: string,
+	originalMenu: Menu
+): Menu {
+	const subMenu = Platform.isDesktop ? (item.setSubmenu() as Menu) : originalMenu;
 	if (!isExcludedPath(plugin.settings, folder, defaultRepo(plugin.settings))) {
 		subMenu.addItem((subItem) => {
 			subItem
-				.setTitle(i18next.t("commands.shareViewFiles.multiple.on", {
-					smartKey: i18next.t("common.default").toUpperCase(),
-					doc: folder.name
-				}))
+				.setTitle(
+					i18next.t("commands.shareViewFiles.multiple.on", {
+						smartKey: i18next.t("common.default").toUpperCase(),
+						doc: folder.name,
+					})
+				)
 				.setIcon("folder-up")
 				.onClick(async () => {
 					const repo = getRepoSharedKey(plugin, undefined);
@@ -59,16 +80,20 @@ function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem, folde
 				});
 		});
 	}
-	const activatedRepoCommands = plugin.settings.github.otherRepo.filter((repo) => repo.createShortcuts);
+	const activatedRepoCommands = plugin.settings.github.otherRepo.filter(
+		(repo) => repo.createShortcuts
+	);
 	if (activatedRepoCommands.length > 0) {
 		activatedRepoCommands.forEach((otherRepo) => {
 			if (isInDryRunFolder(plugin.settings, otherRepo, folder)) return;
 			subMenu.addItem((item) => {
-				item.setTitle(
-					i18next.t("commands.shareViewFiles.multiple.on", {
-						smartKey: otherRepo.smartKey.toUpperCase(),
-						doc: folder.name
-					}))
+				item
+					.setTitle(
+						i18next.t("commands.shareViewFiles.multiple.on", {
+							smartKey: otherRepo.smartKey.toUpperCase(),
+							doc: folder.name,
+						})
+					)
 					.setIcon("folder-up")
 					.onClick(async () => {
 						await shareFolderRepo(plugin, folder, branchName, otherRepo);
@@ -81,10 +106,17 @@ function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem, folde
 			.setTitle(i18next.t("commands.shareViewFiles.multiple.other"))
 			.setIcon("folder-symlink")
 			.onClick(async () => {
-				new ChooseRepoToRun(plugin.app, plugin, null, branchName, "folder", null, async (item: Repository) => {
-					await shareFolderRepo(plugin, folder, branchName, item);
-				}).open();
-
+				new ChooseRepoToRun(
+					plugin.app,
+					plugin,
+					null,
+					branchName,
+					"folder",
+					null,
+					async (item: Repository) => {
+						await shareFolderRepo(plugin, folder, branchName, item);
+					}
+				).open();
 			});
 	});
 	return subMenu;
@@ -97,11 +129,16 @@ function addSubMenuCommandsFolder(plugin: GithubPublisher, item: MenuItem, folde
  * @param branchName {string} - The branch name for the repository
  * @param plugin {GithubPublisher} - The plugin instance
  */
-export async function addMenuFolder(menu: Menu, folder: TFolder, branchName: string, plugin: GithubPublisher) {
+export async function addMenuFolder(
+	menu: Menu,
+	folder: TFolder,
+	branchName: string,
+	plugin: GithubPublisher
+) {
 	menu.addItem((item) => {
 		/**
 		 * Create a submenu if multiple repo exists in the settings
-		*/
+		 */
 		const areTheyMultipleRepo = plugin.settings.github?.otherRepo?.length > 0;
 		if (areTheyMultipleRepo) {
 			if (Platform.isDesktop) {
@@ -112,21 +149,17 @@ export async function addMenuFolder(menu: Menu, folder: TFolder, branchName: str
 				menu.addSeparator();
 				item.setIsLabel(true);
 			}
-			addSubMenuCommandsFolder(
-				plugin,
-				item,
-				folder,
-				branchName,
-				menu
-			);
+			addSubMenuCommandsFolder(plugin, item, folder, branchName, menu);
 			return;
 		}
 		item.setSection("action");
-		item.setTitle(
-			i18next.t("commands.shareViewFiles.multiple.on", {
-				smartKey: i18next.t("common.default").toUpperCase(),
-				doc: folder.name
-			}))
+		item
+			.setTitle(
+				i18next.t("commands.shareViewFiles.multiple.on", {
+					smartKey: i18next.t("common.default").toUpperCase(),
+					doc: folder.name,
+				})
+			)
 			.setIcon("folder-up")
 			.onClick(async () => {
 				const repo = getRepoSharedKey(plugin);

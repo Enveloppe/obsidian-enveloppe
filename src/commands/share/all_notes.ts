@@ -6,9 +6,18 @@ import { GithubBranch } from "src/GitHub/branch";
 import { deleteFromGithub } from "src/GitHub/delete";
 import GithubPublisher from "src/main";
 import { ListChangedFiles } from "src/settings/modals/list_changed";
-import { createListEdited, getSettingsOfMetadataExtractor, logs, notifError,publisherNotification } from "src/utils";
+import {
+	createListEdited,
+	getSettingsOfMetadataExtractor,
+	logs,
+	notifError,
+	publisherNotification,
+} from "src/utils";
 import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
-import { frontmatterSettingsRepository,getProperties } from "src/utils/parse_frontmatter";
+import {
+	frontmatterSettingsRepository,
+	getProperties,
+} from "src/utils/parse_frontmatter";
 import { ShareStatusBar } from "src/utils/status_bar";
 
 /**
@@ -19,7 +28,11 @@ import { ShareStatusBar } from "src/utils/status_bar";
  * @param {string} branchName - The branch name to upload the file
  * @return {Promise<Command>}
  */
-export async function uploadAllNotesCallback(plugin: GithubPublisher, repo: Repository|null, branchName: string): Promise<Command> {
+export async function uploadAllNotesCallback(
+	plugin: GithubPublisher,
+	repo: Repository | null,
+	branchName: string
+): Promise<Command> {
 	const id = repo ? `publish-all-K${repo.smartKey}` : "publish-all";
 	let name = i18next.t("commands.uploadAllNotes");
 	const common = i18next.t("common.repository");
@@ -28,7 +41,7 @@ export async function uploadAllNotesCallback(plugin: GithubPublisher, repo: Repo
 		id,
 		name,
 		callback: async () => {
-			await uploadAllNotes(plugin,repo, branchName);
+			await uploadAllNotes(plugin, repo, branchName);
 		},
 	} as Command;
 }
@@ -41,7 +54,11 @@ export async function uploadAllNotesCallback(plugin: GithubPublisher, repo: Repo
  * @return {Promise<void>}
  */
 
-export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository | null, branchName: string): Promise<void> {
+export async function uploadAllNotes(
+	plugin: GithubPublisher,
+	repo: Repository | null,
+	branchName: string
+): Promise<void> {
 	const statusBarItems = plugin.addStatusBarItem();
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const sharedFiles = publisher.getSharedFiles(repo);
@@ -49,10 +66,7 @@ export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository |
 	const mono: MonoRepoProperties = {
 		frontmatter: Array.isArray(prop) ? prop[0] : prop,
 		repository: repo,
-		convert: frontmatterSettingsRepository(
-			plugin,
-			repo
-		)
+		convert: frontmatterSettingsRepository(plugin, repo),
 	};
 	await shareAllMarkedNotes(
 		publisher,
@@ -60,19 +74,19 @@ export async function uploadAllNotes(plugin: GithubPublisher, repo: Repository |
 		branchName,
 		mono,
 		sharedFiles,
-		true,
+		true
 	);
 }
 
 /**
-	* Share all marked note (share: true) from Obsidian to GitHub
-	* @param {GithubBranch} PublisherManager
-	* @param {HTMLElement} statusBarItems - The status bar element
-	* @param {string} branchName - The branch name created by the plugin
-	* @param {MonoRepoProperties} monoRepo - The repo where to share the files
-	* @param {TFile[]} sharedFiles - The files to share
-	* @param {boolean} createGithubBranch - If true, create the branch before sharing the files
-	*/
+ * Share all marked note (share: true) from Obsidian to GitHub
+ * @param {GithubBranch} PublisherManager
+ * @param {HTMLElement} statusBarItems - The status bar element
+ * @param {string} branchName - The branch name created by the plugin
+ * @param {MonoRepoProperties} monoRepo - The repo where to share the files
+ * @param {TFile[]} sharedFiles - The files to share
+ * @param {boolean} createGithubBranch - If true, create the branch before sharing the files
+ */
 export async function shareAllMarkedNotes(
 	PublisherManager: GithubBranch,
 	statusBarItems: HTMLElement,
@@ -80,16 +94,20 @@ export async function shareAllMarkedNotes(
 	monoRepo: MonoRepoProperties,
 	sharedFiles: TFile[],
 	createGithubBranch: boolean = true,
-	sourceFrontmatter: FrontMatterCache | undefined | null = null,
+	sourceFrontmatter: FrontMatterCache | undefined | null = null
 ) {
 	const statusBar = new ShareStatusBar(statusBarItems, sharedFiles.length);
 	const prop = monoRepo.frontmatter;
 	try {
-		const fileError : string[] = [];
+		const fileError: string[] = [];
 		const listStateUploaded: UploadedFiles[] = [];
 		if (sharedFiles.length > 0) {
 			if (createGithubBranch) {
-				const isValid = await checkRepositoryValidityWithProperties(PublisherManager, prop, sharedFiles.length);
+				const isValid = await checkRepositoryValidityWithProperties(
+					PublisherManager,
+					prop,
+					sharedFiles.length
+				);
 				if (!isValid) return false;
 				await PublisherManager.newBranch(prop);
 			}
@@ -102,16 +120,15 @@ export async function shareAllMarkedNotes(
 						monoRepo,
 						undefined,
 						undefined,
-						sourceFrontmatter,
-					) ;
+						sourceFrontmatter
+					);
 					if (uploaded) {
 						listStateUploaded.push(...uploaded.uploaded);
 					}
-				} catch(e)  {
+				} catch (e) {
 					fileError.push(sharedFile.name);
-					new Notice(
-						(i18next.t("error.unablePublishNote", {file: sharedFile.name})));
-					logs({settings: PublisherManager.settings, e: true}, e);
+					new Notice(i18next.t("error.unablePublishNote", { file: sharedFile.name }));
+					logs({ settings: PublisherManager.settings, e: true }, e);
 				}
 			}
 			statusBar.finish(8000);
@@ -123,31 +140,18 @@ export async function shareAllMarkedNotes(
 				monoRepo
 			);
 			const settings = PublisherManager.settings;
-			if (
-				settings.upload.metadataExtractorPath.length > 0 &&
-					Platform.isDesktop
-			) {
+			if (settings.upload.metadataExtractorPath.length > 0 && Platform.isDesktop) {
 				const metadataExtractor = await getSettingsOfMetadataExtractor(
 					PublisherManager.plugin.app,
 					settings
 				);
 				if (metadataExtractor) {
-					await PublisherManager.uploadMetadataExtractorFiles(
-						metadataExtractor,
-						prop
-					);
+					await PublisherManager.uploadMetadataExtractorFiles(metadataExtractor, prop);
 				}
 			}
-			const update = await PublisherManager.updateRepository(
-				prop
-			);
+			const update = await PublisherManager.updateRepository(prop);
 			if (update) {
-				await publisherNotification(
-					PublisherManager,
-					noticeValue,
-					settings,
-					prop
-				);
+				await publisherNotification(PublisherManager, noticeValue, settings, prop);
 				if (settings.plugin.displayModalRepoEditing) {
 					const listEdited = createListEdited(listStateUploaded, deleted, fileError);
 					new ListChangedFiles(PublisherManager.plugin.app, listEdited).open();
@@ -157,11 +161,15 @@ export async function shareAllMarkedNotes(
 			}
 		}
 	} catch (error) {
-		logs({settings: PublisherManager.settings, e: true}, error);
+		logs({ settings: PublisherManager.settings, e: true }, error);
 		const errorFrag = document.createDocumentFragment();
-		errorFrag.createSpan({ cls: ["error", "obsidian-publisher", "icons", "notification"] }).innerHTML = ERROR_ICONS;
-		errorFrag.createSpan({ cls: ["error", "obsidian-publisher", "notification"], text: i18next.t("error.unablePublishMultiNotes") });
+		errorFrag.createSpan({
+			cls: ["error", "obsidian-publisher", "icons", "notification"],
+		}).innerHTML = ERROR_ICONS;
+		errorFrag.createSpan({
+			cls: ["error", "obsidian-publisher", "notification"],
+			text: i18next.t("error.unablePublishMultiNotes"),
+		});
 		statusBar.error(prop);
 	}
 }
-

@@ -1,5 +1,10 @@
 import { FolderSettings, GithubTiersVersion } from "src/interfaces/enum";
-import { OverrideAttachments,RegexReplace, Repository, TextCleaner } from "src/interfaces/main";
+import {
+	OverrideAttachments,
+	RegexReplace,
+	Repository,
+	TextCleaner,
+} from "src/interfaces/main";
 
 export type Api = {
 	/**
@@ -11,7 +16,7 @@ export type Api = {
 	 * The hostname of the API
 	 */
 	hostname: string;
-}
+};
 
 export type Workflow = {
 	/**
@@ -23,7 +28,7 @@ export type Workflow = {
 	 * The github action needs to be set on "workflow_dispatch" to be able to be triggered
 	 */
 	name: string;
-}
+};
 
 export type ShareAll = {
 	enable: boolean;
@@ -31,7 +36,7 @@ export type ShareAll = {
 	 * The name of the files to exclude
 	 */
 	excludedFileName: string;
-}
+};
 
 export type CopyLink = {
 	/**
@@ -63,114 +68,111 @@ export type CopyLink = {
 		applyRegex: {
 			regex: string;
 			replacement: string;
-		}[]
-	}
-}
+		}[];
+	};
+};
 
 /**
  * The GitHub settings of the plugin
  */
 export interface GitHub {
-	
-		/** The user that belongs to the repository, can be also a community (like obsidian-publisher) */
-		user: string;
-		/** The name of the repository */
-		repo: string;
-		/**
-		 * The branch of the repository (default: main)
+	/** The user that belongs to the repository, can be also a community (like obsidian-publisher) */
+	user: string;
+	/** The name of the repository */
+	repo: string;
+	/**
+	 * The branch of the repository (default: main)
+	 */
+	branch: string;
+	/**
+	 * The path where the token is stored (as the token is not saved in the settings directly, to prevent mistake and security issue)
+	 * @default `%configDir%/plugins/%pluginID%/env`
+	 */
+	tokenPath: string;
+	/**
+	 * If the PR should be automatically merged
+	 */
+	automaticallyMergePR: boolean;
+	/**
+	 * Don't push the changes to the repository, or make any action on the repository
+	 * It will use a local folder instead to mimic the behavior of the plugin
+	 */
+	dryRun: {
+		enable: boolean;
+		/** The folder name that mimic the folder, allow special keys to mimic multiple repository
+		 * @key `%owner%` the owner of the repository (equivalent to `user`)
+		 * @key `%repo%` the name of the repository
+		 * @key `%branch%` the branch of the repository
 		 */
-		branch: string;
-		/**
-		 * The path where the token is stored (as the token is not saved in the settings directly, to prevent mistake and security issue)
-		 * @default `%configDir%/plugins/%pluginID%/env`
-		 */
-		tokenPath: string;
-		/**
-		 * If the PR should be automatically merged
-		 */
-		automaticallyMergePR: boolean;
-		/**
-		 * Don't push the changes to the repository, or make any action on the repository
-		 * It will use a local folder instead to mimic the behavior of the plugin
-		 */
-		dryRun: {
-			enable: boolean;
-			/** The folder name that mimic the folder, allow special keys to mimic multiple repository 
-			 * @key `%owner%` the owner of the repository (equivalent to `user`)
-			 * @key `%repo%` the name of the repository
-			 * @key `%branch%` the branch of the repository
-			*/
-			folderName: string;
-		}
-		/**
-		 * The settings for the github API
-		 */
-		api: Api,
-		/** workflow and action of the plugin in github */
-		workflow: Workflow,
-		/** Enable the usage of different repository */
-		otherRepo: Repository[];
-		/** If the default repository is verified */
-		verifiedRepo?: boolean;
-		/** The rate limit of the Github API */
-		rateLimit: number;
-	
+		folderName: string;
+	};
+	/**
+	 * The settings for the github API
+	 */
+	api: Api;
+	/** workflow and action of the plugin in github */
+	workflow: Workflow;
+	/** Enable the usage of different repository */
+	otherRepo: Repository[];
+	/** If the default repository is verified */
+	verifiedRepo?: boolean;
+	/** The rate limit of the Github API */
+	rateLimit: number;
 }
 
 /**
  * The settings for the upload settings tabs
  */
 export interface Upload {
-	
-		/** The behavior of the folder settings 
-		 * - `yaml` : use a yaml frontmatter to set the path
-		 * - `obsidian` : use the obsidian path 
-		 * - `fixed` : use a fixed folder and send all in it
-		*/
-		behavior: FolderSettings;
-		/** The default name of the folder 
-		 * Used only with `yaml` behavior, when the `category: XXX` is not set in the frontmatter.
-		*/
-		defaultName: string;
-		/** The root folder of the repository
-		 * Used with all behavior
-		 */
-		rootFolder: string;
-		/** The "category" key name if used with YAML behavior */
-		yamlFolderKey: string;
-		/** Generate the filename using a frontmatter key, to change it in the repository.
-		 */
-		frontmatterTitle: {
+	/** The behavior of the folder settings
+	 * - `yaml` : use a yaml frontmatter to set the path
+	 * - `obsidian` : use the obsidian path
+	 * - `fixed` : use a fixed folder and send all in it
+	 */
+	behavior: FolderSettings;
+	/** The default name of the folder
+	 * Used only with `yaml` behavior, when the `category: XXX` is not set in the frontmatter.
+	 */
+	defaultName: string;
+	/** The root folder of the repository
+	 * Used with all behavior
+	 */
+	rootFolder: string;
+	/** The "category" key name if used with YAML behavior */
+	yamlFolderKey: string;
+	/** Generate the filename using a frontmatter key, to change it in the repository.
+	 */
+	frontmatterTitle: {
+		enable: boolean;
+		/** @default `title` */
+		key: string;
+	};
+	/** Edit the title by using regex */
+	replaceTitle: RegexReplace[];
+	/** Edit the path by using regex; apply also on attachment path (will be applied on all path)*/
+	replacePath: RegexReplace[];
+	/** Auto remove file that was unshared (deleted in Obsidian or removed by set `share: false`) */
+	autoclean: {
+		enable: boolean;
+		/** Prevent deleting files */
+		excluded: string[];
+		includeAttachments: boolean;
+	};
+	/** Allow to set a folder note in `index.md` (example) when some settings are met
+	 * For example, auto-rename to `index.md` when the file name and the folder name are the same.
+	 */
+	folderNote: {
+		enable: boolean;
+		/** The name of the index, by default `index.md`*/
+		rename: string;
+		/** save the old title in the frontmatter */
+		addTitle: {
 			enable: boolean;
-			/** @default `title` */
 			key: string;
-		}
-		/** Edit the title by using regex */
-		replaceTitle: RegexReplace[],
-		/** Edit the path by using regex; apply also on attachment path (will be applied on all path)*/
-		replacePath: RegexReplace[],
-		/** Auto remove file that was unshared (deleted in Obsidian or removed by set `share: false`) */
-		autoclean: {
-			enable: boolean;
-			/** Prevent deleting files */
-			excluded: string[];
-			includeAttachments: boolean;
-		}
-		/** Allow to set a folder note in `index.md` (example) when some settings are met
-		 * For example, auto-rename to `index.md` when the file name and the folder name are the same.
-		 */
-		folderNote: {
-			enable: boolean;
-			/** The name of the index, by default `index.md`*/
-			rename: string;
-			/** save the old title in the frontmatter */
-			addTitle: {
-				enable: boolean;
-				key: string;
-			};
-		}
-		/** The path to the metadata extractor plugin */
-		metadataExtractorPath: string;
+		};
+	};
+	/** The path to the metadata extractor plugin */
+	metadataExtractorPath: string;
 }
 
 export interface Conversion {
@@ -188,7 +190,7 @@ export interface Conversion {
 		exclude: string[];
 		/** add the fields value into tags too */
 		fields: string[];
-	}
+	};
 	/** Settings for the links */
 	links: {
 		/** Convert internal links to their proper path into Obsidian */
@@ -204,7 +206,7 @@ export interface Conversion {
 		 * @default `disable`
 		 */
 		slugify: "disable" | "strict" | "lower" | boolean;
-	}
+	};
 }
 
 /**
@@ -289,8 +291,8 @@ export interface PluginBehavior {
 	 * If disabled, the user will always return to the default tab when the settings are closed.
 	 */
 	saveTabId?: boolean;
-	/** Key used for "link" a frontmatter (overriding default settings) into another frontmatter 
-	 * @default `Set` 
+	/** Key used for "link" a frontmatter (overriding default settings) into another frontmatter
+	 * @default `Set`
 	 * @example `Set: [[frontmatter]]`
 	 */
 	setFrontmatterKey: string;

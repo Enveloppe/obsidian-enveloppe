@@ -4,8 +4,18 @@ import { Command, FrontMatterCache, Notice, Platform, TFile } from "obsidian";
 import { GithubBranch } from "src/GitHub/branch";
 import GithubPublisher from "src/main";
 import { ListChangedFiles } from "src/settings/modals/list_changed";
-import { createLink, createListEdited, getSettingsOfMetadataExtractor, logs,notifError, publisherNotification } from "src/utils";
-import { checkRepositoryValidityWithProperties, isShared } from "src/utils/data_validation_test";
+import {
+	createLink,
+	createListEdited,
+	getSettingsOfMetadataExtractor,
+	logs,
+	notifError,
+	publisherNotification,
+} from "src/utils";
+import {
+	checkRepositoryValidityWithProperties,
+	isShared,
+} from "src/utils/data_validation_test";
 import { frontmatterFromFile, getProperties } from "src/utils/parse_frontmatter";
 import merge from "ts-deepmerge";
 
@@ -16,7 +26,10 @@ import merge from "ts-deepmerge";
  * @param {GithubPublisher} plugin - The plugin instance
  * @return {Promise<Command>}
  */
-export async function shareOneNoteCallback(repo: Repository|null, plugin: GithubPublisher): Promise<Command> {
+export async function shareOneNoteCallback(
+	repo: Repository | null,
+	plugin: GithubPublisher
+): Promise<Command> {
 	const id = repo ? `share-one-K${repo.smartKey}` : "share-one";
 	let name = i18next.t("commands.shareActiveFile");
 	const common = i18next.t("common.repository");
@@ -29,17 +42,9 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 		checkCallback: (checking) => {
 			const file = plugin.app.workspace.getActiveFile();
 			const frontmatter = frontmatterFromFile(file, plugin, repo);
-			if (
-				file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
-			) {
+			if (file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)) {
 				if (!checking) {
-					shareOneNote(
-						octokit,
-						file,
-						repo,
-						frontmatter,
-						file.basename,
-					);
+					shareOneNote(octokit, file, repo, frontmatter, file.basename);
 				}
 				return true;
 			}
@@ -48,44 +53,45 @@ export async function shareOneNoteCallback(repo: Repository|null, plugin: Github
 	} as Command;
 }
 
-
 /**
-	* Share only **one** note and their embedded contents, including note and attachments
-	* @param {GithubBranch} PublisherManager
-	* @param {TFile} file - The file to share
-	* @param {Repository|null} repository
-	* @param {string} title The title from frontmatter + regex (if any)
-	* @returns {Promise<void>}
-	*/
+ * Share only **one** note and their embedded contents, including note and attachments
+ * @param {GithubBranch} PublisherManager
+ * @param {TFile} file - The file to share
+ * @param {Repository|null} repository
+ * @param {string} title The title from frontmatter + regex (if any)
+ * @returns {Promise<void>}
+ */
 export async function shareOneNote(
 	PublisherManager: GithubBranch,
 	file: TFile,
 	repository: Repository | null = null,
 	sourceFrontmatter: FrontMatterCache | undefined | null,
-	title?: string,
-): Promise<void|false> {
-	const {settings, plugin} = PublisherManager;
+	title?: string
+): Promise<void | false> {
+	const { settings, plugin } = PublisherManager;
 	const app = PublisherManager.plugin.app;
 	let frontmatter = frontmatterFromFile(file, PublisherManager.plugin, null);
-	if (sourceFrontmatter && frontmatter) frontmatter = merge(sourceFrontmatter, frontmatter);
+	if (sourceFrontmatter && frontmatter)
+		frontmatter = merge(sourceFrontmatter, frontmatter);
 	try {
 		const prop = getProperties(plugin, repository, frontmatter);
 		let isValid: boolean;
 		if (prop instanceof Array) {
 			const isValidArray = [];
 			for (const repo of prop) {
-				isValidArray.push(await checkRepositoryValidityWithProperties(PublisherManager, repo));
+				isValidArray.push(
+					await checkRepositoryValidityWithProperties(PublisherManager, repo)
+				);
 			}
 			isValid = isValidArray.every((v) => v === true);
 		} else isValid = await checkRepositoryValidityWithProperties(PublisherManager, prop);
-			
+
 		const multiRepo: MultiRepoProperties = {
 			frontmatter: prop,
-			repository: repository
+			repository: repository,
 		};
 		if (!isValid) return false;
-		if (!settings.github.dryRun.enable)
-			await PublisherManager.newBranch(prop);
+		if (!settings.github.dryRun.enable) await PublisherManager.newBranch(prop);
 		const publishSuccess = await PublisherManager.publish(
 			file,
 			true,
@@ -95,48 +101,34 @@ export async function shareOneNote(
 			sourceFrontmatter
 		);
 		if (publishSuccess) {
-			if (
-				settings.upload.metadataExtractorPath.length > 0 &&
-					Platform.isDesktop
-			) {
-				const metadataExtractor = await getSettingsOfMetadataExtractor(
-					app,
-					settings
-				);
+			if (settings.upload.metadataExtractorPath.length > 0 && Platform.isDesktop) {
+				const metadataExtractor = await getSettingsOfMetadataExtractor(app, settings);
 				if (metadataExtractor) {
-					await PublisherManager.uploadMetadataExtractorFiles(
-						metadataExtractor,
-						prop
-					);
+					await PublisherManager.uploadMetadataExtractorFiles(metadataExtractor, prop);
 				}
 			}
 			const update = await PublisherManager.updateRepository(
-				prop, settings.github.dryRun.enable
+				prop,
+				settings.github.dryRun.enable
 			);
 			if (update) {
-				await publisherNotification(
-					PublisherManager,
-					title,
-					settings,
-					prop
-				);
-				await createLink(
-					file,
-					multiRepo,
-					plugin
-				);
+				await publisherNotification(PublisherManager, title, settings, prop);
+				await createLink(file, multiRepo, plugin);
 				if (settings.plugin.displayModalRepoEditing) {
-					const listEdited = createListEdited(publishSuccess.uploaded, publishSuccess.deleted, publishSuccess.error);
+					const listEdited = createListEdited(
+						publishSuccess.uploaded,
+						publishSuccess.deleted,
+						publishSuccess.error
+					);
 					new ListChangedFiles(app, listEdited).open();
 				}
-	
 			} else {
 				notifError(prop);
 			}
 		}
 	} catch (error) {
 		if (!(error instanceof DOMException)) {
-			logs({settings, e: true}, error);
+			logs({ settings, e: true }, error);
 			notifError(getProperties(plugin, repository, frontmatter, true));
 		}
 	}
@@ -150,7 +142,10 @@ export async function shareOneNote(
  * @param {string} branchName
  * @return {Promise<void>}
  */
-export async function shareActiveFile(plugin: GithubPublisher, repo: Repository | null): Promise<void> {
+export async function shareActiveFile(
+	plugin: GithubPublisher,
+	repo: Repository | null
+): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	const frontmatter = frontmatterFromFile(file, plugin, repo);
 	if (file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)) {
@@ -158,7 +153,7 @@ export async function shareActiveFile(plugin: GithubPublisher, repo: Repository 
 			await plugin.reloadOctokit(repo?.smartKey),
 			file,
 			repo,
-			frontmatter,
+			frontmatter
 		);
 	} else {
 		new Notice(i18next.t("commands.runOtherRepo.noFile"));

@@ -1,4 +1,3 @@
-
 import { FIND_REGEX, GitHubPublisherSettings } from "@interfaces";
 import { escapeRegex } from "src/conversion/links";
 import { logs } from "src/utils";
@@ -35,16 +34,22 @@ export default function findAndReplaceText(
 	if (!settings.conversion.censorText) {
 		return text;
 	}
-	const censoring = after ? settings.conversion.censorText.filter((censor) => censor.after) : settings.conversion.censorText.filter((censor) => !censor.after);
+	const censoring = after
+		? settings.conversion.censorText.filter((censor) => censor.after)
+		: settings.conversion.censorText.filter((censor) => !censor.after);
 	for (const censor of censoring) {
 		if (censor.entry.trim().length > 0) {
 			const toReplace = censor.entry;
 			const replaceWith = censor.replace;
 			if (toReplace.match(FIND_REGEX)) {
 				const regex = createRegexFromText(toReplace, censor.flags);
-				text = censor.inCodeBlocks ? text.replace(regex, replaceWith) : replaceText(text, regex, replaceWith, settings);
+				text = censor.inCodeBlocks
+					? text.replace(regex, replaceWith)
+					: replaceText(text, regex, replaceWith, settings);
 			} else {
-				text = censor.inCodeBlocks ? text.replace(toReplace, replaceWith) : replaceText(text, toReplace, replaceWith, settings);
+				text = censor.inCodeBlocks
+					? text.replace(toReplace, replaceWith)
+					: replaceText(text, toReplace, replaceWith, settings);
 			}
 		}
 	}
@@ -66,8 +71,9 @@ export function replaceText(
 	pattern: string | RegExp,
 	replaceWith: string,
 	settings: GitHubPublisherSettings,
-	links?: boolean):string {
-	let regexWithString: string ;
+	links?: boolean
+): string {
+	let regexWithString: string;
 	let regex: RegExp;
 
 	if (pattern instanceof RegExp) {
@@ -90,13 +96,10 @@ export function replaceText(
 			try {
 				const replaceWithParsed = JSON.parse(`"${replaceWith}"`);
 				return match.replace(pattern, replaceWithParsed);
-			}
-			catch(e) {
-				logs({settings, e: true}, e);
+			} catch (e) {
+				logs({ settings, e: true }, e);
 				return match.replace(pattern, replaceWith);
 			}
 		}
 	});
 }
-
-

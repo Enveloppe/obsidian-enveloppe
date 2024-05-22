@@ -1,6 +1,13 @@
-import {FolderSettings, GitHubPublisherSettings, OverrideAttachments, RegexReplace, TextCleaner, TypeOfEditRegex} from "@interfaces";
+import {
+	FolderSettings,
+	GitHubPublisherSettings,
+	OverrideAttachments,
+	RegexReplace,
+	TextCleaner,
+	TypeOfEditRegex,
+} from "@interfaces";
 import i18next from "i18next";
-import {App, Modal, Notice, Setting} from "obsidian";
+import { App, Modal, Notice, Setting } from "obsidian";
 import { escapeRegex } from "src/conversion/links";
 
 function isRegexValid(regexString: string) {
@@ -8,13 +15,12 @@ function isRegexValid(regexString: string) {
 		new RegExp(regexString);
 		return {
 			error: null,
-			isValid: true
+			isValid: true,
 		};
-	}
-	catch (e) {
+	} catch (e) {
 		return {
 			error: e,
-			isValid: false
+			isValid: false,
 		};
 	}
 }
@@ -26,32 +32,38 @@ export class OverrideAttachmentsModal extends Modal {
 	constructor(
 		app: App,
 		settings: GitHubPublisherSettings,
-		allOverrides : OverrideAttachments[],
-		onSubmit: (result: OverrideAttachments[]) => void) {
+		allOverrides: OverrideAttachments[],
+		onSubmit: (result: OverrideAttachments[]) => void
+	) {
 		super(app);
 		this.allOverrides = allOverrides;
 		this.settings = settings;
 		this.onSubmit = onSubmit;
 	}
 
-	forbiddenValue(value: string): {value: string, isForbidden: boolean} {
+	forbiddenValue(value: string): { value: string; isForbidden: boolean } {
 		if (!isRegexValid(value).isValid) {
 			const error = isRegexValid(value).error;
-			new Notice(i18next.t("settings.regexReplacing.invalidRegex", {e: error}));
+			new Notice(i18next.t("settings.regexReplacing.invalidRegex", { e: error }));
 			return {
 				value: "",
-				isForbidden: true
+				isForbidden: true,
 			};
 		} else if (value.match(/[\\><:"|?*]/) && !value.match(/^\/(.*)\/[gmisuvdy]*$/)) {
-			new Notice(i18next.t("settings.regexReplacing.forbiddenValue", { what: i18next.t("common.path.folder"), forbiddenChar: value.match(/[\\><:"|?*]/)![0] }));
+			new Notice(
+				i18next.t("settings.regexReplacing.forbiddenValue", {
+					what: i18next.t("common.path.folder"),
+					forbiddenChar: value.match(/[\\><:"|?*]/)![0],
+				})
+			);
 			return {
 				value: "",
-				isForbidden: true
+				isForbidden: true,
 			};
 		}
 		return {
 			value,
-			isForbidden: false
+			isForbidden: false,
 		};
 	}
 	onOpen(): void {
@@ -60,12 +72,14 @@ export class OverrideAttachmentsModal extends Modal {
 		contentEl.addClasses(["github-publisher", "modals", "regex", "file-path-name"]);
 		contentEl.createEl("h2", { text: i18next.t("settings.embed.overrides.modal.title") });
 		contentEl.createEl("p", { text: i18next.t("settings.regexReplacing.modal.desc") });
-		contentEl.createEl("h3", {text: i18next.t("settings.regexReplacing.modal.keywords")});
-		const ul = contentEl.createEl("ul", {cls: "keywords"});
-		ul.createEl("li", {text: i18next.t("settings.embed.forcePush.all")});
-		ul.createEl("li", {text: i18next.t("settings.embed.forcePush.default")});
-		ul.createEl("li", {text: i18next.t("settings.regexReplacing.modal.name")});
-		contentEl.createEl("h3", {text: i18next.t("settings.regexReplacing.modal.force")});
+		contentEl.createEl("h3", {
+			text: i18next.t("settings.regexReplacing.modal.keywords"),
+		});
+		const ul = contentEl.createEl("ul", { cls: "keywords" });
+		ul.createEl("li", { text: i18next.t("settings.embed.forcePush.all") });
+		ul.createEl("li", { text: i18next.t("settings.embed.forcePush.default") });
+		ul.createEl("li", { text: i18next.t("settings.regexReplacing.modal.name") });
+		contentEl.createEl("h3", { text: i18next.t("settings.regexReplacing.modal.force") });
 		contentEl.createEl("p", { text: i18next.t("settings.embed.forcePush.info") });
 
 		if (!this.settings.embed.overrideAttachments) {
@@ -75,7 +89,8 @@ export class OverrideAttachmentsModal extends Modal {
 			const sett = new Setting(contentEl)
 				.setClass("entry")
 				.addText((text) => {
-					text.setPlaceholder(i18next.t("settings.embed.overrides.modal.path"))
+					text
+						.setPlaceholder(i18next.t("settings.embed.overrides.modal.path"))
 						.setValue(override.path)
 						.onChange((value) => {
 							override.path = value;
@@ -83,7 +98,8 @@ export class OverrideAttachmentsModal extends Modal {
 						});
 				})
 				.addText((text) => {
-					text.setPlaceholder(i18next.t("settings.embed.overrides.modal.dest"))
+					text
+						.setPlaceholder(i18next.t("settings.embed.overrides.modal.dest"))
 						.setValue(override.destination)
 						.onChange((value) => {
 							override.destination = value;
@@ -101,53 +117,51 @@ export class OverrideAttachmentsModal extends Modal {
 			sett.controlEl.setAttribute("value", override.path);
 			sett.controlEl.setAttribute("replace", override.destination);
 			sett.addExtraButton((button) => {
-				button
-					.setIcon("trash")
-					.onClick(() => {
-						this.allOverrides.splice(this.allOverrides.indexOf(override), 1);
-						this.onOpen();
-					});
+				button.setIcon("trash").onClick(() => {
+					this.allOverrides.splice(this.allOverrides.indexOf(override), 1);
+					this.onOpen();
+				});
 			});
 		}
 
 		new Setting(contentEl)
 			.addButton((button) => {
-				button
-					.setIcon("plus")
-					.onClick(() => {
-						this.allOverrides.push({
-							path: "",
-							destination: "",
-							forcePush: false
-						});
-						this.onOpen();
+				button.setIcon("plus").onClick(() => {
+					this.allOverrides.push({
+						path: "",
+						destination: "",
+						forcePush: false,
 					});
+					this.onOpen();
+				});
 			})
 			.addButton((button) => {
-				button
-					.setButtonText(i18next.t("common.save"))
-					.onClick(() => {
-						const canBeValidated: boolean[] = [];
-						this.allOverrides.forEach((override) => {
-							const isForbiddenEntry = this.forbiddenValue(override.path);
-							const isForbiddenReplace = this.forbiddenValue(override.destination);
-							canBeValidated.push(isForbiddenEntry.isForbidden);
-							canBeValidated.push(isForbiddenReplace.isForbidden);
-							if (isForbiddenEntry.isForbidden || isForbiddenReplace.isForbidden) {
-								override.path = isForbiddenEntry.value as string;
-								override.destination = isForbiddenReplace.value as string;
-								const faultyInputValue = contentEl.querySelector(`[value="${escapeRegex(override.path)}"] input`);
-								const faultyInputReplace = contentEl.querySelector(`[replace="${escapeRegex(override.destination)}"] input`);
-								faultyInputValue?.classList.add("error");
-								faultyInputReplace?.classList.add("error");
-							}
-						});
-						if (!canBeValidated.includes(true)) {
-							//remove empty regex
-							this.onSubmit(this.allOverrides);
-							this.close();
+				button.setButtonText(i18next.t("common.save")).onClick(() => {
+					const canBeValidated: boolean[] = [];
+					this.allOverrides.forEach((override) => {
+						const isForbiddenEntry = this.forbiddenValue(override.path);
+						const isForbiddenReplace = this.forbiddenValue(override.destination);
+						canBeValidated.push(isForbiddenEntry.isForbidden);
+						canBeValidated.push(isForbiddenReplace.isForbidden);
+						if (isForbiddenEntry.isForbidden || isForbiddenReplace.isForbidden) {
+							override.path = isForbiddenEntry.value as string;
+							override.destination = isForbiddenReplace.value as string;
+							const faultyInputValue = contentEl.querySelector(
+								`[value="${escapeRegex(override.path)}"] input`
+							);
+							const faultyInputReplace = contentEl.querySelector(
+								`[replace="${escapeRegex(override.destination)}"] input`
+							);
+							faultyInputValue?.classList.add("error");
+							faultyInputReplace?.classList.add("error");
 						}
 					});
+					if (!canBeValidated.includes(true)) {
+						//remove empty regex
+						this.onSubmit(this.allOverrides);
+						this.close();
+					}
+				});
 			});
 	}
 	onClose(): void {
@@ -163,8 +177,9 @@ export class ModalRegexFilePathName extends Modal {
 	constructor(
 		app: App,
 		settings: GitHubPublisherSettings,
-		allRegex : RegexReplace[],
-		onSubmit: (result: RegexReplace[]) => void) {
+		allRegex: RegexReplace[],
+		onSubmit: (result: RegexReplace[]) => void
+	) {
 		super(app);
 		this.allRegex = allRegex;
 		this.settings = settings;
@@ -177,58 +192,85 @@ export class ModalRegexFilePathName extends Modal {
 		});
 		this.settings.upload.replaceTitle = allRegex.filter((regex) => {
 			return regex.type === TypeOfEditRegex.title;
-		}
-		);
+		});
 	}
 
-	forbiddenValue(value: string, type: TypeOfEditRegex): {value: string, isForbidden: boolean} {
+	forbiddenValue(
+		value: string,
+		type: TypeOfEditRegex
+	): { value: string; isForbidden: boolean } {
 		const regexSpecialDontExclude = /\/(.*)(\\[dwstrnvfb0cxup])(.*)\//i;
-		let onWhat = type === TypeOfEditRegex.path ? i18next.t("common.path.folder") : i18next.t("common.path.file");
+		let onWhat =
+			type === TypeOfEditRegex.path
+				? i18next.t("common.path.folder")
+				: i18next.t("common.path.file");
 		onWhat = onWhat.toLowerCase();
 		let isForbidden = false;
 		if (value == "/") {
-			new Notice(i18next.t("settings.regexReplacing.forbiddenValue", {what: onWhat, forbiddenChar: value}));
+			new Notice(
+				i18next.t("settings.regexReplacing.forbiddenValue", {
+					what: onWhat,
+					forbiddenChar: value,
+				})
+			);
 			value = "";
 			isForbidden = true;
 		} else if (!isRegexValid(value).isValid) {
 			const error = isRegexValid(value).error;
-			new Notice(i18next.t("settings.regexReplacing.invalidRegex", {e: error}));
+			new Notice(i18next.t("settings.regexReplacing.invalidRegex", { e: error }));
 			isForbidden = true;
-		}
-		else if (
-			(value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)) && (type === TypeOfEditRegex.title) && !(value.match(regexSpecialDontExclude))
+		} else if (
+			value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/) &&
+			type === TypeOfEditRegex.title &&
+			!value.match(regexSpecialDontExclude)
 		) {
-			new Notice(i18next.t("settings.regexReplacing.forbiddenValue", {what: onWhat, forbiddenChar: value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)![0]}));
+			new Notice(
+				i18next.t("settings.regexReplacing.forbiddenValue", {
+					what: onWhat,
+					forbiddenChar: value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)![0],
+				})
+			);
 			value = "";
 			isForbidden = true;
 		} else if (type === TypeOfEditRegex.path) {
-			if (value.match(/[\\><:"|?*]/) && !value.match(/^\/(.*)\/[gmisuvdy]*$/)){
-				new Notice(i18next.t("settings.regexReplacing.forbiddenValue", { what: onWhat, forbiddenChar: value.match(/[\\><:"|?*]/)![0]}));
+			if (value.match(/[\\><:"|?*]/) && !value.match(/^\/(.*)\/[gmisuvdy]*$/)) {
+				new Notice(
+					i18next.t("settings.regexReplacing.forbiddenValue", {
+						what: onWhat,
+						forbiddenChar: value.match(/[\\><:"|?*]/)![0],
+					})
+				);
 				value = "";
 				isForbidden = true;
-			} else if (value.match(/(^\w+\/\w+)|(\\\/)/) && !(value.match(regexSpecialDontExclude))) {
+			} else if (
+				value.match(/(^\w+\/\w+)|(\\\/)/) &&
+				!value.match(regexSpecialDontExclude)
+			) {
 				new Notice(i18next.t("settings.regexReplacing.warningPath"));
 			}
 		}
 		return {
 			value,
-			isForbidden
+			isForbidden,
 		};
 	}
 
 	onOpen() {
-		const {contentEl} = this;
+		const { contentEl } = this;
 		contentEl.empty();
 		contentEl.addClasses(["github-publisher", "modals", "regex", "file-path-name"]);
 		if (this.settings.upload.behavior === FolderSettings.fixed) {
-			contentEl.createEl("h2", { text: i18next.t("settings.regexReplacing.modal.title.only")});
+			contentEl.createEl("h2", {
+				text: i18next.t("settings.regexReplacing.modal.title.only"),
+			});
 		} else {
-			contentEl.createEl("h2", { text: i18next.t("settings.regexReplacing.modal.title.all")});
+			contentEl.createEl("h2", {
+				text: i18next.t("settings.regexReplacing.modal.title.all"),
+			});
 		}
 		if (!this.settings.upload.replacePath) {
 			this.settings.upload.replacePath = [];
-		}
-		else if (!this.settings.upload.replaceTitle) {
+		} else if (!this.settings.upload.replaceTitle) {
 			this.settings.upload.replaceTitle = [];
 		}
 		this.settings.upload.replacePath.forEach((title) => {
@@ -246,7 +288,8 @@ export class ModalRegexFilePathName extends Modal {
 			const sett = new Setting(contentEl)
 				.setClass("entry")
 				.addText((text) => {
-					text.setPlaceholder(i18next.t("regex.entry"))
+					text
+						.setPlaceholder(i18next.t("regex.entry"))
 						.setValue(title.regex)
 						.onChange((value) => {
 							title.regex = value;
@@ -254,7 +297,8 @@ export class ModalRegexFilePathName extends Modal {
 						});
 				})
 				.addText((text) => {
-					text.setPlaceholder(i18next.t("regex.replace"))
+					text
+						.setPlaceholder(i18next.t("regex.replace"))
 						.setValue(title.replacement)
 						.onChange((value) => {
 							title.replacement = value;
@@ -274,76 +318,70 @@ export class ModalRegexFilePathName extends Modal {
 						});
 				});
 			} else {
-				sett
-					.addButton((button) => {
-						button.buttonEl.classList.add("disabled");
-						button.setButtonText(i18next.t("common.path.file"));
-					});
+				sett.addButton((button) => {
+					button.buttonEl.classList.add("disabled");
+					button.setButtonText(i18next.t("common.path.file"));
+				});
 			}
 			sett.addExtraButton((button) => {
-				button
-					.setIcon("trash")
-					.onClick(() => {
-						this.allRegex.splice(this.allRegex.indexOf(title), 1);
-						this.onOpen();
-					});
+				button.setIcon("trash").onClick(() => {
+					this.allRegex.splice(this.allRegex.indexOf(title), 1);
+					this.onOpen();
+				});
 			});
 		}
 		new Setting(contentEl)
 			.addButton((button) => {
-				button
-					.setIcon("plus")
-					.onClick(() => {
-						this.allRegex.push({
-							regex: "",
-							replacement: "",
-							type: TypeOfEditRegex.title
-						});
-						this.onOpen();
+				button.setIcon("plus").onClick(() => {
+					this.allRegex.push({
+						regex: "",
+						replacement: "",
+						type: TypeOfEditRegex.title,
 					});
+					this.onOpen();
+				});
 			})
 			.addButton((button) => {
-				button
-					.setButtonText(i18next.t("common.save"))
-					.onClick(() => {
-						const canBeValidated: boolean[] = [];
-						this.allRegex.forEach((title) => {
-							if (!title.regex)
-								title.regex = "";
-							if (!title.replacement)
-								title.replacement = "";
-							const isForbiddenEntry = this.forbiddenValue(title.regex, title.type);
-							if (title.regex.length === 0) {
-								new Notice(i18next.t("settings.regexReplacing.emptyRegex"));
-								isForbiddenEntry.isForbidden = true;
-								isForbiddenEntry.value = "";
-							}
+				button.setButtonText(i18next.t("common.save")).onClick(() => {
+					const canBeValidated: boolean[] = [];
+					this.allRegex.forEach((title) => {
+						if (!title.regex) title.regex = "";
+						if (!title.replacement) title.replacement = "";
+						const isForbiddenEntry = this.forbiddenValue(title.regex, title.type);
+						if (title.regex.length === 0) {
+							new Notice(i18next.t("settings.regexReplacing.emptyRegex"));
+							isForbiddenEntry.isForbidden = true;
+							isForbiddenEntry.value = "";
+						}
 
-							const isForbiddenReplace = this.forbiddenValue(title.replacement, title.type);
-							canBeValidated.push(isForbiddenEntry.isForbidden);
-							canBeValidated.push(isForbiddenReplace.isForbidden);
-							if (isForbiddenEntry.isForbidden || isForbiddenReplace.isForbidden) {
-								title.regex = isForbiddenEntry.value as string;
-								title.replacement = isForbiddenReplace.value as string;
-								const faultyInputValue = contentEl.querySelector(`[value="${escapeRegex(title.regex)}"] input`);
-								const faultyInputReplace = contentEl.querySelector(`[replace="${escapeRegex(title.replacement)}"] input`);
-								faultyInputValue?.classList.add("error");
-								faultyInputReplace?.classList.add("error");
-							}
-
-						});
-						if (!canBeValidated.includes(true)) {
-							//remove empty regex
-
-							this.onSubmit(this.allRegex);
-							this.close();
+						const isForbiddenReplace = this.forbiddenValue(title.replacement, title.type);
+						canBeValidated.push(isForbiddenEntry.isForbidden);
+						canBeValidated.push(isForbiddenReplace.isForbidden);
+						if (isForbiddenEntry.isForbidden || isForbiddenReplace.isForbidden) {
+							title.regex = isForbiddenEntry.value as string;
+							title.replacement = isForbiddenReplace.value as string;
+							const faultyInputValue = contentEl.querySelector(
+								`[value="${escapeRegex(title.regex)}"] input`
+							);
+							const faultyInputReplace = contentEl.querySelector(
+								`[replace="${escapeRegex(title.replacement)}"] input`
+							);
+							faultyInputValue?.classList.add("error");
+							faultyInputReplace?.classList.add("error");
 						}
 					});
+					if (!canBeValidated.includes(true)) {
+						//remove empty regex
+
+						this.onSubmit(this.allRegex);
+						this.close();
+					}
+				});
 			});
 	}
 
 	onClose() {
-		const {contentEl} = this;
+		const { contentEl } = this;
 		contentEl.empty();
 	}
 }
@@ -354,34 +392,44 @@ export class ModalRegexOnContents extends Modal {
 	constructor(
 		app: App,
 		settings: GitHubPublisherSettings,
-		onSubmit: (settings: GitHubPublisherSettings) => void) {
+		onSubmit: (settings: GitHubPublisherSettings) => void
+	) {
 		super(app);
 		this.settings = settings;
 		this.onSubmit = onSubmit;
 	}
 
 	onOpen() {
-		const {contentEl} = this;
+		const { contentEl } = this;
 		contentEl.empty();
 		contentEl.addClasses(["github-publisher", "modals", "regex", "on-contents"]);
 		contentEl
 			.createEl("p", {
-				text: i18next.t("settings.regexReplacing.modal.title.text") ,
+				text: i18next.t("settings.regexReplacing.modal.title.text"),
 			})
 			.createEl("p", {
-				text: i18next.t("settings.regexReplacing.modal.desc") ,
+				text: i18next.t("settings.regexReplacing.modal.desc"),
 			})
 			.createEl("p", {
-				text: i18next.t("settings.regexReplacing.empty")});
+				text: i18next.t("settings.regexReplacing.empty"),
+			});
 
 		for (const censorText of this.settings.conversion.censorText) {
-			const afterIcon = censorText.after ? "arrow-up-wide-narrow" : "arrow-down-wide-narrow";
+			const afterIcon = censorText.after
+				? "arrow-up-wide-narrow"
+				: "arrow-down-wide-narrow";
 			const inCodeBlocks = censorText?.inCodeBlocks ? "code" : "scan";
-			const moment = censorText.after ? i18next.t("common.after").toLowerCase() : i18next.t("common.before").toLowerCase();
-			const desc = i18next.t("settings.regexReplacing.momentReplaceRegex", {moment});
-			const toolTipCode = censorText.inCodeBlocks ? i18next.t("settings.regexReplacing.inCodeBlocks.runIn") : i18next.t("settings.regexReplacing.inCodeBlocks.runOut");
+			const moment = censorText.after
+				? i18next.t("common.after").toLowerCase()
+				: i18next.t("common.before").toLowerCase();
+			const desc = i18next.t("settings.regexReplacing.momentReplaceRegex", { moment });
+			const toolTipCode = censorText.inCodeBlocks
+				? i18next.t("settings.regexReplacing.inCodeBlocks.runIn")
+				: i18next.t("settings.regexReplacing.inCodeBlocks.runOut");
 			const sett = new Setting(contentEl);
-			const isLastInList = this.settings.conversion.censorText.indexOf(censorText) === this.settings.conversion.censorText.length - 1;
+			const isLastInList =
+				this.settings.conversion.censorText.indexOf(censorText) ===
+				this.settings.conversion.censorText.length - 1;
 			const isFirstInList = this.settings.conversion.censorText.indexOf(censorText) === 0;
 			sett.addExtraButton((btn) => {
 				btn
@@ -396,7 +444,7 @@ export class ModalRegexOnContents extends Modal {
 					});
 				btn.extraSettingsEl.classList.add("padding-0");
 			});
-			
+
 			sett.addExtraButton((btn) => {
 				btn
 					.setDisabled(isLastInList)
@@ -407,15 +455,15 @@ export class ModalRegexOnContents extends Modal {
 						this.settings.conversion.censorText.splice(index, 1);
 						this.settings.conversion.censorText.splice(newIndex, 0, censorText);
 						this.onOpen();
-					});	
+					});
 				btn.extraSettingsEl.classList.add("padding-0");
 			});
-			
-			sett.setClass("entry")
+
+			sett
+				.setClass("entry")
 				.addText((text) => {
-					text.setPlaceholder(i18next.t(
-						"regex.entry")
-					)
+					text
+						.setPlaceholder(i18next.t("regex.entry"))
 						.setValue(censorText.entry)
 						.onChange(async (value) => {
 							censorText.entry = value;
@@ -423,7 +471,8 @@ export class ModalRegexOnContents extends Modal {
 						});
 				})
 				.addText((text) => {
-					text.setPlaceholder(i18next.t("regex.replace"))
+					text
+						.setPlaceholder(i18next.t("regex.replace"))
 						.setValue(censorText.replace)
 						.onChange(async (value) => {
 							censorText.replace = value;
@@ -431,13 +480,12 @@ export class ModalRegexOnContents extends Modal {
 				})
 
 				.addExtraButton((btn) => {
-					btn.setIcon("trash")
-						.setTooltip(i18next.t("common.delete", {things: "Regex"}))
+					btn
+						.setIcon("trash")
+						.setTooltip(i18next.t("common.delete", { things: "Regex" }))
 						.onClick(async () => {
 							this.settings.conversion.censorText.splice(
-								this.settings.conversion.censorText.indexOf(
-									censorText
-								),
+								this.settings.conversion.censorText.indexOf(censorText),
 								1
 							);
 							this.onOpen();
@@ -468,7 +516,7 @@ export class ModalRegexOnContents extends Modal {
 			.addButton((btn) => {
 				btn
 					.setIcon("plus")
-					.setTooltip(i18next.t("common.add", {things: "Regex"}))
+					.setTooltip(i18next.t("common.add", { things: "Regex" }))
 
 					.onClick(async () => {
 						const censorText: TextCleaner = {
@@ -489,13 +537,20 @@ export class ModalRegexOnContents extends Modal {
 						const canBeValidated: boolean[] = [];
 						for (const censor of this.settings.conversion.censorText) {
 							if (!isRegexValid(censor.entry).isValid) {
-								new Notice(i18next.t("settings.regexReplacing.invalidRegex", {e: isRegexValid(censor.entry).error}));
+								new Notice(
+									i18next.t("settings.regexReplacing.invalidRegex", {
+										e: isRegexValid(censor.entry).error,
+									})
+								);
 								//add error class to faulty input
-								const faultyInput = contentEl.querySelector(`[value="${escapeRegex(censor.entry)}"] input`);
+								const faultyInput = contentEl.querySelector(
+									`[value="${escapeRegex(censor.entry)}"] input`
+								);
 								faultyInput?.classList.add("error");
 								canBeValidated.push(false);
 							}
-						} if (!canBeValidated.includes(false)) {
+						}
+						if (!canBeValidated.includes(false)) {
 							this.onSubmit(this.settings);
 							this.close();
 						}
@@ -504,9 +559,7 @@ export class ModalRegexOnContents extends Modal {
 	}
 
 	onClose() {
-		const {contentEl} = this;
+		const { contentEl } = this;
 		contentEl.empty();
 	}
 }
-
-

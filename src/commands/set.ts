@@ -1,13 +1,13 @@
 import i18next from "i18next";
-import { Command,TFile } from "obsidian";
+import { Command, TFile } from "obsidian";
 import GithubPublisher from "src/main";
 
 export function refreshOpenedSet(plugin: GithubPublisher) {
-	const findRepo= (file: TFile | null) => {
+	const findRepo = (file: TFile | null) => {
 		if (!file) return [];
 		return plugin.settings.github.otherRepo.filter((repo) => repo.set === file.path);
 	};
-	
+
 	return {
 		id: "reload-opened-set",
 		name: i18next.t("commands.refreshOpenedSet"),
@@ -17,7 +17,8 @@ export function refreshOpenedSet(plugin: GithubPublisher) {
 			if (file && repos.length > 0) {
 				if (!checking) {
 					repos.forEach((repo) => {
-						plugin.repositoryFrontmatter[repo.smartKey] = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+						plugin.repositoryFrontmatter[repo.smartKey] =
+							plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 					});
 				}
 				return true;
@@ -32,19 +33,22 @@ export function refreshAllSets(plugin: GithubPublisher) {
 		id: "reload-all-sets",
 		name: i18next.t("commands.refreshAllSets"),
 		checkCallback: (checking) => {
-			const allSets = plugin.settings.github.otherRepo.filter((repo) => repo.set !== "" || repo.set !== null);
+			const allSets = plugin.settings.github.otherRepo.filter(
+				(repo) => repo.set !== "" || repo.set !== null
+			);
 			if (allSets.length > 0) {
 				if (!checking) {
 					allSets.forEach((repo) => {
 						if (!repo.set) return;
 						const file = plugin.app.vault.getAbstractFileByPath(repo.set);
 						if (!file || !(file instanceof TFile)) return;
-						plugin.repositoryFrontmatter[repo.smartKey] = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+						plugin.repositoryFrontmatter[repo.smartKey] =
+							plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 					});
 				}
 				return true;
 			}
 			return false;
-		}
+		},
 	} as Command;
 }

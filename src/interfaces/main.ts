@@ -1,7 +1,17 @@
 import { FrontMatterCache, TFile } from "obsidian";
 
-import { EnumbSettingsTabId, FolderSettings,TypeOfEditRegex  } from "./enum";
-import { Api, Conversion, CopyLink, Embed, GitHub, PluginBehavior, ShareAll, Upload, Workflow } from "./settings";
+import { EnumbSettingsTabId, FolderSettings, TypeOfEditRegex } from "./enum";
+import {
+	Api,
+	Conversion,
+	CopyLink,
+	Embed,
+	GitHub,
+	PluginBehavior,
+	ShareAll,
+	Upload,
+	Workflow,
+} from "./settings";
 
 /**
  * @interface RegexReplace
@@ -73,9 +83,9 @@ export interface Repository {
 	/**
 	 * Setting for copy link commands
 	 */
-	copyLink: CopyLink,
+	copyLink: CopyLink;
 	/**
-	 * Allow to set a file for settings that override for example path, dataview, hardbreak... 
+	 * Allow to set a file for settings that override for example path, dataview, hardbreak...
 	 * Useful for autoclean settings, but also for other settings without needing to change the frontmatter and use the set function
 	 */
 	set: string | null;
@@ -105,7 +115,6 @@ export interface GitHubPublisherSettings {
 	plugin: PluginBehavior;
 }
 
-
 /**
  * @interface LinkedNotes
  * @description Interface for the linked notes, with the file, the link from, the alt text and the destination file path
@@ -130,7 +139,7 @@ export interface LinkedNotes {
 	position?: {
 		start: number;
 		end: number;
-	}
+	};
 }
 
 /**
@@ -150,7 +159,7 @@ export interface ConvertedLink {
 
 /**
  * @interface GithubRepo
- * @description File in the github Repository with the sha 
+ * @description File in the github Repository with the sha
  */
 export interface GithubRepo {
 	file: string;
@@ -240,9 +249,9 @@ export interface PropertiesConversion {
 	includeLinks: boolean;
 }
 
-/** A very important interface that handle a repository from the frontmatter and a lot of usefull settings that override the default plugin behavior, including {@link Path}. 
+/** A very important interface that handle a repository from the frontmatter and a lot of usefull settings that override the default plugin behavior, including {@link Path}.
  * Properties also handle {@link Repository} settings.
-*/
+ */
 export interface Properties {
 	/** Branch name */
 	branch: string;
@@ -272,7 +281,7 @@ export interface Properties {
 		folderName: string;
 		/** If autoclean must perform in it */
 		autoclean: boolean;
-	}
+	};
 }
 /**
  * Preset from the official repository
@@ -282,13 +291,15 @@ export interface Preset {
 	settings: GitHubPublisherSettings;
 }
 
-export type SetRepositoryFrontmatter = {[repository: string] : FrontMatterCache | null | undefined};
+export type SetRepositoryFrontmatter = {
+	[repository: string]: FrontMatterCache | null | undefined;
+};
 
 /**
  * Override attachments settings, allowing force push and changing the destination
  */
 export interface OverrideAttachments {
-	/** Path to override. 
+	/** Path to override.
 	 * Support `{{all}}` special keys for handled all attachment */
 	path: string;
 	/** Destination of the files, use `{{default}}` to send into their default repository */

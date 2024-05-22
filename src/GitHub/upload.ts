@@ -1,11 +1,13 @@
 import {
 	Deleted,
 	GitHubPublisherSettings,
-	MetadataExtractor, MonoProperties,
+	MetadataExtractor,
+	MonoProperties,
 	MonoRepoProperties,
 	MultiProperties,
 	MultiRepoProperties,
-	Properties, UploadedFiles,
+	Properties,
+	UploadedFiles,
 } from "@interfaces";
 import { LOADING_ICON } from "@interfaces/icons";
 import { Octokit } from "@octokit/core";
@@ -23,19 +25,11 @@ import {
 } from "obsidian";
 import { mainConverting } from "src/conversion";
 import { convertToHTMLSVG } from "src/conversion/compiler/excalidraw";
-import {
-	getImagePath,
-	getReceiptFolder,
-} from "src/conversion/file_path";
+import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
 import { deleteFromGithub } from "src/GitHub/delete";
 import { FilesManagement } from "src/GitHub/files";
 import GithubPublisher from "src/main";
-import {
-	logs,
-	noticeMobile,
-	notif,
-	notifError,
-} from "src/utils";
+import { logs, noticeMobile, notif, notifError } from "src/utils";
 import {
 	checkEmptyConfiguration,
 	checkIfRepoIsInAnother,
@@ -43,7 +37,12 @@ import {
 	isAttachment,
 	isShared,
 } from "src/utils/data_validation_test";
-import { frontmatterFromFile, frontmatterSettingsRepository, getFrontmatterSettings, getProperties } from "src/utils/parse_frontmatter";
+import {
+	frontmatterFromFile,
+	frontmatterSettingsRepository,
+	getFrontmatterSettings,
+	getProperties,
+} from "src/utils/parse_frontmatter";
 import { ShareStatusBar } from "src/utils/status_bar";
 import merge from "ts-deepmerge";
 
@@ -65,10 +64,7 @@ export default class Publisher {
 	 * @param {GithubPublisher} plugin GithubPublisher instance
 	 */
 
-	constructor(
-		octokit: Octokit,
-		plugin: GithubPublisher,
-	) {
+	constructor(octokit: Octokit, plugin: GithubPublisher) {
 		this.vault = plugin.app.vault;
 		this.metadataCache = plugin.app.metadataCache;
 		this.settings = plugin.settings;
@@ -88,18 +84,13 @@ export default class Publisher {
 		linkedFiles: TFile[],
 		fileHistory: TFile[],
 		deepScan: boolean,
-		properties: MonoProperties,
-
+		properties: MonoProperties
 	) {
 		const uploadedFile: UploadedFiles[] = [];
 		const fileError: string[] = [];
 		if (linkedFiles.length > 0) {
 			const statusBarItems = this.plugin.addStatusBarItem();
-			const statusBar = new ShareStatusBar(
-				statusBarItems,
-				linkedFiles.length,
-				true
-			);
+			const statusBar = new ShareStatusBar(statusBarItems, linkedFiles.length, true);
 			const prop = properties.frontmatter.prop;
 			const repoProperties: MonoRepoProperties = {
 				frontmatter: properties.frontmatter.prop,
@@ -127,23 +118,16 @@ export default class Publisher {
 								isAttachment(file.name, this.settings.embed.unHandledObsidianExt) &&
 								properties.frontmatter.general.attachment
 							) {
-								const published = await this.uploadImage(
-									file,
-									properties
-								);
+								const published = await this.uploadImage(file, properties);
 								fileHistory.push(file);
 								if (published) {
 									uploadedFile.push(published);
 								}
-
 							}
 						}
 						statusBar.increment();
 					} catch (e) {
-						new Notice(
-							(i18next.t("error.unablePublishNote", { file: file.name })
-							)
-						);
+						new Notice(i18next.t("error.unablePublishNote", { file: file.name }));
 						fileError.push(file.name);
 						logs({ settings: this.settings, e: true }, e);
 					}
@@ -176,24 +160,20 @@ export default class Publisher {
 		repo: MultiRepoProperties | MonoRepoProperties,
 		fileHistory: TFile[] = [],
 		deepScan: boolean = false,
-		sourceFrontmatter: FrontMatterCache | null | undefined,
+		sourceFrontmatter: FrontMatterCache | null | undefined
 	) {
-		const shareFiles = new FilesManagement(
-			this.octokit,
-			this.plugin,
-		);
+		const shareFiles = new FilesManagement(this.octokit, this.plugin);
 		let frontmatter = frontmatterFromFile(file, this.plugin, null);
-		if (sourceFrontmatter && frontmatter) frontmatter = merge(sourceFrontmatter, frontmatter);
+		if (sourceFrontmatter && frontmatter)
+			frontmatter = merge(sourceFrontmatter, frontmatter);
 		const prop = getProperties(this.plugin, repo.repository, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(prop, this.plugin);
 		repo.frontmatter = prop;
 		if (
 			!isShared(frontmatter, this.settings, file, repo.repository) ||
 			fileHistory.includes(file) ||
-			!checkIfRepoIsInAnother(
-				prop,
-				repo.frontmatter
-			) || !isNotEmpty
+			!checkIfRepoIsInAnother(prop, repo.frontmatter) ||
+			!isNotEmpty
 		) {
 			return false;
 		}
@@ -205,19 +185,22 @@ export default class Publisher {
 				this.settings,
 				repo.repository
 			);
-			const frontmatterRepository = frontmatterSettingsRepository(this.plugin, repo.repository);
-			const frontmatterSettings = merge(frontmatterRepository, frontmatterSettingsFromFile);
-			let embedFiles = shareFiles.getSharedEmbed(
-				file,
-				frontmatterSettings,
+			const frontmatterRepository = frontmatterSettingsRepository(
+				this.plugin,
+				repo.repository
 			);
+			const frontmatterSettings = merge(
+				frontmatterRepository,
+				frontmatterSettingsFromFile
+			);
+			let embedFiles = shareFiles.getSharedEmbed(file, frontmatterSettings);
 			embedFiles = await shareFiles.getMetadataLinks(
 				file,
 				embedFiles,
 				frontmatterSettings
 			);
 			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
-			
+
 			let text = await this.vault.cachedRead(file);
 			const multiProperties: MultiProperties = {
 				plugin: this.plugin,
@@ -248,23 +231,22 @@ export default class Publisher {
 					frontmatter: {
 						general: frontmatterSettings,
 						prop: repo,
-						source: sourceFrontmatter
+						source: sourceFrontmatter,
 					},
 					repository: multiProperties.repository,
 					filepath: multiProperties.filepath,
 				};
-				const deleted =
-					await this.uploadOnMultipleRepo(
-						file,
-						text,
-						path,
-						embedFiles,
-						fileHistory,
-						deepScan,
-						shareFiles,
-						autoclean,
-						monoProperties
-					);
+				const deleted = await this.uploadOnMultipleRepo(
+					file,
+					text,
+					path,
+					embedFiles,
+					fileHistory,
+					deepScan,
+					shareFiles,
+					autoclean,
+					monoProperties
+				);
 				fileDeleted.push(deleted.deleted);
 				// convert to UploadedFiles[]
 				updated.push(deleted.uploaded);
@@ -299,12 +281,16 @@ export default class Publisher {
 		deepScan: boolean,
 		shareFiles: FilesManagement,
 		autoclean: boolean,
-		properties: MonoProperties,
+		properties: MonoProperties
 	) {
 		const load = this.plugin.addStatusBarItem();
 		//add a little load icon from lucide icons, using SVG
-		load.createEl("span", { cls: ["obsidian-publisher", "loading", "icons"] }).innerHTML = LOADING_ICON;
-		load.createEl("span", { text: i18next.t("statusBar.loading"), cls: ["obsidian-publisher", "loading", "icons"] });
+		load.createEl("span", { cls: ["obsidian-publisher", "loading", "icons"] }).innerHTML =
+			LOADING_ICON;
+		load.createEl("span", {
+			text: i18next.t("statusBar.loading"),
+			cls: ["obsidian-publisher", "loading", "icons"],
+		});
 		embedFiles = await this.cleanLinkedImageIfAlreadyInRepo(embedFiles, properties);
 		const repo = properties.frontmatter.prop;
 		notif(
@@ -319,12 +305,19 @@ export default class Publisher {
 		};
 		load.remove();
 		notifMob?.hide();
-		const uploaded: UploadedFiles | undefined = await this.uploadText(text, path, file.name, repo);
+		const uploaded: UploadedFiles | undefined = await this.uploadText(
+			text,
+			path,
+			file.name,
+			repo
+		);
 		if (!uploaded) {
 			return {
 				deleted,
 				uploaded: [],
-				error: [`Error while uploading ${file.name} to ${repo.owner}/${repo.repo}/${repo.branch}`]
+				error: [
+					`Error while uploading ${file.name} to ${repo.owner}/${repo.repo}/${repo.branch}`,
+				],
 			};
 		}
 		const embeded = await this.statusBarForEmbed(
@@ -337,21 +330,16 @@ export default class Publisher {
 		const embeddedUploaded = embeded.uploaded;
 		embeddedUploaded.push(uploaded);
 		if (autoclean || repo.dryRun.autoclean) {
-			deleted = await deleteFromGithub(
-				true,
-				this.branchName,
-				shareFiles,
-				{
-					frontmatter: repo,
-					repository: properties.repository,
-					convert: properties.frontmatter.general,
-				}
-			);
+			deleted = await deleteFromGithub(true, this.branchName, shareFiles, {
+				frontmatter: repo,
+				repository: properties.repository,
+				convert: properties.frontmatter.general,
+			});
 		}
 		return {
 			deleted,
 			uploaded: embeddedUploaded,
-			error: embeded.error
+			error: embeded.error,
 		};
 	}
 
@@ -363,12 +351,7 @@ export default class Publisher {
 	 * @param {Properties} prop frontmatter settings
 	 */
 
-	async upload(
-		content: string,
-		path: string,
-		title: string = "",
-		prop: Properties
-	) {
+	async upload(content: string, path: string, title: string = "", prop: Properties) {
 		if (!prop.repo) {
 			new Notice(
 				"Config error : You need to define a github repo in the plugin settings"
@@ -398,7 +381,7 @@ export default class Publisher {
 		};
 		const result: UploadedFiles = {
 			isUpdated: false,
-			file: title
+			file: title,
 		};
 		try {
 			const response = await octokit.request(
@@ -417,17 +400,11 @@ export default class Publisher {
 				result.isUpdated = true;
 			}
 		} catch {
-			logs(
-				{ settings: this.settings },
-				i18next.t("error.normal")
-			);
+			logs({ settings: this.settings }, i18next.t("error.normal"));
 		}
 
 		payload.message = msg;
-		await octokit.request(
-			"PUT /repos/{owner}/{repo}/contents/{path}",
-			payload
-		);
+		await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", payload);
 		return result;
 	}
 
@@ -435,10 +412,7 @@ export default class Publisher {
 	 * Convert image in base64 and upload it to GitHub
 	 */
 
-	async uploadImage(
-		imageFile: TFile,
-		properties: MonoProperties,
-	) {
+	async uploadImage(imageFile: TFile, properties: MonoProperties) {
 		let imageBin = await this.vault.readBinary(imageFile);
 		const prop = properties.frontmatter.prop;
 		let image64 = arrayBufferToBase64(imageBin);
@@ -470,9 +444,9 @@ export default class Publisher {
 				}
 				return {
 					isUpdated: needToByUpdated,
-					file: imageFile.name
+					file: imageFile.name,
 				};
-			} 
+			}
 			const folder = dryRunPath.split("/").slice(0, -1).join("/");
 			const folderExists = this.vault.getAbstractFileByPath(folder);
 			if (!folderExists || !(folderExists instanceof TFolder))
@@ -480,11 +454,10 @@ export default class Publisher {
 			await this.vault.createBinary(dryRunPath, imageBin);
 			return {
 				isUpdated: true,
-				file: imageFile.name
+				file: imageFile.name,
 			};
 		}
 		return await this.upload(image64, path, "", properties.frontmatter.prop);
-
 	}
 
 	/**
@@ -500,7 +473,7 @@ export default class Publisher {
 		text: string,
 		path: string,
 		title: string = "",
-		prop: Properties,
+		prop: Properties
 	): Promise<UploadedFiles | undefined> {
 		if (this.settings.github.dryRun.enable) {
 			//create a new file in the vault
@@ -516,7 +489,7 @@ export default class Publisher {
 				await this.vault.modify(isAlreadyExist, text);
 				return {
 					isUpdated: true,
-					file: title
+					file: title,
 				};
 			} //create
 			const folder = newPath.split("/").slice(0, -1).join("/");
@@ -526,17 +499,12 @@ export default class Publisher {
 			await this.vault.create(newPath, text);
 			return {
 				isUpdated: false,
-				file: title
+				file: title,
 			};
 		}
 		try {
 			const contentBase64 = Base64.encode(text).toString();
-			return await this.upload(
-				contentBase64,
-				path,
-				title,
-				prop
-			);
+			return await this.upload(contentBase64, path, title, prop);
 		} catch (e) {
 			notif({ settings: this.settings, e: true }, e);
 			return undefined;
@@ -560,19 +528,10 @@ export default class Publisher {
 				if (file) {
 					const contents = await this.vault.adapter.read(file);
 					const path =
-						this.settings.upload.metadataExtractorPath +
-						"/" +
-						file.split("/").pop();
-					prop = Array.isArray(prop)
-						? prop
-						: [prop];
+						this.settings.upload.metadataExtractorPath + "/" + file.split("/").pop();
+					prop = Array.isArray(prop) ? prop : [prop];
 					for (const repo of prop) {
-						await this.uploadText(
-							contents,
-							path,
-							file.split("/").pop(),
-							repo
-						);
+						await this.uploadText(contents, path, file.split("/").pop(), repo);
 					}
 				}
 			}
@@ -612,9 +571,7 @@ export default class Publisher {
 			);
 			if (workflowGet.data.workflow_runs.length > 0) {
 				const build = workflowGet.data.workflow_runs.find(
-					(run) =>
-						run.name ===
-						prop.workflowName.replace(".yml", "").replace(".yaml", "")
+					(run) => run.name === prop.workflowName.replace(".yml", "").replace(".yaml", "")
 				);
 				if (build && build.status === "completed") {
 					finished = true;
@@ -625,7 +582,6 @@ export default class Publisher {
 		return false;
 	}
 
-
 	/**
 	 * Remove all image embed in the note if they are already in the repo (same path)
 	 * Skip for files, as they are updated by GitHub directly (basic git behavior)
@@ -635,7 +591,7 @@ export default class Publisher {
 	 */
 	async cleanLinkedImageIfAlreadyInRepo(
 		embedFiles: TFile[],
-		properties: MonoProperties,
+		properties: MonoProperties
 	): Promise<TFile[]> {
 		const newLinkedFiles: TFile[] = [];
 		for (const file of embedFiles) {
@@ -664,31 +620,42 @@ export default class Publisher {
 							repo: prop.prop.repo,
 							path: imagePath,
 							ref: this.branchName,
-						});
+						}
+					);
 					if (response.status === 200) {
-						const reply =  await this.octokit.request(
+						const reply = await this.octokit.request(
 							"GET /repos/{owner}/{repo}/commits",
 							{
 								owner: prop.prop.owner,
 								repo: prop.prop.repo,
 								path: imagePath,
 								sha: this.branchName,
-							});
+							}
+						);
 						if (reply.status === 200) {
 							const data = reply.data;
 							const lastEditedInRepo = data[0]?.commit?.committer?.date;
-							const lastEditedDate = lastEditedInRepo ? new Date(lastEditedInRepo) : undefined;
+							const lastEditedDate = lastEditedInRepo
+								? new Date(lastEditedInRepo)
+								: undefined;
 							const lastEditedAttachment = new Date(file.stat.mtime);
 							//if the file in the vault is newer than the file in the repo, push it
-							if (lastEditedDate && lastEditedAttachment > lastEditedDate || !lastEditedDate) {
+							if (
+								(lastEditedDate && lastEditedAttachment > lastEditedDate) ||
+								!lastEditedDate
+							) {
 								newLinkedFiles.push(file);
-							} else logs({ settings: this.settings }, i18next.t("error.alreadyExists", { file: file.name }));
+							} else
+								logs(
+									{ settings: this.settings },
+									i18next.t("error.alreadyExists", { file: file.name })
+								);
 						}
 					}
 				} catch (e) {
 					newLinkedFiles.push(file);
 				}
-			//pass non image file as they are updated basically by GitHub with checking the content (basic git behavior)
+				//pass non image file as they are updated basically by GitHub with checking the content (basic git behavior)
 			} else {
 				newLinkedFiles.push(file);
 			}
@@ -696,4 +663,3 @@ export default class Publisher {
 		return newLinkedFiles;
 	}
 }
-

@@ -1,5 +1,9 @@
 import {
-	EnumbSettingsTabId, FolderSettings, GitHubPublisherSettings, GithubTiersVersion, Repository
+	EnumbSettingsTabId,
+	FolderSettings,
+	GitHubPublisherSettings,
+	GithubTiersVersion,
+	Repository,
 } from "@interfaces";
 import i18next from "i18next";
 import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
@@ -9,20 +13,32 @@ import {
 	KeyBasedOnSettings,
 	multipleRepoExplained,
 	supportMe,
-	usefulLinks
+	usefulLinks,
 } from "src/settings/help";
 import { migrateToken } from "src/settings/migrate";
-import { ExportModal, ImportLoadPreset, ImportModal, loadAllPresets } from "src/settings/modals/import_export";
+import {
+	ExportModal,
+	ImportLoadPreset,
+	ImportModal,
+	loadAllPresets,
+} from "src/settings/modals/import_export";
 import { ModalAddingNewRepository } from "src/settings/modals/manage_repo";
 import { AutoCleanPopup } from "src/settings/modals/popup";
-import { ModalRegexFilePathName, ModalRegexOnContents, OverrideAttachmentsModal } from "src/settings/modals/regex_edition";
+import {
+	ModalRegexFilePathName,
+	ModalRegexOnContents,
+	OverrideAttachmentsModal,
+} from "src/settings/modals/regex_edition";
 import { TokenEditPath } from "src/settings/modals/token_path";
 import {
 	autoCleanCondition,
-	folderHideShowSettings, showHideBasedOnFolder,
+	folderHideShowSettings,
+	showHideBasedOnFolder,
 } from "src/settings/style";
-import { checkRepositoryValidity, verifyRateLimitAPI } from "src/utils/data_validation_test";
-
+import {
+	checkRepositoryValidity,
+	verifyRateLimitAPI,
+} from "src/utils/data_validation_test";
 
 export class GithubPublisherSettingsTab extends PluginSettingTab {
 	plugin: GithubPublisherPlugin;
@@ -43,7 +59,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		containerEl.addClass("github-publisher");
 		const defaultTabId = EnumbSettingsTabId.github;
 		let savedId = this.settings.tabsID ?? defaultTabId;
-		if (this.settings.plugin.saveTabId != undefined && !this.settings.plugin.saveTabId) { //real false
+		if (this.settings.plugin.saveTabId != undefined && !this.settings.plugin.saveTabId) {
+			//real false
 			this.settings.tabsID = defaultTabId;
 			savedId = defaultTabId;
 			this.plugin.saveSettings();
@@ -70,7 +87,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				name: i18next.t("settings.plugin.title"),
 				icon: "gear",
 			},
-			"help": {
+			help: {
 				name: i18next.t("settings.help.title"),
 				icon: "info",
 			},
@@ -79,17 +96,14 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setClass("import-export")
 			.addButton((button) => {
-				button.setButtonText(i18next.t("modals.export.title"))
-					.onClick(() => {
-						new ExportModal(this.app, this.plugin).open();
-					});
-			}
-			)
+				button.setButtonText(i18next.t("modals.export.title")).onClick(() => {
+					new ExportModal(this.app, this.plugin).open();
+				});
+			})
 			.addButton((button) => {
-				button.setButtonText(i18next.t("modals.import.title"))
-					.onClick(() => {
-						new ImportModal(this.app, this.plugin, this.settingsPage, this).open();
-					});
+				button.setButtonText(i18next.t("modals.import.title")).onClick(() => {
+					new ImportModal(this.app, this.plugin, this.settingsPage, this).open();
+				});
 			})
 			.addButton((button) => {
 				button
@@ -98,14 +112,18 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.onClick(async () => {
 						const octokit = await this.plugin.reloadOctokit();
 						const presetLists = await loadAllPresets(octokit.octokit, this.plugin);
-						new ImportLoadPreset(this.app, this.plugin, presetLists, octokit.octokit, this).open();
+						new ImportLoadPreset(
+							this.app,
+							this.plugin,
+							presetLists,
+							octokit.octokit,
+							this
+						).open();
 					});
 			});
 		const tabBar = containerEl.createEl("nav", {
 			cls: "settings-tab-bar",
 		});
-
-
 
 		for (const [tabID, tabInfo] of Object.entries(PUBLISHER_TABS)) {
 			const tabEl = tabBar.createEl("div", {
@@ -119,13 +137,11 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				cls: "settings-tab-name",
 				text: tabInfo.name,
 			});
-			if (tabID === savedId)
-				tabEl.addClass("settings-tab-active");
+			if (tabID === savedId) tabEl.addClass("settings-tab-active");
 
 			tabEl.addEventListener("click", async () => {
 				// @ts-ignore
-				for (const tabEl of tabBar.children)
-					tabEl.removeClass("settings-tab-active");
+				for (const tabEl of tabBar.children) tabEl.removeClass("settings-tab-active");
 
 				tabEl.addClass("settings-tab-active");
 				this.renderSettingsPage(tabID);
@@ -135,8 +151,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			cls: "settings-tab-page",
 		});
 		this.renderSettingsPage(savedId);
-
-
 	}
 
 	/**
@@ -150,24 +164,24 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		}
 		this.settingsPage.empty();
 		switch (tabId) {
-		case "github-configuration":
-			this.renderGithubConfiguration();
-			break;
-		case "upload-configuration":
-			this.renderUploadConfiguration();
-			break;
-		case "text-conversion":
-			this.renderTextConversion();
-			break;
-		case "embed-configuration":
-			this.renderEmbedConfiguration();
-			break;
-		case "plugin-settings":
-			this.renderPluginSettings();
-			break;
-		case "help":
-			this.renderHelp();
-			break;
+			case "github-configuration":
+				this.renderGithubConfiguration();
+				break;
+			case "upload-configuration":
+				this.renderUploadConfiguration();
+				break;
+			case "text-conversion":
+				this.renderTextConversion();
+				break;
+			case "embed-configuration":
+				this.renderEmbedConfiguration();
+				break;
+			case "plugin-settings":
+				this.renderPluginSettings();
+				break;
+			case "help":
+				this.renderHelp();
+				break;
 		}
 	}
 
@@ -181,8 +195,14 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setDesc(i18next.t("settings.github.apiType.desc"))
 			.addDropdown((dropdown) => {
 				dropdown
-					.addOption(GithubTiersVersion.free, i18next.t("settings.github.apiType.dropdown.free"))
-					.addOption(GithubTiersVersion.entreprise, i18next.t("settings.github.apiType.dropdown.enterprise"))
+					.addOption(
+						GithubTiersVersion.free,
+						i18next.t("settings.github.apiType.dropdown.free")
+					)
+					.addOption(
+						GithubTiersVersion.entreprise,
+						i18next.t("settings.github.apiType.dropdown.enterprise")
+					)
 					.setValue(githubSettings.api.tiersForApi)
 					.onChange(async (value) => {
 						githubSettings.api.tiersForApi = value as GithubTiersVersion;
@@ -205,15 +225,12 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				);
 		}
 
-
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.username.title"))
 			.setDesc(i18next.t("settings.github.username.desc"))
 			.addText((text) =>
 				text
-					.setPlaceholder(
-						i18next.t("settings.github.username.title")
-					)
+					.setPlaceholder(i18next.t("settings.github.username.title"))
 					.setValue(githubSettings.user)
 					.onChange(async (value) => {
 						githubSettings.user = value.trim();
@@ -238,8 +255,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			span.innerText = i18next.t("settings.github.ghToken.desc");
 			span.createEl("a", undefined, (link) => {
 				link.innerText = `${i18next.t("common.here")}.`;
-				link.href =
-					"https://github.com/settings/tokens/new?scopes=repo,workflow";
+				link.href = "https://github.com/settings/tokens/new?scopes=repo,workflow";
 			});
 		});
 		const tokenSettings = new Setting(this.settingsPage)
@@ -269,7 +285,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						const token = await this.plugin.loadToken();
 						new TokenEditPath(this.app, this.plugin, token).open();
 						await this.plugin.saveSettings();
-
 					});
 			});
 		new Setting(this.settingsPage)
@@ -288,24 +303,20 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.automaticallyMergePR"))
 			.addToggle((toggle) =>
-				toggle
-					.setValue(githubSettings.automaticallyMergePR)
-					.onChange(async (value) => {
-						githubSettings.automaticallyMergePR = value;
-						await this.plugin.saveSettings();
-					})
+				toggle.setValue(githubSettings.automaticallyMergePR).onChange(async (value) => {
+					githubSettings.automaticallyMergePR = value;
+					await this.plugin.saveSettings();
+				})
 			);
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.dryRun.enable.title"))
 			.setDesc(i18next.t("settings.github.dryRun.enable.desc"))
 			.addToggle((toggle) =>
-				toggle
-					.setValue(githubSettings.dryRun.enable)
-					.onChange(async (value) => {
-						githubSettings.dryRun.enable = value;
-						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.github);
-					})
+				toggle.setValue(githubSettings.dryRun.enable).onChange(async (value) => {
+					githubSettings.dryRun.enable = value;
+					await this.plugin.saveSettings();
+					this.renderSettingsPage(EnumbSettingsTabId.github);
+				})
 			);
 
 		new Setting(this.settingsPage)
@@ -321,7 +332,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					})
 			);
 
-
 		new Setting(this.settingsPage)
 			.setClass("no-display")
 			.addButton((button) =>
@@ -330,8 +340,15 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setClass("connect-button")
 					.onClick(async () => {
 						const octokit = await this.plugin.reloadOctokit();
-						this.settings.github.verifiedRepo = await checkRepositoryValidity(octokit, null, null);
-						this.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this.settings);
+						this.settings.github.verifiedRepo = await checkRepositoryValidity(
+							octokit,
+							null,
+							null
+						);
+						this.settings.github.rateLimit = await verifyRateLimitAPI(
+							octokit.octokit,
+							this.settings
+						);
 						await this.plugin.saveSettings();
 					})
 			)
@@ -339,14 +356,23 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				button
 					.setButtonText(i18next.t("settings.github.smartRepo.button"))
 					.onClick(async () => {
-						const repository: Repository[] = this.copy(this.settings.github?.otherRepo ?? []);
-						new ModalAddingNewRepository(this.app, this.settings, this.branchName, this.plugin, repository, (async result => {
-							this.settings.github.otherRepo = result;
-							await this.plugin.saveSettings();
-							this.plugin.reloadCommands();
-						})
+						const repository: Repository[] = this.copy(
+							this.settings.github?.otherRepo ?? []
+						);
+						new ModalAddingNewRepository(
+							this.app,
+							this.settings,
+							this.branchName,
+							this.plugin,
+							repository,
+							async (result) => {
+								this.settings.github.otherRepo = result;
+								await this.plugin.saveSettings();
+								this.plugin.reloadCommands();
+							}
 						).open();
-					}));
+					})
+			);
 		this.settingsPage.createEl("h3", { text: "GitHub Workflow" });
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.githubWorkflow.prRequest.title"))
@@ -367,17 +393,16 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.githubWorkflow.githubAction.title"))
-			.setDesc(
-				i18next.t("settings.githubWorkflow.githubAction.desc")
-			)
+			.setDesc(i18next.t("settings.githubWorkflow.githubAction.desc"))
 			.addText((text) => {
-				text.setPlaceholder("ci")
+				text
+					.setPlaceholder("ci")
 					.setValue(githubSettings.workflow.name)
 					.onChange(async (value) => {
 						if (value.length > 0) {
 							value = value.trim();
 							const yamlEndings = [".yml", ".yaml"];
-							if (!yamlEndings.some(ending => value.endsWith(ending))) {
+							if (!yamlEndings.some((ending) => value.endsWith(ending))) {
 								value += yamlEndings[0];
 							}
 						}
@@ -385,8 +410,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-
-
 	}
 
 	/**
@@ -400,11 +423,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.addDropdown((dropDown) => {
 				dropDown
 					.addOptions({
-						fixed: i18next.t(
-							"settings.upload.folderBehavior.fixedFolder"),
+						fixed: i18next.t("settings.upload.folderBehavior.fixedFolder"),
 						yaml: i18next.t("settings.upload.folderBehavior.yaml"),
-						obsidian: i18next.t(
-							"settings.upload.folderBehavior.obsidianPath"),
+						obsidian: i18next.t("settings.upload.folderBehavior.obsidianPath"),
 					})
 					.setValue(uploadSettings.behavior)
 					.onChange(async (value: string) => {
@@ -414,33 +435,33 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							rootFolderSettings,
 							autoCleanSetting,
 							value,
-							this.plugin);
+							this.plugin
+						);
 						await this.plugin.saveSettings();
 						this.renderSettingsPage(EnumbSettingsTabId.upload);
 					});
 			});
 
-		const defaultFolder = uploadSettings.behavior === FolderSettings.yaml ?
-			{
-				desc: i18next.t("settings.upload.defaultFolder.desc"),
-				title: i18next.t("settings.upload.defaultFolder.title"),
-			}
-			: {
-				desc: i18next.t("settings.upload.rootFolder.other"),
-				title: i18next.t("settings.upload.rootFolder.title"),
-			};
+		const defaultFolder =
+			uploadSettings.behavior === FolderSettings.yaml
+				? {
+						desc: i18next.t("settings.upload.defaultFolder.desc"),
+						title: i18next.t("settings.upload.defaultFolder.title"),
+					}
+				: {
+						desc: i18next.t("settings.upload.rootFolder.other"),
+						title: i18next.t("settings.upload.rootFolder.title"),
+					};
 
 		new Setting(this.settingsPage)
 			.setName(defaultFolder.title)
 			.setDesc(defaultFolder.desc)
 			.addText((text) => {
-				text.setPlaceholder(i18next.t("settings.upload.defaultFolder.placeholder"))
+				text
+					.setPlaceholder(i18next.t("settings.upload.defaultFolder.placeholder"))
 					.setValue(uploadSettings.defaultName)
 					.onChange(async (value) => {
-						uploadSettings.defaultName = value.replace(
-							/\/$/,
-							""
-						);
+						uploadSettings.defaultName = value.replace(/\/$/, "");
 						await autoCleanCondition(
 							value,
 							autoCleanSetting,
@@ -456,7 +477,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("settings.upload.frontmatterKey.title"))
 			.setDesc(i18next.t("settings.upload.frontmatterKey.desc"))
 			.addText((text) => {
-				text.setPlaceholder(i18next.t("settings.upload.frontmatterKey.placeholder"))
+				text
+					.setPlaceholder(i18next.t("settings.upload.frontmatterKey.placeholder"))
 					.setValue(uploadSettings.yamlFolderKey)
 					.onChange(async (value) => {
 						uploadSettings.yamlFolderKey = value.trim();
@@ -467,13 +489,11 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("settings.upload.rootFolder.title"))
 			.setDesc(i18next.t("settings.upload.rootFolder.desc"))
 			.addText((text) => {
-				text.setPlaceholder("docs")
+				text
+					.setPlaceholder("docs")
 					.setValue(uploadSettings.rootFolder)
 					.onChange(async (value) => {
-						uploadSettings.rootFolder = value.replace(
-							/\/$/,
-							""
-						);
+						uploadSettings.rootFolder = value.replace(/\/$/, "");
 						await autoCleanCondition(
 							value,
 							autoCleanSetting,
@@ -485,12 +505,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					});
 			});
 		const frontmatterTitleSet = new Setting(this.settingsPage)
-			.setName(
-				i18next.t("settings.upload.useFrontmatterTitle.title")
-			)
-			.setDesc(
-				i18next.t("settings.upload.useFrontmatterTitle.desc")
-			)
+			.setName(i18next.t("settings.upload.useFrontmatterTitle.title"))
+			.setDesc(i18next.t("settings.upload.useFrontmatterTitle.desc"))
 			.setClass("title")
 			.addToggle((toggle) => {
 				toggle
@@ -503,7 +519,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 		if (uploadSettings.frontmatterTitle.enable) {
 			frontmatterTitleSet.addText((text) => {
-				text.setPlaceholder("title")
+				text
+					.setPlaceholder("title")
 					.setValue(uploadSettings.frontmatterTitle.key)
 					.onChange(async (value) => {
 						uploadSettings.frontmatterTitle.key = value.trim();
@@ -512,53 +529,56 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			});
 		}
 
-		const desc = uploadSettings.behavior === FolderSettings.fixed ? i18next.t("settings.upload.regexFilePathTitle.title.titleOnly") : i18next.t("settings.upload.regexFilePathTitle.title.FolderPathTitle");
+		const desc =
+			uploadSettings.behavior === FolderSettings.fixed
+				? i18next.t("settings.upload.regexFilePathTitle.title.titleOnly")
+				: i18next.t("settings.upload.regexFilePathTitle.title.FolderPathTitle");
 
 		new Setting(this.settingsPage)
 			.setName(desc)
-			.setDesc(
-				i18next.t("settings.upload.regexFilePathTitle.desc")
-			)
+			.setDesc(i18next.t("settings.upload.regexFilePathTitle.desc"))
 			.addButton((button) => {
-				button
-					.setIcon("pencil")
-					.onClick(async () => {
-						let allRegex = uploadSettings.replaceTitle;
-						if (uploadSettings.behavior !== FolderSettings.fixed) {
-							allRegex = allRegex.concat(uploadSettings.replacePath);
-						}
-						new ModalRegexFilePathName(this.app, this.settings, this.copy(allRegex), (async result => {
-							uploadSettings.replacePath = result.filter(title => { return title.type === "path"; });
-							uploadSettings.replaceTitle = result.filter(title => { return title.type === "title"; });
+				button.setIcon("pencil").onClick(async () => {
+					let allRegex = uploadSettings.replaceTitle;
+					if (uploadSettings.behavior !== FolderSettings.fixed) {
+						allRegex = allRegex.concat(uploadSettings.replacePath);
+					}
+					new ModalRegexFilePathName(
+						this.app,
+						this.settings,
+						this.copy(allRegex),
+						async (result) => {
+							uploadSettings.replacePath = result.filter((title) => {
+								return title.type === "path";
+							});
+							uploadSettings.replaceTitle = result.filter((title) => {
+								return title.type === "title";
+							});
 							await this.plugin.saveSettings();
-						})).open();
-					});
+						}
+					).open();
+				});
 			});
 
 		const folderNoteSettings = new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.links.folderNote.title"))
-			.setDesc(
-				i18next.t("settings.conversion.links.folderNote.desc")
-			)
+			.setDesc(i18next.t("settings.conversion.links.folderNote.desc"))
 			.addToggle((toggle) => {
-				toggle
-					.setValue(uploadSettings.folderNote.enable)
-					.onChange(async (value) => {
-						uploadSettings.folderNote.enable = value;
-						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.upload);
-					});
+				toggle.setValue(uploadSettings.folderNote.enable).onChange(async (value) => {
+					uploadSettings.folderNote.enable = value;
+					await this.plugin.saveSettings();
+					this.renderSettingsPage(EnumbSettingsTabId.upload);
+				});
 			});
 
 		if (uploadSettings.folderNote.enable) {
-
 			folderNoteSettings.addText((text) => {
-				text.setPlaceholder("folderNote")
+				text
+					.setPlaceholder("folderNote")
 					.setValue(uploadSettings.folderNote.rename)
 					.onChange(async (value) => {
 						uploadSettings.folderNote.rename = value;
 						await this.plugin.saveSettings();
-
 					});
 			});
 			new Setting(this.settingsPage)
@@ -576,7 +596,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				new Setting(this.settingsPage)
 					.setName(i18next.t("settings.upload.folderNote.addTitle.key"))
 					.addText((text) => {
-						text.setPlaceholder("title")
+						text
+							.setPlaceholder("title")
 							.setValue(uploadSettings.folderNote.addTitle.key)
 							.onChange(async (value) => {
 								uploadSettings.folderNote.addTitle.key = value;
@@ -586,22 +607,23 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			}
 		}
 
-		showHideBasedOnFolder(this.settings, frontmatterKeySettings, rootFolderSettings, folderNoteSettings);
+		showHideBasedOnFolder(
+			this.settings,
+			frontmatterKeySettings,
+			rootFolderSettings,
+			folderNoteSettings
+		);
 
 		if (this.app.plugins.getPlugin("metadata-extractor")) {
 			new Setting(this.settingsPage)
-				.setName(
-					i18next.t("settings.githubWorkflow.useMetadataExtractor.title")
-				)
-				.setDesc(
-					i18next.t("settings.githubWorkflow.useMetadataExtractor.desc")
-				)
+				.setName(i18next.t("settings.githubWorkflow.useMetadataExtractor.title"))
+				.setDesc(i18next.t("settings.githubWorkflow.useMetadataExtractor.desc"))
 				.addText((text) => {
-					text.setPlaceholder("docs/_assets/metadata")
+					text
+						.setPlaceholder("docs/_assets/metadata")
 						.setValue(uploadSettings.metadataExtractorPath)
 						.onChange(async (value) => {
-							uploadSettings.metadataExtractorPath =
-								value.trim();
+							uploadSettings.metadataExtractorPath = value.trim();
 							await this.plugin.saveSettings();
 						});
 				});
@@ -611,21 +633,23 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("settings.githubWorkflow.autoCleanUp.title"))
 			.setDesc(i18next.t("settings.githubWorkflow.autoCleanUp.desc"))
 			.addToggle((toggle) => {
-				toggle
-					.setValue(uploadSettings.autoclean.enable)
-					.onChange(async (value) => {
-						if (value && (this.settings.upload.behavior === "yaml" && this.settings.upload.defaultName.length === 0 || this.settings.upload.rootFolder.length === 0))
-							new AutoCleanPopup(this.app, this.settings, (result => {
-								uploadSettings.autoclean.enable = result;
-								this.renderSettingsPage(EnumbSettingsTabId.upload);
-							})).open();
-						else
-							uploadSettings.autoclean.enable = value;	
-						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.upload);
-						this.plugin.cleanOldCommands();
-						await this.plugin.chargeAllCommands(null, this.plugin);
-					});
+				toggle.setValue(uploadSettings.autoclean.enable).onChange(async (value) => {
+					if (
+						value &&
+						((this.settings.upload.behavior === "yaml" &&
+							this.settings.upload.defaultName.length === 0) ||
+							this.settings.upload.rootFolder.length === 0)
+					)
+						new AutoCleanPopup(this.app, this.settings, (result) => {
+							uploadSettings.autoclean.enable = result;
+							this.renderSettingsPage(EnumbSettingsTabId.upload);
+						}).open();
+					else uploadSettings.autoclean.enable = value;
+					await this.plugin.saveSettings();
+					this.renderSettingsPage(EnumbSettingsTabId.upload);
+					this.plugin.cleanOldCommands();
+					await this.plugin.chargeAllCommands(null, this.plugin);
+				});
 			});
 		if (uploadSettings.autoclean.enable) {
 			new Setting(this.settingsPage)
@@ -633,12 +657,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				.setDesc(i18next.t("settings.githubWorkflow.excludedFiles.desc"))
 				.addTextArea((textArea) => {
 					textArea
-						.setPlaceholder(
-							"docs/assets/js, docs/assets/logo, /\\.js$/"
-						)
-						.setValue(
-							uploadSettings.autoclean.excluded.join(", ")
-						)
+						.setPlaceholder("docs/assets/js, docs/assets/logo, /\\.js$/")
+						.setValue(uploadSettings.autoclean.excluded.join(", "))
 						.onChange(async (value) => {
 							uploadSettings.autoclean.excluded = value
 								.split(/[,\n]/)
@@ -647,7 +667,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							await this.plugin.saveSettings();
 						});
 				});
-			
+
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.githubWorkflow.includeAttachments.title"))
 				.setDesc(i18next.t("settings.githubWorkflow.includeAttachments.desc"))
@@ -658,18 +678,16 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							uploadSettings.autoclean.includeAttachments = value;
 							await this.plugin.saveSettings();
 						});
-				});	
+				});
 		}
-		
 
 		folderHideShowSettings(
 			frontmatterKeySettings,
 			rootFolderSettings,
 			autoCleanSetting,
 			uploadSettings.behavior,
-			this.plugin,
+			this.plugin
 		);
-
 	}
 
 	/**
@@ -688,61 +706,61 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			text: i18next.t("settings.conversion.links.desc"),
 		});
 
-		const shareAll = this.settings.plugin.shareAll?.enable ? ` ${i18next.t("settings.conversion.links.internals.shareAll")}` : "";
+		const shareAll = this.settings.plugin.shareAll?.enable
+			? ` ${i18next.t("settings.conversion.links.internals.shareAll")}`
+			: "";
 		const internalLinksDesc = document.createDocumentFragment();
-		internalLinksDesc.createEl("p", {text: i18next.t("settings.conversion.links.internals.desc") + shareAll, cls: "no-margin"});
-		internalLinksDesc.createEl("p", {text: i18next.t("settings.conversion.links.internals.dataview"), cls: "no-margin"});
+		internalLinksDesc.createEl("p", {
+			text: i18next.t("settings.conversion.links.internals.desc") + shareAll,
+			cls: "no-margin",
+		});
+		internalLinksDesc.createEl("p", {
+			text: i18next.t("settings.conversion.links.internals.dataview"),
+			cls: "no-margin",
+		});
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.links.internals.title"))
 			.setDesc(internalLinksDesc)
 			.addToggle((toggle) => {
-				toggle
-					.setValue(textSettings.links.internal)
-					.onChange(async (value) => {
-						textSettings.links.internal = value;
-						if (this.settings.plugin.shareAll?.enable) {
-							textSettings.links.unshared = true;
-						}
-						await this.plugin.saveSettings();
-						this.renderSettingsPage("text-conversion");
-					});
+				toggle.setValue(textSettings.links.internal).onChange(async (value) => {
+					textSettings.links.internal = value;
+					if (this.settings.plugin.shareAll?.enable) {
+						textSettings.links.unshared = true;
+					}
+					await this.plugin.saveSettings();
+					this.renderSettingsPage("text-conversion");
+				});
 			});
 
 		if (textSettings.links.internal && !this.settings.plugin.shareAll?.enable) {
 			new Setting(this.settingsPage)
-				.setName(
-					i18next.t("settings.conversion.links.nonShared.title")
-				)
-				.setDesc(
-					i18next.t("settings.conversion.links.nonShared.desc")
-				)
+				.setName(i18next.t("settings.conversion.links.nonShared.title"))
+				.setDesc(i18next.t("settings.conversion.links.nonShared.desc"))
 				.addToggle((toggle) => {
-					toggle
-						.setValue(textSettings.links.unshared)
-						.onChange(async (value) => {
-							textSettings.links.unshared =
-								value;
-							await this.plugin.saveSettings();
-						});
+					toggle.setValue(textSettings.links.unshared).onChange(async (value) => {
+						textSettings.links.unshared = value;
+						await this.plugin.saveSettings();
+					});
 				});
 		}
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.links.wikilinks.title"))
-			.setDesc(
-				i18next.t("settings.conversion.links.wikilinks.desc")
-			)
+			.setDesc(i18next.t("settings.conversion.links.wikilinks.desc"))
 			.addToggle((toggle) => {
-				toggle
-					.setValue(textSettings.links.wiki)
-					.onChange(async (value) => {
-						textSettings.links.wiki = value;
-						await this.plugin.saveSettings();
-						this.renderSettingsPage("text-conversion");
-					});
+				toggle.setValue(textSettings.links.wiki).onChange(async (value) => {
+					textSettings.links.wiki = value;
+					await this.plugin.saveSettings();
+					this.renderSettingsPage("text-conversion");
+				});
 			});
-		const slugifySetting = typeof (textSettings.links.slugify) == "boolean" ? textSettings.links.slugify ? "strict" : "disable" : textSettings.links.slugify;
+		const slugifySetting =
+			typeof textSettings.links.slugify == "boolean"
+				? textSettings.links.slugify
+					? "strict"
+					: "disable"
+				: textSettings.links.slugify;
 		if (textSettings.links.wiki || textSettings.links.internal) {
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.conversion.links.slugify.title"))
@@ -756,12 +774,13 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						})
 						.setValue(slugifySetting)
 						.onChange(async (value) => {
-							textSettings.links.slugify = ["disable", "strict", "lower"].includes(value) ? value as "disable" | "strict" | "lower" : "disable";
+							textSettings.links.slugify = ["disable", "strict", "lower"].includes(value)
+								? (value as "disable" | "strict" | "lower")
+								: "disable";
 							await this.plugin.saveSettings();
 						});
 				});
 		}
-
 
 		this.settingsPage.createEl("h5", {
 			text: i18next.t("settings.conversion.sectionTitle"),
@@ -770,12 +789,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("settings.conversion.hardBreak.title"))
 			.setDesc(i18next.t("settings.conversion.hardBreak.desc"))
 			.addToggle((toggle) => {
-				toggle
-					.setValue(textSettings.hardbreak)
-					.onChange(async (value) => {
-						textSettings.hardbreak = value;
-						await this.plugin.saveSettings();
-					});
+				toggle.setValue(textSettings.hardbreak).onChange(async (value) => {
+					textSettings.hardbreak = value;
+					await this.plugin.saveSettings();
+				});
 			});
 		const isDataviewEnabled = this.app.plugins.plugins.dataview;
 		new Setting(this.settingsPage)
@@ -783,7 +800,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setDesc(i18next.t("settings.conversion.dataview.desc"))
 			.addToggle((toggle) => {
 				toggle
-					.setValue(textSettings.dataview && isDataviewEnabled && textSettings.links.internal)
+					.setValue(
+						textSettings.dataview && isDataviewEnabled && textSettings.links.internal
+					)
 					.setDisabled(!isDataviewEnabled || !textSettings.links.internal)
 					.onChange(async (value) => {
 						textSettings.dataview = value;
@@ -791,37 +810,27 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					});
 			});
 
-
-
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.regexReplacing.modal.title.text"))
 			.setDesc(i18next.t("settings.regexReplacing.modal.desc"))
 			.addButton((button) => {
-				button
-					.setIcon("pencil")
-					.onClick(async () => {
-						new ModalRegexOnContents(this.app, this.copy(this.settings), (async result => {
-							this.settings.conversion.censorText = result.conversion.censorText;
-							await this.plugin.saveSettings();
-						})).open();
-					});
+				button.setIcon("pencil").onClick(async () => {
+					new ModalRegexOnContents(this.app, this.copy(this.settings), async (result) => {
+						this.settings.conversion.censorText = result.conversion.censorText;
+						await this.plugin.saveSettings();
+					}).open();
+				});
 			});
 
 		this.settingsPage.createEl("h5", { text: "Tags" });
 		new Setting(this.settingsPage)
-			.setName(
-				i18next.t("settings.conversion.tags.inlineTags.title")
-			)
-			.setDesc(
-				i18next.t("settings.conversion.tags.inlineTags.desc")
-			)
+			.setName(i18next.t("settings.conversion.tags.inlineTags.title"))
+			.setDesc(i18next.t("settings.conversion.tags.inlineTags.desc"))
 			.addToggle((toggle) => {
-				toggle
-					.setValue(textSettings.tags.inline)
-					.onChange(async (value) => {
-						textSettings.tags.inline = value;
-						await this.plugin.saveSettings();
-					});
+				toggle.setValue(textSettings.tags.inline).onChange(async (value) => {
+					textSettings.tags.inline = value;
+					await this.plugin.saveSettings();
+				});
 			});
 
 		new Setting(this.settingsPage)
@@ -829,7 +838,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setDesc(i18next.t("settings.conversion.tags.desc"))
 			.addTextArea((text) => {
 				text.inputEl.addClass("mid-height");
-				text.setPlaceholder("field_name")
+				text
+					.setPlaceholder("field_name")
 					.setValue(textSettings.tags.fields.join(","))
 					.onChange(async (value) => {
 						textSettings.tags.fields = value
@@ -845,9 +855,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.addTextArea((text) => {
 				text
 					.setPlaceholder(i18next.t("settings.conversion.tags.exclude.placeholder"))
-					.setValue(
-						textSettings.tags.exclude.join(",")
-					)
+					.setValue(textSettings.tags.exclude.join(","))
 					.onChange(async (value) => {
 						textSettings.tags.exclude = value
 							.split(/[,\n]\W*/)
@@ -856,8 +864,6 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 			});
-
-
 	}
 
 	/**
@@ -870,27 +876,25 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("settings.embed.sendSimpleLinks.title"))
 			.setDesc(i18next.t("settings.embed.sendSimpleLinks.desc"))
 			.addToggle((toggle) => {
-				toggle
-					.setValue(embedSettings.sendSimpleLinks)
-					.onChange(async (value) => {
-						embedSettings.sendSimpleLinks = value;
-						await this.plugin.saveSettings();
-						await this.renderEmbedConfiguration();
-					});
+				toggle.setValue(embedSettings.sendSimpleLinks).onChange(async (value) => {
+					embedSettings.sendSimpleLinks = value;
+					await this.plugin.saveSettings();
+					await this.renderEmbedConfiguration();
+				});
 			});
-		this.settingsPage.createEl("h5", { text: i18next.t("settings.embed.attachment"), cls: "center" });
+		this.settingsPage.createEl("h5", {
+			text: i18next.t("settings.embed.attachment"),
+			cls: "center",
+		});
 
-		
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.embed.transferImage.title"))
 			.addToggle((toggle) => {
-				toggle
-					.setValue(embedSettings.attachments)
-					.onChange(async (value) => {
-						embedSettings.attachments = value;
-						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.embed);
-					});
+				toggle.setValue(embedSettings.attachments).onChange(async (value) => {
+					embedSettings.attachments = value;
+					await this.plugin.saveSettings();
+					this.renderSettingsPage(EnumbSettingsTabId.embed);
+				});
 			});
 
 		if (embedSettings.attachments) {
@@ -911,13 +915,11 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setName(i18next.t("settings.embed.defaultImageFolder.title"))
 					.setDesc(i18next.t("settings.embed.defaultImageFolder.desc"))
 					.addText((text) => {
-						text.setPlaceholder("docs/images")
+						text
+							.setPlaceholder("docs/images")
 							.setValue(embedSettings.folder)
 							.onChange(async (value) => {
-								embedSettings.folder = value.replace(
-									/\/$/,
-									""
-								);
+								embedSettings.folder = value.replace(/\/$/, "");
 								await this.plugin.saveSettings();
 							});
 					});
@@ -927,21 +929,25 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				.setName(i18next.t("settings.embed.overrides.modal.title"))
 				.setDesc(i18next.t("settings.embed.overrides.desc"))
 				.addButton((button) => {
-					button
-						.setIcon("pencil")
-						.onClick(async () => {
-							new OverrideAttachmentsModal(this.app, this.settings, this.copy(embedSettings.overrideAttachments), (async result => {
+					button.setIcon("pencil").onClick(async () => {
+						new OverrideAttachmentsModal(
+							this.app,
+							this.settings,
+							this.copy(embedSettings.overrideAttachments),
+							async (result) => {
 								embedSettings.overrideAttachments = result;
 								await this.plugin.saveSettings();
-							})).open();
-						});
+							}
+						).open();
+					});
 				});
-			
+
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.embeds.unHandledObsidianExt.title"))
 				.setDesc(i18next.t("settings.embeds.unHandledObsidianExt.desc"))
 				.addTextArea((text) => {
-					text.setPlaceholder("py, mdx")
+					text
+						.setPlaceholder("py, mdx")
 						.setValue(embedSettings.unHandledObsidianExt.join(", "))
 						.onChange(async (value) => {
 							embedSettings.unHandledObsidianExt = value
@@ -957,10 +963,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("settings.embed.transferMetaFile.title"))
 			.setDesc(i18next.t("settings.embed.transferMetaFile.desc"))
 			.addTextArea((text) => {
-				text.setPlaceholder("banner")
-					.setValue(
-						embedSettings.keySendFile.join(", ")
-					)
+				text
+					.setPlaceholder("banner")
+					.setValue(embedSettings.keySendFile.join(", "))
 					.onChange(async (value) => {
 						embedSettings.keySendFile = value
 							.split(/[,\n]\W*/)
@@ -970,19 +975,20 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					});
 			});
 
-		this.settingsPage.createEl("h5", { text: i18next.t("settings.embed.notes"), cls: "center" });
+		this.settingsPage.createEl("h5", {
+			text: i18next.t("settings.embed.notes"),
+			cls: "center",
+		});
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.embed.transferNotes.title"))
 			.setDesc(i18next.t("settings.embed.transferNotes.desc"))
 			.addToggle((toggle) => {
-				toggle
-					.setValue(embedSettings.notes)
-					.onChange(async (value) => {
-						embedSettings.notes = value;
-						await this.plugin.saveSettings();
-						await this.renderEmbedConfiguration();
-					});
+				toggle.setValue(embedSettings.notes).onChange(async (value) => {
+					embedSettings.notes = value;
+					await this.plugin.saveSettings();
+					await this.renderEmbedConfiguration();
+				});
 			});
 
 		if (embedSettings.notes) {
@@ -997,7 +1003,11 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						.addOption("bake", i18next.t("settings.embed.links.dp.bake"))
 						.setValue(embedSettings.convertEmbedToLinks ?? "keep")
 						.onChange(async (value) => {
-							embedSettings.convertEmbedToLinks = value as "keep" | "remove" | "links" | "bake";
+							embedSettings.convertEmbedToLinks = value as
+								| "keep"
+								| "remove"
+								| "links"
+								| "bake";
 							await this.plugin.saveSettings();
 							await this.renderEmbedConfiguration();
 						});
@@ -1008,7 +1018,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.setName(i18next.t("settings.embed.char.title"))
 					.setDesc(i18next.t("settings.embed.char.desc"))
 					.addText((text) => {
-						text.setPlaceholder("->")
+						text
+							.setPlaceholder("->")
 							.setValue(embedSettings.charConvert ?? "->")
 							.onChange(async (value) => {
 								embedSettings.charConvert = value;
@@ -1019,33 +1030,39 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				if (!embedSettings.bake) {
 					embedSettings.bake = {
 						textBefore: "",
-						textAfter: ""
+						textAfter: "",
 					};
 					await this.plugin.saveSettings();
 				}
 				await this.plugin.saveSettings();
-				this.settingsPage.createEl("h5", { text: i18next.t("settings.embed.bake.title"), cls: "border-bottom" });
+				this.settingsPage.createEl("h5", {
+					text: i18next.t("settings.embed.bake.title"),
+					cls: "border-bottom",
+				});
 				this.settingsPage.createEl("p", { text: i18next.t("settings.embed.bake.text") });
 				this.settingsPage.createEl("p", undefined, (el) => {
 					el.createEl("span", {
 						text: i18next.t("settings.embed.bake.variable.desc"),
-						cls: ["bake"]
-					})
-						.createEl("ul", undefined, (ul) => {
-							ul.createEl("li", undefined, (li) => {
-								li.createEl("code", { text: "{{title}}" });
-								li.createEl("span", { text: i18next.t("settings.embed.bake.variable.title") });
-							});
-							ul.createEl("li", undefined, (li) => {
-								li.createEl("code", { text: "{{url}}" });
-								li.createEl("span", { text: i18next.t("settings.embed.bake.variable.url") });
+						cls: ["bake"],
+					}).createEl("ul", undefined, (ul) => {
+						ul.createEl("li", undefined, (li) => {
+							li.createEl("code", { text: "{{title}}" });
+							li.createEl("span", {
+								text: i18next.t("settings.embed.bake.variable.title"),
 							});
 						});
+						ul.createEl("li", undefined, (li) => {
+							li.createEl("code", { text: "{{url}}" });
+							li.createEl("span", {
+								text: i18next.t("settings.embed.bake.variable.url"),
+							});
+						});
+					});
 				});
 
 				this.settingsPage.createEl("p", {
 					text: `⚠️ ${i18next.t("settings.embed.bake.warning")}`,
-					cls: ["warning", "embed"]
+					cls: ["warning", "embed"],
 				});
 
 				new Setting(this.settingsPage)
@@ -1062,12 +1079,10 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				new Setting(this.settingsPage)
 					.setName(i18next.t("settings.embed.bake.textAfter.title"))
 					.addTextArea((text) => {
-						text
-							.setValue(embedSettings.bake?.textAfter ?? "")
-							.onChange(async (value) => {
-								embedSettings.bake!.textAfter = value;
-								await this.plugin.saveSettings();
-							});
+						text.setValue(embedSettings.bake?.textAfter ?? "").onChange(async (value) => {
+							embedSettings.bake!.textAfter = value;
+							await this.plugin.saveSettings();
+						});
 					});
 			}
 		}
@@ -1158,38 +1173,33 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("settings.plugin.fileMenu.title"))
 			.setDesc(i18next.t("settings.plugin.fileMenu.desc"))
 			.addToggle((toggle) =>
-				toggle
-					.setValue(pluginSettings.fileMenu)
-					.onChange(async (value) => {
-						pluginSettings.fileMenu = value;
-						await this.plugin.saveSettings();
-					})
+				toggle.setValue(pluginSettings.fileMenu).onChange(async (value) => {
+					pluginSettings.fileMenu = value;
+					await this.plugin.saveSettings();
+				})
 			);
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.editorMenu.title"))
 			.setDesc(i18next.t("settings.plugin.editorMenu.desc"))
 			.addToggle((toggle) =>
-				toggle
-					.setValue(pluginSettings.editorMenu)
-					.onChange(async (value) => {
-						pluginSettings.editorMenu = value;
-						await this.plugin.saveSettings();
-					})
+				toggle.setValue(pluginSettings.editorMenu).onChange(async (value) => {
+					pluginSettings.editorMenu = value;
+					await this.plugin.saveSettings();
+				})
 			);
-		this.settingsPage.createEl("h3", { text: i18next.t("settings.plugin.head.copyLinks") });
+		this.settingsPage.createEl("h3", {
+			text: i18next.t("settings.plugin.head.copyLinks"),
+		});
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.copyLink.title"))
 			.setDesc(i18next.t("settings.plugin.copyLink.desc"))
 			.addToggle((toggle) =>
-				toggle
-					.setValue(pluginSettings.copyLink.enable)
-					.onChange(async (value) => {
-						pluginSettings.copyLink.enable = value;
-						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.plugin);
-
-					})
+				toggle.setValue(pluginSettings.copyLink.enable).onChange(async (value) => {
+					pluginSettings.copyLink.enable = value;
+					await this.plugin.saveSettings();
+					this.renderSettingsPage(EnumbSettingsTabId.plugin);
+				})
 			);
 
 		if (pluginSettings.copyLink.enable) {
@@ -1197,7 +1207,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				.setName(i18next.t("settings.plugin.copyLink.baselink.title"))
 				.setDesc(i18next.t("settings.plugin.copyLink.baselink.desc"))
 				.addText((text) => {
-					text.setPlaceholder("my_blog.com")
+					text
+						.setPlaceholder("my_blog.com")
 						.setValue(pluginSettings.copyLink.links)
 						.onChange(async (value) => {
 							pluginSettings.copyLink.links = value;
@@ -1206,14 +1217,16 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				});
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.plugin.copyLink.linkPathRemover.title"))
-				.setDesc(
-					i18next.t("settings.plugin.copyLink.linkPathRemover.desc")
-				)
+				.setDesc(i18next.t("settings.plugin.copyLink.linkPathRemover.desc"))
 				.addText((text) => {
-					text.setPlaceholder("docs")
+					text
+						.setPlaceholder("docs")
 						.setValue(pluginSettings.copyLink.removePart.join(", "))
 						.onChange(async (value) => {
-							pluginSettings.copyLink.removePart = value.split(/[,\n]\s*/).map((item) => item.trim()).filter((item) => item.length > 0);
+							pluginSettings.copyLink.removePart = value
+								.split(/[,\n]\s*/)
+								.map((item) => item.trim())
+								.filter((item) => item.length > 0);
 							await this.plugin.saveSettings();
 						});
 				});
@@ -1229,7 +1242,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							await this.plugin.saveSettings();
 						})
 				);
-			
+
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.plugin.copyLink.slugify.title"))
 				.addDropdown((dropdown) => {
@@ -1239,28 +1252,31 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							strict: i18next.t("settings.plugin.copyLink.slugify.strict"),
 							lower: i18next.t("settings.plugin.copyLink.slugify.lower"),
 						})
-						.setValue(pluginSettings.copyLink.transform.slugify as "disable" | "strict" | "lower")
+						.setValue(
+							pluginSettings.copyLink.transform.slugify as "disable" | "strict" | "lower"
+						)
 						.onChange(async (value) => {
-							pluginSettings.copyLink.transform.slugify = value as "disable" | "strict" | "lower";
+							pluginSettings.copyLink.transform.slugify = value as
+								| "disable"
+								| "strict"
+								| "lower";
 							await this.plugin.saveSettings();
 						});
 				});
-		
+
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.plugin.copyLink.applyRegex.title"))
 				.setHeading()
 				.setDesc(i18next.t("settings.plugin.copyLink.applyRegex.desc"))
 				.addExtraButton((button) => {
-					button
-						.setIcon("plus")
-						.onClick(async () => {
-							pluginSettings.copyLink.transform.applyRegex.push({
-								regex: "",
-								replacement: ""
-							});
-							await this.plugin.saveSettings();
-							this.renderSettingsPage(EnumbSettingsTabId.plugin);
+					button.setIcon("plus").onClick(async () => {
+						pluginSettings.copyLink.transform.applyRegex.push({
+							regex: "",
+							replacement: "",
 						});
+						await this.plugin.saveSettings();
+						this.renderSettingsPage(EnumbSettingsTabId.plugin);
+					});
 				});
 
 			for (const apply of pluginSettings.copyLink.transform.applyRegex) {
@@ -1289,25 +1305,25 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							});
 					})
 					.setClass("max-width")
-					.addExtraButton(button => {
-						button.setIcon("trash")
-							.onClick(async () => {
-								pluginSettings.copyLink.transform.applyRegex = pluginSettings.copyLink.transform.applyRegex.filter((item) => item !== apply);
-								await this.plugin.saveSettings();
-								this.renderSettingsPage(EnumbSettingsTabId.plugin);
-							});
-					});	
+					.addExtraButton((button) => {
+						button.setIcon("trash").onClick(async () => {
+							pluginSettings.copyLink.transform.applyRegex =
+								pluginSettings.copyLink.transform.applyRegex.filter(
+									(item) => item !== apply
+								);
+							await this.plugin.saveSettings();
+							this.renderSettingsPage(EnumbSettingsTabId.plugin);
+						});
+					});
 			}
 
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.plugin.copyLink.command.desc"))
 				.addToggle((toggle) =>
-					toggle
-						.setValue(pluginSettings.copyLink.addCmd)
-						.onChange(async (value) => {
-							pluginSettings.copyLink.addCmd = value;
-							await this.plugin.saveSettings();
-						})
+					toggle.setValue(pluginSettings.copyLink.addCmd).onChange(async (value) => {
+						pluginSettings.copyLink.addCmd = value;
+						await this.plugin.saveSettings();
+					})
 				);
 		}
 
@@ -1329,15 +1345,14 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("settings.plugin.saveTab.title"))
 			.setDesc(i18next.t("settings.plugin.saveTab.desc"))
 			.addToggle((toggle) =>
-				toggle
-					.setValue(pluginSettings.saveTabId ?? true)
-					.onChange(async (value) => {
-						pluginSettings.saveTabId = value;
-						this.settings.tabsID = value ? EnumbSettingsTabId.plugin : EnumbSettingsTabId.github;
-						await this.plugin.saveSettings();
-					})
+				toggle.setValue(pluginSettings.saveTabId ?? true).onChange(async (value) => {
+					pluginSettings.saveTabId = value;
+					this.settings.tabsID = value
+						? EnumbSettingsTabId.plugin
+						: EnumbSettingsTabId.github;
+					await this.plugin.saveSettings();
+				})
 			);
-
 
 		this.settingsPage.createEl("h4", { text: i18next.t("settings.plugin.head.log") });
 
@@ -1345,24 +1360,20 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setName(i18next.t("settings.plugin.logNoticeHeader.title"))
 			.setDesc(i18next.t("settings.plugin.logNoticeHeader.desc"))
 			.addToggle((toggle) =>
-				toggle
-					.setValue(pluginSettings.noticeError)
-					.onChange(async (value) => {
-						pluginSettings.noticeError = value;
-						await this.plugin.saveSettings();
-					})
+				toggle.setValue(pluginSettings.noticeError).onChange(async (value) => {
+					pluginSettings.noticeError = value;
+					await this.plugin.saveSettings();
+				})
 			);
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.plugin.dev.title"))
 			.setDesc(i18next.t("settings.plugin.dev.desc"))
 			.addToggle((toggle) =>
-				toggle
-					.setValue(pluginSettings.dev ?? false)
-					.onChange(async (value) => {
-						pluginSettings.dev = value;
-						await this.plugin.saveSettings();
-					})
+				toggle.setValue(pluginSettings.dev ?? false).onChange(async (value) => {
+					pluginSettings.dev = value;
+					await this.plugin.saveSettings();
+				})
 			);
 	}
 
@@ -1383,7 +1394,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		});
 		this.settingsPage
 			.createEl("p", {
-				text: i18next.t("settings.help.frontmatter.nestedKey")
+				text: i18next.t("settings.help.frontmatter.nestedKey"),
 			})
 			.createEl("code", {
 				text: "key.subkey: value",
@@ -1391,19 +1402,15 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.createEl("span", {
 				text: ".",
 			});
-		this.settingsPage
-			.createEl("pre", { cls: "language-yaml" })
-			.createEl("code", {
-				text: KeyBasedOnSettings(this.settings),
-				cls: "language-yaml",
-			});
+		this.settingsPage.createEl("pre", { cls: "language-yaml" }).createEl("code", {
+			text: KeyBasedOnSettings(this.settings),
+			cls: "language-yaml",
+		});
 		this.settingsPage.appendChild(help(this.settings));
 		this.settingsPage.createEl("h2", {
 			text: i18next.t("settings.help.multiRepoHelp.title"),
 		});
-		this.settingsPage.appendChild(
-			multipleRepoExplained(this.settings)
-		);
+		this.settingsPage.appendChild(multipleRepoExplained(this.settings));
 		this.settingsPage.appendChild(supportMe());
 	}
 

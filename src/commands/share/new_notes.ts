@@ -5,7 +5,10 @@ import { shareAllMarkedNotes } from "src/commands";
 import { GithubBranch } from "src/GitHub/branch";
 import GithubPublisher from "src/main";
 import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
-import { frontmatterSettingsRepository,getProperties } from "src/utils/parse_frontmatter";
+import {
+	frontmatterSettingsRepository,
+	getProperties,
+} from "src/utils/parse_frontmatter";
 
 /**
  * Upload all new notes only
@@ -14,7 +17,11 @@ import { frontmatterSettingsRepository,getProperties } from "src/utils/parse_fro
  * @param branchName {string} - The branch name to upload the file
  * @returns {Promise<Command>}
  */
-export async function uploadNewNotesCallback(plugin: GithubPublisher, repo: Repository | null, branchName: string): Promise<Command> {
+export async function uploadNewNotesCallback(
+	plugin: GithubPublisher,
+	repo: Repository | null,
+	branchName: string
+): Promise<Command> {
 	const id = repo ? `upload-new-K${repo.smartKey}` : "upload-new";
 	let name = i18next.t("commands.uploadNewNotes");
 	const common = i18next.t("common.repository");
@@ -23,7 +30,7 @@ export async function uploadNewNotesCallback(plugin: GithubPublisher, repo: Repo
 		id,
 		name,
 		callback: async () => {
-			await uploadNewNotes(plugin,branchName, repo);
+			await uploadNewNotes(plugin, branchName, repo);
 		},
 	} as Command;
 }
@@ -37,36 +44,38 @@ export async function uploadNewNotesCallback(plugin: GithubPublisher, repo: Repo
  * @return {Promise<void>}
  */
 
-export async function uploadNewNotes(plugin: GithubPublisher, branchName: string, repo: Repository|null): Promise<void> {
+export async function uploadNewNotes(
+	plugin: GithubPublisher,
+	branchName: string,
+	repo: Repository | null
+): Promise<void> {
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const prop = getProperties(plugin, repo, null, true);
-	await shareNewNote(
-		publisher,
-		branchName,
-		{
-			frontmatter: Array.isArray(prop) ? prop[0] : prop,
-			repository: repo,
-			convert: frontmatterSettingsRepository(plugin, repo)
-		},
-	);
+	await shareNewNote(publisher, branchName, {
+		frontmatter: Array.isArray(prop) ? prop[0] : prop,
+		repository: repo,
+		convert: frontmatterSettingsRepository(plugin, repo),
+	});
 }
 
-
 /**
-	* Deep scan the repository and send only the note that not exist in the repository
-	* @param {GithubBranch} PublisherManager
-	* @param {string} branchName - The branch name created by the plugin
-	* @param {MonoRepoProperties} monoRepo - The repo
-	* @returns {Promise<void>}
-	*/
+ * Deep scan the repository and send only the note that not exist in the repository
+ * @param {GithubBranch} PublisherManager
+ * @param {string} branchName - The branch name created by the plugin
+ * @param {MonoRepoProperties} monoRepo - The repo
+ * @returns {Promise<void>}
+ */
 export async function shareNewNote(
 	PublisherManager: GithubBranch,
 	branchName: string,
-	monoRepo: MonoRepoProperties,
-): Promise<void|boolean> {
+	monoRepo: MonoRepoProperties
+): Promise<void | boolean> {
 	const plugin = PublisherManager.plugin;
-	new Notice(i18next.t("informations.scanningRepo") );
-	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(monoRepo.repository, monoRepo.convert);
+	new Notice(i18next.t("informations.scanningRepo"));
+	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(
+		monoRepo.repository,
+		monoRepo.convert
+	);
 	// Get all file in the repo before the creation of the branch
 	const githubSharedNotes = await PublisherManager.getAllFileFromRepo(
 		monoRepo.frontmatter.branch, // we need to take the master branch because the branch to create doesn't exist yet
@@ -74,16 +83,19 @@ export async function shareNewNote(
 	);
 	const newlySharedNotes = PublisherManager.getNewFiles(
 		sharedFilesWithPaths,
-		githubSharedNotes,
+		githubSharedNotes
 	);
 	if (newlySharedNotes.length > 0) {
 		new Notice(
-			(i18next.t("informations.foundNoteToSend", {nbNotes: newlySharedNotes.length})
-			)
+			i18next.t("informations.foundNoteToSend", { nbNotes: newlySharedNotes.length })
 		);
-	
+
 		const statusBarElement = plugin.addStatusBarItem();
-		const isValid = await checkRepositoryValidityWithProperties(PublisherManager, monoRepo.frontmatter, newlySharedNotes.length);
+		const isValid = await checkRepositoryValidityWithProperties(
+			PublisherManager,
+			monoRepo.frontmatter,
+			newlySharedNotes.length
+		);
 		if (!isValid) return false;
 		await PublisherManager.newBranch(monoRepo.frontmatter);
 		await shareAllMarkedNotes(
@@ -92,9 +104,9 @@ export async function shareNewNote(
 			branchName,
 			monoRepo,
 			newlySharedNotes,
-			false,
+			false
 		);
 		return;
 	}
-	new Notice(i18next.t("informations.noNewNote") );
+	new Notice(i18next.t("informations.noNewNote"));
 }

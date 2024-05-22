@@ -12,7 +12,10 @@ import { frontmatterFromFile, getProperties } from "src/utils/parse_frontmatter"
  * @param {GithubPublisher} plugin
  * @return {Promise<Command>}
  */
-export async function createLinkCallback(repo: Repository | null, plugin: GithubPublisher): Promise<Command> {
+export async function createLinkCallback(
+	repo: Repository | null,
+	plugin: GithubPublisher
+): Promise<Command> {
 	const id = repo ? `copy-link-K${repo.smartKey}` : "copy-link";
 	const common = i18next.t("common.repository");
 	let name = i18next.t("commands.copyLink.title");
@@ -30,11 +33,7 @@ export async function createLinkCallback(repo: Repository | null, plugin: Github
 						frontmatter: getProperties(plugin, repo, frontmatter, true),
 						repository: repo,
 					};
-					createLink(
-						file,
-						multiRepo,
-						plugin
-					);
+					createLink(file, multiRepo, plugin);
 					new Notice(i18next.t("commands.copyLink.onActivation"));
 				}
 				return true;
@@ -44,7 +43,6 @@ export async function createLinkCallback(repo: Repository | null, plugin: Github
 	} as Command;
 }
 
-
 /**
  * Create the command to create a link to the note in the repo if a file is active ; else do nothing
  * @call createLink
@@ -52,22 +50,19 @@ export async function createLinkCallback(repo: Repository | null, plugin: Github
  * @param {GithubPublisher} plugin - The plugin instance
  * @return {Promise<void>}
  */
-export async function createLinkOnActiveFile(repo: Repository | null, plugin: GithubPublisher): Promise<void> {
+export async function createLinkOnActiveFile(
+	repo: Repository | null,
+	plugin: GithubPublisher
+): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	const frontmatter = frontmatterFromFile(file, plugin, repo);
 
-	if (
-		file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)
-	) {
+	if (file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)) {
 		const multiRepo: MultiRepoProperties = {
 			frontmatter: getProperties(plugin, repo, frontmatter),
-			repository: repo
+			repository: repo,
 		};
-		await createLink(
-			file,
-			multiRepo,
-			plugin
-		);
+		await createLink(file, multiRepo, plugin);
 		new Notice(i18next.t("commands.copyLink.onActivation"));
 		return;
 	}

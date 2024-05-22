@@ -8,28 +8,29 @@ import {
 	PropertiesConversion,
 	Repository,
 } from "@interfaces";
-import {
-	FrontMatterCache,
-	normalizePath,
-	TFile,
-	TFolder,
-	Vault,
-} from "obsidian";
+import { FrontMatterCache, normalizePath, TFile, TFolder, Vault } from "obsidian";
 import { createRegexFromText } from "src/conversion/find_and_replace_text";
 import GithubPublisher from "src/main";
+import { logs } from "src/utils";
 import {
-	logs,
-} from "src/utils";
-import {checkIfRepoIsInAnother, isInternalShared, isShared} from "src/utils/data_validation_test";
-import { frontmatterFromFile, frontmatterSettingsRepository, getCategory, getFrontmatterSettings, getProperties } from "src/utils/parse_frontmatter";
+	checkIfRepoIsInAnother,
+	isInternalShared,
+	isShared,
+} from "src/utils/data_validation_test";
+import {
+	frontmatterFromFile,
+	frontmatterSettingsRepository,
+	getCategory,
+	getFrontmatterSettings,
+	getProperties,
+} from "src/utils/parse_frontmatter";
 import merge from "ts-deepmerge";
-
 
 /** Search a link in the entire frontmatter value */
 /** Link will always be in the form of [[]] */
 export function linkIsInFormatter(
 	linkedFile: LinkedNotes,
-	frontmatter: FrontMatterCache | undefined | null,
+	frontmatter: FrontMatterCache | undefined | null
 ): boolean {
 	if (frontmatter) {
 		for (const key in frontmatter) {
@@ -44,9 +45,8 @@ export function linkIsInFormatter(
 
 export function textIsInFrontmatter(
 	text: string,
-	frontmatter: FrontMatterCache | undefined | null,
+	frontmatter: FrontMatterCache | undefined | null
 ): boolean {
-
 	if (frontmatter) {
 		for (const key in frontmatter) {
 			if (frontmatter[key] === `[[${text}]]`) {
@@ -70,42 +70,66 @@ export async function createRelativePath(
 	sourceFile: TFile,
 	targetFile: LinkedNotes,
 	frontmatter: FrontMatterCache | null | undefined,
-	properties: MultiProperties,
+	properties: MultiProperties
 ): Promise<string> {
 	const settings = properties.plugin.settings;
 	const shortRepo = properties.repository;
-	const sourcePath = getReceiptFolder(sourceFile, shortRepo, properties.plugin, properties.frontmatter.prop);
-	const frontmatterTarget = frontmatterFromFile(targetFile.linked, properties.plugin, properties.repository);
-	const targetRepo = getProperties(properties.plugin, shortRepo, frontmatterTarget);
-	const isFromAnotherRepo = checkIfRepoIsInAnother(properties.frontmatter.prop, targetRepo);
-	const shared = isInternalShared(
-		frontmatterTarget,
-		properties,
-		targetFile.linked,
+	const sourcePath = getReceiptFolder(
+		sourceFile,
+		shortRepo,
+		properties.plugin,
+		properties.frontmatter.prop
 	);
-	logs({settings}, `Shared: ${shared} for ${targetFile.linked.path}`);
+	const frontmatterTarget = frontmatterFromFile(
+		targetFile.linked,
+		properties.plugin,
+		properties.repository
+	);
+	const targetRepo = getProperties(properties.plugin, shortRepo, frontmatterTarget);
+	const isFromAnotherRepo = checkIfRepoIsInAnother(
+		properties.frontmatter.prop,
+		targetRepo
+	);
+	const shared = isInternalShared(frontmatterTarget, properties, targetFile.linked);
+	logs({ settings }, `Shared: ${shared} for ${targetFile.linked.path}`);
 	if (
-		targetFile.linked.extension === "md" && !targetFile.linked.name.includes("excalidraw") && (!isFromAnotherRepo || !shared)
+		targetFile.linked.extension === "md" &&
+		!targetFile.linked.name.includes("excalidraw") &&
+		(!isFromAnotherRepo || !shared)
 	) {
-		return targetFile.destinationFilePath ? targetFile.destinationFilePath: targetFile.linked.basename;
+		return targetFile.destinationFilePath
+			? targetFile.destinationFilePath
+			: targetFile.linked.basename;
 	}
 	if (targetFile.linked.path === sourceFile.path) {
-		return getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo).split("/").at(-1) as string;
+		return getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo)
+			.split("/")
+			.at(-1) as string;
 	}
 
-	const frontmatterSettingsFromFile = getFrontmatterSettings(frontmatter, settings, shortRepo);
-	const frontmatterSettingsFromRepository = frontmatterSettingsRepository(properties.plugin, shortRepo);
-	const frontmatterSettings = merge(frontmatterSettingsFromRepository, frontmatterSettingsFromFile);
+	const frontmatterSettingsFromFile = getFrontmatterSettings(
+		frontmatter,
+		settings,
+		shortRepo
+	);
+	const frontmatterSettingsFromRepository = frontmatterSettingsRepository(
+		properties.plugin,
+		shortRepo
+	);
+	const frontmatterSettings = merge(
+		frontmatterSettingsFromRepository,
+		frontmatterSettingsFromFile
+	);
 
 	const targetPath =
 		targetFile.linked.extension === "md" && !targetFile.linked.name.includes("excalidraw")
 			? getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo)
 			: getImagePath(
-				targetFile.linked,
-				properties.plugin,
-				frontmatterSettings,
-				targetRepo
-			);
+					targetFile.linked,
+					properties.plugin,
+					frontmatterSettings,
+					targetRepo
+				);
 	const sourceList = sourcePath.split("/");
 	const targetList = targetPath.split("/");
 
@@ -115,10 +139,7 @@ export async function createRelativePath(
 	 * @param {string[]} targetList target list
 	 * @returns {string[]} list with the first different element
 	 */
-	const excludeUtilDiff = (
-		sourceList: string[],
-		targetList: string[]
-	): string[] => {
+	const excludeUtilDiff = (sourceList: string[], targetList: string[]): string[] => {
 		let i = 0;
 		while (sourceList[i] === targetList[i]) {
 			i++;
@@ -145,12 +166,9 @@ export async function createRelativePath(
 	const relative = relativePath.concat(diffTargetPath).join("/");
 	if (relative.trim() === "." || relative.trim() === "") {
 		//in case of errors
-		return getReceiptFolder(
-			targetFile.linked,
-			shortRepo,
-			properties.plugin,
-			targetRepo
-		).split("/").at(-1) as string;
+		return getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo)
+			.split("/")
+			.at(-1) as string;
 	}
 	return relative;
 }
@@ -169,18 +187,18 @@ function folderNoteIndexOBS(
 	file: TFile,
 	vault: Vault,
 	settings: GitHubPublisherSettings,
-	fileName: string,
+	fileName: string
 ): string {
 	const index = settings.upload.folderNote.rename;
-	const folderParent = file.parent ? `/${file.parent.path}/` : "/" ;
+	const folderParent = file.parent ? `/${file.parent.path}/` : "/";
 	const defaultPath = `${folderParent}${regexOnFileName(fileName, settings)}`;
 	if (!settings.upload.folderNote.enable) return defaultPath;
 	const parentFolderName = file.parent ? file.parent.name : "";
-	if (fileName.replace(".md", "") === parentFolderName) return `/${file.parent!.path}/${index}`;
-	const outsideFolder = vault.getAbstractFileByPath(
-		file.path.replace(".md", "")
-	);
-	if (outsideFolder && outsideFolder instanceof TFolder) return `/${outsideFolder.path}/${index}`;
+	if (fileName.replace(".md", "") === parentFolderName)
+		return `/${file.parent!.path}/${index}`;
+	const outsideFolder = vault.getAbstractFileByPath(file.path.replace(".md", ""));
+	if (outsideFolder && outsideFolder instanceof TFolder)
+		return `/${outsideFolder.path}/${index}`;
 	return defaultPath;
 }
 
@@ -198,13 +216,16 @@ function createObsidianPath(
 	settings: GitHubPublisherSettings,
 	vault: Vault,
 	fileName: string,
-	prop?: Properties,
+	prop?: Properties
 ): string {
 	fileName = folderNoteIndexOBS(file, vault, settings, fileName);
 
-	const defaultFolder = prop?.path?.defaultName && prop.path.defaultName.length > 0 ?
-		prop.path.defaultName : settings.upload.defaultName.length > 0 ?
-			settings.upload.defaultName : "";
+	const defaultFolder =
+		prop?.path?.defaultName && prop.path.defaultName.length > 0
+			? prop.path.defaultName
+			: settings.upload.defaultName.length > 0
+				? settings.upload.defaultName
+				: "";
 	const path = defaultFolder + fileName;
 	//remove last word from path splitted with /
 	let pathWithoutEnd = path.split("/").slice(0, -1).join("/");
@@ -212,7 +233,7 @@ function createObsidianPath(
 	const fileNameOnly = path.split("/").at(-1) ?? "";
 	pathWithoutEnd = regexOnPath(pathWithoutEnd, settings);
 	if (pathWithoutEnd.trim().length === 0) return fileNameOnly;
-	return (`${pathWithoutEnd}/${fileNameOnly}`).replace(/^\//, "");
+	return `${pathWithoutEnd}/${fileNameOnly}`.replace(/^\//, "");
 }
 
 /**
@@ -227,17 +248,16 @@ function folderNoteIndexYAML(
 	fileName: string,
 	frontmatter: FrontMatterCache | undefined | null,
 	settings: GitHubPublisherSettings,
-	prop?: Properties,
+	prop?: Properties
 ): string {
 	const category = getCategory(frontmatter, settings, prop?.path);
 	const catSplit = category.split("/");
-	const parentCatFolder = category.endsWith("/") ? catSplit.at(-2) as string : catSplit.at(-1) as string;
+	const parentCatFolder = category.endsWith("/")
+		? (catSplit.at(-2) as string)
+		: (catSplit.at(-1) as string);
 
 	if (!settings.upload.folderNote.enable) return regexOnFileName(fileName, settings);
-	if (
-		fileName.replace(".md", "").toLowerCase() ===
-		parentCatFolder?.toLowerCase()
-	)
+	if (fileName.replace(".md", "").toLowerCase() === parentCatFolder?.toLowerCase())
 		return settings.upload.folderNote.rename;
 	return regexOnFileName(fileName, settings);
 }
@@ -254,19 +274,23 @@ function createFrontmatterPath(
 	settings: GitHubPublisherSettings,
 	frontmatter: FrontMatterCache | null | undefined,
 	fileName: string,
-	prop?: Properties,
+	prop?: Properties
 ): string {
-
 	const uploadSettings = settings.upload;
 	const folderCategory = getCategory(frontmatter, settings, prop?.path);
 	const path = prop?.path;
 	const folderNote = folderNoteIndexYAML(fileName, frontmatter, settings, prop);
-	const root = path?.rootFolder && path.rootFolder.length > 0 ? path.rootFolder : uploadSettings.rootFolder.length > 0 ? uploadSettings.rootFolder : undefined;
+	const root =
+		path?.rootFolder && path.rootFolder.length > 0
+			? path.rootFolder
+			: uploadSettings.rootFolder.length > 0
+				? uploadSettings.rootFolder
+				: undefined;
 	const folderRoot = root && !folderCategory.includes(root) ? `${root}/` : "";
 	if (folderCategory.trim().length === 0) return folderNote;
 	const folderRegex = regexOnPath(folderRoot + folderCategory, settings);
 	if (folderRegex.trim().length === 0) return folderNote;
-	return (`${folderRegex}/${folderNote}`).replace(/^\//, "");
+	return `${folderRegex}/${folderNote}`.replace(/^\//, "");
 }
 
 /**
@@ -276,9 +300,16 @@ function createFrontmatterPath(
  * @param {GitHubPublisherSettings} settings Settings
  * @return {string} edited file name
  */
-export function regexOnFileName(fileName: string, settings: GitHubPublisherSettings): string {
+export function regexOnFileName(
+	fileName: string,
+	settings: GitHubPublisherSettings
+): string {
 	const uploadSettings = settings.upload;
-	if (fileName === uploadSettings.folderNote.rename && uploadSettings.folderNote.enable || uploadSettings.replaceTitle.length === 0) return fileName;
+	if (
+		(fileName === uploadSettings.folderNote.rename && uploadSettings.folderNote.enable) ||
+		uploadSettings.replaceTitle.length === 0
+	)
+		return fileName;
 	const extension = fileName.match(/\.[0-9a-z]+$/i)?.at(-1) ?? "";
 	fileName = fileName.replace(extension, "");
 	for (const regexTitle of uploadSettings.replaceTitle) {
@@ -287,21 +318,14 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
 			const replaceWith = regexTitle.replacement;
 			if (toReplace.match(FIND_REGEX)) {
 				const regex = createRegexFromText(toReplace);
-				fileName = fileName.replace(
-					regex,
-					replaceWith
-				);
+				fileName = fileName.replace(regex, replaceWith);
 			} else {
-				fileName = fileName.replaceAll(
-					toReplace,
-					replaceWith
-				);
+				fileName = fileName.replaceAll(toReplace, replaceWith);
 			}
 		}
 	}
 	return `${fileName}${extension}`;
 }
-
 
 /**
  * Allow to modify enterely the path of a file, using regex / string replace
@@ -309,24 +333,22 @@ export function regexOnFileName(fileName: string, settings: GitHubPublisherSetti
  * @param {GitHubPublisherSettings} settings Settings
  * @return {string} edited path
  */
-export function regexOnPath(path: string, settings: GitHubPublisherSettings):string {
+export function regexOnPath(path: string, settings: GitHubPublisherSettings): string {
 	const uploadSettings = settings.upload;
-	if (uploadSettings.behavior === FolderSettings.fixed || uploadSettings.replacePath.length === 0) return path;
+	if (
+		uploadSettings.behavior === FolderSettings.fixed ||
+		uploadSettings.replacePath.length === 0
+	)
+		return path;
 	for (const regexTitle of uploadSettings.replacePath) {
 		if (regexTitle.regex.trim().length > 0) {
 			const toReplace = regexTitle.regex;
 			const replaceWith = regexTitle.replacement;
 			if (toReplace.match(FIND_REGEX)) {
 				const regex = createRegexFromText(toReplace);
-				path = path.replace(
-					regex,
-					replaceWith
-				);
+				path = path.replace(regex, replaceWith);
 			} else {
-				path = path.replaceAll(
-					toReplace,
-					replaceWith
-				);
+				path = path.replaceAll(toReplace, replaceWith);
 			}
 		}
 	}
@@ -357,8 +379,6 @@ export function getTitleField(
 	return fileName;
 }
 
-
-
 /**
  * Get the path where the file will be saved in the github repository
  */
@@ -367,21 +387,21 @@ export function getReceiptFolder(
 	file: TFile,
 	otherRepo: Repository | null,
 	plugin: GithubPublisher,
-	prop?: Properties | Properties[],
+	prop?: Properties | Properties[]
 ): string {
-	const { vault} = plugin.app;
+	const { vault } = plugin.app;
 	const settings = plugin.settings;
 	if (file.extension === "md") {
 		const frontmatter = frontmatterFromFile(file, plugin, otherRepo);
 		if (!prop) prop = getProperties(plugin, otherRepo, frontmatter);
 		prop = prop instanceof Array ? prop : [prop];
-		let targetRepo = prop.find((repo) => repo.path?.smartkey === otherRepo?.smartKey || "default");
+		let targetRepo = prop.find(
+			(repo) => repo.path?.smartkey === otherRepo?.smartKey || "default"
+		);
 		if (!targetRepo) targetRepo = prop[0];
 		const fileName = getTitleField(frontmatter, file, settings);
 		const editedFileName = regexOnFileName(fileName, settings);
-		if (
-			!isShared(frontmatter, settings, file, otherRepo)
-		) {
+		if (!isShared(frontmatter, settings, file, otherRepo)) {
 			return normalizePath(fileName);
 		}
 		if (targetRepo.path?.override) {
@@ -391,9 +411,13 @@ export function getReceiptFolder(
 			}
 			return normalizePath(`${frontmatterPath}/${editedFileName}`);
 		} else if (targetRepo.path?.type === FolderSettings.yaml) {
-			return normalizePath(createFrontmatterPath(settings, frontmatter, fileName, targetRepo));
+			return normalizePath(
+				createFrontmatterPath(settings, frontmatter, fileName, targetRepo)
+			);
 		} else if (targetRepo.path?.type === FolderSettings.obsidian) {
-			return normalizePath(createObsidianPath(file, settings, vault, fileName, targetRepo));
+			return normalizePath(
+				createObsidianPath(file, settings, vault, fileName, targetRepo)
+			);
 		} else {
 			return targetRepo.path?.defaultName && targetRepo.path.defaultName.length > 0
 				? normalizePath(`${targetRepo.path.defaultName}/${editedFileName}`)
@@ -402,7 +426,6 @@ export function getReceiptFolder(
 	}
 	return file.path;
 }
-
 
 /**
  * Create filepath in github Repository based on settings and frontmatter for image
@@ -414,7 +437,7 @@ export function getImagePath(
 	file: TFile,
 	plugin: GithubPublisher,
 	sourceFrontmatter: PropertiesConversion | null,
-	repository: Properties | Properties[],
+	repository: Properties | Properties[]
 ): string {
 	const settings = plugin.settings;
 	const overridePath = repository instanceof Array ? repository[0] : repository;
@@ -425,7 +448,6 @@ export function getImagePath(
 	return normalizePath(path.replace(file.name, name));
 }
 
-
 /**
  * Create filepath in github Repository based on settings and frontmatter for image
  * @param {TFile} file : Source file
@@ -434,43 +456,60 @@ export function getImagePath(
  * @return {string} the new filepath
  */
 
-function createImagePath(file: TFile,
+function createImagePath(
+	file: TFile,
 	settings: GitHubPublisherSettings,
 	sourceFrontmatter: PropertiesConversion | null,
-	overridePath?: Properties,
-): { path: string, name: string } {
+	overridePath?: Properties
+): { path: string; name: string } {
 	let fileName = file.name;
 	let filePath = file.path;
 	if (file.name.includes(".excalidraw")) {
 		fileName = fileName.replace(".excalidraw.md", ".svg");
 		filePath = filePath.replace(".excalidraw.md", ".svg");
 	}
-	const result : { path: string, name: string } = { path: filePath, name: fileName };
-	const behavior = overridePath?.path?.type ? overridePath.path.type : settings.upload.behavior;
-	const rootFolder = overridePath?.path?.rootFolder ? overridePath.path.rootFolder : settings.upload.rootFolder;
-	const defaultFolderName = overridePath?.path?.defaultName ? overridePath.path.defaultName : settings.upload.defaultName;
-	if (sourceFrontmatter?.attachmentLinks && sourceFrontmatter.attachmentLinks.length > 0) {
+	const result: { path: string; name: string } = {
+		path: filePath,
+		name: fileName,
+	};
+	const behavior = overridePath?.path?.type
+		? overridePath.path.type
+		: settings.upload.behavior;
+	const rootFolder = overridePath?.path?.rootFolder
+		? overridePath.path.rootFolder
+		: settings.upload.rootFolder;
+	const defaultFolderName = overridePath?.path?.defaultName
+		? overridePath.path.defaultName
+		: settings.upload.defaultName;
+	if (
+		sourceFrontmatter?.attachmentLinks &&
+		sourceFrontmatter.attachmentLinks.length > 0
+	) {
 		result.path = normalizePath(`${sourceFrontmatter.attachmentLinks}/${fileName}`);
 		return result;
 	}
 	if (settings.embed.useObsidianFolder) {
 		if (behavior === FolderSettings.yaml) {
-			result.path = rootFolder.length > 0 ? normalizePath(`${rootFolder}/${filePath}`) : filePath;
-		}
-		else {
+			result.path =
+				rootFolder.length > 0 ? normalizePath(`${rootFolder}/${filePath}`) : filePath;
+		} else {
 			//no root, but default folder name
-			result.path = defaultFolderName.length > 0 ? normalizePath(`${defaultFolderName}/${filePath}`) : filePath;
+			result.path =
+				defaultFolderName.length > 0
+					? normalizePath(`${defaultFolderName}/${filePath}`)
+					: filePath;
 		}
 		result.path = applyOverriddenPath(fileName, result.path, settings).filePath;
 		return result;
 	}
-	const defaultImageFolder = overridePath?.path?.attachment?.folder ? overridePath.path?.attachment?.folder : settings.embed.folder;
+	const defaultImageFolder = overridePath?.path?.attachment?.folder
+		? overridePath.path?.attachment?.folder
+		: settings.embed.folder;
 	//find in override
 	const overriddenPath = applyOverriddenPath(fileName, filePath, settings);
 	if (overriddenPath.overridden) {
 		result.path = overriddenPath.filePath;
-	}
-	else if (defaultImageFolder.length > 0) {
+	} else if (defaultImageFolder.length > 0) {
 		result.path = normalizePath(`${defaultImageFolder}/${fileName}`);
 	} else if (defaultFolderName.length > 0) {
 		result.path = normalizePath(`${defaultFolderName}/${fileName}`);
@@ -481,22 +520,27 @@ function createImagePath(file: TFile,
 }
 
 /**
- * Override the path of an attachment using the settings (regex or string replace) 
+ * Override the path of an attachment using the settings (regex or string replace)
  * @param fileName - The name of the file
  * @param filePath - The (original) path of the file
  * @param settings - The settings of the plugin
  * @returns The new path of the file and whether it was overridden
  */
-function applyOverriddenPath(fileName: string, filePath: string, settings: GitHubPublisherSettings): {filePath: string, overridden: boolean} {
+function applyOverriddenPath(
+	fileName: string,
+	filePath: string,
+	settings: GitHubPublisherSettings
+): { filePath: string; overridden: boolean } {
 	let overridden = false;
 	const isOverridden = settings.embed.overrideAttachments.filter((override) => {
 		const isRegex = override.path.match(FIND_REGEX);
 		const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : undefined;
 		return (
-			regex?.test(filePath)
-			|| filePath === override.path
-			|| override.path.contains("{{all}}"))
-			&& !override.destination.contains("{{default}}");
+			(regex?.test(filePath) ||
+				filePath === override.path ||
+				override.path.contains("{{all}}")) &&
+			!override.destination.contains("{{default}}")
+		);
 	});
 	if (isOverridden.length > 0) {
 		overridden = true;
@@ -504,8 +548,10 @@ function applyOverriddenPath(fileName: string, filePath: string, settings: GitHu
 			const isRegex = override.path.match(FIND_REGEX);
 			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
 			const dest = override.destination.replace("{{name}}", fileName);
-			filePath = regex ? normalizePath(filePath.replace(regex, dest)) : normalizePath(filePath.replace(override.path, dest));
+			filePath = regex
+				? normalizePath(filePath.replace(regex, dest))
+				: normalizePath(filePath.replace(override.path, dest));
 		}
 	}
-	return {filePath, overridden};
+	return { filePath, overridden };
 }

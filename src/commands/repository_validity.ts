@@ -11,14 +11,13 @@ import { checkRepositoryValidity } from "src/utils/data_validation_test";
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @return {Promise<void>}
  */
-export async function repositoryValidityActiveFile(plugin:GithubPublisher, repo: Repository | null): Promise<void> {
+export async function repositoryValidityActiveFile(
+	plugin: GithubPublisher,
+	repo: Repository | null
+): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	if (file) {
-		await checkRepositoryValidity(
-			await plugin.reloadOctokit(repo?.smartKey),
-			repo,
-			file,
-		);
+		await checkRepositoryValidity(await plugin.reloadOctokit(repo?.smartKey), repo, file);
 	} else {
 		new Notice("No file is active");
 	}
@@ -31,8 +30,13 @@ export async function repositoryValidityActiveFile(plugin:GithubPublisher, repo:
  * @return {Promise<Command>}
  */
 
-export async function checkRepositoryValidityCallback(plugin: GithubPublisher, repo: Repository | null): Promise<Command> {
-	const id = repo ? `check-plugin-repo-validy-K${repo.smartKey}` : "check-plugin-repo-validy";
+export async function checkRepositoryValidityCallback(
+	plugin: GithubPublisher,
+	repo: Repository | null
+): Promise<Command> {
+	const id = repo
+		? `check-plugin-repo-validy-K${repo.smartKey}`
+		: "check-plugin-repo-validy";
 	let name = i18next.t("commands.checkValidity.title");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;
@@ -41,14 +45,9 @@ export async function checkRepositoryValidityCallback(plugin: GithubPublisher, r
 		id,
 		name,
 		checkCallback: (checking) => {
-			if (plugin.app.workspace.getActiveFile())
-			{
+			if (plugin.app.workspace.getActiveFile()) {
 				if (!checking) {
-					checkRepositoryValidity(
-						octokit,
-						repo,
-						plugin.app.workspace.getActiveFile()
-					);
+					checkRepositoryValidity(octokit, repo, plugin.app.workspace.getActiveFile());
 				}
 				return true;
 			}
