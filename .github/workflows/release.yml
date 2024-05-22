@@ -20,17 +20,12 @@ permissions:
 jobs:
     echo:
         runs-on: ubuntu-latest
-        outputs:
-            beta: ${{ steps.is_beta.outputs.BETA}}
         steps:
             - name: echo
               run: |
                   echo EVENT NAME =  ${{ github.event_name }}
                   echo BETA = ${{ inputs.beta || false}}
                   echo BUMP = ${{ inputs.bump || false}}
-            - name: beta
-              id: is_beta
-              run: echo "BETA=$(node -p "require('./package.json').version.includes('-')")" >> "$GITHUB_OUTPUT"
 
     release:
         if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && !inputs.bump)
@@ -39,7 +34,6 @@ jobs:
         with:
             PLUGIN_NAME: "obsidian-mkdocs-publisher"
             STYLE: true
-            BETA: ${{ needs.echo.outputs.beta }}
             SUBMODULE: true
             CACHE: "pnpm"
         secrets:
@@ -51,7 +45,7 @@ jobs:
         with:
             PLUGIN_NAME: "obsidian-mkdocs-publisher"
             STYLE: true
-            BETA: ${{ needs.echo.outputs.beta }}
+            BETA: ${{ inputs.beta }}
             SUBMODULE: true
             CACHE: "pnpm"
         secrets:
