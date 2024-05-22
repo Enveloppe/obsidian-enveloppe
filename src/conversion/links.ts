@@ -1,10 +1,10 @@
-import {
+import type {
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
 	PropertiesConversion,
 } from "@interfaces";
-import { FrontMatterCache, TFile } from "obsidian";
+import type { FrontMatterCache, TFile } from "obsidian";
 import slugify from "slugify";
 import {
 	createRelativePath,
@@ -273,9 +273,9 @@ function createMarkdownLinks(
 		: `${fileName.replace(/#.*/, "").trim()}.md`;
 	const anchorMatch = fileName.match(/(#.*)/);
 	let anchor = anchorMatch ? anchorMatch[0] : null;
-	const encodedURI = encodeURI(markdownName);
+	const encodedUri = encodeURI(markdownName);
 	anchor = slugifyAnchor(anchor, settings);
-	return `${isEmbed}[${altLink}](${encodedURI}${anchor})`;
+	return `${isEmbed}[${altLink}](${encodedUri}${anchor})`;
 }
 
 /**

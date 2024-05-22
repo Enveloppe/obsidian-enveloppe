@@ -7,12 +7,12 @@ import {
 	GithubTiersVersion,
 	TypeOfEditRegex,
 } from "src/interfaces/enum";
-import {
+import type {
 	Deleted,
 	ListEditedFiles,
 	UploadedFiles,
 } from "src/interfaces/list_edited_files";
-import {
+import type {
 	GitHubPublisherSettings,
 	GithubRepo,
 	LinkedNotes,
@@ -25,13 +25,13 @@ import {
 	SetRepositoryFrontmatter,
 	TextCleaner,
 } from "src/interfaces/main";
-import {
+import type {
 	MonoProperties,
 	MonoRepoProperties,
 	MultiProperties,
 	MultiRepoProperties,
 } from "src/interfaces/properties";
-import { MetadataExtractor } from "src/interfaces/settings";
+import type { MetadataExtractor } from "src/interfaces/settings";
 
 import { ERROR_ICONS, FOUND_ATTACHMENTS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 

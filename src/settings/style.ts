@@ -1,8 +1,12 @@
-import { EnumbSettingsTabId, FolderSettings, GitHubPublisherSettings } from "@interfaces";
+import {
+	EnumbSettingsTabId,
+	FolderSettings,
+	type GitHubPublisherSettings,
+} from "@interfaces";
 import i18next from "i18next";
-import { Notice, Setting } from "obsidian";
-import GithubPublisher from "src/main";
-import { GithubPublisherSettingsTab } from "src/settings";
+import { Notice, type Setting } from "obsidian";
+import type GithubPublisher from "src/main";
+import type { GithubPublisherSettingsTab } from "src/settings";
 /**
  * show a settings
  * @param {Setting} containerEl setting to show
@@ -36,14 +40,14 @@ export function showHideBasedOnFolder(
 	folderNoteSettings: Setting
 ) {
 	const upload = settings.upload;
-	if (upload.behavior === FolderSettings.yaml) {
+	if (upload.behavior === FolderSettings.Yaml) {
 		showSettings(frontmatterKeySettings);
 		showSettings(rootFolderSettings);
 		showSettings(folderNoteSettings);
 	} else {
 		hideSettings(frontmatterKeySettings);
 		hideSettings(rootFolderSettings);
-		if (upload.behavior === FolderSettings.obsidian) {
+		if (upload.behavior === FolderSettings.Obsidian) {
 			showSettings(folderNoteSettings);
 		} else {
 			hideSettings(folderNoteSettings);
@@ -74,15 +78,15 @@ export async function autoCleanCondition(
 		await plugin.saveSettings();
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
-		settingsTab.renderSettingsPage(EnumbSettingsTabId.upload);
+		settingsTab.renderSettingsPage(EnumbSettingsTabId.Upload);
 	}
-	if (value.length === 0 && settings.behavior !== FolderSettings.yaml) {
+	if (value.length === 0 && settings.behavior !== FolderSettings.Yaml) {
 		if (settings.autoclean.enable)
 			new Notice(i18next.t("error.autoClean", { what: i18next.t("common.defaultName") }));
 		settings.autoclean.enable = false;
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
-		settingsTab.renderSettingsPage(EnumbSettingsTabId.upload);
+		settingsTab.renderSettingsPage(EnumbSettingsTabId.Upload);
 	}
 	if (settings.autoclean.enable) {
 		// @ts-ignore
@@ -111,7 +115,7 @@ export async function folderHideShowSettings(
 	plugin: GithubPublisher
 ) {
 	const settings = plugin.settings.upload;
-	if (value === FolderSettings.yaml) {
+	if (value === FolderSettings.Yaml) {
 		showSettings(frontmatterKeySettings);
 		showSettings(rootFolderSettings);
 		return;

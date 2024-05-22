@@ -5,17 +5,17 @@
  * - `title` : replace the title of the file
  */
 export enum TypeOfEditRegex {
-	path = "path",
-	title = "title",
+	Path = "path",
+	Title = "title",
 }
 
 export enum EnumbSettingsTabId {
-	github = "github-configuration",
-	upload = "upload-configuration",
-	text = "text-conversion",
-	embed = "embed-configuration",
-	plugin = "plugin-settings",
-	help = "help",
+	Github = "github-configuration",
+	Upload = "upload-configuration",
+	Text = "text-conversion",
+	Embed = "embed-configuration",
+	Plugin = "plugin-settings",
+	Help = "help",
 }
 
 /**
@@ -24,11 +24,11 @@ export enum EnumbSettingsTabId {
  */
 export enum FolderSettings {
 	/** Use YAML frontmatter for settings the path */
-	yaml = "yaml",
+	Yaml = "yaml",
 	/** Use the obsidian tree */
-	obsidian = "obsidian",
+	Obsidian = "obsidian",
 	/** Use a fixed folder and send all in it */
-	fixed = "fixed",
+	Fixed = "fixed",
 }
 
 /**
@@ -36,6 +36,6 @@ export enum FolderSettings {
  * @description Allow to set a value for the github tiers
  */
 export enum GithubTiersVersion {
-	free = "Github Free/Pro/Team (default)",
-	entreprise = "Enterprise",
+	Free = "Github Free/Pro/Team (default)",
+	Entreprise = "Enterprise",
 }

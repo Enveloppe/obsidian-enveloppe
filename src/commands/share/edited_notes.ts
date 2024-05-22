@@ -1,8 +1,8 @@
-import { MonoRepoProperties, Repository } from "@interfaces";
+import type { MonoRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
-import { Command, Notice, TFile } from "obsidian";
-import { GithubBranch } from "src/GitHub/branch";
-import GithubPublisher from "src/main";
+import { type Command, Notice, type TFile } from "obsidian";
+import type { GithubBranch } from "src/GitHub/branch";
+import type GithubPublisher from "src/main";
 import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
 import {
 	frontmatterSettingsRepository,

@@ -1,4 +1,4 @@
-import {
+import type {
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
@@ -6,19 +6,19 @@ import {
 } from "@interfaces";
 import i18next from "i18next";
 import {
-	FrontMatterCache,
+	type FrontMatterCache,
 	getFrontMatterInfo,
-	MetadataCache,
+	type MetadataCache,
 	Notice,
 	parseFrontMatterTags,
 	parseYaml,
 	stringifyYaml,
-	TFile,
+	type TFile,
 } from "obsidian";
 import { convertDataviewQueries } from "src/conversion/compiler/dataview";
 import { bakeEmbeds, convertInlineDataview } from "src/conversion/compiler/embeds";
 import { convertToInternalGithub, convertWikilinks } from "src/conversion/links";
-import GithubPublisher from "src/main";
+import type GithubPublisher from "src/main";
 import { notif } from "src/utils";
 import { isFolderNote } from "src/utils/data_validation_test";
 

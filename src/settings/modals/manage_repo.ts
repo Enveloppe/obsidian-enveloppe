@@ -1,7 +1,18 @@
-import { GitHubPublisherSettings, GithubTiersVersion, Repository } from "@interfaces";
+import {
+	type GitHubPublisherSettings,
+	GithubTiersVersion,
+	type Repository,
+} from "@interfaces";
 import i18next from "i18next";
-import { AbstractInputSuggest, App, Modal, Notice, Setting, TFile } from "obsidian";
-import GithubPublisher from "src/main";
+import {
+	AbstractInputSuggest,
+	type App,
+	Modal,
+	Notice,
+	Setting,
+	type TFile,
+} from "obsidian";
+import type GithubPublisher from "src/main";
 import { migrateToken } from "src/settings/migrate";
 import {
 	checkRepositoryValidity,
@@ -323,11 +334,11 @@ class ModalEditingRepository extends Modal {
 			.addDropdown((dropdown) => {
 				dropdown
 					.addOption(
-						GithubTiersVersion.free,
+						GithubTiersVersion.Free,
 						i18next.t("settings.github.apiType.dropdown.free")
 					)
 					.addOption(
-						GithubTiersVersion.entreprise,
+						GithubTiersVersion.Entreprise,
 						i18next.t("settings.github.apiType.dropdown.enterprise")
 					)
 					.setValue(this.repository.api.tiersForApi)
@@ -336,7 +347,7 @@ class ModalEditingRepository extends Modal {
 						this.onOpen();
 					});
 			});
-		if (this.repository.api.tiersForApi === GithubTiersVersion.entreprise) {
+		if (this.repository.api.tiersForApi === GithubTiersVersion.Entreprise) {
 			new Setting(contentEl)
 				.setName(i18next.t("settings.github.apiType.hostname.title"))
 				.setDesc(i18next.t("settings.github.apiType.hostname.desc"))
@@ -385,8 +396,8 @@ class ModalEditingRepository extends Modal {
 						this.repository.branch = value.trim();
 					})
 			);
-		const desc_ghToken = document.createDocumentFragment();
-		desc_ghToken.createEl("span", undefined, (span) => {
+		const descGhToken = document.createDocumentFragment();
+		descGhToken.createEl("span", undefined, (span) => {
 			span.innerText = i18next.t("settings.github.ghToken.desc");
 			span.createEl("a", undefined, (link) => {
 				link.innerText = `${i18next.t("common.here")}.`;
@@ -395,7 +406,7 @@ class ModalEditingRepository extends Modal {
 		});
 		new Setting(contentEl)
 			.setName(i18next.t("common.ghToken"))
-			.setDesc(desc_ghToken)
+			.setDesc(descGhToken)
 			.addText(async (text) => {
 				const decryptedToken: string = await this.plugin.loadToken(
 					this.repository.smartKey

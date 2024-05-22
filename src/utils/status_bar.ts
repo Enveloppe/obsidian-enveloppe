@@ -2,11 +2,11 @@ import {
 	ERROR_ICONS,
 	FOUND_ATTACHMENTS,
 	HOURGLASS_ICON,
-	Properties,
+	type Properties,
 	SUCCESS_ICON,
 } from "@interfaces";
 import i18next from "i18next";
-import { Notice } from "obsidian";
+import type { Notice } from "obsidian";
 import { noticeMobile } from "src/utils";
 
 // Credit : https://github.com/oleeskild/obsidian-digital-garden/ @oleeskild

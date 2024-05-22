@@ -1,8 +1,8 @@
-import { MultiRepoProperties, Repository } from "@interfaces";
+import type { MultiRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
-import { Command, FrontMatterCache, Notice, Platform, TFile } from "obsidian";
-import { GithubBranch } from "src/GitHub/branch";
-import GithubPublisher from "src/main";
+import { type Command, type FrontMatterCache, Notice, Platform, type TFile } from "obsidian";
+import type { GithubBranch } from "src/GitHub/branch";
+import type GithubPublisher from "src/main";
 import { ListChangedFiles } from "src/settings/modals/list_changed";
 import {
 	createLink,

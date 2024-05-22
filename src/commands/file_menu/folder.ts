@@ -1,9 +1,9 @@
-import { MonoRepoProperties, Repository } from "@interfaces";
+import type { MonoRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
-import { Menu, MenuItem, Platform, TFolder } from "obsidian";
+import { type Menu, type MenuItem, Platform, type TFolder } from "obsidian";
 import { shareAllMarkedNotes } from "src/commands";
 import { ChooseRepoToRun } from "src/commands/suggest_other_repo_commands_modal";
-import GithubPublisher from "src/main";
+import type GithubPublisher from "src/main";
 import {
 	defaultRepo,
 	getRepoSharedKey,

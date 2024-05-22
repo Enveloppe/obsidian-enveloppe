@@ -1,4 +1,4 @@
-import {
+import type {
 	Deleted,
 	GitHubPublisherSettings,
 	MetadataExtractor,
@@ -10,25 +10,25 @@ import {
 	UploadedFiles,
 } from "@interfaces";
 import { LOADING_ICON } from "@interfaces/icons";
-import { Octokit } from "@octokit/core";
+import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
 import {
 	arrayBufferToBase64,
-	FrontMatterCache,
-	MetadataCache,
+	type FrontMatterCache,
+	type MetadataCache,
 	normalizePath,
 	Notice,
 	TFile,
 	TFolder,
-	Vault,
+	type Vault,
 } from "obsidian";
 import { mainConverting } from "src/conversion";
 import { convertToHTMLSVG } from "src/conversion/compiler/excalidraw";
 import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
 import { deleteFromGithub } from "src/GitHub/delete";
 import { FilesManagement } from "src/GitHub/files";
-import GithubPublisher from "src/main";
+import type GithubPublisher from "src/main";
 import { logs, noticeMobile, notif, notifError } from "src/utils";
 import {
 	checkEmptyConfiguration,

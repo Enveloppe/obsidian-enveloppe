@@ -1,7 +1,7 @@
-import { FrontMatterCache, TFile } from "obsidian";
+import type { FrontMatterCache, TFile } from "obsidian";
 
-import { EnumbSettingsTabId, FolderSettings, TypeOfEditRegex } from "./enum";
-import {
+import type { EnumbSettingsTabId, FolderSettings, TypeOfEditRegex } from "./enum";
+import type {
 	Api,
 	Conversion,
 	CopyLink,
@@ -47,6 +47,7 @@ export interface Repository {
 	/**
 	 * If the PR should be automatically merged
 	 */
+
 	automaticallyMergePR: boolean;
 	/**
 	 * if the validity of the repository was checked and valide
@@ -99,7 +100,7 @@ export interface GitHubPublisherSettings {
 	/**
 	 * Save the tabs id when the settings was closed, pretty useful when quick tests are done
 	 */
-	tabsID?: EnumbSettingsTabId;
+	tabsId?: EnumbSettingsTabId;
 	/**
 	 * GitHub settings for the default repository
 	 */
@@ -266,6 +267,7 @@ export interface Properties {
 	/** commitMsg if the default is not okay for this repo */
 	commitMsg: string;
 	/** Automatically merge the PR */
+	// biome-ignore lint/style/useNamingConvention: It's a type definition, not a variable
 	automaticallyMergePR: boolean;
 	/** If the repository was checked */
 	verifiedRepo?: boolean;

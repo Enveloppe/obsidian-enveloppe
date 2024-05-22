@@ -1,14 +1,21 @@
 import {
 	DEFAULT_SETTINGS,
-	GitHubPublisherSettings,
+	type GitHubPublisherSettings,
 	GithubTiersVersion,
-	Repository,
-	SetRepositoryFrontmatter,
+	type Repository,
+	type SetRepositoryFrontmatter,
 } from "@interfaces";
 import { Octokit } from "@octokit/core";
 import dedent from "dedent";
 import i18next from "i18next";
-import { FrontMatterCache, Menu, Plugin, TAbstractFile, TFile, TFolder } from "obsidian";
+import {
+	type FrontMatterCache,
+	type Menu,
+	Plugin,
+	type TAbstractFile,
+	TFile,
+	TFolder,
+} from "obsidian";
 import {
 	checkRepositoryValidityCallback,
 	createLinkCallback,
@@ -27,7 +34,7 @@ import { getTitleField, regexOnFileName } from "src/conversion/file_path";
 import { GithubBranch } from "src/GitHub/branch";
 import { resources, translationLanguage } from "src/i18n/i18next";
 import { GithubPublisherSettingsTab } from "src/settings";
-import { migrateSettings, OldSettings } from "src/settings/migrate";
+import { migrateSettings, type OldSettings } from "src/settings/migrate";
 import { createTokenPath, monkeyPatchConsole, notif } from "src/utils";
 import {
 	checkRepositoryValidity,
@@ -80,11 +87,11 @@ export default class GithubPublisher extends Plugin {
 		const allCommands = this.app.commands.listCommands();
 		for (const command of allCommands) {
 			if (command.id.startsWith("obsidian-mkdocs-publisher")) {
-				const publisherCMDsName = command.id
+				const publisherCmDsName = command.id
 					.replace("obsidian-mkdocs-publisher:", "")
 					.split("-");
 				//repo will be the last element of the array
-				const repoCmd = publisherCMDsName[publisherCMDsName.length - 1];
+				const repoCmd = publisherCmDsName[publisherCmDsName.length - 1];
 				if (repoCmd.startsWith("K") && repo.smartKey === repoCmd.replace("K", "")) {
 					this.app.commands.removeCommand(command.id);
 				}
@@ -148,9 +155,9 @@ export default class GithubPublisher extends Plugin {
 		try {
 			const tokenFile = await this.app.vault.adapter.read(`${tokenPath}`);
 			if (tokenPath.endsWith(".json")) {
-				const tokenJSON = JSON.parse(tokenFile);
-				const defaultToken = tokenJSON.GITHUB_PUBLISHER_TOKEN;
-				if (repo) return tokenJSON.GITHUB_PUBLISHER_REPOS?.[repo] ?? defaultToken;
+				const tokenJson = JSON.parse(tokenFile);
+				const defaultToken = tokenJson.GITHUB_PUBLISHER_TOKEN;
+				if (repo) return tokenJson.GITHUB_PUBLISHER_REPOS?.[repo] ?? defaultToken;
 				return defaultToken;
 			}
 			if (tokenFile) {
@@ -183,7 +190,7 @@ export default class GithubPublisher extends Plugin {
 		const apiSettings = this.settings.github.api;
 		const token = await this.loadToken(repo);
 		const octokit =
-			apiSettings.tiersForApi === GithubTiersVersion.entreprise &&
+			apiSettings.tiersForApi === GithubTiersVersion.Entreprise &&
 			apiSettings.hostname.length > 0
 				? new Octokit({
 						baseUrl: `${apiSettings.hostname}/api/v3`,

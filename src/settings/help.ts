@@ -1,4 +1,4 @@
-import { FolderSettings, GitHubPublisherSettings } from "@interfaces";
+import { FolderSettings, type GitHubPublisherSettings } from "@interfaces";
 import i18next from "i18next";
 import { normalizePath } from "obsidian";
 import { regexOnPath } from "src/conversion/file_path";
@@ -29,7 +29,7 @@ function spanString(text: string, code: DocumentFragment): HTMLElement {
 }
 
 function spanCategory(settings: GitHubPublisherSettings, code: DocumentFragment) {
-	if (settings.upload.behavior === FolderSettings.yaml) {
+	if (settings.upload.behavior === FolderSettings.Yaml) {
 		const defaultPath =
 			settings.upload.defaultName.length > 0 ? `${settings.upload.defaultName}` : "/";
 		return {
@@ -53,7 +53,7 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings): DocumentF
 	const defaultPath =
 		settings.upload.defaultName.length > 0 ? `${settings.upload.defaultName}` : "/";
 	let path =
-		settings.upload.behavior === FolderSettings.yaml
+		settings.upload.behavior === FolderSettings.Yaml
 			? `${
 					settings.upload.rootFolder.length > 0 ? settings.upload.rootFolder : ""
 				}/${defaultPath}/file.md`

@@ -3,27 +3,27 @@
  * @link https://github.com/oleeskild/obsidian-digital-garden/blob/main/src/compiler/DataviewCompiler.ts
  */
 
-import {
+import type {
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
 	PropertiesConversion,
 } from "@interfaces";
 import i18next from "i18next";
-import { Component, FrontMatterCache, htmlToMarkdown, TFile } from "obsidian";
+import { Component, type FrontMatterCache, htmlToMarkdown, TFile } from "obsidian";
 import {
-	DataviewApi,
+	type DataviewApi,
 	getAPI,
 	isPluginEnabled,
-	Literal,
-	Success,
+	type Literal,
+	type Success,
 } from "obsidian-dataview";
 import {
 	convertToInternalGithub,
 	convertWikilinks,
 	escapeRegex,
 } from "src/conversion/links";
-import GithubPublisher from "src/main";
+import type GithubPublisher from "src/main";
 import { logs, notif } from "src/utils";
 
 class DataviewCompiler {

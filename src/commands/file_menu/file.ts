@@ -1,9 +1,9 @@
-import { Repository } from "@interfaces";
+import type { Repository } from "@interfaces";
 import i18next from "i18next";
-import { Menu, MenuItem, Platform, TFile } from "obsidian";
+import { type Menu, type MenuItem, Platform, type TFile } from "obsidian";
 import { shareOneNote } from "src/commands";
 import { ChooseRepoToRun } from "src/commands/suggest_other_repo_commands_modal";
-import GithubPublisher from "src/main";
+import type GithubPublisher from "src/main";
 import {
 	defaultRepo,
 	getRepoSharedKey,

@@ -1,22 +1,22 @@
 import {
-	Deleted,
+	type Deleted,
 	FIND_REGEX,
-	GitHubPublisherSettings,
-	ListEditedFiles,
-	MetadataExtractor,
-	MultiRepoProperties,
-	Properties,
+	type GitHubPublisherSettings,
+	type ListEditedFiles,
+	type MetadataExtractor,
+	type MultiRepoProperties,
+	type Properties,
 	TOKEN_PATH,
-	UploadedFiles,
+	type UploadedFiles,
 } from "@interfaces";
 import { ERROR_ICONS, HOURGLASS_ICON, SUCCESS_ICON } from "@interfaces/icons";
 import i18next from "i18next";
-import { App, normalizePath, Notice, Platform, TFile } from "obsidian";
+import { type App, normalizePath, Notice, Platform, TFile } from "obsidian";
 import slugify from "slugify";
 import { getReceiptFolder } from "src/conversion/file_path";
 import { createRegexFromText } from "src/conversion/find_and_replace_text";
-import Publisher from "src/GitHub/upload";
-import GithubPublisher from "src/main";
+import type Publisher from "src/GitHub/upload";
+import type GithubPublisher from "src/main";
 import { frontmatterFromFile } from "src/utils/parse_frontmatter";
 
 type LogsParameters = {

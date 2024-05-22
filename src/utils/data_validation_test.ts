@@ -1,18 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
 	FIND_REGEX,
-	GitHubPublisherSettings,
+	type GitHubPublisherSettings,
 	GithubTiersVersion,
-	MultiProperties,
-	Properties,
-	PropertiesConversion,
-	Repository,
+	type MultiProperties,
+	type Properties,
+	type PropertiesConversion,
+	type Repository,
 } from "@interfaces";
-import { Octokit } from "@octokit/core";
+import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
-import { FrontMatterCache, normalizePath, Notice, TFile, TFolder } from "obsidian";
-import { GithubBranch } from "src/GitHub/branch";
-import GithubPublisher from "src/main";
+import {
+	type FrontMatterCache,
+	normalizePath,
+	Notice,
+	type TFile,
+	type TFolder,
+} from "obsidian";
+import type { GithubBranch } from "src/GitHub/branch";
+import type GithubPublisher from "src/main";
 import { notif } from "src/utils";
 import {
 	frontmatterFromFile,
@@ -445,7 +451,7 @@ export function defaultRepo(settings: GitHubPublisherSettings): Repository {
 		user: settings.github.user,
 		repo: settings.github.repo,
 		branch: settings.github.branch,
-		automaticallyMergePR: settings.github.automaticallyMergePR,
+		automaticallyMergePr: settings.github.automaticallyMergePR,
 		verifiedRepo: settings.github.verifiedRepo,
 		rateLimit: settings.github.rateLimit,
 		api: {
@@ -519,7 +525,7 @@ export async function verifyRateLimitAPI(
 		//if the error is 404 and user use enterprise, it's normal
 		if (
 			(error as any).status === 404 &&
-			settings.github.api.tiersForApi === GithubTiersVersion.entreprise &&
+			settings.github.api.tiersForApi === GithubTiersVersion.Entreprise &&
 			(error as any).response.data.message === "Rate limiting is not enabled." &&
 			(error as any).name === "HttpError"
 		)

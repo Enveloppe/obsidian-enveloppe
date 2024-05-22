@@ -1,4 +1,4 @@
-import {
+import type {
 	ConvertedLink,
 	GithubRepo,
 	LinkedNotes,
@@ -6,12 +6,12 @@ import {
 	PropertiesConversion,
 	Repository,
 } from "@interfaces/main";
-import { Octokit } from "@octokit/core";
-import { EmbedCache, LinkCache, TFile, TFolder } from "obsidian";
-import { getAPI, Link } from "obsidian-dataview";
+import type { Octokit } from "@octokit/core";
+import { type EmbedCache, type LinkCache, TFile, TFolder } from "obsidian";
+import { getAPI, type Link } from "obsidian-dataview";
 import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
 import Publisher from "src/GitHub/upload";
-import GithubPublisher from "src/main";
+import type GithubPublisher from "src/main";
 import { logs } from "src/utils";
 import { isAttachment, isShared } from "src/utils/data_validation_test";
 import {
@@ -37,18 +37,18 @@ export class FilesManagement extends Publisher {
 
 	getSharedFiles(repo: Repository | null): TFile[] {
 		const files = this.vault.getMarkdownFiles();
-		const shared_File: TFile[] = [];
+		const sharedFile: TFile[] = [];
 		for (const file of files) {
 			try {
 				const frontMatter = this.metadataCache.getCache(file.path)?.frontmatter;
 				if (isShared(frontMatter, this.settings, file, repo)) {
-					shared_File.push(file);
+					sharedFile.push(file);
 				}
 			} catch (e) {
 				logs({ settings: this.settings, e: true }, e);
 			}
 		}
-		return shared_File;
+		return sharedFile;
 	}
 
 	/**

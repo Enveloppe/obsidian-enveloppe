@@ -1,26 +1,26 @@
 import {
-	Deleted,
+	type Deleted,
 	FIND_REGEX,
 	FolderSettings,
-	GitHubPublisherSettings,
-	GithubRepo,
-	MonoRepoProperties,
-	Properties,
+	type GitHubPublisherSettings,
+	type GithubRepo,
+	type MonoRepoProperties,
+	type Properties,
 } from "@interfaces";
-import { Octokit } from "@octokit/core";
+import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
 import {
-	MetadataCache,
+	type MetadataCache,
 	normalizePath,
 	Notice,
 	parseYaml,
-	TAbstractFile,
+	type TAbstractFile,
 	TFile,
 	TFolder,
 	Vault,
 } from "obsidian";
-import { FilesManagement } from "src/GitHub/files";
+import type { FilesManagement } from "src/GitHub/files";
 import { logs, notif, trimObject } from "src/utils";
 import { isAttachment, verifyRateLimitAPI } from "src/utils/data_validation_test";
 import { frontmatterSettingsRepository } from "src/utils/parse_frontmatter";
@@ -218,7 +218,7 @@ export async function filterGithubFile(
 			isAttachment(file.file, settings.embed.unHandledObsidianExt);
 		if (
 			(file.file.includes(defaultName) ||
-				(behavior === FolderSettings.yaml && file.file.includes(root)) ||
+				(behavior === FolderSettings.Yaml && file.file.includes(root)) ||
 				(attachmentFolder.length > 0 && file.file.includes(attachmentFolder))) &&
 			!excludedFileFromDelete(file.file, settings) &&
 			(enabledAttachments || file.file.match("md$"))

@@ -1,6 +1,6 @@
-import { Deleted, ListEditedFiles } from "@interfaces";
+import type { Deleted, ListEditedFiles } from "@interfaces";
 import i18next from "i18next";
-import { App, Modal } from "obsidian";
+import { type App, Modal } from "obsidian";
 
 export class ListChangedFiles extends Modal {
 	listChanged: ListEditedFiles | Deleted;

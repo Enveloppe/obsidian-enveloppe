@@ -1,8 +1,8 @@
-import { GitHubPublisherSettings, Preset } from "@interfaces/main";
-import { Octokit } from "@octokit/core";
+import type { GitHubPublisherSettings, Preset } from "@interfaces/main";
+import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import {
-	App,
+	type App,
 	ButtonComponent,
 	FuzzySuggestModal,
 	Modal,
@@ -11,9 +11,9 @@ import {
 	Setting,
 	TextAreaComponent,
 } from "obsidian";
-import GithubPublisher from "src/main";
-import { GithubPublisherSettingsTab } from "src/settings";
-import { migrateSettings, OldSettings } from "src/settings/migrate";
+import type GithubPublisher from "src/main";
+import type { GithubPublisherSettingsTab } from "src/settings";
+import { migrateSettings, type OldSettings } from "src/settings/migrate";
 import { logs, notif } from "src/utils";
 
 export type SettingValue = number | string | boolean | unknown;
@@ -176,7 +176,7 @@ export class ImportModal extends Modal {
 		this.settingsPage.empty();
 		// @ts-ignore
 		let openedTab =
-			this.plugin.settings.tabsID ??
+			this.plugin.settings.tabsId ??
 			document.querySelector(".settings-tab.settings-tab-active")
 				? document.querySelector(".settings-tab.settings-tab-active .settings-tab-name")
 						.innerText
@@ -376,7 +376,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 			this.settings.github.user = original.github.user;
 			this.settings.github.otherRepo = original.github.otherRepo;
 			this.settings.github.rateLimit = original.github.rateLimit;
-			this.settings.tabsID = original.tabsID;
+			this.settings.tabsId = original.tabsId;
 
 			this.plugin.saveSettings();
 			this.page.renderSettingsPage("github-configuration");

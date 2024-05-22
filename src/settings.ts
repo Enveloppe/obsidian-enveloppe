@@ -1,13 +1,13 @@
 import {
 	EnumbSettingsTabId,
 	FolderSettings,
-	GitHubPublisherSettings,
+	type GitHubPublisherSettings,
 	GithubTiersVersion,
-	Repository,
+	type Repository,
 } from "@interfaces";
 import i18next from "i18next";
-import { App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
-import GithubPublisherPlugin from "src/main";
+import { type App, Notice, PluginSettingTab, setIcon, Setting } from "obsidian";
+import type GithubPublisherPlugin from "src/main";
 import {
 	help,
 	KeyBasedOnSettings,
@@ -57,16 +57,16 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		const { containerEl } = this;
 		containerEl.empty();
 		containerEl.addClass("github-publisher");
-		const defaultTabId = EnumbSettingsTabId.github;
-		let savedId = this.settings.tabsID ?? defaultTabId;
+		const defaultTabId = EnumbSettingsTabId.Github;
+		let savedId = this.settings.tabsId ?? defaultTabId;
 		if (this.settings.plugin.saveTabId != undefined && !this.settings.plugin.saveTabId) {
 			//real false
-			this.settings.tabsID = defaultTabId;
+			this.settings.tabsId = defaultTabId;
 			savedId = defaultTabId;
 			this.plugin.saveSettings();
 		}
 
-		const PUBLISHER_TABS = {
+		const publisherTabs = {
 			"github-configuration": {
 				name: i18next.t("settings.github.title"),
 				icon: "cloud",
@@ -125,7 +125,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			cls: "settings-tab-bar",
 		});
 
-		for (const [tabID, tabInfo] of Object.entries(PUBLISHER_TABS)) {
+		for (const [tabId, tabInfo] of Object.entries(publisherTabs)) {
 			const tabEl = tabBar.createEl("div", {
 				cls: "settings-tab",
 			});
@@ -137,14 +137,14 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				cls: "settings-tab-name",
 				text: tabInfo.name,
 			});
-			if (tabID === savedId) tabEl.addClass("settings-tab-active");
+			if (tabId === savedId) tabEl.addClass("settings-tab-active");
 
 			tabEl.addEventListener("click", async () => {
 				// @ts-ignore
 				for (const tabEl of tabBar.children) tabEl.removeClass("settings-tab-active");
 
 				tabEl.addClass("settings-tab-active");
-				this.renderSettingsPage(tabID);
+				this.renderSettingsPage(tabId);
 			});
 		}
 		this.settingsPage = containerEl.createEl("div", {
@@ -159,7 +159,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	 */
 	async renderSettingsPage(tabId: string | EnumbSettingsTabId) {
 		if (this.settings.plugin.saveTabId || this.settings.plugin.saveTabId === undefined) {
-			this.settings.tabsID = tabId as EnumbSettingsTabId;
+			this.settings.tabsId = tabId as EnumbSettingsTabId;
 			await this.plugin.saveSettings();
 		}
 		this.settingsPage.empty();
@@ -196,21 +196,21 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.addDropdown((dropdown) => {
 				dropdown
 					.addOption(
-						GithubTiersVersion.free,
+						GithubTiersVersion.Free,
 						i18next.t("settings.github.apiType.dropdown.free")
 					)
 					.addOption(
-						GithubTiersVersion.entreprise,
+						GithubTiersVersion.Entreprise,
 						i18next.t("settings.github.apiType.dropdown.enterprise")
 					)
 					.setValue(githubSettings.api.tiersForApi)
 					.onChange(async (value) => {
 						githubSettings.api.tiersForApi = value as GithubTiersVersion;
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.github);
+						this.renderSettingsPage(EnumbSettingsTabId.Github);
 					});
 			});
-		if (githubSettings.api.tiersForApi === GithubTiersVersion.entreprise) {
+		if (githubSettings.api.tiersForApi === GithubTiersVersion.Entreprise) {
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.github.apiType.hostname.title"))
 				.setDesc(i18next.t("settings.github.apiType.hostname.desc"))
@@ -250,8 +250,8 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
-		const desc_ghToken = document.createDocumentFragment();
-		desc_ghToken.createEl("span", undefined, (span) => {
+		const descGhToken = document.createDocumentFragment();
+		descGhToken.createEl("span", undefined, (span) => {
 			span.innerText = i18next.t("settings.github.ghToken.desc");
 			span.createEl("a", undefined, (link) => {
 				link.innerText = `${i18next.t("common.here")}.`;
@@ -260,7 +260,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		});
 		const tokenSettings = new Setting(this.settingsPage)
 			.setName(i18next.t("common.ghToken"))
-			.setDesc(desc_ghToken)
+			.setDesc(descGhToken)
 			.addText(async (text) => {
 				const decryptedToken: string = await this.plugin.loadToken();
 				text
@@ -315,7 +315,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				toggle.setValue(githubSettings.dryRun.enable).onChange(async (value) => {
 					githubSettings.dryRun.enable = value;
 					await this.plugin.saveSettings();
-					this.renderSettingsPage(EnumbSettingsTabId.github);
+					this.renderSettingsPage(EnumbSettingsTabId.Github);
 				})
 			);
 
@@ -438,12 +438,12 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							this.plugin
 						);
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.upload);
+						this.renderSettingsPage(EnumbSettingsTabId.Upload);
 					});
 			});
 
 		const defaultFolder =
-			uploadSettings.behavior === FolderSettings.yaml
+			uploadSettings.behavior === FolderSettings.Yaml
 				? {
 						desc: i18next.t("settings.upload.defaultFolder.desc"),
 						title: i18next.t("settings.upload.defaultFolder.title"),
@@ -514,7 +514,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						uploadSettings.frontmatterTitle.enable = value;
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.upload);
+						this.renderSettingsPage(EnumbSettingsTabId.Upload);
 					});
 			});
 		if (uploadSettings.frontmatterTitle.enable) {
@@ -530,7 +530,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 		}
 
 		const desc =
-			uploadSettings.behavior === FolderSettings.fixed
+			uploadSettings.behavior === FolderSettings.Fixed
 				? i18next.t("settings.upload.regexFilePathTitle.title.titleOnly")
 				: i18next.t("settings.upload.regexFilePathTitle.title.FolderPathTitle");
 
@@ -540,7 +540,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.addButton((button) => {
 				button.setIcon("pencil").onClick(async () => {
 					let allRegex = uploadSettings.replaceTitle;
-					if (uploadSettings.behavior !== FolderSettings.fixed) {
+					if (uploadSettings.behavior !== FolderSettings.Fixed) {
 						allRegex = allRegex.concat(uploadSettings.replacePath);
 					}
 					new ModalRegexFilePathName(
@@ -567,7 +567,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				toggle.setValue(uploadSettings.folderNote.enable).onChange(async (value) => {
 					uploadSettings.folderNote.enable = value;
 					await this.plugin.saveSettings();
-					this.renderSettingsPage(EnumbSettingsTabId.upload);
+					this.renderSettingsPage(EnumbSettingsTabId.Upload);
 				});
 			});
 
@@ -589,7 +589,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						.onChange(async (value) => {
 							uploadSettings.folderNote.addTitle.enable = value;
 							await this.plugin.saveSettings();
-							this.renderSettingsPage(EnumbSettingsTabId.upload);
+							this.renderSettingsPage(EnumbSettingsTabId.Upload);
 						});
 				});
 			if (uploadSettings.folderNote.addTitle.enable) {
@@ -642,11 +642,11 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 					)
 						new AutoCleanPopup(this.app, this.settings, (result) => {
 							uploadSettings.autoclean.enable = result;
-							this.renderSettingsPage(EnumbSettingsTabId.upload);
+							this.renderSettingsPage(EnumbSettingsTabId.Upload);
 						}).open();
 					else uploadSettings.autoclean.enable = value;
 					await this.plugin.saveSettings();
-					this.renderSettingsPage(EnumbSettingsTabId.upload);
+					this.renderSettingsPage(EnumbSettingsTabId.Upload);
 					this.plugin.cleanOldCommands();
 					await this.plugin.chargeAllCommands(null, this.plugin);
 				});
@@ -893,7 +893,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				toggle.setValue(embedSettings.attachments).onChange(async (value) => {
 					embedSettings.attachments = value;
 					await this.plugin.saveSettings();
-					this.renderSettingsPage(EnumbSettingsTabId.embed);
+					this.renderSettingsPage(EnumbSettingsTabId.Embed);
 				});
 			});
 
@@ -907,7 +907,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						.onChange(async (value) => {
 							embedSettings.useObsidianFolder = value;
 							await this.plugin.saveSettings();
-							this.renderSettingsPage(EnumbSettingsTabId.embed);
+							this.renderSettingsPage(EnumbSettingsTabId.Embed);
 						});
 				});
 			if (!embedSettings.useObsidianFolder) {
@@ -1108,7 +1108,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 						};
 						if (value) this.settings.conversion.links.internal = true;
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.plugin);
+						this.renderSettingsPage(EnumbSettingsTabId.Plugin);
 					})
 			);
 		if (!pluginSettings.shareAll || !pluginSettings.shareAll.enable) {
@@ -1198,7 +1198,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 				toggle.setValue(pluginSettings.copyLink.enable).onChange(async (value) => {
 					pluginSettings.copyLink.enable = value;
 					await this.plugin.saveSettings();
-					this.renderSettingsPage(EnumbSettingsTabId.plugin);
+					this.renderSettingsPage(EnumbSettingsTabId.Plugin);
 				})
 			);
 
@@ -1275,7 +1275,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 							replacement: "",
 						});
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.plugin);
+						this.renderSettingsPage(EnumbSettingsTabId.Plugin);
 					});
 				});
 
@@ -1312,7 +1312,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 									(item) => item !== apply
 								);
 							await this.plugin.saveSettings();
-							this.renderSettingsPage(EnumbSettingsTabId.plugin);
+							this.renderSettingsPage(EnumbSettingsTabId.Plugin);
 						});
 					});
 			}
@@ -1347,9 +1347,9 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.addToggle((toggle) =>
 				toggle.setValue(pluginSettings.saveTabId ?? true).onChange(async (value) => {
 					pluginSettings.saveTabId = value;
-					this.settings.tabsID = value
-						? EnumbSettingsTabId.plugin
-						: EnumbSettingsTabId.github;
+					this.settings.tabsId = value
+						? EnumbSettingsTabId.Plugin
+						: EnumbSettingsTabId.Github;
 					await this.plugin.saveSettings();
 				})
 			);

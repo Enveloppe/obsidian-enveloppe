@@ -1,6 +1,6 @@
 import i18next from "i18next";
-import { Command, TFile } from "obsidian";
-import GithubPublisher from "src/main";
+import { type Command, TFile } from "obsidian";
+import type GithubPublisher from "src/main";
 
 export function refreshOpenedSet(plugin: GithubPublisher) {
 	const findRepo = (file: TFile | null) => {

@@ -18,7 +18,7 @@ import nl from "src/i18n/locales/nl.json";
 import no from "src/i18n/locales/no.json";
 import pl from "src/i18n/locales/pl.json";
 import pt from "src/i18n/locales/pt.json";
-import ptBR from "src/i18n/locales/pt-BR.json";
+import ptBr from "src/i18n/locales/pt-BR.json";
 import ro from "src/i18n/locales/ro.json";
 import ru from "src/i18n/locales/ru.json";
 import sr from "src/i18n/locales/sr.json";
@@ -26,8 +26,8 @@ import sv from "src/i18n/locales/sv.json";
 import tr from "src/i18n/locales/tr.json";
 import uk from "src/i18n/locales/uk.json";
 import vi from "src/i18n/locales/vi.json";
-import zhCN from "src/i18n/locales/zh-CN.json";
-import zhTW from "src/i18n/locales/zh-TW.json";
+import zhCn from "src/i18n/locales/zh-CN.json";
+import zhTw from "src/i18n/locales/zh-TW.json";
 
 export const resources = {
 	en: { translation: en },
@@ -49,7 +49,7 @@ export const resources = {
 	no: { translation: no },
 	pl: { translation: pl },
 	pt: { translation: pt },
-	"pt-BR": { translation: ptBR },
+	"pt-BR": { translation: ptBr },
 	ru: { translation: ru },
 	ro: { translation: ro },
 	sr: { translation: sr },
@@ -57,8 +57,8 @@ export const resources = {
 	tr: { translation: tr },
 	uk: { translation: uk },
 	vi: { translation: vi },
-	"zh-TW": { translation: zhTW },
-	"zh-CN": { translation: zhCN },
+	"zh-TW": { translation: zhTw },
+	"zh-CN": { translation: zhCn },
 } as const;
 
 export const translationLanguage = Object.keys(resources).find(

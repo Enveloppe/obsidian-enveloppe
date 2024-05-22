@@ -1,7 +1,7 @@
-import { MultiRepoProperties, Repository } from "@interfaces";
+import type { MultiRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
-import { Command, Notice } from "obsidian";
-import GithubPublisher from "src/main";
+import { type Command, Notice } from "obsidian";
+import type GithubPublisher from "src/main";
 import { createLink } from "src/utils";
 import { isShared } from "src/utils/data_validation_test";
 import { frontmatterFromFile, getProperties } from "src/utils/parse_frontmatter";
