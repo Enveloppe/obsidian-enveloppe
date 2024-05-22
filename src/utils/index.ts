@@ -27,10 +27,7 @@ type LogsParameters = {
 
 /**
  * Create a notice message for the log
- * @param args {LogsParameters} the settings and the error type
- * @param {unknown[]} messages the message to display
  */
-//eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function notif(args: LogsParameters, ...messages: unknown[]) {
 	const { settings, e } = args;
 	if (settings.plugin?.noticeError) {

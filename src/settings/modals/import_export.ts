@@ -295,7 +295,6 @@ export class ExportModal extends Modal {
 								output
 							);
 							//open the file with default application
-							//eslint-disable-next-line
 							(this.app as any).openWithDefaultApp(
 								`${this.app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`
 							);

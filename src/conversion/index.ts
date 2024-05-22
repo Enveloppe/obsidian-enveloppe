@@ -52,7 +52,6 @@ export function addHardLineBreak(
 	}
 }
 
-//eslint-disable-next-line @typescript-eslint/no-explicit-any
 function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: any) {
 	if (yaml.tag) {
 		try {
@@ -133,7 +132,6 @@ export function addToYaml(
 	return text;
 }
 
-//eslint-disable-next-line @typescript-eslint/no-explicit-any
 function titleToYaml(yaml: any, properties: MultiProperties, file: TFile) {
 	const settings = properties.plugin.settings.upload.folderNote.addTitle;
 	if (!settings) {
