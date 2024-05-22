@@ -235,17 +235,17 @@ export async function getSettingsOfMetadataExtractor(
 		if (plugin.settings.allExceptMdFile.length > 0) {
 			//get file from plugins folder in .obsidian folder
 			//@ts-ignore
-			metadataExtractor.allExceptMdFile = path + "/" + plugin.settings.allExceptMdFile;
+			metadataExtractor.allExceptMdFile = `${path}/${plugin.settings.allExceptMdFile}`;
 		}
 		//@ts-ignore
 		if (plugin.settings["metadataFile"].length > 0) {
 			//@ts-ignore
-			metadataExtractor.metadataFile = path + "/" + plugin.settings.metadataFile;
+			metadataExtractor.metadataFile = `${path}/${plugin.settings.metadataFile}`;
 		}
 		//@ts-ignore
 		if (plugin.settings.tagFile.length > 0) {
 			//@ts-ignore
-			metadataExtractor.tagsFile = path + "/" + plugin.settings.tagFile;
+			metadataExtractor.tagsFile = `${path}/${plugin.settings.tagFile}`;
 		}
 		return metadataExtractor;
 	}
@@ -261,7 +261,7 @@ export async function getSettingsOfMetadataExtractor(
 function checkSlash(link: string): string {
 	const slash = link.match(/\/*$/);
 	if (slash && slash[0].length != 1) {
-		return link.replace(/\/*$/, "") + "/";
+		return `${link.replace(/\/*$/, "")}/`;
 	}
 	return link;
 }
@@ -454,12 +454,9 @@ async function publisherNotificationOneRepo(
 
 /**
  * Trim the object to remove the empty value
- * @param {{[p: string]: string}} obj
- * @return {any}
  */
-
 export function trimObject(obj: { [p: string]: string }) {
-	const trimmed = JSON.stringify(obj, (key, value) => {
+	const trimmed = JSON.stringify(obj, (_key, value) => {
 		if (typeof value === "string") {
 			return value.trim().toLowerCase();
 		}

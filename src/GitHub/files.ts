@@ -395,6 +395,7 @@ export class FilesManagement extends Publisher {
 				{
 					owner: repo.owner,
 					repo: repo.repo,
+					// biome-ignore lint/style/useNamingConvention: github api
 					tree_sha: branchToScan,
 					recursive: "true",
 				}

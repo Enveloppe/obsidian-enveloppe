@@ -451,7 +451,7 @@ export function defaultRepo(settings: GitHubPublisherSettings): Repository {
 		user: settings.github.user,
 		repo: settings.github.repo,
 		branch: settings.github.branch,
-		automaticallyMergePr: settings.github.automaticallyMergePR,
+		automaticallyMergePR: settings.github.automaticallyMergePR,
 		verifiedRepo: settings.github.verifiedRepo,
 		rateLimit: settings.github.rateLimit,
 		api: {

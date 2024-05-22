@@ -1418,7 +1418,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	copy(object: any) {
 		try {
 			return JSON.parse(JSON.stringify(object));
-		} catch (e) {
+		} catch (_e) {
 			console.log("error with stringify for", object);
 		}
 	}

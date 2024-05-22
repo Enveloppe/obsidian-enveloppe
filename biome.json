@@ -83,7 +83,9 @@
 		},
 		"ignore": [
 			"**/npm node_modules",
-			"**/build"
+			"**/build",
+			"**/dist",
+			"**/src/i18n/locales"
 		]
 	},
 	"overrides": [

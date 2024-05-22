@@ -69,7 +69,7 @@ export class ImportModal extends Modal {
 			.setDesc(i18next.t("modals.import.desc"));
 
 		new Setting(contentEl).then((setting) => {
-			// Build an error message container
+			// biome-ignore lint/correctness/noUndeclaredVariables: createSpan is a function builded with the plugin
 			const errorSpan = createSpan({
 				cls: "github-publisher-import-error",
 				text: i18next.t("modals.import.error.span"),
@@ -174,13 +174,11 @@ export class ImportModal extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 		this.settingsPage.empty();
-		// @ts-ignore
 		let openedTab =
 			this.plugin.settings.tabsId ??
-			document.querySelector(".settings-tab.settings-tab-active")
-				? document.querySelector(".settings-tab.settings-tab-active .settings-tab-name")
-						.innerText
-				: i18next.t("settings.github.title");
+			document.querySelector(".settings-tab.settings-tab-active .settings-tab-name")
+				?.textContent ??
+			i18next.t("settings.github.title");
 		openedTab = openedTab.trim();
 		switch (openedTab) {
 			case i18next.t("settings.github.title"):
@@ -351,7 +349,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	onChooseItem(item: Preset, evt: MouseEvent | KeyboardEvent): void {
+	onChooseItem(item: Preset, _evt: MouseEvent | KeyboardEvent): void {
 		const presetSettings = item.settings;
 		logs({ settings: presetSettings }, "onChooseItem");
 		try {

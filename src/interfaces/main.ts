@@ -267,7 +267,6 @@ export interface Properties {
 	/** commitMsg if the default is not okay for this repo */
 	commitMsg: string;
 	/** Automatically merge the PR */
-	// biome-ignore lint/style/useNamingConvention: It's a type definition, not a variable
 	automaticallyMergePR: boolean;
 	/** If the repository was checked */
 	verifiedRepo?: boolean;

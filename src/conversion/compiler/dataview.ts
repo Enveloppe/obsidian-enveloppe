@@ -86,7 +86,7 @@ class DataviewCompiler {
 	 * Are in **code blocks**
 	 * @link https://blacksmithgu.github.io/obsidian-dataview/queries/dql-js-inline/#dataview-query-language-dql
 	 */
-	async DQLDataview(query: string) {
+	async dataviewDQL(query: string) {
 		const { isInsideCallout, finalQuery } = sanitizeQuery(query);
 		const markdown = removeDataviewQueries(
 			(await this.dvApi.tryQueryMarkdown(finalQuery, this.path)) as string,
@@ -102,7 +102,8 @@ class DataviewCompiler {
 	 * Are in **CODE BLOCKS**
 	 * @link https://blacksmithgu.github.io/obsidian-dataview/api/intro/
 	 */
-	async DataviewJS(query: string) {
+	async dataviewJS(query: string) {
+		// biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
 		const div = createEl("div");
 		const component = new Component();
 		await this.dvApi.executeJs(query, div, component, this.path);
@@ -148,6 +149,7 @@ class DataviewCompiler {
 				const query = ${query};
 				dv.paragraph(query);
 			`;
+		// biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
 		const div = createEl("div");
 		const component = new Component();
 		await this.dvApi.executeJs(evaluateQuery, div, component, this.path);
@@ -200,7 +202,7 @@ export async function convertDataviewQueries(
 	for (const queryBlock of matches) {
 		try {
 			const block = queryBlock[0];
-			const markdown = await compiler.DQLDataview(queryBlock[1]);
+			const markdown = await compiler.dataviewDQL(queryBlock[1]);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
 			logs({ settings, e: true }, e);
@@ -212,7 +214,7 @@ export async function convertDataviewQueries(
 	for (const queryBlock of dataviewJsMatches) {
 		try {
 			const block = queryBlock[0];
-			const markdown = await compiler.DataviewJS(queryBlock[1]);
+			const markdown = await compiler.dataviewJS(queryBlock[1]);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
 			logs({ settings, e: true }, e);
@@ -259,8 +261,8 @@ function removeDataviewQueries(
 	dataviewMarkdown: Literal,
 	frontmatterSettings: PropertiesConversion
 ): string {
-	const toString = dataviewMarkdown?.toString();
-	return frontmatterSettings.dataview && dataviewMarkdown && toString ? toString : "";
+	const toStr = dataviewMarkdown?.toString();
+	return frontmatterSettings.dataview && dataviewMarkdown && toStr ? toStr : "";
 }
 
 /**

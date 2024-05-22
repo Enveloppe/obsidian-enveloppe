@@ -53,7 +53,7 @@ export class GithubBranch extends FilesManagement {
 				i18next.t("publish.branch.success", { branchStatus: branch.status, repo: prop })
 			);
 			return branch.status === 201;
-		} catch (e) {
+		} catch (_e) {
 			// catch the old branch
 			try {
 				const allBranch = await this.octokit.request(
@@ -130,7 +130,7 @@ export class GithubBranch extends FilesManagement {
 	async deleteBranchOnRepo(prop: Properties): Promise<boolean> {
 		try {
 			const branch = await this.octokit.request(
-				"DELETE" + " /repos/{owner}/{repo}/git/refs/heads/" + this.branchName,
+				`DELETE /repos/{owner}/{repo}/git/refs/heads/${this.branchName}`,
 				{
 					owner: prop.owner,
 					repo: prop.repo,
@@ -161,8 +161,11 @@ export class GithubBranch extends FilesManagement {
 				{
 					owner: prop.owner,
 					repo: prop.repo,
+					// biome-ignore lint/style/useNamingConvention: hey, say that to github!
 					pull_number: pullRequestNumber,
+					// biome-ignore lint/style/useNamingConvention: hey, say that to github!
 					commit_title: commitMsg,
+					// biome-ignore lint/style/useNamingConvention: hey, say that to github!
 					merge_method: "squash",
 				}
 			);

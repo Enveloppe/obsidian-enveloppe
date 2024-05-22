@@ -125,7 +125,7 @@ export function addToYaml(
 				exists ? text.slice(contentStart) : text
 			}`;
 		}
-	} catch (e) {
+	} catch (_e) {
 		new Notice(i18next.t("error.parseYaml"));
 		return text; //not a valid yaml, skipping
 	}

@@ -223,10 +223,12 @@ export default class GithubPublisher extends Plugin {
 		const oldSettings = this.settings;
 		await migrateSettings(oldSettings as unknown as OldSettings, this);
 
-		this.branchName =
-			this.app.vault.getName().replaceAll(" ", "-").replaceAll(".", "-") +
-			"-" +
-			new Date().toLocaleDateString("en-US").replace(/\//g, "-");
+		this.branchName = `${this.app.vault
+			.getName()
+			.replaceAll(" ", "-")
+			.replaceAll(".", "-")}-${new Date()
+			.toLocaleDateString("en-US")
+			.replace(/\//g, "-")}`;
 		this.addSettingTab(new GithubPublisherSettingsTab(this.app, this, this.branchName));
 		// verify rate limit
 
@@ -288,7 +290,7 @@ export default class GithubPublisher extends Plugin {
 		);
 
 		this.registerEvent(
-			this.app.workspace.on("editor-menu", (menu, editor, view) => {
+			this.app.workspace.on("editor-menu", (menu, _editor, view) => {
 				if (view.file) addMenuFile(this, view.file, this.branchName, menu);
 			})
 		);
@@ -348,7 +350,7 @@ export default class GithubPublisher extends Plugin {
 				DEFAULT_SETTINGS,
 				loadedData
 			) as unknown as GitHubPublisherSettings;
-		} catch (e) {
+		} catch (_e) {
 			console.warn(
 				"[Github Publisher] Error while deep merging settings, using default loading method"
 			);
