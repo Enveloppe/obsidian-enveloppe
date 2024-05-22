@@ -1,16 +1,22 @@
 import {
 	FIND_REGEX,
 	FolderSettings,
-	GitHubPublisherSettings,
-	LinkedNotes,
-	MultiProperties,
-	Properties,
-	PropertiesConversion,
-	Repository,
+	type GitHubPublisherSettings,
+	type LinkedNotes,
+	type MultiProperties,
+	type Properties,
+	type PropertiesConversion,
+	type Repository,
 } from "@interfaces";
-import { FrontMatterCache, normalizePath, TFile, TFolder, Vault } from "obsidian";
+import {
+	type FrontMatterCache,
+	normalizePath,
+	type TFile,
+	TFolder,
+	type Vault,
+} from "obsidian";
 import { createRegexFromText } from "src/conversion/find_and_replace_text";
-import GithubPublisher from "src/main";
+import type GithubPublisher from "src/main";
 import { logs } from "src/utils";
 import {
 	checkIfRepoIsInAnother,
@@ -183,7 +189,7 @@ export async function createRelativePath(
  * @return {string} original file name or index.md
  */
 
-function folderNoteIndexOBS(
+function folderNoteIndexObs(
 	file: TFile,
 	vault: Vault,
 	settings: GitHubPublisherSettings,
@@ -218,7 +224,7 @@ function createObsidianPath(
 	fileName: string,
 	prop?: Properties
 ): string {
-	fileName = folderNoteIndexOBS(file, vault, settings, fileName);
+	fileName = folderNoteIndexObs(file, vault, settings, fileName);
 
 	const defaultFolder =
 		prop?.path?.defaultName && prop.path.defaultName.length > 0
@@ -244,7 +250,7 @@ function createObsidianPath(
  * @returns {string} renamed file name or original file name
  */
 
-function folderNoteIndexYAML(
+function folderNoteIndexYaml(
 	fileName: string,
 	frontmatter: FrontMatterCache | undefined | null,
 	settings: GitHubPublisherSettings,
@@ -279,7 +285,7 @@ function createFrontmatterPath(
 	const uploadSettings = settings.upload;
 	const folderCategory = getCategory(frontmatter, settings, prop?.path);
 	const path = prop?.path;
-	const folderNote = folderNoteIndexYAML(fileName, frontmatter, settings, prop);
+	const folderNote = folderNoteIndexYaml(fileName, frontmatter, settings, prop);
 	const root =
 		path?.rootFolder && path.rootFolder.length > 0
 			? path.rootFolder
@@ -336,7 +342,7 @@ export function regexOnFileName(
 export function regexOnPath(path: string, settings: GitHubPublisherSettings): string {
 	const uploadSettings = settings.upload;
 	if (
-		uploadSettings.behavior === FolderSettings.fixed ||
+		uploadSettings.behavior === FolderSettings.Fixed ||
 		uploadSettings.replacePath.length === 0
 	)
 		return path;
@@ -410,11 +416,11 @@ export function getReceiptFolder(
 				return normalizePath(editedFileName);
 			}
 			return normalizePath(`${frontmatterPath}/${editedFileName}`);
-		} else if (targetRepo.path?.type === FolderSettings.yaml) {
+		} else if (targetRepo.path?.type === FolderSettings.Yaml) {
 			return normalizePath(
 				createFrontmatterPath(settings, frontmatter, fileName, targetRepo)
 			);
-		} else if (targetRepo.path?.type === FolderSettings.obsidian) {
+		} else if (targetRepo.path?.type === FolderSettings.Obsidian) {
 			return normalizePath(
 				createObsidianPath(file, settings, vault, fileName, targetRepo)
 			);
@@ -489,7 +495,7 @@ function createImagePath(
 		return result;
 	}
 	if (settings.embed.useObsidianFolder) {
-		if (behavior === FolderSettings.yaml) {
+		if (behavior === FolderSettings.Yaml) {
 			result.path =
 				rootFolder.length > 0 ? normalizePath(`${rootFolder}/${filePath}`) : filePath;
 		} else {

@@ -1,4 +1,4 @@
-import {
+import type {
 	Deleted,
 	GitHubPublisherSettings,
 	MetadataExtractor,
@@ -10,25 +10,25 @@ import {
 	UploadedFiles,
 } from "@interfaces";
 import { LOADING_ICON } from "@interfaces/icons";
-import { Octokit } from "@octokit/core";
+import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
 import {
 	arrayBufferToBase64,
-	FrontMatterCache,
-	MetadataCache,
+	type FrontMatterCache,
+	type MetadataCache,
 	normalizePath,
 	Notice,
 	TFile,
 	TFolder,
-	Vault,
+	type Vault,
 } from "obsidian";
 import { mainConverting } from "src/conversion";
 import { convertToHTMLSVG } from "src/conversion/compiler/excalidraw";
 import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
 import { deleteFromGithub } from "src/GitHub/delete";
 import { FilesManagement } from "src/GitHub/files";
-import GithubPublisher from "src/main";
+import type GithubPublisher from "src/main";
 import { logs, noticeMobile, notif, notifError } from "src/utils";
 import {
 	checkEmptyConfiguration,
@@ -527,8 +527,9 @@ export default class Publisher {
 			for (const file of Object.values(metadataExtractor)) {
 				if (file) {
 					const contents = await this.vault.adapter.read(file);
-					const path =
-						this.settings.upload.metadataExtractorPath + "/" + file.split("/").pop();
+					const path = `${this.settings.upload.metadataExtractorPath}/${file
+						.split("/")
+						.pop()}`;
 					prop = Array.isArray(prop) ? prop : [prop];
 					for (const repo of prop) {
 						await this.uploadText(contents, path, file.split("/").pop(), repo);
@@ -556,11 +557,13 @@ export default class Publisher {
 			{
 				owner: prop.owner,
 				repo: prop.repo,
+				// biome-ignore lint/style/useNamingConvention: GitHub API :(
 				workflow_id: prop.workflowName,
 				ref: prop.branch,
 			}
 		);
 		while (!finished) {
+			// biome-ignore lint/correctness/noUndeclaredVariables: directly build with obsidianAPI
 			await sleep(10000);
 			const workflowGet = await octokit.request(
 				"GET /repos/{owner}/{repo}/actions/runs",
@@ -652,7 +655,7 @@ export default class Publisher {
 								);
 						}
 					}
-				} catch (e) {
+				} catch (_e) {
 					newLinkedFiles.push(file);
 				}
 				//pass non image file as they are updated basically by GitHub with checking the content (basic git behavior)

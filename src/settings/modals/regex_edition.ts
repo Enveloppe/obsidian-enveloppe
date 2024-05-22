@@ -1,13 +1,13 @@
 import {
 	FolderSettings,
-	GitHubPublisherSettings,
-	OverrideAttachments,
-	RegexReplace,
-	TextCleaner,
+	type GitHubPublisherSettings,
+	type OverrideAttachments,
+	type RegexReplace,
+	type TextCleaner,
 	TypeOfEditRegex,
 } from "@interfaces";
 import i18next from "i18next";
-import { App, Modal, Notice, Setting } from "obsidian";
+import { type App, Modal, Notice, Setting } from "obsidian";
 import { escapeRegex } from "src/conversion/links";
 
 function isRegexValid(regexString: string) {
@@ -188,10 +188,10 @@ export class ModalRegexFilePathName extends Modal {
 
 	classValue(allRegex: RegexReplace[]) {
 		this.settings.upload.replacePath = allRegex.filter((regex) => {
-			return regex.type === TypeOfEditRegex.path;
+			return regex.type === TypeOfEditRegex.Path;
 		});
 		this.settings.upload.replaceTitle = allRegex.filter((regex) => {
-			return regex.type === TypeOfEditRegex.title;
+			return regex.type === TypeOfEditRegex.Title;
 		});
 	}
 
@@ -201,7 +201,7 @@ export class ModalRegexFilePathName extends Modal {
 	): { value: string; isForbidden: boolean } {
 		const regexSpecialDontExclude = /\/(.*)(\\[dwstrnvfb0cxup])(.*)\//i;
 		let onWhat =
-			type === TypeOfEditRegex.path
+			type === TypeOfEditRegex.Path
 				? i18next.t("common.path.folder")
 				: i18next.t("common.path.file");
 		onWhat = onWhat.toLowerCase();
@@ -221,7 +221,7 @@ export class ModalRegexFilePathName extends Modal {
 			isForbidden = true;
 		} else if (
 			value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/) &&
-			type === TypeOfEditRegex.title &&
+			type === TypeOfEditRegex.Title &&
 			!value.match(regexSpecialDontExclude)
 		) {
 			new Notice(
@@ -232,7 +232,7 @@ export class ModalRegexFilePathName extends Modal {
 			);
 			value = "";
 			isForbidden = true;
-		} else if (type === TypeOfEditRegex.path) {
+		} else if (type === TypeOfEditRegex.Path) {
 			if (value.match(/[\\><:"|?*]/) && !value.match(/^\/(.*)\/[gmisuvdy]*$/)) {
 				new Notice(
 					i18next.t("settings.regexReplacing.forbiddenValue", {
@@ -259,7 +259,7 @@ export class ModalRegexFilePathName extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 		contentEl.addClasses(["github-publisher", "modals", "regex", "file-path-name"]);
-		if (this.settings.upload.behavior === FolderSettings.fixed) {
+		if (this.settings.upload.behavior === FolderSettings.Fixed) {
 			contentEl.createEl("h2", {
 				text: i18next.t("settings.regexReplacing.modal.title.only"),
 			});
@@ -275,12 +275,12 @@ export class ModalRegexFilePathName extends Modal {
 		}
 		this.settings.upload.replacePath.forEach((title) => {
 			if (!title.type) {
-				title.type = TypeOfEditRegex.path;
+				title.type = TypeOfEditRegex.Path;
 			}
 		});
 		this.settings.upload.replaceTitle.forEach((title) => {
 			if (!title.type) {
-				title.type = TypeOfEditRegex.title;
+				title.type = TypeOfEditRegex.Title;
 			}
 		});
 
@@ -307,7 +307,7 @@ export class ModalRegexFilePathName extends Modal {
 				});
 			sett.controlEl.setAttribute("value", title.regex);
 			sett.controlEl.setAttribute("replace", title.replacement);
-			if (this.settings.upload.behavior !== FolderSettings.fixed) {
+			if (this.settings.upload.behavior !== FolderSettings.Fixed) {
 				sett.addDropdown((dropdown) => {
 					dropdown
 						.addOption("path", i18next.t("common.path.folder"))
@@ -336,7 +336,7 @@ export class ModalRegexFilePathName extends Modal {
 					this.allRegex.push({
 						regex: "",
 						replacement: "",
-						type: TypeOfEditRegex.title,
+						type: TypeOfEditRegex.Title,
 					});
 					this.onOpen();
 				});

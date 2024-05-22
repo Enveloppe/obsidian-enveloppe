@@ -1,6 +1,6 @@
-import { GitHubPublisherSettings } from "@interfaces/main";
+import type { GitHubPublisherSettings } from "@interfaces/main";
 import i18next from "i18next";
-import { App, Modal, Setting } from "obsidian";
+import { type App, Modal, Setting } from "obsidian";
 
 export class AutoCleanPopup extends Modal {
 	settings: GitHubPublisherSettings;

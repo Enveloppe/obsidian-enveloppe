@@ -1,4 +1,4 @@
-import {
+import type {
 	GitHubPublisherSettings,
 	LinkedNotes,
 	MultiProperties,
@@ -6,19 +6,19 @@ import {
 } from "@interfaces";
 import i18next from "i18next";
 import {
-	FrontMatterCache,
+	type FrontMatterCache,
 	getFrontMatterInfo,
-	MetadataCache,
+	type MetadataCache,
 	Notice,
 	parseFrontMatterTags,
 	parseYaml,
 	stringifyYaml,
-	TFile,
+	type TFile,
 } from "obsidian";
 import { convertDataviewQueries } from "src/conversion/compiler/dataview";
 import { bakeEmbeds, convertInlineDataview } from "src/conversion/compiler/embeds";
 import { convertToInternalGithub, convertWikilinks } from "src/conversion/links";
-import GithubPublisher from "src/main";
+import type GithubPublisher from "src/main";
 import { notif } from "src/utils";
 import { isFolderNote } from "src/utils/data_validation_test";
 
@@ -52,7 +52,6 @@ export function addHardLineBreak(
 	}
 }
 
-//eslint-disable-next-line @typescript-eslint/no-explicit-any
 function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: any) {
 	if (yaml.tag) {
 		try {
@@ -125,7 +124,7 @@ export function addToYaml(
 				exists ? text.slice(contentStart) : text
 			}`;
 		}
-	} catch (e) {
+	} catch (_e) {
 		new Notice(i18next.t("error.parseYaml"));
 		return text; //not a valid yaml, skipping
 	}
@@ -133,7 +132,6 @@ export function addToYaml(
 	return text;
 }
 
-//eslint-disable-next-line @typescript-eslint/no-explicit-any
 function titleToYaml(yaml: any, properties: MultiProperties, file: TFile) {
 	const settings = properties.plugin.settings.upload.folderNote.addTitle;
 	if (!settings) {

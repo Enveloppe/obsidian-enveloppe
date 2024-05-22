@@ -1,6 +1,10 @@
-import { FolderSettings, GitHubPublisherSettings, Repository } from "@interfaces";
+import {
+	FolderSettings,
+	type GitHubPublisherSettings,
+	type Repository,
+} from "@interfaces";
 import i18next from "i18next";
-import { App, FuzzySuggestModal } from "obsidian";
+import { type App, FuzzySuggestModal } from "obsidian";
 import {
 	createLinkOnActiveFile,
 	deleteCommands,
@@ -11,7 +15,7 @@ import {
 	uploadAllNotes,
 	uploadNewNotes,
 } from "src/commands";
-import GithubPublisher from "src/main";
+import type GithubPublisher from "src/main";
 import { defaultRepo } from "src/utils/data_validation_test";
 
 interface GithubPublisherCommands {
@@ -45,8 +49,7 @@ export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
 	getItemText(item: Repository): string {
 		return item.smartKey;
 	}
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	onChooseItem(item: Repository, evt: MouseEvent | KeyboardEvent): void {
+	onChooseItem(item: Repository, _evt: MouseEvent | KeyboardEvent): void {
 		new SuggestOtherRepoCommandsModal(
 			this.plugin.app,
 			this.plugin,
@@ -122,8 +125,7 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 	getItemText(item: Repository): string {
 		return item.smartKey;
 	}
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	onChooseItem(item: Repository, evt: MouseEvent | KeyboardEvent): void {
+	onChooseItem(item: Repository, _evt: MouseEvent | KeyboardEvent): void {
 		this.onSubmit(item);
 	}
 }
@@ -180,7 +182,7 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 		}
 		if (
 			this.settings.upload.autoclean.enable &&
-			this.settings.upload.behavior !== FolderSettings.fixed
+			this.settings.upload.behavior !== FolderSettings.Fixed
 		) {
 			cmd.push({
 				commands: "deleteUnsharedDeletedNotes",
@@ -192,8 +194,7 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 	getItemText(item: GithubPublisherCommands): string {
 		return item.name;
 	}
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	onChooseItem(item: GithubPublisherCommands, evt: MouseEvent | KeyboardEvent): void {
+	onChooseItem(item: GithubPublisherCommands, _evt: MouseEvent | KeyboardEvent): void {
 		switch (item.commands) {
 			case "shareAllMarkedNotes":
 				uploadAllNotes(this.plugin, this.repo, this.branchName);

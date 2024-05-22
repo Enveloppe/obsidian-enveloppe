@@ -1,18 +1,19 @@
 import {
-	FolderSettings,
-	GithubTiersVersion,
-	TextCleaner,
+	type FolderSettings,
+	type GithubTiersVersion,
+	type TextCleaner,
 	TOKEN_PATH,
 	TypeOfEditRegex,
 } from "@interfaces";
 import i18next from "i18next";
 import { normalizePath } from "obsidian";
-import GithubPublisher from "src/main";
+import type GithubPublisher from "src/main";
 import { createTokenPath, logs } from "src/utils";
 
 export interface OldSettings {
 	githubRepo: string;
 	githubName: string;
+	// biome-ignore lint/style/useNamingConvention: it's the migration from old settings, so we keep the old name with the typo
 	GhToken: string;
 	githubBranch: string;
 	shareKey: string;
@@ -87,10 +88,11 @@ async function migrateReplaceTitle(plugin: GithubPublisher) {
 }
 
 async function migrateSubFolder(plugin: GithubPublisher) {
-	//@ts-ignore
 	if (
+		//@ts-ignore
 		plugin.settings.upload.subFolder &&
 		!plugin.settings.upload.replacePath.find(
+			//@ts-ignore
 			(e) => e.regex === `/${plugin.settings.upload.subFolder}`
 		)
 	) {
@@ -99,9 +101,9 @@ async function migrateSubFolder(plugin: GithubPublisher) {
 		if (plugin.settings.upload.subFolder.length > 0) {
 			plugin.settings.upload.replacePath.push({
 				//@ts-ignore
-				regex: "/" + plugin.settings.upload.subFolder,
+				regex: `/${plugin.settings.upload.subFolder}`,
 				replacement: "",
-				type: TypeOfEditRegex.path,
+				type: TypeOfEditRegex.Path,
 			});
 		}
 		//delete plugin.settings.upload.subFolder from settings;
@@ -115,7 +117,7 @@ async function migrateCensor(plugin: GithubPublisher) {
 	for (const censor of plugin.settings.conversion.censorText) {
 		if (censor.flags) {
 			//enclose regex in / / and add flags
-			censor.entry = "/" + censor.entry + "/" + censor.flags;
+			censor.entry = `/${censor.entry}/${censor.flags}`;
 			delete censor.flags;
 			await plugin.saveSettings();
 		}
@@ -178,11 +180,13 @@ export async function migrateToken(
 	if (tokenPath.endsWith(".json")) {
 		const envToken = repo
 			? {
+					// biome-ignore lint/style/useNamingConvention: it's a constant
 					GITHUB_PUBLISHER_REPOS: {
 						[repo]: token,
 					},
 				}
 			: {
+					// biome-ignore lint/style/useNamingConvention: it's a constant
 					GITHUB_PUBLISHER_TOKEN: token,
 				};
 		if (!exists) {
@@ -221,13 +225,13 @@ async function migrateOtherRepository(plugin: GithubPublisher) {
 	const otherRepo = plugin.settings.github?.otherRepo ?? [];
 	for (const repo of otherRepo) {
 		const workflow = {
-			//@ts-ignore
 			name:
-				plugin.settings.github.worflow?.workflowName ??
+				//@ts-ignore
+				plugin.settings.github.workflow?.workflowName ??
 				plugin.settings.github.workflow.name,
-			//@ts-ignore
 			commitMessage:
-				plugin.settings.github.worflow?.customCommitMsg ??
+				//@ts-ignore
+				plugin.settings.github.workflow?.commitMessage ??
 				plugin.settings.github.workflow.commitMessage,
 		};
 		if (!repo.workflow) {
@@ -315,14 +319,14 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 				{
 					regex: old.frontmatterTitleRegex,
 					replacement: old.frontmatterTitleReplacement,
-					type: TypeOfEditRegex.title,
+					type: TypeOfEditRegex.Title,
 				},
 			],
 			replacePath: [
 				{
 					regex: old.subFolder,
 					replacement: "",
-					type: TypeOfEditRegex.path,
+					type: TypeOfEditRegex.Path,
 				},
 			],
 			autoclean: {
@@ -391,8 +395,10 @@ async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
 	//@ts-ignore
 	const token = old.GhToken
 		? old.GhToken
-		: plugin.settings.github.token
-			? plugin.settings.github.token
+		: //@ts-ignore
+			plugin.settings.github.token
+			? //@ts-ignore
+				plugin.settings.github.token
 			: undefined;
 	await migrateToken(plugin, token);
 	await plugin.saveSettings();

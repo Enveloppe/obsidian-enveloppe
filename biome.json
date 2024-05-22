@@ -13,6 +13,19 @@
 				"noUselessCatch": "error",
 				"noWith": "error"
 			},
+			"style": {
+				"noVar": "error",
+				"useFilenamingConvention": "error",
+				"useImportType": "error",
+				"useNamingConvention": {
+					"level": "warn",
+					"options": {
+						"strictCase": false
+					}
+				},
+				"useTemplate": "warn",
+				"useConst": "error"
+			},
 			"correctness": {
 				"noConstAssign": "error",
 				"noConstantCondition": "error",
@@ -70,7 +83,9 @@
 		},
 		"ignore": [
 			"**/npm node_modules",
-			"**/build"
+			"**/build",
+			"**/dist",
+			"**/src/i18n/locales"
 		]
 	},
 	"overrides": [

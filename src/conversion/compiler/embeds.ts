@@ -6,24 +6,24 @@
  * Each function is modified to fit the needs of this plugin, but citation are done in the code for each function
  */
 
-import { GitHubPublisherSettings, LinkedNotes, MultiProperties } from "@interfaces";
+import type { GitHubPublisherSettings, LinkedNotes, MultiProperties } from "@interfaces";
 import {
-	App,
-	BlockSubpathResult,
-	CachedMetadata,
-	HeadingSubpathResult,
+	type App,
+	type BlockSubpathResult,
+	type CachedMetadata,
+	type HeadingSubpathResult,
 	parseLinktext,
 	resolveSubpath,
-	TFile,
+	type TFile,
 } from "obsidian";
-import { getAPI, Link } from "obsidian-dataview";
+import { getAPI, type Link } from "obsidian-dataview";
 import { addToYaml } from "src/conversion";
 import {
 	createRelativePath,
 	getTitleField,
 	regexOnFileName,
 } from "src/conversion/file_path";
-import GithubPublisher from "src/main";
+import type GithubPublisher from "src/main";
 import { isShared } from "src/utils/data_validation_test";
 
 /**
@@ -188,7 +188,7 @@ export async function bakeEmbeds(
 
 		const replaceTarget = async (replacement: string) => {
 			if (settings.embed.bake?.textAfter) {
-				let textAfter = await changeURL(
+				let textAfter = await changeUrl(
 					settings.embed.bake?.textAfter,
 					properties,
 					linked,
@@ -200,7 +200,7 @@ export async function bakeEmbeds(
 				replacement = `${replacement}${newLine}${textAfter}`;
 			}
 			if (settings.embed.bake?.textBefore) {
-				let textBefore = await changeURL(
+				let textBefore = await changeUrl(
 					settings.embed.bake?.textBefore,
 					properties,
 					linked,
@@ -241,7 +241,7 @@ export async function bakeEmbeds(
  * @param linkedNotes {LinkedNotes[]} The linked notes embedded in the file
  * @returns {Promise<string>}
  */
-async function changeURL(
+async function changeUrl(
 	textToAdd: string,
 	properties: MultiProperties,
 	linked: TFile,

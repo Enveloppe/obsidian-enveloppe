@@ -1,22 +1,22 @@
 import {
-	Deleted,
+	type Deleted,
 	FIND_REGEX,
-	GitHubPublisherSettings,
-	ListEditedFiles,
-	MetadataExtractor,
-	MultiRepoProperties,
-	Properties,
+	type GitHubPublisherSettings,
+	type ListEditedFiles,
+	type MetadataExtractor,
+	type MultiRepoProperties,
+	type Properties,
 	TOKEN_PATH,
-	UploadedFiles,
+	type UploadedFiles,
 } from "@interfaces";
 import { ERROR_ICONS, HOURGLASS_ICON, SUCCESS_ICON } from "@interfaces/icons";
 import i18next from "i18next";
-import { App, normalizePath, Notice, Platform, TFile } from "obsidian";
+import { type App, normalizePath, Notice, Platform, TFile } from "obsidian";
 import slugify from "slugify";
 import { getReceiptFolder } from "src/conversion/file_path";
 import { createRegexFromText } from "src/conversion/find_and_replace_text";
-import Publisher from "src/GitHub/upload";
-import GithubPublisher from "src/main";
+import type Publisher from "src/GitHub/upload";
+import type GithubPublisher from "src/main";
 import { frontmatterFromFile } from "src/utils/parse_frontmatter";
 
 type LogsParameters = {
@@ -27,10 +27,7 @@ type LogsParameters = {
 
 /**
  * Create a notice message for the log
- * @param args {LogsParameters} the settings and the error type
- * @param {unknown[]} messages the message to display
  */
-//eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function notif(args: LogsParameters, ...messages: unknown[]) {
 	const { settings, e } = args;
 	if (settings.plugin?.noticeError) {
@@ -235,17 +232,17 @@ export async function getSettingsOfMetadataExtractor(
 		if (plugin.settings.allExceptMdFile.length > 0) {
 			//get file from plugins folder in .obsidian folder
 			//@ts-ignore
-			metadataExtractor.allExceptMdFile = path + "/" + plugin.settings.allExceptMdFile;
+			metadataExtractor.allExceptMdFile = `${path}/${plugin.settings.allExceptMdFile}`;
 		}
 		//@ts-ignore
 		if (plugin.settings["metadataFile"].length > 0) {
 			//@ts-ignore
-			metadataExtractor.metadataFile = path + "/" + plugin.settings.metadataFile;
+			metadataExtractor.metadataFile = `${path}/${plugin.settings.metadataFile}`;
 		}
 		//@ts-ignore
 		if (plugin.settings.tagFile.length > 0) {
 			//@ts-ignore
-			metadataExtractor.tagsFile = path + "/" + plugin.settings.tagFile;
+			metadataExtractor.tagsFile = `${path}/${plugin.settings.tagFile}`;
 		}
 		return metadataExtractor;
 	}
@@ -261,7 +258,7 @@ export async function getSettingsOfMetadataExtractor(
 function checkSlash(link: string): string {
 	const slash = link.match(/\/*$/);
 	if (slash && slash[0].length != 1) {
-		return link.replace(/\/*$/, "") + "/";
+		return `${link.replace(/\/*$/, "")}/`;
 	}
 	return link;
 }
@@ -454,12 +451,9 @@ async function publisherNotificationOneRepo(
 
 /**
  * Trim the object to remove the empty value
- * @param {{[p: string]: string}} obj
- * @return {any}
  */
-
 export function trimObject(obj: { [p: string]: string }) {
-	const trimmed = JSON.stringify(obj, (key, value) => {
+	const trimmed = JSON.stringify(obj, (_key, value) => {
 		if (typeof value === "string") {
 			return value.trim().toLowerCase();
 		}

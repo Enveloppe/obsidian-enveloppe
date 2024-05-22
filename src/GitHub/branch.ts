@@ -1,9 +1,9 @@
-import { Properties } from "@interfaces/main";
-import { Octokit } from "@octokit/core";
+import type { Properties } from "@interfaces/main";
+import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Notice } from "obsidian";
 import { FilesManagement } from "src/GitHub/files";
-import GithubPublisher from "src/main";
+import type GithubPublisher from "src/main";
 import { logs, notif } from "src/utils";
 
 export class GithubBranch extends FilesManagement {
@@ -53,7 +53,7 @@ export class GithubBranch extends FilesManagement {
 				i18next.t("publish.branch.success", { branchStatus: branch.status, repo: prop })
 			);
 			return branch.status === 201;
-		} catch (e) {
+		} catch (_e) {
 			// catch the old branch
 			try {
 				const allBranch = await this.octokit.request(
@@ -90,7 +90,7 @@ export class GithubBranch extends FilesManagement {
 
 	async pullRequestOnRepo(prop: Properties): Promise<number> {
 		try {
-			const PR = await this.octokit.request("POST /repos/{owner}/{repo}/pulls", {
+			const pr = await this.octokit.request("POST /repos/{owner}/{repo}/pulls", {
 				owner: prop.owner,
 				repo: prop.repo,
 				title: i18next.t("publish.branch.prMessage", { branchName: this.branchName }),
@@ -98,17 +98,17 @@ export class GithubBranch extends FilesManagement {
 				head: this.branchName,
 				base: prop.branch,
 			});
-			return PR.data.number;
+			return pr.data.number;
 		} catch (e) {
 			logs({ settings: this.settings, e: true }, e);
 			//trying to get the last open PR number
 			try {
-				const PR = await this.octokit.request("GET /repos/{owner}/{repo}/pulls", {
+				const pr = await this.octokit.request("GET /repos/{owner}/{repo}/pulls", {
 					owner: prop.owner,
 					repo: prop.repo,
 					state: "open",
 				});
-				return PR.data[0]?.number || 0;
+				return pr.data[0]?.number || 0;
 			} catch (e) {
 				// there is no open PR and impossible to create a new one
 				notif(
@@ -130,7 +130,7 @@ export class GithubBranch extends FilesManagement {
 	async deleteBranchOnRepo(prop: Properties): Promise<boolean> {
 		try {
 			const branch = await this.octokit.request(
-				"DELETE" + " /repos/{owner}/{repo}/git/refs/heads/" + this.branchName,
+				`DELETE /repos/{owner}/{repo}/git/refs/heads/${this.branchName}`,
 				{
 					owner: prop.owner,
 					repo: prop.repo,
@@ -161,8 +161,11 @@ export class GithubBranch extends FilesManagement {
 				{
 					owner: prop.owner,
 					repo: prop.repo,
+					// biome-ignore lint/style/useNamingConvention: hey, say that to github!
 					pull_number: pullRequestNumber,
+					// biome-ignore lint/style/useNamingConvention: hey, say that to github!
 					commit_title: commitMsg,
+					// biome-ignore lint/style/useNamingConvention: hey, say that to github!
 					merge_method: "squash",
 				}
 			);
@@ -203,8 +206,8 @@ export class GithubBranch extends FilesManagement {
 		try {
 			const pullRequest = await this.pullRequestOnRepo(prop);
 			if (prop.automaticallyMergePR && pullRequest !== 0) {
-				const PRSuccess = await this.mergePullRequestOnRepo(pullRequest, prop);
-				if (PRSuccess) {
+				const prSuccess = await this.mergePullRequestOnRepo(pullRequest, prop);
+				if (prSuccess) {
 					await this.deleteBranchOnRepo(prop);
 					return true;
 				}

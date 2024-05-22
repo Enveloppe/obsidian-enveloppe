@@ -1,7 +1,7 @@
-import { Repository } from "@interfaces";
+import type { Repository } from "@interfaces";
 import i18next from "i18next";
-import { Command, Notice } from "obsidian";
-import GithubPublisher from "src/main";
+import { type Command, Notice } from "obsidian";
+import type GithubPublisher from "src/main";
 import { checkRepositoryValidity } from "src/utils/data_validation_test";
 
 /**

@@ -5,14 +5,14 @@
 
 import {
 	FolderSettings,
-	GitHubPublisherSettings,
-	Path,
-	Properties,
-	PropertiesConversion,
-	Repository,
+	type GitHubPublisherSettings,
+	type Path,
+	type Properties,
+	type PropertiesConversion,
+	type Repository,
 } from "@interfaces";
-import { FrontMatterCache, normalizePath, TFile } from "obsidian";
-import GithubPublisher from "src/main";
+import { type FrontMatterCache, normalizePath, TFile } from "obsidian";
+import type GithubPublisher from "src/main";
 import merge from "ts-deepmerge";
 
 export function frontmatterSettingsRepository(
@@ -157,7 +157,7 @@ export function getProperties(
 			autoclean: settings.upload.autoclean.enable && settings.github.dryRun.enable,
 		},
 	};
-	if (settings.upload.behavior === FolderSettings.fixed) {
+	if (settings.upload.behavior === FolderSettings.Fixed) {
 		Properties.autoclean = false;
 	}
 	if (

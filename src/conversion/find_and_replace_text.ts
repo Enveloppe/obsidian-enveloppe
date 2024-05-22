@@ -1,4 +1,4 @@
-import { FIND_REGEX, GitHubPublisherSettings } from "@interfaces";
+import { FIND_REGEX, type GitHubPublisherSettings } from "@interfaces";
 import { escapeRegex } from "src/conversion/links";
 import { logs } from "src/utils";
 

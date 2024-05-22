@@ -1,4 +1,4 @@
-import { App, TFile } from "obsidian";
+import type { App, TFile } from "obsidian";
 
 export async function convertToHTMLSVG(file: TFile, app: App) {
 	try {

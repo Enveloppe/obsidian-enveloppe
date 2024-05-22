@@ -1,8 +1,8 @@
-import { GitHubPublisherSettings, Preset } from "@interfaces/main";
-import { Octokit } from "@octokit/core";
+import type { GitHubPublisherSettings, Preset } from "@interfaces/main";
+import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import {
-	App,
+	type App,
 	ButtonComponent,
 	FuzzySuggestModal,
 	Modal,
@@ -11,9 +11,9 @@ import {
 	Setting,
 	TextAreaComponent,
 } from "obsidian";
-import GithubPublisher from "src/main";
-import { GithubPublisherSettingsTab } from "src/settings";
-import { migrateSettings, OldSettings } from "src/settings/migrate";
+import type GithubPublisher from "src/main";
+import type { GithubPublisherSettingsTab } from "src/settings";
+import { migrateSettings, type OldSettings } from "src/settings/migrate";
 import { logs, notif } from "src/utils";
 
 export type SettingValue = number | string | boolean | unknown;
@@ -69,7 +69,7 @@ export class ImportModal extends Modal {
 			.setDesc(i18next.t("modals.import.desc"));
 
 		new Setting(contentEl).then((setting) => {
-			// Build an error message container
+			// biome-ignore lint/correctness/noUndeclaredVariables: createSpan is a function builded with the plugin
 			const errorSpan = createSpan({
 				cls: "github-publisher-import-error",
 				text: i18next.t("modals.import.error.span"),
@@ -174,13 +174,11 @@ export class ImportModal extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 		this.settingsPage.empty();
-		// @ts-ignore
 		let openedTab =
-			this.plugin.settings.tabsID ??
-			document.querySelector(".settings-tab.settings-tab-active")
-				? document.querySelector(".settings-tab.settings-tab-active .settings-tab-name")
-						.innerText
-				: i18next.t("settings.github.title");
+			this.plugin.settings.tabsId ??
+			document.querySelector(".settings-tab.settings-tab-active .settings-tab-name")
+				?.textContent ??
+			i18next.t("settings.github.title");
 		openedTab = openedTab.trim();
 		switch (openedTab) {
 			case i18next.t("settings.github.title"):
@@ -297,7 +295,6 @@ export class ExportModal extends Modal {
 								output
 							);
 							//open the file with default application
-							//eslint-disable-next-line
 							(this.app as any).openWithDefaultApp(
 								`${this.app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`
 							);
@@ -351,7 +348,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	onChooseItem(item: Preset, evt: MouseEvent | KeyboardEvent): void {
+	onChooseItem(item: Preset, _evt: MouseEvent | KeyboardEvent): void {
 		const presetSettings = item.settings;
 		logs({ settings: presetSettings }, "onChooseItem");
 		try {
@@ -376,7 +373,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 			this.settings.github.user = original.github.user;
 			this.settings.github.otherRepo = original.github.otherRepo;
 			this.settings.github.rateLimit = original.github.rateLimit;
-			this.settings.tabsID = original.tabsID;
+			this.settings.tabsId = original.tabsId;
 
 			this.plugin.saveSettings();
 			this.page.renderSettingsPage("github-configuration");

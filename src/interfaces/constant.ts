@@ -1,5 +1,5 @@
 import { FolderSettings, GithubTiersVersion } from "src/interfaces/enum";
-import { GitHubPublisherSettings } from "src/interfaces/main";
+import type { GitHubPublisherSettings } from "src/interfaces/main";
 
 /** Find a regex encapsuled in // */
 export const FIND_REGEX = /^\/(.*)\/[igmsuy]*$/;
@@ -22,7 +22,7 @@ export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 		},
 		tokenPath: TOKEN_PATH,
 		api: {
-			tiersForApi: GithubTiersVersion.free,
+			tiersForApi: GithubTiersVersion.Free,
 			hostname: "",
 		},
 		workflow: {
@@ -34,7 +34,7 @@ export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 		rateLimit: 0,
 	},
 	upload: {
-		behavior: FolderSettings.fixed,
+		behavior: FolderSettings.Fixed,
 		defaultName: "",
 		rootFolder: "",
 		yamlFolderKey: "",

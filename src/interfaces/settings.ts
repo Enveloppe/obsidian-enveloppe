@@ -1,5 +1,5 @@
-import { FolderSettings, GithubTiersVersion } from "src/interfaces/enum";
-import {
+import type { FolderSettings, GithubTiersVersion } from "src/interfaces/enum";
+import type {
 	OverrideAttachments,
 	RegexReplace,
 	Repository,
