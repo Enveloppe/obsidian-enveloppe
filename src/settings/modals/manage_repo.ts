@@ -47,7 +47,6 @@ class SetClassSuggester extends AbstractInputSuggest<TFile> {
 		});
 	}
 
-	//eslint-disable-next-line @typescript-eslint/no-unused-vars
 	selectSuggestion(value: TFile, _evt: MouseEvent | KeyboardEvent): void {
 		this.onSubmit(value);
 		this.inputEl.value = value.path;
