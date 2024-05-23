@@ -16,7 +16,6 @@ import {
 	getAPI,
 	isPluginEnabled,
 	type Literal,
-	type Success,
 } from "obsidian-dataview";
 import {
 	convertToInternalGithub,
@@ -119,9 +118,8 @@ class DataviewCompiler {
 	 */
 
 	async inlineDQLDataview(query: string) {
-		let dataviewResult = this.dvApi.evaluateInline(query, this.path);
+		const dataviewResult = this.dvApi.evaluateInline(query, this.path);
 		if (dataviewResult.successful) {
-			dataviewResult = dataviewResult as Success<Literal, string>;
 			return removeDataviewQueries(
 				dataviewResult.value,
 				this.properties.frontmatter.general
