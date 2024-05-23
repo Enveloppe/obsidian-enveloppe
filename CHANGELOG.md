@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.2.5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.5-1...7.2.5) (2024-05-23)
+
+
+### Bug Fixes
+
+* merging frontmatter shouldn't overriding key if set to undefined ([1d991b7](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/1d991b7fae1d0c67abdf0be64fc1015a822dc512))
+
 ## [7.2.4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.3...7.2.4) (2024-05-11)
 
 
