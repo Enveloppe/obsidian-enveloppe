@@ -85,7 +85,13 @@ export function getRepoSharedKey(
 		return defaultRepo(settings);
 	} else if (!frontmatter) return null;
 	const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
-	frontmatter = linkedFrontmatter ? merge(linkedFrontmatter, frontmatter) : frontmatter;
+	frontmatter = linkedFrontmatter
+		? merge.withOptions(
+				{ allowUndefinedOverrides: false },
+				linkedFrontmatter,
+				frontmatter
+			)
+		: frontmatter;
 	return (
 		allOtherRepo.find((repo) => frontmatter?.[repo.shareKey]) ?? defaultRepo(settings)
 	);
@@ -200,7 +206,9 @@ export function multipleSharedKey(
 	}
 	if (!frontmatter) return keysInFile;
 	const linkedRepo = getLinkedFrontmatter(frontmatter, file, plugin);
-	frontmatter = linkedRepo ? merge(linkedRepo, frontmatter) : frontmatter;
+	frontmatter = linkedRepo
+		? merge.withOptions({ allowUndefinedOverrides: false }, linkedRepo, frontmatter)
+		: frontmatter;
 	const allKey = settings.github.otherRepo.map((repo) => repo.shareKey);
 	allKey.push(settings.plugin.shareKey);
 

@@ -81,14 +81,12 @@ export function getFrontmatterSettings(
 	settingsConversion = settingsLink(frontmatter, settingsConversion);
 	settingsConversion = settingsEmbed(frontmatter, settingsConversion);
 	settingsConversion = settingAttachment(frontmatter, settingsConversion);
-
 	if (frontmatter.dataview != undefined) {
 		settingsConversion.dataview = frontmatter.dataview;
 	}
 	if (frontmatter.hardbreak != undefined) {
 		settingsConversion.hardbreak = frontmatter.hardbreak;
 	}
-
 	return getFrontmatterSettingRepository(repo, frontmatter, settingsConversion);
 }
 /**
@@ -128,7 +126,11 @@ export function getProperties(
 	let github = repository ?? settings.github;
 	if (checkSet && repository && plugin.repositoryFrontmatter[repository.smartKey]) {
 		const setFrontmatter = plugin.repositoryFrontmatter[repository.smartKey];
-		frontmatter = merge(setFrontmatter ?? {}, frontmatter ?? {});
+		frontmatter = merge.withOptions(
+			{ allowUndefinedOverrides: false },
+			setFrontmatter ?? {},
+			frontmatter ?? {}
+		);
 	}
 	if (
 		frontmatter &&
@@ -509,22 +511,21 @@ function getFrontmatterSettingRepository(
 	frontmatter: FrontMatterCache | null | undefined,
 	frontConvert: PropertiesConversion
 ) {
-	if (!repository) return frontConvert;
+	if (!repository || !repository?.smartKey) return frontConvert;
 	const smartKey = repository.smartKey;
 	frontConvert = settingsLink(frontmatter, frontConvert, smartKey);
 	frontConvert = settingAttachment(frontmatter, frontConvert, smartKey);
 	frontConvert = settingsEmbed(frontmatter, frontConvert, smartKey);
-	const key = smartKey ? "" : `${smartKey}.`;
+	const key = `${smartKey}.`;
 	if (frontmatter?.[`${key}dataview`] != undefined) {
-		frontConvert.dataview = frontmatter[`${smartKey}.dataview`];
+		frontConvert.dataview = frontmatter[`${smartKey}dataview`];
 	}
 	if (frontmatter?.[`${key}hardbreak`] != undefined) {
-		frontConvert.hardbreak = frontmatter[`${smartKey}.hardbreak`];
+		frontConvert.hardbreak = frontmatter[`${smartKey}hardbreak`];
 	}
 	if (frontmatter?.[`${key}includeLinks`] != undefined) {
-		frontConvert.includeLinks = frontmatter[`${smartKey}.includeLinks`];
+		frontConvert.includeLinks = frontmatter[`${smartKey}includeLinks`];
 	}
-
 	return frontConvert;
 }
 
@@ -568,7 +569,8 @@ export function frontmatterFromFile(
 	if (file) {
 		frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
-		frontmatter = merge(
+		frontmatter = merge.withOptions(
+			{ allowUndefinedOverrides: false },
 			setFrontmatter ?? {},
 			linkedFrontmatter ?? {},
 			frontmatter ?? {}

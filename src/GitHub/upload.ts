@@ -165,7 +165,11 @@ export default class Publisher {
 		const shareFiles = new FilesManagement(this.octokit, this.plugin);
 		let frontmatter = frontmatterFromFile(file, this.plugin, null);
 		if (sourceFrontmatter && frontmatter)
-			frontmatter = merge(sourceFrontmatter, frontmatter);
+			frontmatter = merge.withOptions(
+				{ allowUndefinedOverrides: false },
+				sourceFrontmatter,
+				frontmatter
+			);
 		const prop = getProperties(this.plugin, repo.repository, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(prop, this.plugin);
 		repo.frontmatter = prop;
@@ -185,11 +189,19 @@ export default class Publisher {
 				this.settings,
 				repo.repository
 			);
+
 			const frontmatterRepository = frontmatterSettingsRepository(
 				this.plugin,
 				repo.repository
 			);
-			const frontmatterSettings = merge(
+			console.warn(
+				"REPOSITORY",
+				frontmatterRepository,
+				"FILE",
+				frontmatterSettingsFromFile
+			);
+			const frontmatterSettings = merge.withOptions(
+				{ allowUndefinedOverrides: false },
 				frontmatterRepository,
 				frontmatterSettingsFromFile
 			);

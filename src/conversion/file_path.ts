@@ -122,7 +122,8 @@ export async function createRelativePath(
 		properties.plugin,
 		shortRepo
 	);
-	const frontmatterSettings = merge(
+	const frontmatterSettings = merge.withOptions(
+		{ allowUndefinedOverrides: false },
 		frontmatterSettingsFromRepository,
 		frontmatterSettingsFromFile
 	);

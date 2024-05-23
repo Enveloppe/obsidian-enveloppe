@@ -1,6 +1,12 @@
 import type { MultiRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
-import { type Command, type FrontMatterCache, Notice, Platform, type TFile } from "obsidian";
+import {
+	type Command,
+	type FrontMatterCache,
+	Notice,
+	Platform,
+	type TFile,
+} from "obsidian";
 import type { GithubBranch } from "src/GitHub/branch";
 import type GithubPublisher from "src/main";
 import { ListChangedFiles } from "src/settings/modals/list_changed";
@@ -72,7 +78,11 @@ export async function shareOneNote(
 	const app = PublisherManager.plugin.app;
 	let frontmatter = frontmatterFromFile(file, PublisherManager.plugin, null);
 	if (sourceFrontmatter && frontmatter)
-		frontmatter = merge(sourceFrontmatter, frontmatter);
+		frontmatter = merge.withOptions(
+			{ allowUndefinedOverrides: false },
+			sourceFrontmatter,
+			frontmatter
+		);
 	try {
 		const prop = getProperties(plugin, repository, frontmatter);
 		let isValid: boolean;
