@@ -113,7 +113,7 @@
 		"enabled": true,
 		"indentStyle": "tab",
 		"indentWidth": 2,
-		"lineWidth": 90
+		"lineWidth": 150
 	},
 	"javascript": {
 		"formatter": {
