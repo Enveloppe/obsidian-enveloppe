@@ -3,6 +3,7 @@ import dedent from "dedent";
 import i18next from "i18next";
 import { normalizePath, sanitizeHTMLToDom } from "obsidian";
 import { regexOnPath } from "src/conversion/file_path";
+import { DISCORD_ICON, DISCUSSION_ICON, DOCUMENTATION, GITHUB_ICON, ISSUE, TRANSLATION_ICON } from "../interfaces/icons";
 
 /**
  * Export the YAML help to create an example of yaml with the value based on the Settings
@@ -38,10 +39,7 @@ import { regexOnPath } from "src/conversion/file_path";
 
 export function KeyBasedOnSettings(settings: GitHubPublisherSettings): DocumentFragment {
 	const defaultPath = settings.upload.defaultName.length > 0 ? `${settings.upload.defaultName}` : "/";
-	let path =
-		settings.upload.behavior === FolderSettings.Yaml
-			? `${settings.upload.rootFolder.length > 0 ? settings.upload.rootFolder : ""}/${defaultPath}/file.md`
-			: `${defaultPath}/file.md`;
+	let path = settings.upload.behavior === FolderSettings.Yaml ? `${settings.upload.rootFolder.length > 0 ? settings.upload.rootFolder : ""}/${defaultPath}/file.md` : `${defaultPath}/file.md`;
 	path = normalizePath(regexOnPath(path, settings));
 	const rules = "token key atrule";
 	const comments = "token comment";
@@ -51,9 +49,7 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings): DocumentF
 		if (settings.upload.behavior === FolderSettings.Yaml) {
 			const defaultPath = settings.upload.defaultName.length > 0 ? `${settings.upload.defaultName}` : "/";
 			return dedent(`
-			<br><span class="${rules}">${
-				settings.upload.yamlFolderKey.length > 0 ? `${settings.upload.yamlFolderKey}: ` : "category: "
-			}</span><span class="${str}">${normalizePath(defaultPath)}</span>
+			<br><span class="${rules}">${settings.upload.yamlFolderKey.length > 0 ? `${settings.upload.yamlFolderKey}: ` : "category: "}</span><span class="${str}">${normalizePath(defaultPath)}</span>
 			`);
 		}
 		return "";
@@ -77,7 +73,6 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings): DocumentF
 		<span class="${rules}">includeLinks</span>: <span class="${boolean}">${settings.embed.sendSimpleLinks}</span>
 	`);
 	if (settings.github.otherRepo.length > 0) {
-		console.log(settings.github.otherRepo[0].smartKey);
 		const smartkey = settings.github.otherRepo[0].smartKey.length > 0 ? settings.github.otherRepo[0].smartKey : "smartkey";
 		html += dedent(`<br><span class="${rules}">shortRepo</span>: <span class="${str}">${smartkey}</span>`);
 	}
@@ -87,9 +82,7 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings): DocumentF
 		<span class="${rules}">  branch</span>: <span class="${str}">${settings.github.branch}</span>
 		<span class="${rules}">  autoclean</span>: <span class="${boolean}">${settings.upload.autoclean.enable}</span>
 		<span class="${rules}">copylink</span>:
-		<span class="${rules}">  base</span>: <span class="${str}">${
-			settings.plugin.copyLink.links.length > 0 ? settings.plugin.copyLink.links : `https://${settings.github.repo}.github.io/${settings.github.repo}`
-		}</span>
+		<span class="${rules}">  base</span>: <span class="${str}">${settings.plugin.copyLink.links.length > 0 ? settings.plugin.copyLink.links : `https://${settings.github.repo}.github.io/${settings.github.repo}`}</span>
 	`);
 	const removePart = settings.plugin.copyLink.removePart.map((val) => `"${val}"`).join(", ");
 	if (removePart.length > 0) {
@@ -105,19 +98,13 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings): DocumentF
 export function help(settings: GitHubPublisherSettings) {
 	const els = dedent(`
 		<ul>
-			<li><code class="code-title">${settings.plugin.shareKey}</code>${i18next.t("common.points")}${i18next.t(
-				"settings.help.frontmatter.share.title"
-			)}
+			<li><code class="code-title">${settings.plugin.shareKey}</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.share.title")}
 			<ol>${i18next.t("settings.help.frontmatter.share.other")}</ol>
 			<li><code class="code-title">path</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.path")}</li>
 			<li><code class="code-title">links</code>${i18next.t("common.points")}
 				<ul>
-					<li><code>mdlinks</code>${i18next.t("common.points")}${i18next.t(
-						"settings.help.frontmatter.mdlinks"
-					)} <code>[[markdown|alias]]</code>${i18next.t("common.in")} <code>[alias](markdown)</code></li>
-					<li><code>convert</code>${i18next.t("common.points")}${i18next.t(
-						"settings.help.frontmatter.convert.enableOrDisable"
-					)} <code>[[link]]</code>${i18next.t("common.or")} <code>[](link)</code>${i18next.t("settings.help.frontmatter.convert.syntax")}</li>
+					<li><code>mdlinks</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.mdlinks")} <code>[[markdown|alias]]</code>${i18next.t("common.in")} <code>[alias](markdown)</code></li>
+					<li><code>convert</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.convert.enableOrDisable")} <code>[[link]]</code>${i18next.t("common.or")} <code>[](link)</code>${i18next.t("settings.help.frontmatter.convert.syntax")}</li>
 					<li><code>internals</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.internals")}</li>
 					<li><code>nonShared</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.nonShared")}</li>
 				</ul>
@@ -144,9 +131,7 @@ export function help(settings: GitHubPublisherSettings) {
 			</li>
 			<li><code class="code-title">dataview</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.dataview")}</li>
 			<li><code class="code-title">hardbreak</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.hardBreak")}</li>
-			<li><code class="code-title">includeLinks</code>${i18next.t("common.points")}${i18next.t(
-				"settings.help.frontmatter.includeLinks"
-			)} <code>[[markdown]]</code> ${i18next.t("common.or")} <code>[](markdown)</code></li>
+			<li><code class="code-title">includeLinks</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.includeLinks")} <code>[[markdown]]</code> ${i18next.t("common.or")} <code>[](markdown)</code></li>
 			<li><code class="code-title">shortRepo</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.shortRepo")}</li>
 			<li><code class="code-title">repo</code>${i18next.t("common.points")}
 				<ul>
@@ -156,9 +141,7 @@ export function help(settings: GitHubPublisherSettings) {
 					<li><code>autoclean</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.autoclean")}</li>
 				</ul>
 			</li>
-			<li><code class="code-title">${settings.upload.frontmatterTitle.key}</code>${i18next.t("common.points")}${i18next.t(
-				"settings.help.frontmatter.titleKey"
-			)}</li>
+			<li><code class="code-title">${settings.upload.frontmatterTitle.key}</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.titleKey")}</li>
 			<li><code class="code-title">baseLink</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.baselink.desc")}
 				<code class="code-title">copylink:</code>
 				<ul>
@@ -178,12 +161,13 @@ export function help(settings: GitHubPublisherSettings) {
 export function usefulLinks(): DocumentFragment {
 	const els = dedent(`
 		<ul>
-			<li><a href="${i18next.t("settings.help.usefulLinks.links")}>${i18next.t("settings.help.usefulLinks.documentation")}<a></li>
-			<li><a href="https://github.com/ObsidianPublisher/obsidian-github-publisher">${i18next.t("common.repository")}</a></li>
-			<li><a href="https://github.com/ObsidianPublisher/obsidian-github-publisher/issues">${i18next.t("settings.help.usefulLinks.issue")}<a></li>
-			<li><a href="https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions">${i18next.t("settings.help.usefulLinks.discussion")}</a></li>
-			<li><a href="https://discord.gg/6DyY779Nbn">Discord</a></li>
-			<li><a href="https://hosted.weblate.org/projects/obsidian-github-publisher/locales/">${i18next.t("settings.help.usefulLinks.translation")}</li>
+			<a href=${i18next.t("settings.help.usefulLinks.links")}>${DOCUMENTATION} ${i18next.t("settings.help.usefulLinks.documentation")}<a><br>
+			<a href="https://github.com/ObsidianPublisher/obsidian-github-publisher">${GITHUB_ICON} ${i18next.t("common.repository")}</a><br>
+			<a href="https://github.com/ObsidianPublisher/obsidian-github-publisher/issues">${ISSUE} ${i18next.t("settings.help.usefulLinks.issue")}<a><br>
+			<a href="https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions">${DISCUSSION_ICON} ${i18next.t("settings.help.usefulLinks.discussion")}</a><br>
+			<a href="https://discord.gg/6DyY779Nbn">${DISCORD_ICON} Discord</a><br>
+			<a href="https://hosted.weblate.org/projects/obsidian-github-publisher/locales/">${TRANSLATION_ICON} ${i18next.t("settings.help.usefulLinks.translation")}<a><br>
+		</ul>
 	`);
 	return sanitizeHTMLToDom(els);
 }
