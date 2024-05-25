@@ -29,7 +29,7 @@ jobs:
 
     release:
         if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && !inputs.bump)
-        uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-release.yaml@main
+        uses: mara-li/reusable-workflows/.github/workflows/obsidian-plugin-release.yaml@main
         needs: echo
         with:
             PLUGIN_NAME: "obsidian-mkdocs-publisher"
@@ -41,7 +41,7 @@ jobs:
     bump-version-and-release:
         if: ${{ inputs.bump }}
         needs: echo
-        uses: lisandra-dev/reusable-workflows/.github/workflows/obsidian-plugin-bump-version.yaml@main
+        uses: mara-li/reusable-workflows/.github/workflows/obsidian-plugin-bump-version.yaml@main
         with:
             PLUGIN_NAME: "obsidian-mkdocs-publisher"
             STYLE: true
