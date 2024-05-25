@@ -107,13 +107,21 @@
 			"include": [
 				"*.json"
 			]
+		},
+		{
+			"include": [
+				"src/settings/help.ts"
+			],
+			"formatter": {
+				"lineWidth": 320
+			}
 		}
 	],
 	"formatter": {
 		"enabled": true,
 		"indentStyle": "tab",
 		"indentWidth": 2,
-		"lineWidth": 150
+		"lineWidth": 90
 	},
 	"javascript": {
 		"formatter": {
