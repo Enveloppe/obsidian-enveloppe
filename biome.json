@@ -107,6 +107,14 @@
 			"include": [
 				"*.json"
 			]
+		},
+		{
+			"include": [
+				"src/settings/help.ts"
+			],
+			"formatter": {
+				"lineWidth": 320
+			}
 		}
 	],
 	"formatter": {

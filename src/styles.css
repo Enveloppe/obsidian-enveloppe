@@ -296,7 +296,7 @@ span.obsidian-publisher.icons {
 }
 
 .github-publisher.list-changed .settings-tab-page code.code-title,
-.code.code-title {
+.settings-tab-page code.code-title {
 	font-size: calc(var(--code-size) * 12px);
 	font-weight: bolder;
 	text-decoration: underline;
