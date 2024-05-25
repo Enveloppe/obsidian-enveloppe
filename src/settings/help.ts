@@ -161,12 +161,12 @@ export function help(settings: GitHubPublisherSettings) {
 export function usefulLinks(): DocumentFragment {
 	const els = dedent(`
 		<ul>
-			<a href=${i18next.t("settings.help.usefulLinks.links")}>${DOCUMENTATION} ${i18next.t("settings.help.usefulLinks.documentation")}<a><br>
+			<a href=${i18next.t("settings.help.usefulLinks.links")}>${DOCUMENTATION} ${i18next.t("settings.help.usefulLinks.documentation")}</a><br>
 			<a href="https://github.com/ObsidianPublisher/obsidian-github-publisher">${GITHUB_ICON} ${i18next.t("common.repository")}</a><br>
-			<a href="https://github.com/ObsidianPublisher/obsidian-github-publisher/issues">${ISSUE} ${i18next.t("settings.help.usefulLinks.issue")}<a><br>
+			<a href="https://github.com/ObsidianPublisher/obsidian-github-publisher/issues">${ISSUE} ${i18next.t("settings.help.usefulLinks.issue")}</a><br>
 			<a href="https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions">${DISCUSSION_ICON} ${i18next.t("settings.help.usefulLinks.discussion")}</a><br>
 			<a href="https://discord.gg/6DyY779Nbn">${DISCORD_ICON} Discord</a><br>
-			<a href="https://hosted.weblate.org/projects/obsidian-github-publisher/locales/">${TRANSLATION_ICON} ${i18next.t("settings.help.usefulLinks.translation")}<a><br>
+			<a href="https://hosted.weblate.org/projects/obsidian-github-publisher/locales/">${TRANSLATION_ICON} ${i18next.t("settings.help.usefulLinks.translation")}</a><br>
 		</ul>
 	`);
 	return sanitizeHTMLToDom(els);
