@@ -5,7 +5,8 @@
 	"minAppVersion": "0.15.4",
 	"description": "Github Publisher helps you to publish your notes on a preconfigured GitHub repository, for free, and more!",
 	"author": "Mara-Li",
-	"authorUrl": "https://github.com/Mara-Li",
-	"fundingUrl": "https://ko-fi.com/lisandra_dev",
-	"isDesktopOnly": false
+	"authorUrl": "https://github.com/ObsidianPublisher",
+	"fundingUrl": "https://ko-fi.com/mara__li",
+	"isDesktopOnly": false,
+	"helpUrl": "https://obsidian-publisher.netlify.app"
 }
