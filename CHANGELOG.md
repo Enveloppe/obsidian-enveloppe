@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.2.8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.7...7.2.8) (2024-05-27)
+
+
+### Bug Fixes
+
+* excalidraw path was not edited ([78df90c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/78df90c9aa7920b66361f2a5ebf67bb0981978e6))
+* logs to txt that never worked before ([0eb6462](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0eb64624f8db50923fc560f7d9460d404ddf3be1))
+* the logs should be deleted when the plugin is disabled/removed or the option is disabled ([0788feb](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/0788feb425bc2a8b4c1c25a5c905b8bbc476f9e1))
+
 ## [7.2.7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.6...7.2.7) (2024-05-26)
 
 ## [7.2.6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.5...7.2.6) (2024-05-25)
