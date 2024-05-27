@@ -166,7 +166,7 @@ export function usefulLinks(): DocumentFragment {
 			<a href="https://github.com/Enveloppe/obsidian-enveloppe/issues">${ISSUE} ${i18next.t("settings.help.usefulLinks.issue")}</a><br>
 			<a href="https://github.com/orgs/Enveloppe/discussions">${DISCUSSION_ICON} ${i18next.t("settings.help.usefulLinks.discussion")}</a><br>
 			<a href="https://discord.gg/6DyY779Nbn">${DISCORD_ICON} Discord</a><br>
-			<a href="https://hosted.weblate.org/projects/obsidian-github-publisher/locales/">${TRANSLATION_ICON} ${i18next.t("settings.help.usefulLinks.translation")}</a><br>
+			<a href="https://hosted.weblate.org/projects/enveloppe/locales/">${TRANSLATION_ICON} ${i18next.t("settings.help.usefulLinks.translation")}</a><br>
 		</ul>
 	`);
 	return sanitizeHTMLToDom(els);
