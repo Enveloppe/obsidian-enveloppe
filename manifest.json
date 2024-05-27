@@ -1,12 +1,12 @@
 {
 	"id": "obsidian-mkdocs-publisher",
-	"name": "Github Publisher",
+	"name": "Enveloppe",
 	"version": "7.2.7",
 	"minAppVersion": "0.15.4",
-	"description": "Github Publisher helps you to publish your notes on a preconfigured GitHub repository, for free, and more!",
+	"description": "Enveloppe helps you to publish your notes on a preconfigured GitHub repository, for free, and more!",
 	"author": "Mara-Li",
-	"authorUrl": "https://github.com/ObsidianPublisher",
+	"authorUrl": "https://github.com/enveloppe",
 	"fundingUrl": "https://ko-fi.com/mara__li",
 	"isDesktopOnly": false,
-	"helpUrl": "https://obsidian-publisher.netlify.app"
+	"helpUrl": "https://enveloppe.github.io/"
 }
