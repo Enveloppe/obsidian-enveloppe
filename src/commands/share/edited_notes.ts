@@ -2,7 +2,7 @@ import type { MonoRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
 import { type Command, Notice, type TFile } from "obsidian";
 import type { GithubBranch } from "src/GitHub/branch";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
 import {
 	frontmatterSettingsRepository,
@@ -20,7 +20,7 @@ import { shareAllMarkedNotes } from "./all_notes";
  * @return {Promise<Command>}
  */
 export async function uploadAllEditedNotesCallback(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	repo: Repository | null,
 	branchName: string
 ): Promise<Command> {
@@ -39,13 +39,13 @@ export async function uploadAllEditedNotesCallback(
 
 /**
  * Upload all the edited notes (including the new ones)
- * @param {GithubPublisher} plugin
+ * @param {Enveloppe} plugin
  * @param {string} branchName
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @return {Promise<void>}
  */
 export async function uploadAllEditedNotes(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	branchName: string,
 	repo: Repository | null = null
 ): Promise<void> {
@@ -170,13 +170,13 @@ async function shareOnlyEdited(
  * @call shareOnlyEdited
  * @param {string} branchName
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
- * @param {GithubPublisher} plugin
+ * @param {Enveloppe} plugin
  * @return {Promise<void>}
  */
 export async function shareEditedOnly(
 	branchName: string,
 	repo: Repository | null,
-	plugin: GithubPublisher
+	plugin: Enveloppe
 ): Promise<void> {
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const prop = getProperties(plugin, repo, null, true);
@@ -192,13 +192,13 @@ export async function shareEditedOnly(
  * @call shareEditedOnly
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {string} branchName
- * @param {GithubPublisher} plugin
+ * @param {Enveloppe} plugin
  * @return {Promise<Command>}
  */
 export async function shareEditedOnlyCallback(
 	repo: Repository | null,
 	branchName: string,
-	plugin: GithubPublisher
+	plugin: Enveloppe
 ): Promise<Command> {
 	const id = repo ? `upload-edited-K${repo.smartKey}` : "upload-edited";
 	let name = i18next.t("commands.uploadAllEditedNote");

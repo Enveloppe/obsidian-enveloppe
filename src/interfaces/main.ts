@@ -93,10 +93,10 @@ export interface Repository {
 }
 
 /**
- * @interface GitHubPublisherSettings
+ * @interface EnveloppeSettings
  * @description Interface for the settings of the plugin
  */
-export interface GitHubPublisherSettings {
+export interface EnveloppeSettings {
 	/**
 	 * Save the tabs id when the settings was closed, pretty useful when quick tests are done
 	 */
@@ -289,7 +289,7 @@ export interface Properties {
  */
 export interface Preset {
 	name: string;
-	settings: GitHubPublisherSettings;
+	settings: EnveloppeSettings;
 }
 
 export type SetRepositoryFrontmatter = {

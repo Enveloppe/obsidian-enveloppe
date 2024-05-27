@@ -3,7 +3,7 @@ import i18next from "i18next";
 import { type Menu, type MenuItem, Platform, type TFolder } from "obsidian";
 import { shareAllMarkedNotes } from "src/commands";
 import { ChooseRepoToRun } from "src/commands/suggest_other_repo_commands_modal";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import {
 	defaultRepo,
 	getRepoSharedKey,
@@ -17,13 +17,13 @@ import {
 
 /**
  * Share the shared file of a folder to a repository
- * @param {GithubPublisher} plugin - The plugin instance
+ * @param {Enveloppe} plugin - The plugin instance
  * @param {TFolder} folder - The folder to share
  * @param {string} branchName - The branch name for the repository
  * @param {Repository | null} repo - The data repository found in the file
  */
 async function shareFolderRepo(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	folder: TFolder,
 	branchName: string,
 	repo: Repository | null
@@ -50,14 +50,14 @@ async function shareFolderRepo(
  * Create a submenu if multiple repository are set up
  * If Platform is Desktop, create a submenu
  * If not, add the command to the original menu, in line
- * @param {GithubPublisher} plugin - The plugin instance
+ * @param {Enveloppe} plugin - The plugin instance
  * @param {MenuItem} item - The item to add the submenu to
  * @param {TFolder} folder - The folder to share
  * @param {string} branchName - The branch name for the repository
  * @return {Menu} - The submenu created
  */
 function addSubMenuCommandsFolder(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	item: MenuItem,
 	folder: TFolder,
 	branchName: string,
@@ -127,13 +127,13 @@ function addSubMenuCommandsFolder(
  * @param menu {Menu} - The menu to add the item to
  * @param folder {TFolder} - The folder to share
  * @param branchName {string} - The branch name for the repository
- * @param plugin {GithubPublisher} - The plugin instance
+ * @param plugin {Enveloppe} - The plugin instance
  */
 export async function addMenuFolder(
 	menu: Menu,
 	folder: TFolder,
 	branchName: string,
-	plugin: GithubPublisher
+	plugin: Enveloppe
 ) {
 	menu.addItem((item) => {
 		/**
@@ -142,7 +142,7 @@ export async function addMenuFolder(
 		const areTheyMultipleRepo = plugin.settings.github?.otherRepo?.length > 0;
 		if (areTheyMultipleRepo) {
 			if (Platform.isDesktop) {
-				item.setTitle("Github Publisher");
+				item.setTitle("E");
 				item.setIcon("upload-cloud");
 			} else {
 				//add the line to separate the commands

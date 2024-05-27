@@ -1,6 +1,6 @@
 import type { FrontMatterCache } from "obsidian";
 import type { Properties, PropertiesConversion, Repository } from "src/interfaces/main";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 
 /**
  * @interface MultiProperties
@@ -8,7 +8,7 @@ import type GithubPublisher from "src/main";
  * Allow to know the plugin, the frontmatter, the repository and the filepath
  */
 export interface MultiProperties {
-	plugin: GithubPublisher;
+	plugin: Enveloppe;
 	frontmatter: {
 		general: PropertiesConversion;
 		prop: Properties | Properties[];
@@ -22,7 +22,7 @@ export interface MultiProperties {
  * Same as {@link MultiProperties} but for a single {@link Properties}
  */
 export interface MonoProperties {
-	plugin: GithubPublisher;
+	plugin: Enveloppe;
 	frontmatter: {
 		general: PropertiesConversion;
 		prop: Properties;

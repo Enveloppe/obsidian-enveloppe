@@ -1,16 +1,16 @@
 import { TOKEN_PATH } from "@interfaces";
 import i18next from "i18next";
 import { type App, Modal, Notice, Setting } from "obsidian";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { migrateToken } from "src/settings/migrate";
 import { createTokenPath, logs } from "src/utils";
 
 export class TokenEditPath extends Modal {
-	plugin: GithubPublisher;
+	plugin: Enveloppe;
 	token: string;
 	tokenPath: string;
 
-	constructor(app: App, plugin: GithubPublisher, token: string) {
+	constructor(app: App, plugin: Enveloppe, token: string) {
 		super(app);
 		this.plugin = plugin;
 		this.token = token;
@@ -20,7 +20,7 @@ export class TokenEditPath extends Modal {
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClasses(["github-publisher", "modals", "token-path"]);
+		contentEl.addClasses(["enveloppe", "modals", "token-path"]);
 
 		const defaultPath = createTokenPath(this.plugin, TOKEN_PATH);
 		const desc = contentEl.createEl("p", undefined, (p) => {

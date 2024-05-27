@@ -5,18 +5,18 @@
 
 import {
 	FolderSettings,
-	type GitHubPublisherSettings,
+	type EnveloppeSettings,
 	type Path,
 	type Properties,
 	type PropertiesConversion,
 	type Repository,
 } from "@interfaces";
 import { type FrontMatterCache, normalizePath, TFile } from "obsidian";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import merge from "ts-deepmerge";
 
 export function frontmatterSettingsRepository(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	repo: Repository | null
 ) {
 	const defaultConvert = getFrontmatterSettings(null, plugin.settings, repo);
@@ -28,10 +28,7 @@ export function frontmatterSettingsRepository(
 	);
 }
 
-export function getDefaultProperties(
-	repository: Repository | null,
-	plugin: GithubPublisher
-) {
+export function getDefaultProperties(repository: Repository | null, plugin: Enveloppe) {
 	const defaultSettings = getProperties(plugin, repository);
 	if (
 		!repository?.set ||
@@ -49,13 +46,13 @@ export function getDefaultProperties(
  * Retrieves the frontmatter settings for a given file.
  *
  * @param frontmatter - The frontmatter cache for the file.
- * @param settings - The GitHub Publisher settings.
+ * @param settings - The Obsidian Enveloppe settings.
  * @param repo - The repository settings for the file.
  * @returns The frontmatter settings for the file.
  */
 export function getFrontmatterSettings(
 	frontmatter: FrontMatterCache | undefined | null,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	repo: Repository | null
 ) {
 	let settingsConversion: PropertiesConversion = {
@@ -110,14 +107,14 @@ function booleanRemoveEmbed(removeEmbed: unknown) {
 /**
  * Retrieves the repository frontmatter based on the provided settings and repository information.
  *
- * @param {GithubPublisher} plugin - The plugin instance
+ * @param {Enveloppe} plugin - The plugin instance
  * @param {Repository | null} repository - The repository information.
  * @param {FrontMatterCache | null} frontmatter - The frontmatter cache.
  * @param {boolean} [checkSet] - Whether to check the set file for frontmatter (preventing multiple reading of the same file)
  * @returns {Properties[] | Properties} - The repository frontmatter.
  */
 export function getProperties(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	repository: Repository | null,
 	frontmatter?: FrontMatterCache | null,
 	checkSet?: boolean
@@ -285,7 +282,7 @@ function multipleShortKeyRepo(
 	frontmatter: FrontMatterCache,
 	allRepo: Repository[],
 	properties: Properties,
-	plugin: GithubPublisher
+	plugin: Enveloppe
 ) {
 	if (frontmatter.shortRepo instanceof Array) {
 		const multipleRepo: Properties[] = [];
@@ -358,12 +355,12 @@ function repositoryStringSlice(repo: string, properties: Properties): Properties
 /**
  * Get the category from the frontmatter
  * @param {FrontMatterCache} frontmatter
- * @param {GitHubPublisherSettings} settings
+ * @param {EnveloppeSettings} settings
  * @return {string} - The category or the default name
  */
 export function getCategory(
 	frontmatter: FrontMatterCache | null | undefined,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	paths: Path | undefined
 ): string {
 	const key = paths?.category?.key ?? settings.upload.yamlFolderKey;
@@ -378,7 +375,7 @@ export function getCategory(
 }
 
 export function parsePath(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	repository: Repository | null,
 	properties: Properties | Properties[],
 	frontmatter?: FrontMatterCache | null | undefined
@@ -532,7 +529,7 @@ function getFrontmatterSettingRepository(
 export function getLinkedFrontmatter(
 	originalFrontmatter: FrontMatterCache | null | undefined,
 	sourceFile: TFile | null | undefined,
-	plugin: GithubPublisher
+	plugin: Enveloppe
 ) {
 	const { settings } = plugin;
 	const { metadataCache, vault } = plugin.app;
@@ -558,7 +555,7 @@ export function getLinkedFrontmatter(
 
 export function frontmatterFromFile(
 	file: TFile | null,
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	repo: Repository | null
 ) {
 	let frontmatter = null;

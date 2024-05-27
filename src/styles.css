@@ -1,7 +1,7 @@
 /* styles.css */
 
 /* ---------- MODALS REGEX ---------- */
-.github-publisher.modals .setting-item.entry {
+.enveloppe.modals .setting-item.entry {
 	border: 0 !important;
 	padding: 5px !important;
 }
@@ -10,36 +10,36 @@
 	gap: 0;
 }
 
-hr.github-publisher-hr {
+hr.enveloppe-hr {
 	margin: 1px !important;
 	padding-bottom: 1px;
 }
 
-.github-publisher.modals .setting-item.entry input {
+.enveloppe.modals .setting-item.entry input {
 	width: 38%;
 	margin: 0 2px;
 }
 
-.github-publisher.modals .setting-item.entry .setting-item-info {
+.enveloppe.modals .setting-item.entry .setting-item-info {
 	display: none;
 }
 
-.github-publisher.modals
+.enveloppe.modals
 	.clickable-icon.setting-editor-extra-setting-button.is-disabled.padding-0 {
 	opacity: 0.1;
 }
 
-.github-publisher .no-margin {
+.enveloppe .no-margin {
 	margin: 0;
 }
 
 /* --------- EXPORT IMPORT --------- */
 
-.github-publisher .setting-item.import-export {
+.enveloppe .setting-item.import-export {
 	padding-bottom: 10px;
 }
 
-.github-publisher-export-import > .setting-item-info {
+.enveloppe-export-import > .setting-item-info {
 	display: flex;
 	flex-direction: row;
 	gap: 4px;
@@ -47,39 +47,37 @@ hr.github-publisher-hr {
 	padding: 0;
 }
 
-.setting-item.github-publisher-export-import > .setting-item-control {
+.setting-item.enveloppe-export-import > .setting-item-control {
 	padding-bottom: 10px;
 }
 
-.github-publisher-import-error {
+.enveloppe-import-error {
 	display: none;
 	color: var(--text-error);
 }
 
-.github-publisher-import-error.active {
+.enveloppe-import-error.active {
 	display: block;
 }
 
-.github-publisher.modals .error {
+.enveloppe.modals .error {
 	border-color: var(--text-error);
 	box-shadow: 0 0 0 1px var(--text-error);
 }
 
-.github-publisher.modals .padding-0 {
+.enveloppe.modals .padding-0 {
 	padding: 0;
 }
 
-.modal:has(.github-publisher.modals.manage-repo.edit) {
+.modal:has(.enveloppe.modals.manage-repo.edit) {
 	width: 100%;
 }
 
-.github-publisher.modals.manage-repo
-	.no-display
-	.setting-item-control:has(.mod-cta) {
+.enveloppe.modals.manage-repo .no-display .setting-item-control:has(.mod-cta) {
 	margin: 0 100% 5px 0;
 }
 
-.github-publisher-import-input {
+.enveloppe-import-input {
 	width: 0.1px;
 	height: 0.1px;
 	opacity: 0;
@@ -88,9 +86,9 @@ hr.github-publisher-hr {
 	z-index: -1;
 }
 
-.github-publisher-import-label,
-a.github-publisher-copy,
-a.github-publisher-download {
+.enveloppe-import-label,
+a.enveloppe-copy,
+a.enveloppe-download {
 	color: var(--text-normal);
 	font-size: var(--font-ui-small);
 	border-radius: var(--button-radius);
@@ -109,36 +107,36 @@ a.github-publisher-download {
 		box-shadow 0.1s ease;
 }
 
-.github-publisher-import-label:hover,
-a.github-publisher-copy:hover,
-a.github-publisher-download:hover {
+.enveloppe-import-label:hover,
+a.enveloppe-copy:hover,
+a.enveloppe-download:hover {
 	background-color: var(--interactive-hover);
 	box-shadow: var(--input-shadow-hover);
 }
 
-.github-publisher-import-save-button {
+.enveloppe-import-save-button {
 	text-align: center;
 	width: 100%;
 }
 
-.github-publisher-copy,
-.github-publisher-download {
+.enveloppe-copy,
+.enveloppe-download {
 	position: relative;
 	display: inline-block;
 	margin-left: 10px;
 }
 
-.github-publisher.modals h1,
-.github-publisher.modals h2,
-.github-publisher.modals h3,
-.github-publisher.modals h4,
-.github-publisher.modals h5,
-.github-publisher.modals h6 {
+.enveloppe.modals h1,
+.enveloppe.modals h2,
+.enveloppe.modals h3,
+.enveloppe.modals h4,
+.enveloppe.modals h5,
+.enveloppe.modals h6 {
 	margin-top: 0;
 	margin-bottom: 0;
 }
 
-.github-publisher-copy:before {
+.enveloppe-copy:before {
 	color: var(--interactive-success);
 	content: "✓";
 	position: absolute;
@@ -148,12 +146,12 @@ a.github-publisher-download:hover {
 	transition: 150ms opacity ease-in-out;
 }
 
-.github-publisher-copy.success:before {
+.enveloppe-copy.success:before {
 	opacity: 1;
 }
 
-.github-publisher-export-textarea,
-.github-publisher-import-textarea {
+.enveloppe-export-textarea,
+.enveloppe-import-textarea {
 	width: 100%;
 	height: 200px;
 	font-family: var(--font-monospace);
@@ -162,41 +160,41 @@ a.github-publisher-download:hover {
 
 /* --------- GENERAL SETTINGS --------- */
 
-.github-publisher {
+.enveloppe {
 	-webkit-user-select: text;
 	-moz-user-select: text;
 	user-select: text;
 }
 
-.github-publisher textarea {
+.enveloppe textarea {
 	width: 250px;
 	height: 100px;
 }
 
-.github-publisher .mini textarea {
+.enveloppe .mini textarea {
 	height: 50px;
 }
 
-.github-publisher .border-bottom {
+.enveloppe .border-bottom {
 	border-bottom: 1px solid var(--background-modifier-border);
 	padding-bottom: 10px;
 }
 
-.github-publisher .mini textarea {
+.enveloppe .mini textarea {
 	width: 100%;
 	height: 50px;
 }
 
-.github-publisher .mid-height {
+.enveloppe .mid-height {
 	height: 50%;
 }
 
-.github-publisher .bake ul {
+.enveloppe .bake ul {
 	margin-top: 0;
 }
 
 /* --------- SETTINGS TABS BAR --------- */
-.github-publisher .settings-tab-bar {
+.enveloppe .settings-tab-bar {
 	display: flex;
 	flex-direction: row;
 	gap: 4px;
@@ -204,72 +202,70 @@ a.github-publisher-download:hover {
 	padding: 0;
 }
 
-.github-publisher .settings-tab {
+.enveloppe .settings-tab {
 	padding: 10px;
 	border: 1px solid var(--background-modifier-border);
 	border-radius: 5px;
 }
 
-.github-publisher .settings-tab:hover {
+.enveloppe .settings-tab:hover {
 	background-color: var(--background-modifier-hover);
 }
 
 @media screen and (max-width: 900px) {
-	.github-publisher .settings-tab-bar,
-	.setting-item.github-publisher-export-import > .setting-item-control {
+	.enveloppe .settings-tab-bar,
+	.setting-item.enveloppe-export-import > .setting-item-control {
 		flex-direction: column;
 		width: 100%;
 	}
 
-	.setting-item.github-publisher-export-import
-		> .setting-item-control
-		button {
+	.setting-item.enveloppe-export-import > .setting-item-control button {
 		width: 100%;
 	}
 
-	a.github-publisher-copy + button {
+	a.enveloppe-copy + button {
 		height: 10%;
 	}
 
-	.github-publisher .connect-button {
+	.enveloppe .connect-button {
 		margin: 0 !important;
 	}
 }
 
 @media screen and (max-width: 1200px) {
-	.github-publisher .settings-tab-bar {
+	.enveloppe .settings-tab-bar {
 		flex-wrap: wrap;
 	}
 
-	.github-publisher .settings-tab {
+	.enveloppe .settings-tab {
 		border-bottom: 1px solid var(--background-modifier-border);
 	}
 
-	.github-publisher .settings-tab-bar {
+	.enveloppe .settings-tab-bar {
 		border-bottom: 0;
 	}
 
-	.github-publisher.manage-repo button.connect {
+	.enveloppe.manage-repo button.connect {
 		margin: 0 !important;
 	}
 }
 
-.github-publisher.manage-repo button.connect {
+.enveloppe.manage-repo button.connect {
 	margin: 0 50%;
 }
 
-.github-publisher .settings-tab-active {
+.enveloppe .settings-tab-active {
 	background-color: var(--color-accent);
 	color: var(--text-on-accent);
 	border: 0;
 	border-bottom-right-radius: 0;
 	border-bottom-left-radius: 0;
 }
-.github-publisher .settings-tab-name {
+.enveloppe .settings-tab-name {
 	font-weight: bold;
 	text-align: center;
 }
-.github-publisher .settings-tab-icon {
+.enveloppe .settings-tab-icon {
 	text-align: center;
 }
 
@@ -279,14 +275,14 @@ span.obsidian-publisher.icons {
 	padding-right: 5px;
 }
 
-.github-publisher .settings-tab-page > .setting-item:first-child {
+.enveloppe .settings-tab-page > .setting-item:first-child {
 	margin-top: 15px;
 }
-.github-publisher .settings-tab-page h5 {
+.enveloppe .settings-tab-page h5 {
 	margin-bottom: 10px !important;
 }
 .settings-tab-page code,
-.github-publisher.list-changed code.code-title,
+.enveloppe.list-changed code.code-title,
 .code {
 	color: var(--code-normal);
 	font-family: var(--font-monospace);
@@ -295,26 +291,26 @@ span.obsidian-publisher.icons {
 	font-size: var(--code-size);
 }
 
-.github-publisher.list-changed .settings-tab-page code.code-title,
+.enveloppe.list-changed .settings-tab-page code.code-title,
 .settings-tab-page code.code-title {
 	font-size: calc(var(--code-size) * 12px);
 	font-weight: bolder;
 	text-decoration: underline;
 }
 
-.github-publisher .setting-item.title input[type="text"][placeholder="title"] {
+.enveloppe .setting-item.title input[type="text"][placeholder="title"] {
 	width: 100%;
 }
 
-.github-publisher .setting-item.no-display > .setting-item-info {
+.enveloppe .setting-item.no-display > .setting-item-info {
 	display: none;
 }
 
-.github-publisher button.max-width {
+.enveloppe button.max-width {
 	width: 100%;
 }
 
-.github-publisher.github-publisher.modals.regex.file-path-name .disabled {
+.enveloppe.enveloppe.modals.regex.file-path-name .disabled {
 	pointer-events: none;
 	opacity: 0.5;
 	font-style: italic;
@@ -326,46 +322,46 @@ span.obsidian-publisher.icons {
 	font-family: var(--font-monospace);
 }
 
-.github-publisher.modals.github-publisher.modals {
+.enveloppe.modals {
 	border-top: 0 !important;
 }
 
-.github-publisher.list-changed h2.success {
+.enveloppe.list-changed h2.success {
 	text-align: center;
 	color: var(--color-green);
 }
 
-.github-publisher.list-changed h2.error {
+.enveloppe.list-changed h2.error {
 	color: var(--text-error);
 	padding: 10px 10px;
 }
 
-.github-publisher.list-changed .emoji {
+.enveloppe.list-changed .emoji {
 	padding-right: 5px;
 	font-size: 18px;
 }
 
-.github-publisher .important:not(.token) {
+.enveloppe .important:not(.token) {
 	color: var(--text-error);
 	font-weight: bold;
 }
 
-.github-publisher .warning.embed {
+.enveloppe .warning.embed {
 	color: var(--color-orange);
 	font-weight: bold;
 	border-left: 3px solid var(--color-orange);
 	padding-left: 5px;
 }
 
-.github-publisher .error input {
+.enveloppe .error input {
 	border: 1px solid var(--text-error);
 }
-.github-publisher .max-width input,
-.github-publisher .max-width button {
+.enveloppe .max-width input,
+.enveloppe .max-width button {
 	width: 100%;
 }
 
-.github-publisher .display-none .setting-item-info {
+.enveloppe .display-none .setting-item-info {
 	display: none;
 }
 

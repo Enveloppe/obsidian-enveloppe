@@ -1,6 +1,6 @@
 import {
 	FolderSettings,
-	type GitHubPublisherSettings,
+	type EnveloppeSettings,
 	type OverrideAttachments,
 	type RegexReplace,
 	type TextCleaner,
@@ -27,12 +27,12 @@ function isRegexValid(regexString: string) {
 }
 
 export class OverrideAttachmentsModal extends Modal {
-	settings: GitHubPublisherSettings;
+	settings: EnveloppeSettings;
 	allOverrides: OverrideAttachments[];
 	onSubmit: (result: OverrideAttachments[]) => void;
 	constructor(
 		app: App,
-		settings: GitHubPublisherSettings,
+		settings: EnveloppeSettings,
 		allOverrides: OverrideAttachments[],
 		onSubmit: (result: OverrideAttachments[]) => void
 	) {
@@ -70,7 +70,7 @@ export class OverrideAttachmentsModal extends Modal {
 	onOpen(): void {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClasses(["github-publisher", "modals", "regex", "file-path-name"]);
+		contentEl.addClasses(["enveloppe", "modals", "regex", "file-path-name"]);
 		new Setting(contentEl)
 			.setHeading()
 			.setName(i18next.t("settings.embed.overrides.modal.title"));
@@ -176,12 +176,12 @@ export class OverrideAttachmentsModal extends Modal {
 }
 
 export class ModalRegexFilePathName extends Modal {
-	settings: GitHubPublisherSettings;
+	settings: EnveloppeSettings;
 	allRegex: RegexReplace[];
 	onSubmit: (result: RegexReplace[]) => void;
 	constructor(
 		app: App,
-		settings: GitHubPublisherSettings,
+		settings: EnveloppeSettings,
 		allRegex: RegexReplace[],
 		onSubmit: (result: RegexReplace[]) => void
 	) {
@@ -263,7 +263,7 @@ export class ModalRegexFilePathName extends Modal {
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClasses(["github-publisher", "modals", "regex", "file-path-name"]);
+		contentEl.addClasses(["enveloppe", "modals", "regex", "file-path-name"]);
 		if (this.settings.upload.behavior === FolderSettings.Fixed) {
 			contentEl.createEl("h2", {
 				text: i18next.t("settings.regexReplacing.modal.title.only"),
@@ -392,12 +392,12 @@ export class ModalRegexFilePathName extends Modal {
 }
 
 export class ModalRegexOnContents extends Modal {
-	settings: GitHubPublisherSettings;
-	onSubmit: (settings: GitHubPublisherSettings) => void;
+	settings: EnveloppeSettings;
+	onSubmit: (settings: EnveloppeSettings) => void;
 	constructor(
 		app: App,
-		settings: GitHubPublisherSettings,
-		onSubmit: (settings: GitHubPublisherSettings) => void
+		settings: EnveloppeSettings,
+		onSubmit: (settings: EnveloppeSettings) => void
 	) {
 		super(app);
 		this.settings = settings;
@@ -407,7 +407,7 @@ export class ModalRegexOnContents extends Modal {
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClasses(["github-publisher", "modals", "regex", "on-contents"]);
+		contentEl.addClasses(["enveloppe", "modals", "regex", "on-contents"]);
 		contentEl
 			.createEl("p", {
 				text: i18next.t("settings.regexReplacing.modal.title.text"),

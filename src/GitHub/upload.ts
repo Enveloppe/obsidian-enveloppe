@@ -1,6 +1,6 @@
 import type {
 	Deleted,
-	GitHubPublisherSettings,
+	EnveloppeSettings,
 	MetadataExtractor,
 	MonoProperties,
 	MonoRepoProperties,
@@ -28,7 +28,7 @@ import { convertToHTMLSVG } from "src/conversion/compiler/excalidraw";
 import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
 import { deleteFromGithub } from "src/GitHub/delete";
 import { FilesManagement } from "src/GitHub/files";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { logs, noticeMobile, notif, notifError } from "src/utils";
 import {
 	checkEmptyConfiguration,
@@ -52,19 +52,19 @@ import merge from "ts-deepmerge";
 
 export default class Publisher {
 	octokit: Octokit;
-	plugin: GithubPublisher;
+	plugin: Enveloppe;
 	vault: Vault;
 	metadataCache: MetadataCache;
-	settings: GitHubPublisherSettings;
+	settings: EnveloppeSettings;
 	branchName: string;
 
 	/**
 	 * Class to manage the branch
 	 * @param {Octokit} octokit Octokit instance
-	 * @param {GithubPublisher} plugin GithubPublisher instance
+	 * @param {Enveloppe} plugin Enveloppe instance
 	 */
 
-	constructor(octokit: Octokit, plugin: GithubPublisher) {
+	constructor(octokit: Octokit, plugin: Enveloppe) {
 		this.vault = plugin.app.vault;
 		this.metadataCache = plugin.app.metadataCache;
 		this.settings = plugin.settings;

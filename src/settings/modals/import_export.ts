@@ -1,4 +1,4 @@
-import type { GitHubPublisherSettings, Preset } from "@interfaces/main";
+import type { EnveloppeSettings, Preset } from "@interfaces/main";
 import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import {
@@ -11,32 +11,32 @@ import {
 	Setting,
 	TextAreaComponent,
 } from "obsidian";
-import type GithubPublisher from "src/main";
-import type { GithubPublisherSettingsTab } from "src/settings";
+import type Enveloppe from "src/main";
+import type { EnveloppeSettingsTab } from "src/settings";
 import { migrateSettings, type OldSettings } from "src/settings/migrate";
 import { logs, notif } from "src/utils";
 
 export type SettingValue = number | string | boolean | unknown;
 
-function clone(obj: GitHubPublisherSettings): GitHubPublisherSettings {
+function clone(obj: EnveloppeSettings): EnveloppeSettings {
 	return JSON.parse(JSON.stringify(obj));
 }
 /**
  *
  * Credit : Style Settings Plugin
- * URL : https://github.com/mgmeyers/obsidian-github-publisher
+ * URL : https://github.com/mgmeyers/obsidian-enveloppe
  **/
 
 export class ImportModal extends Modal {
-	plugin: GithubPublisher;
+	plugin: Enveloppe;
 	settingsPage: HTMLElement;
-	settingsTab: GithubPublisherSettingsTab;
-	settings: GitHubPublisherSettings;
+	settingsTab: EnveloppeSettingsTab;
+	settings: EnveloppeSettings;
 	constructor(
 		app: App,
-		plugin: GithubPublisher,
+		plugin: Enveloppe,
 		settingsPage: HTMLElement,
-		settingsTab: GithubPublisherSettingsTab
+		settingsTab: EnveloppeSettingsTab
 	) {
 		super(app);
 		this.plugin = plugin;
@@ -45,7 +45,7 @@ export class ImportModal extends Modal {
 		this.settings = plugin.settings;
 	}
 
-	async censorRepositoryData(original: GitHubPublisherSettings) {
+	async censorRepositoryData(original: EnveloppeSettings) {
 		logs({ settings: original }, "original settings:", original);
 		this.settings.plugin.dev = original.plugin.dev;
 		this.settings.plugin.migrated = original.plugin.migrated;
@@ -71,7 +71,7 @@ export class ImportModal extends Modal {
 		new Setting(contentEl).then((setting) => {
 			// biome-ignore lint/correctness/noUndeclaredVariables: createSpan is a function builded with the plugin
 			const errorSpan = createSpan({
-				cls: "github-publisher-import-error",
+				cls: "enveloppe-import-error",
 				text: i18next.t("modals.import.error.span"),
 			});
 			setting.nameEl.appendChild(errorSpan);
@@ -92,7 +92,7 @@ export class ImportModal extends Modal {
 								{ settings: this.plugin.settings },
 								i18next.t("informations.migrating.normalFormat")
 							);
-							importedSettings = importedSettings as unknown as GitHubPublisherSettings;
+							importedSettings = importedSettings as unknown as EnveloppeSettings;
 							//create a copy of actual settings
 							const actualSettings = clone(this.plugin.settings);
 							if (!(importedSettings.upload.replaceTitle instanceof Array)) {
@@ -125,10 +125,10 @@ export class ImportModal extends Modal {
 			setting.controlEl.createEl(
 				"input",
 				{
-					cls: "github-publisher-import-input",
+					cls: "enveloppe-import-input",
 					attr: {
-						id: "github-publisher-import-input",
-						name: "github-publisher-import-input",
+						id: "enveloppe-import-input",
+						name: "enveloppe-import-input",
 						type: "file",
 						accept: ".json",
 					},
@@ -149,10 +149,10 @@ export class ImportModal extends Modal {
 
 			// Build a label we will style as a link
 			setting.controlEl.createEl("label", {
-				cls: "github-publisher-import-label",
+				cls: "enveloppe-import-label",
 				text: i18next.t("modals.import.importFromFile"),
 				attr: {
-					for: "github-publisher-import-input",
+					for: "enveloppe-import-input",
 				},
 			});
 
@@ -164,9 +164,9 @@ export class ImportModal extends Modal {
 						.onClick(async () => {
 							await importAndClose(ta.getValue().trim());
 						});
-					saveButton.buttonEl.addClass("github-publisher-import-save-button");
+					saveButton.buttonEl.addClass("enveloppe-import-save-button");
 				});
-			textArea.inputEl.addClass("github-publisher-import-textarea");
+			textArea.inputEl.addClass("enveloppe-import-textarea");
 		});
 	}
 
@@ -204,14 +204,14 @@ export class ImportModal extends Modal {
 }
 
 export class ExportModal extends Modal {
-	plugin: GithubPublisher;
+	plugin: Enveloppe;
 
-	constructor(app: App, plugin: GithubPublisher) {
+	constructor(app: App, plugin: Enveloppe) {
 		super(app);
 		this.plugin = plugin;
 	}
 
-	censorGithubSettingsData(censuredSettings: GitHubPublisherSettings) {
+	censorGithubSettingsData(censuredSettings: EnveloppeSettings) {
 		const cloneCensored = Object(censuredSettings);
 		const { github } = cloneCensored;
 		if (cloneCensored.tabsID) delete cloneCensored.tabsID;
@@ -233,7 +233,7 @@ export class ExportModal extends Modal {
 
 	onOpen() {
 		const { contentEl, modalEl } = this;
-		modalEl.addClass("modal-github-publisher");
+		modalEl.addClass("modal-enveloppe");
 		new Setting(contentEl)
 			.setName(i18next.t("modals.export.title"))
 			.setDesc(i18next.t("modals.export.desc"))
@@ -246,7 +246,7 @@ export class ExportModal extends Modal {
 				setting.controlEl.createEl(
 					"a",
 					{
-						cls: "github-publisher-copy",
+						cls: "enveloppe-copy",
 						text: i18next.t("modals.export.copy"),
 						href: "#",
 					},
@@ -272,16 +272,16 @@ export class ExportModal extends Modal {
 									}, 2000);
 								});
 							});
-						textArea.inputEl.addClass("github-publisher-export-textarea");
+						textArea.inputEl.addClass("enveloppe-export-textarea");
 					}
 				);
 
 				if (Platform.isDesktop) {
 					setting.controlEl.createEl("a", {
-						cls: "github-publisher-download",
+						cls: "enveloppe-download",
 						text: i18next.t("modals.export.download"),
 						attr: {
-							download: "github-publisher.json",
+							download: "enveloppe.json",
 							href: `data:application/json;charset=utf-8,${encodeURIComponent(output)}`,
 						},
 					});
@@ -319,17 +319,17 @@ export class ExportModal extends Modal {
 
 export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 	octokit: Octokit;
-	plugin: GithubPublisher;
+	plugin: Enveloppe;
 	presetList: Preset[];
-	page: GithubPublisherSettingsTab;
-	settings: GitHubPublisherSettings;
+	page: EnveloppeSettingsTab;
+	settings: EnveloppeSettings;
 
 	constructor(
 		app: App,
-		plugin: GithubPublisher,
+		plugin: Enveloppe,
 		presetList: Preset[],
 		octokit: Octokit,
-		page: GithubPublisherSettingsTab
+		page: EnveloppeSettingsTab
 	) {
 		super(app);
 		this.plugin = plugin;
@@ -386,7 +386,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 
 export async function loadAllPresets(
 	octokit: Octokit,
-	plugin: GithubPublisher
+	plugin: Enveloppe
 ): Promise<Preset[]> {
 	//load from gitHub repository
 	try {
@@ -424,8 +424,8 @@ export async function loadAllPresets(
 export async function loadPresetContent(
 	path: string,
 	octokit: Octokit,
-	plugin: GithubPublisher
-): Promise<GitHubPublisherSettings> {
+	plugin: Enveloppe
+): Promise<EnveloppeSettings> {
 	const presetContent = await octokit.request(
 		"GET /repos/{owner}/{repo}/contents/{path}",
 		{
@@ -440,5 +440,5 @@ export async function loadPresetContent(
 	}
 	// @ts-ignore
 	const presetContentDecoded = atob(presetContent.data.content);
-	return JSON.parse(presetContentDecoded) as unknown as GitHubPublisherSettings;
+	return JSON.parse(presetContentDecoded) as unknown as EnveloppeSettings;
 }

@@ -1,5 +1,5 @@
 import type {
-	GitHubPublisherSettings,
+	EnveloppeSettings,
 	LinkedNotes,
 	MultiProperties,
 	PropertiesConversion,
@@ -24,7 +24,7 @@ type IsEmbed = {
  * Pretty cursed
  * @param {string} fileContent the text to convert
  * @param {PropertiesConversion} conditionConvert  the frontmatter settings
- * @param {GitHubPublisherSettings} settings  global settings
+ * @param {EnveloppeSettings} settings  global settings
  * @param {LinkedNotes[]} linkedFiles the list of linked files
  * @return {string} the converted text
  */
@@ -33,7 +33,7 @@ export function convertWikilinks(
 	fileContent: string,
 	conditionConvert: PropertiesConversion,
 	linkedFiles: LinkedNotes[],
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	sourceFrontmatter: FrontMatterCache | undefined | null
 ): string {
 	if (noTextConversion(conditionConvert)) return fileContent;
@@ -140,7 +140,7 @@ function isLinkedFile(
 	linkedFile: LinkedNotes,
 	conditionConvert: PropertiesConversion,
 	isEmbed: IsEmbed,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	isNotAttachment: boolean,
 	fileContent: string,
 	wikiMatch: string,
@@ -196,7 +196,7 @@ function isLinkedFile(
  * @param {string} wikiMatch the match for the wikilink
  * @param {string} fileName  the file name to convert to a markdown link
  * @param {PropertiesConversion} conditionConvert the frontmatter settings
- * @param {GitHubPublisherSettings} settings the global settings
+ * @param {EnveloppeSettings} settings the global settings
  * @param {string} fileContent the file content to convert
  * @returns {string} the converted text
  */
@@ -206,7 +206,7 @@ function strictStringConversion(
 	wikiMatch: string,
 	fileName: string,
 	conditionConvert: PropertiesConversion,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	fileContent: string
 ): string {
 	const altMatch = wikiMatch.match(/(\|).*(]])/);
@@ -266,7 +266,7 @@ function createMarkdownLinks(
 	fileName: string,
 	isEmbed: string,
 	altLink: string,
-	settings: GitHubPublisherSettings
+	settings: EnveloppeSettings
 ): string {
 	const markdownName = isAttachment(fileName.trim(), settings.embed.unHandledObsidianExt)
 		? fileName.trim()
@@ -281,10 +281,10 @@ function createMarkdownLinks(
 /**
  * Slugify the anchor based on the settings
  * @param anchor {string | null} the anchor to slugify
- * @param settings {GitHubPublisherSettings}
+ * @param settings {EnveloppeSettings}
  * @returns {string} the slugified anchor
  */
-function slugifyAnchor(anchor: string | null, settings: GitHubPublisherSettings): string {
+function slugifyAnchor(anchor: string | null, settings: EnveloppeSettings): string {
 	const slugifySetting =
 		typeof settings.conversion.links.slugify === "string"
 			? settings.conversion.links.slugify

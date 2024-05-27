@@ -8,7 +8,7 @@ import {
 	type TFile,
 } from "obsidian";
 import type { GithubBranch } from "src/GitHub/branch";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { ListChangedFiles } from "src/settings/modals/list_changed";
 import {
 	createLink,
@@ -29,12 +29,12 @@ import merge from "ts-deepmerge";
  * Command to upload the active file ; use checkCallback to check if the file is shared and if they are a active file
  * @call shareOneNote
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
- * @param {GithubPublisher} plugin - The plugin instance
+ * @param {Enveloppe} plugin - The plugin instance
  * @return {Promise<Command>}
  */
 export async function shareOneNoteCallback(
 	repo: Repository | null,
-	plugin: GithubPublisher
+	plugin: Enveloppe
 ): Promise<Command> {
 	const id = repo ? `share-one-K${repo.smartKey}` : "share-one";
 	let name = i18next.t("commands.shareActiveFile");
@@ -147,13 +147,13 @@ export async function shareOneNote(
 /**
  * Command to shareTheActiveFile ; Return an error if no file is active
  * @call shareOneNote
- * @param {GithubPublisher} plugin
+ * @param {Enveloppe} plugin
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {string} branchName
  * @return {Promise<void>}
  */
 export async function shareActiveFile(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	repo: Repository | null
 ): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();

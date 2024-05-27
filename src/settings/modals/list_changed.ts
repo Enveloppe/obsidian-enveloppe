@@ -42,7 +42,7 @@ export class ListChangedFiles extends Modal {
 		 */
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClasses(["github-publisher", "modals", "list-changed"]);
+		contentEl.addClasses(["enveloppe", "modals", "list-changed"]);
 		contentEl.createEl("h2", {
 			text: i18next.t("modals.listChangedFiles.title"),
 			cls: "success",

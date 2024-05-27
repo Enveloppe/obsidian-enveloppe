@@ -7,7 +7,7 @@ import {
 } from "@interfaces";
 import i18next from "i18next";
 import { normalizePath } from "obsidian";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { createTokenPath, logs } from "src/utils";
 
 export interface OldSettings {
@@ -61,7 +61,7 @@ export interface OldSettings {
 
 export async function migrateSettings(
 	old: OldSettings,
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	imported?: boolean
 ) {
 	if (plugin.settings.plugin.migrated && !imported) {
@@ -78,7 +78,7 @@ export async function migrateSettings(
 	await plugin.saveSettings();
 }
 
-async function migrateReplaceTitle(plugin: GithubPublisher) {
+async function migrateReplaceTitle(plugin: Enveloppe) {
 	if (plugin.settings.upload.replaceTitle instanceof Array) {
 		return;
 	}
@@ -87,7 +87,7 @@ async function migrateReplaceTitle(plugin: GithubPublisher) {
 	await plugin.saveSettings();
 }
 
-async function migrateSubFolder(plugin: GithubPublisher) {
+async function migrateSubFolder(plugin: Enveloppe) {
 	if (
 		//@ts-ignore
 		plugin.settings.upload.subFolder &&
@@ -113,7 +113,7 @@ async function migrateSubFolder(plugin: GithubPublisher) {
 	}
 }
 
-async function migrateCensor(plugin: GithubPublisher) {
+async function migrateCensor(plugin: Enveloppe) {
 	for (const censor of plugin.settings.conversion.censorText) {
 		if (censor.flags) {
 			//enclose regex in / / and add flags
@@ -124,7 +124,7 @@ async function migrateCensor(plugin: GithubPublisher) {
 	}
 }
 
-async function migrateWorFlow(plugin: GithubPublisher) {
+async function migrateWorFlow(plugin: Enveloppe) {
 	logs({ settings: plugin.settings }, "Migrating workflow");
 	//@ts-ignore
 	if (!plugin.settings.github.worflow) {
@@ -143,11 +143,7 @@ async function migrateWorFlow(plugin: GithubPublisher) {
 	await plugin.saveSettings();
 }
 
-export async function migrateToken(
-	plugin: GithubPublisher,
-	token?: string,
-	repo?: string
-) {
+export async function migrateToken(plugin: Enveloppe, token?: string, repo?: string) {
 	logs({ settings: plugin.settings }, "migrating token");
 	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
 	//@ts-ignore
@@ -220,7 +216,7 @@ export async function migrateToken(
 	return;
 }
 
-async function migrateOtherRepository(plugin: GithubPublisher) {
+async function migrateOtherRepository(plugin: Enveloppe) {
 	logs({ settings: plugin.settings }, "Configuring other repositories");
 	const otherRepo = plugin.settings.github?.otherRepo ?? [];
 	for (const repo of otherRepo) {
@@ -267,7 +263,7 @@ async function migrateOtherRepository(plugin: GithubPublisher) {
 	}
 }
 
-async function migrateOldSettings(plugin: GithubPublisher, old: OldSettings) {
+async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 	if (!Object.keys(old).includes("editorMenu")) {
 		return;
 	}

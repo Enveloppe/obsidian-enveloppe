@@ -1,7 +1,7 @@
 import {
 	EnumbSettingsTabId,
 	FolderSettings,
-	type GitHubPublisherSettings,
+	type EnveloppeSettings,
 	GithubTiersVersion,
 	type Repository,
 } from "@interfaces";
@@ -14,7 +14,7 @@ import {
 	setIcon,
 	Setting,
 } from "obsidian";
-import type GithubPublisherPlugin from "src/main";
+import type EnveloppePlugin from "src/main";
 import {
 	help,
 	KeyBasedOnSettings,
@@ -48,13 +48,13 @@ import {
 } from "src/utils/data_validation_test";
 import { monkeyPatchConsole } from "./utils";
 
-export class GithubPublisherSettingsTab extends PluginSettingTab {
-	plugin: GithubPublisherPlugin;
+export class EnveloppeSettingsTab extends PluginSettingTab {
+	plugin: EnveloppePlugin;
 	settingsPage!: HTMLElement;
 	branchName: string;
-	settings: GitHubPublisherSettings;
+	settings: EnveloppeSettings;
 
-	constructor(app: App, plugin: GithubPublisherPlugin, branchName: string) {
+	constructor(app: App, plugin: EnveloppePlugin, branchName: string) {
 		super(app, plugin);
 		this.plugin = plugin;
 		this.branchName = branchName;
@@ -64,7 +64,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
-		containerEl.addClass("github-publisher");
+		containerEl.addClass("enveloppe");
 		const defaultTabId = EnumbSettingsTabId.Github;
 		let savedId = this.settings.tabsId ?? defaultTabId;
 		if (this.settings.plugin.saveTabId != undefined && !this.settings.plugin.saveTabId) {
@@ -74,7 +74,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			this.plugin.saveSettings();
 		}
 
-		const publisherTabs = {
+		const enveloppeTabs = {
 			"github-configuration": {
 				name: i18next.t("settings.github.title"),
 				icon: "cloud",
@@ -133,7 +133,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			cls: "settings-tab-bar",
 		});
 
-		for (const [tabId, tabInfo] of Object.entries(publisherTabs)) {
+		for (const [tabId, tabInfo] of Object.entries(enveloppeTabs)) {
 			const tabEl = tabBar.createEl("div", {
 				cls: "settings-tab",
 			});
@@ -332,7 +332,7 @@ export class GithubPublisherSettingsTab extends PluginSettingTab {
 			.setDesc(i18next.t("settings.github.dryRun.folder.desc"))
 			.addText((text) =>
 				text
-					.setPlaceholder("github-publisher")
+					.setPlaceholder("enveloppe")
 					.setValue(githubSettings.dryRun.folderName)
 					.onChange(async (value) => {
 						githubSettings.dryRun.folderName = value.trim();

@@ -13,7 +13,7 @@ import type {
 	UploadedFiles,
 } from "src/interfaces/list_edited_files";
 import type {
-	GitHubPublisherSettings,
+	EnveloppeSettings,
 	GithubRepo,
 	LinkedNotes,
 	OverrideAttachments,
@@ -51,7 +51,7 @@ export {
 
 export type {
 	Deleted,
-	GitHubPublisherSettings,
+	EnveloppeSettings,
 	GithubRepo,
 	LinkedNotes,
 	ListEditedFiles,

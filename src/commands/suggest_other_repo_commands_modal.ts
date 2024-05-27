@@ -1,8 +1,4 @@
-import {
-	FolderSettings,
-	type GitHubPublisherSettings,
-	type Repository,
-} from "@interfaces";
+import { FolderSettings, type EnveloppeSettings, type Repository } from "@interfaces";
 import i18next from "i18next";
 import { type App, FuzzySuggestModal } from "obsidian";
 import {
@@ -15,10 +11,10 @@ import {
 	uploadAllNotes,
 	uploadNewNotes,
 } from "src/commands";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { defaultRepo } from "src/utils/data_validation_test";
 
-interface GithubPublisherCommands {
+interface EnveloppeCommands {
 	commands: string;
 	name: string;
 }
@@ -27,16 +23,16 @@ interface GithubPublisherCommands {
  * @extends FuzzySuggestModal
  * @category Command
  * @category SuggestModal
- * @category GithubPublisher
+ * @category Enveloppe
  * @description This class is used to choose which repo to run the command on
  */
 
 export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
-	plugin: GithubPublisher;
+	plugin: Enveloppe;
 	branchName: string;
-	settings: GitHubPublisherSettings;
+	settings: EnveloppeSettings;
 
-	constructor(app: App, plugin: GithubPublisher, branchName: string) {
+	constructor(app: App, plugin: Enveloppe, branchName: string) {
 		super(app);
 		this.plugin = plugin;
 		this.branchName = branchName;
@@ -63,17 +59,17 @@ export class ChooseWhichRepoToRun extends FuzzySuggestModal<Repository> {
  * Just return the repo data
  */
 export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
-	plugin: GithubPublisher;
+	plugin: Enveloppe;
 	branchName: string;
 	keyToFind: string | null;
 	type: "folder" | "file";
-	settings: GitHubPublisherSettings;
+	settings: EnveloppeSettings;
 	fileName: string | null;
 	onSubmit: (item: Repository) => void;
 
 	constructor(
 		app: App,
-		plugin: GithubPublisher,
+		plugin: Enveloppe,
 		keyToFind: null | string = null,
 		branchName: string,
 		type: "folder" | "file",
@@ -135,19 +131,19 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
  * @extends FuzzySuggestModal
  */
 
-export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPublisherCommands> {
-	plugin: GithubPublisher;
+export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<EnveloppeCommands> {
+	plugin: Enveloppe;
 	branchName: string;
 	repo: Repository;
-	settings: GitHubPublisherSettings;
-	constructor(app: App, plugin: GithubPublisher, branchName: string, repo: Repository) {
+	settings: EnveloppeSettings;
+	constructor(app: App, plugin: Enveloppe, branchName: string, repo: Repository) {
 		super(app);
 		this.plugin = plugin;
 		this.branchName = branchName;
 		this.repo = repo;
 		this.settings = plugin.settings;
 	}
-	getItems(): GithubPublisherCommands[] {
+	getItems(): EnveloppeCommands[] {
 		const cmd = [
 			{
 				commands: "shareAllMarkedNotes",
@@ -191,10 +187,10 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<GithubPubli
 		}
 		return cmd;
 	}
-	getItemText(item: GithubPublisherCommands): string {
+	getItemText(item: EnveloppeCommands): string {
 		return item.name;
 	}
-	onChooseItem(item: GithubPublisherCommands, _evt: MouseEvent | KeyboardEvent): void {
+	onChooseItem(item: EnveloppeCommands, _evt: MouseEvent | KeyboardEvent): void {
 		switch (item.commands) {
 			case "shareAllMarkedNotes":
 				uploadAllNotes(this.plugin, this.repo, this.branchName);

@@ -1,4 +1,4 @@
-import { FolderSettings, type GitHubPublisherSettings } from "@interfaces";
+import { FolderSettings, type EnveloppeSettings } from "@interfaces";
 import dedent from "dedent";
 import i18next from "i18next";
 import { normalizePath, sanitizeHTMLToDom } from "obsidian";
@@ -37,7 +37,7 @@ import { DISCORD_ICON, DISCUSSION_ICON, DOCUMENTATION, GITHUB_ICON, ISSUE, TRANS
 ```
 */
 
-export function KeyBasedOnSettings(settings: GitHubPublisherSettings): DocumentFragment {
+export function KeyBasedOnSettings(settings: EnveloppeSettings): DocumentFragment {
 	const defaultPath = settings.upload.defaultName.length > 0 ? `${settings.upload.defaultName}` : "/";
 	let path = settings.upload.behavior === FolderSettings.Yaml ? `${settings.upload.rootFolder.length > 0 ? settings.upload.rootFolder : ""}/${defaultPath}/file.md` : `${defaultPath}/file.md`;
 	path = normalizePath(regexOnPath(path, settings));
@@ -95,7 +95,7 @@ export function KeyBasedOnSettings(settings: GitHubPublisherSettings): DocumentF
 /**
  * Create the contents of the help settings tab
  */
-export function help(settings: GitHubPublisherSettings) {
+export function help(settings: EnveloppeSettings) {
 	const els = dedent(`
 		<ul>
 			<li><code class="code-title">${settings.plugin.shareKey}</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.share.title")}
@@ -185,10 +185,10 @@ export function usefulLinks(): DocumentFragment {
  *    branch: master
  *    autoclean: false
  * ```
- * @param {GitHubPublisherSettings} settings
+ * @param {EnveloppeSettings} settings
  * @return {DocumentFragment}
  */
-export function multipleRepoExplained(settings: GitHubPublisherSettings): DocumentFragment {
+export function multipleRepoExplained(settings: EnveloppeSettings): DocumentFragment {
 	const rules = "token key atrule";
 	const comments = "token comment";
 	const str = "token string";

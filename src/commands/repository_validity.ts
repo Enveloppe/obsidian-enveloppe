@@ -1,18 +1,18 @@
 import type { Repository } from "@interfaces";
 import i18next from "i18next";
 import { type Command, Notice } from "obsidian";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { checkRepositoryValidity } from "src/utils/data_validation_test";
 
 /**
  * Command to check the validity of the repository
  * @call checkRepositoryValidity
- * @param {GithubPublisher} plugin
+ * @param {Enveloppe} plugin
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @return {Promise<void>}
  */
 export async function repositoryValidityActiveFile(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	repo: Repository | null
 ): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
@@ -25,13 +25,13 @@ export async function repositoryValidityActiveFile(
 
 /**
  * Check if the repository is valid
- * @param {GithubPublisher} plugin
+ * @param {Enveloppe} plugin
  * @param {Repository} repo
  * @return {Promise<Command>}
  */
 
 export async function checkRepositoryValidityCallback(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	repo: Repository | null
 ): Promise<Command> {
 	const id = repo

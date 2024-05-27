@@ -1,12 +1,8 @@
-import {
-	EnumbSettingsTabId,
-	FolderSettings,
-	type GitHubPublisherSettings,
-} from "@interfaces";
+import { EnumbSettingsTabId, FolderSettings, type EnveloppeSettings } from "@interfaces";
 import i18next from "i18next";
 import { Notice, type Setting } from "obsidian";
-import type GithubPublisher from "src/main";
-import type { GithubPublisherSettingsTab } from "src/settings";
+import type Enveloppe from "src/main";
+import type { EnveloppeSettingsTab } from "src/settings";
 /**
  * show a settings
  * @param {Setting} containerEl setting to show
@@ -34,7 +30,7 @@ export function hideSettings(containerEl: Setting) {
 }
 
 export function showHideBasedOnFolder(
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	frontmatterKeySettings: Setting,
 	rootFolderSettings: Setting,
 	folderNoteSettings: Setting
@@ -62,9 +58,9 @@ export function showHideBasedOnFolder(
 export async function autoCleanCondition(
 	value: string,
 	autoCleanSetting: Setting,
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	what: "rootFolder" | "defaultName" = "defaultName",
-	settingsTab: GithubPublisherSettingsTab
+	settingsTab: EnveloppeSettingsTab
 ) {
 	const settings = plugin.settings.upload;
 	const translation =
@@ -112,7 +108,7 @@ export async function folderHideShowSettings(
 	rootFolderSettings: Setting,
 	autoCleanSetting: Setting,
 	value: string,
-	plugin: GithubPublisher
+	plugin: Enveloppe
 ) {
 	const settings = plugin.settings.upload;
 	if (value === FolderSettings.Yaml) {
@@ -132,13 +128,13 @@ export async function folderHideShowSettings(
  * show or hide with disabling the autoclean settings based on the condition
  * @param {boolean} condition
  * @param {Setting} autoCleanSetting
- * @param {GithubPublisher} plugin
+ * @param {Enveloppe} plugin
  */
 
 export function autoCleanUpSettingsOnCondition(
 	condition: boolean,
 	autoCleanSetting: Setting,
-	plugin: GithubPublisher
+	plugin: Enveloppe
 ) {
 	const settings = plugin.settings.upload;
 	if (condition) {

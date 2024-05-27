@@ -11,7 +11,7 @@ import { type EmbedCache, type LinkCache, TFile, TFolder } from "obsidian";
 import { getAPI, type Link } from "obsidian-dataview";
 import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
 import Publisher from "src/GitHub/upload";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { logs } from "src/utils";
 import { isAttachment, isShared } from "src/utils/data_validation_test";
 import {
@@ -23,10 +23,10 @@ import {
 export class FilesManagement extends Publisher {
 	/**
 	 * @param {Octokit} octokit The octokit instance
-	 * @param {GitHubPublisherSettings} plugin The plugin
+	 * @param {EnveloppeSettings} plugin The plugin
 	 */
 
-	constructor(octokit: Octokit, plugin: GithubPublisher) {
+	constructor(octokit: Octokit, plugin: Enveloppe) {
 		super(octokit, plugin);
 	}
 

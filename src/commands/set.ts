@@ -1,8 +1,8 @@
 import i18next from "i18next";
 import { type Command, TFile } from "obsidian";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 
-export function refreshOpenedSet(plugin: GithubPublisher) {
+export function refreshOpenedSet(plugin: Enveloppe) {
 	const findRepo = (file: TFile | null) => {
 		if (!file) return [];
 		return plugin.settings.github.otherRepo.filter((repo) => repo.set === file.path);
@@ -28,7 +28,7 @@ export function refreshOpenedSet(plugin: GithubPublisher) {
 	} as Command;
 }
 
-export function refreshAllSets(plugin: GithubPublisher) {
+export function refreshAllSets(plugin: Enveloppe) {
 	return {
 		id: "reload-all-sets",
 		name: i18next.t("commands.refreshAllSets"),

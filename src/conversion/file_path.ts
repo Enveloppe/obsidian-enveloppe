@@ -1,7 +1,7 @@
 import {
 	FIND_REGEX,
 	FolderSettings,
-	type GitHubPublisherSettings,
+	type EnveloppeSettings,
 	type LinkedNotes,
 	type MultiProperties,
 	type Properties,
@@ -16,7 +16,7 @@ import {
 	type Vault,
 } from "obsidian";
 import { createRegexFromText } from "src/conversion/find_and_replace_text";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { logs } from "src/utils";
 import {
 	checkIfRepoIsInAnother,
@@ -185,7 +185,7 @@ export async function createRelativePath(
  * Change the filename in index.md if folder note
  * @param {TFile} file Source file
  * @param {Vault} vault
- * @param {GitHubPublisherSettings} settings Global Settings
+ * @param {EnveloppeSettings} settings Global Settings
  * @param {string} fileName the filename after reading the frontmatter
  * @return {string} original file name or index.md
  */
@@ -193,7 +193,7 @@ export async function createRelativePath(
 function folderNoteIndexObs(
 	file: TFile,
 	vault: Vault,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	fileName: string
 ): string {
 	const index = settings.upload.folderNote.rename;
@@ -213,14 +213,14 @@ function folderNoteIndexObs(
  * Create the path on hypothetical vault using the obsidian path and replacing the name by index.md if needed and removing the subfolder if needed
  * @param {TFile} file Source file
  * @param {Vault} vault
- * @param {GitHubPublisherSettings} settings Global Settings
+ * @param {EnveloppeSettings} settings Global Settings
  * @param {string} fileName file name
  * @return {string} path
  */
 
 function createObsidianPath(
 	file: TFile,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	vault: Vault,
 	fileName: string,
 	prop?: Properties
@@ -247,14 +247,14 @@ function createObsidianPath(
  * Check if a file (using category frontmatter option) is a folder note, and rename it to index.md if it is
  * @param {string} fileName file name
  * @param {FrontMatterCache} frontmatter frontmatter
- * @param {GitHubPublisherSettings} settings Settings
+ * @param {EnveloppeSettings} settings Settings
  * @returns {string} renamed file name or original file name
  */
 
 function folderNoteIndexYaml(
 	fileName: string,
 	frontmatter: FrontMatterCache | undefined | null,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	prop?: Properties
 ): string {
 	const category = getCategory(frontmatter, settings, prop?.path);
@@ -271,14 +271,14 @@ function folderNoteIndexYaml(
 
 /**
  * Create filepath based on settings and frontmatter for the github repository
- * @param {GitHubPublisherSettings} settings Settings
+ * @param {EnveloppeSettings} settings Settings
  * @param {FrontMatterCache} frontmatter frontmatter
  * @param {string} fileName file name
  * @returns {string} filepath
  */
 
 function createFrontmatterPath(
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	frontmatter: FrontMatterCache | null | undefined,
 	fileName: string,
 	prop?: Properties
@@ -304,13 +304,10 @@ function createFrontmatterPath(
  * Apply a regex edition on the title. It can be used to remove special characters or to add a prefix or suffix
  * ! Not applied on the index.md file (folder note)
  * @param {string} fileName file name
- * @param {GitHubPublisherSettings} settings Settings
+ * @param {EnveloppeSettings} settings Settings
  * @return {string} edited file name
  */
-export function regexOnFileName(
-	fileName: string,
-	settings: GitHubPublisherSettings
-): string {
+export function regexOnFileName(fileName: string, settings: EnveloppeSettings): string {
 	const uploadSettings = settings.upload;
 	if (
 		(fileName === uploadSettings.folderNote.rename && uploadSettings.folderNote.enable) ||
@@ -338,10 +335,10 @@ export function regexOnFileName(
 /**
  * Allow to modify enterely the path of a file, using regex / string replace
  * @param {string} path path
- * @param {GitHubPublisherSettings} settings Settings
+ * @param {EnveloppeSettings} settings Settings
  * @return {string} edited path
  */
-export function regexOnPath(path: string, settings: GitHubPublisherSettings): string {
+export function regexOnPath(path: string, settings: EnveloppeSettings): string {
 	const uploadSettings = settings.upload;
 	if (
 		uploadSettings.behavior === FolderSettings.Fixed ||
@@ -367,13 +364,13 @@ export function regexOnPath(path: string, settings: GitHubPublisherSettings): st
  * Get the title field from frontmatter or file name
  * @param {FrontMatterCache} frontmatter frontmatter
  * @param {TFile} file file
- * @param {GitHubPublisherSettings} settings Settings
+ * @param {EnveloppeSettings} settings Settings
  * @returns {string} title
  */
 export function getTitleField(
 	frontmatter: FrontMatterCache | undefined | null,
 	file: TFile,
-	settings: GitHubPublisherSettings
+	settings: EnveloppeSettings
 ): string {
 	const fileName = file.name;
 	if (
@@ -394,7 +391,7 @@ export function getTitleField(
 export function getReceiptFolder(
 	file: TFile,
 	otherRepo: Repository | null,
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	prop?: Properties | Properties[]
 ): string {
 	const { vault } = plugin.app;
@@ -443,7 +440,7 @@ export function getReceiptFolder(
  */
 export function getImagePath(
 	file: TFile,
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	sourceFrontmatter: PropertiesConversion | null,
 	repository: Properties | Properties[]
 ): string {
@@ -465,14 +462,14 @@ export function getImagePath(
 /**
  * Create filepath in github Repository based on settings and frontmatter for image
  * @param {TFile} file : Source file
- * @param {GitHubPublisherSettings} settings Settings
+ * @param {EnveloppeSettings} settings Settings
  * @param {PropertiesConversion | null} sourceFrontmatter
  * @return {string} the new filepath
  */
 
 function createImagePath(
 	file: TFile,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	sourceFrontmatter: PropertiesConversion | null,
 	overridePath?: Properties
 ): { path: string; name: string } {
@@ -540,7 +537,7 @@ function createImagePath(
 function applyOverriddenPath(
 	fileName: string,
 	filePath: string,
-	settings: GitHubPublisherSettings
+	settings: EnveloppeSettings
 ): { filePath: string; overridden: boolean } {
 	let overridden = false;
 	const isOverridden = settings.embed.overrideAttachments.filter((override) => {

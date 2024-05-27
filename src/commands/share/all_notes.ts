@@ -1,10 +1,16 @@
 import type { MonoRepoProperties, Repository, UploadedFiles } from "@interfaces";
 import { ERROR_ICONS } from "@interfaces/icons";
 import i18next from "i18next";
-import { type Command, type FrontMatterCache, Notice, Platform, type TFile } from "obsidian";
+import {
+	type Command,
+	type FrontMatterCache,
+	Notice,
+	Platform,
+	type TFile,
+} from "obsidian";
 import type { GithubBranch } from "src/GitHub/branch";
 import { deleteFromGithub } from "src/GitHub/delete";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { ListChangedFiles } from "src/settings/modals/list_changed";
 import {
 	createListEdited,
@@ -23,13 +29,13 @@ import { ShareStatusBar } from "src/utils/status_bar";
 /**
  * Upload all note
  * @call uploadAllNotes
- * @param plugin {GithubPublisher} - The plugin instance
+ * @param plugin {Enveloppe} - The plugin instance
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {string} branchName - The branch name to upload the file
  * @return {Promise<Command>}
  */
 export async function uploadAllNotesCallback(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	repo: Repository | null,
 	branchName: string
 ): Promise<Command> {
@@ -48,14 +54,14 @@ export async function uploadAllNotesCallback(
 /**
  * Command to share all the notes
  * @call shareAllMarkedNotes
- * @param {GithubPublisher} plugin
+ * @param {Enveloppe} plugin
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {string} branchName
  * @return {Promise<void>}
  */
 
 export async function uploadAllNotes(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	repo: Repository | null,
 	branchName: string
 ): Promise<void> {

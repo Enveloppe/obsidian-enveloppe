@@ -1,7 +1,7 @@
 import {
 	type Deleted,
 	FIND_REGEX,
-	type GitHubPublisherSettings,
+	type EnveloppeSettings,
 	type ListEditedFiles,
 	type MetadataExtractor,
 	type MultiRepoProperties,
@@ -16,11 +16,11 @@ import slugify from "slugify";
 import { getReceiptFolder } from "src/conversion/file_path";
 import { createRegexFromText } from "src/conversion/find_and_replace_text";
 import type Publisher from "src/GitHub/upload";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { frontmatterFromFile } from "src/utils/parse_frontmatter";
 
 type LogsParameters = {
-	settings: Partial<GitHubPublisherSettings>;
+	settings: Partial<EnveloppeSettings>;
 	e?: boolean;
 	logs?: boolean;
 };
@@ -41,7 +41,7 @@ export function notif(args: LogsParameters, ...messages: unknown[]) {
 	const date = new Date().toISOString().slice(11, 23);
 	const prefix = args.logs
 		? `DEV LOGS [${date}] ${stack}:\n`
-		: `[GitHub Publisher](${stack}):\n`;
+		: `[Enveloppe](${stack}):\n`;
 	if (e) console.error(prefix, ...messages);
 	else console.log(prefix, ...messages);
 }
@@ -100,7 +100,7 @@ function callFunction(type?: boolean): string {
  * @param messages {unknown[]} the message to display
  */
 export function logs(args: LogsParameters, ...messages: unknown[]) {
-	const settings = args.settings as GitHubPublisherSettings;
+	const settings = args.settings as EnveloppeSettings;
 	args.logs = true;
 	if (args.e) {
 		notif(args, ...messages);
@@ -113,10 +113,10 @@ export function logs(args: LogsParameters, ...messages: unknown[]) {
 
 /**
  * Monkey patch the console to log all the messages in a file in the plugin folder
- * @param plugin {GithubPublisher} the plugin instance
+ * @param plugin {Enveloppe} the plugin instance
  * @returns {void}
  */
-export function monkeyPatchConsole(plugin: GithubPublisher): void {
+export function monkeyPatchConsole(plugin: Enveloppe): void {
 	if (!plugin.settings.plugin.dev) return;
 
 	const logFile = `${plugin.manifest.dir}/logs.txt`;
@@ -199,13 +199,13 @@ export function createListEdited(
  * Get the settings of the metadata extractor plugin
  * Disable the plugin if it is not installed, the settings are not set or if plateform is mobile
  * @param {App} app
- * @param {GitHubPublisherSettings} settings
+ * @param {EnveloppeSettings} settings
  * @returns {Promise<MetadataExtractor | null>}
  */
 
 export async function getSettingsOfMetadataExtractor(
 	app: App,
-	settings: GitHubPublisherSettings
+	settings: EnveloppeSettings
 ): Promise<MetadataExtractor | null> {
 	if (
 		Platform.isMobile ||
@@ -267,7 +267,7 @@ function checkSlash(link: string): string {
 export async function createLink(
 	file: TFile,
 	multiRepo: MultiRepoProperties,
-	plugin: GithubPublisher
+	plugin: Enveloppe
 ): Promise<void> {
 	const otherRepo = multiRepo.repository;
 	const settings = plugin.settings;
@@ -354,14 +354,14 @@ export async function createLink(
  * Loop through the list of repo and create a message for each one.
  * @param {Publisher} PublisherManager
  * @param {TFile | string} file
- * @param {GitHubPublisherSettings} settings
+ * @param {EnveloppeSettings} settings
  * @param {Properties | Properties[]} prop
  */
 
 export async function publisherNotification(
 	PublisherManager: Publisher,
 	file: TFile | string | undefined,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	prop: Properties | Properties[]
 ) {
 	prop = Array.isArray(prop) ? prop : [prop];
@@ -391,7 +391,7 @@ export function notifError(properties: Properties | Properties[]) {
  * Create a notice message for the sharing ; the message can be delayed if a workflow is used.
  * @param {Publisher} PublisherManager
  * @param {TFile | string} file
- * @param {GitHubPublisherSettings} settings
+ * @param {EnveloppeSettings} settings
  * @param {Properties} prop
  * @return {Promise<void>}
  */
@@ -399,7 +399,7 @@ export function notifError(properties: Properties | Properties[]) {
 async function publisherNotificationOneRepo(
 	PublisherManager: Publisher,
 	file: TFile | string | undefined,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	prop: Properties
 ): Promise<void> {
 	const noticeValue = file instanceof TFile ? `"${file.basename}"` : file;
@@ -468,11 +468,11 @@ export function trimObject(obj: { [p: string]: string }) {
  * Convert the variable to their final value:
  * - %configDir% -> The config directory of the vault
  * - %pluginID% -> The ID of the plugin
- * @param {GithubPublisher} plugin - The plugin
+ * @param {Enveloppe} plugin - The plugin
  * @param {string} tokenPath - The path of the token as entered by the user
  * @return {string} - The final path of the token
  */
-export function createTokenPath(plugin: GithubPublisher, tokenPath?: string): string {
+export function createTokenPath(plugin: Enveloppe, tokenPath?: string): string {
 	const vault = plugin.app.vault;
 	if (!tokenPath) {
 		tokenPath = TOKEN_PATH;

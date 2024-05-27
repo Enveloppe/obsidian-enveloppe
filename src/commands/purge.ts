@@ -3,7 +3,7 @@ import i18next from "i18next";
 import { type Command, Notice } from "obsidian";
 import type { GithubBranch } from "src/GitHub/branch";
 import { deleteFromGithub } from "src/GitHub/delete";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { ListChangedFiles } from "src/settings/modals/list_changed";
 import { notif } from "src/utils";
 import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
@@ -15,13 +15,13 @@ import {
 /**
  * Command to delete file on the repo
  * @call purgeNotesRemote
- * @param {GithubPublisher} plugin - The plugin instance
+ * @param {Enveloppe} plugin - The plugin instance
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {string} branchName - The branch name to delete the file
  * @return {Promise<Command>}
  */
 export async function purgeCallback(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	repo: Repository | null,
 	branchName: string
 ): Promise<Command> {
@@ -82,13 +82,13 @@ async function purge(
 
 /**
  * Command to delete the files
- * @param {GithubPublisher} plugin
+ * @param {Enveloppe} plugin
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param {string} branchName
  * @return {Promise<void>}
  */
 export async function purgeForRepo(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	repo: Repository | null,
 	branchName: string
 ): Promise<void> {

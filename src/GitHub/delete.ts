@@ -2,7 +2,7 @@ import {
 	type Deleted,
 	FIND_REGEX,
 	FolderSettings,
-	type GitHubPublisherSettings,
+	type EnveloppeSettings,
 	type GithubRepo,
 	type MonoRepoProperties,
 	type Properties,
@@ -169,13 +169,10 @@ async function deleteFromGithubOneRepo(
 /**
  * Prevent deletion of specific file by checking their presence in the excludedFile list
  * @param {string} file file to eventually delete
- * @param {GitHubPublisherSettings} settings
+ * @param {EnveloppeSettings} settings
  * @return {boolean} : true if the file is in the excludedFile list
  */
-function excludedFileFromDelete(
-	file: string,
-	settings: GitHubPublisherSettings
-): boolean {
+function excludedFileFromDelete(file: string, settings: EnveloppeSettings): boolean {
 	const autoCleanExcluded = settings.upload.autoclean.excluded;
 	if (autoCleanExcluded.length > 0) {
 		for (const excludedFile of autoCleanExcluded) {
@@ -198,13 +195,13 @@ function excludedFileFromDelete(
  * Ex : Include all files in a rootfolder docs/*
  * Also the function check if the file is excluded from deletion
  * @param {GithubRepo[]} fileInRepo All files from repository
- * @param {GitHubPublisherSettings} settings Settings of the plugin
+ * @param {EnveloppeSettings} settings Settings of the plugin
  * @return {Promise<GithubRepo[]>} sharedFilesInRepo containing valid file to check if they must be deleted
  */
 
 export async function filterGithubFile(
 	fileInRepo: GithubRepo[],
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	prop: Properties
 ): Promise<GithubRepo[]> {
 	const sharedFilesInRepo: GithubRepo[] = [];
@@ -248,7 +245,7 @@ function parseYamlFrontmatter(contents: string): unknown {
  * - autoClean: false
  * - share: false
  * @param {Octokit} octokit GitHub API
- * @param {GitHubPublisherSettings} settings Settings of the plugin
+ * @param {EnveloppeSettings} settings Settings of the plugin
  * @param {string} path path of the file to check
  * @param {Properties} prop repository informations
  * @return {Promise<boolean>} true if the file must be deleted
@@ -256,7 +253,7 @@ function parseYamlFrontmatter(contents: string): unknown {
 
 async function checkIndexFiles(
 	octokit: Octokit,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	path: string,
 	prop: Properties
 ): Promise<boolean> {

@@ -1,5 +1,5 @@
 import { FolderSettings, GithubTiersVersion } from "src/interfaces/enum";
-import type { GitHubPublisherSettings } from "src/interfaces/main";
+import type { EnveloppeSettings } from "src/interfaces/main";
 
 /** Find a regex encapsuled in // */
 export const FIND_REGEX = /^\/(.*)\/[igmsuy]*$/;
@@ -10,7 +10,7 @@ export const FIND_REGEX = /^\/(.*)\/[igmsuy]*$/;
  */
 export const TOKEN_PATH: string = "%configDir%/plugins/%pluginID%/env";
 
-export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
+export const DEFAULT_SETTINGS: Partial<EnveloppeSettings> = {
 	github: {
 		user: "",
 		repo: "",
@@ -18,7 +18,7 @@ export const DEFAULT_SETTINGS: Partial<GitHubPublisherSettings> = {
 		automaticallyMergePR: true,
 		dryRun: {
 			enable: false,
-			folderName: "github-publisher",
+			folderName: "enveloppe",
 		},
 		tokenPath: TOKEN_PATH,
 		api: {

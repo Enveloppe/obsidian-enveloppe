@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
 	FIND_REGEX,
-	type GitHubPublisherSettings,
+	type EnveloppeSettings,
 	GithubTiersVersion,
 	type MultiProperties,
 	type Properties,
@@ -18,7 +18,7 @@ import {
 	type TFolder,
 } from "obsidian";
 import type { GithubBranch } from "src/GitHub/branch";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { notif } from "src/utils";
 import {
 	frontmatterFromFile,
@@ -69,13 +69,13 @@ export function isInternalShared(
 }
 /**
  * Retrieves the shared key for a repository based on the provided settings, app, frontmatter, and file.
- * @param plugin - The GitHub Publisher plugin instance.
+ * @param plugin - The Enveloppe plugin instance.
  * @param frontmatter - The FrontMatterCache object representing the frontmatter of the file.
  * @param file - The TFile object representing the file being processed.
  * @returns The Repository object representing the repository with the shared key, or null if no repository is found.
  */
 export function getRepoSharedKey(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	frontmatter?: FrontMatterCache | null,
 	file?: TFile
 ): Repository | null {
@@ -102,7 +102,7 @@ export function getRepoSharedKey(
  * - Check if the file is in the excluded file list
  * - Verify for all Repository if the file is shared
  * @param {FrontMatterCache} meta the frontmatter of the file
- * @param {GitHubPublisherSettings} settings
+ * @param {EnveloppeSettings} settings
  * @param {TFile} file
  * @param otherRepo
  * @returns {boolean} the value of meta[settings.shareKey] or false if the file is in the ignore list/not valid
@@ -110,7 +110,7 @@ export function getRepoSharedKey(
 
 export function isShared(
 	meta: FrontMatterCache | undefined | null,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	file: TFile,
 	otherRepo: Repository | null
 ): boolean {
@@ -153,12 +153,12 @@ export function isShared(
 }
 /**
  * Check if a file is in an excluded folder
- * @param settings {GitHubPublisherSettings}
+ * @param settings {EnveloppeSettings}
  * @param file {TFile}
  * @returns boolean
  */
 export function isExcludedPath(
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	file: TFile | TFolder,
 	repository: Repository | null
 ): boolean {
@@ -185,14 +185,13 @@ export function isExcludedPath(
  * Allow to get all sharedKey from one file to count them
  *
  * @param {FrontMatterCache | undefined} frontmatter - The frontmatter of the file.
- * @param {GitHubPublisherSettings} settings - The GitHub Publisher settings.
  * @param {TFile | null} file - The file to get the shared keys from.
  * @returns {string[]} - An array of shared keys found in the file.
  */
 export function multipleSharedKey(
 	frontmatter: FrontMatterCache | undefined | null,
 	file: TFile | null,
-	plugin: GithubPublisher
+	plugin: Enveloppe
 ): string[] {
 	const keysInFile: string[] = [];
 	const { settings } = plugin;
@@ -314,13 +313,13 @@ export function checkIfRepoIsInAnother(
  * Verify if the Repository configuration is not empty
  * Permit to send a special notice for each empty configuration
  * @param {Properties | Properties[]} prop the prop to check
- * @param {GithubPublisher} plugin the plugin instance
+ * @param {Enveloppe} plugin the plugin instance
  * @param silent
  * @return {Promise<boolean>}
  */
 export async function checkEmptyConfiguration(
 	prop: Properties | Properties[],
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	silent = false
 ): Promise<boolean> {
 	prop = Array.isArray(prop) ? prop : [prop];
@@ -450,10 +449,10 @@ export async function checkRepositoryValidityWithProperties(
 /**
  * Returns the default repository based on the provided settings.
  *
- * @param settings - The GitHubPublisherSettings object containing the configuration settings.
+ * @param settings - The EnveloppeSettings object containing the configuration settings.
  * @returns The Repository object representing the default repository.
  */
-export function defaultRepo(settings: GitHubPublisherSettings): Repository {
+export function defaultRepo(settings: EnveloppeSettings): Repository {
 	return {
 		smartKey: "default",
 		user: settings.github.user,
@@ -499,7 +498,7 @@ export function defaultRepo(settings: GitHubPublisherSettings): Repository {
  */
 export async function verifyRateLimitAPI(
 	octokit: Octokit,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	commands = false,
 	numberOfFile = 1
 ): Promise<number> {
@@ -547,13 +546,10 @@ export async function verifyRateLimitAPI(
  * Determines if an attachment file needs to be force pushed based on the provided settings.
  *
  * @param file - The attachment file to check.
- * @param settings - The GitHub Publisher settings.
+ * @param settings - The Enveloppe settings.
  * @returns True if the attachment file needs to be force pushed, false otherwise.
  */
-export function forcePushAttachment(
-	file: TFile,
-	settings: GitHubPublisherSettings
-): boolean {
+export function forcePushAttachment(file: TFile, settings: EnveloppeSettings): boolean {
 	const needToBeForPush = settings.embed.overrideAttachments.filter((path) => {
 		const isRegex = path.path.match(FIND_REGEX);
 		const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
@@ -585,15 +581,15 @@ export function isFolderNote(properties: MultiProperties): boolean {
 }
 
 /**
- * Checks if a file or folder is located within the dry run folder specified in the GitHub Publisher settings.
+ * Checks if a file or folder is located within the dry run folder specified in the Enveloppe settings.
  *
- * @param settings - The GitHub Publisher settings.
+ * @param settings - The Enveloppe settings.
  * @param repo - The repository information. If null, the default repository information from the settings will be used.
  * @param file - The file or folder to check.
  * @returns True if the file or folder is located within the dry run folder, false otherwise.
  */
 export function isInDryRunFolder(
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	repo: Repository | null,
 	file: TFile | TFolder
 ) {

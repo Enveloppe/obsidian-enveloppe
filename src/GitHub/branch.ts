@@ -3,11 +3,11 @@ import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Notice } from "obsidian";
 import { FilesManagement } from "src/GitHub/files";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { logs, notif } from "src/utils";
 
 export class GithubBranch extends FilesManagement {
-	constructor(octokit: Octokit, plugin: GithubPublisher) {
+	constructor(octokit: Octokit, plugin: Enveloppe) {
 		super(octokit, plugin);
 	}
 

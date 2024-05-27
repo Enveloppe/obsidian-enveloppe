@@ -4,7 +4,7 @@
  */
 
 import type {
-	GitHubPublisherSettings,
+	EnveloppeSettings,
 	LinkedNotes,
 	MultiProperties,
 	PropertiesConversion,
@@ -22,18 +22,18 @@ import {
 	convertWikilinks,
 	escapeRegex,
 } from "src/conversion/links";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { logs, notif } from "src/utils";
 
 class DataviewCompiler {
-	settings: GitHubPublisherSettings;
+	settings: EnveloppeSettings;
 	properties: MultiProperties;
 	path: string;
 	dvApi: DataviewApi;
 	sourceText: string;
 
 	constructor(
-		settings: GitHubPublisherSettings,
+		settings: EnveloppeSettings,
 		properties: MultiProperties,
 		path: string,
 		dvApi: DataviewApi,
@@ -292,10 +292,7 @@ async function convertDataviewLinks(
 /**
  * Get the dataview path from a markdown file
  */
-export function getDataviewPath(
-	markdown: string,
-	plugin: GithubPublisher
-): LinkedNotes[] {
+export function getDataviewPath(markdown: string, plugin: Enveloppe): LinkedNotes[] {
 	const { settings } = plugin;
 	const vault = plugin.app.vault;
 	if (!settings.conversion.dataview) {

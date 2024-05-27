@@ -1,4 +1,4 @@
-import { FIND_REGEX, type GitHubPublisherSettings } from "@interfaces";
+import { FIND_REGEX, type EnveloppeSettings } from "@interfaces";
 import { escapeRegex } from "src/conversion/links";
 import { logs } from "src/utils";
 
@@ -22,13 +22,13 @@ export function createRegexFromText(toReplace: string, withflag?: string): RegEx
  * Given a series of `censor` entries in Settings, this will loop through each
  * then find and replace.
  * @param {string} text The text to be censored.
- * @param {GitHubPublisherSettings} settings Settings
+ * @param {EnveloppeSettings} settings Settings
  * @param {boolean} after Whether to censor all or just the first match.
  * @returns {string} The censored text.
  */
 export default function findAndReplaceText(
 	text: string,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	after?: boolean
 ): string {
 	if (!settings.conversion.censorText) {
@@ -70,7 +70,7 @@ export function replaceText(
 	fileContent: string,
 	pattern: string | RegExp,
 	replaceWith: string,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	links?: boolean
 ): string {
 	let regexWithString: string;

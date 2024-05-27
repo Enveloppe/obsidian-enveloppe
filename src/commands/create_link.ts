@@ -1,7 +1,7 @@
 import type { MultiRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
 import { type Command, Notice } from "obsidian";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { createLink } from "src/utils";
 import { isShared } from "src/utils/data_validation_test";
 import { frontmatterFromFile, getProperties } from "src/utils/parse_frontmatter";
@@ -9,12 +9,12 @@ import { frontmatterFromFile, getProperties } from "src/utils/parse_frontmatter"
 /**
  * Create the command to create a link to the note in the repo
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
- * @param {GithubPublisher} plugin
+ * @param {Enveloppe} plugin
  * @return {Promise<Command>}
  */
 export async function createLinkCallback(
 	repo: Repository | null,
-	plugin: GithubPublisher
+	plugin: Enveloppe
 ): Promise<Command> {
 	const id = repo ? `copy-link-K${repo.smartKey}` : "copy-link";
 	const common = i18next.t("common.repository");
@@ -47,12 +47,12 @@ export async function createLinkCallback(
  * Create the command to create a link to the note in the repo if a file is active ; else do nothing
  * @call createLink
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
- * @param {GithubPublisher} plugin - The plugin instance
+ * @param {Enveloppe} plugin - The plugin instance
  * @return {Promise<void>}
  */
 export async function createLinkOnActiveFile(
 	repo: Repository | null,
-	plugin: GithubPublisher
+	plugin: Enveloppe
 ): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	const frontmatter = frontmatterFromFile(file, plugin, repo);

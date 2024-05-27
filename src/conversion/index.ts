@@ -1,5 +1,5 @@
 import type {
-	GitHubPublisherSettings,
+	EnveloppeSettings,
 	LinkedNotes,
 	MultiProperties,
 	PropertiesConversion,
@@ -18,7 +18,7 @@ import {
 import { convertDataviewQueries } from "src/conversion/compiler/dataview";
 import { bakeEmbeds, convertInlineDataview } from "src/conversion/compiler/embeds";
 import { convertToInternalGithub, convertWikilinks } from "src/conversion/links";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { notif } from "src/utils";
 import { isFolderNote } from "src/utils/data_validation_test";
 
@@ -30,14 +30,14 @@ import findAndReplaceText from "./find_and_replace_text";
  * If both are set, the perfile setting will override the global setting.
  * If neither are set, the default is false.
  * @param {string} text the text to convert
- * @param {GitHubPublisherSettings} settings the global settings
+ * @param {EnveloppeSettings} settings the global settings
  * @param {frontmatter} frontmatter the perfile frontmatter settings
  * @returns {string} the converted text
  */
 
 export function addHardLineBreak(
 	text: string,
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	frontmatter: PropertiesConversion
 ): string {
 	try {
@@ -52,7 +52,7 @@ export function addHardLineBreak(
 	}
 }
 
-function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: any) {
+function tagsToYaml(toAdd: string[], settings: EnveloppeSettings, yaml: any) {
 	if (yaml.tag) {
 		try {
 			toAdd = [
@@ -95,7 +95,7 @@ function tagsToYaml(toAdd: string[], settings: GitHubPublisherSettings, yaml: an
 export function addToYaml(
 	text: string,
 	toAdd: string[],
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	folderNoteParaMeters: { properties: MultiProperties | null; file: TFile }
 ): string {
 	const properties = folderNoteParaMeters?.properties;
@@ -144,7 +144,7 @@ function titleToYaml(yaml: any, properties: MultiProperties, file: TFile) {
 }
 
 function inlineTags(
-	settings: GitHubPublisherSettings,
+	settings: EnveloppeSettings,
 	file: TFile,
 	metadataCache: MetadataCache,
 	frontmatter: FrontMatterCache | undefined | null

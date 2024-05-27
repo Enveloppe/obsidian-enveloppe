@@ -6,7 +6,7 @@
  * Each function is modified to fit the needs of this plugin, but citation are done in the code for each function
  */
 
-import type { GitHubPublisherSettings, LinkedNotes, MultiProperties } from "@interfaces";
+import type { EnveloppeSettings, LinkedNotes, MultiProperties } from "@interfaces";
 import {
 	type App,
 	type BlockSubpathResult,
@@ -23,7 +23,7 @@ import {
 	getTitleField,
 	regexOnFileName,
 } from "src/conversion/file_path";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { isShared } from "src/utils/data_validation_test";
 
 /**
@@ -145,7 +145,7 @@ function extractSubpath(
  * @source https://github.com/mgmeyers/obsidian-easy-bake/blob/master/src/BakeModal.ts
  * @param {TFile} originalFile the file to bake
  * @param {Set<TFile>} ancestor the ancestor of the file
- * @param {GithubPublisher} plugin the Obsidian Plugin instance
+ * @param {Enveloppe} plugin the Obsidian Plugin instance
  * @param {MultiProperties} properties the properties of the plugins (settings, repository, frontmatter)
  * @param {string|null} subpath the subpath to bake
  * @param {LinkedNotes[]} linkedNotes the linked notes embedded in the file
@@ -237,7 +237,7 @@ export async function bakeEmbeds(
  * @param properties {MultiProperties} contains the settings, repository and frontmatter
  * @param linked {TFile} The linked note
  * @param sourceFile {TFile} The source file
- * @param plugin {GithubPublisher} The Obsidian App instance
+ * @param plugin {Enveloppe} The Obsidian App instance
  * @param linkedNotes {LinkedNotes[]} The linked notes embedded in the file
  * @returns {Promise<string>}
  */
@@ -270,14 +270,14 @@ async function changeUrl(
  * @param textToAdd {string} The text from the settings.config.embed.bake.textBefore or textAfter
  * @param linked {TFile} The linked note
  * @param app {App} The Obsidian App instance
- * @param settings {GitHubPublisherSettings}
+ * @param settings {EnveloppeSettings}
  * @returns {string}
  */
 function changeTitle(
 	textToAdd: string,
 	linked: TFile,
 	app: App,
-	settings: GitHubPublisherSettings
+	settings: EnveloppeSettings
 ): string {
 	const title = linked.basename;
 	const frontmatter = app.metadataCache.getFileCache(linked)?.frontmatter;
@@ -300,7 +300,7 @@ function changeTitle(
 
 export async function convertInlineDataview(
 	text: string,
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	sourceFile: TFile
 ): Promise<string> {
 	const { settings, app } = plugin;
@@ -361,13 +361,10 @@ export async function convertInlineDataview(
  * extract the alt text if it exists, otherwise extract the filename
  * return null if the alt text or the filename is excluded
  * @param {Link} fieldValue the dataview link
- * @param {GitHubPublisherSettings} settings the global settings
+ * @param {EnveloppeSettings} settings the global settings
  * @return {string | null} the display text by dataview
  */
-function dataviewExtract(
-	fieldValue: Link,
-	settings: GitHubPublisherSettings
-): string | null {
+function dataviewExtract(fieldValue: Link, settings: EnveloppeSettings): string | null {
 	const basename = (name: string) => /([^/\\.]*)(\..*)?$/.exec(name)![1];
 	const filename = basename(fieldValue.path).toString();
 	const display = fieldValue.display ? fieldValue.display.toString() : filename;

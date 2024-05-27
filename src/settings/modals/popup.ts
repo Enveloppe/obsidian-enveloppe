@@ -1,13 +1,13 @@
-import type { GitHubPublisherSettings } from "@interfaces/main";
+import type { EnveloppeSettings } from "@interfaces/main";
 import i18next from "i18next";
 import { type App, Modal, Setting } from "obsidian";
 
 export class AutoCleanPopup extends Modal {
-	settings: GitHubPublisherSettings;
+	settings: EnveloppeSettings;
 	onSubmit: (enable: boolean) => void;
 	constructor(
 		app: App,
-		settings: GitHubPublisherSettings,
+		settings: EnveloppeSettings,
 		onSubmit: (enable: boolean) => void
 	) {
 		super(app);
@@ -29,7 +29,7 @@ export class AutoCleanPopup extends Modal {
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClasses(["github-publisher", "modals", "popup"]);
+		contentEl.addClasses(["enveloppe", "modals", "popup"]);
 		contentEl.createEl("h2", {
 			text: i18next.t("settings.githubWorkflow.autoCleanUp.popup.title"),
 		});

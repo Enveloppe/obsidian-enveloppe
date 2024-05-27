@@ -1,8 +1,4 @@
-import {
-	type GitHubPublisherSettings,
-	GithubTiersVersion,
-	type Repository,
-} from "@interfaces";
+import { type EnveloppeSettings, GithubTiersVersion, type Repository } from "@interfaces";
 import i18next from "i18next";
 import {
 	AbstractInputSuggest,
@@ -12,7 +8,7 @@ import {
 	Setting,
 	type TFile,
 } from "obsidian";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { migrateToken } from "src/settings/migrate";
 import {
 	checkRepositoryValidity,
@@ -20,10 +16,10 @@ import {
 } from "src/utils/data_validation_test";
 
 class SetClassSuggester extends AbstractInputSuggest<TFile> {
-	plugin: GithubPublisher;
+	plugin: Enveloppe;
 	constructor(
 		private inputEl: HTMLInputElement,
-		plugin: GithubPublisher,
+		plugin: Enveloppe,
 		private onSubmit: (value: TFile) => void
 	) {
 		super(plugin.app, inputEl);
@@ -61,25 +57,25 @@ class SetClassSuggester extends AbstractInputSuggest<TFile> {
  * It will list all the repo in the settings and allow the user to add a new one, edit or delete an existing one
  * @extends Modal
  * @param {App} app - the Obsidian App
- * @param {GitHubPublisherSettings} settings - the plugin settings
+ * @param {EnveloppeSettings} settings - the plugin settings
  * @param {string} branchName - the branch name
- * @param {GithubPublisher} plugin - the plugin
+ * @param {Enveloppe} plugin - the plugin
  * @param {Repository[]} repository - the list of repo in the settings
  * @param {(result: Repository[]) => void} onSubmit - the function to call when the modal is submitted
  */
 
 export class ModalAddingNewRepository extends Modal {
-	settings: GitHubPublisherSettings;
-	plugin: GithubPublisher;
+	settings: EnveloppeSettings;
+	plugin: Enveloppe;
 	branchName: string;
 	repository: Repository[];
 	onSubmit: (result: Repository[]) => void;
 
 	constructor(
 		app: App,
-		settings: GitHubPublisherSettings,
+		settings: EnveloppeSettings,
 		branchName: string,
-		plugin: GithubPublisher,
+		plugin: Enveloppe,
 		repository: Repository[],
 		onSubmit: (result: Repository[]) => void
 	) {
@@ -94,7 +90,7 @@ export class ModalAddingNewRepository extends Modal {
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClasses(["github-publisher", "modals", "manage-repo", "add"]);
+		contentEl.addClasses(["enveloppe", "modals", "manage-repo", "add"]);
 		contentEl.createEl("h2", {
 			text: i18next.t("settings.github.smartRepo.modals.title"),
 		});
@@ -275,7 +271,7 @@ export class ModalAddingNewRepository extends Modal {
  * @extends Modal
  * @param {App} app - The Obsidian App instance
  * @param {Repository} repository - The repository to edit
- * @param {GithubPublisher} GithubPublisher - The GithubPublisher instance
+ * @param {Enveloppe} Enveloppe - The Enveloppe instance
  * @param {string} brancheName - The name of the branch (for validation)
  * @param {function} onSubmit - The function to call when the modal is closed (to save the changes)
  */
@@ -283,13 +279,13 @@ export class ModalAddingNewRepository extends Modal {
 class ModalEditingRepository extends Modal {
 	repository: Repository;
 	branchName: string;
-	plugin: GithubPublisher;
+	plugin: Enveloppe;
 	onSubmit: (result: Repository) => void;
 
 	constructor(
 		app: App,
 		repository: Repository,
-		GithubPublisher: GithubPublisher,
+		Enveloppe: Enveloppe,
 		brancheName: string,
 		onSubmit: (result: Repository) => void
 	) {
@@ -297,13 +293,13 @@ class ModalEditingRepository extends Modal {
 		this.repository = repository;
 		this.onSubmit = onSubmit;
 		this.branchName = brancheName;
-		this.plugin = GithubPublisher;
+		this.plugin = Enveloppe;
 	}
 
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.addClasses(["github-publisher", "modals", "manage-repo", "edit"]);
+		contentEl.addClasses(["enveloppe", "modals", "manage-repo", "edit"]);
 		new Setting(contentEl)
 			.setClass("no-display")
 			.addButton((button) =>

@@ -3,7 +3,7 @@ import i18next from "i18next";
 import { type Command, Notice } from "obsidian";
 import { shareAllMarkedNotes } from "src/commands";
 import type { GithubBranch } from "src/GitHub/branch";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
 import {
 	frontmatterSettingsRepository,
@@ -12,13 +12,13 @@ import {
 
 /**
  * Upload all new notes only
- * @param plugin {GithubPublisher} - The plugin instance
+ * @param plugin {Enveloppe} - The plugin instance
  * @param repo {Repository | null} - Other repo if the command is called from the suggest_other_repo_command.ts
  * @param branchName {string} - The branch name to upload the file
  * @returns {Promise<Command>}
  */
 export async function uploadNewNotesCallback(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	repo: Repository | null,
 	branchName: string
 ): Promise<Command> {
@@ -38,14 +38,14 @@ export async function uploadNewNotesCallback(
 /**
  * Command to share the new notes
  * @call shareNewNote
- * @param {GithubPublisher} plugin
+ * @param {Enveloppe} plugin
  * @param {string} branchName
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
  * @return {Promise<void>}
  */
 
 export async function uploadNewNotes(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	branchName: string,
 	repo: Repository | null
 ): Promise<void> {

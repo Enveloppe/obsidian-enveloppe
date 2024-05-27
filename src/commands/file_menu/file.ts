@@ -3,7 +3,7 @@ import i18next from "i18next";
 import { type Menu, type MenuItem, Platform, type TFile } from "obsidian";
 import { shareOneNote } from "src/commands";
 import { ChooseRepoToRun } from "src/commands/suggest_other_repo_commands_modal";
-import type GithubPublisher from "src/main";
+import type Enveloppe from "src/main";
 import {
 	defaultRepo,
 	getRepoSharedKey,
@@ -14,13 +14,13 @@ import { frontmatterFromFile, getProperties } from "src/utils/parse_frontmatter"
 
 /**
  * Create a menu for a shared file
- * @param {GithubPublisher} plugin - The plugin instance
+ * @param {Enveloppe} plugin - The plugin instance
  * @param {TFile} file - The file to share
  * @param {string} branchName - The branch name for the repository
  * @param {Menu} menu - The menu to add the item to
  */
 export function addMenuFile(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	file: TFile,
 	branchName: string,
 	menu: Menu
@@ -46,7 +46,7 @@ export function addMenuFile(
 
 		if (allKeysFromFile.length > 1 || (prop instanceof Array && prop.length > 1)) {
 			if (Platform.isDesktop) {
-				item.setTitle("Github Publisher").setIcon("upload-cloud");
+				item.setTitle("Enveloppe").setIcon("upload-cloud");
 			} else {
 				//add the line to separate the commands
 				menu.addSeparator();
@@ -97,7 +97,7 @@ export function addMenuFile(
  * Create a subMenu if multiple repository are set up
  * If Platform is Desktop, create a submenu
  * If not, add the command to the original menu, in line
- * @param {GithubPublisher} plugin - The plugin instance
+ * @param {Enveloppe} plugin - The plugin instance
  * @param {MenuItem} item - The item to add the submenu to
  * @param {TFile} file - The file to share
  * @param {string} branchName - The branch name for the repository
@@ -105,7 +105,7 @@ export function addMenuFile(
  * @return {Menu} - The submenu created
  */
 function subMenuCommandsFile(
-	plugin: GithubPublisher,
+	plugin: Enveloppe,
 	item: MenuItem,
 	file: TFile,
 	branchName: string,

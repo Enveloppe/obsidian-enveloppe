@@ -1,6 +1,6 @@
 import {
 	DEFAULT_SETTINGS,
-	type GitHubPublisherSettings,
+	type EnveloppeSettings,
 	GithubTiersVersion,
 	type Repository,
 	type SetRepositoryFrontmatter,
@@ -34,7 +34,7 @@ import { ChooseWhichRepoToRun } from "src/commands/suggest_other_repo_commands_m
 import { getTitleField, regexOnFileName } from "src/conversion/file_path";
 import { GithubBranch } from "src/GitHub/branch";
 import { resources, translationLanguage } from "src/i18n/i18next";
-import { GithubPublisherSettingsTab } from "src/settings";
+import { EnveloppeSettingsTab } from "src/settings";
 import { migrateSettings, type OldSettings } from "src/settings/migrate";
 import { createTokenPath, monkeyPatchConsole, notif } from "src/utils";
 import {
@@ -48,8 +48,8 @@ import merge from "ts-deepmerge";
  * @extends Plugin
  */
 
-export default class GithubPublisher extends Plugin {
-	settings!: GitHubPublisherSettings;
+export default class Enveloppe extends Plugin {
+	settings!: EnveloppeSettings;
 	branchName: string = "";
 	repositoryFrontmatter: SetRepositoryFrontmatter = {};
 	originalConsole: any;
@@ -70,7 +70,7 @@ export default class GithubPublisher extends Plugin {
 		);
 	}
 
-	async chargeAllCommands(repo: Repository | null, plugin: GithubPublisher) {
+	async chargeAllCommands(repo: Repository | null, plugin: Enveloppe) {
 		if (plugin.settings.plugin.copyLink.addCmd) {
 			this.addCommand(await createLinkCallback(repo, this));
 		}
@@ -216,7 +216,7 @@ export default class GithubPublisher extends Plugin {
 		});
 
 		console.info(
-			dedent(`[GITHUB PUBLISHER] v.${this.manifest.version} (lang: ${translationLanguage}) loaded.
+			dedent(`[Obsidian Enveloppe] v.${this.manifest.version} (lang: ${translationLanguage}) loaded.
 		* You can hide HTTP logs in the console with checking the "Hide network" in the console settings.
 		* See here: https://developer.chrome.com/docs/devtools/console/reference#network`)
 		);
@@ -245,7 +245,7 @@ export default class GithubPublisher extends Plugin {
 			.replaceAll(".", "-")}-${new Date()
 			.toLocaleDateString("en-US")
 			.replace(/\//g, "-")}`;
-		this.addSettingTab(new GithubPublisherSettingsTab(this.app, this, this.branchName));
+		this.addSettingTab(new EnveloppeSettingsTab(this.app, this, this.branchName));
 		// verify rate limit
 
 		if (!this.settings.github.verifiedRepo && (await this.loadToken()) !== "") {
@@ -351,7 +351,7 @@ export default class GithubPublisher extends Plugin {
 	 * Called when the plugin is disabled
 	 */
 	onunload() {
-		console.info("[Github Publisher] Unloaded");
+		console.info("[Obsidian Enveloppe] Unloaded");
 		this.returnNormalConsoleState();
 	}
 
@@ -372,13 +372,10 @@ export default class GithubPublisher extends Plugin {
 	async loadSettings() {
 		const loadedData = await this.loadData();
 		try {
-			this.settings = merge(
-				DEFAULT_SETTINGS,
-				loadedData
-			) as unknown as GitHubPublisherSettings;
+			this.settings = merge(DEFAULT_SETTINGS, loadedData) as unknown as EnveloppeSettings;
 		} catch (_e) {
 			console.warn(
-				"[Github Publisher] Error while deep merging settings, using default loading method"
+				"[Obsidian Enveloppe] Error while deep merging settings, using default loading method"
 			);
 			this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
 		}
