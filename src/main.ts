@@ -11,6 +11,7 @@ import i18next from "i18next";
 import {
 	type FrontMatterCache,
 	type Menu,
+	normalizePath,
 	Plugin,
 	type TAbstractFile,
 	TFile,
@@ -51,6 +52,7 @@ export default class GithubPublisher extends Plugin {
 	settings!: GitHubPublisherSettings;
 	branchName: string = "";
 	repositoryFrontmatter: SetRepositoryFrontmatter = {};
+	originalConsole: any;
 
 	/**
 	 * Get the title field of a file
@@ -219,6 +221,20 @@ export default class GithubPublisher extends Plugin {
 		* See here: https://developer.chrome.com/docs/devtools/console/reference#network`)
 		);
 		await this.loadSettings();
+		this.originalConsole = {
+			debug: console.debug,
+			error: console.error,
+			info: console.info,
+			log: console.log,
+			warn: console.warn,
+		};
+		if (
+			!this.settings.plugin.dev &&
+			(await this.app.vault.adapter.exists(
+				normalizePath(`${this.manifest.dir}/logs.txt`)
+			))
+		)
+			await this.app.vault.adapter.remove(normalizePath(`${this.manifest.dir}/logs.txt`));
 
 		const oldSettings = this.settings;
 		await migrateSettings(oldSettings as unknown as OldSettings, this);
@@ -327,7 +343,7 @@ export default class GithubPublisher extends Plugin {
 		}
 		this.addCommand(refreshOpenedSet(this));
 		this.addCommand(refreshAllSets(this));
-
+		this.app.vault.adapter.removeFile(normalizePath(`${this.manifest.dir}/logs.txt`));
 		monkeyPatchConsole(this);
 	}
 
@@ -336,6 +352,16 @@ export default class GithubPublisher extends Plugin {
 	 */
 	onunload() {
 		console.info("[Github Publisher] Unloaded");
+		this.returnNormalConsoleState();
+	}
+
+	async returnNormalConsoleState() {
+		await this.app.vault.adapter.remove(normalizePath(`${this.manifest.dir}/logs.txt`));
+		console.log = this.originalConsole.log;
+		console.info = this.originalConsole.info;
+		console.warn = this.originalConsole.warn;
+		console.error = this.originalConsole.error;
+		console.debug = this.originalConsole.debug;
 	}
 
 	/**

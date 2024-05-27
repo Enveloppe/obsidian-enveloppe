@@ -117,20 +117,12 @@ export function logs(args: LogsParameters, ...messages: unknown[]) {
  * @returns {void}
  */
 export function monkeyPatchConsole(plugin: GithubPublisher): void {
-	if (!plugin.settings.plugin.dev) {
-		return;
-	}
+	if (!plugin.settings.plugin.dev) return;
 
 	const logFile = `${plugin.manifest.dir}/logs.txt`;
 	const logs: string[] = [];
 	//detect if console.debug, console.error, console.info, console.log or console.warn is called
-	const originalConsole = {
-		debug: console.debug,
-		error: console.error,
-		info: console.info,
-		log: console.log,
-		warn: console.warn,
-	};
+
 	const logMessages =
 		(prefix: string) =>
 		(...messages: unknown[]) => {
@@ -145,19 +137,19 @@ export function monkeyPatchConsole(plugin: GithubPublisher): void {
 			//also display the message in the console
 			switch (prefix) {
 				case "error":
-					originalConsole.error(...messages);
+					plugin.originalConsole.error(...messages);
 					break;
 				case "info":
-					originalConsole.info(...messages);
+					plugin.originalConsole.info(...messages);
 					break;
 				case "log":
-					originalConsole.log(...messages);
+					plugin.originalConsole.log(...messages);
 					break;
 				case "warn":
-					originalConsole.warn(...messages);
+					plugin.originalConsole.warn(...messages);
 					break;
 				case "debug":
-					originalConsole.debug(...messages);
+					plugin.originalConsole.debug(...messages);
 					break;
 			}
 		};
@@ -166,6 +158,7 @@ export function monkeyPatchConsole(plugin: GithubPublisher): void {
 	console.info = logMessages("info");
 	console.log = logMessages("log");
 	console.warn = logMessages("warn");
+	notif({ settings: plugin.settings }, "Console monkey patched");
 }
 
 /**
