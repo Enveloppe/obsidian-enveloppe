@@ -117,8 +117,7 @@ export function logs(args: LogsParameters, ...messages: unknown[]) {
  * @returns {void}
  */
 export function monkeyPatchConsole(plugin: GithubPublisher): void {
-	const stack = new Error().stack?.split("\n")?.[3];
-	if (!stack?.includes("obsidian-mkdocs-publisher") || !plugin.settings.plugin.dev) {
+	if (!plugin.settings.plugin.dev) {
 		return;
 	}
 
@@ -135,11 +134,14 @@ export function monkeyPatchConsole(plugin: GithubPublisher): void {
 	const logMessages =
 		(prefix: string) =>
 		(...messages: unknown[]) => {
-			logs.push(`\n[${prefix}]`);
-			for (const message of messages) {
-				logs.push(String(message));
+			const stack = new Error().stack?.split("\n")?.[3]?.trim();
+			if (stack?.includes("obsidian-mkdocs-publisher")) {
+				logs.push(`\n[${prefix}]`);
+				for (const message of messages) {
+					logs.push(String(message));
+				}
+				plugin.app.vault.adapter.write(logFile, logs.join(" "));
 			}
-			plugin.app.vault.adapter.write(logFile, logs.join(" "));
 			//also display the message in the console
 			switch (prefix) {
 				case "error":
