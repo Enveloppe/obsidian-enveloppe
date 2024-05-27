@@ -325,6 +325,7 @@ export function regexOnFileName(
 			const replaceWith = regexTitle.replacement;
 			if (toReplace.match(FIND_REGEX)) {
 				const regex = createRegexFromText(toReplace);
+
 				fileName = fileName.replace(regex, replaceWith);
 			} else {
 				fileName = fileName.replaceAll(toReplace, replaceWith);
@@ -450,9 +451,15 @@ export function getImagePath(
 	const overridePath = repository instanceof Array ? repository[0] : repository;
 
 	const imagePath = createImagePath(file, settings, sourceFrontmatter, overridePath);
-	const path = regexOnPath(imagePath.path, settings);
-	const name = regexOnFileName(imagePath.name, settings);
-	return normalizePath(path.replace(file.name, name));
+	let path = regexOnPath(imagePath.path, settings);
+	let name = regexOnFileName(imagePath.name, settings);
+	let originalFileName = file.name;
+	if (originalFileName.includes("excalidraw")) {
+		name = name.replace(".excalidraw.md", ".svg");
+		path = path.replace(".excalidraw.md", ".svg");
+		originalFileName = originalFileName.replace(".excalidraw.md", ".svg");
+	}
+	return normalizePath(path.replace(originalFileName, name));
 }
 
 /**
@@ -469,12 +476,9 @@ function createImagePath(
 	sourceFrontmatter: PropertiesConversion | null,
 	overridePath?: Properties
 ): { path: string; name: string } {
-	let fileName = file.name;
-	let filePath = file.path;
-	if (file.name.includes(".excalidraw")) {
-		fileName = fileName.replace(".excalidraw.md", ".svg");
-		filePath = filePath.replace(".excalidraw.md", ".svg");
-	}
+	const fileName = file.name;
+	const filePath = file.path;
+
 	const result: { path: string; name: string } = {
 		path: filePath,
 		name: fileName,

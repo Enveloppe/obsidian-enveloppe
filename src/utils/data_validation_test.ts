@@ -250,7 +250,7 @@ export function isAttachment(
 	filename: string,
 	attachmentExtern?: string[]
 ): RegExpMatchArray | null {
-	if (filename.includes("excalidraw")) return filename.match(/excalidraw\.md$/i);
+	if (filename.match(/excalidraw\.md$/i)) return filename.match(/excalidraw\.md$/i);
 	if (attachmentExtern && attachmentExtern.length > 0) {
 		for (const att of attachmentExtern) {
 			const isRegex = att.match(FIND_REGEX);
