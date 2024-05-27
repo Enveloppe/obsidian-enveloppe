@@ -4,13 +4,13 @@ order: 1
 
 ![Obsidian Downloads](https://img.shields.io/badge/dynamic/json?logo=obsidian&color=%23483699&label=downloads&query=%24%5B%22obsidian-mkdocs-publisher%22%5D.downloads&url=https%3A%2F%2Fraw.githubusercontent.com%2Fobsidianmd%2Fobsidian-releases%2Fmaster%2Fcommunity-plugin-stats.json)
 
-# GitHub Publisher
+# ✉️ Enveloppe : An Obsidian GitHub Vault Publisher
 
 Publish your notes in your own GitHub repository for free and do whatever you want with them. ✨
 
 This allows you to set up any template: Jekyll, Mkdocs, Hugo, or custom-made ones!
 
-## 📑 [Documentation](https://obsidian-publisher.netlify.app/)
+## 📑 [Documentation](https://enveloppe.github.io/)
 
 Here, you will only get a quick setup!
 
@@ -63,7 +63,7 @@ The plugin adds 8 commands in the palette, one of which is also available in the
 - `Test the connection to the configured repository`
 - `Check the rate limit of the GitHub API`
 
-Each of the commands are explained [here](https://obsidian-publisher.netlify.app/Commands).
+Each of the commands are explained [here](https://enveloppe.github.io/Commands).
 
 ## 🤖 How it works
 
@@ -78,14 +78,14 @@ Each of the commands are explained [here](https://obsidian-publisher.netlify.app
 
 You can :
 
-- [Maintaining the project and adding new function](https://obsidian-publisher.netlify.app/Developing#general)
-- [Help with the translation](https://obsidian-publisher.netlify.app/Developing#translation)
+- [Maintaining the project and adding new function](https://enveloppe.github.io//Developing#general)
+- [Help with the translation](https://enveloppe.github.io//Developing#translation)
 
 ## 🪧 Looking for something?
 
-→ [Settings explanation](https://obsidian-publisher.netlify.app/Plugin/Settings/)
-← [Commands references](https://obsidian-publisher.netlify.app/Commands)
-→ [GitHub Discussion](https://github.com/ObsidianPublisher/obsidian-github-publisher/discussions)
+→ [Settings explanation](https://enveloppe.github.io//Plugin/Settings/)
+← [Commands references](https://enveloppe.github.io//Commands)
+→ [GitHub Discussion](https://github.com/orgs/Enveloppe/discussions)
 
 ---
 
