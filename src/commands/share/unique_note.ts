@@ -98,7 +98,7 @@ export async function shareOneNote(
 
 		const multiRepo: MultiRepoProperties = {
 			frontmatter: prop,
-			repository: repository,
+			repository,
 		};
 		if (!isValid) return false;
 		if (!settings.github.dryRun.enable) await PublisherManager.newBranch(prop);

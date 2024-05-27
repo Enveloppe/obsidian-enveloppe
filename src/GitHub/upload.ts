@@ -194,12 +194,6 @@ export default class Publisher {
 				this.plugin,
 				repo.repository
 			);
-			console.warn(
-				"REPOSITORY",
-				frontmatterRepository,
-				"FILE",
-				frontmatterSettingsFromFile
-			);
 			const frontmatterSettings = merge.withOptions(
 				{ allowUndefinedOverrides: false },
 				frontmatterRepository,
