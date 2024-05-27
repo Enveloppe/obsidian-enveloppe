@@ -6,8 +6,9 @@ import {
 	type TextCleaner,
 	TypeOfEditRegex,
 } from "@interfaces";
+import dedent from "dedent";
 import i18next from "i18next";
-import { type App, Modal, Notice, Setting } from "obsidian";
+import { type App, Modal, Notice, sanitizeHTMLToDom, Setting } from "obsidian";
 import { escapeRegex } from "src/conversion/links";
 
 function isRegexValid(regexString: string) {
@@ -70,17 +71,21 @@ export class OverrideAttachmentsModal extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 		contentEl.addClasses(["github-publisher", "modals", "regex", "file-path-name"]);
-		contentEl.createEl("h2", { text: i18next.t("settings.embed.overrides.modal.title") });
-		contentEl.createEl("p", { text: i18next.t("settings.regexReplacing.modal.desc") });
-		contentEl.createEl("h3", {
-			text: i18next.t("settings.regexReplacing.modal.keywords"),
-		});
-		const ul = contentEl.createEl("ul", { cls: "keywords" });
-		ul.createEl("li", { text: i18next.t("settings.embed.forcePush.all") });
-		ul.createEl("li", { text: i18next.t("settings.embed.forcePush.default") });
-		ul.createEl("li", { text: i18next.t("settings.regexReplacing.modal.name") });
-		contentEl.createEl("h3", { text: i18next.t("settings.regexReplacing.modal.force") });
-		contentEl.createEl("p", { text: i18next.t("settings.embed.forcePush.info") });
+		new Setting(contentEl)
+			.setHeading()
+			.setName(i18next.t("settings.embed.overrides.modal.title"));
+		const explanation = dedent(`
+			<p>${i18next.t("settings.regexReplacing.modal.desc")}</p>
+			<h3>${i18next.t("settings.regexReplacing.modal.keywords")}</h3>
+			<ul class="keywords">
+				<li><code>{{all}}</code>${i18next.t("settings.embed.forcePush.all")}</li>
+				<li><code>{{default}}</code>${i18next.t("settings.embed.forcePush.default")}</li>
+				<li><code>{{name}}</code>${i18next.t("settings.regexReplacing.modal.name")}</li>
+			</ul>
+			<h3>${i18next.t("settings.regexReplacing.modal.force")}</h3>
+			<p>${i18next.t("settings.embed.forcePush.info")}</p>
+		`);
+		contentEl.appendChild(sanitizeHTMLToDom(explanation));
 
 		if (!this.settings.embed.overrideAttachments) {
 			this.settings.embed.overrideAttachments = [];
