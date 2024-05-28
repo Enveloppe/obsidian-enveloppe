@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.2.9-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.8...7.2.9-0) (2024-05-28)
+
+
+### Bug Fixes
+
+* when refreshed, excalidraw file lead to a crash ([78551cd](https://github.com/Enveloppe/obsidian-enveloppe/commit/78551cdbbf0fb171e6db6e4800971e66398994fe))
+
 ## [7.2.5-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.5-0...7.2.5-1) (2024-05-21)
 
 ## [7.2.5-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.4...7.2.5-0) (2024-05-21)
