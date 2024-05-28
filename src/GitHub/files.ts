@@ -438,13 +438,11 @@ export class FilesManagement extends Publisher {
 			if (!githubSharedFiles.some((x) => x.file === file.converted.trim())) {
 				//get TFile from file
 				const fileInVault = this.vault.getAbstractFileByPath(file.real.path.trim());
-				if (
-					fileInVault &&
+				const isMarkdown =
 					fileInVault instanceof TFile &&
-					fileInVault.extension === "md"
-				) {
-					newFiles.push(fileInVault);
-				}
+					fileInVault.extension === "md" &&
+					!fileInVault.name.endsWith(".excalidraw.md");
+				if (fileInVault && isMarkdown) newFiles.push(fileInVault);
 			}
 		}
 		return newFiles;
@@ -598,11 +596,12 @@ export class FilesManagement extends Publisher {
 				if (!githubSharedFile) continue;
 				const repoEditedTime = await this.getLastEditedTimeRepo(githubSharedFile);
 				const fileInVault = this.vault.getAbstractFileByPath(file.real.path.trim());
-				if (
-					fileInVault &&
+				const isMarkdown =
 					fileInVault instanceof TFile &&
-					fileInVault.extension === "md"
-				) {
+					fileInVault?.extension === "md" &&
+					!fileInVault?.name.endsWith(".excalidraw.md");
+				console.log(fileInVault, isMarkdown, repoEditedTime, githubSharedFile);
+				if (fileInVault && isMarkdown) {
 					const vaultEditedTime = new Date(fileInVault.stat.mtime);
 					if (repoEditedTime && vaultEditedTime > repoEditedTime) {
 						logs(
