@@ -46,7 +46,7 @@ export function addMenuFile(
 
 		if (allKeysFromFile.length > 1 || (prop instanceof Array && prop.length > 1)) {
 			if (Platform.isDesktop) {
-				item.setTitle("Enveloppe").setIcon("upload-cloud");
+				item.setTitle("Enveloppe").setIcon("mail-open");
 			} else {
 				//add the line to separate the commands
 				menu.addSeparator();

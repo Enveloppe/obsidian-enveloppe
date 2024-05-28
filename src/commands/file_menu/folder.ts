@@ -142,8 +142,8 @@ export async function addMenuFolder(
 		const areTheyMultipleRepo = plugin.settings.github?.otherRepo?.length > 0;
 		if (areTheyMultipleRepo) {
 			if (Platform.isDesktop) {
-				item.setTitle("E");
-				item.setIcon("upload-cloud");
+				item.setTitle("Enveloppe");
+				item.setIcon("mail-open");
 			} else {
 				//add the line to separate the commands
 				menu.addSeparator();
