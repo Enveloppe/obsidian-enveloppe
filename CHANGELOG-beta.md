@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.2.9-1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9-0...7.2.9-1) (2024-05-28)
+
+
+### Bug Fixes
+
+* "E" ([a0b9f65](https://github.com/Enveloppe/obsidian-enveloppe/commit/a0b9f65b75135a29bc42fb605397cc2d1d33f7d2))
+
 ## [7.2.9-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.8...7.2.9-0) (2024-05-28)
 
 
