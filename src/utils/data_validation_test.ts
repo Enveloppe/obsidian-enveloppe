@@ -114,9 +114,9 @@ export function isShared(
 	file: TFile,
 	otherRepo: Repository | null
 ): boolean {
-	if (!file || file.extension !== "md") {
+	if (!file || file.extension !== "md" || !file.name.endsWith(".excalidraw.md"))
 		return false;
-	}
+
 	const otherRepoWithShareAll = settings.github.otherRepo.filter(
 		(repo) => repo.shareAll?.enable
 	);
@@ -129,9 +129,9 @@ export function isShared(
 			isExcludedPath(settings, file, otherRepo) ||
 			meta[shareKey] === undefined ||
 			["false", "0", "no"].includes(meta[shareKey].toString().toLowerCase())
-		) {
+		)
 			return false;
-		}
+
 		const shareKeyInFrontmatter: string = meta[shareKey].toString().toLowerCase();
 		return ["true", "1", "yes"].includes(shareKeyInFrontmatter);
 	} else if (settings.plugin.shareAll?.enable || otherRepoWithShareAll.length > 0) {
