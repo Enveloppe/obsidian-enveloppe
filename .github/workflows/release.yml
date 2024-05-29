@@ -36,8 +36,12 @@ jobs:
             STYLE: true
             SUBMODULE: true
             CACHE: "pnpm"
+            discord_webhook_avatar: "https://avatars.githubusercontent.com/u/107352364?s=400&u=f2eb1406068b95a58baecdf987ccccde7fcbdd55&v=4"
+            discord_webhook_name: "Enveloppe"
         secrets:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
     bump-version-and-release:
         if: ${{ inputs.bump }}
         needs: echo
@@ -48,5 +52,8 @@ jobs:
             BETA: ${{ inputs.beta }}
             SUBMODULE: true
             CACHE: "pnpm"
+            discord_webhook_avatar: "https://avatars.githubusercontent.com/u/107352364?s=400&u=f2eb1406068b95a58baecdf987ccccde7fcbdd55&v=4"
+            discord_webhook_name: "Enveloppe"
         secrets:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
