@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.2.9-2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9-1...7.2.9-2) (2024-05-29)
+
+
+### Bug Fixes
+
+* disable commands on excalidraw files ([e2e3e08](https://github.com/Enveloppe/obsidian-enveloppe/commit/e2e3e087e48101177b5553f72edac20c691b3547))
+
 ## [7.2.9-1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9-0...7.2.9-1) (2024-05-28)
 
 
