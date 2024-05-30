@@ -356,7 +356,12 @@ export default class Enveloppe extends Plugin {
 	}
 
 	async returnNormalConsoleState() {
-		await this.app.vault.adapter.remove(normalizePath(`${this.manifest.dir}/logs.txt`));
+		try {
+			await this.app.vault.adapter.remove(normalizePath(`${this.manifest.dir}/logs.txt`));
+		} catch (_e) {
+			//pass
+		}
+
 		console.log = this.originalConsole.log;
 		console.info = this.originalConsole.info;
 		console.warn = this.originalConsole.warn;
