@@ -10,7 +10,7 @@
 		"dev:prod": "node esbuild.config.mjs --vault",
 		"dev": "node esbuild.config.mjs",
 		"export": "node esbuild.config.mjs --production --vault",
-		"bump": "node commit-and-tag-version.js",
+		"bump": "node commit-and-tag-version.mjs",
 		"postbump": "git push --follow-tags origin master",
 		"predeploy": "pnpm run bump",
 		"deploy": "pnpm run export"
