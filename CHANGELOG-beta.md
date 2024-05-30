@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [7.2.9-3](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9-2...7.2.9-3) (2024-05-30)
+
+
+### Bug Fixes
+
+* active note not found ([ad7a0af](https://github.com/Enveloppe/obsidian-enveloppe/commit/ad7a0af1eb4b6ddc3a96c9f7cc11dbfea6d77f62))
+* crash if logs.txt doesn't exist ([fbb9061](https://github.com/Enveloppe/obsidian-enveloppe/commit/fbb90612412cd8fc0a73c1641794ff02ed2bcbd3))
+
 ## [7.2.9-2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9-1...7.2.9-2) (2024-05-29)
 
 
