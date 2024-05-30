@@ -114,7 +114,7 @@ export function isShared(
 	file: TFile,
 	otherRepo: Repository | null
 ): boolean {
-	if (!file || file.extension !== "md" || !file.name.endsWith(".excalidraw.md"))
+	if (!file || file.extension !== "md" || file.name.endsWith(".excalidraw.md"))
 		return false;
 
 	const otherRepoWithShareAll = settings.github.otherRepo.filter(
