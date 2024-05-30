@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { Command, Option } from "commander";
 import commitAndTagVersion from "commit-and-tag-version";
 import dedent from "dedent";
@@ -96,7 +95,8 @@ if (opt.beta) {
 		tagPrefix: "",
 	})
 		.then(() => {
-			removeText("CHANGELOG-beta.md");
+			if (!opt.dryRun)
+				removeText("CHANGELOG-beta.md");
 			console.log("Done");
 		})
 		.catch((err) => {
@@ -138,11 +138,11 @@ if (opt.beta) {
 		releaseAs: opt.releaseAs,
 	})
 		.then(() => {
-			removeText("CHANGELOG.md");
+			if (!opt.dryRun)
+				removeText("CHANGELOG.md");
 			console.log("Done");
 		})
 		.catch((err) => {
 			console.error(err);
 		});
-	removeText("CHANGELOG.md");
 }
