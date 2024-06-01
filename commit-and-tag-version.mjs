@@ -75,7 +75,7 @@ if (opt.beta) {
 		dryRun: opt.dryRun,
 		tagPrefix: "",
 		scripts: {
-			postchangelog: "node _changelog.mjs -b",
+			postchangelog: "node hooks/_changelog.mjs -b",
 		},
 	})
 		.then(() => {
@@ -117,7 +117,7 @@ if (opt.beta) {
 		tagPrefix: "",
 		releaseAs: opt.releaseAs,
 		scripts: {
-			postchangelog: "node _changelog.mjs",
+			postchangelog: "node hooks/_changelog.mjs",
 		},
 	})
 		.then(() => {
