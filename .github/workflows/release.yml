@@ -33,7 +33,6 @@ jobs:
         needs: echo
         with:
             PLUGIN_NAME: "obsidian-mkdocs-publisher"
-            STYLE: true
             SUBMODULE: true
             CACHE: "pnpm"
             discord_webhook_avatar: "https://avatars.githubusercontent.com/u/107352364?s=400&u=f2eb1406068b95a58baecdf987ccccde7fcbdd55&v=4"
@@ -48,7 +47,6 @@ jobs:
         uses: mara-li/reusable-workflows/.github/workflows/obsidian-plugin-bump-version.yaml@main
         with:
             PLUGIN_NAME: "obsidian-mkdocs-publisher"
-            STYLE: true
             BETA: ${{ inputs.beta }}
             SUBMODULE: true
             CACHE: "pnpm"
