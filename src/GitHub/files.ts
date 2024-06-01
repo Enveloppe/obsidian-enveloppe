@@ -12,22 +12,23 @@ import { getAPI, type Link } from "obsidian-dataview";
 import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
 import Publisher from "src/GitHub/upload";
 import type Enveloppe from "src/main";
-import { logs } from "src/utils";
 import { isAttachment, isShared } from "src/utils/data_validation_test";
 import {
 	frontmatterFromFile,
 	getFrontmatterSettings,
 	getProperties,
 } from "src/utils/parse_frontmatter";
+import type { Logs } from "../utils/logs";
 
 export class FilesManagement extends Publisher {
 	/**
 	 * @param {Octokit} octokit The octokit instance
 	 * @param {EnveloppeSettings} plugin The plugin
 	 */
-
+	console: Logs;
 	constructor(octokit: Octokit, plugin: Enveloppe) {
 		super(octokit, plugin);
+		this.console = plugin.console;
 	}
 
 	/**
@@ -45,7 +46,7 @@ export class FilesManagement extends Publisher {
 					sharedFile.push(file);
 				}
 			} catch (e) {
-				logs({ settings: this.settings, e: true }, e);
+				this.console.logs({ e: true }, e);
 			}
 		}
 		return sharedFile;
@@ -73,7 +74,7 @@ export class FilesManagement extends Publisher {
 						files.push(file as TFile);
 					}
 				} catch (e) {
-					logs({ settings: this.settings, e: true }, e);
+					this.console.logs({ e: true }, e);
 				}
 			}
 		}
@@ -220,7 +221,7 @@ export class FilesManagement extends Publisher {
 						linkedFiles.push(thisLinkedFile);
 					}
 				} catch (e) {
-					logs({ settings: this.settings }, e);
+					this.console.logs({}, e);
 				}
 			}
 		}
@@ -281,11 +282,7 @@ export class FilesManagement extends Publisher {
 						embedList.push(thisEmbed);
 					}
 				} catch (e) {
-					logs(
-						{ settings: this.settings, e: true },
-						`Error with this links : ${embedCache.link}`,
-						e
-					);
+					this.console.logs({ e: true }, `Error with this links : ${embedCache.link}`, e);
 				}
 			}
 			return [...new Set(embedList)];
@@ -347,11 +344,7 @@ export class FilesManagement extends Publisher {
 					fromWhat
 				) as TFile;
 		} catch (e) {
-			logs(
-				{ settings: this.settings, e: true },
-				`Error with this file : ${embed.displayText}`,
-				e
-			);
+			this.console.logs({ e: true }, `Error with this file : ${embed.displayText}`, e);
 		}
 		return undefined;
 	}
@@ -415,7 +408,7 @@ export class FilesManagement extends Publisher {
 				}
 			}
 		} catch (e) {
-			logs({ settings: this.settings, e: true }, e);
+			this.console.logs({ e: true }, e);
 		}
 		return filesInRepo;
 	}
@@ -578,7 +571,6 @@ export class FilesManagement extends Publisher {
 	 * Get all edited file since the last sync, compared to the github repo
 	 * @param {ConvertedLink[]} allFileWithPath - all shared file with their path
 	 * @param {GithubRepo[]} githubSharedFiles - all file in the github repo
-	 * @param {Vault} vault - vault
 	 * @param {TFile[]} newFiles - new file to add to the repo
 	 * @return {Promise<TFile[]>} newFiles - File to add in the repo
 	 */
@@ -600,12 +592,11 @@ export class FilesManagement extends Publisher {
 					fileInVault instanceof TFile &&
 					fileInVault?.extension === "md" &&
 					!fileInVault?.name.endsWith(".excalidraw.md");
-				console.log(fileInVault, isMarkdown, repoEditedTime, githubSharedFile);
 				if (fileInVault && isMarkdown) {
 					const vaultEditedTime = new Date(fileInVault.stat.mtime);
 					if (repoEditedTime && vaultEditedTime > repoEditedTime) {
-						logs(
-							{ settings: this.settings },
+						this.console.logs(
+							{},
 							`edited file : ${fileInVault.path} / ${vaultEditedTime} vs ${repoEditedTime}`
 						);
 						newFiles.push(fileInVault);

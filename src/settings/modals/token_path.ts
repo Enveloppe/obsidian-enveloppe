@@ -3,18 +3,21 @@ import i18next from "i18next";
 import { type App, Modal, Notice, Setting } from "obsidian";
 import type Enveloppe from "src/main";
 import { migrateToken } from "src/settings/migrate";
-import { createTokenPath, logs } from "src/utils";
+import { createTokenPath } from "src/utils";
+import type { Logs } from "../../utils/logs";
 
 export class TokenEditPath extends Modal {
 	plugin: Enveloppe;
 	token: string;
 	tokenPath: string;
+	console: Logs;
 
 	constructor(app: App, plugin: Enveloppe, token: string) {
 		super(app);
 		this.plugin = plugin;
 		this.token = token;
 		this.tokenPath = "";
+		this.console = plugin.console;
 	}
 
 	onOpen() {
@@ -94,7 +97,7 @@ export class TokenEditPath extends Modal {
 					input.controlEl.querySelector("input")!.style.border = "1px solid red";
 					new Notice(i18next.t("error.reading-token-file"));
 					this.tokenPath = "error";
-					logs({ settings: this.plugin.settings, e: true }, e);
+					this.console.logs({ e: true }, e);
 				}
 			});
 		});

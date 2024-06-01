@@ -10,14 +10,7 @@ import {
 import type { GithubBranch } from "src/GitHub/branch";
 import type Enveloppe from "src/main";
 import { ListChangedFiles } from "src/settings/modals/list_changed";
-import {
-	createLink,
-	createListEdited,
-	getSettingsOfMetadataExtractor,
-	logs,
-	notifError,
-	publisherNotification,
-} from "src/utils";
+import { createLink, createListEdited, getSettingsOfMetadataExtractor } from "src/utils";
 import {
 	checkRepositoryValidityWithProperties,
 	isShared,
@@ -122,7 +115,12 @@ export async function shareOneNote(
 				settings.github.dryRun.enable
 			);
 			if (update) {
-				await publisherNotification(PublisherManager, title, settings, prop);
+				await plugin.console.publisherNotification(
+					PublisherManager,
+					title,
+					settings,
+					prop
+				);
 				await createLink(file, multiRepo, plugin);
 				if (settings.plugin.displayModalRepoEditing) {
 					const listEdited = createListEdited(
@@ -133,13 +131,13 @@ export async function shareOneNote(
 					new ListChangedFiles(app, listEdited).open();
 				}
 			} else {
-				notifError(prop);
+				plugin.console.notifError(prop);
 			}
 		}
 	} catch (error) {
 		if (!(error instanceof DOMException)) {
-			logs({ settings, e: true }, error);
-			notifError(getProperties(plugin, repository, frontmatter, true));
+			plugin.console.logs({ e: true }, error);
+			plugin.console.notifError(getProperties(plugin, repository, frontmatter, true));
 		}
 	}
 }

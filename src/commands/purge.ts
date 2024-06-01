@@ -5,7 +5,6 @@ import type { GithubBranch } from "src/GitHub/branch";
 import { deleteFromGithub } from "src/GitHub/delete";
 import type Enveloppe from "src/main";
 import { ListChangedFiles } from "src/settings/modals/list_changed";
-import { notif } from "src/utils";
 import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
 import {
 	frontmatterSettingsRepository,
@@ -76,7 +75,7 @@ async function purge(
 		if (PublisherManager.settings.plugin.displayModalRepoEditing)
 			new ListChangedFiles(PublisherManager.plugin.app, deleted).open();
 	} catch (e) {
-		notif({ settings: PublisherManager.settings, e: true }, e);
+		PublisherManager.plugin.console.notif({ e: true }, e);
 	}
 }
 

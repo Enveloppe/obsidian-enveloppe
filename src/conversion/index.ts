@@ -19,7 +19,6 @@ import { convertDataviewQueries } from "src/conversion/compiler/dataview";
 import { bakeEmbeds, convertInlineDataview } from "src/conversion/compiler/embeds";
 import { convertToInternalGithub, convertWikilinks } from "src/conversion/links";
 import type Enveloppe from "src/main";
-import { notif } from "src/utils";
 import { isFolderNote } from "src/utils/data_validation_test";
 
 import findAndReplaceText from "./find_and_replace_text";
@@ -37,7 +36,7 @@ import findAndReplaceText from "./find_and_replace_text";
 
 export function addHardLineBreak(
 	text: string,
-	settings: EnveloppeSettings,
+	plugin: Enveloppe,
 	frontmatter: PropertiesConversion
 ): string {
 	try {
@@ -47,12 +46,12 @@ export function addHardLineBreak(
 		}
 		return text;
 	} catch (e) {
-		notif({ settings, e: true }, e);
+		plugin.console.notif({ e: true }, e);
 		return text;
 	}
 }
 
-function tagsToYaml(toAdd: string[], settings: EnveloppeSettings, yaml: any) {
+function tagsToYaml(toAdd: string[], plugin: Enveloppe, yaml: any) {
 	if (yaml.tag) {
 		try {
 			toAdd = [
@@ -63,7 +62,7 @@ function tagsToYaml(toAdd: string[], settings: EnveloppeSettings, yaml: any) {
 			];
 			delete yaml.tag;
 		} catch (e) {
-			notif({ settings, e: true }, e);
+			plugin.console.notif({ e: true }, e);
 		}
 	}
 	if (yaml.tags) {
@@ -75,7 +74,7 @@ function tagsToYaml(toAdd: string[], settings: EnveloppeSettings, yaml: any) {
 				]),
 			];
 		} catch (e) {
-			notif({ settings, e: true }, e);
+			plugin.console.notif({ e: true }, e);
 		}
 	} else {
 		yaml.tags = toAdd;
@@ -95,7 +94,6 @@ function tagsToYaml(toAdd: string[], settings: EnveloppeSettings, yaml: any) {
 export function addToYaml(
 	text: string,
 	toAdd: string[],
-	plugin: Enveloppe,
 	folderNoteParaMeters: { properties: MultiProperties | null; file: TFile }
 ): string {
 	const properties = folderNoteParaMeters?.properties;
@@ -106,11 +104,10 @@ export function addToYaml(
 			!properties.plugin.settings.upload.folderNote.addTitle)
 	)
 		return text;
-	const { settings } = plugin;
 	let yamlObject = parseYaml(exists ? frontmatter : "{}");
 	try {
 		if (yamlObject && toAdd.length > 0) {
-			yamlObject = tagsToYaml(toAdd, settings, yamlObject);
+			yamlObject = tagsToYaml(toAdd, properties.plugin, yamlObject);
 		}
 		if (folderNoteParaMeters?.properties) {
 			yamlObject = titleToYaml(
@@ -183,7 +180,7 @@ export async function processYaml(
 	const metadataCache = app.metadataCache;
 	const toAdd = inlineTags(settings, file, metadataCache, frontmatter);
 	const folderNoteParaMeters = { properties: multiProperties, file };
-	return addToYaml(text, toAdd, plugin, folderNoteParaMeters);
+	return addToYaml(text, toAdd, folderNoteParaMeters);
 }
 
 /**
@@ -200,19 +197,19 @@ export async function mainConverting(
 	const { plugin } = properties;
 	if (properties.frontmatter.general.removeEmbed === "bake")
 		text = await bakeEmbeds(file, new Set(), properties, null, linkedFiles);
-	text = findAndReplaceText(text, plugin.settings, false);
+	text = findAndReplaceText(text, plugin, false);
 	text = await processYaml(file, frontmatter, text, properties);
 	text = await convertToInternalGithub(text, linkedFiles, file, frontmatter, properties);
 	text = convertWikilinks(
 		text,
 		properties.frontmatter.general,
 		linkedFiles,
-		plugin.settings,
+		plugin,
 		frontmatter
 	);
 	text = await convertDataviewQueries(text, file.path, frontmatter, file, properties);
 	text = await convertInlineDataview(text, plugin, file);
-	text = addHardLineBreak(text, plugin.settings, properties.frontmatter.general);
+	text = addHardLineBreak(text, plugin, properties.frontmatter.general);
 
-	return findAndReplaceText(text, plugin.settings, true);
+	return findAndReplaceText(text, plugin, true);
 }

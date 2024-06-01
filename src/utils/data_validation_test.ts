@@ -19,7 +19,6 @@ import {
 } from "obsidian";
 import type { GithubBranch } from "src/GitHub/branch";
 import type Enveloppe from "src/main";
-import { notif } from "src/utils";
 import {
 	frontmatterFromFile,
 	getLinkedFrontmatter,
@@ -386,7 +385,6 @@ export async function checkRepositoryValidity(
 	file: TFile | null,
 	silent: boolean = false
 ): Promise<boolean> {
-	const settings = PublisherManager.settings;
 	try {
 		const frontmatter = frontmatterFromFile(file, PublisherManager.plugin, repository);
 		const prop = getProperties(PublisherManager.plugin, repository, frontmatter);
@@ -400,7 +398,7 @@ export async function checkRepositoryValidity(
 			return true;
 		}
 	} catch (e) {
-		notif({ settings, e: true }, e);
+		PublisherManager.console.notif({}, e);
 		return false;
 	}
 	return false;
@@ -431,7 +429,7 @@ export async function checkRepositoryValidityWithProperties(
 				return (
 					(await verifyRateLimitAPI(
 						PublisherManager.octokit,
-						settings,
+						PublisherManager.plugin,
 						false,
 						numberOfFile
 					)) > 0
@@ -440,7 +438,7 @@ export async function checkRepositoryValidityWithProperties(
 			return true;
 		}
 	} catch (e) {
-		notif({ settings, e: true }, e);
+		PublisherManager.console.notif({ e: true }, e);
 		return false;
 	}
 	return false;
@@ -498,10 +496,11 @@ export function defaultRepo(settings: EnveloppeSettings): Repository {
  */
 export async function verifyRateLimitAPI(
 	octokit: Octokit,
-	settings: EnveloppeSettings,
+	plugin: Enveloppe,
 	commands = false,
 	numberOfFile = 1
 ): Promise<number> {
+	const settings = plugin.settings;
 	try {
 		const rateLimit = await octokit.request("GET /rate_limit");
 		const remaining = rateLimit.data.resources.core.remaining;
@@ -524,7 +523,7 @@ export async function verifyRateLimitAPI(
 		if (commands) {
 			new Notice(message);
 		} else {
-			notif({ settings }, message);
+			plugin.console.notif({}, message);
 		}
 
 		return remaining;
@@ -537,7 +536,7 @@ export async function verifyRateLimitAPI(
 			(error as any).name === "HttpError"
 		)
 			return 5000;
-		notif({ settings, e: true }, error);
+		plugin.console.notif({ e: true }, error);
 		return 0;
 	}
 }

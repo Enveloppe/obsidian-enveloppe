@@ -1,6 +1,6 @@
-import { FIND_REGEX, type EnveloppeSettings } from "@interfaces";
+import { FIND_REGEX } from "@interfaces";
 import { escapeRegex } from "src/conversion/links";
-import { logs } from "src/utils";
+import type Enveloppe from "../main";
 
 /**
  * Convert a string to a regex object when the string is in the form of a regex (enclosed by /)
@@ -28,9 +28,10 @@ export function createRegexFromText(toReplace: string, withflag?: string): RegEx
  */
 export default function findAndReplaceText(
 	text: string,
-	settings: EnveloppeSettings,
+	plugin: Enveloppe,
 	after?: boolean
 ): string {
+	const settings = plugin.settings;
 	if (!settings.conversion.censorText) {
 		return text;
 	}
@@ -45,11 +46,11 @@ export default function findAndReplaceText(
 				const regex = createRegexFromText(toReplace, censor.flags);
 				text = censor.inCodeBlocks
 					? text.replace(regex, replaceWith)
-					: replaceText(text, regex, replaceWith, settings);
+					: replaceText(text, regex, replaceWith, plugin);
 			} else {
 				text = censor.inCodeBlocks
 					? text.replace(toReplace, replaceWith)
-					: replaceText(text, toReplace, replaceWith, settings);
+					: replaceText(text, toReplace, replaceWith, plugin);
 			}
 		}
 	}
@@ -70,7 +71,7 @@ export function replaceText(
 	fileContent: string,
 	pattern: string | RegExp,
 	replaceWith: string,
-	settings: EnveloppeSettings,
+	plugin: Enveloppe,
 	links?: boolean
 ): string {
 	let regexWithString: string;
@@ -97,7 +98,7 @@ export function replaceText(
 				const replaceWithParsed = JSON.parse(`"${replaceWith}"`);
 				return match.replace(pattern, replaceWithParsed);
 			} catch (e) {
-				logs({ settings, e: true }, e);
+				plugin.console.logs({ e: true }, e);
 				return match.replace(pattern, replaceWith);
 			}
 		}

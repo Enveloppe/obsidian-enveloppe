@@ -36,12 +36,13 @@ import { GithubBranch } from "src/GitHub/branch";
 import { resources, translationLanguage } from "src/i18n/i18next";
 import { EnveloppeSettingsTab } from "src/settings";
 import { migrateSettings, type OldSettings } from "src/settings/migrate";
-import { createTokenPath, monkeyPatchConsole, notif } from "src/utils";
+import { createTokenPath } from "src/utils";
 import {
 	checkRepositoryValidity,
 	verifyRateLimitAPI,
 } from "src/utils/data_validation_test";
 import merge from "ts-deepmerge";
+import { Logs } from "./utils/logs";
 
 /**
  * Main class of the plugin
@@ -52,7 +53,7 @@ export default class Enveloppe extends Plugin {
 	settings!: EnveloppeSettings;
 	branchName: string = "";
 	repositoryFrontmatter: SetRepositoryFrontmatter = {};
-	originalConsole: any;
+	console: Logs = new Logs(this);
 
 	/**
 	 * Get the title field of a file
@@ -178,7 +179,7 @@ export default class Enveloppe extends Plugin {
 				return defaultToken;
 			}
 		} catch (e) {
-			notif({ settings: this.settings, e: true }, e);
+			this.console.notif({ e: true }, e);
 			return "";
 		}
 		return "";
@@ -215,19 +216,15 @@ export default class Enveloppe extends Plugin {
 			returnEmptyString: false,
 		});
 
-		console.info(
+		await this.loadSettings();
+		this.console = new Logs(this);
+		this.console.logs(
+			{},
 			dedent(`[Obsidian Enveloppe] v.${this.manifest.version} (lang: ${translationLanguage}) loaded.
 		* You can hide HTTP logs in the console with checking the "Hide network" in the console settings.
 		* See here: https://developer.chrome.com/docs/devtools/console/reference#network`)
 		);
-		await this.loadSettings();
-		this.originalConsole = {
-			debug: console.debug,
-			error: console.error,
-			info: console.info,
-			log: console.log,
-			warn: console.warn,
-		};
+
 		if (
 			!this.settings.plugin.dev &&
 			(await this.app.vault.adapter.exists(
@@ -258,7 +255,7 @@ export default class Enveloppe extends Plugin {
 			);
 			this.settings.github.rateLimit = await verifyRateLimitAPI(
 				octokit.octokit,
-				this.settings,
+				this,
 				false
 			);
 			await this.saveSettings();
@@ -276,10 +273,7 @@ export default class Enveloppe extends Plugin {
 					null,
 					false
 				);
-				repository.rateLimit = await verifyRateLimitAPI(
-					repoOctokit.octokit,
-					this.settings
-				);
+				repository.rateLimit = await verifyRateLimitAPI(repoOctokit.octokit, this);
 			}
 
 			if (repository.set) {
@@ -317,10 +311,7 @@ export default class Enveloppe extends Plugin {
 			name: i18next.t("commands.checkValidity.rateLimit.command"),
 			callback: async () => {
 				const octokit = await this.reloadOctokit();
-				this.settings.github.rateLimit = await verifyRateLimitAPI(
-					octokit.octokit,
-					this.settings
-				);
+				this.settings.github.rateLimit = await verifyRateLimitAPI(octokit.octokit, this);
 				await this.saveSettings();
 			},
 		});
@@ -344,7 +335,6 @@ export default class Enveloppe extends Plugin {
 		this.addCommand(refreshOpenedSet(this));
 		this.addCommand(refreshAllSets(this));
 		this.app.vault.adapter.removeFile(normalizePath(`${this.manifest.dir}/logs.txt`));
-		monkeyPatchConsole(this);
 	}
 
 	/**
@@ -352,21 +342,6 @@ export default class Enveloppe extends Plugin {
 	 */
 	onunload() {
 		console.info("[Obsidian Enveloppe] Unloaded");
-		this.returnNormalConsoleState();
-	}
-
-	async returnNormalConsoleState() {
-		try {
-			await this.app.vault.adapter.remove(normalizePath(`${this.manifest.dir}/logs.txt`));
-		} catch (_e) {
-			//pass
-		}
-
-		console.log = this.originalConsole.log;
-		console.info = this.originalConsole.info;
-		console.warn = this.originalConsole.warn;
-		console.error = this.originalConsole.error;
-		console.debug = this.originalConsole.debug;
 	}
 
 	/**

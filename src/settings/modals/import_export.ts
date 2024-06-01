@@ -14,7 +14,7 @@ import {
 import type Enveloppe from "src/main";
 import type { EnveloppeSettingsTab } from "src/settings";
 import { migrateSettings, type OldSettings } from "src/settings/migrate";
-import { logs, notif } from "src/utils";
+import type { Logs } from "../../utils/logs";
 
 export type SettingValue = number | string | boolean | unknown;
 
@@ -32,6 +32,7 @@ export class ImportModal extends Modal {
 	settingsPage: HTMLElement;
 	settingsTab: EnveloppeSettingsTab;
 	settings: EnveloppeSettings;
+	console: Logs;
 	constructor(
 		app: App,
 		plugin: Enveloppe,
@@ -43,10 +44,11 @@ export class ImportModal extends Modal {
 		this.settingsPage = settingsPage;
 		this.settingsTab = settingsTab;
 		this.settings = plugin.settings;
+		this.console = plugin.console;
 	}
 
 	async censorRepositoryData(original: EnveloppeSettings) {
-		logs({ settings: original }, "original settings:", original);
+		this.console.logs({}, "original settings:", original);
 		this.settings.plugin.dev = original.plugin.dev;
 		this.settings.plugin.migrated = original.plugin.migrated;
 		this.settings.plugin.displayModalRepoEditing =
@@ -83,15 +85,9 @@ export class ImportModal extends Modal {
 							//need to convert old settings to new settings
 							const oldSettings = importedSettings as unknown as OldSettings;
 							await migrateSettings(oldSettings, this.plugin, true);
-							logs(
-								{ settings: this.plugin.settings },
-								i18next.t("informations.migrating.oldSettings")
-							);
+							this.console.logs({}, i18next.t("informations.migrating.oldSettings"));
 						} else {
-							logs(
-								{ settings: this.plugin.settings },
-								i18next.t("informations.migrating.normalFormat")
-							);
+							this.console.logs({}, i18next.t("informations.migrating.normalFormat"));
 							importedSettings = importedSettings as unknown as EnveloppeSettings;
 							//create a copy of actual settings
 							const actualSettings = clone(this.plugin.settings);
@@ -205,10 +201,12 @@ export class ImportModal extends Modal {
 
 export class ExportModal extends Modal {
 	plugin: Enveloppe;
+	console: Logs;
 
 	constructor(app: App, plugin: Enveloppe) {
 		super(app);
 		this.plugin = plugin;
+		this.console = plugin.console;
 	}
 
 	censorGithubSettingsData(censuredSettings: EnveloppeSettings) {
@@ -310,7 +308,7 @@ export class ExportModal extends Modal {
 				`${this.app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`
 			);
 		} catch (e) {
-			logs({ settings: this.plugin.settings }, "Error while deleting temporary file", e);
+			this.console.logs({}, "Error while deleting temporary file", e);
 		}
 		const { contentEl } = this;
 		contentEl.empty();
@@ -323,6 +321,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 	presetList: Preset[];
 	page: EnveloppeSettingsTab;
 	settings: EnveloppeSettings;
+	console: Logs;
 
 	constructor(
 		app: App,
@@ -337,6 +336,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 		this.octokit = octokit;
 		this.page = page;
 		this.settings = plugin.settings;
+		this.console = plugin.console;
 	}
 
 	getItems(): Preset[] {
@@ -350,7 +350,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	onChooseItem(item: Preset, _evt: MouseEvent | KeyboardEvent): void {
 		const presetSettings = item.settings;
-		logs({ settings: presetSettings }, "onChooseItem");
+		this.console.logs({}, "onChooseItem");
 		try {
 			const original = clone(this.plugin.settings);
 			if (!(presetSettings.upload.replaceTitle instanceof Array)) {
@@ -379,7 +379,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 			this.page.renderSettingsPage("github-configuration");
 		} catch (e) {
 			new Notice(i18next.t("modals.import.error.span") + e);
-			notif({ settings: this.settings }, "onChooseItem", e);
+			this.console.notif({}, "onChooseItem", e);
 		}
 	}
 }
@@ -404,7 +404,7 @@ export async function loadAllPresets(
 		if (!Array.isArray(githubPreset.data)) {
 			return presetList;
 		}
-		logs({ settings: plugin.settings }, "LoadAllPreset", githubPreset);
+		plugin.console.logs({}, "LoadAllPreset", githubPreset);
 		for (const preset of githubPreset.data) {
 			if (preset.name.endsWith(".json")) {
 				const presetName = preset.name.replace(".json", "");
@@ -416,7 +416,7 @@ export async function loadAllPresets(
 		}
 		return presetList;
 	} catch (e) {
-		notif({ settings: plugin.settings, e: true }, "Couldn't load preset. Error:", e);
+		plugin.console.notif({ e: true }, "Couldn't load preset. Error:", e);
 		return [];
 	}
 }

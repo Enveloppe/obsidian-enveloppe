@@ -13,6 +13,7 @@ import {
 } from "src/conversion/file_path";
 import { replaceText } from "src/conversion/find_and_replace_text";
 import { isAttachment, noTextConversion } from "src/utils/data_validation_test";
+import type Enveloppe from "../main";
 
 type IsEmbed = {
 	cond: boolean;
@@ -33,11 +34,11 @@ export function convertWikilinks(
 	fileContent: string,
 	conditionConvert: PropertiesConversion,
 	linkedFiles: LinkedNotes[],
-	settings: EnveloppeSettings,
+	plugin: Enveloppe,
 	sourceFrontmatter: FrontMatterCache | undefined | null
 ): string {
 	if (noTextConversion(conditionConvert)) return fileContent;
-
+	const settings = plugin.settings;
 	const wikiRegex = /!?\[\[.*?\]\]/g;
 	const wikiMatches = fileContent.match(wikiRegex);
 	if (wikiMatches) {
@@ -65,7 +66,7 @@ export function convertWikilinks(
 						linkedFile,
 						conditionConvert,
 						isEmbed,
-						settings,
+						plugin,
 						isNotAttachment,
 						fileContent,
 						wikiMatch,
@@ -81,7 +82,7 @@ export function convertWikilinks(
 						wikiMatch,
 						path,
 						conditionConvert,
-						settings,
+						plugin,
 						fileContent
 					);
 				}
@@ -140,7 +141,7 @@ function isLinkedFile(
 	linkedFile: LinkedNotes,
 	conditionConvert: PropertiesConversion,
 	isEmbed: IsEmbed,
-	settings: EnveloppeSettings,
+	plugin: Enveloppe,
 	isNotAttachment: boolean,
 	fileContent: string,
 	wikiMatch: string,
@@ -148,7 +149,7 @@ function isLinkedFile(
 ): string {
 	let altText: string;
 	let linkCreator = wikiMatch;
-
+	const settings = plugin.settings;
 	if (linkedFile.linked.extension === "md") {
 		altText = linkedFile.altText ? linkedFile.altText : linkedFile.linked.basename;
 		altText = altText.replace("#", " > ").replace(/ > \^\w*/, "");
@@ -187,7 +188,7 @@ function isLinkedFile(
 		linkCreator = altText;
 	if ((!conditionConvert.attachment && !isNotAttachment) || removeEmbed) linkCreator = "";
 
-	return replaceText(fileContent, wikiMatch, linkCreator, settings, true);
+	return replaceText(fileContent, wikiMatch, linkCreator, plugin, true);
 }
 /**
  * Will strictly convert the the links without a found linked notes (usefull when links are already edited using the markdown conversion or regex)
@@ -206,7 +207,7 @@ function strictStringConversion(
 	wikiMatch: string,
 	fileName: string,
 	conditionConvert: PropertiesConversion,
-	settings: EnveloppeSettings,
+	plugin: Enveloppe,
 	fileContent: string
 ): string {
 	const altMatch = wikiMatch.match(/(\|).*(]])/);
@@ -226,6 +227,7 @@ function strictStringConversion(
 		isEmbed.char = `${conditionConvert.charEmbedLinks} `;
 		linkCreator = linkCreator.replace("!", isEmbed.char);
 	}
+	const settings = plugin.settings;
 	linkCreator = conditionConvert.convertWiki
 		? createMarkdownLinks(fileName, isEmbed.char, altLink, settings)
 		: addAltForWikilinks(altMatch as RegExpMatchArray, linkCreator);
@@ -235,7 +237,7 @@ function strictStringConversion(
 	if ((!conditionConvert.attachment && !isNotAttachment) || removeEmbed) {
 		linkCreator = "";
 	}
-	return replaceText(fileContent, wikiMatch, linkCreator, settings, true);
+	return replaceText(fileContent, wikiMatch, linkCreator, plugin, true);
 }
 
 /**
@@ -392,7 +394,7 @@ export async function convertToInternalGithub(
 					newLink = `[${altText}](${encodeURI(pathInGithub)})`; //encode to URI for compatibility with github
 				}
 				newLink = addAltText(newLink, linkedFile);
-				fileContent = replaceText(fileContent, link, newLink, settings, true);
+				fileContent = replaceText(fileContent, link, newLink, properties.plugin, true);
 			}
 		}
 	}

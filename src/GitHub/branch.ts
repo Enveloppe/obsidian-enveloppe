@@ -4,11 +4,13 @@ import i18next from "i18next";
 import { Notice } from "obsidian";
 import { FilesManagement } from "src/GitHub/files";
 import type Enveloppe from "src/main";
-import { logs, notif } from "src/utils";
+import type { Logs } from "../utils/logs";
 
 export class GithubBranch extends FilesManagement {
+	console: Logs;
 	constructor(octokit: Octokit, plugin: Enveloppe) {
 		super(octokit, plugin);
+		this.console = plugin.console;
 	}
 
 	/**
@@ -48,8 +50,8 @@ export class GithubBranch extends FilesManagement {
 				ref: `refs/heads/${this.branchName}`,
 				sha: shaMainBranch,
 			});
-			notif(
-				{ settings: this.settings },
+			this.console.notif(
+				{},
 				i18next.t("publish.branch.success", { branchStatus: branch.status, repo: prop })
 			);
 			return branch.status === 201;
@@ -66,8 +68,8 @@ export class GithubBranch extends FilesManagement {
 				const mainBranch = allBranch.data.find(
 					(branch: { name: string }) => branch.name === this.branchName
 				);
-				notif(
-					{ settings: this.settings },
+				this.console.notif(
+					{},
 					i18next.t("publish.branch.alreadyExists", {
 						branchName: this.branchName,
 						repo: prop,
@@ -75,7 +77,7 @@ export class GithubBranch extends FilesManagement {
 				);
 				return !!mainBranch;
 			} catch (e) {
-				notif({ settings: this.settings, e: true }, e);
+				this.console.notif({ e: true }, e);
 				return false;
 			}
 		}
@@ -100,7 +102,7 @@ export class GithubBranch extends FilesManagement {
 			});
 			return pr.data.number;
 		} catch (e) {
-			logs({ settings: this.settings, e: true }, e);
+			this.console.logs({ e: true }, e);
 			//trying to get the last open PR number
 			try {
 				const pr = await this.octokit.request("GET /repos/{owner}/{repo}/pulls", {
@@ -111,8 +113,8 @@ export class GithubBranch extends FilesManagement {
 				return pr.data[0]?.number || 0;
 			} catch (e) {
 				// there is no open PR and impossible to create a new one
-				notif(
-					{ settings: this.settings, e: true },
+				this.console.notif(
+					{ e: true },
 					i18next.t("publish.branch.error", { error: e, repo: prop })
 				);
 				return 0;
@@ -138,7 +140,7 @@ export class GithubBranch extends FilesManagement {
 			);
 			return branch.status === 200;
 		} catch (e) {
-			logs({ settings: this.settings, e: true }, e);
+			this.console.logs({ e: true }, e);
 			return false;
 		}
 	}
@@ -171,7 +173,7 @@ export class GithubBranch extends FilesManagement {
 			);
 			return branch.status === 200;
 		} catch (e) {
-			notif({ settings: this.settings, e: true }, e);
+			this.console.notif({ e: true }, e);
 			new Notice(i18next.t("error.mergeconflic"));
 			return false;
 		}
@@ -215,7 +217,7 @@ export class GithubBranch extends FilesManagement {
 			}
 			return true;
 		} catch (e) {
-			logs({ settings: this.settings, e: true }, e);
+			this.console.logs({ e: true }, e);
 			new Notice(i18next.t("error.errorConfig", { repo: prop }));
 			return false;
 		}
@@ -252,8 +254,8 @@ export class GithubBranch extends FilesManagement {
 					});
 				//@ts-ignore
 				if (repoExist.status === 200) {
-					notif(
-						{ settings: this.settings },
+					this.console.notif(
+						{},
 						i18next.t("commands.checkValidity.repoExistsTestBranch", { repo })
 					);
 
@@ -281,7 +283,7 @@ export class GithubBranch extends FilesManagement {
 					}
 				}
 			} catch (e) {
-				logs({ settings: this.settings, e: true }, e);
+				this.console.logs({ e: true }, e);
 				new Notice(i18next.t("commands.checkValidity.error", { repo }));
 				break;
 			}

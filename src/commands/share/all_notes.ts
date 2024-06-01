@@ -12,13 +12,7 @@ import type { GithubBranch } from "src/GitHub/branch";
 import { deleteFromGithub } from "src/GitHub/delete";
 import type Enveloppe from "src/main";
 import { ListChangedFiles } from "src/settings/modals/list_changed";
-import {
-	createListEdited,
-	getSettingsOfMetadataExtractor,
-	logs,
-	notifError,
-	publisherNotification,
-} from "src/utils";
+import { createListEdited, getSettingsOfMetadataExtractor } from "src/utils";
 import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
 import {
 	frontmatterSettingsRepository,
@@ -102,7 +96,13 @@ export async function shareAllMarkedNotes(
 	createGithubBranch: boolean = true,
 	sourceFrontmatter: FrontMatterCache | undefined | null = null
 ) {
-	const statusBar = new ShareStatusBar(statusBarItems, sharedFiles.length);
+	const statusBar = new ShareStatusBar(
+		statusBarItems,
+		sharedFiles.length,
+		undefined,
+		PublisherManager.console
+	);
+	const plugin = PublisherManager.plugin;
 	const prop = monoRepo.frontmatter;
 	try {
 		const fileError: string[] = [];
@@ -134,7 +134,7 @@ export async function shareAllMarkedNotes(
 				} catch (e) {
 					fileError.push(sharedFile.name);
 					new Notice(i18next.t("error.unablePublishNote", { file: sharedFile.name }));
-					logs({ settings: PublisherManager.settings, e: true }, e);
+					plugin.console.logs({ e: true }, e);
 				}
 			}
 			statusBar.finish(8000);
@@ -157,17 +157,22 @@ export async function shareAllMarkedNotes(
 			}
 			const update = await PublisherManager.updateRepository(prop);
 			if (update) {
-				await publisherNotification(PublisherManager, noticeValue, settings, prop);
+				await plugin.console.publisherNotification(
+					PublisherManager,
+					noticeValue,
+					settings,
+					prop
+				);
 				if (settings.plugin.displayModalRepoEditing) {
 					const listEdited = createListEdited(listStateUploaded, deleted, fileError);
 					new ListChangedFiles(PublisherManager.plugin.app, listEdited).open();
 				}
 			} else {
-				notifError(prop);
+				plugin.console.notifError(prop);
 			}
 		}
 	} catch (error) {
-		logs({ settings: PublisherManager.settings, e: true }, error);
+		plugin.console.logs({ e: true }, error);
 		const errorFrag = document.createDocumentFragment();
 		errorFrag.createSpan({
 			cls: ["error", "obsidian-publisher", "icons", "notification"],

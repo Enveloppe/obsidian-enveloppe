@@ -46,7 +46,6 @@ import {
 	checkRepositoryValidity,
 	verifyRateLimitAPI,
 } from "src/utils/data_validation_test";
-import { monkeyPatchConsole } from "./utils";
 
 export class EnveloppeSettingsTab extends PluginSettingTab {
 	plugin: EnveloppePlugin;
@@ -355,7 +354,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 						);
 						this.settings.github.rateLimit = await verifyRateLimitAPI(
 							octokit.octokit,
-							this.settings
+							this.plugin
 						);
 						await this.plugin.saveSettings();
 					})
@@ -1380,8 +1379,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 			.addToggle((toggle) =>
 				toggle.setValue(pluginSettings.dev ?? false).onChange(async (value) => {
 					pluginSettings.dev = value;
-					if (!value) await this.plugin.returnNormalConsoleState();
-					else monkeyPatchConsole(this.plugin);
+
 					await this.plugin.saveSettings();
 				})
 			);
@@ -1424,7 +1422,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 		try {
 			return JSON.parse(JSON.stringify(object));
 		} catch (_e) {
-			console.log("error with stringify for", object);
+			this.plugin.console.logs({ e: true }, "error with stringify for", object);
 		}
 	}
 }

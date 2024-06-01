@@ -7,7 +7,7 @@ import {
 } from "@interfaces";
 import i18next from "i18next";
 import type { Notice } from "obsidian";
-import { noticeMobile } from "src/utils";
+import type { Logs } from "./logs";
 
 // Credit : https://github.com/oleeskild/obsidian-digital-garden/ @oleeskild
 
@@ -25,6 +25,7 @@ export class ShareStatusBar {
 	status: HTMLElement;
 	icon: HTMLElement;
 	noticeMobile: Notice | undefined;
+	console: Logs;
 
 	/**
 	 * @param {HTMLElement} statusBarItem
@@ -35,12 +36,14 @@ export class ShareStatusBar {
 	constructor(
 		statusBarItem: HTMLElement,
 		numberOfNotesToPublish: number,
-		attachment: boolean = false
+		attachment: boolean = false,
+		console: Logs
 	) {
 		this.statusBarItem = statusBarItem;
 		this.counter = 0;
 		this.numberOfNotesToPublish = numberOfNotesToPublish;
 		this.attachment = attachment;
+		this.console = console;
 
 		const typeAttachment = this.attachment
 			? i18next.t("common.attachments")
@@ -56,7 +59,7 @@ export class ShareStatusBar {
 		this.icon.innerHTML = FOUND_ATTACHMENTS;
 		this.status = this.statusBarItem.createEl("span", { text: `${msg}` });
 		this.status.addClass("found-attachments");
-		this.noticeMobile = noticeMobile("wait", FOUND_ATTACHMENTS, msg);
+		this.noticeMobile = this.console.noticeMobile("wait", FOUND_ATTACHMENTS, msg);
 	}
 
 	/**
@@ -83,7 +86,7 @@ export class ShareStatusBar {
 			setTimeout(() => {
 				this.noticeMobile?.hide();
 			}, 4000);
-			this.noticeMobile = noticeMobile("load", HOURGLASS_ICON, msg);
+			this.noticeMobile = this.console.noticeMobile("load", HOURGLASS_ICON, msg);
 		}
 	}
 

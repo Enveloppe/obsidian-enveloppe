@@ -433,7 +433,7 @@ class ModalEditingRepository extends Modal {
 					);
 					this.plugin.settings.github.rateLimit = await verifyRateLimitAPI(
 						octokit.octokit,
-						this.plugin.settings
+						this.plugin
 					);
 				})
 		);

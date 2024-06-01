@@ -29,7 +29,6 @@ import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
 import { deleteFromGithub } from "src/GitHub/delete";
 import { FilesManagement } from "src/GitHub/files";
 import type Enveloppe from "src/main";
-import { logs, noticeMobile, notif, notifError } from "src/utils";
 import {
 	checkEmptyConfiguration,
 	checkIfRepoIsInAnother,
@@ -45,6 +44,7 @@ import {
 } from "src/utils/parse_frontmatter";
 import { ShareStatusBar } from "src/utils/status_bar";
 import merge from "ts-deepmerge";
+import type { Logs } from "../utils/logs";
 
 /** Class to manage the branch
  * @extends FilesManagement
@@ -57,6 +57,7 @@ export default class Publisher {
 	metadataCache: MetadataCache;
 	settings: EnveloppeSettings;
 	branchName: string;
+	console: Logs;
 
 	/**
 	 * Class to manage the branch
@@ -71,6 +72,7 @@ export default class Publisher {
 		this.octokit = octokit;
 		this.plugin = plugin;
 		this.branchName = plugin.branchName;
+		this.console = plugin.console;
 	}
 
 	/**
@@ -90,7 +92,12 @@ export default class Publisher {
 		const fileError: string[] = [];
 		if (linkedFiles.length > 0) {
 			const statusBarItems = this.plugin.addStatusBarItem();
-			const statusBar = new ShareStatusBar(statusBarItems, linkedFiles.length, true);
+			const statusBar = new ShareStatusBar(
+				statusBarItems,
+				linkedFiles.length,
+				true,
+				this.console
+			);
 			const prop = properties.frontmatter.prop;
 			const repoProperties: MonoRepoProperties = {
 				frontmatter: properties.frontmatter.prop,
@@ -129,13 +136,13 @@ export default class Publisher {
 					} catch (e) {
 						new Notice(i18next.t("error.unablePublishNote", { file: file.name }));
 						fileError.push(file.name);
-						logs({ settings: this.settings, e: true }, e);
+						this.console.logs({ e: true }, e);
 					}
 				}
 				statusBar.finish(8000);
 			} catch (e) {
-				logs({ settings: this.settings, e: true }, e);
-				notifError(prop);
+				this.console.logs({ e: true }, e);
+				this.console.notifError(prop);
 				statusBar.error(prop);
 			}
 		}
@@ -182,7 +189,7 @@ export default class Publisher {
 			return false;
 		}
 		try {
-			logs({ settings: this.settings }, `Publishing file: ${file.path}`);
+			this.console.logs({}, `Publishing file: ${file.path}`);
 			fileHistory.push(file);
 			const frontmatterSettingsFromFile = getFrontmatterSettings(
 				frontmatter,
@@ -227,7 +234,7 @@ export default class Publisher {
 				multiRepMsg += `[${repo.owner}/${repo.repo}/${repo.branch}] `;
 			}
 			const msg = `Publishing ${file.name} to ${multiRepMsg}`;
-			logs({ settings: this.settings }, msg);
+			this.console.logs({}, msg);
 			const fileDeleted: Deleted[] = [];
 			const updated: UploadedFiles[][] = [];
 			const fileError: string[] = [];
@@ -260,7 +267,7 @@ export default class Publisher {
 			}
 			return { deleted: fileDeleted[0], uploaded: updated[0], error: fileError };
 		} catch (e) {
-			logs({ settings: this.settings, e: true }, e);
+			this.console.logs({ e: true }, e);
 			return false;
 		}
 	}
@@ -299,11 +306,15 @@ export default class Publisher {
 		});
 		embedFiles = await this.cleanLinkedImageIfAlreadyInRepo(embedFiles, properties);
 		const repo = properties.frontmatter.prop;
-		notif(
-			{ settings: this.settings },
+		this.console.notif(
+			{},
 			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${this.branchName}`
 		);
-		const notifMob = noticeMobile("wait", LOADING_ICON, i18next.t("statusBar.loading"));
+		const notifMob = this.console.noticeMobile(
+			"wait",
+			LOADING_ICON,
+			i18next.t("statusBar.loading")
+		);
 		let deleted: Deleted = {
 			success: false,
 			deleted: [],
@@ -406,7 +417,7 @@ export default class Publisher {
 				result.isUpdated = true;
 			}
 		} catch {
-			logs({ settings: this.settings }, i18next.t("error.normal"));
+			this.console.logs({}, i18next.t("error.normal"));
 		}
 
 		payload.message = msg;
@@ -512,7 +523,7 @@ export default class Publisher {
 			const contentBase64 = Base64.encode(text).toString();
 			return await this.upload(contentBase64, path, title, prop);
 		} catch (e) {
-			notif({ settings: this.settings, e: true }, e);
+			this.console.notif({ e: true }, e);
 			return undefined;
 		}
 	}
@@ -655,8 +666,8 @@ export default class Publisher {
 							) {
 								newLinkedFiles.push(file);
 							} else
-								logs(
-									{ settings: this.settings },
+								this.console.logs(
+									{},
 									i18next.t("error.alreadyExists", { file: file.name })
 								);
 						}

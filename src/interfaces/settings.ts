@@ -296,6 +296,11 @@ export interface PluginBehavior {
 	 * @example `Set: [[frontmatter]]`
 	 */
 	setFrontmatterKey: string;
+	/**
+	 * Save the folder of the plugin
+	 * @default `.obsidian/plugins/%pluginID%`
+	 */
+	manifestDir?: string;
 }
 
 /**

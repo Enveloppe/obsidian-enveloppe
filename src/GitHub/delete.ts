@@ -21,9 +21,10 @@ import {
 	Vault,
 } from "obsidian";
 import type { FilesManagement } from "src/GitHub/files";
-import { logs, notif, trimObject } from "src/utils";
+import { trimObject } from "src/utils";
 import { isAttachment, verifyRateLimitAPI } from "src/utils/data_validation_test";
 import { frontmatterSettingsRepository } from "src/utils/parse_frontmatter";
+import type Enveloppe from "../main";
 
 /**
  * Delete file from github, based on a list of file in the original vault
@@ -71,21 +72,22 @@ async function deleteFromGithubOneRepo(
 	repoProperties: MonoRepoProperties
 ): Promise<Deleted> {
 	const repo = repoProperties.frontmatter;
+	const pconsole = filesManagement.console;
 	if (repo.dryRun.autoclean) return cleanDryRun(silent, filesManagement, repoProperties);
 	if (!repo.autoclean) return { success: false, deleted: [], undeleted: [] };
 	const getAllFile = await filesManagement.getAllFileFromRepo(branchName, repo);
 	const settings = filesManagement.settings;
-	const octokit = filesManagement.octokit;
+	const { octokit, plugin } = filesManagement;
 	const filesInRepo = await filterGithubFile(getAllFile, settings, repo);
 	if (
 		(settings.github.rateLimit === 0 || filesInRepo.length > settings.github.rateLimit) &&
-		(await verifyRateLimitAPI(octokit, settings, false, filesInRepo.length)) === 0
+		(await verifyRateLimitAPI(octokit, plugin, false, filesInRepo.length)) === 0
 	) {
 		console.warn("Rate limited exceeded, please try again later");
 		return { success: false, deleted: [], undeleted: [] };
 	}
 	if (filesInRepo.length === 0) {
-		logs({ settings }, `No file to delete in ${repo.owner}/${repo.repo}`);
+		pconsole.logs({}, `No file to delete in ${repo.owner}/${repo.repo}`);
 		return { success: false, deleted: [], undeleted: [] };
 	}
 	const allSharedFiles = filesManagement.getAllFileWithPath(
@@ -119,12 +121,12 @@ async function deleteFromGithubOneRepo(
 		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
 		if (isNeedToBeDeleted) {
 			const checkingIndex = file.file.contains(settings.upload.folderNote.rename)
-				? await checkIndexFiles(octokit, settings, file.file, repo)
+				? await checkIndexFiles(octokit, plugin, file.file, repo)
 				: false;
 			try {
 				if (!checkingIndex) {
-					notif(
-						{ settings },
+					pconsole.notif(
+						{},
 						`trying to delete file : ${file.file} from ${repo.owner}/${repo.repo}`
 					);
 					const reponse = await octokit.request(
@@ -147,7 +149,7 @@ async function deleteFromGithubOneRepo(
 					}
 				}
 			} catch (e) {
-				if (!(e instanceof DOMException)) logs({ settings, e: true }, e);
+				if (!(e instanceof DOMException)) pconsole.logs({ e: true }, e);
 			}
 		}
 	}
@@ -253,7 +255,7 @@ function parseYamlFrontmatter(contents: string): unknown {
 
 async function checkIndexFiles(
 	octokit: Octokit,
-	settings: EnveloppeSettings,
+	plugin: Enveloppe,
 	path: string,
 	prop: Properties
 ): Promise<boolean> {
@@ -284,7 +286,7 @@ async function checkIndexFiles(
 		}
 	} catch (e) {
 		if (!(e instanceof DOMException)) {
-			notif({ settings, e: true }, e);
+			plugin.console.notif({ e: true }, e);
 			return false;
 		}
 	}
@@ -296,8 +298,8 @@ function cleanDryRun(
 	filesManagement: FilesManagement,
 	repoProperties: MonoRepoProperties
 ): Deleted {
-	const { vault, settings } = filesManagement;
-	const app = filesManagement.plugin.app;
+	const { vault, settings, console, plugin } = filesManagement;
+	const app = plugin.app;
 	const repo = repoProperties.frontmatter;
 	const dryRunFolderPath = normalizePath(
 		repo.dryRun.folderName
@@ -358,8 +360,8 @@ function cleanDryRun(
 				? indexFileDryRun(file as TFile, app.metadataCache)
 				: false;
 			if (!indexFile) {
-				notif(
-					{ settings },
+				console.notif(
+					{},
 					`[DRYRUN] trying to delete file : ${file.path} from ${dryRunFolderPath}`
 				);
 				vault.trash(file, false);

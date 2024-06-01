@@ -23,7 +23,6 @@ import {
 	escapeRegex,
 } from "src/conversion/links";
 import type Enveloppe from "src/main";
-import { logs, notif } from "src/utils";
 
 class DataviewCompiler {
 	settings: EnveloppeSettings;
@@ -189,7 +188,7 @@ export async function convertDataviewQueries(
 	const { dataviewJsMatches, inlineMatches, inlineJsMatches } = compiler.matches();
 
 	if (!matches && !inlineMatches && !dataviewJsMatches && !inlineJsMatches) {
-		logs({ settings }, "No dataview queries found");
+		plugin.console.logs({}, "No dataview queries found");
 		return replacedText;
 	}
 	const error = i18next.t("error.dataview");
@@ -203,8 +202,8 @@ export async function convertDataviewQueries(
 			const markdown = await compiler.dataviewDQL(queryBlock[1]);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
-			logs({ settings, e: true }, e);
-			notif({ settings }, error);
+			plugin.console.logs({ e: true }, e);
+			plugin.console.notif({}, error);
 			return queryBlock[0];
 		}
 	}
@@ -215,8 +214,8 @@ export async function convertDataviewQueries(
 			const markdown = await compiler.dataviewJS(queryBlock[1]);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
-			logs({ settings, e: true }, e);
-			notif({ settings }, error);
+			plugin.console.logs({ e: true }, e);
+			plugin.console.notif({}, error);
 			return queryBlock[0];
 		}
 	}
@@ -229,8 +228,8 @@ export async function convertDataviewQueries(
 			const markdown = await compiler.inlineDQLDataview(query);
 			replacedText = replacedText.replace(code, markdown);
 		} catch (e) {
-			logs({ settings, e: true }, e);
-			notif({ settings }, error);
+			plugin.console.logs({ e: true }, e);
+			plugin.console.notif({}, error);
 			return inlineQuery[0];
 		}
 	}
@@ -241,8 +240,8 @@ export async function convertDataviewQueries(
 			const markdown = await compiler.inlineDataviewJS(inlineJsQuery[1].trim());
 			replacedText = replacedText.replace(code, markdown);
 		} catch (e) {
-			logs({ settings, e: true }, e);
-			notif({ settings }, error);
+			plugin.console.logs({ e: true }, e);
+			plugin.console.notif({}, error);
 			return inlineJsQuery[0];
 		}
 	}
@@ -284,7 +283,7 @@ async function convertDataviewLinks(
 		md,
 		properties.frontmatter.general,
 		dataviewPath,
-		properties.plugin.settings,
+		properties.plugin,
 		frontmatter
 	);
 }

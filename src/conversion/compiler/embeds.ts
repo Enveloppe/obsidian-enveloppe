@@ -348,7 +348,7 @@ export async function convertInlineDataview(
 		}
 	}
 	if (valueToAdd.length > 0) {
-		return addToYaml(text, valueToAdd.filter(Boolean), plugin, {
+		return addToYaml(text, valueToAdd.filter(Boolean), {
 			properties: null,
 			file: sourceFile,
 		});

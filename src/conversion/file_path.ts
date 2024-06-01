@@ -17,7 +17,6 @@ import {
 } from "obsidian";
 import { createRegexFromText } from "src/conversion/find_and_replace_text";
 import type Enveloppe from "src/main";
-import { logs } from "src/utils";
 import {
 	checkIfRepoIsInAnother,
 	isInternalShared,
@@ -97,7 +96,7 @@ export async function createRelativePath(
 		targetRepo
 	);
 	const shared = isInternalShared(frontmatterTarget, properties, targetFile.linked);
-	logs({ settings }, `Shared: ${shared} for ${targetFile.linked.path}`);
+	properties.plugin.console.logs({}, `Shared: ${shared} for ${targetFile.linked.path}`);
 	if (
 		targetFile.linked.extension === "md" &&
 		!targetFile.linked.name.includes("excalidraw") &&
