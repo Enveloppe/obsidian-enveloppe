@@ -52,7 +52,7 @@ console.log(msg);
 console.log();
 
 if (opt.beta) {
-	console.log(`${bold.green(">")} ${info.underline("Bumping beta version...")}`);
+	console.log(`${bold.green(">")} ${info(underline("Bumping beta version..."))}`);
 	console.log();
 	const bumpFiles = [
 		{
