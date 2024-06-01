@@ -4,23 +4,6 @@ import dedent from "dedent";
 import pkg from "ansi-colors";
 const { red, dim, gray, italic, bold, cyan, blue, green, underline, yellow, theme } = pkg;
 
-import { readFileSync, writeFile } from "fs";
-
-/**
- * Remove text from the file
- * @param {string} path 
- */
-function removeText(path) {
-	const toRemove = ["# Changelog", "All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines."]
-	let changelog = readFileSync(path, "utf8");
-	for (const remove of toRemove) changelog = changelog.replace(remove, "").trim();
-	changelog = changelog.replaceAll(/[\n\r]{3,}/gm, "\n\n").trim();
-	changelog = changelog.replaceAll(/## (.*)[\n\r]{2}### /gm, "## $1\n### ").trim();
-	writeFile(path, changelog.trim(), "utf8", (err) => {
-		if (err) return console.error(err);
-	});
-}
-
 const program = new Command();
 
 theme({
@@ -58,14 +41,12 @@ const opt = program.opts();
 
 const betaMsg = opt.beta ? em("- Pre-release\n\t") : "";
 const dryRunMsg = opt.dryRun ? em("- Dry run\n\t") : "";
-const releaseAsMsg = opt.releaseAs
-	? em(`- Release as ${underline(opt.releaseAs)}`)
-	: "";
+const releaseAsMsg = opt.releaseAs ? em(`- Release as ${underline(opt.releaseAs)}`) : "";
 
 const msg = dedent(`
-${heading("Options :")}
-	${betaMsg}${dryRunMsg}${releaseAsMsg}  
-`);
+	${heading("Options :")}
+		${betaMsg}${dryRunMsg}${releaseAsMsg}  
+	`);
 
 console.log(msg);
 console.log();
@@ -93,16 +74,16 @@ if (opt.beta) {
 		prerelease: "",
 		dryRun: opt.dryRun,
 		tagPrefix: "",
+		scripts: {
+			postchangelog: "node _changelog.mjs -b",
+		},
 	})
 		.then(() => {
-			if (!opt.dryRun)
-				removeText("CHANGELOG-beta.md");
 			console.log("Done");
 		})
 		.catch((err) => {
 			console.error(err);
 		});
-	removeText("CHANGELOG-beta.md");
 } else {
 	const versionBumped = opt.releaseAs
 		? info(`Release as ${underline(opt.releaseAs)}`)
@@ -126,9 +107,8 @@ if (opt.beta) {
 		{
 			filename: "manifest.json",
 			type: "json",
-		}
+		},
 	];
-
 
 	commitAndTagVersion({
 		infile: "CHANGELOG.md",
@@ -136,10 +116,11 @@ if (opt.beta) {
 		dryRun: opt.dryRun,
 		tagPrefix: "",
 		releaseAs: opt.releaseAs,
+		scripts: {
+			postchangelog: "node _changelog.mjs",
+		},
 	})
 		.then(() => {
-			if (!opt.dryRun)
-				removeText("CHANGELOG.md");
 			console.log("Done");
 		})
 		.catch((err) => {
