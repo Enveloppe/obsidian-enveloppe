@@ -1,3 +1,5 @@
+## [7.2.9-5](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9-4...7.2.9-5) (2024-06-05)
+
 ## [7.2.9-4](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9-3...7.2.9-4) (2024-06-01)
 
 ## [7.2.9-3](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9-2...7.2.9-3) (2024-05-30)
@@ -373,41 +375,30 @@
 
 ## [6.2.0-0](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-19...6.2.0-0) (2023-06-08)
 ### [6.1.1-19](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-18...6.1.1-19) (2023-06-08)
-
 ### [6.1.1-18](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-17...6.1.1-18) (2023-06-08)
 ### [6.1.1-17](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-16...6.1.1-17) (2023-06-08)
-
 ### Bug Fixes
 
 * skip wrongly formatted tags ([550a859](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/commit/550a8598c9787d73cf67c2d522a341faaab26411))
 
 ### [6.1.1-16](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-15...6.1.1-16) (2023-06-08)
 ### [6.1.1-15](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-14...6.1.1-15) (2023-06-08)
-
 ### [6.1.1-14](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1-13...6.1.1-14) (2023-06-08)
 ### [6.1.1-13](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.17-0...6.1.1-13) (2023-06-08)
-
 ### [6.1.17-0](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.16...6.1.17-0) (2023-06-08)
 ### [6.1.16](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.15...6.1.16) (2023-06-08)
-
 ### [6.1.15](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.14...6.1.15) (2023-06-08)
 ### [6.1.14](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.13...6.1.14) (2023-06-08)
-
 ### [6.1.13](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.12...6.1.13) (2023-06-08)
 ### [6.1.12](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.11...6.1.12) (2023-06-08)
-
 ### [6.1.11](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.10...6.1.11) (2023-06-08)
 ### [6.1.10](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.9...6.1.10) (2023-06-08)
-
 ### [6.1.9](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.8...6.1.9) (2023-06-08)
 ### [6.1.8](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.7...6.1.8) (2023-06-08)
-
 ### [6.1.7](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.6...6.1.7) (2023-06-08)
 ### [6.1.6](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.5...6.1.6) (2023-06-08)
-
 ### [6.1.5](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.4...6.1.5) (2023-06-08)
 ### [6.1.4](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.3...6.1.4) (2023-06-08)
-
 ### [6.1.3](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.1...6.1.3) (2023-06-08)
 ### [6.1.1](https://github.com/Lisandra-dev/obsidian-github-publisher-ULTRA-DEV/compare/6.1.0...6.1.1) (2023-06-08)
 
@@ -1227,7 +1218,6 @@
 
 ### [4.1.3-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.2...4.1.3-1) (2022-08-29)
 ### [4.1.3-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.2...4.1.3-0) (2022-08-29)
-
 ### [4.1.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/4.1.1...4.1.2) (2022-08-29)
 ### Bug Fixes
 
@@ -1289,7 +1279,6 @@
 
 ## [4.0.0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.17.1...4.0.0) (2022-08-26)
 ### [3.17.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.17.0...3.17.1) (2022-08-25)
-
 ### Bug Fixes
 
 * forgot language string ([f575cab](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/f575cab712c086ad5f7729e62d3494298a74837e))
@@ -1704,17 +1693,14 @@
 
 ### [3.10.3-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2...3.10.3-0) (2022-07-10)
 ### [3.10.2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-7...3.10.2) (2022-07-07)
-
 ### Bug Fixes
 
 * image path not converted correctly ([627172c](https://github.com/obsidianMkdocs/obsidian-github-publisher/commit/627172ccb402191327c6d0321b7a852bee9b953e))
 
 ### [3.10.2-7](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-6...3.10.2-7) (2022-07-07)
 ### [3.10.2-6](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-5...3.10.2-6) (2022-07-07)
-
 ### [3.10.2-5](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-4...3.10.2-5) (2022-07-07)
 ### [3.10.2-4](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-3...3.10.2-4) (2022-07-07)
-
 ### [3.10.2-3](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-2...3.10.2-3) (2022-07-07)
 ### Bug Fixes
 
@@ -1723,7 +1709,6 @@
 
 ### [3.10.2-2](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-1...3.10.2-2) (2022-07-07)
 ### [3.10.2-1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.2-0...3.10.2-1) (2022-07-07)
-
 ### [3.10.2-0](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0...3.10.2-0) (2022-07-07)
 ### [3.10.1](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/3.10.0...3.10.1) (2022-07-07)
 
@@ -1758,7 +1743,6 @@
 
 ### [3.9.3-1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.3-0...3.9.3-1) (2022-06-23)
 ### [3.9.3-0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.9.2...3.9.3-0) (2022-06-23)
-
 ### Bug Fixes
 
 * use a strict replacement of link ([ac5ae73](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/ac5ae734658b86cfa89f35d9be5e1e68bace98d3))
@@ -1784,10 +1768,8 @@
 
 ### [3.8.3-1](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.2...3.8.3-1) (2022-06-18)
 ### [3.8.3-0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.2...3.8.3-0) (2022-06-18)
-
 ### [3.8.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.2-0...3.8.2) (2022-06-18)
 ### [3.8.2-0](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.8.1...3.8.2-0) (2022-06-18)
-
 ### Bug Fixes
 
 * crash with multiple send ([45989ce](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/45989ce278669d0024c35c4ac4813f766efe539f))
@@ -1819,7 +1801,6 @@
 
 ### [3.6.7](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.6...3.6.7) (2022-06-17)
 ### [3.6.6](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/3.6.5...3.6.6) (2022-06-15)
-
 ### Bug Fixes
 
 * fix regex convertor ([ca0e8ff](https://github.com/Mara-Li/obsidian-mkdocs-publisher/commit/ca0e8ff9ae154c3892c6ee05d052b2865dc61293))
@@ -1919,7 +1900,6 @@
 
 ### [2.3.4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.3.3...2.3.4) (2022-05-14)
 ### [2.3.3](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/compare/2.3.2...2.3.3) (2022-05-13)
-
 ### Bug Fixes
 
 * **github:** github action delete filename with coma ([b89f153](https://github.com/Mara-Li/obsidian-mkdocs-publisher-plugin/commit/b89f15318638120f6402a9b18b8f5f444071c9e8))
@@ -1947,7 +1927,6 @@
 
 ### [2.2.4](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.3...2.2.4) (2022-04-18)
 ### [2.2.3](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.2...2.2.3) (2022-04-16)
-
 ### [2.2.2](https://github.com/Mara-Li/obsidian-mkdocs-publisher/compare/2.2.1...2.2.2) (2022-04-16)
 ### Bug Fixes
 
@@ -1976,7 +1955,6 @@
 
 ### 2.0.2 (2022-04-12)
 ### [2.0.1](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/2.0.0...2.0.1) (2022-04-11)
-
 ### Bug Fixes
 
 * Base64 errors on mobile ([26dbe6d](https://github.com/Mara-Li/obsidian-mkdocs-publication/commit/26dbe6d514f08ddc4ad60ced7d6cce16c14f2142))
@@ -2009,7 +1987,6 @@
 
 ## [1.0.0](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/0.0.2...1.0.0) (2022-04-11)
 ### [0.0.2](https://github.com/Mara-Li/obsidian-mkdocs-publication/compare/0.0.1...0.0.2) (2022-04-11)
-
 ### 0.0.1 (2022-04-11)
 ### Features
 
