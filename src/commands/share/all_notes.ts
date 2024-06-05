@@ -1,11 +1,11 @@
 import type { MonoRepoProperties, Repository, UploadedFiles } from "@interfaces";
-import { ERROR_ICONS } from "@interfaces/icons";
 import i18next from "i18next";
 import {
 	type Command,
 	type FrontMatterCache,
 	Notice,
 	Platform,
+	setIcon,
 	type TFile,
 } from "obsidian";
 import type { GithubBranch } from "src/GitHub/branch";
@@ -174,11 +174,12 @@ export async function shareAllMarkedNotes(
 	} catch (error) {
 		plugin.console.logs({ e: true }, error);
 		const errorFrag = document.createDocumentFragment();
+		const errorSpan = errorFrag.createSpan({
+			cls: ["error", "enveloppe", "icons", "notification"],
+		});
+		setIcon(errorSpan, "mail-warning");
 		errorFrag.createSpan({
-			cls: ["error", "obsidian-publisher", "icons", "notification"],
-		}).innerHTML = ERROR_ICONS;
-		errorFrag.createSpan({
-			cls: ["error", "obsidian-publisher", "notification"],
+			cls: ["error", "enveloppe", "notification"],
 			text: i18next.t("error.unablePublishMultiNotes"),
 		});
 		statusBar.error(prop);

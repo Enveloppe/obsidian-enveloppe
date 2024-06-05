@@ -1,12 +1,8 @@
 import {
-	ERROR_ICONS,
-	FOUND_ATTACHMENTS,
-	HOURGLASS_ICON,
 	type Properties,
-	SUCCESS_ICON,
 } from "@interfaces";
 import i18next from "i18next";
-import type { Notice } from "obsidian";
+import { setIcon, type Notice } from "obsidian";
 import type { Logs } from "./logs";
 
 // Credit : https://github.com/oleeskild/obsidian-digital-garden/ @oleeskild
@@ -53,13 +49,13 @@ export class ShareStatusBar {
 			type: typeAttachment,
 		});
 		this.icon = this.statusBarItem.createEl("span", {
-			cls: ["obsidian-publisher", "icons"],
+			cls: ["enveloppe", "icons"],
 		});
 		this.statusBarItem.addClass("found-attachments");
-		this.icon.innerHTML = FOUND_ATTACHMENTS;
+		setIcon(this.icon, "search-check");
 		this.status = this.statusBarItem.createEl("span", { text: `${msg}` });
 		this.status.addClass("found-attachments");
-		this.noticeMobile = this.console.noticeMobile("wait", FOUND_ATTACHMENTS, msg);
+		this.noticeMobile = this.console.noticeMobile("wait", "search-check", msg);
 	}
 
 	/**
@@ -71,7 +67,7 @@ export class ShareStatusBar {
 			? i18next.t("common.attachments")
 			: i18next.t("common.files");
 		const msg = i18next.t("statusBar.sharing", { type: typeAttachment.toLowerCase() });
-		this.icon.innerHTML = HOURGLASS_ICON;
+		setIcon(this.icon, "hourglass");
 		this.status.setText(
 			i18next.t("statusBar.counter", {
 				msg,
@@ -86,7 +82,7 @@ export class ShareStatusBar {
 			setTimeout(() => {
 				this.noticeMobile?.hide();
 			}, 4000);
-			this.noticeMobile = this.console.noticeMobile("load", HOURGLASS_ICON, msg);
+			this.noticeMobile = this.console.noticeMobile("load", "hourglass", msg);
 		}
 	}
 
@@ -105,7 +101,7 @@ export class ShareStatusBar {
 					action: i18next.t("common.published"),
 					type: i18next.t("common.files"),
 				});
-		this.icon.innerHTML = SUCCESS_ICON;
+		setIcon(this.icon, "mail-check");
 		this.status.setText(
 			i18next.t("statusBar.counter", {
 				msg,
@@ -132,7 +128,7 @@ export class ShareStatusBar {
 		this.statusBarItem.addClass("error");
 		this.statusBarItem.removeClass("sharing");
 		this.statusBarItem.removeClass("found-attachments");
-		this.icon.innerHTML = ERROR_ICONS;
+		setIcon(this.icon, "mail-warning");
 		this.status.innerHTML = i18next.t("error.errorPublish", { repo: prop });
 		this.noticeMobile?.hide();
 		setTimeout(() => {

@@ -9,7 +9,6 @@ import type {
 	Properties,
 	UploadedFiles,
 } from "@interfaces";
-import { LOADING_ICON } from "@interfaces/icons";
 import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
@@ -19,6 +18,7 @@ import {
 	type MetadataCache,
 	normalizePath,
 	Notice,
+	setIcon,
 	TFile,
 	TFolder,
 	type Vault,
@@ -298,11 +298,11 @@ export default class Publisher {
 	) {
 		const load = this.plugin.addStatusBarItem();
 		//add a little load icon from lucide icons, using SVG
-		load.createEl("span", { cls: ["obsidian-publisher", "loading", "icons"] }).innerHTML =
-			LOADING_ICON;
+		load.createEl("span", { cls: ["enveloppe", "loading", "icons"] });
+		setIcon(load, "loader");
 		load.createEl("span", {
 			text: i18next.t("statusBar.loading"),
-			cls: ["obsidian-publisher", "loading", "icons"],
+			cls: ["enveloppe", "loading", "icons"],
 		});
 		embedFiles = await this.cleanLinkedImageIfAlreadyInRepo(embedFiles, properties);
 		const repo = properties.frontmatter.prop;
@@ -312,7 +312,7 @@ export default class Publisher {
 		);
 		const notifMob = this.console.noticeMobile(
 			"wait",
-			LOADING_ICON,
+			"loader",
 			i18next.t("statusBar.loading")
 		);
 		let deleted: Deleted = {

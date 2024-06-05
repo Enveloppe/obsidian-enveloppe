@@ -269,7 +269,7 @@ a.enveloppe-download:hover {
 	text-align: center;
 }
 
-span.obsidian-publisher.icons {
+span.enveloppe.icons {
 	vertical-align: middle;
 	position: relative;
 	padding-right: 5px;
@@ -396,17 +396,17 @@ span.obsidian-publisher.icons {
 	}
 }
 
-span.obsidian-publisher.loading svg {
+span.enveloppe.loading svg {
 	/* animate */
 	animation: spin 1s linear infinite;
 	vertical-align: middle;
 }
 
-span.obsidian-publisher.icons svg {
+span.enveloppe.icons svg {
 	margin-right: 2px;
 }
 
-span.obsidian-publisher.icons svg.lucide.lucide-mail-check {
+span.enveloppe.icons svg.lucide-mail-check {
 	/* animation to bump to up */
 	animation: bumpAnimation 0.5s ease-in-out;
 }
@@ -415,19 +415,19 @@ span.obsidian-publisher.icons svg.lucide.lucide-mail-check {
 	color: var(--text-success);
 }
 
-.notice:has(.obsidian-publisher.success.notification) {
+.notice:has(.enveloppe.success.notification) {
 	background-color: var(--text-success);
 	color: green;
 	font-weight: bold;
 }
 
-.notice:has(.obsidian-publisher.error.notification) {
+.notice:has(.enveloppe.error.notification) {
 	background-color: var(--text-error);
 	color: black;
 }
 
-.notice:has(.obsidian-publisher.load.notification),
-.notice:has(.obsidian-publisher.wait.notification) {
+.notice:has(.enveloppe.load.notification),
+.notice:has(.enveloppe.wait.notification) {
 	background-color: var(--color-yellow);
 	color: black;
 }
@@ -436,7 +436,7 @@ span.obsidian-publisher.icons svg.lucide.lucide-mail-check {
 	color: var(--text-error);
 }
 
-span.obsidian-publisher.icons svg.lucide.lucide-hourglass {
+span.enveloppe.icons svg.lucide-hourglass {
 	/* animation to bump to up */
 	animation: hourglassRotation 1s linear infinite;
 }

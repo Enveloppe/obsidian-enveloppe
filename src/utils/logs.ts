@@ -1,10 +1,7 @@
-import { Notice, Platform, TFile } from "obsidian";
+import { Notice, Platform, setIcon, TFile } from "obsidian";
 import type Enveloppe from "../main";
 import {
 	type EnveloppeSettings,
-	ERROR_ICONS,
-	HOURGLASS_ICON,
-	SUCCESS_ICON,
 	type Properties,
 } from "@interfaces";
 import i18next from "i18next";
@@ -60,12 +57,13 @@ export class Logs {
 			return;
 		}
 		const noticeFrag = document.createDocumentFragment();
-		noticeFrag.createEl("span", {
+		const span = noticeFrag.createEl("span", {
 			text: message,
-			cls: ["obsidian-publisher", cls, "icons"],
-		}).innerHTML = icon;
+			cls: ["enveloppe", cls, "icons"],
+		});
+		setIcon(span, icon)
 		noticeFrag.createEl("span", {
-			cls: ["obsidian-publisher", cls, "notification"],
+			cls: ["enveloppe", cls, "notification"],
 		}).innerHTML = message;
 		return new Notice(noticeFrag, 0);
 	}
@@ -124,11 +122,12 @@ export class Logs {
 		const repo = Array.isArray(properties) ? properties : [properties];
 		for (const repository of repo) {
 			const notif = document.createDocumentFragment();
+			const notifSpan = notif.createSpan({
+				cls: ["error", "enveloppe", "icons", "notification"],
+			});
+			setIcon(notifSpan, "mail-warning");
 			notif.createSpan({
-				cls: ["error", "obsidian-publisher", "icons", "notification"],
-			}).innerHTML = ERROR_ICONS;
-			notif.createSpan({
-				cls: ["error", "obsidian-publisher", "notification"],
+				cls: ["error", "enveloppe", "notification"],
 			}).innerHTML = i18next.t("error.errorPublish", { repo: repository });
 			new Notice(notif);
 		}
@@ -152,31 +151,33 @@ export class Logs {
 						file: noticeValue,
 						repo: prop,
 					});
-		docSuccess.createEl("span", {
+		const span = docSuccess.createEl("span", {
 			text: successMsg,
-			cls: ["obsidian-publisher", "success", "icons"],
-		}).innerHTML = SUCCESS_ICON;
+			cls: ["enveloppe", "success", "icons"],
+		});
+		setIcon(span, "mail-check");
 		docSuccess.createEl("span", {
-			cls: ["obsidian-publisher", "success", "notification"],
+			cls: ["enveloppe", "success", "notification"],
 		}).innerHTML = successMsg;
 		if (settings.github.workflow.name.length === 0) {
 			new Notice(docSuccess, 0);
 			return;
 		}
 		const workflowSuccess = document.createDocumentFragment();
-		workflowSuccess.createEl("span", {
+		const Workflowspan = workflowSuccess.createEl("span", {
 			text: i18next.t("informations.successfulPublish", {
 				nbNotes: noticeValue,
 				repo: prop,
 			}),
-			cls: ["obsidian-publisher", "wait", "icons"],
-		}).innerHTML = HOURGLASS_ICON;
+			cls: ["enveloppe", "wait", "icons"],
+		});
+		setIcon(Workflowspan, "hourglass");
 		const msg = `${i18next.t("informations.sendMessage", {
 			nbNotes: noticeValue,
 			repo: prop,
 		})}.<br>${i18next.t("informations.waitingWorkflow")}`;
 		workflowSuccess.createEl("span", {
-			cls: ["obsidian-publisher", "wait", "notification"],
+			cls: ["enveloppe", "wait", "notification"],
 		}).innerHTML = msg;
 		new Notice(workflowSuccess);
 		const successWorkflow = await PublisherManager.workflowGestion(prop);

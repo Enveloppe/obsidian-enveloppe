@@ -33,18 +33,13 @@ import type {
 } from "src/interfaces/properties";
 import type { MetadataExtractor } from "src/interfaces/settings";
 
-import { ERROR_ICONS, FOUND_ATTACHMENTS, HOURGLASS_ICON, SUCCESS_ICON } from "./icons";
 
 export {
 	DEFAULT_SETTINGS,
 	EnumbSettingsTabId,
-	ERROR_ICONS,
 	FIND_REGEX,
 	FolderSettings,
-	FOUND_ATTACHMENTS,
 	GithubTiersVersion,
-	HOURGLASS_ICON,
-	SUCCESS_ICON,
 	TOKEN_PATH,
 	TypeOfEditRegex,
 };

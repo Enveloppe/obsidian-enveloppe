@@ -59,7 +59,7 @@ async function purge(
 ): Promise<void | boolean> {
 	try {
 		const noticeFragment = document.createDocumentFragment();
-		noticeFragment.createSpan({ cls: ["obsidian-publisher", "notification"] }).innerHTML =
+		noticeFragment.createSpan({ cls: ["enveloppe", "notification"] }).innerHTML =
 			i18next.t("informations.startingClean", { repo: monoRepo.frontmatter });
 		new Notice(noticeFragment);
 		const isValid = await checkRepositoryValidityWithProperties(

@@ -76,7 +76,7 @@ export type CopyLink = {
  * The GitHub settings of the plugin
  */
 export interface GitHub {
-	/** The user that belongs to the repository, can be also a community (like obsidian-publisher) */
+	/** The user that belongs to the repository, can be also a community (like enveloppe) */
 	user: string;
 	/** The name of the repository */
 	repo: string;
