@@ -1,3 +1,8 @@
+## [7.2.9-6](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9-5...7.2.9-6) (2024-06-06)
+### Bug Fixes
+
+* icon not displayed properly ([00bb27b](https://github.com/Enveloppe/obsidian-enveloppe/commit/00bb27b7d0efee4c9f583f55ac50116aa843c37a))
+
 ## [7.2.9-5](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9-4...7.2.9-5) (2024-06-05)
 
 ## [7.2.9-4](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9-3...7.2.9-4) (2024-06-01)
