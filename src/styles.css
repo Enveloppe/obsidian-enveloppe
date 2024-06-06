@@ -440,3 +440,7 @@ span.enveloppe.icons svg.lucide-hourglass {
 	/* animation to bump to up */
 	animation: hourglassRotation 1s linear infinite;
 }
+
+.status-bar-item.plugin-obsidian-mkdocs-publisher svg.lucide-loader {
+	animation: hourglassRotation 1s linear infinite;
+}
