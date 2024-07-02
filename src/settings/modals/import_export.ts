@@ -15,11 +15,12 @@ import type Enveloppe from "src/main";
 import type { EnveloppeSettingsTab } from "src/settings";
 import { migrateSettings, type OldSettings } from "src/settings/migrate";
 import type { Logs } from "../../utils/logs";
+import { klona } from "klona";
 
 export type SettingValue = number | string | boolean | unknown;
 
 function clone(obj: EnveloppeSettings): EnveloppeSettings {
-	return JSON.parse(JSON.stringify(obj));
+	return klona(obj);
 }
 /**
  *

@@ -25,6 +25,7 @@ import { trimObject } from "src/utils";
 import { isAttachment, verifyRateLimitAPI } from "src/utils/data_validation_test";
 import { frontmatterSettingsRepository } from "src/utils/parse_frontmatter";
 import type Enveloppe from "../main";
+import { klona } from "klona";
 
 /**
  * Delete file from github, based on a list of file in the original vault
@@ -113,7 +114,7 @@ async function deleteFromGithubOneRepo(
 			? !allSharedConverted.some((f) => {
 					let prop = f.repo;
 					if (Array.isArray(prop)) {
-						prop = prop.find((r) => JSON.stringify(r.repo) === JSON.stringify(repo.repo));
+						prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
 					}
 					return (f.converted === file.file || f.otherPath?.includes(file.file)) && prop;
 				})
@@ -346,7 +347,7 @@ function cleanDryRun(
 			? !allSharedFiles.some((f) => {
 					let prop = f.repo;
 					if (Array.isArray(prop)) {
-						prop = prop.find((r) => JSON.stringify(r.repo) === JSON.stringify(repo.repo));
+						prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
 					}
 					return (
 						(f.converted === convertedPath || f.otherPath?.includes(convertedPath)) &&

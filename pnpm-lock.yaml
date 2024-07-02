@@ -79,6 +79,9 @@ importers:
       js-base64:
         specifier: ^3.7.6
         version: 3.7.7
+      klona:
+        specifier: ^2.0.6
+        version: 2.0.6
       obsidian:
         specifier: 1.5.7-1
         version: 1.5.7-1(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
@@ -942,6 +945,10 @@ packages:
   kind-of@6.0.3:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
+
+  klona@2.0.6:
+    resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
+    engines: {node: '>= 8'}
 
   lie@3.1.1:
     resolution: {integrity: sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==}
@@ -2398,6 +2405,8 @@ snapshots:
   jsonparse@1.3.1: {}
 
   kind-of@6.0.3: {}
+
+  klona@2.0.6: {}
 
   lie@3.1.1:
     dependencies:

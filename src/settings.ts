@@ -22,6 +22,7 @@ import {
 	supportMe,
 	usefulLinks,
 } from "src/settings/help";
+import { klona } from "klona";
 import { migrateToken } from "src/settings/migrate";
 import {
 	ExportModal,
@@ -1417,10 +1418,9 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 		this.settingsPage.appendChild(supportMe());
 	}
 
-	// eslint-disable-next-line
 	copy(object: any) {
 		try {
-			return JSON.parse(JSON.stringify(object));
+			return klona(object);
 		} catch (_e) {
 			this.plugin.console.logs({ e: true }, "error with stringify for", object);
 		}

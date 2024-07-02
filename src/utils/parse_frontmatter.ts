@@ -11,6 +11,7 @@ import {
 	type PropertiesConversion,
 	type Repository,
 } from "@interfaces";
+import { klona } from "klona";
 import { type FrontMatterCache, normalizePath, TFile } from "obsidian";
 import type Enveloppe from "src/main";
 import merge from "ts-deepmerge";
@@ -227,7 +228,7 @@ function parseMultipleRepo(frontmatter: FrontMatterCache, Properties: Properties
 	if (frontmatter.multipleRepo instanceof Array && frontmatter.multipleRepo.length > 0) {
 		for (const repo of frontmatter.multipleRepo) {
 			if (typeof repo === "object") {
-				const repository: Properties = structuredClone(Properties);
+				const repository: Properties = klona(Properties);
 				if (repo.branch != undefined) {
 					repository.branch = repo.branch;
 				}
@@ -244,7 +245,7 @@ function parseMultipleRepo(frontmatter: FrontMatterCache, Properties: Properties
 			} else {
 				//is string
 				const repoString = repo.split("/");
-				const repository: Properties = structuredClone(Properties);
+				const repository: Properties = klona(Properties);
 				multipleRepo.push(repositoryStringSlice(repoString, repository));
 			}
 		}
@@ -332,7 +333,7 @@ function multipleShortKeyRepo(
  */
 
 function repositoryStringSlice(repo: string, properties: Properties): Properties {
-	const newRepo: Properties = structuredClone(properties);
+	const newRepo: Properties = klona(properties);
 	if (repo.length === 4) {
 		newRepo.branch = repo[2];
 		newRepo.repo = repo[1];
