@@ -1,6 +1,4 @@
-import {
-	type Properties,
-} from "@interfaces";
+import type { Properties } from "@interfaces";
 import i18next from "i18next";
 import { setIcon, type Notice } from "obsidian";
 import type { Logs } from "./logs";

@@ -33,7 +33,6 @@ import type {
 } from "src/interfaces/properties";
 import type { MetadataExtractor } from "src/interfaces/settings";
 
-
 export {
 	DEFAULT_SETTINGS,
 	EnumbSettingsTabId,

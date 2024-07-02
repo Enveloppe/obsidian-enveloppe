@@ -1,9 +1,6 @@
 import { Notice, Platform, setIcon, TFile } from "obsidian";
 import type Enveloppe from "../main";
-import {
-	type EnveloppeSettings,
-	type Properties,
-} from "@interfaces";
+import type { EnveloppeSettings, Properties } from "@interfaces";
 import i18next from "i18next";
 import type Publisher from "../GitHub/upload";
 
@@ -61,7 +58,7 @@ export class Logs {
 			text: message,
 			cls: ["enveloppe", cls, "icons"],
 		});
-		setIcon(span, icon)
+		setIcon(span, icon);
 		noticeFrag.createEl("span", {
 			cls: ["enveloppe", cls, "notification"],
 		}).innerHTML = message;
