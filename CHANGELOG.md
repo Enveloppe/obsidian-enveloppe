@@ -1,3 +1,5 @@
+## [7.2.10](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9...7.2.10) (2024-07-02)
+
 ## [7.2.9](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9-6...7.2.9) (2024-07-02)
 
 ## [7.2.8](https://github.com/obsidianMkdocs/obsidian-github-publisher/compare/7.2.7...7.2.8) (2024-05-27)
