@@ -25,6 +25,7 @@ import { trimObject } from "src/utils";
 import { isAttachment, verifyRateLimitAPI } from "src/utils/data_validation_test";
 import { frontmatterSettingsRepository } from "src/utils/parse_frontmatter";
 import type Enveloppe from "../main";
+import { klona } from "klona";
 
 /**
  * Delete file from github, based on a list of file in the original vault
@@ -111,7 +112,11 @@ async function deleteFromGithubOneRepo(
 		);
 		const isMarkdownForAnotherRepo = file.file.trim().endsWith(".md")
 			? !allSharedConverted.some((f) => {
-					getProp(f, repo, file.file);
+					let prop = f.repo;
+					if (Array.isArray(prop)) {
+						prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
+					}
+					return (f.converted === file.file || f.otherPath?.includes(file.file)) && prop;
 				})
 			: false;
 		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
@@ -289,20 +294,6 @@ async function checkIndexFiles(
 	return false;
 }
 
-function getProp(
-	f: {
-		converted: string;
-		repo: Properties | Properties[] | undefined;
-		otherPath: string[] | undefined;
-	},
-	repo: Properties,
-	convertedPath: string
-) {
-	let prop = f.repo;
-	if (Array.isArray(prop)) prop = prop.find((r) => r.repo === repo.repo);
-	return (f.converted === convertedPath || f.otherPath?.includes(convertedPath)) && prop;
-}
-
 function cleanDryRun(
 	silent: boolean = false,
 	filesManagement: FilesManagement,
@@ -354,7 +345,14 @@ function cleanDryRun(
 		);
 		const isMarkdownForAnotherRepo = file.path.trim().endsWith(".md")
 			? !allSharedFiles.some((f) => {
-					return getProp(f, repo, convertedPath);
+					let prop = f.repo;
+					if (Array.isArray(prop)) {
+						prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
+					}
+					return (
+						(f.converted === convertedPath || f.otherPath?.includes(convertedPath)) &&
+						prop
+					);
 				})
 			: false;
 		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
