@@ -1,3 +1,9 @@
+## [7.2.12](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.11...7.2.12) (2024-07-28)
+### Bug Fixes
+
+* **attachment:** if a md file and attachment share a common path, it leads to an errored path ([6b7d73b](https://github.com/Enveloppe/obsidian-enveloppe/commit/6b7d73b08453651f7ef407e91f14cef855314cba)), closes [#356](https://github.com/Enveloppe/obsidian-enveloppe/issues/356)
+* **dataview:** dataviewjs (codeblock) inside callout ([5261c6c](https://github.com/Enveloppe/obsidian-enveloppe/commit/5261c6c732b7878d05ed752dfee784f11fde72ac)), closes [#354](https://github.com/Enveloppe/obsidian-enveloppe/issues/354)
+
 ## [7.2.11](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.10...7.2.11) (2024-07-07)
 
 ## [7.2.10](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9...7.2.10) (2024-07-02)
