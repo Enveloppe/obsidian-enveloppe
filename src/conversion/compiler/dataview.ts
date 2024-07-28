@@ -101,12 +101,20 @@ class DataviewCompiler {
 	 * @link https://blacksmithgu.github.io/obsidian-dataview/api/intro/
 	 */
 	async dataviewJS(query: string) {
+		const { isInsideCallout, finalQuery } = sanitizeQuery(query);
 		// biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
 		const div = createEl("div");
 		const component = new Component();
-		await this.dvApi.executeJs(query, div, component, this.path);
+		await this.dvApi.executeJs(finalQuery, div, component, this.path);
 		component.load();
-		return removeDataviewQueries(div.innerHTML, this.properties.frontmatter.general);
+		const markdown = removeDataviewQueries(
+			div.innerHTML,
+			this.properties.frontmatter.general
+		);
+		if (isInsideCallout) {
+			return surroundWithCalloutBlock(markdown);
+		}
+		return markdown;
 	}
 
 	/**
@@ -331,7 +339,6 @@ function sanitizeQuery(query: string): { isInsideCallout: boolean; finalQuery: s
 	let isInsideCallout = false;
 	const parts = query.split("\n");
 	const sanitized = [];
-
 	for (const part of parts) {
 		if (part.startsWith(">")) {
 			isInsideCallout = true;
@@ -340,7 +347,10 @@ function sanitizeQuery(query: string): { isInsideCallout: boolean; finalQuery: s
 			sanitized.push(part);
 		}
 	}
-	const finalQuery = isInsideCallout ? sanitized.join("\n") : query;
+	let finalQuery = query;
+	if (isInsideCallout) {
+		finalQuery = sanitized.join("\n");
+	}
 	return { isInsideCallout, finalQuery };
 }
 
