@@ -25,6 +25,7 @@ import {
 	getProperties,
 } from "src/utils/parse_frontmatter";
 import merge from "ts-deepmerge";
+import { escapeRegex } from "../conversion/links";
 
 /**
  * - Check if the file is a valid file to publish
@@ -251,11 +252,12 @@ export function isAttachment(
 	if (filename.match(/excalidraw\.md$/i)) return filename.match(/excalidraw\.md$/i);
 	if (attachmentExtern && attachmentExtern.length > 0) {
 		for (const att of attachmentExtern) {
+			const naturalExt = new RegExp(`\\.${escapeRegex(att)}$`, "i");
 			const isRegex = att.match(FIND_REGEX);
 			if (isRegex) {
 				const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
 				if (regex?.test(filename)) return filename.match(regex);
-			} else if (filename.match(att)) return filename.match(att);
+			} else if (filename.match(naturalExt)) return filename.match(naturalExt);
 		}
 	}
 	return filename.match(
