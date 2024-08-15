@@ -1,3 +1,8 @@
+## [7.2.13](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.12...7.2.13) (2024-08-15)
+### Bug Fixes
+
+* hardbreak added to frontmatter ([0e41c52](https://github.com/Enveloppe/obsidian-enveloppe/commit/0e41c52d5a19a97af0bdc580b20fec0479d0d9c0)), closes [#358](https://github.com/Enveloppe/obsidian-enveloppe/issues/358)
+
 ## [7.2.12](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.11...7.2.12) (2024-07-28)
 ### Bug Fixes
 
