@@ -40,11 +40,21 @@ export function addHardLineBreak(
 	frontmatter: PropertiesConversion
 ): string {
 	try {
-		text = text.replace(/^\s*\\\s*$/gim, "<br/>");
+		const { exists, contentStart, from } = getFrontMatterInfo(text);
 		if (frontmatter.hardbreak) {
-			text = text.replace(/\n/gm, "  \n");
+			if (exists) {
+				const substring = text
+					.substring(contentStart)
+					.replace(/\n/gm, "  \n")
+					.replace(/^\s*\\\s*$/gim, "<br/>");
+				return `---\n${text.slice(from, contentStart)}${substring}`;
+			}
+			return text.replace(/\n/gm, "  \n");
+		} else if (exists) {
+			const newText = text.substring(contentStart).replace(/^\s*\\\s*$/gim, "<br/>");
+			return `---\n${text.slice(from, contentStart)}${newText}`;
 		}
-		return text;
+		return text.replace(/^\s*\\\s*$/gim, "<br/>");
 	} catch (e) {
 		plugin.console.notif({ e: true }, e);
 		return text;
