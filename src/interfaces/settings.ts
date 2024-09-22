@@ -6,6 +6,7 @@ import type {
 	TextCleaner,
 } from "src/interfaces/main";
 
+// noinspection JSClassNamingConvention
 export type Api = {
 	/**
 	 * The tier of the API
@@ -227,9 +228,9 @@ export interface Embed {
 	overrideAttachments: OverrideAttachments[];
 	/** Use the obsidian folder for the attachments */
 	useObsidianFolder?: boolean;
-	/** Send files linkeds to a frontmatter keys */
+	/** Send files linked to a frontmatter keys */
 	keySendFile: string[];
-	/** Also send embeddednotes */
+	/** Also send embedded notes */
 	notes: boolean;
 	/** The folder where the attachments are stored */
 	folder: string;
@@ -254,7 +255,7 @@ export interface Embed {
 	 * Support regex (with `/regex/flags` format)
 	 */
 	unHandledObsidianExt: string[];
-	/** Also send files /attachments linkeds by links (ie [[file]])
+	/** Also send files /attachments linked by links (ie [[file]])
 	 * Will apply all previous settings
 	 */
 	sendSimpleLinks: boolean;
