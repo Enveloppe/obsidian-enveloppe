@@ -1,3 +1,8 @@
+## [7.3.0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.15...7.3.0) (2024-09-22)
+### Features
+
+* **link:** add "unlink" ([5021b3e](https://github.com/Enveloppe/obsidian-enveloppe/commit/5021b3e02606bb6594938ac2fc6da0f4c2c6f1db))
+
 ## [7.2.15](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.14...7.2.15) (2024-09-22)
 ### Bug Fixes
 
