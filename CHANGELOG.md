@@ -1,3 +1,8 @@
+## [7.3.1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.3.0...7.3.1) (2024-09-22)
+### Bug Fixes
+
+* typo that broke the new link function ([a5b6146](https://github.com/Enveloppe/obsidian-enveloppe/commit/a5b6146811fc4937ccc0f5a6c44e97e908a6d0d5))
+
 ## [7.3.0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.15...7.3.0) (2024-09-22)
 ### Features
 
