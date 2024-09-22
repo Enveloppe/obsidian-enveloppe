@@ -124,14 +124,12 @@ export function isShared(
 		const shareKey = otherRepo ? otherRepo.shareKey : settings.plugin.shareKey;
 		if (
 			meta == null ||
-			!meta[shareKey] ||
-			meta[shareKey] == null ||
+			meta?.[shareKey] == null ||
 			isExcludedPath(settings, file, otherRepo) ||
-			meta[shareKey] === undefined ||
 			["false", "0", "no"].includes(meta[shareKey].toString().toLowerCase())
-		)
+		) {
 			return false;
-
+		}
 		const shareKeyInFrontmatter: string = meta[shareKey].toString().toLowerCase();
 		return ["true", "1", "yes"].includes(shareKeyInFrontmatter);
 	} else if (settings.plugin.shareAll?.enable || otherRepoWithShareAll.length > 0) {

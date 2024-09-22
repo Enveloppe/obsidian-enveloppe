@@ -172,6 +172,7 @@ export default class Publisher {
 	) {
 		const shareFiles = new FilesManagement(this.octokit, this.plugin);
 		let frontmatter = frontmatterFromFile(file, this.plugin, null);
+		if (!isShared(frontmatter, this.settings, file, repo.repository)) return false;
 		if (sourceFrontmatter && frontmatter)
 			frontmatter = merge.withOptions(
 				{ allowUndefinedOverrides: false },
@@ -182,7 +183,6 @@ export default class Publisher {
 		const isNotEmpty = await checkEmptyConfiguration(prop, this.plugin);
 		repo.frontmatter = prop;
 		if (
-			!isShared(frontmatter, this.settings, file, repo.repository) ||
 			fileHistory.includes(file) ||
 			!checkIfRepoIsInAnother(prop, repo.frontmatter) ||
 			!isNotEmpty

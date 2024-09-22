@@ -57,6 +57,7 @@ export async function shareOneNoteCallback(
  * @param {GithubBranch} PublisherManager
  * @param {TFile} file - The file to share
  * @param {Repository|null} repository
+ * @param sourceFrontmatter
  * @param {string} title The title from frontmatter + regex (if any)
  * @returns {Promise<void>}
  */
