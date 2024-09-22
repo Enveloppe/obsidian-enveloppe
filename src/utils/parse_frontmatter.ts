@@ -54,7 +54,7 @@ export function getFrontmatterSettings(
 		unshared: settings.conversion.links.unshared,
 		convertInternalLinks: settings.conversion.links.internal,
 		includeLinks: settings.embed.sendSimpleLinks,
-		unlink: settings.conversion.links.unshared && settings.conversion.links.unlink,
+		unlink: !settings.conversion.links.unshared && settings.conversion.links.unlink,
 	};
 
 	const shareAll = repo ? repo.shareAll?.enable : settings.plugin.shareAll?.enable;
