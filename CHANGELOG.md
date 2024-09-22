@@ -1,3 +1,8 @@
+## [7.2.15](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.14...7.2.15) (2024-09-22)
+### Bug Fixes
+
+* **bakeEmbed:** new type added for resolveSubPath that broke build ([27d095e](https://github.com/Enveloppe/obsidian-enveloppe/commit/27d095ed4dfae3206140b8fd3afcf90b379551d2))
+
 ## [7.2.14](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.13...7.2.14) (2024-09-22)
 ### Bug Fixes
 
