@@ -124,6 +124,7 @@ export function getProperties(
 	let github = repository ?? settings.github;
 	if (checkSet && repository && plugin.repositoryFrontmatter[repository.smartKey]) {
 		const setFrontmatter = plugin.repositoryFrontmatter[repository.smartKey];
+		delete setFrontmatter?.[settings.plugin.shareKey];
 		frontmatter = merge.withOptions(
 			{ allowUndefinedOverrides: false },
 			setFrontmatter ?? {},
@@ -567,6 +568,7 @@ export function frontmatterFromFile(
 	if (file) {
 		frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
 		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
+		delete linkedFrontmatter?.[plugin.settings.plugin.shareKey];
 		frontmatter = merge.withOptions(
 			{ allowUndefinedOverrides: false },
 			setFrontmatter ?? {},
@@ -693,4 +695,15 @@ function settingAttachment(
 		);
 	}
 	return settingsConversion;
+}
+
+export function mergeFrontmatter(frontmatter: FrontMatterCache | null, sourceFrontmatter: FrontMatterCache | null | undefined, shareKey: string) {
+	delete sourceFrontmatter?.[shareKey];
+	if (sourceFrontmatter && frontmatter)
+		frontmatter = merge.withOptions(
+			{allowUndefinedOverrides: false},
+			sourceFrontmatter,
+			frontmatter
+		);
+	return frontmatter;
 }

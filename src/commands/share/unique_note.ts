@@ -15,7 +15,7 @@ import {
 	checkRepositoryValidityWithProperties,
 	isShared,
 } from "src/utils/data_validation_test";
-import { frontmatterFromFile, getProperties } from "src/utils/parse_frontmatter";
+import {frontmatterFromFile, getProperties, mergeFrontmatter} from "src/utils/parse_frontmatter";
 import merge from "ts-deepmerge";
 
 /**
@@ -71,12 +71,7 @@ export async function shareOneNote(
 	const { settings, plugin } = PublisherManager;
 	const app = PublisherManager.plugin.app;
 	let frontmatter = frontmatterFromFile(file, PublisherManager.plugin, null);
-	if (sourceFrontmatter && frontmatter)
-		frontmatter = merge.withOptions(
-			{ allowUndefinedOverrides: false },
-			sourceFrontmatter,
-			frontmatter
-		);
+	frontmatter = mergeFrontmatter(frontmatter, sourceFrontmatter, PublisherManager.settings.plugin.shareKey);
 	try {
 		const prop = getProperties(plugin, repository, frontmatter);
 		let isValid: boolean;
