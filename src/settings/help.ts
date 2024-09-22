@@ -2,8 +2,7 @@ import { FolderSettings, type EnveloppeSettings } from "@interfaces";
 import dedent from "dedent";
 import i18next from "i18next";
 import { normalizePath, sanitizeHTMLToDom } from "obsidian";
-import { regexOnPath } from "src/conversion/file_path";
-import { DISCORD_ICON, DISCUSSION_ICON, DOCUMENTATION, GITHUB_ICON, ISSUE, TRANSLATION_ICON } from "../interfaces/icons";
+import {DISCORD_ICON, DISCUSSION_ICON, DOCUMENTATION, GITHUB_ICON, ISSUE, TRANSLATION_ICON} from "@interfaces/icons";
 
 /**
  * Export the YAML help to create an example of yaml with the value based on the Settings
@@ -38,9 +37,6 @@ import { DISCORD_ICON, DISCUSSION_ICON, DOCUMENTATION, GITHUB_ICON, ISSUE, TRANS
 */
 
 export function KeyBasedOnSettings(settings: EnveloppeSettings): DocumentFragment {
-	const defaultPath = settings.upload.defaultName.length > 0 ? `${settings.upload.defaultName}` : "/";
-	let path = settings.upload.behavior === FolderSettings.Yaml ? `${settings.upload.rootFolder.length > 0 ? settings.upload.rootFolder : ""}/${defaultPath}/file.md` : `${defaultPath}/file.md`;
-	path = normalizePath(regexOnPath(path, settings));
 	const rules = "token key atrule";
 	const comments = "token comment";
 	const str = "token string";
@@ -61,6 +57,8 @@ export function KeyBasedOnSettings(settings: EnveloppeSettings): DocumentFragmen
 		<span class="${rules}">  convert</span>: <span class="${boolean}">true</span>
 		<span class="${rules}">  internals</span>: <span class="${boolean}">${settings.conversion.links.internal}</span>
 		<span class="${rules}">  nonShared</span>: <span class="${boolean}">${settings.conversion.links.unshared}</span>
+		<span class="${rules}">  unlink</span>: <span class="${boolean}">${settings.conversion.links.unlink}</span>
+
 		<span class="${rules}">embed</span>:
 		<span class="${rules}">  send</span>: <span class="${boolean}">${settings.embed.notes}</span>
 		<span class="${rules}">  remove</span>: <span class="${str}">${settings.embed.convertEmbedToLinks}</span>
@@ -107,6 +105,7 @@ export function help(settings: EnveloppeSettings) {
 					<li><code>convert</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.convert.enableOrDisable")} <code>[[link]]</code>${i18next.t("common.or")} <code>[](link)</code>${i18next.t("settings.help.frontmatter.convert.syntax")}</li>
 					<li><code>internals</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.internals")}</li>
 					<li><code>nonShared</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.nonShared")}</li>
+					<li><code>unlink</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.unlink")}</li>
 				</ul>
 			</li>
 			<li><code class="code-title">embed</code>${i18next.t("common.points")}

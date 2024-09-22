@@ -76,7 +76,7 @@ export async function createRelativePath(
 	targetFile: LinkedNotes,
 	frontmatter: FrontMatterCache | null | undefined,
 	properties: MultiProperties
-): Promise<string> {
+): Promise<{ link: string, unshared?: boolean }> {
 	const settings = properties.plugin.settings;
 	const shortRepo = properties.repository;
 	const sourcePath = getReceiptFolder(
@@ -102,14 +102,19 @@ export async function createRelativePath(
 		!targetFile.linked.name.includes("excalidraw") &&
 		(!isFromAnotherRepo || !shared)
 	) {
-		return targetFile.destinationFilePath
-			? targetFile.destinationFilePath
-			: targetFile.linked.basename;
+		return {
+			link: targetFile.destinationFilePath
+				? targetFile.destinationFilePath
+				: targetFile.linked.basename,
+			unshared: true,
+		};
 	}
 	if (targetFile.linked.path === sourceFile.path) {
-		return getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo)
+		return {
+			link: getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo)
 			.split("/")
-			.at(-1) as string;
+				.at(-1) as string
+		};
 	}
 
 	const frontmatterSettingsFromFile = getFrontmatterSettings(
@@ -172,11 +177,13 @@ export async function createRelativePath(
 	const relative = relativePath.concat(diffTargetPath).join("/");
 	if (relative.trim() === "." || relative.trim() === "") {
 		//in case of errors
-		return getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo)
+		return {
+			link: getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo)
 			.split("/")
-			.at(-1) as string;
+				.at(-1) as string
+		};
 	}
-	return relative;
+	return {link: relative};
 }
 
 /**

@@ -352,6 +352,7 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 				unshared: old.migrateInternalNonShared,
 				wiki: old.migrateWikiLinks,
 				slugify: false,
+				unlink: false,
 			},
 		},
 		embed: {

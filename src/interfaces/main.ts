@@ -248,6 +248,9 @@ export interface PropertiesConversion {
 	convertInternalLinks: boolean;
 	/** Include also linked files in the send/conversion */
 	includeLinks: boolean;
+	
+	/** Remove link if not shared */
+	unlink: boolean;
 }
 
 /** A very important interface that handle a repository from the frontmatter and a lot of usefull settings that override the default plugin behavior, including {@link Path}.

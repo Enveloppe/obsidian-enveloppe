@@ -177,6 +177,7 @@ function inlineTags(
  * @param {TFile} file the file to process
  * @param {FrontMatterCache} frontmatter the frontmatter cache
  * @param {string} text the text to convert
+ * @param multiProperties
  * @return {Promise<string>} the converted text
  */
 export async function processYaml(

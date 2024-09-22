@@ -12,7 +12,7 @@ import {
 	textIsInFrontmatter,
 } from "src/conversion/file_path";
 import { replaceText } from "src/conversion/find_and_replace_text";
-import { isAttachment, noTextConversion } from "src/utils/data_validation_test";
+import {isAttachment, isShared, noTextConversion} from "src/utils/data_validation_test";
 import type Enveloppe from "../main";
 
 type IsEmbed = {
@@ -25,8 +25,9 @@ type IsEmbed = {
  * Pretty cursed
  * @param {string} fileContent the text to convert
  * @param {PropertiesConversion} conditionConvert  the frontmatter settings
- * @param {EnveloppeSettings} settings  global settings
  * @param {LinkedNotes[]} linkedFiles the list of linked files
+ * @param plugin
+ * @param sourceFrontmatter
  * @return {string} the converted text
  */
 
@@ -348,14 +349,14 @@ export async function convertToInternalGithub(
 	const frontmatterSettings = properties.frontmatter.general;
 	const settings = properties.plugin.settings;
 	if (!frontmatterSettings.convertInternalLinks) return fileContent;
-
 	for (const linkedFile of linkedFiles) {
-		let pathInGithub = await createRelativePath(
+		const paths = await createRelativePath(
 			sourceFile,
 			linkedFile,
 			frontmatter,
 			properties
-		);
+		)
+		let pathInGithub = paths.link;
 		pathInGithub = pathInGithub.replace(".md", "");
 		let anchor = linkedFile.anchor ? linkedFile.anchor : "";
 		let linkInMarkdown =
@@ -370,6 +371,11 @@ export async function convertToInternalGithub(
 		const matchedLink = fileContent.match(regexToReplace);
 		if (matchedLink) {
 			for (const link of matchedLink) {
+				if (frontmatterSettings.unlink && paths.unshared) {
+					fileContent = replaceText(fileContent, link, pathInGithub, properties.plugin, true);
+					continue;
+				}
+				
 				const regToReplace = new RegExp(`((${escapedLinkedFile})|(${linkInMarkdown}))`);
 				let pathInGithubWithAnchor = pathInGithub;
 				if (linkedFile.anchor) {
@@ -391,6 +397,7 @@ export async function convertToInternalGithub(
 								: pathInGithub;
 					}
 					const altText = link.match(/\[(.*)\]/)![1];
+					
 					newLink = `[${altText}](${encodeURI(pathInGithub)})`; //encode to URI for compatibility with github
 				}
 				newLink = addAltText(newLink, linkedFile);

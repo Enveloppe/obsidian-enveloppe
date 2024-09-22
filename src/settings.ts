@@ -710,9 +710,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 		this.settingsPage.createEl("h5", {
 			text: i18next.t("settings.conversion.links.title"),
 		});
-		this.settingsPage.createEl("p", {
-			text: i18next.t("settings.conversion.links.desc"),
-		});
+		this.settingsPage.append(sanitizeHTMLToDom(i18next.t("settings.conversion.links.desc"),));
 
 		const shareAll = this.settings.plugin.shareAll?.enable
 			? ` ${i18next.t("settings.conversion.links.internals.shareAll")}`
@@ -737,7 +735,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 						textSettings.links.unshared = true;
 					}
 					await this.plugin.saveSettings();
-					this.renderSettingsPage("text-conversion");
+					await this.renderSettingsPage("text-conversion");
 				});
 			});
 
@@ -748,9 +746,22 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				.addToggle((toggle) => {
 					toggle.setValue(textSettings.links.unshared).onChange(async (value) => {
 						textSettings.links.unshared = value;
+						await this.renderSettingsPage("text-conversion");
 						await this.plugin.saveSettings();
 					});
 				});
+			
+			if (!textSettings.links.unshared) {
+				new Setting(this.settingsPage)
+					.setName(i18next.t("settings.conversion.links.unlink.title"))
+					.setDesc(sanitizeHTMLToDom(i18next.t("settings.conversion.links.unlink.desc")))
+					.addToggle((toggle) => {
+						toggle.setValue(textSettings.links.unlink).onChange(async (value) => {
+							textSettings.links.unlink = value;
+							await this.plugin.saveSettings();
+						});
+					});
+			}
 		}
 
 		new Setting(this.settingsPage)

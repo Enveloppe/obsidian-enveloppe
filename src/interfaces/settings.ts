@@ -197,7 +197,12 @@ export interface Conversion {
 		internal: boolean;
 		/** Also convert the internal path for unshared files */
 		unshared: boolean;
-		/** Convert wikilinks to markdown links */
+		/**
+		 * Remove the link and only keep the text/alias for unshared files
+		 */
+		unlink: boolean;
+		/**
+		 * Convert wikilinks to markdown links */
 		wiki: boolean;
 		/** Slugify links if needed
 		 * - `disable` : do not slugify the link

@@ -4,15 +4,15 @@
  */
 
 import {
-	FolderSettings,
 	type EnveloppeSettings,
+	FolderSettings,
 	type Path,
 	type Properties,
 	type PropertiesConversion,
 	type Repository,
 } from "@interfaces";
-import { klona } from "klona";
-import { type FrontMatterCache, normalizePath, TFile } from "obsidian";
+import {klona} from "klona";
+import {type FrontMatterCache, normalizePath, TFile} from "obsidian";
 import type Enveloppe from "src/main";
 import merge from "ts-deepmerge";
 
@@ -68,6 +68,7 @@ export function getFrontmatterSettings(
 		unshared: settings.conversion.links.unshared,
 		convertInternalLinks: settings.conversion.links.internal,
 		includeLinks: settings.embed.sendSimpleLinks,
+		unlink: settings.conversion.links.unlink,
 	};
 
 	const shareAll = repo ? repo.shareAll?.enable : settings.plugin.shareAll?.enable;
@@ -466,8 +467,7 @@ export function parsePath(
 			path.category.key =
 				splitArrayPath(smartkeys.categoryKey.asKey) ?? path.category.key;
 		if (smartkeys.rootFolder) {
-			const rootFolder = splitArrayPath(smartkeys.rootFolder) as string;
-			path.rootFolder = rootFolder;
+			path.rootFolder = splitArrayPath(smartkeys.rootFolder) as string;
 		}
 		if (smartkeys.defaultName.direct)
 			path.defaultName = splitArrayPath(smartkeys.defaultName.direct) as string;
@@ -602,6 +602,9 @@ function settingsLink(
 			if (frontmatter[key].nonShared != undefined) {
 				settingsConversion.unshared = frontmatter[key].nonShared;
 			}
+			if (frontmatter[key].unlink != undefined) {
+				settingsConversion.unlink = frontmatter[key].unlink;
+			}
 		} else {
 			settingsConversion.links = frontmatter[key];
 		}
@@ -614,7 +617,8 @@ function settingsLink(
 		settingsConversion.convertWiki = frontmatter[`${key}.mdlinks`];
 	if (frontmatter[`${key}.nonShared`] != undefined)
 		settingsConversion.unshared = frontmatter[`${key}.nonShared`];
-
+	if (frontmatter[`${key}.unlink`] != undefined)
+		settingsConversion.unlink = frontmatter[`${key}.unlink`];
 	if (frontmatter[smartKey ? `${smartKey}.mdlinks` : "mdlinks"] != undefined)
 		settingsConversion.convertWiki =
 			frontmatter[smartKey ? `${smartKey}.mdlinks` : "mdlinks"];

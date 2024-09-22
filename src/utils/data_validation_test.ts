@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
 	FIND_REGEX,
 	type EnveloppeSettings,
@@ -24,7 +23,6 @@ import {
 	getLinkedFrontmatter,
 	getProperties, mergeFrontmatter,
 } from "src/utils/parse_frontmatter";
-import merge from "ts-deepmerge";
 import { escapeRegex } from "../conversion/links";
 
 /**
@@ -60,8 +58,7 @@ export function isInternalShared(
 	const shareKey =
 		properties.repository?.shareKey || properties.plugin.settings.plugin.shareKey;
 	if (
-		frontmatter[shareKey] == null ||
-		frontmatter[shareKey] === undefined ||
+		frontmatter?.[shareKey] == null ||
 		["false", "0", "no"].includes(frontmatter[shareKey].toString().toLowerCase())
 	)
 		return false;

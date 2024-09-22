@@ -145,7 +145,6 @@ function extractSubpath(
  * @source https://github.com/mgmeyers/obsidian-easy-bake/blob/master/src/BakeModal.ts
  * @param {TFile} originalFile the file to bake
  * @param {Set<TFile>} ancestor the ancestor of the file
- * @param {Enveloppe} plugin the Obsidian Plugin instance
  * @param {MultiProperties} properties the properties of the plugins (settings, repository, frontmatter)
  * @param {string|null} subpath the subpath to bake
  * @param {LinkedNotes[]} linkedNotes the linked notes embedded in the file
@@ -237,7 +236,6 @@ export async function bakeEmbeds(
  * @param properties {MultiProperties} contains the settings, repository and frontmatter
  * @param linked {TFile} The linked note
  * @param sourceFile {TFile} The source file
- * @param plugin {Enveloppe} The Obsidian App instance
  * @param linkedNotes {LinkedNotes[]} The linked notes embedded in the file
  * @returns {Promise<string>}
  */
@@ -260,7 +258,7 @@ async function changeUrl(
 			frontmatter,
 			properties
 		);
-		return textToAdd.replace(/\{{2}url\}{2}/gim, relativePath);
+		return textToAdd.replace(/\{{2}url\}{2}/gim, relativePath.link);
 	}
 	return textToAdd.replace(/\{{2}url\}{2}/gim, linkedNote.linked.path);
 }
@@ -294,6 +292,7 @@ function changeTitle(
  * Will be recursive for array
  * stringify with extract alt text for links
  * @param {string} text the text to convert
+ * @param plugin
  * @param {TFile} sourceFile the file to process
  * @return {Promise<string>} the converted text
  */
