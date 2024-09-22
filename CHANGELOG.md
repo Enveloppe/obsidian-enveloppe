@@ -1,3 +1,8 @@
+## [7.2.14](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.13...7.2.14) (2024-09-22)
+### Bug Fixes
+
+* **share:** not shared not shared themself if linked ([0b923fe](https://github.com/Enveloppe/obsidian-enveloppe/commit/0b923fe9a6bbcb23f5d65f18b9cc0f103bf1d385))
+
 ## [7.2.13](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.12...7.2.13) (2024-08-15)
 ### Bug Fixes
 
