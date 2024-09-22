@@ -16,7 +16,6 @@ import {
 	isShared,
 } from "src/utils/data_validation_test";
 import {frontmatterFromFile, getProperties, mergeFrontmatter} from "src/utils/parse_frontmatter";
-import merge from "ts-deepmerge";
 
 /**
  * Command to upload the active file ; use checkCallback to check if the file is shared and if they are a active file
@@ -143,7 +142,6 @@ export async function shareOneNote(
  * @call shareOneNote
  * @param {Enveloppe} plugin
  * @param {Repository | null} repo - Other repo if the command is called from the suggest_other_repo_command.ts
- * @param {string} branchName
  * @return {Promise<void>}
  */
 export async function shareActiveFile(

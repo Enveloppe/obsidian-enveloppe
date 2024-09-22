@@ -56,6 +56,7 @@ export class FilesManagement extends Publisher {
 	 * Get all shared files in a specified TFolder
 	 * @param {TFolder} folder The folder to scan
 	 * @param {Repository | null} repo The repository
+	 * @param addFolderNote
 	 * @return {TFile[]} The shared files
 	 */
 	getSharedFileOfFolder(
@@ -475,6 +476,7 @@ export class FilesManagement extends Publisher {
 	 * Check if the sharing is allowing based on the frontmatter
 	 * @param {TFile} file
 	 * @param {PropertiesConversion} settingsConversion
+	 * @param fromWhat
 	 * @return {null | TFile}
 	 * @private
 	 */
@@ -505,7 +507,6 @@ export class FilesManagement extends Publisher {
 	 * if frontmatter, get the path of the file and check if it exists in the vault
 	 * @param {TFile} file
 	 * @param {TFile[]} embedFiles
-	 * @param {FrontMatterCache} frontmatterSourceFile
 	 * @param {PropertiesConversion} frontmatterSettings
 	 * @return {Promise<TFile[]>}
 	 */

@@ -1,5 +1,7 @@
+// noinspection JSIgnoredPromiseFromCall
+
 import {
-	EnumbSettingsTabId,
+	ESettingsTabId,
 	FolderSettings,
 	type EnveloppeSettings,
 	GithubTiersVersion,
@@ -65,7 +67,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 		const { containerEl } = this;
 		containerEl.empty();
 		containerEl.addClass("enveloppe");
-		const defaultTabId = EnumbSettingsTabId.Github;
+		const defaultTabId = ESettingsTabId.Github;
 		let savedId = this.settings.tabsId ?? defaultTabId;
 		if (this.settings.plugin.saveTabId != undefined && !this.settings.plugin.saveTabId) {
 			//real false
@@ -152,7 +154,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				for (const tabEl of tabBar.children) tabEl.removeClass("settings-tab-active");
 
 				tabEl.addClass("settings-tab-active");
-				this.renderSettingsPage(tabId);
+				await this.renderSettingsPage(tabId);
 			});
 		}
 		this.settingsPage = containerEl.createEl("div", {
@@ -165,9 +167,9 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 	 * Render the settings tab
 	 * @param {string} tabId - to know which tab to render
 	 */
-	async renderSettingsPage(tabId: string | EnumbSettingsTabId) {
+	async renderSettingsPage(tabId: string | ESettingsTabId) {
 		if (this.settings.plugin.saveTabId || this.settings.plugin.saveTabId === undefined) {
-			this.settings.tabsId = tabId as EnumbSettingsTabId;
+			this.settings.tabsId = tabId as ESettingsTabId;
 			await this.plugin.saveSettings();
 		}
 		this.settingsPage.empty();
@@ -182,7 +184,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				this.renderTextConversion();
 				break;
 			case "embed-configuration":
-				this.renderEmbedConfiguration();
+				await this.renderEmbedConfiguration();
 				break;
 			case "plugin-settings":
 				this.renderPluginSettings();
@@ -215,7 +217,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						githubSettings.api.tiersForApi = value as GithubTiersVersion;
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.Github);
+						await this.renderSettingsPage(ESettingsTabId.Github);
 					});
 			});
 		if (githubSettings.api.tiersForApi === GithubTiersVersion.Entreprise) {
@@ -323,7 +325,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				toggle.setValue(githubSettings.dryRun.enable).onChange(async (value) => {
 					githubSettings.dryRun.enable = value;
 					await this.plugin.saveSettings();
-					this.renderSettingsPage(EnumbSettingsTabId.Github);
+					await this.renderSettingsPage(ESettingsTabId.Github);
 				})
 			);
 
@@ -376,7 +378,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 							async (result) => {
 								this.settings.github.otherRepo = result;
 								await this.plugin.saveSettings();
-								this.plugin.reloadCommands();
+								await this.plugin.reloadCommands();
 							}
 						).open();
 					})
@@ -446,7 +448,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 							this.plugin
 						);
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.Upload);
+						await this.renderSettingsPage(ESettingsTabId.Upload);
 					});
 			});
 
@@ -522,7 +524,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						uploadSettings.frontmatterTitle.enable = value;
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.Upload);
+						await this.renderSettingsPage(ESettingsTabId.Upload);
 					});
 			});
 		if (uploadSettings.frontmatterTitle.enable) {
@@ -575,7 +577,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				toggle.setValue(uploadSettings.folderNote.enable).onChange(async (value) => {
 					uploadSettings.folderNote.enable = value;
 					await this.plugin.saveSettings();
-					this.renderSettingsPage(EnumbSettingsTabId.Upload);
+					await this.renderSettingsPage(ESettingsTabId.Upload);
 				});
 			});
 
@@ -597,7 +599,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 						.onChange(async (value) => {
 							uploadSettings.folderNote.addTitle.enable = value;
 							await this.plugin.saveSettings();
-							this.renderSettingsPage(EnumbSettingsTabId.Upload);
+							await this.renderSettingsPage(ESettingsTabId.Upload);
 						});
 				});
 			if (uploadSettings.folderNote.addTitle.enable) {
@@ -650,11 +652,11 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					)
 						new AutoCleanPopup(this.app, this.settings, (result) => {
 							uploadSettings.autoclean.enable = result;
-							this.renderSettingsPage(EnumbSettingsTabId.Upload);
+							this.renderSettingsPage(ESettingsTabId.Upload);
 						}).open();
 					else uploadSettings.autoclean.enable = value;
 					await this.plugin.saveSettings();
-					this.renderSettingsPage(EnumbSettingsTabId.Upload);
+					await this.renderSettingsPage(ESettingsTabId.Upload);
 					this.plugin.cleanOldCommands();
 					await this.plugin.chargeAllCommands(null, this.plugin);
 				});
@@ -771,7 +773,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				toggle.setValue(textSettings.links.wiki).onChange(async (value) => {
 					textSettings.links.wiki = value;
 					await this.plugin.saveSettings();
-					this.renderSettingsPage("text-conversion");
+					await this.renderSettingsPage("text-conversion");
 				});
 			});
 		const slugifySetting =
@@ -912,7 +914,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				toggle.setValue(embedSettings.attachments).onChange(async (value) => {
 					embedSettings.attachments = value;
 					await this.plugin.saveSettings();
-					this.renderSettingsPage(EnumbSettingsTabId.Embed);
+					await this.renderSettingsPage(ESettingsTabId.Embed);
 				});
 			});
 
@@ -926,7 +928,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 						.onChange(async (value) => {
 							embedSettings.useObsidianFolder = value;
 							await this.plugin.saveSettings();
-							this.renderSettingsPage(EnumbSettingsTabId.Embed);
+							await this.renderSettingsPage(ESettingsTabId.Embed);
 						});
 				});
 			if (!embedSettings.useObsidianFolder) {
@@ -1127,7 +1129,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 						};
 						if (value) this.settings.conversion.links.internal = true;
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.Plugin);
+						await this.renderSettingsPage(ESettingsTabId.Plugin);
 					})
 			);
 		if (!pluginSettings.shareAll || !pluginSettings.shareAll.enable) {
@@ -1217,7 +1219,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				toggle.setValue(pluginSettings.copyLink.enable).onChange(async (value) => {
 					pluginSettings.copyLink.enable = value;
 					await this.plugin.saveSettings();
-					this.renderSettingsPage(EnumbSettingsTabId.Plugin);
+					await this.renderSettingsPage(ESettingsTabId.Plugin);
 				})
 			);
 
@@ -1294,7 +1296,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 							replacement: "",
 						});
 						await this.plugin.saveSettings();
-						this.renderSettingsPage(EnumbSettingsTabId.Plugin);
+						await this.renderSettingsPage(ESettingsTabId.Plugin);
 					});
 				});
 
@@ -1331,7 +1333,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 									(item) => item !== apply
 								);
 							await this.plugin.saveSettings();
-							this.renderSettingsPage(EnumbSettingsTabId.Plugin);
+							await this.renderSettingsPage(ESettingsTabId.Plugin);
 						});
 					});
 			}
@@ -1367,8 +1369,8 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				toggle.setValue(pluginSettings.saveTabId ?? true).onChange(async (value) => {
 					pluginSettings.saveTabId = value;
 					this.settings.tabsId = value
-						? EnumbSettingsTabId.Plugin
-						: EnumbSettingsTabId.Github;
+						? ESettingsTabId.Plugin
+						: ESettingsTabId.Github;
 					await this.plugin.saveSettings();
 				})
 			);

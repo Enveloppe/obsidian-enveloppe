@@ -1,6 +1,6 @@
-import { Notice, Platform, setIcon, TFile } from "obsidian";
+import {Notice, Platform, setIcon, TFile} from "obsidian";
 import type Enveloppe from "../main";
-import type { EnveloppeSettings, Properties } from "@interfaces";
+import type {EnveloppeSettings, Properties} from "@interfaces";
 import i18next from "i18next";
 import type Publisher from "../GitHub/upload";
 
@@ -90,6 +90,7 @@ export class Logs {
 	 * For advanced users only
 	 */
 	logs(args: Arguments, ...messages: unknown[]) {
+		// noinspection JSUnusedAssignment
 		let { logs, e } = args;
 		const settings = this.plugin.settings;
 		logs = true;
@@ -111,8 +112,8 @@ export class Logs {
 			logs.push(String(message));
 		}
 		const logFile = `${this.plugin.manifest.dir}/logs.txt`;
-
-		this.plugin.app.vault.adapter.append(logFile, logs.join(" "));
+		
+		await this.plugin.app.vault.adapter.append(logFile, logs.join(" "));
 	}
 
 	notifError(properties: Properties | Properties[]) {
@@ -161,21 +162,20 @@ export class Logs {
 			return;
 		}
 		const workflowSuccess = document.createDocumentFragment();
-		const Workflowspan = workflowSuccess.createEl("span", {
+		const WorkflowSpan = workflowSuccess.createEl("span", {
 			text: i18next.t("informations.successfulPublish", {
 				nbNotes: noticeValue,
 				repo: prop,
 			}),
 			cls: ["enveloppe", "wait", "icons"],
 		});
-		setIcon(Workflowspan, "hourglass");
-		const msg = `${i18next.t("informations.sendMessage", {
+		setIcon(WorkflowSpan, "hourglass");
+		workflowSuccess.createEl("span", {
+			cls: ["enveloppe", "wait", "notification"],
+		}).innerHTML = `${i18next.t("informations.sendMessage", {
 			nbNotes: noticeValue,
 			repo: prop,
 		})}.<br>${i18next.t("informations.waitingWorkflow")}`;
-		workflowSuccess.createEl("span", {
-			cls: ["enveloppe", "wait", "notification"],
-		}).innerHTML = msg;
 		new Notice(workflowSuccess);
 		const successWorkflow = await PublisherManager.workflowGestion(prop);
 		if (successWorkflow) {

@@ -102,6 +102,7 @@ export function addMenuFile(
  * @param {TFile} file - The file to share
  * @param {string} branchName - The branch name for the repository
  * @param {Repository} repo - The data repository found in the file
+ * @param originalMenu
  * @return {Menu} - The submenu created
  */
 function subMenuCommandsFile(

@@ -2,7 +2,7 @@
 
 import { DEFAULT_SETTINGS, FIND_REGEX, TOKEN_PATH } from "src/interfaces/constant";
 import {
-	EnumbSettingsTabId,
+	ESettingsTabId,
 	FolderSettings,
 	GithubTiersVersion,
 	TypeOfEditRegex,
@@ -35,7 +35,7 @@ import type { MetadataExtractor } from "src/interfaces/settings";
 
 export {
 	DEFAULT_SETTINGS,
-	EnumbSettingsTabId,
+	ESettingsTabId,
 	FIND_REGEX,
 	FolderSettings,
 	GithubTiersVersion,

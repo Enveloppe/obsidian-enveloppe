@@ -1,6 +1,6 @@
 import type { FrontMatterCache, TFile } from "obsidian";
 
-import type { EnumbSettingsTabId, FolderSettings, TypeOfEditRegex } from "./enum";
+import type {ESettingsTabId, FolderSettings, TypeOfEditRegex} from "./enum";
 import type {
 	Api,
 	Conversion,
@@ -100,7 +100,7 @@ export interface EnveloppeSettings {
 	/**
 	 * Save the tabs id when the settings was closed, pretty useful when quick tests are done
 	 */
-	tabsId?: EnumbSettingsTabId;
+	tabsId?: ESettingsTabId;
 	/**
 	 * GitHub settings for the default repository
 	 */

@@ -54,6 +54,7 @@ async function shareFolderRepo(
  * @param {MenuItem} item - The item to add the submenu to
  * @param {TFolder} folder - The folder to share
  * @param {string} branchName - The branch name for the repository
+ * @param originalMenu
  * @return {Menu} - The submenu created
  */
 function addSubMenuCommandsFolder(

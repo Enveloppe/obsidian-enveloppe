@@ -29,7 +29,7 @@ import findAndReplaceText from "./find_and_replace_text";
  * If both are set, the perfile setting will override the global setting.
  * If neither are set, the default is false.
  * @param {string} text the text to convert
- * @param {EnveloppeSettings} settings the global settings
+ * @param plugin
  * @param {frontmatter} frontmatter the perfile frontmatter settings
  * @returns {string} the converted text
  */
@@ -97,7 +97,7 @@ function tagsToYaml(toAdd: string[], plugin: Enveloppe, yaml: any) {
  * If the tags key does not exist, it will be created
  * @param {string} text the text to convert
  * @param {string[]} toAdd the list of tags to add
- * @param settings
+ * @param folderNoteParaMeters
  * @returns {Promise<string>} the converted text
  */
 

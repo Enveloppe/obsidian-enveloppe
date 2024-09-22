@@ -144,6 +144,7 @@ export function isShared(
  * Check if a file is in an excluded folder
  * @param settings {EnveloppeSettings}
  * @param file {TFile}
+ * @param repository
  * @returns boolean
  */
 export function isExcludedPath(
@@ -175,6 +176,7 @@ export function isExcludedPath(
  *
  * @param {FrontMatterCache | undefined} frontmatter - The frontmatter of the file.
  * @param {TFile | null} file - The file to get the shared keys from.
+ * @param plugin
  * @returns {string[]} - An array of shared keys found in the file.
  */
 export function multipleSharedKey(
@@ -336,7 +338,7 @@ export async function checkEmptyConfiguration(
 			}
 		}
 	}
-	const allInvalid = isEmpty.every((value) => value === true);
+	const allInvalid = isEmpty.every((value) => value);
 	return !allInvalid;
 }
 
@@ -478,7 +480,7 @@ export function defaultRepo(settings: EnveloppeSettings): Repository {
  * it displays a notice indicating that the rate limit is limited.
  * Otherwise, it displays a notice indicating that the rate limit is not limited.
  * @param octokit - The Octokit instance used to make requests to the GitHub API.
- * @param settings - The settings object containing the rate limit configuration.
+ * @param plugin
  * @param commands - Indicates whether the function is called from a command or not. Default is `false`.
  * @param numberOfFile - The number of files to be processed. Default is `1`.
  * @returns The remaining number of requests in the rate limit.
@@ -546,8 +548,8 @@ export function forcePushAttachment(file: TFile, settings: EnveloppeSettings): b
 			(regex?.test(file.path) || file.path === path.path || path.path.contains("{{all}}"))
 		);
 	});
-	if (needToBeForPush.length === 0) return false;
-	return true;
+	return needToBeForPush.length !== 0;
+	
 }
 
 /**

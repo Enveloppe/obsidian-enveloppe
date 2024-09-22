@@ -16,7 +16,7 @@ import type Enveloppe from "src/main";
 import { frontmatterFromFile } from "src/utils/parse_frontmatter";
 
 /**
- * Create the differents list of the modals opened after the upload
+ * Create the different list of the modals opened after the upload
  * @param {UploadedFiles[]} listUploaded
  * @param {Deleted} deleted
  * @param {string[]} fileError
@@ -51,7 +51,7 @@ export function createListEdited(
 
 /**
  * Get the settings of the metadata extractor plugin
- * Disable the plugin if it is not installed, the settings are not set or if plateform is mobile
+ * Disable the plugin if it is not installed, the settings are not set or if platform is mobile
  * @param {App} app
  * @param {EnveloppeSettings} settings
  * @returns {Promise<MetadataExtractor | null>}
@@ -189,7 +189,7 @@ export async function createLink(
 		url = slugify(url, { lower: true, strict: true });
 	}
 	for (const apply of transform.applyRegex) {
-		//detect if text is encapsed by //
+		//detect if text is encased by //
 		const { regex, replacement } = apply;
 		if (regex.match(FIND_REGEX)) {
 			const reg = createRegexFromText(regex);

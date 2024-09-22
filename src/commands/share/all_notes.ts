@@ -86,6 +86,7 @@ export async function uploadAllNotes(
  * @param {MonoRepoProperties} monoRepo - The repo where to share the files
  * @param {TFile[]} sharedFiles - The files to share
  * @param {boolean} createGithubBranch - If true, create the branch before sharing the files
+ * @param sourceFrontmatter
  */
 export async function shareAllMarkedNotes(
 	PublisherManager: GithubBranch,

@@ -79,6 +79,7 @@ export async function migrateSettings(
 }
 
 async function migrateReplaceTitle(plugin: Enveloppe) {
+	// noinspection SuspiciousTypeOfGuard
 	if (plugin.settings.upload.replaceTitle instanceof Array) {
 		return;
 	}

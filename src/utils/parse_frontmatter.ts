@@ -29,20 +29,6 @@ export function frontmatterSettingsRepository(
 	);
 }
 
-export function getDefaultProperties(repository: Repository | null, plugin: Enveloppe) {
-	const defaultSettings = getProperties(plugin, repository);
-	if (
-		!repository?.set ||
-		(repository && !plugin.repositoryFrontmatter[repository.smartKey])
-	)
-		return defaultSettings;
-	return getProperties(
-		plugin,
-		repository,
-		plugin.repositoryFrontmatter[repository.smartKey]
-	);
-}
-
 /**
  * Retrieves the frontmatter settings for a given file.
  *
@@ -225,7 +211,7 @@ export function getProperties(
  * @return {Properties[]}
  */
 
-function parseMultipleRepo(frontmatter: FrontMatterCache, Properties: Properties) {
+function parseMultipleRepo(frontmatter: FrontMatterCache, Properties: Properties): Properties[] {
 	const multipleRepo: Properties[] = [];
 	if (frontmatter.multipleRepo instanceof Array && frontmatter.multipleRepo.length > 0) {
 		for (const repo of frontmatter.multipleRepo) {
@@ -280,6 +266,7 @@ function removeDuplicateRepo(multipleRepo: Properties[]) {
  * @param {FrontMatterCache} frontmatter - The frontmatter of the file
  * @param {Repository[]} allRepo - The list of all repo from the settings
  * @param {Properties} properties - The default Properties (from the default settings)
+ * @param plugin
  */
 function multipleShortKeyRepo(
 	frontmatter: FrontMatterCache,
@@ -359,6 +346,7 @@ function repositoryStringSlice(repo: string, properties: Properties): Properties
  * Get the category from the frontmatter
  * @param {FrontMatterCache} frontmatter
  * @param {EnveloppeSettings} settings
+ * @param paths
  * @return {string} - The category or the default name
  */
 export function getCategory(

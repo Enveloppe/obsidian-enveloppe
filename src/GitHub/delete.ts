@@ -199,6 +199,7 @@ function excludedFileFromDelete(file: string, settings: EnveloppeSettings): bool
  * Also the function check if the file is excluded from deletion
  * @param {GithubRepo[]} fileInRepo All files from repository
  * @param {EnveloppeSettings} settings Settings of the plugin
+ * @param prop
  * @return {Promise<GithubRepo[]>} sharedFilesInRepo containing valid file to check if they must be deleted
  */
 
@@ -248,7 +249,7 @@ function parseYamlFrontmatter(contents: string): unknown {
  * - autoClean: false
  * - share: false
  * @param {Octokit} octokit GitHub API
- * @param {EnveloppeSettings} settings Settings of the plugin
+ * @param plugin
  * @param {string} path path of the file to check
  * @param {Properties} prop repository informations
  * @return {Promise<boolean>} true if the file must be deleted

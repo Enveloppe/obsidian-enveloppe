@@ -221,6 +221,7 @@ function folderNoteIndexObs(
  * @param {Vault} vault
  * @param {EnveloppeSettings} settings Global Settings
  * @param {string} fileName file name
+ * @param prop
  * @return {string} path
  */
 
@@ -254,6 +255,7 @@ function createObsidianPath(
  * @param {string} fileName file name
  * @param {FrontMatterCache} frontmatter frontmatter
  * @param {EnveloppeSettings} settings Settings
+ * @param prop
  * @returns {string} renamed file name or original file name
  */
 
@@ -280,6 +282,7 @@ function folderNoteIndexYaml(
  * @param {EnveloppeSettings} settings Settings
  * @param {FrontMatterCache} frontmatter frontmatter
  * @param {string} fileName file name
+ * @param prop
  * @returns {string} filepath
  */
 
@@ -441,7 +444,9 @@ export function getReceiptFolder(
 /**
  * Create filepath in github Repository based on settings and frontmatter for image
  * @param {TFile} file : Source file
+ * @param plugin
  * @param {PropertiesConversion | null} sourceFrontmatter
+ * @param repository
  * @return {string} the new filepath
  */
 export function getImagePath(
@@ -470,6 +475,7 @@ export function getImagePath(
  * @param {TFile} file : Source file
  * @param {EnveloppeSettings} settings Settings
  * @param {PropertiesConversion | null} sourceFrontmatter
+ * @param overridePath
  * @return {string} the new filepath
  */
 

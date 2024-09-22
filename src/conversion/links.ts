@@ -12,7 +12,7 @@ import {
 	textIsInFrontmatter,
 } from "src/conversion/file_path";
 import { replaceText } from "src/conversion/find_and_replace_text";
-import {isAttachment, isShared, noTextConversion} from "src/utils/data_validation_test";
+import {isAttachment, noTextConversion} from "src/utils/data_validation_test";
 import type Enveloppe from "../main";
 
 type IsEmbed = {
@@ -131,7 +131,7 @@ function sanitizeStrictFileName(link: string) {
  * @param linkedFile the file connected to the link
  * @param conditionConvert the frontmatter settings
  * @param isEmbed the embed and if it is an embed
- * @param settings the global settings of the plugin
+ * @param plugin
  * @param isNotAttachment if the file linked is **not** an attachment
  * @param fileContent the file content to convert
  * @param wikiMatch the match for the wikilink
@@ -198,7 +198,7 @@ function isLinkedFile(
  * @param {string} wikiMatch the match for the wikilink
  * @param {string} fileName  the file name to convert to a markdown link
  * @param {PropertiesConversion} conditionConvert the frontmatter settings
- * @param {EnveloppeSettings} settings the global settings
+ * @param plugin
  * @param {string} fileContent the file content to convert
  * @returns {string} the converted text
  */

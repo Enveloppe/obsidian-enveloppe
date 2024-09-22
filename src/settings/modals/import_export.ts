@@ -1,4 +1,4 @@
-import type { EnveloppeSettings, Preset } from "@interfaces/main";
+import type {EnveloppeSettings, Preset, RegexReplace} from "@interfaces/main";
 import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import {
@@ -16,8 +16,6 @@ import type { EnveloppeSettingsTab } from "src/settings";
 import { migrateSettings, type OldSettings } from "src/settings/migrate";
 import type { Logs } from "../../utils/logs";
 import { klona } from "klona";
-
-export type SettingValue = number | string | boolean | unknown;
 
 function clone(obj: EnveloppeSettings): EnveloppeSettings {
 	return klona(obj);
@@ -260,7 +258,6 @@ export class ExportModal extends Modal {
 									textarea.inputEl.select();
 									textarea.inputEl.setSelectionRange(0, 99999);
 									document.execCommand("copy");
-
 									copyButton.addClass("success");
 
 									setTimeout(() => {
@@ -354,8 +351,10 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 		this.console.logs({}, "onChooseItem");
 		try {
 			const original = clone(this.plugin.settings);
+			
+			// noinspection SuspiciousTypeOfGuard
 			if (!(presetSettings.upload.replaceTitle instanceof Array)) {
-				presetSettings.upload.replaceTitle = [presetSettings.upload.replaceTitle];
+				presetSettings.upload.replaceTitle = [presetSettings.upload.replaceTitle as RegexReplace];
 			}
 
 			for (const [key, value] of Object.entries(presetSettings)) {

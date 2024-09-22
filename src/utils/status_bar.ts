@@ -1,8 +1,9 @@
+// noinspection SpellCheckingInspection
+
 import type { Properties } from "@interfaces";
 import i18next from "i18next";
 import { setIcon, type Notice } from "obsidian";
 import type { Logs } from "./logs";
-
 // Credit : https://github.com/oleeskild/obsidian-digital-garden/ @oleeskild
 
 /**
@@ -25,6 +26,7 @@ export class ShareStatusBar {
 	 * @param {HTMLElement} statusBarItem
 	 * @param {number} numberOfNotesToPublish
 	 * @param {boolean} attachment true if there are attachment to the note
+	 * @param console
 	 */
 
 	constructor(

@@ -183,6 +183,7 @@ export class GithubBranch extends FilesManagement {
 	/**
 	 * Update the repository with the new branch : PR, merging and deleting the branch if allowed by the global settings
 	 * @param {Properties | Properties[]} prop The repo to use
+	 * @param dryRun
 	 * @returns {Promise<boolean>} True if the update is successful
 	 */
 	async updateRepository(
@@ -195,7 +196,7 @@ export class GithubBranch extends FilesManagement {
 		for (const repo of prop) {
 			success.push(await this.updateRepositoryOnOne(repo));
 		}
-		return !success.every((value) => value === false);
+		return !success.every((value) => !value);
 	}
 
 	/**

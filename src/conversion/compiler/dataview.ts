@@ -190,7 +190,7 @@ export async function convertDataviewQueries(
 	const isDataviewEnabled = app.plugins.plugins.dataview;
 	if (!isDataviewEnabled || !isPluginEnabled(app)) return replacedText;
 	const dvApi = getAPI(app);
-	if (!dvApi || dvApi === undefined) return replacedText;
+	if (!dvApi) return replacedText;
 	const matches = text.matchAll(dataViewRegex);
 	const compiler = new DataviewCompiler(settings, properties, path, dvApi, text);
 	const { dataviewJsMatches, inlineMatches, inlineJsMatches } = compiler.matches();

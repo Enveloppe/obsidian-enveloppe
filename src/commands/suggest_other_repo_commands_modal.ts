@@ -1,3 +1,5 @@
+// noinspection JSIgnoredPromiseFromCall
+
 import { FolderSettings, type EnveloppeSettings, type Repository } from "@interfaces";
 import i18next from "i18next";
 import { type App, FuzzySuggestModal } from "obsidian";

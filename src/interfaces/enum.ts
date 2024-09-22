@@ -9,7 +9,7 @@ export enum TypeOfEditRegex {
 	Title = "title",
 }
 
-export enum EnumbSettingsTabId {
+export enum ESettingsTabId {
 	Github = "github-configuration",
 	Upload = "upload-configuration",
 	Text = "text-conversion",

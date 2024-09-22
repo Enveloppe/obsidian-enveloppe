@@ -1,19 +1,9 @@
-import { type EnveloppeSettings, GithubTiersVersion, type Repository } from "@interfaces";
+import {type EnveloppeSettings, GithubTiersVersion, type Repository} from "@interfaces";
 import i18next from "i18next";
-import {
-	AbstractInputSuggest,
-	type App,
-	Modal,
-	Notice,
-	Setting,
-	type TFile,
-} from "obsidian";
+import {AbstractInputSuggest, type App, Modal, Notice, Setting, type TFile,} from "obsidian";
 import type Enveloppe from "src/main";
-import { migrateToken } from "src/settings/migrate";
-import {
-	checkRepositoryValidity,
-	verifyRateLimitAPI,
-} from "src/utils/data_validation_test";
+import {migrateToken} from "src/settings/migrate";
+import {checkRepositoryValidity, verifyRateLimitAPI,} from "src/utils/data_validation_test";
 
 class SetClassSuggester extends AbstractInputSuggest<TFile> {
 	plugin: Enveloppe;
@@ -492,9 +482,7 @@ class ModalEditingRepository extends Modal {
 				search.setValue(this.repository.set ?? "").setPlaceholder("path/to/file.md");
 				new SetClassSuggester(search.inputEl, this.plugin, (result) => {
 					this.repository.set = result.path;
-					const frontmatter =
-						this.plugin.app.metadataCache.getFileCache(result)?.frontmatter;
-					this.plugin.repositoryFrontmatter[this.repository.smartKey] = frontmatter;
+					this.plugin.repositoryFrontmatter[this.repository.smartKey] = this.plugin.app.metadataCache.getFileCache(result)?.frontmatter;
 				});
 			});
 

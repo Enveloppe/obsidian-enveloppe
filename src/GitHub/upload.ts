@@ -453,7 +453,7 @@ export default class Publisher {
 			if (isAlreadyExist && isAlreadyExist instanceof TFile) {
 				const needToByUpdated = isAlreadyExist.stat.mtime > imageFile.stat.mtime;
 				if (needToByUpdated) {
-					this.vault.modifyBinary(isAlreadyExist, imageBin);
+					await this.vault.modifyBinary(isAlreadyExist, imageBin);
 				}
 				return {
 					isUpdated: needToByUpdated,

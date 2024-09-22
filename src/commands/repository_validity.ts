@@ -35,8 +35,8 @@ export async function checkRepositoryValidityCallback(
 	repo: Repository | null
 ): Promise<Command> {
 	const id = repo
-		? `check-plugin-repo-validy-K${repo.smartKey}`
-		: "check-plugin-repo-validy";
+		? `check-plugin-repo-validity-K${repo.smartKey}`
+		: "check-plugin-repo-validity";
 	let name = i18next.t("commands.checkValidity.title");
 	const common = i18next.t("common.repository");
 	name = repo ? `${name} (${common} : ${repo.smartKey})` : name;

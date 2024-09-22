@@ -1,4 +1,4 @@
-import { EnumbSettingsTabId, FolderSettings, type EnveloppeSettings } from "@interfaces";
+import {ESettingsTabId, FolderSettings, type EnveloppeSettings} from "@interfaces";
 import i18next from "i18next";
 import { Notice, type Setting } from "obsidian";
 import type Enveloppe from "src/main";
@@ -74,7 +74,7 @@ export async function autoCleanCondition(
 		await plugin.saveSettings();
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
-		settingsTab.renderSettingsPage(EnumbSettingsTabId.Upload);
+		settingsTab.renderSettingsPage(ESettingsTabId.Upload);
 	}
 	if (value.length === 0 && settings.behavior !== FolderSettings.Yaml) {
 		if (settings.autoclean.enable)
@@ -82,7 +82,7 @@ export async function autoCleanCondition(
 		settings.autoclean.enable = false;
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
-		settingsTab.renderSettingsPage(EnumbSettingsTabId.Upload);
+		settingsTab.renderSettingsPage(ESettingsTabId.Upload);
 	}
 	if (settings.autoclean.enable) {
 		// @ts-ignore

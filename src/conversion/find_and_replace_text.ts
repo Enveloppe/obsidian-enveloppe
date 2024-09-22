@@ -22,7 +22,7 @@ export function createRegexFromText(toReplace: string, withflag?: string): RegEx
  * Given a series of `censor` entries in Settings, this will loop through each
  * then find and replace.
  * @param {string} text The text to be censored.
- * @param {EnveloppeSettings} settings Settings
+ * @param plugin
  * @param {boolean} after Whether to censor all or just the first match.
  * @returns {string} The censored text.
  */
@@ -64,6 +64,7 @@ export default function findAndReplaceText(
  * @param fileContent {string} The entire file content
  * @param pattern {string | RegExp} The string or regex to be replaced
  * @param replaceWith {string} The string to replace with
+ * @param plugin
  * @param links {boolean} Whether to exclude the replacement if the string is prepended by a backslash.
  * @returns {string} The file content with the replacements
  */
