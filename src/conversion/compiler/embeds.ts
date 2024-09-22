@@ -165,7 +165,7 @@ export async function bakeEmbeds(
 	const cache = metadataCache.getFileCache(originalFile);
 	if (!cache) return text;
 	const resolvedSubpath = subpath ? resolveSubpath(cache, subpath) : null;
-	if (resolvedSubpath) {
+	if (resolvedSubpath && resolvedSubpath.type !== "footnote") {
 		text = extractSubpath(text, resolvedSubpath, cache);
 	}
 	const embeds = cache.embeds;
