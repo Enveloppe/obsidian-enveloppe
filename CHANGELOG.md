@@ -1,3 +1,8 @@
+## [7.3.2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.3.1...7.3.2) (2024-09-22)
+### Bug Fixes
+
+* **excalidraw:** cannot read properties of undefined (reading "skipInliningFonts") ([6fb1133](https://github.com/Enveloppe/obsidian-enveloppe/commit/6fb113332d25d06407c1755e5fa648086c3ee24f))
+
 ## [7.3.1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.3.0...7.3.1) (2024-09-22)
 ### Bug Fixes
 
