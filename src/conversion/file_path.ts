@@ -76,7 +76,7 @@ export async function createRelativePath(
 	targetFile: LinkedNotes,
 	frontmatter: FrontMatterCache | null | undefined,
 	properties: MultiProperties
-): Promise<{ link: string, unshared?: boolean }> {
+): Promise<{ link: string; unshared?: boolean }> {
 	const settings = properties.plugin.settings;
 	const shortRepo = properties.repository;
 	const sourcePath = getReceiptFolder(
@@ -112,8 +112,8 @@ export async function createRelativePath(
 	if (targetFile.linked.path === sourceFile.path) {
 		return {
 			link: getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo)
-			.split("/")
-				.at(-1) as string
+				.split("/")
+				.at(-1) as string,
 		};
 	}
 
@@ -179,8 +179,8 @@ export async function createRelativePath(
 		//in case of errors
 		return {
 			link: getReceiptFolder(targetFile.linked, shortRepo, properties.plugin, targetRepo)
-			.split("/")
-				.at(-1) as string
+				.split("/")
+				.at(-1) as string,
 		};
 	}
 	return {link: relative};

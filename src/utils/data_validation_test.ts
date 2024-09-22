@@ -21,7 +21,8 @@ import type Enveloppe from "src/main";
 import {
 	frontmatterFromFile,
 	getLinkedFrontmatter,
-	getProperties, mergeFrontmatter,
+	getProperties,
+	mergeFrontmatter,
 } from "src/utils/parse_frontmatter";
 import { escapeRegex } from "../conversion/links";
 
@@ -82,7 +83,11 @@ export function getRepoSharedKey(
 		return defaultRepo(settings);
 	} else if (!frontmatter) return null;
 	const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
-	frontmatter = mergeFrontmatter(frontmatter, linkedFrontmatter, settings.plugin.shareKey);
+	frontmatter = mergeFrontmatter(
+		frontmatter,
+		linkedFrontmatter,
+		settings.plugin.shareKey
+	);
 	return (
 		allOtherRepo.find((repo) => frontmatter?.[repo.shareKey]) ?? defaultRepo(settings)
 	);
@@ -549,7 +554,6 @@ export function forcePushAttachment(file: TFile, settings: EnveloppeSettings): b
 		);
 	});
 	return needToBeForPush.length !== 0;
-	
 }
 
 /**

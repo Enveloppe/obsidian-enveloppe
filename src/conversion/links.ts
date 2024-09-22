@@ -355,7 +355,7 @@ export async function convertToInternalGithub(
 			linkedFile,
 			frontmatter,
 			properties
-		)
+		);
 		let pathInGithub = paths.link;
 		pathInGithub = pathInGithub.replace(".md", "");
 		let anchor = linkedFile.anchor ? linkedFile.anchor : "";
@@ -372,7 +372,13 @@ export async function convertToInternalGithub(
 		if (matchedLink) {
 			for (const link of matchedLink) {
 				if (frontmatterSettings.unlink && paths.unshared) {
-					fileContent = replaceText(fileContent, link, pathInGithub, properties.plugin, true);
+					fileContent = replaceText(
+						fileContent,
+						link,
+						pathInGithub,
+						properties.plugin,
+						true
+					);
 					continue;
 				}
 				

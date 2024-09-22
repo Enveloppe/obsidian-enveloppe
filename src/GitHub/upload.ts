@@ -40,7 +40,8 @@ import {
 	frontmatterFromFile,
 	frontmatterSettingsRepository,
 	getFrontmatterSettings,
-	getProperties, mergeFrontmatter,
+	getProperties,
+	mergeFrontmatter,
 } from "src/utils/parse_frontmatter";
 import { ShareStatusBar } from "src/utils/status_bar";
 import merge from "ts-deepmerge";
@@ -173,7 +174,11 @@ export default class Publisher {
 		const shareFiles = new FilesManagement(this.octokit, this.plugin);
 		let frontmatter = frontmatterFromFile(file, this.plugin, null);
 		if (!isShared(frontmatter, this.settings, file, repo.repository)) return false;
-		frontmatter = mergeFrontmatter(frontmatter, sourceFrontmatter, this.settings.plugin.shareKey);
+		frontmatter = mergeFrontmatter(
+			frontmatter,
+			sourceFrontmatter,
+			this.settings.plugin.shareKey
+		);
 		const prop = getProperties(this.plugin, repo.repository, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(prop, this.plugin);
 		repo.frontmatter = prop;

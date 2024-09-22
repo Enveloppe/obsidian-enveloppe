@@ -211,7 +211,10 @@ export function getProperties(
  * @return {Properties[]}
  */
 
-function parseMultipleRepo(frontmatter: FrontMatterCache, Properties: Properties): Properties[] {
+function parseMultipleRepo(
+	frontmatter: FrontMatterCache,
+	Properties: Properties
+): Properties[] {
 	const multipleRepo: Properties[] = [];
 	if (frontmatter.multipleRepo instanceof Array && frontmatter.multipleRepo.length > 0) {
 		for (const repo of frontmatter.multipleRepo) {
@@ -689,7 +692,11 @@ function settingAttachment(
 	return settingsConversion;
 }
 
-export function mergeFrontmatter(frontmatter: FrontMatterCache | null, sourceFrontmatter: FrontMatterCache | null | undefined, shareKey: string) {
+export function mergeFrontmatter(
+	frontmatter: FrontMatterCache | null,
+	sourceFrontmatter: FrontMatterCache | null | undefined,
+	shareKey: string
+) {
 	delete sourceFrontmatter?.[shareKey];
 	if (sourceFrontmatter && frontmatter)
 		frontmatter = merge.withOptions(

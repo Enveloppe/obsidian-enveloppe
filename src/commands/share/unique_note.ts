@@ -15,7 +15,11 @@ import {
 	checkRepositoryValidityWithProperties,
 	isShared,
 } from "src/utils/data_validation_test";
-import {frontmatterFromFile, getProperties, mergeFrontmatter} from "src/utils/parse_frontmatter";
+import {
+	frontmatterFromFile,
+	getProperties,
+	mergeFrontmatter,
+} from "src/utils/parse_frontmatter";
 
 /**
  * Command to upload the active file ; use checkCallback to check if the file is shared and if they are a active file
@@ -70,7 +74,11 @@ export async function shareOneNote(
 	const { settings, plugin } = PublisherManager;
 	const app = PublisherManager.plugin.app;
 	let frontmatter = frontmatterFromFile(file, PublisherManager.plugin, null);
-	frontmatter = mergeFrontmatter(frontmatter, sourceFrontmatter, PublisherManager.settings.plugin.shareKey);
+	frontmatter = mergeFrontmatter(
+		frontmatter,
+		sourceFrontmatter,
+		PublisherManager.settings.plugin.shareKey
+	);
 	try {
 		const prop = getProperties(plugin, repository, frontmatter);
 		let isValid: boolean;

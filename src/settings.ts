@@ -712,7 +712,9 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 		this.settingsPage.createEl("h5", {
 			text: i18next.t("settings.conversion.links.title"),
 		});
-		this.settingsPage.append(sanitizeHTMLToDom(i18next.t("settings.conversion.links.desc"),));
+		this.settingsPage.append(
+			sanitizeHTMLToDom(i18next.t("settings.conversion.links.desc"))
+		);
 
 		const shareAll = this.settings.plugin.shareAll?.enable
 			? ` ${i18next.t("settings.conversion.links.internals.shareAll")}`
@@ -752,7 +754,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					});
 				});
-			
+
 			if (!textSettings.links.unshared) {
 				new Setting(this.settingsPage)
 					.setName(i18next.t("settings.conversion.links.unlink.title"))
@@ -1368,9 +1370,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 			.addToggle((toggle) =>
 				toggle.setValue(pluginSettings.saveTabId ?? true).onChange(async (value) => {
 					pluginSettings.saveTabId = value;
-					this.settings.tabsId = value
-						? ESettingsTabId.Plugin
-						: ESettingsTabId.Github;
+					this.settings.tabsId = value ? ESettingsTabId.Plugin : ESettingsTabId.Github;
 					await this.plugin.saveSettings();
 				})
 			);

@@ -42,7 +42,9 @@ export class GithubBranch extends FilesManagement {
 			(branch: { name: string }) => branch.name === prop.branch
 		);
 		if (!mainBranch) {
-			throw new Error(`No main branch found for ${prop.repo}, please check the branch name in the settings`);
+			throw new Error(
+				`No main branch found for ${prop.repo}, please check the branch name in the settings`
+			);
 		}
 		try {
 			const shaMainBranch = mainBranch!.commit.sha;

@@ -351,10 +351,12 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 		this.console.logs({}, "onChooseItem");
 		try {
 			const original = clone(this.plugin.settings);
-			
+
 			// noinspection SuspiciousTypeOfGuard
 			if (!(presetSettings.upload.replaceTitle instanceof Array)) {
-				presetSettings.upload.replaceTitle = [presetSettings.upload.replaceTitle as RegexReplace];
+				presetSettings.upload.replaceTitle = [
+					presetSettings.upload.replaceTitle as RegexReplace,
+				];
 			}
 
 			for (const [key, value] of Object.entries(presetSettings)) {
