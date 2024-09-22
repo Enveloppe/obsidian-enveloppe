@@ -160,6 +160,7 @@ export default class Publisher {
 	 * @param repo
 	 * @param {TFile[]} fileHistory File already sent during DeepScan
 	 * @param {boolean} deepScan if the plugin must check the embed notes too.
+	 * @param sourceFrontmatter
 	 */
 	async publish(
 		file: TFile,

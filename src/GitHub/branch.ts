@@ -41,7 +41,9 @@ export class GithubBranch extends FilesManagement {
 		const mainBranch = allBranch.data.find(
 			(branch: { name: string }) => branch.name === prop.branch
 		);
-		if (!mainBranch) return false;
+		if (!mainBranch) {
+			throw new Error(`No main branch found for ${prop.repo}, please check the branch name in the settings`);
+		}
 		try {
 			const shaMainBranch = mainBranch!.commit.sha;
 			const branch = await this.octokit.request("POST /repos/{owner}/{repo}/git/refs", {

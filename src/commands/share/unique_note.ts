@@ -86,7 +86,7 @@ export async function shareOneNote(
 					await checkRepositoryValidityWithProperties(PublisherManager, repo)
 				);
 			}
-			isValid = isValidArray.every((v) => v === true);
+			isValid = isValidArray.every((v) => v);
 		} else isValid = await checkRepositoryValidityWithProperties(PublisherManager, prop);
 
 		const multiRepo: MultiRepoProperties = {
