@@ -134,13 +134,13 @@ export async function shareOneNote(
 					new ListChangedFiles(app, listEdited).open();
 				}
 			} else {
-				plugin.console.notifError(prop);
+				plugin.console.noticeErrorUpload(prop);
 			}
 		}
 	} catch (error) {
 		if (!(error instanceof DOMException)) {
-			plugin.console.logs({ e: true }, error);
-			plugin.console.notifError(getProperties(plugin, repository, frontmatter, true));
+			plugin.console.fatal(error);
+			plugin.console.noticeErrorUpload(getProperties(plugin, repository, frontmatter, true));
 		}
 	}
 }

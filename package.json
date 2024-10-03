@@ -56,7 +56,8 @@
   },
   "dependencies": {
     "dedent": "^1.5.3",
-    "ts-deepmerge": "^6.2.1"
+    "ts-deepmerge": "^6.2.1",
+    "tslog": "^4.9.3"
   },
   "peerDependencies": {
     "@types/electron": "npm:@ophidian/electron-types@^24.3.1"

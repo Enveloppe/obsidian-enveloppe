@@ -88,7 +88,7 @@ async function deleteFromGithubOneRepo(
 		return { success: false, deleted: [], undeleted: [] };
 	}
 	if (filesInRepo.length === 0) {
-		pconsole.logs({}, `No file to delete in ${repo.owner}/${repo.repo}`);
+		pconsole.trace(`No file to delete in ${repo.owner}/${repo.repo}`);
 		return { success: false, deleted: [], undeleted: [] };
 	}
 	const allSharedFiles = filesManagement.getAllFileWithPath(
@@ -126,11 +126,10 @@ async function deleteFromGithubOneRepo(
 				: false;
 			try {
 				if (!checkingIndex) {
-					pconsole.notif(
-						{},
+					pconsole.trace(
 						`trying to delete file : ${file.file} from ${repo.owner}/${repo.repo}`
 					);
-					const reponse = await octokit.request(
+					const response = await octokit.request(
 						"DELETE /repos/{owner}/{repo}/contents/{path}",
 						{
 							owner: repo.owner,
@@ -141,7 +140,7 @@ async function deleteFromGithubOneRepo(
 							branch: branchName,
 						}
 					);
-					if (reponse.status === 200) {
+					if (response.status === 200) {
 						deletedSuccess++;
 						result.deleted.push(file.file);
 					} else {
@@ -150,7 +149,7 @@ async function deleteFromGithubOneRepo(
 					}
 				}
 			} catch (e) {
-				if (!(e instanceof DOMException)) pconsole.logs({ e: true }, e);
+				if (!(e instanceof DOMException)) pconsole.fatal(true, e);
 			}
 		}
 	}
@@ -288,7 +287,7 @@ async function checkIndexFiles(
 		}
 	} catch (e) {
 		if (!(e instanceof DOMException)) {
-			plugin.console.notif({ e: true }, e);
+			plugin.console.fatal(e);
 			return false;
 		}
 	}
@@ -362,9 +361,8 @@ function cleanDryRun(
 				? indexFileDryRun(file as TFile, app.metadataCache)
 				: false;
 			if (!indexFile) {
-				console.notif(
-					{},
-					`[DRYRUN] trying to delete file : ${file.path} from ${dryRunFolderPath}`
+				console.trace(
+					`[DRY-RUN] trying to delete file : ${file.path} from ${dryRunFolderPath}`
 				);
 				vault.trash(file, false);
 				deletedSuccess++;

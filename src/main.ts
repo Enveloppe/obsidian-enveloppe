@@ -179,7 +179,7 @@ export default class Enveloppe extends Plugin {
 				return defaultToken;
 			}
 		} catch (e) {
-			this.console.notif({ e: true }, e);
+			this.console.error(e);
 			return "";
 		}
 		return "";
@@ -218,8 +218,7 @@ export default class Enveloppe extends Plugin {
 
 		await this.loadSettings();
 		this.console = new Logs(this);
-		this.console.logs(
-			{},
+		this.console.info(
 			dedent(`[Obsidian Enveloppe] v.${this.manifest.version} (lang: ${translationLanguage}) loaded.
 		* You can hide HTTP logs in the console with checking the "Hide network" in the console settings.
 		* See here: https://developer.chrome.com/docs/devtools/console/reference#network`)

@@ -47,7 +47,7 @@ export class ImportModal extends Modal {
 	}
 
 	async censorRepositoryData(original: EnveloppeSettings) {
-		this.console.logs({}, "original settings:", original);
+		this.console.trace("original settings:", original);
 		this.settings.plugin.dev = original.plugin.dev;
 		this.settings.plugin.migrated = original.plugin.migrated;
 		this.settings.plugin.displayModalRepoEditing =
@@ -84,9 +84,9 @@ export class ImportModal extends Modal {
 							//need to convert old settings to new settings
 							const oldSettings = importedSettings as unknown as OldSettings;
 							await migrateSettings(oldSettings, this.plugin, true);
-							this.console.logs({}, i18next.t("informations.migrating.oldSettings"));
+							this.console.trace(i18next.t("informations.migrating.oldSettings"));
 						} else {
-							this.console.logs({}, i18next.t("informations.migrating.normalFormat"));
+							this.console.trace(i18next.t("informations.migrating.normalFormat"));
 							importedSettings = importedSettings as unknown as EnveloppeSettings;
 							//create a copy of actual settings
 							const actualSettings = clone(this.plugin.settings);
@@ -306,7 +306,7 @@ export class ExportModal extends Modal {
 				`${this.app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`
 			);
 		} catch (e) {
-			this.console.logs({}, "Error while deleting temporary file", e);
+			this.console.debug("Error while deleting temporary file", e);
 		}
 		const { contentEl } = this;
 		contentEl.empty();
@@ -348,7 +348,6 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	onChooseItem(item: Preset, _evt: MouseEvent | KeyboardEvent): void {
 		const presetSettings = item.settings;
-		this.console.logs({}, "onChooseItem");
 		try {
 			const original = clone(this.plugin.settings);
 
@@ -381,7 +380,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 			this.page.renderSettingsPage("github-configuration");
 		} catch (e) {
 			new Notice(i18next.t("modals.import.error.span") + e);
-			this.console.notif({}, "onChooseItem", e);
+			this.console.error(e);
 		}
 	}
 }
@@ -406,7 +405,7 @@ export async function loadAllPresets(
 		if (!Array.isArray(githubPreset.data)) {
 			return presetList;
 		}
-		plugin.console.logs({}, "LoadAllPreset", githubPreset);
+		plugin.console.trace("# LoadAllPreset", githubPreset);
 		for (const preset of githubPreset.data) {
 			if (preset.name.endsWith(".json")) {
 				const presetName = preset.name.replace(".json", "");
@@ -418,7 +417,7 @@ export async function loadAllPresets(
 		}
 		return presetList;
 	} catch (e) {
-		plugin.console.notif({ e: true }, "Couldn't load preset. Error:", e);
+		plugin.console.error("Couldn't load preset. Error:", e);
 		return [];
 	}
 }

@@ -97,7 +97,7 @@ export class TokenEditPath extends Modal {
 					input.controlEl.querySelector("input")!.style.border = "1px solid red";
 					new Notice(i18next.t("error.reading-token-file"));
 					this.tokenPath = "error";
-					this.console.logs({ e: true }, e);
+					this.console.fatal(e);
 				}
 			});
 		});

@@ -137,13 +137,13 @@ export default class Publisher {
 					} catch (e) {
 						new Notice(i18next.t("error.unablePublishNote", { file: file.name }));
 						fileError.push(file.name);
-						this.console.logs({ e: true }, e);
+						this.console.fatal(e);
 					}
 				}
 				statusBar.finish(8000);
 			} catch (e) {
-				this.console.logs({ e: true }, e);
-				this.console.notifError(prop);
+				this.console.fatal(e);
+				this.console.noticeErrorUpload(prop);
 				statusBar.error(prop);
 			}
 		}
@@ -190,7 +190,7 @@ export default class Publisher {
 			return false;
 		}
 		try {
-			this.console.logs({}, `Publishing file: ${file.path}`);
+			this.console.fatal(`Publishing file: ${file.path}`);
 			fileHistory.push(file);
 			const frontmatterSettingsFromFile = getFrontmatterSettings(
 				frontmatter,
@@ -235,7 +235,7 @@ export default class Publisher {
 				multiRepMsg += `[${repo.owner}/${repo.repo}/${repo.branch}] `;
 			}
 			const msg = `Publishing ${file.name} to ${multiRepMsg}`;
-			this.console.logs({}, msg);
+			this.console.trace(msg);
 			const fileDeleted: Deleted[] = [];
 			const updated: UploadedFiles[][] = [];
 			const fileError: string[] = [];
@@ -268,7 +268,7 @@ export default class Publisher {
 			}
 			return { deleted: fileDeleted[0], uploaded: updated[0], error: fileError };
 		} catch (e) {
-			this.console.logs({ e: true }, e);
+			this.console.fatal(e);
 			return false;
 		}
 	}
@@ -307,8 +307,7 @@ export default class Publisher {
 		});
 		embedFiles = await this.cleanLinkedImageIfAlreadyInRepo(embedFiles, properties);
 		const repo = properties.frontmatter.prop;
-		this.console.notif(
-			{},
+		this.console.trace(
 			`Upload ${file.name}:${path} on ${repo.owner}/${repo.repo}:${this.branchName}`
 		);
 		const notifMob = this.console.noticeMobile(
@@ -338,14 +337,14 @@ export default class Publisher {
 				],
 			};
 		}
-		const embeded = await this.statusBarForEmbed(
+		const embedded = await this.statusBarForEmbed(
 			embedFiles,
 			fileHistory,
 			deepScan,
 			properties
 		);
-
-		const embeddedUploaded = embeded.uploaded;
+		
+		const embeddedUploaded = embedded.uploaded;
 		embeddedUploaded.push(uploaded);
 		if (autoclean || repo.dryRun.autoclean) {
 			deleted = await deleteFromGithub(true, this.branchName, shareFiles, {
@@ -357,7 +356,7 @@ export default class Publisher {
 		return {
 			deleted,
 			uploaded: embeddedUploaded,
-			error: embeded.error,
+			error: embedded.error,
 		};
 	}
 
@@ -418,7 +417,7 @@ export default class Publisher {
 				result.isUpdated = true;
 			}
 		} catch {
-			this.console.logs({}, i18next.t("error.normal"));
+			this.console.trace(i18next.t("error.normal"));
 		}
 
 		payload.message = msg;
@@ -524,7 +523,7 @@ export default class Publisher {
 			const contentBase64 = Base64.encode(text).toString();
 			return await this.upload(contentBase64, path, title, prop);
 		} catch (e) {
-			this.console.notif({ e: true }, e);
+			this.console.fatal(e);
 			return undefined;
 		}
 	}
@@ -667,8 +666,7 @@ export default class Publisher {
 							) {
 								newLinkedFiles.push(file);
 							} else
-								this.console.logs(
-									{},
+								this.console.trace(
 									i18next.t("error.alreadyExists", { file: file.name })
 								);
 						}

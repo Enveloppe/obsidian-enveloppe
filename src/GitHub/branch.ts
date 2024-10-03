@@ -11,6 +11,7 @@ export class GithubBranch extends FilesManagement {
 	constructor(octokit: Octokit, plugin: Enveloppe) {
 		super(octokit, plugin);
 		this.console = plugin.console;
+		
 	}
 
 	/**
@@ -45,6 +46,7 @@ export class GithubBranch extends FilesManagement {
 			throw new Error(
 				`No main branch found for ${prop.repo}, please check the branch name in the settings`
 			);
+			
 		}
 		try {
 			const shaMainBranch = mainBranch!.commit.sha;
@@ -54,8 +56,7 @@ export class GithubBranch extends FilesManagement {
 				ref: `refs/heads/${this.branchName}`,
 				sha: shaMainBranch,
 			});
-			this.console.notif(
-				{},
+			this.console.info(
 				i18next.t("publish.branch.success", { branchStatus: branch.status, repo: prop })
 			);
 			return branch.status === 201;
@@ -72,8 +73,7 @@ export class GithubBranch extends FilesManagement {
 				const mainBranch = allBranch.data.find(
 					(branch: { name: string }) => branch.name === this.branchName
 				);
-				this.console.notif(
-					{},
+				this.console.info(
 					i18next.t("publish.branch.alreadyExists", {
 						branchName: this.branchName,
 						repo: prop,
@@ -81,7 +81,7 @@ export class GithubBranch extends FilesManagement {
 				);
 				return !!mainBranch;
 			} catch (e) {
-				this.console.notif({ e: true }, e);
+				this.console.error(e);
 				return false;
 			}
 		}
@@ -106,7 +106,7 @@ export class GithubBranch extends FilesManagement {
 			});
 			return pr.data.number;
 		} catch (e) {
-			this.console.logs({ e: true }, e);
+			this.console.trace(e);
 			//trying to get the last open PR number
 			try {
 				const pr = await this.octokit.request("GET /repos/{owner}/{repo}/pulls", {
@@ -117,8 +117,7 @@ export class GithubBranch extends FilesManagement {
 				return pr.data[0]?.number || 0;
 			} catch (e) {
 				// there is no open PR and impossible to create a new one
-				this.console.notif(
-					{ e: true },
+				this.console.info(
 					i18next.t("publish.branch.error", { error: e, repo: prop })
 				);
 				return 0;
@@ -144,7 +143,7 @@ export class GithubBranch extends FilesManagement {
 			);
 			return branch.status === 200;
 		} catch (e) {
-			this.console.logs({ e: true }, e);
+			this.console.trace(e);
 			return false;
 		}
 	}
@@ -177,7 +176,7 @@ export class GithubBranch extends FilesManagement {
 			);
 			return branch.status === 200;
 		} catch (e) {
-			this.console.notif({ e: true }, e);
+			this.console.warn(e);
 			new Notice(i18next.t("error.mergeconflic"));
 			return false;
 		}
@@ -222,7 +221,7 @@ export class GithubBranch extends FilesManagement {
 			}
 			return true;
 		} catch (e) {
-			this.console.logs({ e: true }, e);
+			this.console.warn(e);
 			new Notice(i18next.t("error.errorConfig", { repo: prop }));
 			return false;
 		}
@@ -241,6 +240,7 @@ export class GithubBranch extends FilesManagement {
 	async checkRepository(prop: Properties | Properties[], silent = true): Promise<void> {
 		prop = Array.isArray(prop) ? prop : [prop];
 		for (const repo of prop) {
+			this.console.logger.silly(repo);
 			try {
 				const repoExist = await this.octokit
 					.request("GET /repos/{owner}/{repo}", {
@@ -259,8 +259,7 @@ export class GithubBranch extends FilesManagement {
 					});
 				//@ts-ignore
 				if (repoExist.status === 200) {
-					this.console.notif(
-						{},
+					this.console.info(
 						i18next.t("commands.checkValidity.repoExistsTestBranch", { repo })
 					);
 
@@ -272,6 +271,7 @@ export class GithubBranch extends FilesManagement {
 						})
 						.catch((e) => {
 							//check the error code
+							this.console.logger.warn(e);
 							if (e.status === 404) {
 								new Notice(
 									i18next.t("commands.checkValidity.inBranch.error404", { repo })
@@ -282,13 +282,14 @@ export class GithubBranch extends FilesManagement {
 								);
 							}
 						});
+					this.console.logger.info(branchExist);
 					//@ts-ignore
 					if (branchExist.status === 200 && !silent) {
 						new Notice(i18next.t("commands.checkValidity.success", { repo }));
 					}
 				}
 			} catch (e) {
-				this.console.logs({ e: true }, e);
+				this.console.logger.fatal(e);
 				new Notice(i18next.t("commands.checkValidity.error", { repo }));
 				break;
 			}

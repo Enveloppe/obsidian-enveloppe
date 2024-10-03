@@ -83,8 +83,8 @@ async function migrateReplaceTitle(plugin: Enveloppe) {
 	if (plugin.settings.upload.replaceTitle instanceof Array) {
 		return;
 	}
-
-	plugin.console.logs({}, i18next.t("informations.migrating.fileReplace"));
+	
+	plugin.console.trace(i18next.t("informations.migrating.fileReplace"));
 	plugin.settings.upload.replaceTitle = [plugin.settings.upload.replaceTitle];
 	await plugin.saveSettings();
 }
@@ -98,7 +98,7 @@ async function migrateSubFolder(plugin: Enveloppe) {
 			(e) => e.regex === `/${plugin.settings.upload.subFolder}`
 		)
 	) {
-		plugin.console.logs({}, i18next.t("informations.migrating.subFolder"));
+		plugin.console.trace(i18next.t("informations.migrating.subFolder"));
 		//@ts-ignore
 		if (plugin.settings.upload.subFolder.length > 0) {
 			plugin.settings.upload.replacePath.push({
@@ -127,7 +127,7 @@ async function migrateCensor(plugin: Enveloppe) {
 }
 
 async function migrateWorFlow(plugin: Enveloppe) {
-	plugin.console.logs({}, "Migrating workflow");
+	plugin.console.trace("Migrating workflow");
 	//@ts-ignore
 	if (!plugin.settings.github.worflow) {
 		return;
@@ -146,11 +146,11 @@ async function migrateWorFlow(plugin: Enveloppe) {
 }
 
 export async function migrateToken(plugin: Enveloppe, token?: string, repo?: string) {
-	plugin.console.logs({}, "migrating token");
+	plugin.console.trace("migrating token");
 	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
 	//@ts-ignore
 	if (plugin.settings.github.token && !token) {
-		plugin.console.logs({}, `Moving the GitHub Token in the file : ${tokenPath}`);
+		plugin.console.trace(`Moving the GitHub Token in the file : ${tokenPath}`);
 		//@ts-ignore
 		token = plugin.settings.github.token;
 		//@ts-ignore
@@ -160,8 +160,7 @@ export async function migrateToken(plugin: Enveloppe, token?: string, repo?: str
 	if (token === undefined) {
 		return;
 	}
-	plugin.console.logs(
-		{},
+	plugin.console.trace(
 		`Moving the GitHub Token in the file : ${tokenPath} for ${
 			repo ?? "default"
 		} repository`
@@ -216,7 +215,7 @@ export async function migrateToken(plugin: Enveloppe, token?: string, repo?: str
 }
 
 async function migrateOtherRepository(plugin: Enveloppe) {
-	plugin.console.logs({}, "Configuring other repositories");
+	plugin.console.trace("Configuring other repositories");
 	const otherRepo = plugin.settings.github?.otherRepo ?? [];
 	for (const repo of otherRepo) {
 		const workflow = {
@@ -266,7 +265,7 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 	if (!Object.keys(old).includes("editorMenu")) {
 		return;
 	}
-	plugin.console.logs({}, i18next.t("informations.migrating.oldSettings"));
+	plugin.console.trace(i18next.t("informations.migrating.oldSettings"));
 	plugin.settings = {
 		github: {
 			user: old.githubName

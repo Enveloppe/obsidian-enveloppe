@@ -56,7 +56,7 @@ export function addHardLineBreak(
 		}
 		return text.replace(/^\s*\\\s*$/gim, "<br/>");
 	} catch (e) {
-		plugin.console.notif({ e: true }, e);
+		plugin.console.error(e);
 		return text;
 	}
 }
@@ -72,7 +72,7 @@ function tagsToYaml(toAdd: string[], plugin: Enveloppe, yaml: any) {
 			];
 			delete yaml.tag;
 		} catch (e) {
-			plugin.console.notif({ e: true }, e);
+			plugin.console.error(e);
 		}
 	}
 	if (yaml.tags) {
@@ -84,7 +84,7 @@ function tagsToYaml(toAdd: string[], plugin: Enveloppe, yaml: any) {
 				]),
 			];
 		} catch (e) {
-			plugin.console.notif({ e: true }, e);
+			plugin.console.error(e);
 		}
 	} else {
 		yaml.tags = toAdd;

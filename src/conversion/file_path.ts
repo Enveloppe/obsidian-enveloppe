@@ -96,7 +96,7 @@ export async function createRelativePath(
 		targetRepo
 	);
 	const shared = isInternalShared(frontmatterTarget, properties, targetFile.linked);
-	properties.plugin.console.logs({}, `Shared: ${shared} for ${targetFile.linked.path}`);
+	properties.plugin.console.trace(`Shared: ${shared} for ${targetFile.linked.path}`);
 	if (
 		targetFile.linked.extension === "md" &&
 		!targetFile.linked.name.includes("excalidraw") &&

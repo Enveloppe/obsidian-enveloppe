@@ -1,40 +1,68 @@
-import {Notice, Platform, setIcon, TFile} from "obsidian";
+import {Notice, Platform, sanitizeHTMLToDom, setIcon, TFile} from "obsidian";
 import type Enveloppe from "../main";
 import type {EnveloppeSettings, Properties} from "@interfaces";
 import i18next from "i18next";
 import type Publisher from "../GitHub/upload";
+import {Logger, type ILogObj} from "tslog";
 
-type Arguments = {
-	logs?: boolean;
-	e?: boolean;
-};
 
 export class Logs {
 	plugin: Enveloppe;
-
+	logger: Logger<ILogObj>;
 	constructor(plugin: Enveloppe) {
 		this.plugin = plugin;
+		const minLevel = this.plugin.settings.plugin?.dev ? 0 : 2;
+		this.logger = new Logger({prefix: ["Enveloppe"], minLevel});
+		if (this.plugin.settings.plugin?.dev) {
+			const logFile = `${this.plugin.manifest.dir}/logs.txt`;
+			this.logger.attachTransport(async (logObj) => {
+				await this.plugin.app.vault.adapter.append(logFile, JSON.stringify(logObj));
+			});
+			
+		}
 	}
 
 	/**
 	 * Create a notice message for the log
 	 */
-	notif(args: Arguments, ...messages: unknown[]) {
-		const { logs, e } = args;
+	private notif(...messages: unknown[]) {
 		const settings = this.plugin.settings;
-		if (settings.plugin?.noticeError) {
-			new Notice(messages.join(" "));
-			return;
-		}
-		let stack: string = this.callFunction();
-		if (stack.contains("logs")) {
-			stack = this.callFunction(true);
-		}
-		const date = new Date().toISOString().slice(11, 23);
-		const prefix = logs ? `DEV LOGS [${date}] ${stack}:\n` : `[Enveloppe](${stack}):\n`;
-		if (e) console.error(prefix, ...messages);
-		else console.log(prefix, ...messages);
-		this.writeToLog(stack, e, ...messages);
+		if (settings.plugin?.noticeError) new Notice(messages.join(" "));
+	}
+	
+	error(...messages: unknown[]) {
+		this.logger.error(...messages);
+		this.notif(messages);
+	}
+	
+	warn(...messages: unknown[]) {
+		this.logger.warn(...messages);
+		this.notif(messages);
+	}
+	
+	info(...messages: unknown[]) {
+		this.logger.info(...messages);
+		this.notif(messages);
+	}
+	
+	debug(...messages: unknown[]) {
+		this.logger.debug(...messages);
+		this.notif(messages);
+	}
+	
+	trace(...messages: unknown[]) {
+		this.logger.trace(...messages);
+		this.notif(messages);
+	}
+	
+	silly(...messages: unknown[]) {
+		this.logger.silly(...messages);
+		this.notif(messages);
+	}
+	
+	fatal(...messages: unknown[]) {
+		this.logger.fatal(...messages);
+		this.notif(messages);
 	}
 
 	/**
@@ -64,69 +92,19 @@ export class Logs {
 		}).innerHTML = message;
 		return new Notice(noticeFrag, 0);
 	}
-
-	/**
-	 * Detect the function that call the function
-	 * @param type {boolean} if true, return the function that call the function that call the function
-	 * @returns {string}
-	 */
-	callFunction(type?: boolean): string {
-		const index = type ? 4 : 3;
-		let callFunction = new Error().stack?.split("\n")[index].trim();
-		callFunction = callFunction?.substring(
-			callFunction.indexOf("at ") + 3,
-			callFunction.lastIndexOf(" (")
-		);
-		callFunction = callFunction?.replace("Object.callback", "");
-		callFunction = callFunction ? callFunction : "main";
-		callFunction = callFunction === "eval" ? "main" : callFunction;
-		return callFunction;
-	}
-
-	/**
-	 * Add a new option in settings "dev"
-	 * Will make appear ALL the logs in the console
-	 * Not just the logs for normal process
-	 * For advanced users only
-	 */
-	logs(args: Arguments, ...messages: unknown[]) {
-		// noinspection JSUnusedAssignment
-		let { logs, e } = args;
-		const settings = this.plugin.settings;
-		logs = true;
-		if (e) {
-			this.notif({ logs, e }, ...messages);
-			return;
-		}
-		if (settings.plugin?.dev) {
-			this.notif({ logs }, ...messages);
-		}
-	}
-
-	async writeToLog(stack: string, e?: boolean, ...messages: unknown[]) {
-		const settings = this.plugin.settings;
-		if (!settings.plugin?.dev) return;
-		const logs: string[] = [];
-		logs.push(`\n[${e ? "error" : "logs"} - ${stack}]`);
-		for (const message of messages) {
-			logs.push(String(message));
-		}
-		const logFile = `${this.plugin.manifest.dir}/logs.txt`;
-		
-		await this.plugin.app.vault.adapter.append(logFile, logs.join(" "));
-	}
-
-	notifError(properties: Properties | Properties[]) {
+	
+	noticeErrorUpload(properties: Properties | Properties[]) {
 		const repo = Array.isArray(properties) ? properties : [properties];
 		for (const repository of repo) {
 			const notif = document.createDocumentFragment();
 			const notifSpan = notif.createSpan({
 				cls: ["error", "enveloppe", "icons", "notification"],
 			});
+			const html = sanitizeHTMLToDom(i18next.t("error.errorPublish", {repo: repository}));
 			setIcon(notifSpan, "mail-warning");
 			notif.createSpan({
 				cls: ["error", "enveloppe", "notification"],
-			}).innerHTML = i18next.t("error.errorPublish", { repo: repository });
+			}).appendChild(html);
 			new Notice(notif);
 		}
 	}

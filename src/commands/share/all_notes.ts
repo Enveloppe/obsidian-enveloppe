@@ -135,7 +135,7 @@ export async function shareAllMarkedNotes(
 				} catch (e) {
 					fileError.push(sharedFile.name);
 					new Notice(i18next.t("error.unablePublishNote", { file: sharedFile.name }));
-					plugin.console.logs({ e: true }, e);
+					plugin.console.trace(e);
 				}
 			}
 			statusBar.finish(8000);
@@ -169,11 +169,11 @@ export async function shareAllMarkedNotes(
 					new ListChangedFiles(PublisherManager.plugin.app, listEdited).open();
 				}
 			} else {
-				plugin.console.notifError(prop);
+				plugin.console.noticeErrorUpload(prop);
 			}
 		}
 	} catch (error) {
-		plugin.console.logs({ e: true }, error);
+		plugin.console.trace(error);
 		const errorFrag = document.createDocumentFragment();
 		const errorSpan = errorFrag.createSpan({
 			cls: ["error", "enveloppe", "icons", "notification"],
