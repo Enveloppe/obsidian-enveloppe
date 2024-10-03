@@ -14,56 +14,69 @@ if you want to view the source, please visit the github repository of this plugi
 */
 `;
 
-function cleanOutdir(outdir) {
+function cleanOutDir(outdir) {
 	if (fs.existsSync(outdir)) {
 		fs.rm(outdir, { recursive: true });
 	}
 }
+
+
+/**
+ * @typedef Options
+ * @prop {boolean|undefined} production
+ * @prop {string|boolean|undefined} vault
+ * @prop {string|undefined} outputDir
+ * @prop {boolean|undefined} beta
+ */
 
 dotenv.config();
 
 const program = new Command();
 program
 	.option("-p, --production", "Production build")
-	.option("-v, --vault", "Use vault path")
+	.option("-v, --vault [vault]", "Use vault path").action((v) => {
+	if (!v) return false;
+	if (typeof v === "string") return path.resolve(v.replace(/\\/g, "/"));
+	return process.env.VAULT;
+})
 	.option("-o, --output-dir <path>", "Output path")
 	.option("-b, --beta", "Pre-release version")
 	.parse();
 program.parse();
 
 /** OPTIONS */
+/** @type {Options} */
 const opt = program.opts();
+/** @type {boolean} */
 const prod = opt.production ?? false;
-const exportToVault = opt.vault ?? false;
 
 /** VARIABLES **/
 const isStyled = fs.existsSync("src/styles.css");
 const pluginID = manifest.id;
 
 /** FOLDER PATHS **/
-const vaultPath = process.env.VAULT;
-const folderPlugin = vaultPath
-	? path.join(vaultPath, ".obsidian", "plugins", pluginID)
+const folderPlugin = opt.vault
+	? path.join(opt.vault, ".obsidian", "plugins", pluginID)
 	: undefined;
 
-if (vaultPath && exportToVault && !fs.existsSync(folderPlugin)) {
+if (folderPlugin && !fs.existsSync(folderPlugin)) {
 	fs.mkdirSync(folderPlugin, { recursive: true });
 }
 if (opt.beta && !fs.existsSync("manifest-beta.json")) {
 	fs.copyFileSync("manifest.json", "manifest-beta.json");
 }
 
-let outdir = "./";
+let outDir = "./";
 if (opt.outputDir) {
-	outdir = opt.outputDir;
-	cleanOutdir(outdir);
-} else if (exportToVault) {
-	outdir = folderPlugin;
+	outDir = opt.outputDir;
+	cleanOutDir(outDir);
+} else if (opt.vault) {
+	outDir = folderPlugin;
 	if (!prod) fs.writeFileSync(path.join(folderPlugin, ".hotreload"), "");
 } else if (prod) {
-	outdir = "./dist";
+	outDir = "./dist";
 	//clean dist if
-	cleanOutdir(outdir);
+	cleanOutDir(outDir);
 }
 
 /**
@@ -88,8 +101,8 @@ const exportToVaultFunc = {
 			if (!folderPlugin)
 				throw new Error("VAULT environment variable not set, skipping export to vault");
 
-			fs.copyFileSync(`${outdir}/main.js`, path.join(folderPlugin, "main.js"));
-			if (fs.existsSync(`${outdir}/styles.css`))
+			fs.copyFileSync(`${outDir}/main.js`, path.join(folderPlugin, "main.js"));
+			if (fs.existsSync(`${outDir}/styles.css`))
 				fs.copyFileSync("./styles.css", path.join(folderPlugin, "styles.css"));
 			if (opt.beta) fs.copyFileSync("manifest-beta.json", path.join(folderPlugin, "manifest.json"));
 			else fs.copyFileSync("./manifest.json", path.join(folderPlugin, "manifest.json"));
@@ -104,8 +117,8 @@ const exportToDist = {
 	name: "export-to-dist",
 	setup(build) {
 		build.onEnd(() => {
-			if (opt.beta) fs.copyFileSync("manifest-beta.json", path.join(outdir, "manifest.json"));
-			else fs.copyFileSync("manifest.json", path.join(outdir, "manifest.json"));
+			if (opt.beta) fs.copyFileSync("manifest-beta.json", path.join(outDir, "manifest.json"));
+			else fs.copyFileSync("manifest.json", path.join(outDir, "manifest.json"));
 		});
 	},
 };
@@ -120,7 +133,7 @@ if (isStyled) entryPoints.push("src/styles.css");
 const plugins = [];
 if (isStyled) plugins.push(moveStyles);
 if (prod) plugins.push(exportToDist);
-if (prod && exportToVault) plugins.push(exportToVaultFunc);
+if (prod && opt.vault) plugins.push(exportToVaultFunc);
 
 /**
  * BUILD
@@ -154,18 +167,18 @@ const context = await esbuild.context({
 	treeShaking: true,
 	minifySyntax: prod,
 	minifyWhitespace: prod,
-	outdir,
+	outdir: outDir,
 	plugins,
 });
 
 if (prod) {
 	console.log("🎉 Build for production");
-	console.log(`📤 Output directory: ${outdir}`);
+	console.log(`📤 Output directory: ${outDir}`);
 	await context.rebuild();
 	console.log("✅ Build successful");
 	process.exit(0);
 } else {
 	console.log("🚀 Start development build");
-	console.log(`📤 Output directory: ${outdir}`);
+	console.log(`📤 Output directory: ${outDir}`);
 	await context.watch();
 }
