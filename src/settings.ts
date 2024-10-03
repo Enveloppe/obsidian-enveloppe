@@ -1435,7 +1435,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 		try {
 			return klona(object);
 		} catch (_e) {
-			this.plugin.console.logs({ e: true }, "error with stringify for", object);
+			this.plugin.console.debug("error with stringify for", object);
 		}
 	}
 }

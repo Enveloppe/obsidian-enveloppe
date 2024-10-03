@@ -423,7 +423,7 @@ span.enveloppe.icons svg.lucide-mail-check {
 
 .notice:has(.enveloppe.error.notification) {
 	background-color: var(--text-error);
-	color: black;
+	color: white;
 }
 
 .notice:has(.enveloppe.load.notification),

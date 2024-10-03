@@ -196,7 +196,7 @@ export async function convertDataviewQueries(
 	const { dataviewJsMatches, inlineMatches, inlineJsMatches } = compiler.matches();
 
 	if (!matches && !inlineMatches && !dataviewJsMatches && !inlineJsMatches) {
-		plugin.console.logs({}, "No dataview queries found");
+		plugin.console.warn("No dataview queries found");
 		return replacedText;
 	}
 	const error = i18next.t("error.dataview");
@@ -210,8 +210,8 @@ export async function convertDataviewQueries(
 			const markdown = await compiler.dataviewDQL(queryBlock[1]);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
-			plugin.console.logs({ e: true }, e);
-			plugin.console.notif({}, error);
+			plugin.console.debug(e);
+			plugin.console.warn(error);
 			return queryBlock[0];
 		}
 	}
@@ -222,8 +222,8 @@ export async function convertDataviewQueries(
 			const markdown = await compiler.dataviewJS(queryBlock[1]);
 			replacedText = replacedText.replace(block, markdown);
 		} catch (e) {
-			plugin.console.logs({ e: true }, e);
-			plugin.console.notif({}, error);
+			plugin.console.debug(e);
+			plugin.console.warn(error);
 			return queryBlock[0];
 		}
 	}
@@ -236,8 +236,8 @@ export async function convertDataviewQueries(
 			const markdown = await compiler.inlineDQLDataview(query);
 			replacedText = replacedText.replace(code, markdown);
 		} catch (e) {
-			plugin.console.logs({ e: true }, e);
-			plugin.console.notif({}, error);
+			plugin.console.debug(e);
+			plugin.console.warn(error);
 			return inlineQuery[0];
 		}
 	}
@@ -248,8 +248,8 @@ export async function convertDataviewQueries(
 			const markdown = await compiler.inlineDataviewJS(inlineJsQuery[1].trim());
 			replacedText = replacedText.replace(code, markdown);
 		} catch (e) {
-			plugin.console.logs({ e: true }, e);
-			plugin.console.notif({}, error);
+			plugin.console.debug(e);
+			plugin.console.warn(error);
 			return inlineJsQuery[0];
 		}
 	}

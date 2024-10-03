@@ -278,7 +278,7 @@ export function checkIfRepoIsInAnother(
 	 * @param {Properties} target
 	 * @return {boolean}
 	 */
-	const isSame = (source: Properties, target: Properties) => {
+	const isSame = (source: Properties, target: Properties): boolean => {
 		return (
 			source.owner === target.owner &&
 			source.repo === target.repo &&
@@ -394,7 +394,7 @@ export async function checkRepositoryValidity(
 			return true;
 		}
 	} catch (e) {
-		PublisherManager.console.notif({}, e);
+		PublisherManager.console.error(e);
 		return false;
 	}
 	return false;
@@ -434,7 +434,7 @@ export async function checkRepositoryValidityWithProperties(
 			return true;
 		}
 	} catch (e) {
-		PublisherManager.console.notif({ e: true }, e);
+		PublisherManager.console.error(e);
 		return false;
 	}
 	return false;
@@ -519,7 +519,7 @@ export async function verifyRateLimitAPI(
 		if (commands) {
 			new Notice(message);
 		} else {
-			plugin.console.notif({}, message);
+			plugin.console.info(message);
 		}
 
 		return remaining;
@@ -532,7 +532,7 @@ export async function verifyRateLimitAPI(
 			(error as any).name === "HttpError"
 		)
 			return 5000;
-		plugin.console.notif({ e: true }, error);
+		plugin.console.error(error);
 		return 0;
 	}
 }

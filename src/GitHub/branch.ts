@@ -24,6 +24,16 @@ export class GithubBranch extends FilesManagement {
 			await this.newBranchOnRepo(repo);
 		}
 	}
+	
+	private async findMainBranch(prop: Properties) {
+		const allBranch = await this.octokit.request("GET /repos/{owner}/{repo}/branches", {
+			owner: prop.owner,
+			repo: prop.repo,
+		});
+		return allBranch.data.find(
+			(branch: { name: string }) => branch.name === prop.branch
+		);
+	}
 
 	/**
 	 * Create a new branch on the repo named "Vault-date"
@@ -54,26 +64,15 @@ export class GithubBranch extends FilesManagement {
 				ref: `refs/heads/${this.branchName}`,
 				sha: shaMainBranch,
 			});
-			this.console.notif(
-				{},
+			this.console.info(
 				i18next.t("publish.branch.success", { branchStatus: branch.status, repo: prop })
 			);
 			return branch.status === 201;
 		} catch (_e) {
 			// catch the old branch
 			try {
-				const allBranch = await this.octokit.request(
-					"GET /repos/{owner}/{repo}/branches",
-					{
-						owner: prop.owner,
-						repo: prop.repo,
-					}
-				);
-				const mainBranch = allBranch.data.find(
-					(branch: { name: string }) => branch.name === this.branchName
-				);
-				this.console.notif(
-					{},
+				const mainBranch = await this.findMainBranch(prop);
+				this.console.info(
 					i18next.t("publish.branch.alreadyExists", {
 						branchName: this.branchName,
 						repo: prop,
@@ -81,7 +80,7 @@ export class GithubBranch extends FilesManagement {
 				);
 				return !!mainBranch;
 			} catch (e) {
-				this.console.notif({ e: true }, e);
+				this.console.error(e);
 				return false;
 			}
 		}
@@ -106,7 +105,7 @@ export class GithubBranch extends FilesManagement {
 			});
 			return pr.data.number;
 		} catch (e) {
-			this.console.logs({ e: true }, e);
+			this.console.trace(e);
 			//trying to get the last open PR number
 			try {
 				const pr = await this.octokit.request("GET /repos/{owner}/{repo}/pulls", {
@@ -117,10 +116,7 @@ export class GithubBranch extends FilesManagement {
 				return pr.data[0]?.number || 0;
 			} catch (e) {
 				// there is no open PR and impossible to create a new one
-				this.console.notif(
-					{ e: true },
-					i18next.t("publish.branch.error", { error: e, repo: prop })
-				);
+				this.console.info(i18next.t("publish.branch.error", {error: e, repo: prop}));
 				return 0;
 			}
 		}
@@ -144,7 +140,7 @@ export class GithubBranch extends FilesManagement {
 			);
 			return branch.status === 200;
 		} catch (e) {
-			this.console.logs({ e: true }, e);
+			this.console.trace(e);
 			return false;
 		}
 	}
@@ -177,7 +173,7 @@ export class GithubBranch extends FilesManagement {
 			);
 			return branch.status === 200;
 		} catch (e) {
-			this.console.notif({ e: true }, e);
+			this.console.warn(e);
 			new Notice(i18next.t("error.mergeconflic"));
 			return false;
 		}
@@ -222,7 +218,7 @@ export class GithubBranch extends FilesManagement {
 			}
 			return true;
 		} catch (e) {
-			this.console.logs({ e: true }, e);
+			this.console.warn(e);
 			new Notice(i18next.t("error.errorConfig", { repo: prop }));
 			return false;
 		}
@@ -259,37 +255,25 @@ export class GithubBranch extends FilesManagement {
 					});
 				//@ts-ignore
 				if (repoExist.status === 200) {
-					this.console.notif(
-						{},
+					this.console.info(
 						i18next.t("commands.checkValidity.repoExistsTestBranch", { repo })
 					);
-
-					const branchExist = await this.octokit
-						.request("GET /repos/{owner}/{repo}/branches/{branch}", {
-							owner: repo.owner,
-							repo: repo.repo,
-							branch: repo.branch,
-						})
-						.catch((e) => {
-							//check the error code
-							if (e.status === 404) {
-								new Notice(
-									i18next.t("commands.checkValidity.inBranch.error404", { repo })
-								);
-							} else if (e.status === 403) {
-								new Notice(
-									i18next.t("commands.checkValidity.inBranch.error403", { repo })
-								);
-							}
-						});
-					//@ts-ignore
-					if (branchExist.status === 200 && !silent) {
-						new Notice(i18next.t("commands.checkValidity.success", { repo }));
+					
+					const branchExist = await this.findMainBranch(repo);
+					if (!branchExist) {
+						const errorMsg = i18next.t("commands.checkValidity.inBranch.error404", {repo});
+						this.console.fatal(errorMsg);
+						
+						break;
+					}
+					this.console.info(i18next.t("commands.checkValidity.success", {repo}));
+					if (!silent) {
+						this.console.noticeSuccess(i18next.t("commands.checkValidity.success", {repo}));
 					}
 				}
 			} catch (e) {
-				this.console.logs({ e: true }, e);
-				new Notice(i18next.t("commands.checkValidity.error", { repo }));
+				this.console.fatal(i18next.t("commands.checkValidity.error", {repo}));
+				this.console.info(e);
 				break;
 			}
 		}

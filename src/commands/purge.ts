@@ -75,7 +75,7 @@ async function purge(
 		if (PublisherManager.settings.plugin.displayModalRepoEditing)
 			new ListChangedFiles(PublisherManager.plugin.app, deleted).open();
 	} catch (e) {
-		PublisherManager.plugin.console.notif({ e: true }, e);
+		PublisherManager.plugin.console.fatal(e);
 	}
 }
 
