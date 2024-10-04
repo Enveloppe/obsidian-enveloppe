@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import esbuild from "esbuild";
 import * as fs from "fs";
 import * as path from "path";
-import process from "process";
 import packageJson from "./package.json" with { type: "json" };
 import manifest from "./manifest.json" with { type: "json" };
 
@@ -29,7 +28,7 @@ function cleanOutDir(outdir) {
  * @prop {boolean|undefined} beta
  */
 
-dotenv.config();
+dotenv.config({path: [".env"]});
 
 const program = new Command();
 program

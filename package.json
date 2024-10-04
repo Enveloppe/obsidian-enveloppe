@@ -4,9 +4,6 @@
   "description": "Github Publisher is a plugin that help you to send file in a configured Github Repository, based on a frontmatter entry state.",
   "main": "main.js",
   "private": true,
-  "config": {
-    "port": "1337"
-  },
   "scripts": {
     "lint": "biome format --write src/",
     "prebuild": "tsc --noEmit --skipLibCheck",
@@ -14,11 +11,11 @@
     "dev:prod": "node esbuild.config.mjs --vault",
     "dev": "node esbuild.config.mjs",
     "export": "node esbuild.config.mjs --production --vault",
-    "prerelease": "dotenv cross-var %ENGINE% run prebuild",
+    "prerelease": "bun run prebuild",
     "release": "node commit-and-tag-version.mjs",
     "postrelease": "git push --follow-tags origin master",
-    "predeploy": "dotenv cross-var %ENGINE% run bump",
-    "deploy": "dotenv cross-var %ENGINE% run export"
+    "predeploy": "bun run bump",
+    "deploy": "bun run export"
   },
   "commit-and-tag-version": {
     "t": ""
