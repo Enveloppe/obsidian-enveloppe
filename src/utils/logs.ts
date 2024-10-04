@@ -90,7 +90,7 @@ export class Logs {
 		}).innerHTML = message;
 		return new Notice(noticeFrag, 0);
 	}
-	
+
 	noticeErrorUpload(properties: Properties | Properties[]) {
 		const repo = Array.isArray(properties) ? properties : [properties];
 		for (const repository of repo) {
