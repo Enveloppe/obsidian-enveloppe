@@ -57,7 +57,7 @@ export class Logs {
 		this.logger.silly(...messages);
 		this.notif(messages);
 	}
-	
+
 	fatal(...messages: unknown[]) {
 		this.logger.fatal(...messages);
 		this.noticeError(messages.join(" "));

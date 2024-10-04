@@ -8,7 +8,7 @@
     "engine": "bun"
   },
   "scripts": {
-    "lint:fix": "biome --ext .ts,.js,.json src/ --fix",
+    "lint": "biome format --write src/",
     "prebuild": "tsc --noEmit --skipLibCheck",
     "build": "node esbuild.config.mjs --production",
     "dev:prod": "node esbuild.config.mjs --vault",
