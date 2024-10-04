@@ -1026,7 +1026,6 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				});
 			});
 		
-		
 		if (embedSettings.notes) {
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.embed.links.title"))

@@ -87,7 +87,6 @@ export const DEFAULT_SETTINGS: Partial<EnveloppeSettings> = {
 		unHandledObsidianExt: [],
 		sendSimpleLinks: true,
 		forcePush: true,
-
 	},
 	plugin: {
 		shareKey: "share",

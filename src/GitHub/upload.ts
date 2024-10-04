@@ -173,7 +173,23 @@ export default class Publisher {
 	) {
 		const shareFiles = new FilesManagement(this.octokit, this.plugin);
 		let frontmatter = frontmatterFromFile(file, this.plugin, null);
+		const filePath = getReceiptFolder(
+			file,
+			repo.repository,
+			this.plugin,
+			repo.frontmatter
+		);
 		if (!isShared(frontmatter, this.settings, file, repo.repository)) return false;
+		if (!(await shareFiles.wasEditedSinceLastSync(file, repo.repository, filePath))) {
+			const msg = i18next.t("publish.upToDate", {
+				file: file.name,
+				repo: `${repo.repository?.user ?? this.settings.github.user}/${
+					repo.repository?.repo ?? this.settings.github.repo
+				}:${repo.repository?.branch ?? this.branchName}`,
+			});
+			new Notice(msg);
+			return false;
+		}
 		frontmatter = mergeFrontmatter(
 			frontmatter,
 			sourceFrontmatter,
@@ -182,6 +198,7 @@ export default class Publisher {
 		const prop = getProperties(this.plugin, repo.repository, frontmatter);
 		const isNotEmpty = await checkEmptyConfiguration(prop, this.plugin);
 		repo.frontmatter = prop;
+
 		if (
 			fileHistory.includes(file) ||
 			!checkIfRepoIsInAnother(prop, repo.frontmatter) ||
@@ -207,15 +224,6 @@ export default class Publisher {
 				frontmatterRepository,
 				frontmatterSettingsFromFile
 			);
-			let embedFiles = shareFiles.getSharedEmbed(file, frontmatterSettings);
-			embedFiles = await shareFiles.getMetadataLinks(
-				file,
-				embedFiles,
-				frontmatterSettings
-			);
-			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
-
-			let text = await this.vault.cachedRead(file);
 			const multiProperties: MultiProperties = {
 				plugin: this.plugin,
 				frontmatter: {
@@ -223,8 +231,17 @@ export default class Publisher {
 					prop: repo.frontmatter,
 				},
 				repository: repo.repository,
-				filepath: getReceiptFolder(file, repo.repository, this.plugin, repo.frontmatter),
+				filepath: filePath,
 			};
+
+			let embedFiles = shareFiles.getSharedEmbed(file, frontmatterSettings);
+			embedFiles = await shareFiles.getMetadataLinks(
+				file,
+				embedFiles,
+				frontmatterSettings
+			);
+			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
+			let text = await this.vault.cachedRead(file);
 			text = await mainConverting(text, file, frontmatter, linkedFiles, multiProperties);
 			const path = multiProperties.filepath;
 			const prop = Array.isArray(repo.frontmatter)

@@ -24,15 +24,13 @@ export class GithubBranch extends FilesManagement {
 			await this.newBranchOnRepo(repo);
 		}
 	}
-	
+
 	private async findMainBranch(prop: Properties) {
 		const allBranch = await this.octokit.request("GET /repos/{owner}/{repo}/branches", {
 			owner: prop.owner,
 			repo: prop.repo,
 		});
-		return allBranch.data.find(
-			(branch: { name: string }) => branch.name === prop.branch
-		);
+		return allBranch.data.find((branch: { name: string }) => branch.name === prop.branch);
 	}
 
 	/**
@@ -258,17 +256,21 @@ export class GithubBranch extends FilesManagement {
 					this.console.info(
 						i18next.t("commands.checkValidity.repoExistsTestBranch", { repo })
 					);
-					
+
 					const branchExist = await this.findMainBranch(repo);
 					if (!branchExist) {
-						const errorMsg = i18next.t("commands.checkValidity.inBranch.error404", {repo});
+						const errorMsg = i18next.t("commands.checkValidity.inBranch.error404", {
+							repo,
+						});
 						this.console.fatal(errorMsg);
-						
+
 						break;
 					}
 					this.console.info(i18next.t("commands.checkValidity.success", {repo}));
 					if (!silent) {
-						this.console.noticeSuccess(i18next.t("commands.checkValidity.success", {repo}));
+						this.console.noticeSuccess(
+							i18next.t("commands.checkValidity.success", {repo})
+						);
 					}
 				}
 			} catch (e) {

@@ -606,4 +606,32 @@ export class FilesManagement extends Publisher {
 		}
 		return newFiles;
 	}
+	
+	async wasEditedSinceLastSync(
+		file: TFile,
+		repo: Repository | null,
+		repoPath: string
+	): Promise<boolean> {
+		//first check if the file exist in github
+		if (this.settings.embed.forcePush || this.settings.embed.forcePush == null)
+			return true;
+		const githubFile = await this.octokit.request("GET /repos/{owner}/{repo}/commits", {
+			owner: repo?.user ?? this.settings.github.user,
+			repo: repo?.repo ?? this.settings.github.repo,
+			path: repoPath,
+		});
+		if (githubFile.status !== 200) return true; //doesn't exists
+		const vaultEditedTime = new Date(file.stat.mtime);
+		const lastCommittedFile = githubFile.data[0];
+		if (
+			!lastCommittedFile ||
+			!lastCommittedFile.commit ||
+			!lastCommittedFile.commit.committer ||
+			!lastCommittedFile.commit.committer.date
+		) {
+			return true;
+		}
+		const githubDate = new Date(lastCommittedFile.commit.committer.date);
+		return vaultEditedTime > githubDate;
+	}
 }

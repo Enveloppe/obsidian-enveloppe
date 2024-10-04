@@ -47,12 +47,12 @@ export class Logs {
 		this.logger.debug(...messages);
 		this.notif(messages);
 	}
-	
+
 	trace(...messages: unknown[]) {
 		this.logger.trace(...messages);
 		this.notif(messages);
 	}
-	
+
 	silly(...messages: unknown[]) {
 		this.logger.silly(...messages);
 		this.notif(messages);
@@ -132,7 +132,7 @@ export class Logs {
 			cls: ["error", "enveloppe", "icons", "notification"],
 		});
 		const html = sanitizeHTMLToDom(message);
-		setIcon(notifSpan, "mail-question");
+		setIcon(notifSpan, "alert-triangle");
 		notif
 			.createSpan({
 				cls: ["error", "enveloppe", "notification"],
