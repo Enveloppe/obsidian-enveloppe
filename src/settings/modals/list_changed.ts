@@ -11,7 +11,7 @@ export class ListChangedFiles extends Modal {
 
 	displayListOfFile(toDisplay: string[], contentEl: HTMLElement) {
 		if (!toDisplay.length) return;
-		const ul = contentEl.createEl("ul");
+		const ul = contentEl.createEl("ul", {cls: "list"});
 		toDisplay.forEach((file) => {
 			let emoji = "❓";
 			const ext = file.split(".").pop() ?? "";
@@ -61,33 +61,33 @@ export class ListChangedFiles extends Modal {
 				text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`,
 			});
 			this.displayListOfFile(this.listChanged.deleted, contentEl);
-
-			contentEl.createEl("h2", {
+			
+			const span = contentEl.createDiv({cls: "error"});
+			span.createEl("h2", {
 				text: `❌ ${i18next.t("modals.listChangedFiles.error")}`,
-				cls: "error",
 			});
-			contentEl.createEl("h3", {
+			span.createEl("h3", {
 				text: `📤 ${i18next.t("modals.listChangedFiles.unpublished")}`,
 			});
-			this.displayListOfFile(this.listChanged.unpublished, contentEl);
-			contentEl.createEl("h3", {
+			this.displayListOfFile(this.listChanged.unpublished, span);
+			span.createEl("h3", {
 				text: `♻️ ${i18next.t("modals.listChangedFiles.notDeleted")}`,
 			});
-			this.displayListOfFile(this.listChanged.notDeleted, contentEl);
+			this.displayListOfFile(this.listChanged.notDeleted, span);
 		} else {
 			this.listChanged = this.listChanged as Deleted;
 			contentEl.createEl("h3", {
 				text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`,
 			});
 			this.displayListOfFile(this.listChanged.deleted, contentEl);
-			contentEl.createEl("h3", {
+			const span = contentEl.createSpan({cls: "error"});
+			span.createEl("h3", {
 				text: `❌ ${i18next.t("modals.listChangedFiles.error")}`,
-				cls: "error",
 			});
-			contentEl.createEl("h3", {
+			span.createEl("h3", {
 				text: `♻️ ${i18next.t("modals.listChangedFiles.notDeleted")}`,
 			});
-			this.displayListOfFile(this.listChanged.undeleted, contentEl);
+			this.displayListOfFile(this.listChanged.undeleted, span);
 		}
 	}
 

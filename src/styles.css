@@ -331,9 +331,26 @@ span.enveloppe.icons {
 	color: var(--color-green);
 }
 
-.enveloppe.list-changed h2.error {
+.enveloppe.list-changed .error {
 	color: var(--text-error);
-	padding: 10px 10px;
+	border-radius: 5px;
+	background-color: rgba(var(--color-red-rgb), 0.1);
+	box-shadow: none;
+	margin-top: 3px;
+	padding-bottom: 10px;
+}
+
+.enveloppe.list-changed .error h3 {
+	margin-left: 1em;
+}
+
+.enveloppe.list-changed .error .list {
+	margin-left: 1em;
+}
+
+.enveloppe.list-changed .error h2 {
+	padding-top: 10px;
+	margin-left: 3px;
 }
 
 .enveloppe.list-changed .emoji {
