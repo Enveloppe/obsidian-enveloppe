@@ -1,11 +1,11 @@
 {
-  "name": "obsidian-github-publisher",
-  "version": "7.3.2",
+  "name": "obsidian-enveloppe",
+  "version": "7.4.0",
   "description": "Github Publisher is a plugin that help you to send file in a configured Github Repository, based on a frontmatter entry state.",
   "main": "main.js",
   "private": true,
   "config": {
-    "engine": "bun"
+    "port": "1337"
   },
   "scripts": {
     "lint": "biome format --write src/",
@@ -14,11 +14,11 @@
     "dev:prod": "node esbuild.config.mjs --vault",
     "dev": "node esbuild.config.mjs",
     "export": "node esbuild.config.mjs --production --vault",
-    "prebump": "%npm_package_config_engine% run prebuild",
-    "bump": "node commit-and-tag-version.mjs",
-    "postbump": "git push --follow-tags origin master",
-    "predeploy": "%npm_package_config_engine% run bump",
-    "deploy": "%npm_package_config_engine% run export"
+    "prerelease": "dotenv cross-var %ENGINE% run prebuild",
+    "release": "node commit-and-tag-version.mjs",
+    "postrelease": "git push --follow-tags origin master",
+    "predeploy": "dotenv cross-var %ENGINE% run bump",
+    "deploy": "dotenv cross-var %ENGINE% run export"
   },
   "commit-and-tag-version": {
     "t": ""
@@ -55,7 +55,10 @@
     "typescript": "^5.6.2"
   },
   "dependencies": {
+    "cross-var": "^1.1.0",
     "dedent": "^1.5.3",
+    "dotenv-cli": "^7.4.2",
+    "env-cmd": "^10.1.0",
     "ts-deepmerge": "^6.2.1",
     "tslog": "^4.9.3"
   },

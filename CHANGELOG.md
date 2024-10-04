@@ -1,3 +1,13 @@
+## [7.4.0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.3.2...7.4.0) (2024-10-04)
+### Features
+
+* **upload:** prevent forced update (default: false) ([7f92528](https://github.com/Enveloppe/obsidian-enveloppe/commit/7f9252847eeeb6146ee2c2798e402ff799d3bce3))
+* **upload:** prevent forced update (default: false) ([b7053a2](https://github.com/Enveloppe/obsidian-enveloppe/commit/b7053a24583f890f32c4c7ee701475b2b3f63998))
+
+### Bug Fixes
+
+* allow force push "first" file ([90a6186](https://github.com/Enveloppe/obsidian-enveloppe/commit/90a618650c0e59ad53f09c73a9fec91d7b137881))
+
 ## [7.3.2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.3.1...7.3.2) (2024-09-22)
 ### Bug Fixes
 
