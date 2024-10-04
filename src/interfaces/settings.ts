@@ -259,6 +259,11 @@ export interface Embed {
 	 * Will apply all previous settings
 	 */
 	sendSimpleLinks: boolean;
+	/**
+	 * Force the note to be uploaded even if they are not edited (and exists on repo)
+	 * @default true
+	 */
+	forcePush?: boolean;
 }
 
 /**

@@ -21,7 +21,6 @@
     "noImplicitAny": true,
     "skipLibCheck": true,
     "removeComments": true,
-    "sourceMap": true,
     "moduleResolution": "node",
     "importHelpers": true,
     "isolatedModules": true,
