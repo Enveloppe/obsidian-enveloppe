@@ -180,7 +180,10 @@ export default class Publisher {
 			repo.frontmatter
 		);
 		if (!isShared(frontmatter, this.settings, file, repo.repository)) return false;
-		if (!(await shareFiles.wasEditedSinceLastSync(file, repo.repository, filePath))) {
+		console.debug(file.name, fileHistory.length);
+		if (
+			!(await shareFiles.wasEditedSinceLastSync(file, repo.repository, filePath)) && fileHistory.length > 0
+		) {
 			const msg = i18next.t("publish.upToDate", {
 				file: file.name,
 				repo: `${repo.repository?.user ?? this.settings.github.user}/${
