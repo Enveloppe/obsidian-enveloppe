@@ -3,7 +3,7 @@ description: Fill a bug report for the plugin
 title: "[Bug]: "
 labels: ["🐛 Bug"]
 assignees:
-  - lisandra-dev
+  - mara-li
 body:
   - type: markdown
     attributes:
@@ -52,6 +52,9 @@ body:
         - [Discord](https://discord.gg/6DyY779Nbn): Have some ressource for user, bug resolve and quick communication about update and bug.
         - Mail: lisandra-dev@yahoo.com
 
+        > [!Warning]
+        > All non-English issue are automatically closed.
+        
   - type: checkboxes
     attributes:
       label: Issue validation
