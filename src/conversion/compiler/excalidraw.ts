@@ -11,7 +11,7 @@ export async function convertToHTMLSVG(file: TFile, app: App) {
 		if (!excalidraw) return null;
 		// @ts-ignore
 		const ea = excalidraw.ea as ExcalidrawAutomate;
-		const settings = ea.getExportSettings(true, true);
+		const settings = ea.getExportSettings(false, true);
 		const embeddedFilesLoader = ea.getEmbeddedFilesLoader(true);
 		const svg = await ea.createSVG(file.path, true, settings, embeddedFilesLoader);
 		return svg.outerHTML as string;
