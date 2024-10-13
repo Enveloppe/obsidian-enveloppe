@@ -34,7 +34,7 @@ jobs:
         with:
             PLUGIN_NAME: "obsidian-mkdocs-publisher"
             SUBMODULE: true
-            CACHE: "bun"
+            CACHE: "pnpm"
             discord_webhook_avatar: "https://avatars.githubusercontent.com/u/107352364?s=400&u=f2eb1406068b95a58baecdf987ccccde7fcbdd55&v=4"
             discord_webhook_name: "Enveloppe"
         secrets:
@@ -49,7 +49,7 @@ jobs:
             PLUGIN_NAME: "obsidian-mkdocs-publisher"
             BETA: ${{ inputs.beta }}
             SUBMODULE: true
-            CACHE: "bun"
+            CACHE: "pnpm"
             discord_webhook_avatar: "https://avatars.githubusercontent.com/u/107352364?s=400&u=f2eb1406068b95a58baecdf987ccccde7fcbdd55&v=4"
             discord_webhook_name: "Enveloppe"
         secrets:
