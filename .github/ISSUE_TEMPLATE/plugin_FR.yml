@@ -3,16 +3,19 @@ description: Suggest an idea for the obsidian GitHub Publisher plugin.
 title: "[FR]: "
 labels: ["✨ Enhancement"]
 assignees:
-  - lisandra-dev
+  - mara-li
 body:
   - type: markdown
     attributes:
       value: |
         Thanks for this report!
         
+        > [!Warning]
+        > All non-English issue are automatically closed.
+        
         ## Contacts
         - [Discord](https://discord.gg/6DyY779Nbn): Have some ressource for user, bug resolve and quick communication about update and bug.
-        - Mail: lisandra-dev@yahoo.com
+        - Mail: lisandra-dev@yahoo.com        
         
   - type: checkboxes
     attributes:
