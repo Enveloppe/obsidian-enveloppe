@@ -77,6 +77,8 @@ body:
         - Refresh published and upload new notes
         - Refresh all published notes
         - Test the connection to the configured repository
+    validations:
+      required: true
   - type: input
     id: plugin-version
     attributes:
