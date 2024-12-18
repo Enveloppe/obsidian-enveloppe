@@ -274,7 +274,7 @@ export class GithubBranch extends FilesManagement {
 					}
 				}
 			} catch (e) {
-				this.console.fatal(i18next.t("commands.checkValidity.error", {repo}));
+				this.console.fatal(i18next.t("commands.checkValidity.error"), repo);
 				this.console.info(e);
 				break;
 			}
