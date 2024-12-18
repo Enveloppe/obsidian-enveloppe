@@ -41,7 +41,7 @@ import {
 	checkRepositoryValidity,
 	verifyRateLimitAPI,
 } from "src/utils/data_validation_test";
-import merge from "ts-deepmerge";
+import {merge} from "ts-deepmerge";
 import { Logs } from "./utils/logs";
 
 /**
