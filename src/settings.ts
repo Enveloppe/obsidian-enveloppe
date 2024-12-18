@@ -49,6 +49,7 @@ import {
 	checkRepositoryValidity,
 	verifyRateLimitAPI,
 } from "src/utils/data_validation_test";
+import dedent from "dedent";
 
 export class EnveloppeSettingsTab extends PluginSettingTab {
 	plugin: EnveloppePlugin;
@@ -983,7 +984,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				.addTextArea((text) => {
 					text
 						.setPlaceholder("py, mdx")
-						.setValue(embedSettings.unHandledObsidianExt.join(", "))
+						.setValue((embedSettings.unHandledObsidianExt||[]).join(", "))
 						.onChange(async (value) => {
 							embedSettings.unHandledObsidianExt = value
 								.split(/[,\n]\W*/)
@@ -1000,7 +1001,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 			.addTextArea((text) => {
 				text
 					.setPlaceholder("banner")
-					.setValue(embedSettings.keySendFile.join(", "))
+					.setValue((embedSettings.keySendFile||[]).join(", "))
 					.onChange(async (value) => {
 						embedSettings.keySendFile = value
 							.split(/[,\n]\W*/)
@@ -1070,35 +1071,18 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				}
 				await this.plugin.saveSettings();
-				this.settingsPage.createEl("h5", {
-					text: i18next.t("settings.embed.bake.title"),
-					cls: "border-bottom",
-				});
-				this.settingsPage.createEl("p", { text: i18next.t("settings.embed.bake.text") });
-				this.settingsPage.createEl("p", undefined, (el) => {
-					el.createEl("span", {
-						text: i18next.t("settings.embed.bake.variable.desc"),
-						cls: ["bake"],
-					}).createEl("ul", undefined, (ul) => {
-						ul.createEl("li", undefined, (li) => {
-							li.createEl("code", { text: "{{title}}" });
-							li.createEl("span", {
-								text: i18next.t("settings.embed.bake.variable.title"),
-							});
-						});
-						ul.createEl("li", undefined, (li) => {
-							li.createEl("code", { text: "{{url}}" });
-							li.createEl("span", {
-								text: i18next.t("settings.embed.bake.variable.url"),
-							});
-						});
-					});
-				});
-
-				this.settingsPage.createEl("p", {
-					text: `⚠️ ${i18next.t("settings.embed.bake.warning")}`,
-					cls: ["warning", "embed"],
-				});
+				
+				const bakeEmbedDesc = dedent(`
+				<h5>${i18next.t("settings.embed.bake.title")}</h5>
+				<p>${i18next.t("settings.embed.bake.text")}. <span class="bake">${i18next.t("settings.embed.bake.variable.desc")}</span>
+				<ul>
+					<li><code>{{title}}</code>${i18next.t("settings.embed.bake.variable.title")}</li>
+					<li><code>{{url}}</code>${i18next.t("settings.embed.bake.variable.url")}</li>
+				</ul></p>
+				<p class="warning embed">⚠️ ${i18next.t("settings.embed.bake.warning")}</p>
+				`)
+				
+				this.settingsPage.appendChild(sanitizeHTMLToDom(bakeEmbedDesc));
 
 				new Setting(this.settingsPage)
 					.setName(i18next.t("settings.embed.bake.textBefore.title"))
