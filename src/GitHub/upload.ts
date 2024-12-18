@@ -44,7 +44,7 @@ import {
 	mergeFrontmatter,
 } from "src/utils/parse_frontmatter";
 import { ShareStatusBar } from "src/utils/status_bar";
-import merge from "ts-deepmerge";
+import {merge} from "ts-deepmerge";
 import type { Logs } from "../utils/logs";
 
 /** Class to manage the branch

@@ -14,7 +14,7 @@ import {
 import {klona} from "klona";
 import {type FrontMatterCache, normalizePath, TFile} from "obsidian";
 import type Enveloppe from "src/main";
-import merge from "ts-deepmerge";
+import {merge} from "ts-deepmerge";
 
 export function frontmatterSettingsRepository(
 	plugin: Enveloppe,
