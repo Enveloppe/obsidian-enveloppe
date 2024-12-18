@@ -101,8 +101,8 @@ export function help(settings: EnveloppeSettings) {
 			<li><code class="code-title">path</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.path")}</li>
 			<li><code class="code-title">links</code>${i18next.t("common.points")}
 				<ul>
-					<li><code>mdlinks</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.mdlinks")} <code>[[markdown|alias]]</code>${i18next.t("common.in")} <code>[alias](markdown)</code></li>
-					<li><code>convert</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.convert.enableOrDisable")} <code>[[link]]</code>${i18next.t("common.or")} <code>[](link)</code>${i18next.t("settings.help.frontmatter.convert.syntax")}</li>
+					<li><code>mdlinks</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.mdlinks")} <code>[[markdown|alias]]</code> ${i18next.t("common.in")} <code>[alias](markdown)</code></li>
+					<li><code>convert</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.convert.enableOrDisable")} <code>[[link]]</code> ${i18next.t("common.or")} <code>[](link)</code> ${i18next.t("settings.help.frontmatter.convert.syntax")}</li>
 					<li><code>internals</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.internals")}</li>
 					<li><code>nonShared</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.nonShared")}</li>
 					<li><code>unlink</code>${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.unlink")}</li>
