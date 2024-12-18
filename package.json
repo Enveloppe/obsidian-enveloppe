@@ -25,6 +25,8 @@
   "license": "AGPL-3.0",
   "devDependencies": {
     "@biomejs/biome": "1.9.3",
+    "@codemirror/buildhelper": "^1.0.2",
+    "@codemirror/language": "github:lishid/cm-language",
     "@codemirror/state": "^6.4.1",
     "@codemirror/view": "^6.34.1",
     "@enveloppe/obsidian-dataview": "^0.5.67",
@@ -49,8 +51,7 @@
     "slugify": "^1.6.6",
     "ts-dedent": "^2.2.0",
     "tslib": "^2.7.0",
-    "typescript": "^5.6.3",
-    "@codemirror/language" : "https://github.com/lishid/cm-language/"
+    "typescript": "^5.6.3"
   },
   "dependencies": {
     "cross-var": "^1.1.0",
@@ -70,6 +71,10 @@
     }
   },
   "trustedDependencies": [
-    "@biomejs/biome"
+    "@biomejs/biome",
+    "@codemirror/language",
+    "core-js",
+    "electron",
+    "esbuild"
   ]
 }
