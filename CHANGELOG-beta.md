@@ -1,3 +1,13 @@
+## [7.5.0-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.4.0...7.5.0-0) (2024-12-24)
+### Features
+
+* **excalidraw:** force excalidraw to export transparent background ([5bb19ab](https://github.com/Enveloppe/obsidian-enveloppe/commit/5bb19ab7aa49c24b9141ac157279136d9953816c))
+
+### Bug Fixes
+
+* adjust merge import ([05cc8f8](https://github.com/Enveloppe/obsidian-enveloppe/commit/05cc8f8d89bc463b72f6c110ef74760b4d512c67))
+* **merge:** fix merge import ([10f44b0](https://github.com/Enveloppe/obsidian-enveloppe/commit/10f44b048f65d0bf22ad3494f21496950ba6ddbc))
+
 ## [7.2.9-6](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.2.9-5...7.2.9-6) (2024-06-06)
 ### Bug Fixes
 

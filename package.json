@@ -1,6 +1,6 @@
 {
   "name": "obsidian-enveloppe",
-  "version": "7.4.0",
+  "version": "7.5.0-0",
   "description": "Github Publisher is a plugin that help you to send file in a configured Github Repository, based on a frontmatter entry state.",
   "main": "main.js",
   "private": true,
