@@ -79,7 +79,7 @@ Each of the commands are explained [here](https://enveloppe.github.io/Commands).
 You can :
 
 - [Maintaining the project and adding new function](https://enveloppe.github.io//Developing#general)
-- [Help with the translation](https://enveloppe.github.io//Developing#translation)
+- [Translate to your language or improve current wording](https://enveloppe.github.io//Developing#translation)
 
 ## 🪧 Looking for something?
 
