@@ -78,7 +78,7 @@ export class GithubBranch extends FilesManagement {
 				);
 				return !!mainBranch;
 			} catch (e) {
-				this.console.error(e);
+				this.console.error(e as Error);
 				return false;
 			}
 		}
@@ -114,7 +114,7 @@ export class GithubBranch extends FilesManagement {
 				return pr.data[0]?.number || 0;
 			} catch (e) {
 				// there is no open PR and impossible to create a new one
-				this.console.info(i18next.t("publish.branch.error", {error: e, repo: prop}));
+				this.console.info(i18next.t("publish.branch.error", { error: e, repo: prop }));
 				return 0;
 			}
 		}
@@ -259,22 +259,26 @@ export class GithubBranch extends FilesManagement {
 
 					const branchExist = await this.findMainBranch(repo);
 					if (!branchExist) {
-						const errorMsg = i18next.t("commands.checkValidity.inBranch.error404", {
-							repo,
-						});
+						const errorMsg = new Error(
+							i18next.t("commands.checkValidity.inBranch.error404", {
+								repo,
+							})
+						);
 						this.console.fatal(errorMsg);
 
 						break;
 					}
-					this.console.info(i18next.t("commands.checkValidity.success", {repo}));
+					this.console.info(i18next.t("commands.checkValidity.success", { repo }));
 					if (!silent) {
 						this.console.noticeSuccess(
-							i18next.t("commands.checkValidity.success", {repo})
+							i18next.t("commands.checkValidity.success", { repo })
 						);
 					}
 				}
 			} catch (e) {
-				this.console.fatal(i18next.t("commands.checkValidity.error"), repo);
+				const err = new Error(i18next.t("commands.checkValidity.error"));
+				err.stack = (e as Error).stack;
+				this.console.fatal(err);
 				this.console.info(e);
 				break;
 			}

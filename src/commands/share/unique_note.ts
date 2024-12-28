@@ -139,7 +139,7 @@ export async function shareOneNote(
 		}
 	} catch (error) {
 		if (!(error instanceof DOMException)) {
-			plugin.console.fatal(error);
+			plugin.console.fatal(error as Error);
 			plugin.console.noticeErrorUpload(
 				getProperties(plugin, repository, frontmatter, true)
 			);

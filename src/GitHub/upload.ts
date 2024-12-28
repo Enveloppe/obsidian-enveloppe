@@ -13,21 +13,21 @@ import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
 import {
-	arrayBufferToBase64,
 	type FrontMatterCache,
 	type MetadataCache,
-	normalizePath,
 	Notice,
-	setIcon,
 	TFile,
 	TFolder,
 	type Vault,
+	arrayBufferToBase64,
+	normalizePath,
+	setIcon,
 } from "obsidian";
+import { deleteFromGithub } from "src/GitHub/delete";
+import { FilesManagement } from "src/GitHub/files";
 import { mainConverting } from "src/conversion";
 import { convertToHTMLSVG } from "src/conversion/compiler/excalidraw";
 import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
-import { deleteFromGithub } from "src/GitHub/delete";
-import { FilesManagement } from "src/GitHub/files";
 import type Enveloppe from "src/main";
 import {
 	checkEmptyConfiguration,
@@ -44,7 +44,7 @@ import {
 	mergeFrontmatter,
 } from "src/utils/parse_frontmatter";
 import { ShareStatusBar } from "src/utils/status_bar";
-import {merge} from "ts-deepmerge";
+import { merge } from "ts-deepmerge";
 import type { Logs } from "../utils/logs";
 
 /** Class to manage the branch
@@ -137,12 +137,12 @@ export default class Publisher {
 					} catch (e) {
 						new Notice(i18next.t("error.unablePublishNote", { file: file.name }));
 						fileError.push(file.name);
-						this.console.fatal(e);
+						this.console.fatal(e as Error);
 					}
 				}
 				statusBar.finish(8000);
 			} catch (e) {
-				this.console.fatal(e);
+				this.console.fatal(e as Error);
 				this.console.noticeErrorUpload(prop);
 				statusBar.error(prop);
 			}
@@ -182,7 +182,8 @@ export default class Publisher {
 		if (!isShared(frontmatter, this.settings, file, repo.repository)) return false;
 		console.debug(file.name, fileHistory.length);
 		if (
-			!(await shareFiles.wasEditedSinceLastSync(file, repo.repository, filePath)) && fileHistory.length > 0
+			!(await shareFiles.wasEditedSinceLastSync(file, repo.repository, filePath)) &&
+			fileHistory.length > 0
 		) {
 			const msg = i18next.t("publish.upToDate", {
 				file: file.name,
@@ -288,7 +289,7 @@ export default class Publisher {
 			}
 			return { deleted: fileDeleted[0], uploaded: updated[0], error: fileError };
 		} catch (e) {
-			this.console.fatal(e);
+			this.console.fatal(e as Error);
 			return false;
 		}
 	}
@@ -543,7 +544,7 @@ export default class Publisher {
 			const contentBase64 = Base64.encode(text).toString();
 			return await this.upload(contentBase64, path, title, prop);
 		} catch (e) {
-			this.console.fatal(e);
+			console.error(e as Error);
 			return undefined;
 		}
 	}
@@ -686,7 +687,7 @@ export default class Publisher {
 							) {
 								newLinkedFiles.push(file);
 							} else
-								this.console.trace(i18next.t("error.alreadyExists", {file: file.name}));
+								this.console.trace(i18next.t("error.alreadyExists", { file: file.name }));
 						}
 					}
 				} catch (_e) {

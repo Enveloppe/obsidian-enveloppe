@@ -7,13 +7,13 @@ import type {
 import i18next from "i18next";
 import {
 	type FrontMatterCache,
-	getFrontMatterInfo,
 	type MetadataCache,
 	Notice,
+	type TFile,
+	getFrontMatterInfo,
 	parseFrontMatterTags,
 	parseYaml,
 	stringifyYaml,
-	type TFile,
 } from "obsidian";
 import { convertDataviewQueries } from "src/conversion/compiler/dataview";
 import { bakeEmbeds, convertInlineDataview } from "src/conversion/compiler/embeds";
@@ -56,7 +56,7 @@ export function addHardLineBreak(
 		}
 		return text.replace(/^\s*\\\s*$/gim, "<br/>");
 	} catch (e) {
-		plugin.console.error(e);
+		plugin.console.error(e as Error);
 		return text;
 	}
 }
@@ -72,7 +72,7 @@ function tagsToYaml(toAdd: string[], plugin: Enveloppe, yaml: any) {
 			];
 			delete yaml.tag;
 		} catch (e) {
-			plugin.console.error(e);
+			plugin.console.error(e as Error);
 		}
 	}
 	if (yaml.tags) {
@@ -84,7 +84,7 @@ function tagsToYaml(toAdd: string[], plugin: Enveloppe, yaml: any) {
 				]),
 			];
 		} catch (e) {
-			plugin.console.error(e);
+			plugin.console.error(e as Error);
 		}
 	} else {
 		yaml.tags = toAdd;

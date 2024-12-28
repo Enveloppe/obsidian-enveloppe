@@ -1,6 +1,7 @@
-import type {EnveloppeSettings, Preset, RegexReplace} from "@interfaces/main";
+import type { EnveloppeSettings, Preset, RegexReplace } from "@interfaces/main";
 import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
+import { klona } from "klona";
 import {
 	type App,
 	ButtonComponent,
@@ -13,9 +14,8 @@ import {
 } from "obsidian";
 import type Enveloppe from "src/main";
 import type { EnveloppeSettingsTab } from "src/settings";
-import { migrateSettings, type OldSettings } from "src/settings/migrate";
+import { type OldSettings, migrateSettings } from "src/settings/migrate";
 import type { Logs } from "../../utils/logs";
-import { klona } from "klona";
 
 function clone(obj: EnveloppeSettings): EnveloppeSettings {
 	return klona(obj);
@@ -380,7 +380,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 			this.page.renderSettingsPage("github-configuration");
 		} catch (e) {
 			new Notice(i18next.t("modals.import.error.span") + e);
-			this.console.error(e);
+			this.console.error(e as Error);
 		}
 	}
 }
@@ -417,7 +417,10 @@ export async function loadAllPresets(
 		}
 		return presetList;
 	} catch (e) {
-		plugin.console.error("Couldn't load preset. Error:", e);
+		const err = new Error("Error while loading presets:\n");
+		err.stack = (e as Error).stack;
+		err.message = err.message + (e as Error).message;
+		plugin.console.error(err);
 		return [];
 	}
 }

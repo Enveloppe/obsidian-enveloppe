@@ -1,6 +1,6 @@
 import {
-	FIND_REGEX,
 	type EnveloppeSettings,
+	FIND_REGEX,
 	GithubTiersVersion,
 	type MultiProperties,
 	type Properties,
@@ -11,10 +11,10 @@ import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import {
 	type FrontMatterCache,
-	normalizePath,
 	Notice,
 	type TFile,
 	type TFolder,
+	normalizePath,
 } from "obsidian";
 import type { GithubBranch } from "src/GitHub/branch";
 import type Enveloppe from "src/main";
@@ -394,7 +394,7 @@ export async function checkRepositoryValidity(
 			return true;
 		}
 	} catch (e) {
-		PublisherManager.console.error(e);
+		PublisherManager.console.error(e as Error);
 		return false;
 	}
 	return false;
@@ -434,7 +434,7 @@ export async function checkRepositoryValidityWithProperties(
 			return true;
 		}
 	} catch (e) {
-		PublisherManager.console.error(e);
+		PublisherManager.console.error(e as Error);
 		return false;
 	}
 	return false;
@@ -532,7 +532,7 @@ export async function verifyRateLimitAPI(
 			(error as any).name === "HttpError"
 		)
 			return 5000;
-		plugin.console.error(error);
+		plugin.console.error(error as Error);
 		return 0;
 	}
 }

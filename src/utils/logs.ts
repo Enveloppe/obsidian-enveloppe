@@ -1,9 +1,9 @@
-import {Notice, Platform, sanitizeHTMLToDom, setIcon, TFile} from "obsidian";
-import type Enveloppe from "../main";
-import type {EnveloppeSettings, Properties} from "@interfaces";
+import type { EnveloppeSettings, Properties } from "@interfaces";
 import i18next from "i18next";
+import { Notice, Platform, TFile, sanitizeHTMLToDom, setIcon } from "obsidian";
+import { type ILogObj, Logger } from "tslog";
 import type Publisher from "../GitHub/upload";
-import {Logger, type ILogObj} from "tslog";
+import type Enveloppe from "../main";
 
 export class Logs {
 	plugin: Enveloppe;
@@ -11,7 +11,15 @@ export class Logs {
 	constructor(plugin: Enveloppe) {
 		this.plugin = plugin;
 		const minLevel = plugin.settings.plugin?.dev ? 0 : 2;
-		this.logger = new Logger({name: "Enveloppe", minLevel});
+		this.logger = new Logger({
+			name: "Enveloppe",
+			minLevel,
+			prettyLogTemplate: "{{logLevelName}} ",
+			prettyErrorTemplate:
+				"\n{{errorName}} {{errorMessage}}\nerror stack:\n{{errorStack}}",
+			prettyErrorStackTemplate: "  • {{fileName}}\t{{method}}\n\t{{filePathWithLine}}",
+			type: "hidden",
+		});
 		if (this.plugin.settings.plugin?.dev) {
 			const logFile = `${this.plugin.manifest.dir}/logs.txt`;
 			this.logger.attachTransport(async (logObj) => {
@@ -28,39 +36,46 @@ export class Logs {
 		if (settings.plugin?.noticeError) new Notice(messages.join(" "));
 	}
 
-	error(...messages: unknown[]) {
-		this.logger.error(...messages);
-		this.noticeError(messages.join(" "));
+	error(error: Error) {
+		console.error(error);
+		this.logger.error(error);
+		this.noticeError(error.message);
 	}
 
 	warn(...messages: unknown[]) {
+		console.warn(...messages);
 		this.logger.warn(...messages);
 		this.notif(messages);
 	}
 
 	info(...messages: unknown[]) {
+		console.info(...messages);
 		this.logger.info(...messages);
 		this.notif(messages);
 	}
 
 	debug(...messages: unknown[]) {
+		if (this.plugin.settings.plugin?.dev) console.debug(...messages);
 		this.logger.debug(...messages);
 		this.notif(messages);
 	}
 
 	trace(...messages: unknown[]) {
+		if (this.plugin.settings.plugin?.dev) console.trace(...messages);
 		this.logger.trace(...messages);
 		this.notif(messages);
 	}
 
 	silly(...messages: unknown[]) {
+		if (this.plugin.settings.plugin?.dev) console.log(...messages);
 		this.logger.silly(...messages);
 		this.notif(messages);
 	}
 
-	fatal(...messages: unknown[]) {
-		this.logger.fatal(...messages);
-		this.noticeError(messages.join(" "));
+	fatal(error: Error) {
+		console.error(error);
+		this.logger.fatal(error);
+		this.noticeError(error.message);
 	}
 
 	/**
@@ -99,7 +114,7 @@ export class Logs {
 				cls: ["error", "enveloppe", "icons", "notification"],
 			});
 			const html = sanitizeHTMLToDom(
-				i18next.t("error.errorPublish", {repo: repository})
+				i18next.t("error.errorPublish", { repo: repository })
 			);
 			setIcon(notifSpan, "mail-warning");
 			notif
@@ -110,7 +125,7 @@ export class Logs {
 			new Notice(notif);
 		}
 	}
-	
+
 	noticeSuccess(message: string) {
 		const notif = document.createDocumentFragment();
 		const notifSpan = notif.createSpan({
@@ -125,7 +140,7 @@ export class Logs {
 			.appendChild(html);
 		new Notice(notif);
 	}
-	
+
 	noticeError(message: string) {
 		const notif = document.createDocumentFragment();
 		const notifSpan = notif.createSpan({

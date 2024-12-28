@@ -1,8 +1,8 @@
 import {
 	type Deleted,
+	type EnveloppeSettings,
 	FIND_REGEX,
 	FolderSettings,
-	type EnveloppeSettings,
 	type GithubRepo,
 	type MonoRepoProperties,
 	type Properties,
@@ -10,22 +10,22 @@ import {
 import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
+import { klona } from "klona";
 import {
 	type MetadataCache,
-	normalizePath,
 	Notice,
-	parseYaml,
 	type TAbstractFile,
 	TFile,
 	TFolder,
 	Vault,
+	normalizePath,
+	parseYaml,
 } from "obsidian";
 import type { FilesManagement } from "src/GitHub/files";
 import { trimObject } from "src/utils";
 import { isAttachment, verifyRateLimitAPI } from "src/utils/data_validation_test";
 import { frontmatterSettingsRepository } from "src/utils/parse_frontmatter";
 import type Enveloppe from "../main";
-import { klona } from "klona";
 
 /**
  * Delete file from github, based on a list of file in the original vault
@@ -149,7 +149,7 @@ async function deleteFromGithubOneRepo(
 					}
 				}
 			} catch (e) {
-				if (!(e instanceof DOMException)) pconsole.fatal(true, e);
+				pconsole.fatal(e as Error);
 			}
 		}
 	}
@@ -287,7 +287,7 @@ async function checkIndexFiles(
 		}
 	} catch (e) {
 		if (!(e instanceof DOMException)) {
-			plugin.console.fatal(e);
+			plugin.console.fatal(e as Error);
 			return false;
 		}
 	}

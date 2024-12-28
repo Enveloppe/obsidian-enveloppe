@@ -11,12 +11,13 @@ import i18next from "i18next";
 import {
 	type FrontMatterCache,
 	type Menu,
-	normalizePath,
 	Plugin,
 	type TAbstractFile,
 	TFile,
 	TFolder,
+	normalizePath,
 } from "obsidian";
+import { GithubBranch } from "src/GitHub/branch";
 import {
 	checkRepositoryValidityCallback,
 	createLinkCallback,
@@ -32,16 +33,15 @@ import {
 import { addMenuFile, addMenuFolder } from "src/commands/file_menu";
 import { ChooseWhichRepoToRun } from "src/commands/suggest_other_repo_commands_modal";
 import { getTitleField, regexOnFileName } from "src/conversion/file_path";
-import { GithubBranch } from "src/GitHub/branch";
 import { resources, translationLanguage } from "src/i18n/i18next";
 import { EnveloppeSettingsTab } from "src/settings";
-import { migrateSettings, type OldSettings } from "src/settings/migrate";
+import { type OldSettings, migrateSettings } from "src/settings/migrate";
 import { createTokenPath } from "src/utils";
 import {
 	checkRepositoryValidity,
 	verifyRateLimitAPI,
 } from "src/utils/data_validation_test";
-import {merge} from "ts-deepmerge";
+import { merge } from "ts-deepmerge";
 import { Logs } from "./utils/logs";
 
 /**
@@ -179,7 +179,7 @@ export default class Enveloppe extends Plugin {
 				return defaultToken;
 			}
 		} catch (e) {
-			this.console.error(e);
+			this.console.error(e as Error);
 			return "";
 		}
 		return "";
