@@ -2,7 +2,7 @@ import { FolderSettings, type EnveloppeSettings } from "@interfaces";
 import dedent from "dedent";
 import i18next from "i18next";
 import { normalizePath, sanitizeHTMLToDom } from "obsidian";
-import {DISCORD_ICON, DISCUSSION_ICON, DOCUMENTATION, GITHUB_ICON, ISSUE, TRANSLATION_ICON} from "@interfaces/icons";
+import { DISCORD_ICON, DISCUSSION_ICON, DOCUMENTATION, GITHUB_ICON, ISSUE, TRANSLATION_ICON } from "@interfaces/icons";
 
 /**
  * Export the YAML help to create an example of yaml with the value based on the Settings

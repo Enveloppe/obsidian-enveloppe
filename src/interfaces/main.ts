@@ -1,6 +1,6 @@
 import type { FrontMatterCache, TFile } from "obsidian";
 
-import type {ESettingsTabId, FolderSettings, TypeOfEditRegex} from "./enum";
+import type { ESettingsTabId, FolderSettings, TypeOfEditRegex } from "./enum";
 import type {
 	Api,
 	Conversion,
@@ -248,7 +248,7 @@ export interface PropertiesConversion {
 	convertInternalLinks: boolean;
 	/** Include also linked files in the send/conversion */
 	includeLinks: boolean;
-	
+
 	/** Remove link if not shared */
 	unlink: boolean;
 }

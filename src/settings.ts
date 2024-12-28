@@ -319,7 +319,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				})
 			);
-		
+
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.dryRun.enable.title"))
 			.setDesc(i18next.t("settings.github.dryRun.enable.desc"))
@@ -907,7 +907,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					await this.renderEmbedConfiguration();
 				});
 			});
-		
+
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.embed.forcePush.title"))
 			.setDesc(i18next.t("settings.embed.forcePush.desc"))
@@ -917,7 +917,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				})
 			);
-		
+
 		this.settingsPage.createEl("h5", {
 			text: i18next.t("settings.embed.attachment"),
 			cls: "center",
@@ -984,7 +984,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				.addTextArea((text) => {
 					text
 						.setPlaceholder("py, mdx")
-						.setValue((embedSettings.unHandledObsidianExt||[]).join(", "))
+						.setValue((embedSettings.unHandledObsidianExt || []).join(", "))
 						.onChange(async (value) => {
 							embedSettings.unHandledObsidianExt = value
 								.split(/[,\n]\W*/)
@@ -1001,7 +1001,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 			.addTextArea((text) => {
 				text
 					.setPlaceholder("banner")
-					.setValue((embedSettings.keySendFile||[]).join(", "))
+					.setValue((embedSettings.keySendFile || []).join(", "))
 					.onChange(async (value) => {
 						embedSettings.keySendFile = value
 							.split(/[,\n]\W*/)
@@ -1026,7 +1026,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					await this.renderEmbedConfiguration();
 				});
 			});
-		
+
 		if (embedSettings.notes) {
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.embed.links.title"))
@@ -1071,7 +1071,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				}
 				await this.plugin.saveSettings();
-				
+
 				const bakeEmbedDesc = dedent(`
 				<h5>${i18next.t("settings.embed.bake.title")}</h5>
 				<p>${i18next.t("settings.embed.bake.text")}. <span class="bake">${i18next.t("settings.embed.bake.variable.desc")}</span>
@@ -1080,8 +1080,8 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					<li><code>{{url}}</code>${i18next.t("settings.embed.bake.variable.url")}</li>
 				</ul></p>
 				<p class="warning embed">⚠️ ${i18next.t("settings.embed.bake.warning")}</p>
-				`)
-				
+				`);
+
 				this.settingsPage.appendChild(sanitizeHTMLToDom(bakeEmbedDesc));
 
 				new Setting(this.settingsPage)

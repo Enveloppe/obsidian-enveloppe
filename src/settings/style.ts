@@ -1,4 +1,4 @@
-import {ESettingsTabId, FolderSettings, type EnveloppeSettings} from "@interfaces";
+import { ESettingsTabId, FolderSettings, type EnveloppeSettings } from "@interfaces";
 import i18next from "i18next";
 import { Notice, type Setting } from "obsidian";
 import type Enveloppe from "src/main";

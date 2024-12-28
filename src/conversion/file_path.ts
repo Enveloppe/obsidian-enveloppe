@@ -29,7 +29,7 @@ import {
 	getFrontmatterSettings,
 	getProperties,
 } from "src/utils/parse_frontmatter";
-import {merge} from "ts-deepmerge";
+import { merge } from "ts-deepmerge";
 
 /** Search a link in the entire frontmatter value */
 /** Link will always be in the form of [[]] */
@@ -183,7 +183,7 @@ export async function createRelativePath(
 				.at(-1) as string,
 		};
 	}
-	return {link: relative};
+	return { link: relative };
 }
 
 /**

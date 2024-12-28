@@ -12,7 +12,7 @@ import {
 	textIsInFrontmatter,
 } from "src/conversion/file_path";
 import { replaceText } from "src/conversion/find_and_replace_text";
-import {isAttachment, noTextConversion} from "src/utils/data_validation_test";
+import { isAttachment, noTextConversion } from "src/utils/data_validation_test";
 import type Enveloppe from "../main";
 
 type IsEmbed = {
@@ -381,7 +381,7 @@ export async function convertToInternalGithub(
 					);
 					continue;
 				}
-				
+
 				const regToReplace = new RegExp(`((${escapedLinkedFile})|(${linkInMarkdown}))`);
 				let pathInGithubWithAnchor = pathInGithub;
 				if (linkedFile.anchor) {
@@ -403,7 +403,7 @@ export async function convertToInternalGithub(
 								: pathInGithub;
 					}
 					const altText = link.match(/\[(.*)\]/)![1];
-					
+
 					newLink = `[${altText}](${encodeURI(pathInGithub)})`; //encode to URI for compatibility with github
 				}
 				newLink = addAltText(newLink, linkedFile);

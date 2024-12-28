@@ -83,7 +83,7 @@ async function migrateReplaceTitle(plugin: Enveloppe) {
 	if (plugin.settings.upload.replaceTitle instanceof Array) {
 		return;
 	}
-	
+
 	plugin.console.trace(i18next.t("informations.migrating.fileReplace"));
 	plugin.settings.upload.replaceTitle = [plugin.settings.upload.replaceTitle];
 	await plugin.saveSettings();

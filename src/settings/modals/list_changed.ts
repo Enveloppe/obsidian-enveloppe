@@ -11,7 +11,7 @@ export class ListChangedFiles extends Modal {
 
 	displayListOfFile(toDisplay: string[], contentEl: HTMLElement) {
 		if (!toDisplay.length) return;
-		const ul = contentEl.createEl("ul", {cls: "list"});
+		const ul = contentEl.createEl("ul", { cls: "list" });
 		toDisplay.forEach((file) => {
 			let emoji = "❓";
 			const ext = file.split(".").pop() ?? "";
@@ -61,8 +61,8 @@ export class ListChangedFiles extends Modal {
 				text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`,
 			});
 			this.displayListOfFile(this.listChanged.deleted, contentEl);
-			
-			const span = contentEl.createDiv({cls: "error"});
+
+			const span = contentEl.createDiv({ cls: "error" });
 			span.createEl("h2", {
 				text: `❌ ${i18next.t("modals.listChangedFiles.error")}`,
 			});
@@ -80,7 +80,7 @@ export class ListChangedFiles extends Modal {
 				text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`,
 			});
 			this.displayListOfFile(this.listChanged.deleted, contentEl);
-			const span = contentEl.createSpan({cls: "error"});
+			const span = contentEl.createSpan({ cls: "error" });
 			span.createEl("h3", {
 				text: `❌ ${i18next.t("modals.listChangedFiles.error")}`,
 			});

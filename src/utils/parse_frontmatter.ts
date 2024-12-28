@@ -11,10 +11,10 @@ import {
 	type PropertiesConversion,
 	type Repository,
 } from "@interfaces";
-import {klona} from "klona";
-import {type FrontMatterCache, normalizePath, TFile} from "obsidian";
+import { klona } from "klona";
+import { type FrontMatterCache, normalizePath, TFile } from "obsidian";
 import type Enveloppe from "src/main";
-import {merge} from "ts-deepmerge";
+import { merge } from "ts-deepmerge";
 
 export function frontmatterSettingsRepository(
 	plugin: Enveloppe,
@@ -361,7 +361,7 @@ export function getCategory(
 	const category =
 		frontmatter && frontmatter[key] != undefined
 			? frontmatter[key]
-			: paths?.defaultName ?? settings.upload.defaultName;
+			: (paths?.defaultName ?? settings.upload.defaultName);
 	if (category instanceof Array) {
 		return category.join("/");
 	}
@@ -700,7 +700,7 @@ export function mergeFrontmatter(
 	delete sourceFrontmatter?.[shareKey];
 	if (sourceFrontmatter && frontmatter)
 		frontmatter = merge.withOptions(
-			{allowUndefinedOverrides: false},
+			{ allowUndefinedOverrides: false },
 			sourceFrontmatter,
 			frontmatter
 		);

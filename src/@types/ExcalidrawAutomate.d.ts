@@ -17,14 +17,14 @@ export declare class ExcalidrawAutomate {
 		theme?: string,
 		padding?: number
 	): Promise<SVGSVGElement>;
-	
+
 	/**
 	 * utility function to generate EmbeddedFilesLoader object
 	 * @param isDark
 	 * @returns
 	 */
 	getEmbeddedFilesLoader(isDark?: boolean): any;
-	
+
 	/**
 	 * utility function to generate ExportSettings object
 	 * @param withBackground

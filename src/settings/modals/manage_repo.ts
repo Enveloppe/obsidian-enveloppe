@@ -1,4 +1,4 @@
-import {type EnveloppeSettings, GithubTiersVersion, type Repository} from "@interfaces";
+import { type EnveloppeSettings, GithubTiersVersion, type Repository } from "@interfaces";
 import i18next from "i18next";
 import {
 	AbstractInputSuggest,
@@ -9,7 +9,7 @@ import {
 	type TFile,
 } from "obsidian";
 import type Enveloppe from "src/main";
-import {migrateToken} from "src/settings/migrate";
+import { migrateToken } from "src/settings/migrate";
 import {
 	checkRepositoryValidity,
 	verifyRateLimitAPI,

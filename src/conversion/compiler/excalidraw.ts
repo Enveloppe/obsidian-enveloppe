@@ -1,5 +1,5 @@
 import type { App, TFile } from "obsidian";
-import type {ExcalidrawAutomate} from "../../@types/ExcalidrawAutomate";
+import type { ExcalidrawAutomate } from "../../@types/ExcalidrawAutomate";
 
 /**
  * @param file

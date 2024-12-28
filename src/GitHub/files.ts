@@ -613,9 +613,11 @@ export class FilesManagement extends Publisher {
 		repoPath: string
 	): Promise<boolean> {
 		//first check if the file exist in github
-		if (this.settings.embed.forcePush ||
+		if (
+			this.settings.embed.forcePush ||
 			this.settings.embed.forcePush == null ||
-			this.settings.github.dryRun.enable)
+			this.settings.github.dryRun.enable
+		)
 			return true;
 		const githubFile = await this.octokit.request("GET /repos/{owner}/{repo}/commits", {
 			owner: repo?.user ?? this.settings.github.user,
