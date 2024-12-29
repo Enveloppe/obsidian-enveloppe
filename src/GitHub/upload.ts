@@ -45,7 +45,7 @@ import {
 } from "src/utils/parse_frontmatter";
 import { ShareStatusBar } from "src/utils/status_bar";
 import { merge } from "ts-deepmerge";
-import type { Logs } from "../utils/logs";
+import { EnveloppeErrors, type Logs } from "../utils/logs";
 
 /** Class to manage the branch
  * @extends FilesManagement
@@ -137,14 +137,14 @@ export default class Publisher {
 					} catch (e) {
 						new Notice(i18next.t("error.unablePublishNote", { file: file.name }));
 						fileError.push(file.name);
-						this.console.fatal(e as Error);
+						this.console.error(e as Error);
 					}
 				}
 				statusBar.finish(8000);
 			} catch (e) {
-				this.console.fatal(e as Error);
 				this.console.noticeErrorUpload(prop);
 				statusBar.error(prop);
+				throw new EnveloppeErrors((e as Error).message, { cause: e });
 			}
 		}
 		return {
@@ -210,88 +210,77 @@ export default class Publisher {
 		) {
 			return false;
 		}
-		try {
-			this.console.trace(`Publishing file: ${file.path}`);
-			fileHistory.push(file);
-			const frontmatterSettingsFromFile = getFrontmatterSettings(
-				frontmatter,
-				this.settings,
-				repo.repository
-			);
+		this.console.trace(`Publishing file: ${file.path}`);
+		fileHistory.push(file);
+		const frontmatterSettingsFromFile = getFrontmatterSettings(
+			frontmatter,
+			this.settings,
+			repo.repository
+		);
 
-			const frontmatterRepository = frontmatterSettingsRepository(
-				this.plugin,
-				repo.repository
-			);
-			const frontmatterSettings = merge.withOptions(
-				{ allowUndefinedOverrides: false },
-				frontmatterRepository,
-				frontmatterSettingsFromFile
-			);
-			const multiProperties: MultiProperties = {
+		const frontmatterRepository = frontmatterSettingsRepository(
+			this.plugin,
+			repo.repository
+		);
+		const frontmatterSettings = merge.withOptions(
+			{ allowUndefinedOverrides: false },
+			frontmatterRepository,
+			frontmatterSettingsFromFile
+		);
+		const multiProperties: MultiProperties = {
+			plugin: this.plugin,
+			frontmatter: {
+				general: frontmatterSettings,
+				prop: repo.frontmatter,
+			},
+			repository: repo.repository,
+			filepath: filePath,
+		};
+
+		let embedFiles = shareFiles.getSharedEmbed(file, frontmatterSettings);
+		embedFiles = await shareFiles.getMetadataLinks(file, embedFiles, frontmatterSettings);
+		const linkedFiles = shareFiles.getLinkedByEmbedding(file);
+		let text = await this.vault.cachedRead(file);
+		text = await mainConverting(text, file, frontmatter, linkedFiles, multiProperties);
+		const path = multiProperties.filepath;
+		const props = Array.isArray(repo.frontmatter) ? repo.frontmatter : [repo.frontmatter];
+		let multiRepMsg = "";
+		for (const repo of props) {
+			multiRepMsg += `[${repo.owner}/${repo.repo}/${repo.branch}] `;
+		}
+		const msg = `Publishing ${file.name} to ${multiRepMsg}`;
+		this.console.trace(msg);
+		const fileDeleted: Deleted[] = [];
+		const updated: UploadedFiles[][] = [];
+		const fileError: string[] = [];
+		for (const repo of props) {
+			const monoProperties: MonoProperties = {
 				plugin: this.plugin,
 				frontmatter: {
 					general: frontmatterSettings,
-					prop: repo.frontmatter,
+					prop: repo,
+					source: sourceFrontmatter,
 				},
-				repository: repo.repository,
-				filepath: filePath,
+				repository: multiProperties.repository,
+				filepath: multiProperties.filepath,
 			};
-
-			let embedFiles = shareFiles.getSharedEmbed(file, frontmatterSettings);
-			embedFiles = await shareFiles.getMetadataLinks(
+			const deleted = await this.uploadOnMultipleRepo(
 				file,
+				text,
+				path,
 				embedFiles,
-				frontmatterSettings
+				fileHistory,
+				deepScan,
+				shareFiles,
+				autoclean,
+				monoProperties
 			);
-			const linkedFiles = shareFiles.getLinkedByEmbedding(file);
-			let text = await this.vault.cachedRead(file);
-			text = await mainConverting(text, file, frontmatter, linkedFiles, multiProperties);
-			const path = multiProperties.filepath;
-			const prop = Array.isArray(repo.frontmatter)
-				? repo.frontmatter
-				: [repo.frontmatter];
-			let multiRepMsg = "";
-			for (const repo of prop) {
-				multiRepMsg += `[${repo.owner}/${repo.repo}/${repo.branch}] `;
-			}
-			const msg = `Publishing ${file.name} to ${multiRepMsg}`;
-			this.console.trace(msg);
-			const fileDeleted: Deleted[] = [];
-			const updated: UploadedFiles[][] = [];
-			const fileError: string[] = [];
-			for (const repo of prop) {
-				const monoProperties: MonoProperties = {
-					plugin: this.plugin,
-					frontmatter: {
-						general: frontmatterSettings,
-						prop: repo,
-						source: sourceFrontmatter,
-					},
-					repository: multiProperties.repository,
-					filepath: multiProperties.filepath,
-				};
-				const deleted = await this.uploadOnMultipleRepo(
-					file,
-					text,
-					path,
-					embedFiles,
-					fileHistory,
-					deepScan,
-					shareFiles,
-					autoclean,
-					monoProperties
-				);
-				fileDeleted.push(deleted.deleted);
-				// convert to UploadedFiles[]
-				updated.push(deleted.uploaded);
-				fileError.push(...deleted.error);
-			}
-			return { deleted: fileDeleted[0], uploaded: updated[0], error: fileError };
-		} catch (e) {
-			this.console.fatal(e as Error);
-			return false;
+			fileDeleted.push(deleted.deleted);
+			// convert to UploadedFiles[]
+			updated.push(deleted.uploaded);
+			fileError.push(...deleted.error);
 		}
+		return { deleted: fileDeleted[0], uploaded: updated[0], error: fileError };
 	}
 
 	/**

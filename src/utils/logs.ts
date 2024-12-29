@@ -1,30 +1,53 @@
 import type { EnveloppeSettings, Properties } from "@interfaces";
 import i18next from "i18next";
 import { Notice, Platform, TFile, sanitizeHTMLToDom, setIcon } from "obsidian";
-import { type ILogObj, Logger } from "tslog";
 import type Publisher from "../GitHub/upload";
 import type Enveloppe from "../main";
 
 export class Logs {
 	plugin: Enveloppe;
-	logger: Logger<ILogObj>;
 	constructor(plugin: Enveloppe) {
 		this.plugin = plugin;
-		const minLevel = plugin.settings.plugin?.dev ? 0 : 2;
-		this.logger = new Logger({
-			name: "Enveloppe",
-			minLevel,
-			prettyLogTemplate: "{{logLevelName}} ",
-			prettyErrorTemplate:
-				"\n{{errorName}} {{errorMessage}}\nerror stack:\n{{errorStack}}",
-			prettyErrorStackTemplate: "  • {{fileName}}\t{{method}}\n\t{{filePathWithLine}}",
-			type: "hidden",
-		});
+	}
+
+	private errorToMessage(error: unknown) {
+		if (error instanceof Object) {
+			if (error instanceof Error && error.message) {
+				return error.message;
+			}
+			const parsedError = JSON.parse(JSON.stringify(error));
+			if (Array.isArray(parsedError)) {
+				return parsedError.join(", ");
+			}
+			return JSON.stringify(parsedError);
+		}
+		if (typeof error === "string") {
+			return error;
+		}
+		return JSON.stringify(error);
+	}
+
+	writeToLog(
+		error: unknown,
+		type: "silly" | "debug" | "info" | "warn" | "error" | "fatal"
+	) {
 		if (this.plugin.settings.plugin?.dev) {
 			const logFile = `${this.plugin.manifest.dir}/logs.txt`;
-			this.logger.attachTransport(async (logObj) => {
-				await this.plugin.app.vault.adapter.append(logFile, JSON.stringify(logObj));
-			});
+			const err = error as Error;
+			const errMessage = this.errorToMessage(error);
+			const stack = err.stack
+				? `\t\t${err.stack.replace(errMessage, "").trim().replaceAll("Error: \n", "").trim().replaceAll("\n", "\n\t")}\n\n`
+				: "\n";
+			const header = `${new Date().toLocaleString()} [${type}]: \n\t${errMessage.replaceAll("\n", "\n\t")}\n${stack}`;
+			const exists = this.plugin.app.vault.adapter.exists(logFile);
+			if (!exists)
+				this.plugin.app.vault.adapter
+					.write(logFile, header)
+					.catch((e) => console.error(e));
+			else
+				this.plugin.app.vault.adapter
+					.append(logFile, header)
+					.catch((e) => console.error(e));
 		}
 	}
 
@@ -38,44 +61,44 @@ export class Logs {
 
 	error(error: Error) {
 		console.error(error);
-		this.logger.error(error);
 		this.noticeError(error.message);
+		this.writeToLog(error, "error");
 	}
 
 	warn(...messages: unknown[]) {
 		console.warn(...messages);
-		this.logger.warn(...messages);
 		this.notif(messages);
+		this.writeToLog(messages, "warn");
 	}
 
 	info(...messages: unknown[]) {
 		console.info(...messages);
-		this.logger.info(...messages);
 		this.notif(messages);
+		this.writeToLog(messages, "info");
 	}
 
 	debug(...messages: unknown[]) {
-		if (this.plugin.settings.plugin?.dev) console.debug(...messages);
-		this.logger.debug(...messages);
-		this.notif(messages);
+		if (this.plugin.settings.plugin?.dev) {
+			console.debug(...messages);
+			this.notif(messages);
+			this.writeToLog(messages, "debug");
+		}
 	}
 
 	trace(...messages: unknown[]) {
-		if (this.plugin.settings.plugin?.dev) console.trace(...messages);
-		this.logger.trace(...messages);
-		this.notif(messages);
+		if (this.plugin.settings.plugin?.dev) {
+			console.trace(...messages);
+			this.notif(messages);
+			this.writeToLog(messages, "debug");
+		}
 	}
 
 	silly(...messages: unknown[]) {
-		if (this.plugin.settings.plugin?.dev) console.log(...messages);
-		this.logger.silly(...messages);
-		this.notif(messages);
-	}
-
-	fatal(error: Error) {
-		console.error(error);
-		this.logger.fatal(error);
-		this.noticeError(error.message);
+		if (this.plugin.settings.plugin?.dev) {
+			console.log(...messages);
+			this.notif(messages);
+			this.writeToLog(messages, "silly");
+		}
 	}
 
 	/**
@@ -223,5 +246,19 @@ export class Logs {
 				repository
 			);
 		}
+	}
+}
+
+export class EnveloppeErrors extends Error {
+	constructor(
+		message: string,
+		options?: { name?: string; cause?: unknown; stack?: string }
+	) {
+		super();
+		this.message = message;
+		const { name, cause, stack } = options || {};
+		if (name) this.name = name;
+		if (cause) this.cause = cause;
+		if (stack) this.stack = stack;
 	}
 }

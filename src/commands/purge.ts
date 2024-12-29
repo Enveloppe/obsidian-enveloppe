@@ -57,26 +57,24 @@ async function purge(
 	branchName: string,
 	monoRepo: MonoRepoProperties
 ): Promise<void | boolean> {
-	try {
-		const noticeFragment = document.createDocumentFragment();
-		noticeFragment.createSpan({ cls: ["enveloppe", "notification"] }).innerHTML =
-			i18next.t("informations.startingClean", { repo: monoRepo.frontmatter });
-		new Notice(noticeFragment);
-		const isValid = await checkRepositoryValidityWithProperties(
-			PublisherManager,
-			monoRepo.frontmatter
-		);
-		if (!isValid) return false;
-		if (!PublisherManager.settings.github.dryRun.enable)
-			await PublisherManager.newBranch(monoRepo.frontmatter);
-		const deleted = await deleteFromGithub(false, branchName, PublisherManager, monoRepo);
-		if (!PublisherManager.settings.github.dryRun.enable)
-			await PublisherManager.updateRepository(monoRepo.frontmatter);
-		if (PublisherManager.settings.plugin.displayModalRepoEditing)
-			new ListChangedFiles(PublisherManager.plugin.app, deleted).open();
-	} catch (e) {
-		PublisherManager.plugin.console.fatal(e as Error);
-	}
+	const noticeFragment = document.createDocumentFragment();
+	noticeFragment.createSpan({ cls: ["enveloppe", "notification"] }).innerHTML = i18next.t(
+		"informations.startingClean",
+		{ repo: monoRepo.frontmatter }
+	);
+	new Notice(noticeFragment);
+	const isValid = await checkRepositoryValidityWithProperties(
+		PublisherManager,
+		monoRepo.frontmatter
+	);
+	if (!isValid) return false;
+	if (!PublisherManager.settings.github.dryRun.enable)
+		await PublisherManager.newBranch(monoRepo.frontmatter);
+	const deleted = await deleteFromGithub(false, branchName, PublisherManager, monoRepo);
+	if (!PublisherManager.settings.github.dryRun.enable)
+		await PublisherManager.updateRepository(monoRepo.frontmatter);
+	if (PublisherManager.settings.plugin.displayModalRepoEditing)
+		new ListChangedFiles(PublisherManager.plugin.app, deleted).open();
 }
 
 /**

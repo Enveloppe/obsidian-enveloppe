@@ -215,7 +215,7 @@ export default class Enveloppe extends Plugin {
 			returnNull: false,
 			returnEmptyString: false,
 		});
-
+		await this.app.vault.adapter.remove(normalizePath(`${this.manifest.dir}/logs.txt`));
 		await this.loadSettings();
 		this.console = new Logs(this);
 		this.console.info(
@@ -333,7 +333,13 @@ export default class Enveloppe extends Plugin {
 		}
 		this.addCommand(refreshOpenedSet(this));
 		this.addCommand(refreshAllSets(this));
-		this.app.vault.adapter.removeFile(normalizePath(`${this.manifest.dir}/logs.txt`));
+		window.addEventListener("unhandledrejection", (e) => {
+			if (e.reason.stack.includes(this.manifest.id))
+				this.console.writeToLog(e.reason, "fatal");
+		});
+		window.addEventListener("error", (e) => {
+			if (e.error.stack.includes(this.manifest.id)) this.console.writeToLog(e, "error");
+		});
 	}
 
 	/**

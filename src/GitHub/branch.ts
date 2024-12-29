@@ -4,7 +4,7 @@ import i18next from "i18next";
 import { Notice } from "obsidian";
 import { FilesManagement } from "src/GitHub/files";
 import type Enveloppe from "src/main";
-import type { Logs } from "../utils/logs";
+import { EnveloppeErrors, type Logs } from "../utils/logs";
 
 export class GithubBranch extends FilesManagement {
 	console: Logs;
@@ -235,52 +235,51 @@ export class GithubBranch extends FilesManagement {
 	async checkRepository(prop: Properties | Properties[], silent = true): Promise<void> {
 		prop = Array.isArray(prop) ? prop : [prop];
 		for (const repo of prop) {
-			try {
-				const repoExist = await this.octokit
-					.request("GET /repos/{owner}/{repo}", {
-						owner: repo.owner,
-						repo: repo.repo,
-					})
-					.catch((e) => {
-						//check the error code
-						if (e.status === 404) {
-							new Notice(i18next.t("commands.checkValidity.inRepo.error404", { repo }));
-						} else if (e.status === 403) {
-							new Notice(i18next.t("commands.checkValidity.inRepo.error403", { repo }));
-						} else if (e.status === 301) {
-							new Notice(i18next.t("commands.checkValidity.inRepo.error301", { repo }));
-						}
-					});
-				//@ts-ignore
-				if (repoExist.status === 200) {
-					this.console.info(
-						i18next.t("commands.checkValidity.repoExistsTestBranch", { repo })
+			const repoExist = await this.octokit
+				.request("GET /repos/{owner}/{repo}", {
+					owner: repo.owner,
+					repo: repo.repo,
+				})
+				.catch((e) => {
+					//check the error code
+					if (e.status === 404) {
+						new Notice(i18next.t("commands.checkValidity.inRepo.error404", { repo }));
+						throw new EnveloppeErrors(
+							i18next.t("commands.checkValidity.inRepo.error404", { repo })
+						);
+					} else if (e.status === 403) {
+						new Notice(i18next.t("commands.checkValidity.inRepo.error403", { repo }));
+						throw new EnveloppeErrors(
+							i18next.t("commands.checkValidity.inRepo.error403", { repo })
+						);
+					} else if (e.status === 301) {
+						new Notice(i18next.t("commands.checkValidity.inRepo.error301", { repo }));
+						throw new EnveloppeErrors(
+							i18next.t("commands.checkValidity.inRepo.error301", { repo })
+						);
+					}
+				});
+			//@ts-ignore
+			if (repoExist.status === 200) {
+				this.console.info(
+					i18next.t("commands.checkValidity.repoExistsTestBranch", { repo })
+				);
+
+				const branchExist = await this.findMainBranch(repo);
+				if (!branchExist) {
+					throw new EnveloppeErrors(
+						i18next.t("commands.checkValidity.inBranch.error404", {
+							repo,
+						}),
+						{ cause: "Branch not found" }
 					);
-
-					const branchExist = await this.findMainBranch(repo);
-					if (!branchExist) {
-						const errorMsg = new Error(
-							i18next.t("commands.checkValidity.inBranch.error404", {
-								repo,
-							})
-						);
-						this.console.fatal(errorMsg);
-
-						break;
-					}
-					this.console.info(i18next.t("commands.checkValidity.success", { repo }));
-					if (!silent) {
-						this.console.noticeSuccess(
-							i18next.t("commands.checkValidity.success", { repo })
-						);
-					}
 				}
-			} catch (e) {
-				const err = new Error(i18next.t("commands.checkValidity.error"));
-				err.stack = (e as Error).stack;
-				this.console.fatal(err);
-				this.console.info(e);
-				break;
+				this.console.info(i18next.t("commands.checkValidity.success", { repo }));
+				if (!silent) {
+					this.console.noticeSuccess(
+						i18next.t("commands.checkValidity.success", { repo })
+					);
+				}
 			}
 		}
 	}

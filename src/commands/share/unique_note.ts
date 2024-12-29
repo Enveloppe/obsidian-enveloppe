@@ -79,70 +79,56 @@ export async function shareOneNote(
 		sourceFrontmatter,
 		PublisherManager.settings.plugin.shareKey
 	);
-	try {
-		const prop = getProperties(plugin, repository, frontmatter);
-		let isValid: boolean;
-		if (prop instanceof Array) {
-			const isValidArray = [];
-			for (const repo of prop) {
-				isValidArray.push(
-					await checkRepositoryValidityWithProperties(PublisherManager, repo)
-				);
-			}
-			isValid = isValidArray.every((v) => v);
-		} else isValid = await checkRepositoryValidityWithProperties(PublisherManager, prop);
-
-		const multiRepo: MultiRepoProperties = {
-			frontmatter: prop,
-			repository,
-		};
-		if (!isValid) return false;
-		if (!settings.github.dryRun.enable) await PublisherManager.newBranch(prop);
-		const publishSuccess = await PublisherManager.publish(
-			file,
-			true,
-			multiRepo,
-			[],
-			true,
-			sourceFrontmatter
-		);
-		if (publishSuccess) {
-			if (settings.upload.metadataExtractorPath.length > 0 && Platform.isDesktop) {
-				const metadataExtractor = await getSettingsOfMetadataExtractor(app, settings);
-				if (metadataExtractor) {
-					await PublisherManager.uploadMetadataExtractorFiles(metadataExtractor, prop);
-				}
-			}
-			const update = await PublisherManager.updateRepository(
-				prop,
-				settings.github.dryRun.enable
+	const prop = getProperties(plugin, repository, frontmatter);
+	let isValid: boolean;
+	if (prop instanceof Array) {
+		const isValidArray = [];
+		for (const repo of prop) {
+			isValidArray.push(
+				await checkRepositoryValidityWithProperties(PublisherManager, repo)
 			);
-			if (update) {
-				await plugin.console.publisherNotification(
-					PublisherManager,
-					title,
-					settings,
-					prop
-				);
-				await createLink(file, multiRepo, plugin);
-				if (settings.plugin.displayModalRepoEditing) {
-					const listEdited = createListEdited(
-						publishSuccess.uploaded,
-						publishSuccess.deleted,
-						publishSuccess.error
-					);
-					new ListChangedFiles(app, listEdited).open();
-				}
-			} else {
-				plugin.console.noticeErrorUpload(prop);
+		}
+		isValid = isValidArray.every((v) => v);
+	} else isValid = await checkRepositoryValidityWithProperties(PublisherManager, prop);
+
+	const multiRepo: MultiRepoProperties = {
+		frontmatter: prop,
+		repository,
+	};
+	if (!isValid) return false;
+	if (!settings.github.dryRun.enable) await PublisherManager.newBranch(prop);
+	const publishSuccess = await PublisherManager.publish(
+		file,
+		true,
+		multiRepo,
+		[],
+		true,
+		sourceFrontmatter
+	);
+	if (publishSuccess) {
+		if (settings.upload.metadataExtractorPath.length > 0 && Platform.isDesktop) {
+			const metadataExtractor = await getSettingsOfMetadataExtractor(app, settings);
+			if (metadataExtractor) {
+				await PublisherManager.uploadMetadataExtractorFiles(metadataExtractor, prop);
 			}
 		}
-	} catch (error) {
-		if (!(error instanceof DOMException)) {
-			plugin.console.fatal(error as Error);
-			plugin.console.noticeErrorUpload(
-				getProperties(plugin, repository, frontmatter, true)
-			);
+		const update = await PublisherManager.updateRepository(
+			prop,
+			settings.github.dryRun.enable
+		);
+		if (update) {
+			await plugin.console.publisherNotification(PublisherManager, title, settings, prop);
+			await createLink(file, multiRepo, plugin);
+			if (settings.plugin.displayModalRepoEditing) {
+				const listEdited = createListEdited(
+					publishSuccess.uploaded,
+					publishSuccess.deleted,
+					publishSuccess.error
+				);
+				new ListChangedFiles(app, listEdited).open();
+			}
+		} else {
+			plugin.console.noticeErrorUpload(prop);
 		}
 	}
 }

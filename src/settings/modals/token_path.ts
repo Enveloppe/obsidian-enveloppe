@@ -4,7 +4,7 @@ import { type App, Modal, Notice, Setting } from "obsidian";
 import type Enveloppe from "src/main";
 import { migrateToken } from "src/settings/migrate";
 import { createTokenPath } from "src/utils";
-import type { Logs } from "../../utils/logs";
+import { EnveloppeErrors, type Logs } from "../../utils/logs";
 
 export class TokenEditPath extends Modal {
 	plugin: Enveloppe;
@@ -97,7 +97,7 @@ export class TokenEditPath extends Modal {
 					input.controlEl.querySelector("input")!.style.border = "1px solid red";
 					new Notice(i18next.t("error.reading-token-file"));
 					this.tokenPath = "error";
-					this.console.fatal(e as Error);
+					throw new EnveloppeErrors((e as Error).message, { cause: e });
 				}
 			});
 		});

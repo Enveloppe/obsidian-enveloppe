@@ -25,7 +25,6 @@ import type { FilesManagement } from "src/GitHub/files";
 import { trimObject } from "src/utils";
 import { isAttachment, verifyRateLimitAPI } from "src/utils/data_validation_test";
 import { frontmatterSettingsRepository } from "src/utils/parse_frontmatter";
-import type Enveloppe from "../main";
 
 /**
  * Delete file from github, based on a list of file in the original vault
@@ -122,34 +121,30 @@ async function deleteFromGithubOneRepo(
 		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
 		if (isNeedToBeDeleted) {
 			const checkingIndex = file.file.contains(settings.upload.folderNote.rename)
-				? await checkIndexFiles(octokit, plugin, file.file, repo)
+				? await checkIndexFiles(octokit, file.file, repo)
 				: false;
-			try {
-				if (!checkingIndex) {
-					pconsole.trace(
-						`trying to delete file : ${file.file} from ${repo.owner}/${repo.repo}`
-					);
-					const response = await octokit.request(
-						"DELETE /repos/{owner}/{repo}/contents/{path}",
-						{
-							owner: repo.owner,
-							repo: repo.repo,
-							path: file.file,
-							message: `DELETE FILE : ${file.file}`,
-							sha: file.sha,
-							branch: branchName,
-						}
-					);
-					if (response.status === 200) {
-						deletedSuccess++;
-						result.deleted.push(file.file);
-					} else {
-						deletedFailed++;
-						result.undeleted.push(file.file);
+			if (!checkingIndex) {
+				pconsole.trace(
+					`trying to delete file : ${file.file} from ${repo.owner}/${repo.repo}`
+				);
+				const response = await octokit.request(
+					"DELETE /repos/{owner}/{repo}/contents/{path}",
+					{
+						owner: repo.owner,
+						repo: repo.repo,
+						path: file.file,
+						message: `DELETE FILE : ${file.file}`,
+						sha: file.sha,
+						branch: branchName,
 					}
+				);
+				if (response.status === 200) {
+					deletedSuccess++;
+					result.deleted.push(file.file);
+				} else {
+					deletedFailed++;
+					result.undeleted.push(file.file);
 				}
-			} catch (e) {
-				pconsole.fatal(e as Error);
 			}
 		}
 	}
@@ -248,7 +243,6 @@ function parseYamlFrontmatter(contents: string): unknown {
  * - autoClean: false
  * - share: false
  * @param {Octokit} octokit GitHub API
- * @param plugin
  * @param {string} path path of the file to check
  * @param {Properties} prop repository informations
  * @return {Promise<boolean>} true if the file must be deleted
@@ -256,40 +250,29 @@ function parseYamlFrontmatter(contents: string): unknown {
 
 async function checkIndexFiles(
 	octokit: Octokit,
-	plugin: Enveloppe,
 	path: string,
 	prop: Properties
 ): Promise<boolean> {
-	try {
-		const fileRequest = await octokit.request(
-			"GET /repos/{owner}/{repo}/contents/{path}",
-			{
-				owner: prop.owner,
-				repo: prop.repo,
-				path,
-			}
+	const fileRequest = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+		owner: prop.owner,
+		repo: prop.repo,
+		path,
+	});
+	if (fileRequest.status === 200) {
+		// @ts-ignore
+		const fileContent = Base64.decode(fileRequest.data.content);
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const fileFrontmatter = parseYamlFrontmatter(fileContent) as any;
+		// if not share => don't delete
+		// Key preventing deletion :
+		//	- index: true
+		//	- delete: false
+		// return true for NO DELETION
+		return (
+			fileFrontmatter.index === "true" ||
+			fileFrontmatter.delete === "false" ||
+			!fileFrontmatter.share
 		);
-		if (fileRequest.status === 200) {
-			// @ts-ignore
-			const fileContent = Base64.decode(fileRequest.data.content);
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const fileFrontmatter = parseYamlFrontmatter(fileContent) as any;
-			// if not share => don't delete
-			// Key preventing deletion :
-			//	- index: true
-			//	- delete: false
-			// return true for NO DELETION
-			return (
-				fileFrontmatter.index === "true" ||
-				fileFrontmatter.delete === "false" ||
-				!fileFrontmatter.share
-			);
-		}
-	} catch (e) {
-		if (!(e instanceof DOMException)) {
-			plugin.console.fatal(e as Error);
-			return false;
-		}
 	}
 	return false;
 }
