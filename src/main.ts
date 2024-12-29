@@ -215,7 +215,7 @@ export default class Enveloppe extends Plugin {
 			returnNull: false,
 			returnEmptyString: false,
 		});
-		await this.app.vault.adapter.remove(normalizePath(`${this.manifest.dir}/logs.txt`));
+
 		await this.loadSettings();
 		this.console = new Logs(this);
 		this.console.info(
@@ -223,6 +223,7 @@ export default class Enveloppe extends Plugin {
 		* You can hide HTTP logs in the console with checking the "Hide network" in the console settings.
 		* See here: https://developer.chrome.com/docs/devtools/console/reference#network`)
 		);
+		await this.console.createLogFile();
 
 		if (
 			!this.settings.plugin.dev &&

@@ -1,13 +1,32 @@
 import type { EnveloppeSettings, Properties } from "@interfaces";
 import i18next from "i18next";
-import { Notice, Platform, TFile, sanitizeHTMLToDom, setIcon } from "obsidian";
+import {
+	type App,
+	Notice,
+	Platform,
+	TFile,
+	normalizePath,
+	sanitizeHTMLToDom,
+	setIcon,
+} from "obsidian";
 import type Publisher from "../GitHub/upload";
 import type Enveloppe from "../main";
 
 export class Logs {
 	plugin: Enveloppe;
+	app: App;
 	constructor(plugin: Enveloppe) {
 		this.plugin = plugin;
+		this.app = plugin.app;
+	}
+
+	async createLogFile() {
+		const path = normalizePath(`${this.plugin.manifest.dir}/logs.txt`);
+		if (!(await this.app.vault.adapter.exists(path))) {
+			await this.app.vault.adapter.remove(
+				normalizePath(`${this.plugin.manifest.dir}/logs.txt`)
+			);
+		}
 	}
 
 	private errorToMessage(error: unknown) {
@@ -32,22 +51,17 @@ export class Logs {
 		type: "silly" | "debug" | "info" | "warn" | "error" | "fatal"
 	) {
 		if (this.plugin.settings.plugin?.dev) {
-			const logFile = `${this.plugin.manifest.dir}/logs.txt`;
+			const logFile = normalizePath(`${this.plugin.manifest.dir}/logs.txt`);
 			const err = error as Error;
 			const errMessage = this.errorToMessage(error);
 			const stack = err.stack
 				? `\t\t${err.stack.replace(errMessage, "").trim().replaceAll("Error: \n", "").trim().replaceAll("\n", "\n\t")}\n\n`
 				: "\n";
 			const header = `${new Date().toLocaleString()} [${type}]: \n\t${errMessage.replaceAll("\n", "\n\t")}\n${stack}`;
-			const exists = this.plugin.app.vault.adapter.exists(logFile);
+			const exists = this.app.vault.adapter.exists(logFile);
 			if (!exists)
-				this.plugin.app.vault.adapter
-					.write(logFile, header)
-					.catch((e) => console.error(e));
-			else
-				this.plugin.app.vault.adapter
-					.append(logFile, header)
-					.catch((e) => console.error(e));
+				this.app.vault.adapter.write(logFile, header).catch((e) => console.error(e));
+			else this.app.vault.adapter.append(logFile, header).catch((e) => console.error(e));
 		}
 	}
 
