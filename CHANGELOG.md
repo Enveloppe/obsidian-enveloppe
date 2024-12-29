@@ -1,3 +1,8 @@
+## [7.5.1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.0...7.5.1) (2024-12-29)
+### Bug Fixes
+
+* **log:** cannot start the plugin if log.txt doesn't exists ([e67a6a0](https://github.com/Enveloppe/obsidian-enveloppe/commit/e67a6a0a4610e498f40c39075ec43587681d5f9e)), closes [#374](https://github.com/Enveloppe/obsidian-enveloppe/issues/374)
+
 ## [7.5.0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.0-3...7.5.0) (2024-12-29)
 
 ## [7.4.0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.3.2...7.4.0) (2024-10-04)
