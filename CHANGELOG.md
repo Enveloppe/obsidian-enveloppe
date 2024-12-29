@@ -1,3 +1,5 @@
+## [7.5.0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.0-3...7.5.0) (2024-12-29)
+
 ## [7.4.0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.3.2...7.4.0) (2024-10-04)
 ### Features
 
