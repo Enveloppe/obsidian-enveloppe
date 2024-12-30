@@ -1,3 +1,8 @@
+## [7.5.2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.1...7.5.2) (2024-12-30)
+### Bug Fixes
+
+* **log:** typo that broke the plugin ([d79893c](https://github.com/Enveloppe/obsidian-enveloppe/commit/d79893ca32505a02387c5059359c48ed5714299e)), closes [#364](https://github.com/Enveloppe/obsidian-enveloppe/issues/364)
+
 ## [7.5.1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.0...7.5.1) (2024-12-29)
 ### Bug Fixes
 
