@@ -22,7 +22,7 @@ export class Logs {
 
 	async createLogFile() {
 		const path = normalizePath(`${this.plugin.manifest.dir}/logs.txt`);
-		if (!(await this.app.vault.adapter.exists(path))) {
+		if (await this.app.vault.adapter.exists(path)) {
 			await this.app.vault.adapter.remove(
 				normalizePath(`${this.plugin.manifest.dir}/logs.txt`)
 			);
