@@ -1,3 +1,8 @@
+## [7.5.3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/7.5.2...7.5.3) (2025-01-13)
+### Bug Fixes
+
+* **local-test:** fix all files deleting if the test folder is empty ([62efe9b](https://github.com/ObsidianPublisher/obsidian-github-publisher/commit/62efe9ba6f69f83f5518a23b394ebdddd0149657))
+
 ## [7.5.2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.1...7.5.2) (2024-12-30)
 ### Bug Fixes
 
