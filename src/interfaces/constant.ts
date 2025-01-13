@@ -4,6 +4,7 @@ import type { EnveloppeSettings } from "src/interfaces/main";
 /** Find a regex encapsuled in // */
 export const FIND_REGEX = /^\/(.*)\/[igmsuy]*$/;
 
+export const DOCUMENTATION_LINK = "https://enveloppe.ovh/"
 /**
  * Just a constant for the token path
  * @type {string} TOKEN_PATH

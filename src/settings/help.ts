@@ -3,6 +3,7 @@ import dedent from "dedent";
 import i18next from "i18next";
 import { normalizePath, sanitizeHTMLToDom } from "obsidian";
 import { DISCORD_ICON, DISCUSSION_ICON, DOCUMENTATION, GITHUB_ICON, ISSUE, TRANSLATION_ICON } from "@interfaces/icons";
+import { DOCUMENTATION_LINK } from "@interfaces/constant";
 
 /**
  * Export the YAML help to create an example of yaml with the value based on the Settings
@@ -160,7 +161,7 @@ export function help(settings: EnveloppeSettings) {
 export function usefulLinks(): DocumentFragment {
 	const els = dedent(`
 		<ul>
-			<a href=${i18next.t("settings.help.usefulLinks.links")}>${DOCUMENTATION} ${i18next.t("settings.help.usefulLinks.documentation")}</a><br>
+			<a href=${DOCUMENTATION_LINK}>${DOCUMENTATION} ${i18next.t("settings.help.usefulLinks.documentation")}</a><br>
 			<a href="https://github.com/Enveloppe/obsidian-enveloppe">${GITHUB_ICON} ${i18next.t("common.repository")}</a><br>
 			<a href="https://github.com/Enveloppe/obsidian-enveloppe/issues">${ISSUE} ${i18next.t("settings.help.usefulLinks.issue")}</a><br>
 			<a href="https://github.com/orgs/Enveloppe/discussions">${DISCUSSION_ICON} ${i18next.t("settings.help.usefulLinks.discussion")}</a><br>
