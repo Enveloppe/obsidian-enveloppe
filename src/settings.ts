@@ -331,16 +331,24 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				})
 			);
 
+		const defaultFolderName = githubSettings.dryRun.folderName.trim().length > 0 ? githubSettings.dryRun.folderName :"enveloppe";
+
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.dryRun.folder.title"))
 			.setDesc(i18next.t("settings.github.dryRun.folder.desc"))
 			.addText((text) =>
 				text
 					.setPlaceholder("enveloppe")
-					.setValue(githubSettings.dryRun.folderName)
+					.setValue(defaultFolderName)
 					.onChange(async (value) => {
 						githubSettings.dryRun.folderName = value.trim();
-						await this.plugin.saveSettings();
+						if (value.trim().length === 0) {
+							new Notice(i18next.t("settings.github.dryRun.folder.error"));
+							text.inputEl.addClass("error");
+						} else {
+							text.inputEl.removeClass("error");
+							await this.plugin.saveSettings();
+						}
 					})
 			);
 

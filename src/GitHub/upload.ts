@@ -458,7 +458,8 @@ export default class Publisher {
 			properties.frontmatter.prop
 		);
 		if (this.settings.github.dryRun.enable) {
-			const folderName = this.settings.github.dryRun.folderName
+			const originalFolderName = this.settings.github.dryRun.folderName.trim().length > 0 ? this.settings.github.dryRun.folderName : "enveloppe";
+			const folderName = originalFolderName
 				.replace("{{repo}}", prop.repo)
 				.replace("{{branch}}", prop.branch)
 				.replace("{{owner}}", prop.owner);

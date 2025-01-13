@@ -367,13 +367,19 @@ span.enveloppe.icons {
 	border-left: 3px solid var(--color-orange);
 	padding-left: 5px;
 }
-
+.enveloppe input.error,
 .enveloppe .error input {
 	border: 1px solid var(--text-error);
 }
 .enveloppe .max-width input,
 .enveloppe .max-width button {
 	width: 100%;
+}
+
+.enveloppe input.error:active,
+.enveloppe input.error:focus {
+	border: 2px solid var(--text-error);
+	box-shadow: none !important;
 }
 
 .enveloppe .display-none .setting-item-info {
