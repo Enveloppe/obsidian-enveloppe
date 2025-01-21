@@ -245,8 +245,8 @@ export default class Publisher {
 		const path = multiProperties.filepath;
 		const props = Array.isArray(repo.frontmatter) ? repo.frontmatter : [repo.frontmatter];
 		let multiRepMsg = "";
-		for (const repo of props) {
-			multiRepMsg += `[${repo.owner}/${repo.repo}/${repo.branch}] `;
+		for (const prop of props) {
+			multiRepMsg += `[${prop.owner}/${prop.repo}/${prop.branch}] `;
 		}
 		const msg = `Publishing ${file.name} to ${multiRepMsg}`;
 		this.console.trace(msg);
