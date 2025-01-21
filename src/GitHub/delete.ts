@@ -282,15 +282,20 @@ function cleanDryRun(
 	filesManagement: FilesManagement,
 	repoProperties: MonoRepoProperties
 ): Deleted {
-	const { vault, settings, console, plugin } = filesManagement;
+	const { vault, settings, plugin } = filesManagement;
 	const app = plugin.app;
 	const repo = repoProperties.frontmatter;
+	const pconsole = filesManagement.console;
+	if (!repo.dryRun.folderName || repo.dryRun.folderName.length === 0)
+		throw new Error("DryRun folder path is empty, please check your settings");
 	const dryRunFolderPath = normalizePath(
 		repo.dryRun.folderName
 			.replace("{{owner}}", repo.owner)
 			.replace("{{repo}}", repo.repo)
 			.replace("{{branch}}", repo.branch)
 	);
+	if (dryRunFolderPath.trim().length === 0 || dryRunFolderPath === "/")
+		throw new Error("DryRun folder path is empty, please check your settings");
 	const dryRunFolder = vault.getAbstractFileByPath(dryRunFolderPath);
 	if (!dryRunFolder || dryRunFolder instanceof TFile)
 		return { success: false, deleted: [], undeleted: [] };
@@ -344,7 +349,7 @@ function cleanDryRun(
 				? indexFileDryRun(file as TFile, app.metadataCache)
 				: false;
 			if (!indexFile) {
-				console.trace(
+				pconsole.trace(
 					`[DRY-RUN] trying to delete file : ${file.path} from ${dryRunFolderPath}`
 				);
 				vault.trash(file, false);
