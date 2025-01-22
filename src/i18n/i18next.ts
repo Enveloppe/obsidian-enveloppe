@@ -61,8 +61,9 @@ export const resources = {
 	"zh-CN": { translation: zhCn },
 } as const;
 
+const localeUsed:string = window.localStorage.language || moment.locale();
 export const translationLanguage = Object.keys(resources).find(
-	(i) => i.toLocaleLowerCase() == moment.locale()
+	(i) => i.toLocaleLowerCase() == localeUsed.toLowerCase()
 )
-	? moment.locale()
+	? localeUsed.toLowerCase()
 	: "en";
