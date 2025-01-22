@@ -34,7 +34,7 @@ jobs:
     needs: [update]
     uses: mara-li/reusable-workflows/.github/workflows/obsidian-plugin-bump-version.yaml@main
     with:
-      PLUGIN_NAME: "obsidian-enveloppe"
+      PLUGIN_NAME: "obsidian-mkdocs-publisher"
       BETA: FALSE
       SUBMODULE: true
       CACHE: "bun"
@@ -43,4 +43,3 @@ jobs:
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-      
