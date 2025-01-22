@@ -8,8 +8,11 @@ import path from "node:path";
 /**
  * Update the locale submodules
  */
-console.log("<> Updating locale submodules <>");
-execSync("cd src/i18n/locales && git checkout main && git pull");
+const args = process.argv.slice(2)[0];
+if (args === "pull") {
+	console.log("<> Updating locale submodules <>");
+	execSync("cd src/i18n/locales && git checkout main && git pull");
+}
 
 const i18nPath = path.resolve("src/i18n/i18next.ts");
 const i18nDir = path.resolve("src/i18n/locales");

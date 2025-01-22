@@ -1,0 +1,46 @@
+name: Fetch submodule and release
+on:
+  repository_dispatch:
+    types: [update]
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+      - name: Fetch submodule
+        run: |
+          git submodule update --init --recursive --remote --merge
+          # if no changes, exit
+          git diff --quiet || exit 0
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install & hooks
+        run: |
+          bun install
+          bun run sync:locale
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "chore(locales): update translations"
+      - name: Push changes
+        run: git push
+
+  bump:
+    needs: [update]
+    uses: mara-li/reusable-workflows/.github/workflows/obsidian-plugin-bump-version.yaml@main
+    with:
+      PLUGIN_NAME: "obsidian-enveloppe"
+      BETA: FALSE
+      SUBMODULE: true
+      CACHE: "bun"
+      discord_webhook_avatar: "https://avatars.githubusercontent.com/u/107352364?s=400&u=f2eb1406068b95a58baecdf987ccccde7fcbdd55&v=4"
+      discord_webhook_name: "Enveloppe"
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      
