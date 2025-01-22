@@ -15,7 +15,9 @@
     "release": "node commit-and-tag-version.mjs",
     "postrelease": "git push --follow-tags origin master",
     "predeploy": "bun run bump",
-    "deploy": "bun run export"
+    "deploy": "bun run export",
+	  "local:update": "cd src/i18n/locales && git checkout main && git pull && cd ../../..",
+	"local:commit" : "cd src/i18n/locales && git add . && git commit -m 'Update locales' && git push && cd ../../.."
   },
   "commit-and-tag-version": {
     "t": ""
