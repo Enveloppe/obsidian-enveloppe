@@ -8,6 +8,7 @@ import path from "node:path";
 /**
  * Update the locale submodules
  */
+console.log("<> Updating locale submodules <>");
 execSync("cd src/i18n/locales && git checkout main && git pull");
 
 const i18nPath = path.resolve("src/i18n/i18next.ts");
@@ -25,6 +26,7 @@ let importText = "/** ---- IMPORT TRANSLATIONS ---- */\n";
  * @Param {Record<string, {translation: string}>} resources
  */
 const resources = {};
+console.log("<> Parsing i18n files in the src/i18n/locales folder <>");
 for (const files of i18nFiles) {
 	let locale = files.split(".")[0];
 	if (locale.includes("-")) {
@@ -52,6 +54,8 @@ newI18nContent = newI18nContent.replace(
 	/\/\*\* ---- RESOURCE OBJECT ---- \*\/[\s\S]*\/\*\* ---- RESOURCE OBJECT ---- \*\//,
 	resourceObject
 );
+console.log("<> Updating i18next.ts file <>");
 fs.writeFileSync(i18nPath, newI18nContent);
 //run biome
+console.log("<> Linting i18next.ts file <>");
 execSync("biome format src/i18n/i18next.ts --write");
