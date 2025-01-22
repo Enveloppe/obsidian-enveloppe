@@ -5,6 +5,11 @@ import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
+/**
+ * Update the locale submodules
+ */
+execSync("cd src/i18n/locales && git checkout main && git pull");
+
 const i18nPath = path.resolve("src/i18n/i18next.ts");
 const i18nDir = path.resolve("src/i18n/locales");
 

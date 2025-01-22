@@ -331,7 +331,10 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				})
 			);
 
-		const defaultFolderName = githubSettings.dryRun.folderName.trim().length > 0 ? githubSettings.dryRun.folderName :"enveloppe";
+		const defaultFolderName =
+			githubSettings.dryRun.folderName.trim().length > 0
+				? githubSettings.dryRun.folderName
+				: "enveloppe";
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.github.dryRun.folder.title"))
