@@ -280,7 +280,7 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 					: "",
 			branch: old.githubBranch,
 			automaticallyMergePR: old.automaticallyMergePR,
-			tokenPath: TOKEN_PATH,
+			tokenPath: plugin.settings.github.tokenPath ?? TOKEN_PATH,
 			api: {
 				tiersForApi: old.tiersForApi,
 				hostname: old.hostname,

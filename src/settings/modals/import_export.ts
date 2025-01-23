@@ -1,5 +1,6 @@
 import { ESettingsTabId } from "@interfaces";
 import type { EnveloppeSettings, Preset, RegexReplace } from "@interfaces/main";
+import type { GitHub, PluginBehavior } from "@interfaces/settings";
 import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { klona } from "klona";
@@ -18,9 +19,6 @@ import type { EnveloppeSettingsTab } from "src/settings";
 import { type OldSettings, migrateSettings } from "src/settings/migrate";
 import type { Logs } from "../../utils/logs";
 
-function clone(obj: EnveloppeSettings): EnveloppeSettings {
-	return klona(obj);
-}
 /**
  *
  * Credit : Style Settings Plugin
@@ -60,6 +58,9 @@ export class ImportModal extends Modal {
 		this.plugin.settings.github.repo = original.github.repo;
 		this.plugin.settings.github.user = original.github.user;
 		this.plugin.settings.github.otherRepo = original.github.otherRepo;
+		this.plugin.settings.tabsId = original.tabsId;
+		this.plugin.settings.plugin.copyLink.links = original.plugin.copyLink.links;
+		this.settings.github.tokenPath = original.github.tokenPath;
 		await this.plugin.saveSettings();
 	}
 
@@ -90,7 +91,7 @@ export class ImportModal extends Modal {
 							this.console.trace(i18next.t("informations.migrating.normalFormat"));
 							importedSettings = importedSettings as unknown as EnveloppeSettings;
 							//create a copy of actual settings
-							const actualSettings = clone(this.plugin.settings);
+							const actualSettings = klona(this.plugin.settings);
 							if (!(importedSettings.upload.replaceTitle instanceof Array)) {
 								importedSettings.upload.replaceTitle = [
 									importedSettings.upload.replaceTitle,
@@ -210,27 +211,39 @@ export class ExportModal extends Modal {
 	}
 
 	censorGithubSettingsData(
-		censuredSettings: EnveloppeSettings
+		censuredSettings: Partial<EnveloppeSettings>
 	): Partial<EnveloppeSettings> {
-		const cloneCensored = Object(censuredSettings);
-		const { github } = cloneCensored;
-		if (cloneCensored.tabsID) delete cloneCensored.tabsID;
+		const cloneCensored = klona(censuredSettings);
+		const github: Partial<GitHub> | undefined = cloneCensored.github;
+		const plugin: Partial<PluginBehavior> | undefined = cloneCensored.plugin;
+		if (censuredSettings.tabsId) delete cloneCensored.tabsId;
 		if (github) {
 			delete github.repo;
 			delete github.user;
 			delete github.otherRepo;
 			delete github.rateLimit;
+			delete github.tokenPath;
 		}
-		delete cloneCensored.plugin.dev;
-		delete cloneCensored.plugin.migrated;
-		delete cloneCensored.plugin.displayModalRepoEditing;
-		delete cloneCensored.plugin.noticeError;
-		delete cloneCensored.plugin.copyLink.addCmd;
-		delete cloneCensored.plugin.fileMenu;
-		delete cloneCensored.plugin.editorMenu;
+		if (plugin) {
+			delete plugin.dev;
+			delete plugin.migrated;
+			delete plugin.displayModalRepoEditing;
+			delete plugin.noticeError;
+			if (plugin.copyLink) {
+				if (plugin.copyLink.addCmd)
+					delete (plugin.copyLink as Partial<PluginBehavior["copyLink"]>).addCmd;
+				if (plugin.copyLink.links)
+					delete (plugin.copyLink as Partial<PluginBehavior["copyLink"]>).links;
+			}
+			delete plugin.fileMenu;
+			delete plugin.editorMenu;
+		}
 		//fix old version with autoclean.excluded is a string
-		if (typeof cloneCensored.upload.autoClean.excluded === "string") {
-			cloneCensored.upload.autoClean.excluded = [cloneCensored.upload.autoClean.excluded];
+		// noinspection SuspiciousTypeOfGuard
+		if (typeof cloneCensored.upload?.autoclean?.excluded === "string") {
+			cloneCensored.upload.autoclean.excluded = [
+				cloneCensored.upload?.autoclean?.excluded,
+			];
 		}
 		return cloneCensored;
 	}
@@ -244,7 +257,7 @@ export class ExportModal extends Modal {
 			.then((setting) => {
 				//create a copy of the settings object
 				const censuredSettings = this.censorGithubSettingsData(
-					clone(this.plugin.settings)
+					klona(this.plugin.settings)
 				);
 
 				const output = JSON.stringify(censuredSettings, null, 2);
@@ -294,10 +307,12 @@ export class ExportModal extends Modal {
 						b.setButtonText(i18next.t("modals.export.download")).onClick(() => {
 							// Can't use the method above on mobile, so we'll just open a new tab
 							//create a temporary file
-							this.app.vault.adapter.write(
-								`${this.app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`,
-								output
-							);
+							this.app.vault.adapter
+								.write(
+									`${this.app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`,
+									output
+								)
+								.then();
 							//open the file with default application
 							(this.app as any).openWithDefaultApp(
 								`${this.app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`
@@ -310,9 +325,11 @@ export class ExportModal extends Modal {
 
 	onClose() {
 		try {
-			this.app.vault.adapter.trashSystem(
-				`${this.app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`
-			);
+			this.app.vault.adapter
+				.trashSystem(
+					`${this.app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`
+				)
+				.then();
 		} catch (e) {
 			this.console.debug("Error while deleting temporary file", e);
 		}
@@ -357,7 +374,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 	onChooseItem(item: Preset, _evt: MouseEvent | KeyboardEvent): void {
 		const presetSettings = item.settings;
 		try {
-			const original = clone(this.plugin.settings);
+			const original = klona(this.plugin.settings);
 
 			// noinspection SuspiciousTypeOfGuard
 			if (!(presetSettings.upload.replaceTitle instanceof Array)) {
@@ -384,8 +401,8 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 			this.settings.github.rateLimit = original.github.rateLimit;
 			this.settings.tabsId = original.tabsId;
 
-			this.plugin.saveSettings();
-			this.page.renderSettingsPage("github-configuration");
+			this.plugin.saveSettings().then();
+			this.page.renderSettingsPage("github-configuration").then();
 		} catch (e) {
 			new Notice(i18next.t("modals.import.error.span") + e);
 			this.console.error(e as Error);
@@ -441,7 +458,7 @@ export async function loadPresetContent(
 	const presetContent = await octokit.request(
 		"GET /repos/{owner}/{repo}/contents/{path}",
 		{
-			owner: "ObsidianPublisher",
+			owner: "Enveloppe",
 			repo: "plugin-presets",
 			path,
 		}
