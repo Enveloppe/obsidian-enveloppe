@@ -1,3 +1,4 @@
+import { ESettingsTabId } from "@interfaces";
 import type { EnveloppeSettings, Preset, RegexReplace } from "@interfaces/main";
 import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
@@ -176,22 +177,22 @@ export class ImportModal extends Modal {
 			i18next.t("settings.github.title");
 		openedTab = openedTab.trim();
 		switch (openedTab) {
-			case i18next.t("settings.github.title"):
+			case ESettingsTabId.Github:
 				this.settingsTab.renderGithubConfiguration();
 				break;
-			case i18next.t("settings.upload.title"):
+			case ESettingsTabId.Upload:
 				this.settingsTab.renderUploadConfiguration();
 				break;
-			case i18next.t("settings.conversion.title"):
+			case ESettingsTabId.Text:
 				this.settingsTab.renderTextConversion();
 				break;
-			case i18next.t("settings.embed.title"):
-				this.settingsTab.renderEmbedConfiguration();
+			case ESettingsTabId.Embed:
+				this.settingsTab.renderEmbedConfiguration().then();
 				break;
-			case i18next.t("settings.plugin.title"):
+			case ESettingsTabId.Plugin:
 				this.settingsTab.renderPluginSettings();
 				break;
-			case i18next.t("settings.help.title"):
+			case ESettingsTabId.Help:
 				this.settingsTab.renderHelp();
 				break;
 		}
@@ -245,6 +246,7 @@ export class ExportModal extends Modal {
 				const censuredSettings = this.censorGithubSettingsData(
 					clone(this.plugin.settings)
 				);
+
 				const output = JSON.stringify(censuredSettings, null, 2);
 				setting.controlEl.createEl(
 					"a",
