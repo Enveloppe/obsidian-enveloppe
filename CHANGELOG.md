@@ -1,3 +1,8 @@
+## [7.5.5](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.4...7.5.5) (2025-01-23)
+### Bug Fixes
+
+* **commands:purge:** finally fix the autoclean commands that is not added after enabling the settings ([b253269](https://github.com/Enveloppe/obsidian-enveloppe/commit/b25326914fe199465030e53633677a2da7467f2d))
+
 ## [7.5.4](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.3...7.5.4) (2025-01-23)
 ### Bug Fixes
 
