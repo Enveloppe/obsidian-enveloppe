@@ -208,7 +208,9 @@ export class ExportModal extends Modal {
 		this.console = plugin.console;
 	}
 
-	censorGithubSettingsData(censuredSettings: EnveloppeSettings) {
+	censorGithubSettingsData(
+		censuredSettings: EnveloppeSettings
+	): Partial<EnveloppeSettings> {
 		const cloneCensored = Object(censuredSettings);
 		const { github } = cloneCensored;
 		if (cloneCensored.tabsID) delete cloneCensored.tabsID;
@@ -225,6 +227,10 @@ export class ExportModal extends Modal {
 		delete cloneCensored.plugin.copyLink.addCmd;
 		delete cloneCensored.plugin.fileMenu;
 		delete cloneCensored.plugin.editorMenu;
+		//fix old version with autoclean.excluded is a string
+		if (typeof cloneCensored.upload.autoClean.excluded === "string") {
+			cloneCensored.upload.autoClean.excluded = [cloneCensored.upload.autoClean.excluded];
+		}
 		return cloneCensored;
 	}
 

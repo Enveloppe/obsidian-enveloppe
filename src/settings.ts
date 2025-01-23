@@ -2,29 +2,30 @@
 
 import {
 	ESettingsTabId,
-	FolderSettings,
 	type EnveloppeSettings,
+	FolderSettings,
 	GithubTiersVersion,
 	type Repository,
 } from "@interfaces";
+import dedent from "dedent";
 import i18next from "i18next";
+import { klona } from "klona";
 import {
 	type App,
 	Notice,
 	PluginSettingTab,
+	Setting,
 	sanitizeHTMLToDom,
 	setIcon,
-	Setting,
 } from "obsidian";
 import type EnveloppePlugin from "src/main";
 import {
-	help,
 	KeyBasedOnSettings,
+	help,
 	multipleRepoExplained,
 	supportMe,
 	usefulLinks,
 } from "src/settings/help";
-import { klona } from "klona";
 import { migrateToken } from "src/settings/migrate";
 import {
 	ExportModal,
@@ -49,7 +50,6 @@ import {
 	checkRepositoryValidity,
 	verifyRateLimitAPI,
 } from "src/utils/data_validation_test";
-import dedent from "dedent";
 
 export class EnveloppeSettingsTab extends PluginSettingTab {
 	plugin: EnveloppePlugin;
@@ -670,18 +670,23 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					else uploadSettings.autoclean.enable = value;
 					await this.plugin.saveSettings();
 					await this.renderSettingsPage(ESettingsTabId.Upload);
-					this.plugin.cleanOldCommands();
-					await this.plugin.chargeAllCommands(null, this.plugin);
+					await this.plugin.reloadCommands();
 				});
 			});
 		if (uploadSettings.autoclean.enable) {
+			// noinspection SuspiciousTypeOfGuard
+			const excluded: string[] =
+				//in some condition, it can be a string
+				typeof uploadSettings.autoclean.excluded === "string"
+					? [uploadSettings.autoclean.excluded]
+					: uploadSettings.autoclean.excluded;
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.githubWorkflow.excludedFiles.title"))
 				.setDesc(i18next.t("settings.githubWorkflow.excludedFiles.desc"))
 				.addTextArea((textArea) => {
 					textArea
 						.setPlaceholder("docs/assets/js, docs/assets/logo, /\\.js$/")
-						.setValue(uploadSettings.autoclean.excluded.join(", "))
+						.setValue(excluded.join(", "))
 						.onChange(async (value) => {
 							uploadSettings.autoclean.excluded = value
 								.split(/[,\n]/)
@@ -1090,7 +1095,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					<li><code>{{title}}</code>${i18next.t("settings.embed.bake.variable.title")}</li>
 					<li><code>{{url}}</code>${i18next.t("settings.embed.bake.variable.url")}</li>
 				</ul></p>
-				<p class="warning embed">⚠️ ${i18next.t("settings.embed.bake.warning")}</p>
+				<p class="warning embed">! ${i18next.t("settings.embed.bake.warning")}</p>
 				`);
 
 				this.settingsPage.appendChild(sanitizeHTMLToDom(bakeEmbedDesc));

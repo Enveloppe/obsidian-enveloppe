@@ -1,8 +1,8 @@
 import {
 	type FolderSettings,
 	type GithubTiersVersion,
-	type TextCleaner,
 	TOKEN_PATH,
+	type TextCleaner,
 	TypeOfEditRegex,
 } from "@interfaces";
 import i18next from "i18next";
@@ -29,7 +29,7 @@ export interface OldSettings {
 	embedImage: boolean;
 	defaultImageFolder: string;
 	autoCleanUp: boolean;
-	autoCleanUpExcluded: string[];
+	autoCleanUpExcluded: string[] | string;
 	folderNote: boolean;
 	folderNoteRename: string;
 	migrateWikiLinks: boolean;
@@ -325,7 +325,10 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 			],
 			autoclean: {
 				enable: old.autoCleanUp,
-				excluded: old.autoCleanUpExcluded,
+				excluded:
+					typeof old.autoCleanUpExcluded === "string"
+						? [old.autoCleanUpExcluded]
+						: old.autoCleanUpExcluded,
 				includeAttachments: old.autoCleanUp,
 			},
 			folderNote: {
