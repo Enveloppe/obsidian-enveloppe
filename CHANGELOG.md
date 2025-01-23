@@ -1,3 +1,12 @@
+## [7.5.4](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.3...7.5.4) (2025-01-23)
+### Bug Fixes
+
+* **dryRun:** prevent deleting when the dryRun.folder name is empty or equals to =="/" ([f9851cc](https://github.com/Enveloppe/obsidian-enveloppe/commit/f9851cca5559e4afd6b958a6d8781f348a91b3ea))
+* **export:** add more type in the censoring data when export ([9be1ce1](https://github.com/Enveloppe/obsidian-enveloppe/commit/9be1ce1081f3a479faaad255351a71f60e173fab))
+* **export:** render the settings after import properly ([d657eed](https://github.com/Enveloppe/obsidian-enveloppe/commit/d657eed3971bf71edd6184669fa9fac3c32cd3f6))
+* **locale:** use localStorage.language instead of moment in primary searching for the locale ([069f3ff](https://github.com/Enveloppe/obsidian-enveloppe/commit/069f3ff78c579466d7dbaf80c0775fdcf1e8c619))
+* **settings-autoclean:** in some old version, the excluded values was not a list ([c1a7895](https://github.com/Enveloppe/obsidian-enveloppe/commit/c1a78951503638d021a6a55894cf307a709621c4))
+
 ## [7.5.3](https://github.com/ObsidianPublisher/obsidian-github-publisher/compare/7.5.2...7.5.3) (2025-01-13)
 ### Bug Fixes
 
