@@ -670,7 +670,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					else uploadSettings.autoclean.enable = value;
 					await this.plugin.saveSettings();
 					await this.renderSettingsPage(ESettingsTabId.Upload);
-					await this.plugin.reloadCommands();
+					await this.plugin.reloadCommands(true, value);
 				});
 			});
 		if (uploadSettings.autoclean.enable) {

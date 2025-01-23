@@ -71,12 +71,16 @@ export default class Enveloppe extends Plugin {
 		);
 	}
 
-	async chargeAllCommands(repo: Repository | null, plugin: Enveloppe) {
+	async chargeAllCommands(
+		repo: Repository | null,
+		plugin: Enveloppe,
+		autoClean?: boolean
+	) {
 		if (plugin.settings.plugin.copyLink.addCmd) {
 			this.addCommand(await createLinkCallback(repo, this));
 		}
 		this.addCommand(await shareOneNoteCallback(repo, this));
-		if (plugin.settings.upload.autoclean.enable) {
+		if (autoClean || plugin.settings.upload.autoclean.enable) {
 			this.addCommand(await purgeNotesRemoteCallback(this, repo, this.branchName));
 		}
 		this.addCommand(await uploadAllNotesCallback(this, repo, this.branchName));
@@ -125,10 +129,12 @@ export default class Enveloppe extends Plugin {
 		}
 	}
 
-	async reloadCommands() {
+	async reloadCommands(useDefaultRepo?: boolean, autoClean?: boolean) {
 		//compare old and new repo to delete old commands
 		const newRepo: Repository[] = this.settings.github?.otherRepo ?? [];
 		this.cleanOldCommands();
+		if (useDefaultRepo) await this.chargeAllCommands(null, this, autoClean);
+
 		for (const repo of newRepo) {
 			if (repo.createShortcuts) {
 				await this.chargeAllCommands(repo, this);
