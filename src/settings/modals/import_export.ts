@@ -217,6 +217,8 @@ export class ExportModal extends Modal {
 		const github: Partial<GitHub> | undefined = cloneCensored.github;
 		const plugin: Partial<PluginBehavior> | undefined = cloneCensored.plugin;
 		if (censuredSettings.tabsId) delete cloneCensored.tabsId;
+		//@ts-ignore
+		if (censuredSettings.tabsID) delete cloneCensored.tabsID;
 		if (github) {
 			delete github.repo;
 			delete github.user;
