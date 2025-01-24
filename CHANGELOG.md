@@ -1,3 +1,8 @@
+## [7.5.6](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.5...7.5.6) (2025-01-24)
+### Bug Fixes
+
+* **export:** delete tabsID (old version) in export ([dc7f689](https://github.com/Enveloppe/obsidian-enveloppe/commit/dc7f68946c74fc5bc1b5333f46de24ff566b6396))
+
 ## [7.5.5](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.4...7.5.5) (2025-01-23)
 ### Bug Fixes
 
