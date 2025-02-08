@@ -211,14 +211,19 @@ a.enveloppe-download:hover {
 }
 
 @media screen and (max-width: 900px) {
-	.enveloppe .settings-tab-bar,
-	.setting-item.enveloppe-export-import > .setting-item-control {
+	.enveloppe .settings-tab-bar {
 		flex-direction: column;
 		width: 100%;
 	}
 
-	.setting-item.enveloppe-export-import > .setting-item-control button {
-		width: 100%;
+	.setting-item.import-export > .setting-item-control {
+		display: grid;
+		grid-template-columns: 1fr;
+		justify-content: start;
+	}
+
+	.setting-item.import-export {
+		display: grid;
 	}
 
 	a.enveloppe-copy + button {
