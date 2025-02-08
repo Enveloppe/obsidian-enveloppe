@@ -1,3 +1,8 @@
+## [7.5.8](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.7...7.5.8) (2025-02-08)
+### Bug Fixes
+
+* unhandled infinite rejection ([a489591](https://github.com/Enveloppe/obsidian-enveloppe/commit/a4895914773c24b2cb5dcee3939e317e44d5334a))
+
 ## [7.5.7](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.6...7.5.7) (2025-02-08)
 ### Bug Fixes
 
