@@ -1,3 +1,8 @@
+## [7.5.7](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.6...7.5.7) (2025-02-08)
+### Bug Fixes
+
+* **style:** broken "import-export" button on mobile ([77d5de2](https://github.com/Enveloppe/obsidian-enveloppe/commit/77d5de287146fdb7d5e82e4bc31555cdceebddf3))
+
 ## [7.5.6](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.5...7.5.6) (2025-01-24)
 ### Bug Fixes
 
