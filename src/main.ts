@@ -341,11 +341,12 @@ export default class Enveloppe extends Plugin {
 		this.addCommand(refreshOpenedSet(this));
 		this.addCommand(refreshAllSets(this));
 		window.addEventListener("unhandledrejection", (e) => {
-			if (e.reason.stack.includes(this.manifest.id))
+			if (e?.reason?.stack?.includes(this.manifest.id))
 				this.console.writeToLog(e.reason, "fatal");
 		});
 		window.addEventListener("error", (e) => {
-			if (e.error.stack.includes(this.manifest.id)) this.console.writeToLog(e, "error");
+			if (e?.error?.stack?.includes(this.manifest.id))
+				this.console.writeToLog(e, "error");
 		});
 	}
 
