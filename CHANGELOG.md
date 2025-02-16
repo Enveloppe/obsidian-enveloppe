@@ -1,3 +1,8 @@
+## [7.5.9](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.8...7.5.9) (2025-02-16)
+### Bug Fixes
+
+* **yaml:tags:** TypeError - yaml.tags.map is not a function or not iterable ([9a7612e](https://github.com/Enveloppe/obsidian-enveloppe/commit/9a7612e13d64acac1f96980468ec2e7ec0839651))
+
 ## [7.5.8](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.7...7.5.8) (2025-02-08)
 ### Bug Fixes
 
