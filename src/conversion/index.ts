@@ -61,15 +61,21 @@ export function addHardLineBreak(
 	}
 }
 
+function setTags(toAdd: string[], tags?: any) {
+	if (tags) {
+		tags = tags.map((tag: string) => tag.replaceAll("/", "_"));
+		if (Array.isArray(tags)) {
+			return [...new Set([...tags, ...toAdd])];
+		}
+		return [...new Set([...toAdd, tags])];
+	}
+	return toAdd;
+}
+
 function tagsToYaml(toAdd: string[], plugin: Enveloppe, yaml: any) {
 	if (yaml.tag) {
 		try {
-			toAdd = [
-				...new Set([
-					...toAdd,
-					...yaml.tag.map((tag: string) => tag.replaceAll("/", "_")),
-				]),
-			];
+			toAdd = [...setTags(yaml.tag, toAdd)];
 			delete yaml.tag;
 		} catch (e) {
 			plugin.console.error(e as Error);
@@ -77,12 +83,7 @@ function tagsToYaml(toAdd: string[], plugin: Enveloppe, yaml: any) {
 	}
 	if (yaml.tags) {
 		try {
-			yaml.tags = [
-				...new Set([
-					...yaml.tags.map((tag: string) => tag.replaceAll("/", "_")),
-					...toAdd,
-				]),
-			];
+			yaml.tags = [...setTags(toAdd, yaml.tags)];
 		} catch (e) {
 			plugin.console.error(e as Error);
 		}
