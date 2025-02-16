@@ -1,3 +1,8 @@
+## [7.5.10](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.9...7.5.10) (2025-02-16)
+### Bug Fixes
+
+* **yaml:tags:** typo ([5265fc4](https://github.com/Enveloppe/obsidian-enveloppe/commit/5265fc41e98167ee90c7fac2e66c73da5c98b5b0))
+
 ## [7.5.9](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.8...7.5.9) (2025-02-16)
 ### Bug Fixes
 
