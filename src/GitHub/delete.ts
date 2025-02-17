@@ -231,9 +231,15 @@ export async function filterGithubFile(
  */
 
 function parseYamlFrontmatter(contents: string): unknown {
-	const yamlFrontmatter = contents.split("---")[1];
-	const yamlFrontmatterParsed = parseYaml(yamlFrontmatter) ?? {};
-	return trimObject(yamlFrontmatterParsed);
+	const yamlFrontmatter = contents.split("---");
+	if (yamlFrontmatter.length < 2) return {}; //no frontmatter
+	try {
+		const yamlFrontmatterParsed = parseYaml(yamlFrontmatter[1]) ?? {};
+		return trimObject(yamlFrontmatterParsed);
+	} catch (e) { //probably not a valid frontmatter, skip
+		console.warn("Error parsing YAML frontmatter", e);
+		return {};
+	}
 }
 
 /**
@@ -261,7 +267,6 @@ async function checkIndexFiles(
 	if (fileRequest.status === 200) {
 		// @ts-ignore
 		const fileContent = Base64.decode(fileRequest.data.content);
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const fileFrontmatter = parseYamlFrontmatter(fileContent) as any;
 		// if not share => don't delete
 		// Key preventing deletion :
