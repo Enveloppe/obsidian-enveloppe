@@ -1,3 +1,8 @@
+## [7.5.11](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.10...7.5.11) (2025-02-17)
+### Bug Fixes
+
+* **yaml:** canno't read length of undefined ([0a04a69](https://github.com/Enveloppe/obsidian-enveloppe/commit/0a04a69573ef440f70f1f9e855a73c03e09c2bce))
+
 ## [7.5.10](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.9...7.5.10) (2025-02-16)
 ### Bug Fixes
 
