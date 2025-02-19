@@ -58,10 +58,15 @@ export class Logs {
 				? `\t\t${err.stack.replace(errMessage, "").trim().replaceAll("Error: \n", "").trim().replaceAll("\n", "\n\t")}\n\n`
 				: "\n";
 			const header = `${new Date().toLocaleString()} [${type}]: \n\t${errMessage.replaceAll("\n", "\n\t")}\n${stack}`;
-			const exists = this.app.vault.adapter.exists(logFile);
-			if (!exists)
-				this.app.vault.adapter.write(logFile, header).catch((e) => console.error(e));
-			else this.app.vault.adapter.append(logFile, header).catch((e) => console.error(e));
+			this.app.vault.adapter
+				.exists(logFile)
+				.then((e) => {
+					if (!e)
+						this.app.vault.adapter.write(logFile, header).catch((e) => console.error(e));
+					else
+						this.app.vault.adapter.append(logFile, header).catch((e) => console.error(e));
+				})
+				.catch((e) => console.error(e));
 		}
 	}
 

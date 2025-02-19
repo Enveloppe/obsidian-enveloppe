@@ -340,14 +340,16 @@ export default class Enveloppe extends Plugin {
 		}
 		this.addCommand(refreshOpenedSet(this));
 		this.addCommand(refreshAllSets(this));
-		window.addEventListener("unhandledrejection", (e) => {
-			if (e?.reason?.stack?.includes(this.manifest.id))
-				this.console.writeToLog(e.reason, "fatal");
-		});
-		window.addEventListener("error", (e) => {
-			if (e?.error?.stack?.includes(this.manifest.id))
-				this.console.writeToLog(e, "error");
-		});
+		window.addEventListener("unhandledrejection", this.unhandledRejectionListener);
+		window.addEventListener("error", this.errorListener);
+	}
+
+	unhandledRejectionListener(e: PromiseRejectionEvent) {
+		if (e?.reason?.stack?.includes(this.manifest.id)) this.console.writeToLog(e, "fatal");
+	}
+
+	errorListener(e: ErrorEvent) {
+		if (e?.error?.stack?.includes(this.manifest.id)) this.console.writeToLog(e, "error");
 	}
 
 	/**
@@ -355,6 +357,9 @@ export default class Enveloppe extends Plugin {
 	 */
 	onunload() {
 		this.console.warn("[Obsidian Enveloppe] Unloaded");
+		//remove the event listener
+		window.removeEventListener("unhandledrejection", this.unhandledRejectionListener);
+		window.removeEventListener("error", this.errorListener);
 	}
 
 	/**
