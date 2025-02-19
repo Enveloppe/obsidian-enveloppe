@@ -1,3 +1,8 @@
+## [7.5.13-1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.13-0...7.5.13-1) (2025-02-19)
+### Bug Fixes
+
+* **notices:** update notice length reference to use plugin settings ([d7c6a03](https://github.com/Enveloppe/obsidian-enveloppe/commit/d7c6a0322ff1ff6a98d448c33e07fdb82b849316))
+
 ## [7.5.13-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.12...7.5.13-0) (2025-02-19)
 ### Bug Fixes
 
