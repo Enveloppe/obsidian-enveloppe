@@ -471,7 +471,7 @@ class ModalEditingRepository extends Modal {
 							value = "[PUBLISHER] MERGE";
 							new Notice(
 								i18next.t("settings.githubWorkflow.prRequest.error"),
-								this.settings.plugin.noticeLength
+								this.plugin.settings.plugin.noticeLength
 							);
 						}
 						this.repository.workflow.commitMessage = value;

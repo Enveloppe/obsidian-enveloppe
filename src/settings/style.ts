@@ -71,24 +71,24 @@ export async function autoCleanCondition(
 		if (settings.autoclean.enable)
 			new Notice(
 				i18next.t("error.autoClean", { what: translation }),
-				this.settings.plugin.noticeLength
+				plugin.settings.plugin.noticeLength
 			);
 		settings.autoclean.enable = false;
 		await plugin.saveSettings();
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
-		settingsTab.renderSettingsPage(ESettingsTabId.Upload);
+		await settingsTab.renderSettingsPage(ESettingsTabId.Upload);
 	}
 	if (value.length === 0 && settings.behavior !== FolderSettings.Yaml) {
 		if (settings.autoclean.enable)
 			new Notice(
 				i18next.t("error.autoClean", { what: i18next.t("common.defaultName") }),
-				this.settings.plugin.noticeLength
+				plugin.settings.plugin.noticeLength
 			);
 		settings.autoclean.enable = false;
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
-		settingsTab.renderSettingsPage(ESettingsTabId.Upload);
+		await settingsTab.renderSettingsPage(ESettingsTabId.Upload);
 	}
 	if (settings.autoclean.enable) {
 		// @ts-ignore
