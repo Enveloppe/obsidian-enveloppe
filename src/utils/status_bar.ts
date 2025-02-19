@@ -2,7 +2,7 @@
 
 import type { Properties } from "@interfaces";
 import i18next from "i18next";
-import { setIcon, type Notice } from "obsidian";
+import { type Notice, setIcon } from "obsidian";
 import type { Logs } from "./logs";
 // Credit : https://github.com/oleeskild/obsidian-digital-garden/ @oleeskild
 
@@ -21,26 +21,29 @@ export class ShareStatusBar {
 	icon: HTMLElement;
 	noticeMobile: Notice | undefined;
 	console: Logs;
+	isMainFile?: boolean;
 
 	/**
 	 * @param {HTMLElement} statusBarItem
 	 * @param {number} numberOfNotesToPublish
 	 * @param {boolean} attachment true if there are attachment to the note
 	 * @param console
+	 * @param isMainFile
 	 */
 
 	constructor(
 		statusBarItem: HTMLElement,
 		numberOfNotesToPublish: number,
 		attachment: boolean = false,
-		console: Logs
+		console: Logs,
+		isMainFile?: boolean
 	) {
 		this.statusBarItem = statusBarItem;
 		this.counter = 0;
 		this.numberOfNotesToPublish = numberOfNotesToPublish;
 		this.attachment = attachment;
 		this.console = console;
-
+		this.isMainFile = isMainFile;
 		const typeAttachment = this.attachment
 			? i18next.t("common.attachments")
 			: i18next.t("common.files");
@@ -101,15 +104,19 @@ export class ShareStatusBar {
 					action: i18next.t("common.published"),
 					type: i18next.t("common.files"),
 				});
-		setIcon(this.icon, "mail-check");
-		this.status.setText(
-			i18next.t("statusBar.counter", {
-				msg,
-				counter: this.counter,
-				nb: this.numberOfNotesToPublish,
-			})
-		);
+		const iconProp = this.isMainFile ? "book-check" : "mail-check";
+		setIcon(this.icon, iconProp);
+		if (this.counter > 1)
+			this.status.setText(
+				i18next.t("statusBar.counter", {
+					msg,
+					counter: this.counter,
+					nb: this.numberOfNotesToPublish,
+				})
+			);
+		else this.status.setText(i18next.t("common.main"));
 		this.statusBarItem.addClass("success");
+		if (this.isMainFile) this.statusBarItem.addClass("main-success");
 		this.statusBarItem.removeClass("sharing");
 		this.noticeMobile?.hide();
 		setTimeout(() => {

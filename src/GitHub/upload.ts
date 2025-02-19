@@ -332,21 +332,16 @@ export default class Publisher {
 		};
 		load.hide();
 		notifMob?.hide();
-		let loadBar: ShareStatusBar | undefined = undefined;
-		if (embedFiles.length === 0) {
-			const statusBarItems = this.plugin.addStatusBarItem();
-			loadBar = new ShareStatusBar(statusBarItems, 1, false, this.console);
-		}
+		const statusBarItems = this.plugin.addStatusBarItem();
+		const loadBar = new ShareStatusBar(statusBarItems, 1, false, this.console, true);
+
 		const uploaded: UploadedFiles | undefined = await this.uploadText(
 			text,
 			path,
 			file.name,
 			repo
 		);
-		if (loadBar) {
-			loadBar.increment();
-			loadBar.finish(8000);
-		}
+		loadBar.increment();
 		if (!uploaded) {
 			return {
 				deleted,
@@ -372,6 +367,7 @@ export default class Publisher {
 				convert: properties.frontmatter.general,
 			});
 		}
+		loadBar.finish(8000);
 		return {
 			deleted,
 			uploaded: embeddedUploaded,

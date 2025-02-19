@@ -1,5 +1,9 @@
 /* styles.css */
 
+:root {
+	--main-success: #5caf1a;
+}
+
 /* ---------- MODALS REGEX ---------- */
 .enveloppe.modals .setting-item.entry {
 	border: 0 !important;
@@ -431,7 +435,7 @@ span.enveloppe.loading svg {
 span.enveloppe.icons svg {
 	margin-right: 2px;
 }
-
+span.enveloppe.icons svg.lucide-book-check,
 span.enveloppe.icons svg.lucide-mail-check {
 	/* animation to bump to up */
 	animation: bumpAnimation 0.5s ease-in-out;
@@ -439,6 +443,10 @@ span.enveloppe.icons svg.lucide-mail-check {
 
 .status-bar-item.plugin-obsidian-mkdocs-publisher.success {
 	color: var(--text-success);
+}
+.status-bar-item.plugin-obsidian-mkdocs-publisher.main-success {
+	color: var(--main-success);
+	font-weight: bold;
 }
 
 .notice:has(.enveloppe.success.notification) {
