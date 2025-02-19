@@ -1,3 +1,8 @@
+## [7.5.13-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.12...7.5.13-0) (2025-02-19)
+### Bug Fixes
+
+* **notices:** update notice length for various notifications across the application ([39719cf](https://github.com/Enveloppe/obsidian-enveloppe/commit/39719cf4dbeca01515740690605bef4f08a04eeb))
+
 ## [7.5.0-3](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.0-2...7.5.0-3) (2024-12-29)
 
 ## [7.5.0-2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.0-1...7.5.0-2) (2024-12-28)
