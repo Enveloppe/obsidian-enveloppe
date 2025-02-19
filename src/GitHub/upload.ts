@@ -330,14 +330,23 @@ export default class Publisher {
 			deleted: [],
 			undeleted: [],
 		};
-		load.remove();
+		load.hide();
 		notifMob?.hide();
+		let loadBar: ShareStatusBar | undefined = undefined;
+		if (embedFiles.length === 0) {
+			const statusBarItems = this.plugin.addStatusBarItem();
+			loadBar = new ShareStatusBar(statusBarItems, 1, false, this.console);
+		}
 		const uploaded: UploadedFiles | undefined = await this.uploadText(
 			text,
 			path,
 			file.name,
 			repo
 		);
+		if (loadBar) {
+			loadBar.increment();
+			loadBar.finish(8000);
+		}
 		if (!uploaded) {
 			return {
 				deleted,
