@@ -1,3 +1,9 @@
+## [7.5.12](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.11...7.5.12) (2025-02-19)
+### Bug Fixes
+
+* **status-bar:** enhance status bar behavior for main files and improve styling ([b9dec51](https://github.com/Enveloppe/obsidian-enveloppe/commit/b9dec5140f274ba4c4e0cd36a83cc6f979bd6067))
+* **upload:** update loading behavior and add status bar for file uploads ([eef6a0c](https://github.com/Enveloppe/obsidian-enveloppe/commit/eef6a0ca27949e4d17f4235d222568ea83ba891f))
+
 ## [7.5.11](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.10...7.5.11) (2025-02-17)
 ### Bug Fixes
 
