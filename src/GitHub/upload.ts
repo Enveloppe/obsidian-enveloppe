@@ -59,6 +59,7 @@ export default class Publisher {
 	settings: EnveloppeSettings;
 	branchName: string;
 	console: Logs;
+	noticeLength?: number;
 
 	/**
 	 * Class to manage the branch
@@ -74,6 +75,7 @@ export default class Publisher {
 		this.plugin = plugin;
 		this.branchName = plugin.branchName;
 		this.console = plugin.console;
+		this.noticeLength = this.settings.plugin.noticeLength;
 	}
 
 	/**
@@ -135,7 +137,10 @@ export default class Publisher {
 						}
 						statusBar.increment();
 					} catch (e) {
-						new Notice(i18next.t("error.unablePublishNote", { file: file.name }));
+						new Notice(
+							i18next.t("error.unablePublishNote", { file: file.name }),
+							this.noticeLength
+						);
 						fileError.push(file.name);
 						this.console.error(e as Error);
 					}
@@ -191,7 +196,7 @@ export default class Publisher {
 					repo.repository?.repo ?? this.settings.github.repo
 				}:${repo.repository?.branch ?? this.branchName}`,
 			});
-			new Notice(msg);
+			new Notice(msg, this.noticeLength);
 			return false;
 		}
 		frontmatter = mergeFrontmatter(
@@ -386,13 +391,15 @@ export default class Publisher {
 	async upload(content: string, path: string, title: string = "", prop: Properties) {
 		if (!prop.repo) {
 			new Notice(
-				"Config error : You need to define a github repo in the plugin settings"
+				"Config error : You need to define a github repo in the plugin settings",
+				this.noticeLength
 			);
 			throw {};
 		}
 		if (!prop.owner) {
 			new Notice(
-				"Config error : You need to define your github username in the plugin settings"
+				"Config error : You need to define your github username in the plugin settings",
+				this.noticeLength
 			);
 			throw {};
 		}

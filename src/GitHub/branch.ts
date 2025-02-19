@@ -172,7 +172,7 @@ export class GithubBranch extends FilesManagement {
 			return branch.status === 200;
 		} catch (e) {
 			this.console.warn(e);
-			new Notice(i18next.t("error.mergeconflic"));
+			new Notice(i18next.t("error.mergeconflic"), this.noticeLength);
 			return false;
 		}
 	}
@@ -217,7 +217,7 @@ export class GithubBranch extends FilesManagement {
 			return true;
 		} catch (e) {
 			this.console.warn(e);
-			new Notice(i18next.t("error.errorConfig", { repo: prop }));
+			new Notice(i18next.t("error.errorConfig", { repo: prop }), this.noticeLength);
 			return false;
 		}
 	}
@@ -243,17 +243,26 @@ export class GithubBranch extends FilesManagement {
 				.catch((e) => {
 					//check the error code
 					if (e.status === 404) {
-						new Notice(i18next.t("commands.checkValidity.inRepo.error404", { repo }));
+						new Notice(
+							i18next.t("commands.checkValidity.inRepo.error404", { repo }),
+							this.noticeLength
+						);
 						throw new EnveloppeErrors(
 							i18next.t("commands.checkValidity.inRepo.error404", { repo })
 						);
 					} else if (e.status === 403) {
-						new Notice(i18next.t("commands.checkValidity.inRepo.error403", { repo }));
+						new Notice(
+							i18next.t("commands.checkValidity.inRepo.error403", { repo }),
+							this.noticeLength
+						);
 						throw new EnveloppeErrors(
 							i18next.t("commands.checkValidity.inRepo.error403", { repo })
 						);
 					} else if (e.status === 301) {
-						new Notice(i18next.t("commands.checkValidity.inRepo.error301", { repo }));
+						new Notice(
+							i18next.t("commands.checkValidity.inRepo.error301", { repo }),
+							this.noticeLength
+						);
 						throw new EnveloppeErrors(
 							i18next.t("commands.checkValidity.inRepo.error301", { repo })
 						);

@@ -34,7 +34,10 @@ export async function createLinkCallback(
 						repository: repo,
 					};
 					createLink(file, multiRepo, plugin);
-					new Notice(i18next.t("commands.copyLink.onActivation"));
+					new Notice(
+						i18next.t("commands.copyLink.onActivation"),
+						plugin.settings.plugin.noticeLength
+					);
 				}
 				return true;
 			}
@@ -63,8 +66,14 @@ export async function createLinkOnActiveFile(
 			repository: repo,
 		};
 		await createLink(file, multiRepo, plugin);
-		new Notice(i18next.t("commands.copyLink.onActivation"));
+		new Notice(
+			i18next.t("commands.copyLink.onActivation"),
+			plugin.settings.plugin.noticeLength
+		);
 		return;
 	}
-	new Notice(i18next.t("commands.runOtherRepo.noFile"));
+	new Notice(
+		i18next.t("commands.runOtherRepo.noFile"),
+		plugin.settings.plugin.noticeLength
+	);
 }

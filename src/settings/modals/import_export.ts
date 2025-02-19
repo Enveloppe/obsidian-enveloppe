@@ -406,7 +406,10 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 			this.plugin.saveSettings().then();
 			this.page.renderSettingsPage("github-configuration").then();
 		} catch (e) {
-			new Notice(i18next.t("modals.import.error.span") + e);
+			new Notice(
+				i18next.t("modals.import.error.span") + e,
+				this.settings.plugin.noticeLength
+			);
 			this.console.error(e as Error);
 		}
 	}

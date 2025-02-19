@@ -19,7 +19,7 @@ export async function repositoryValidityActiveFile(
 	if (file) {
 		await checkRepositoryValidity(await plugin.reloadOctokit(repo?.smartKey), repo, file);
 	} else {
-		new Notice("No file is active");
+		new Notice("No file is active", plugin.settings.plugin.noticeLength);
 	}
 }
 

@@ -5,8 +5,8 @@ import {
 	type FrontMatterCache,
 	Notice,
 	Platform,
-	setIcon,
 	type TFile,
+	setIcon,
 } from "obsidian";
 import type { GithubBranch } from "src/GitHub/branch";
 import { deleteFromGithub } from "src/GitHub/delete";
@@ -134,7 +134,10 @@ export async function shareAllMarkedNotes(
 					}
 				} catch (e) {
 					fileError.push(sharedFile.name);
-					new Notice(i18next.t("error.unablePublishNote", { file: sharedFile.name }));
+					new Notice(
+						i18next.t("error.unablePublishNote", { file: sharedFile.name }),
+						PublisherManager.noticeLength
+					);
 					plugin.console.trace(e);
 				}
 			}

@@ -62,7 +62,7 @@ async function purge(
 		"informations.startingClean",
 		{ repo: monoRepo.frontmatter }
 	);
-	new Notice(noticeFragment);
+	new Notice(noticeFragment, PublisherManager.noticeLength);
 	const isValid = await checkRepositoryValidityWithProperties(
 		PublisherManager,
 		monoRepo.frontmatter

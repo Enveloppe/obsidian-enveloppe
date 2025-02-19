@@ -130,10 +130,16 @@ export function addToYaml(
 			}`;
 		}
 	} catch (_e) {
-		new Notice(i18next.t("error.parseYaml"));
+		new Notice(
+			i18next.t("error.parseYaml"),
+			properties.plugin.settings.plugin.noticeLength
+		);
 		return text; //not a valid yaml, skipping
 	}
-	new Notice(i18next.t("error.parseYaml"));
+	new Notice(
+		i18next.t("error.parseYaml"),
+		properties.plugin.settings.plugin.noticeLength
+	);
 	return text;
 }
 

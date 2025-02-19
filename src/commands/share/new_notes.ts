@@ -1,8 +1,8 @@
 import type { MonoRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
 import { type Command, Notice } from "obsidian";
-import { shareAllMarkedNotes } from "src/commands";
 import type { GithubBranch } from "src/GitHub/branch";
+import { shareAllMarkedNotes } from "src/commands";
 import type Enveloppe from "src/main";
 import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
 import {
@@ -71,7 +71,7 @@ export async function shareNewNote(
 	monoRepo: MonoRepoProperties
 ): Promise<void | boolean> {
 	const plugin = PublisherManager.plugin;
-	new Notice(i18next.t("informations.scanningRepo"));
+	new Notice(i18next.t("informations.scanningRepo"), PublisherManager.noticeLength);
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(
 		monoRepo.repository,
 		monoRepo.convert
@@ -87,7 +87,8 @@ export async function shareNewNote(
 	);
 	if (newlySharedNotes.length > 0) {
 		new Notice(
-			i18next.t("informations.foundNoteToSend", { nbNotes: newlySharedNotes.length })
+			i18next.t("informations.foundNoteToSend", { nbNotes: newlySharedNotes.length }),
+			PublisherManager.noticeLength
 		);
 
 		const statusBarElement = plugin.addStatusBarItem();
@@ -108,5 +109,5 @@ export async function shareNewNote(
 		);
 		return;
 	}
-	new Notice(i18next.t("informations.noNewNote"));
+	new Notice(i18next.t("informations.noNewNote"), PublisherManager.noticeLength);
 }

@@ -197,11 +197,20 @@ export class ModalAddingNewRepository extends Modal {
 					}
 					input?.classList?.add("error");
 					if (error.type === "duplicate") {
-						new Notice(i18next.t("settings.github.smartRepo.modals.duplicate"));
+						new Notice(
+							i18next.t("settings.github.smartRepo.modals.duplicate"),
+							this.settings.plugin.noticeLength
+						);
 					} else if (error.type === "default") {
-						new Notice(i18next.t("settings.github.smartRepo.modals.default"));
+						new Notice(
+							i18next.t("settings.github.smartRepo.modals.default"),
+							this.settings.plugin.noticeLength
+						);
 					} else if (error.type === "empty") {
-						new Notice(i18next.t("settings.github.smartRepo.modals.empty"));
+						new Notice(
+							i18next.t("settings.github.smartRepo.modals.empty"),
+							this.settings.plugin.noticeLength
+						);
 					}
 				});
 		});
@@ -235,7 +244,8 @@ export class ModalAddingNewRepository extends Modal {
 			new Notice(
 				`${i18next.t("settings.github.smartRepo.modals.empty")} ${i18next.t(
 					"common.rename"
-				)}`
+				)}`,
+				this.settings.plugin.noticeLength
 			);
 		} else if (error.type === "duplicate") {
 			//rename the repo
@@ -246,7 +256,8 @@ export class ModalAddingNewRepository extends Modal {
 			new Notice(
 				`${i18next.t("settings.github.smartRepo.modals.duplicate")} ${i18next.t(
 					"common.rename"
-				)}`
+				)}`,
+				this.settings.plugin.noticeLength
 			);
 		} else if (error.type === "default") {
 			//rename the repo
@@ -258,7 +269,8 @@ export class ModalAddingNewRepository extends Modal {
 			new Notice(
 				`${i18next.t("settings.github.smartRepo.modals.default")} ${i18next.t(
 					"common.rename"
-				)}`
+				)}`,
+				this.settings.plugin.noticeLength
 			);
 		}
 		this.onSubmit(this.repository);
@@ -457,7 +469,10 @@ class ModalEditingRepository extends Modal {
 					.onChange(async (value) => {
 						if (value.trim().length === 0) {
 							value = "[PUBLISHER] MERGE";
-							new Notice(i18next.t("settings.githubWorkflow.prRequest.error"));
+							new Notice(
+								i18next.t("settings.githubWorkflow.prRequest.error"),
+								this.settings.plugin.noticeLength
+							);
 						}
 						this.repository.workflow.commitMessage = value;
 					})

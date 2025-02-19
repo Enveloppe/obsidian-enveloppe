@@ -312,6 +312,7 @@ export interface PluginBehavior {
 	 * @default `.obsidian/plugins/%pluginID%`
 	 */
 	manifestDir?: string;
+	noticeLength?: number;
 }
 
 /**

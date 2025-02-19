@@ -323,21 +323,37 @@ export async function checkEmptyConfiguration(
 	if (token.length === 0) {
 		isEmpty.push(true);
 		const whatIsEmpty = i18next.t("common.ghToken");
-		if (!silent) new Notice(i18next.t("error.isEmpty", { what: whatIsEmpty }));
+		if (!silent)
+			new Notice(
+				i18next.t("error.isEmpty", { what: whatIsEmpty }),
+				plugin.settings.plugin.noticeLength
+			);
 	} else {
 		for (const repo of prop) {
 			if (repo.repo.length === 0) {
 				isEmpty.push(true);
 				const whatIsEmpty = i18next.t("common.repository");
-				if (!silent) new Notice(i18next.t("error.isEmpty", { what: whatIsEmpty }));
+				if (!silent)
+					new Notice(
+						i18next.t("error.isEmpty", { what: whatIsEmpty }),
+						plugin.settings.plugin.noticeLength
+					);
 			} else if (repo.owner.length === 0) {
 				isEmpty.push(true);
 				const whatIsEmpty = i18next.t("error.whatEmpty.owner");
-				if (!silent) new Notice(i18next.t("error.isEmpty", { what: whatIsEmpty }));
+				if (!silent)
+					new Notice(
+						i18next.t("error.isEmpty", { what: whatIsEmpty }),
+						plugin.settings.plugin.noticeLength
+					);
 			} else if (repo.branch.length === 0) {
 				isEmpty.push(true);
 				const whatIsEmpty = i18next.t("error.whatEmpty.branch");
-				if (!silent) new Notice(i18next.t("error.isEmpty", { what: whatIsEmpty }));
+				if (!silent)
+					new Notice(
+						i18next.t("error.isEmpty", { what: whatIsEmpty }),
+						plugin.settings.plugin.noticeLength
+					);
 			} else {
 				isEmpty.push(false);
 			}
@@ -506,7 +522,8 @@ export async function verifyRateLimitAPI(
 
 		if (remaining <= numberOfFile) {
 			new Notice(
-				i18next.t("commands.checkValidity.rateLimit.limited", { resetTime: time })
+				i18next.t("commands.checkValidity.rateLimit.limited", { resetTime: time }),
+				settings.plugin.noticeLength
 			);
 			return 0;
 		}
@@ -516,11 +533,8 @@ export async function verifyRateLimitAPI(
 			resetTime: time,
 		});
 
-		if (commands) {
-			new Notice(message);
-		} else {
-			plugin.console.info(message);
-		}
+		if (commands) new Notice(message, settings.plugin.noticeLength);
+		else plugin.console.info(message);
 
 		return remaining;
 	} catch (error) {

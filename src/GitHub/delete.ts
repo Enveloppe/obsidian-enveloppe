@@ -76,8 +76,7 @@ async function deleteFromGithubOneRepo(
 	if (repo.dryRun.autoclean) return cleanDryRun(silent, filesManagement, repoProperties);
 	if (!repo.autoclean) return { success: false, deleted: [], undeleted: [] };
 	const getAllFile = await filesManagement.getAllFileFromRepo(branchName, repo);
-	const settings = filesManagement.settings;
-	const { octokit, plugin } = filesManagement;
+	const { octokit, plugin, settings, noticeLength } = filesManagement;
 	const filesInRepo = await filterGithubFile(getAllFile, settings, repo);
 	if (
 		(settings.github.rateLimit === 0 || filesInRepo.length > settings.github.rateLimit) &&
@@ -157,7 +156,7 @@ async function deleteFromGithubOneRepo(
 		failedMsg = i18next.t("deletion.failed", { nb: deletedFailed.toString() });
 	}
 	if (!silent) {
-		new Notice(successMsg + failedMsg);
+		new Notice(successMsg + failedMsg, noticeLength);
 	}
 	result.success = deletedFailed === 0;
 	return result;
@@ -236,7 +235,8 @@ function parseYamlFrontmatter(contents: string): unknown {
 	try {
 		const yamlFrontmatterParsed = parseYaml(yamlFrontmatter[1]) ?? {};
 		return trimObject(yamlFrontmatterParsed);
-	} catch (e) { //probably not a valid frontmatter, skip
+	} catch (e) {
+		//probably not a valid frontmatter, skip
 		console.warn("Error parsing YAML frontmatter", e);
 		return {};
 	}
@@ -287,7 +287,7 @@ function cleanDryRun(
 	filesManagement: FilesManagement,
 	repoProperties: MonoRepoProperties
 ): Deleted {
-	const { vault, settings, plugin } = filesManagement;
+	const { vault, settings, plugin, noticeLength } = filesManagement;
 	const app = plugin.app;
 	const repo = repoProperties.frontmatter;
 	const pconsole = filesManagement.console;
@@ -388,7 +388,7 @@ function cleanDryRun(
 		deletedSuccess > 0
 			? i18next.t("deletion.success", { nb: deletedSuccess.toString() })
 			: i18next.t("deletion.noFile");
-	if (!silent) new Notice(successMsg);
+	if (!silent) new Notice(successMsg, noticeLength);
 	result.success = deletedSuccess === 0;
 	return result;
 }

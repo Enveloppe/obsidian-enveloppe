@@ -15,9 +15,11 @@ import type Enveloppe from "../main";
 export class Logs {
 	plugin: Enveloppe;
 	app: App;
+	noticeLength?: number;
 	constructor(plugin: Enveloppe) {
 		this.plugin = plugin;
 		this.app = plugin.app;
+		this.noticeLength = plugin.settings.plugin.noticeLength;
 	}
 
 	async createLogFile() {
@@ -75,7 +77,8 @@ export class Logs {
 	 */
 	private notif(...messages: unknown[]) {
 		const settings = this.plugin.settings;
-		if (settings.plugin?.noticeError) new Notice(messages.join(" "));
+		if (settings.plugin?.noticeError)
+			new Notice(messages.join(" "), settings.plugin.noticeLength);
 	}
 
 	error(error: Error) {
@@ -145,7 +148,7 @@ export class Logs {
 		noticeFrag.createEl("span", {
 			cls: ["enveloppe", cls, "notification"],
 		}).innerHTML = message;
-		return new Notice(noticeFrag, 0);
+		return new Notice(noticeFrag, this.noticeLength);
 	}
 
 	noticeErrorUpload(properties: Properties | Properties[]) {
@@ -164,7 +167,7 @@ export class Logs {
 					cls: ["error", "enveloppe", "notification"],
 				})
 				.appendChild(html);
-			new Notice(notif);
+			new Notice(notif, this.noticeLength);
 		}
 	}
 
@@ -180,7 +183,7 @@ export class Logs {
 				cls: ["success", "enveloppe", "notification"],
 			})
 			.appendChild(html);
-		new Notice(notif);
+		new Notice(notif, this.noticeLength);
 	}
 
 	noticeError(message: string) {
@@ -195,7 +198,7 @@ export class Logs {
 				cls: ["error", "enveloppe", "notification"],
 			})
 			.appendChild(html);
-		new Notice(notif);
+		new Notice(notif, this.plugin.settings.plugin.noticeLength);
 	}
 
 	async publisherNotificationOneRepo(
@@ -225,7 +228,7 @@ export class Logs {
 			cls: ["enveloppe", "success", "notification"],
 		}).innerHTML = successMsg;
 		if (settings.github.workflow.name.length === 0) {
-			new Notice(docSuccess, 0);
+			new Notice(docSuccess, settings.plugin.noticeLength);
 			return;
 		}
 		const workflowSuccess = document.createDocumentFragment();
@@ -243,10 +246,10 @@ export class Logs {
 			nbNotes: noticeValue,
 			repo: prop,
 		})}.<br>${i18next.t("informations.waitingWorkflow")}`;
-		new Notice(workflowSuccess);
+		new Notice(workflowSuccess, PublisherManager.settings.plugin.noticeLength);
 		const successWorkflow = await PublisherManager.workflowGestion(prop);
 		if (successWorkflow) {
-			new Notice(docSuccess, 0);
+			new Notice(docSuccess, settings.plugin.noticeLength);
 		}
 	}
 

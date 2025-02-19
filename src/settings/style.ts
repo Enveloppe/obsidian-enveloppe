@@ -1,4 +1,4 @@
-import { ESettingsTabId, FolderSettings, type EnveloppeSettings } from "@interfaces";
+import { ESettingsTabId, type EnveloppeSettings, FolderSettings } from "@interfaces";
 import i18next from "i18next";
 import { Notice, type Setting } from "obsidian";
 import type Enveloppe from "src/main";
@@ -69,7 +69,10 @@ export async function autoCleanCondition(
 			: i18next.t("common.defaultName");
 	if (value.length === 0 && settings.defaultName) {
 		if (settings.autoclean.enable)
-			new Notice(i18next.t("error.autoClean", { what: translation }));
+			new Notice(
+				i18next.t("error.autoClean", { what: translation }),
+				this.settings.plugin.noticeLength
+			);
 		settings.autoclean.enable = false;
 		await plugin.saveSettings();
 		// @ts-ignore
@@ -78,7 +81,10 @@ export async function autoCleanCondition(
 	}
 	if (value.length === 0 && settings.behavior !== FolderSettings.Yaml) {
 		if (settings.autoclean.enable)
-			new Notice(i18next.t("error.autoClean", { what: i18next.t("common.defaultName") }));
+			new Notice(
+				i18next.t("error.autoClean", { what: i18next.t("common.defaultName") }),
+				this.settings.plugin.noticeLength
+			);
 		settings.autoclean.enable = false;
 		// @ts-ignore
 		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");

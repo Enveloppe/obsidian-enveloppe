@@ -280,7 +280,10 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						if (value.trim().length === 0) {
 							tokenSettings.controlEl.addClass("error");
-							new Notice(i18next.t("settings.github.ghToken.error"));
+							new Notice(
+								i18next.t("settings.github.ghToken.error"),
+								this.settings.plugin.noticeLength
+							);
 						} else {
 							tokenSettings.controlEl.removeClass("error");
 							await migrateToken(this.plugin, value.trim());
@@ -346,7 +349,10 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						githubSettings.dryRun.folderName = value.trim();
 						if (value.trim().length === 0) {
-							new Notice(i18next.t("settings.github.dryRun.folder.error"));
+							new Notice(
+								i18next.t("settings.github.dryRun.folder.error"),
+								this.settings.plugin.noticeLength
+							);
 							text.inputEl.addClass("error");
 						} else {
 							text.inputEl.removeClass("error");
@@ -407,7 +413,10 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						if (value.trim().length === 0) {
 							value = "[PUBLISHER] MERGE";
-							new Notice(i18next.t("settings.githubWorkflow.prRequest.error"));
+							new Notice(
+								i18next.t("settings.githubWorkflow.prRequest.error"),
+								this.settings.plugin.noticeLength
+							);
 						}
 						githubSettings.workflow.commitMessage = value;
 						await this.plugin.saveSettings();
@@ -1408,6 +1417,25 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 
 					await this.plugin.saveSettings();
 				})
+			);
+
+		const length = pluginSettings.noticeLength ?? 0;
+		new Setting(this.settingsPage)
+			.setName(i18next.t("settings.plugin.noticeLength.title"))
+			.setDesc(i18next.t("settings.plugin.noticeLength.desc"))
+			.addText((text) =>
+				text
+					.setPlaceholder("0")
+					.setValue(`${length / 1000}`)
+					.onChange(async (value) => {
+						pluginSettings.noticeLength = parseInt(value, 10) * 1000;
+						if (pluginSettings.noticeLength < 0) pluginSettings.noticeLength = 0;
+						if (isNaN(pluginSettings.noticeLength)) {
+							pluginSettings.noticeLength = 0;
+							await this.renderSettingsPage(ESettingsTabId.Plugin);
+						}
+						await this.plugin.saveSettings();
+					})
 			);
 	}
 

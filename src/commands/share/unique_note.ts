@@ -154,6 +154,9 @@ export async function shareActiveFile(
 			frontmatter
 		);
 	} else {
-		new Notice(i18next.t("commands.runOtherRepo.noFile"));
+		new Notice(
+			i18next.t("commands.runOtherRepo.noFile"),
+			plugin.settings.plugin.noticeLength
+		);
 	}
 }

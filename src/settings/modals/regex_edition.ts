@@ -1,6 +1,6 @@
 import {
-	FolderSettings,
 	type EnveloppeSettings,
+	FolderSettings,
 	type OverrideAttachments,
 	type RegexReplace,
 	type TextCleaner,
@@ -8,7 +8,7 @@ import {
 } from "@interfaces";
 import dedent from "dedent";
 import i18next from "i18next";
-import { type App, Modal, Notice, sanitizeHTMLToDom, Setting } from "obsidian";
+import { type App, Modal, Notice, Setting, sanitizeHTMLToDom } from "obsidian";
 import { escapeRegex } from "src/conversion/links";
 
 function isRegexValid(regexString: string) {
@@ -45,7 +45,10 @@ export class OverrideAttachmentsModal extends Modal {
 	forbiddenValue(value: string): { value: string; isForbidden: boolean } {
 		if (!isRegexValid(value).isValid) {
 			const error = isRegexValid(value).error;
-			new Notice(i18next.t("settings.regexReplacing.invalidRegex", { e: error }));
+			new Notice(
+				i18next.t("settings.regexReplacing.invalidRegex", { e: error }),
+				this.settings.plugin.noticeLength
+			);
 			return {
 				value: "",
 				isForbidden: true,
@@ -55,7 +58,8 @@ export class OverrideAttachmentsModal extends Modal {
 				i18next.t("settings.regexReplacing.forbiddenValue", {
 					what: i18next.t("common.path.folder"),
 					forbiddenChar: value.match(/[\\><:"|?*]/)![0],
-				})
+				}),
+				this.settings.plugin.noticeLength
 			);
 			return {
 				value: "",
@@ -216,13 +220,17 @@ export class ModalRegexFilePathName extends Modal {
 				i18next.t("settings.regexReplacing.forbiddenValue", {
 					what: onWhat,
 					forbiddenChar: value,
-				})
+				}),
+				this.settings.plugin.noticeLength
 			);
 			value = "";
 			isForbidden = true;
 		} else if (!isRegexValid(value).isValid) {
 			const error = isRegexValid(value).error;
-			new Notice(i18next.t("settings.regexReplacing.invalidRegex", { e: error }));
+			new Notice(
+				i18next.t("settings.regexReplacing.invalidRegex", { e: error }),
+				this.settings.plugin.noticeLength
+			);
 			isForbidden = true;
 		} else if (
 			value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/) &&
@@ -233,7 +241,8 @@ export class ModalRegexFilePathName extends Modal {
 				i18next.t("settings.regexReplacing.forbiddenValue", {
 					what: onWhat,
 					forbiddenChar: value.match(/[><:"|?*]|(\\\/)|(^\w+\/\w+)|(\\)/)![0],
-				})
+				}),
+				this.settings.plugin.noticeLength
 			);
 			value = "";
 			isForbidden = true;
@@ -243,7 +252,8 @@ export class ModalRegexFilePathName extends Modal {
 					i18next.t("settings.regexReplacing.forbiddenValue", {
 						what: onWhat,
 						forbiddenChar: value.match(/[\\><:"|?*]/)![0],
-					})
+					}),
+					this.settings.plugin.noticeLength
 				);
 				value = "";
 				isForbidden = true;
@@ -251,7 +261,10 @@ export class ModalRegexFilePathName extends Modal {
 				value.match(/(^\w+\/\w+)|(\\\/)/) &&
 				!value.match(regexSpecialDontExclude)
 			) {
-				new Notice(i18next.t("settings.regexReplacing.warningPath"));
+				new Notice(
+					i18next.t("settings.regexReplacing.warningPath"),
+					this.settings.plugin.noticeLength
+				);
 			}
 		}
 		return {
@@ -354,7 +367,10 @@ export class ModalRegexFilePathName extends Modal {
 						if (!title.replacement) title.replacement = "";
 						const isForbiddenEntry = this.forbiddenValue(title.regex, title.type);
 						if (title.regex.length === 0) {
-							new Notice(i18next.t("settings.regexReplacing.emptyRegex"));
+							new Notice(
+								i18next.t("settings.regexReplacing.emptyRegex"),
+								this.settings.plugin.noticeLength
+							);
 							isForbiddenEntry.isForbidden = true;
 							isForbiddenEntry.value = "";
 						}
@@ -545,7 +561,8 @@ export class ModalRegexOnContents extends Modal {
 								new Notice(
 									i18next.t("settings.regexReplacing.invalidRegex", {
 										e: isRegexValid(censor.entry).error,
-									})
+									}),
+									this.settings.plugin.noticeLength
 								);
 								//add error class to faulty input
 								const faultyInput = contentEl.querySelector(

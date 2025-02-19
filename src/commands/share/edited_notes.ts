@@ -71,7 +71,7 @@ async function shareAllEditedNotes(
 	monoRepo: MonoRepoProperties
 ) {
 	const plugin = PublisherManager.plugin;
-	new Notice(i18next.t("informations.scanningRepo"));
+	new Notice(i18next.t("informations.scanningRepo"), PublisherManager.noticeLength);
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(
 		monoRepo.repository,
 		monoRepo.convert
@@ -91,7 +91,8 @@ async function shareAllEditedNotes(
 	);
 	if (newlySharedNotes.length > 0) {
 		new Notice(
-			i18next.t("informations.foundNoteToSend", { nbNotes: newlySharedNotes.length })
+			i18next.t("informations.foundNoteToSend", { nbNotes: newlySharedNotes.length }),
+			PublisherManager.noticeLength
 		);
 
 		const statusBarElement = plugin.addStatusBarItem();
@@ -112,7 +113,7 @@ async function shareAllEditedNotes(
 		);
 		return;
 	}
-	new Notice(i18next.t("informations.noNewNote"));
+	new Notice(i18next.t("informations.noNewNote"), PublisherManager.noticeLength);
 }
 
 /**
@@ -128,7 +129,7 @@ async function shareOnlyEdited(
 ) {
 	const shortRepo = monoRepo.repository;
 	const prop = monoRepo.frontmatter;
-	new Notice(i18next.t("informations.scanningRepo"));
+	new Notice(i18next.t("informations.scanningRepo"), PublisherManager.noticeLength);
 	const sharedFilesWithPaths = PublisherManager.getAllFileWithPath(
 		shortRepo,
 		monoRepo.convert
@@ -142,7 +143,8 @@ async function shareOnlyEdited(
 	);
 	if (newlySharedNotes.length > 0) {
 		new Notice(
-			i18next.t("informations.foundNoteToSend", { nbNotes: newlySharedNotes.length })
+			i18next.t("informations.foundNoteToSend", { nbNotes: newlySharedNotes.length }),
+			PublisherManager.noticeLength
 		);
 		const statusBarElement = PublisherManager.plugin.addStatusBarItem();
 		const isValid = await checkRepositoryValidityWithProperties(
@@ -162,7 +164,7 @@ async function shareOnlyEdited(
 		);
 		return;
 	}
-	new Notice(i18next.t("informations.noNewNote"));
+	new Notice(i18next.t("informations.noNewNote"), PublisherManager.noticeLength);
 }
 
 /**

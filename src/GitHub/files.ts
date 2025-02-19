@@ -8,9 +8,9 @@ import type {
 } from "@interfaces/main";
 import type { Octokit } from "@octokit/core";
 import { type EmbedCache, type LinkCache, TFile, TFolder } from "obsidian";
-import { getAPI, type Link } from "obsidian-dataview";
-import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
+import { type Link, getAPI } from "obsidian-dataview";
 import Publisher from "src/GitHub/upload";
+import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
 import type Enveloppe from "src/main";
 import { isAttachment, isShared } from "src/utils/data_validation_test";
 import {
@@ -26,6 +26,7 @@ export class FilesManagement extends Publisher {
 	 * @param {EnveloppeSettings} plugin The plugin
 	 */
 	console: Logs;
+
 	constructor(octokit: Octokit, plugin: Enveloppe) {
 		super(octokit, plugin);
 		this.console = plugin.console;
