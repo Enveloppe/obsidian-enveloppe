@@ -1,4 +1,4 @@
-name: Fetch submodule and release
+name: Update translation and release
 on:
   repository_dispatch:
     types: [update]
