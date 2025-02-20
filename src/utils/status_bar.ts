@@ -114,7 +114,7 @@ export class ShareStatusBar {
 					nb: this.numberOfNotesToPublish,
 				})
 			);
-		else this.status.setText(i18next.t("common.main"));
+		else this.status.setText(i18next.t("statusBar.main"));
 		this.statusBarItem.addClass("success");
 		if (this.isMainFile) this.statusBarItem.addClass("main-success");
 		this.statusBarItem.removeClass("sharing");
