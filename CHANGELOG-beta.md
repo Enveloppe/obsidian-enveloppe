@@ -1,3 +1,8 @@
+## [7.5.13-2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.13-1...7.5.13-2) (2025-02-20)
+### Bug Fixes
+
+* **translation:** update key ([67fe18b](https://github.com/Enveloppe/obsidian-enveloppe/commit/67fe18bf789c767a386f5d5ba9a778e537c1758a))
+
 ## [7.5.13-1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.13-0...7.5.13-1) (2025-02-19)
 ### Bug Fixes
 
