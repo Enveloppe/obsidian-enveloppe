@@ -17,7 +17,9 @@ if (args === "pull") {
 const i18nPath = path.resolve("src/i18n/i18next.ts");
 const i18nDir = path.resolve("src/i18n/locales");
 
-const i18nFiles = fs.readdirSync(i18nDir).filter((file) => file.endsWith(".json"));
+const i18nFiles = fs
+	.readdirSync(i18nDir)
+	.filter((file) => file.match(/^..(-..)?\.json$/));
 
 function titleCase(str) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
