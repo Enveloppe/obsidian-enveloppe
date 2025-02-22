@@ -32,3 +32,4 @@ dist/
 act.json
 tokens.json
 logs.txt
+*.zip
