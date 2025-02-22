@@ -97,13 +97,13 @@ export class ShareStatusBar {
 	finish(displayDurationMillisec: number) {
 		const msg = this.attachment
 			? i18next.t("statusBar.success", {
-					action: i18next.t("common.shared"),
-					type: i18next.t("common.attachments"),
-				})
+				action: i18next.t("common.shared"),
+				type: i18next.t("common.attachments"),
+			})
 			: i18next.t("statusBar.success", {
-					action: i18next.t("common.published"),
-					type: i18next.t("common.files"),
-				});
+				action: i18next.t("common.published"),
+				type: i18next.t("common.files"),
+			});
 		const iconProp = this.isMainFile ? "book-check" : "mail-check";
 		setIcon(this.icon, iconProp);
 		if (this.counter > 1)
@@ -114,7 +114,7 @@ export class ShareStatusBar {
 					nb: this.numberOfNotesToPublish,
 				})
 			);
-		else this.status.setText(i18next.t("common.main"));
+		else this.status.setText(i18next.t("statusBar.main"));
 		this.statusBarItem.addClass("success");
 		if (this.isMainFile) this.statusBarItem.addClass("main-success");
 		this.statusBarItem.removeClass("sharing");
