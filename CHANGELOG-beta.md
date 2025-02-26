@@ -1,3 +1,11 @@
+## [7.5.13-3](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.12...7.5.13-3) (2025-02-26)
+### Bug Fixes
+
+* crashing obsidian when two files have the same generated path and are shared in the same time (infinite loop) ([2e3f94a](https://github.com/Enveloppe/obsidian-enveloppe/commit/2e3f94aa67bc487c3dc640ce95a108011e355151))
+* **notification:** add more indication when the plugin share a file on mobile ([90afc44](https://github.com/Enveloppe/obsidian-enveloppe/commit/90afc44bd133dddbb62acbdc864907a24a83eb5a))
+* prevent multiple time icon in statusBar ([f746b15](https://github.com/Enveloppe/obsidian-enveloppe/commit/f746b15b457342a225f5dd0f87f0df550280a98d))
+* translation ([02f7357](https://github.com/Enveloppe/obsidian-enveloppe/commit/02f7357ffeb5892776bf6f47fd2cbc24b9a50322))
+
 ## [7.5.13-2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.13-1...7.5.13-2) (2025-02-20)
 ### Bug Fixes
 
