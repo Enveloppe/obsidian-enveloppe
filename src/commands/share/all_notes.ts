@@ -60,6 +60,7 @@ export async function uploadAllNotes(
 	branchName: string
 ): Promise<void> {
 	const statusBarItems = plugin.addStatusBarItem();
+	plugin.console.noticeMobile("load", "hourglass", i18next.t("informations.wait_plural"));
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const sharedFiles = publisher.getSharedFiles(repo);
 	const prop = getProperties(plugin, repo, undefined, true);

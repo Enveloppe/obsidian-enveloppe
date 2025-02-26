@@ -51,7 +51,6 @@ export async function uploadAllEditedNotes(
 ): Promise<void> {
 	const publisher = await plugin.reloadOctokit(repo?.smartKey);
 	const prop = getProperties(plugin, repo, null, true);
-
 	await shareAllEditedNotes(publisher, branchName, {
 		frontmatter: Array.isArray(prop) ? prop[0] : prop,
 		repository: repo,

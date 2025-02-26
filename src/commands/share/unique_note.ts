@@ -73,6 +73,11 @@ export async function shareOneNote(
 ): Promise<void | false> {
 	const { settings, plugin } = PublisherManager;
 	const app = PublisherManager.plugin.app;
+	plugin.console.noticeMobile(
+		"load",
+		"hourglass",
+		i18next.t("informations.wait", { file: file.basename })
+	);
 	let frontmatter = frontmatterFromFile(file, PublisherManager.plugin, null);
 	frontmatter = mergeFrontmatter(
 		frontmatter,
@@ -95,7 +100,10 @@ export async function shareOneNote(
 		frontmatter: prop,
 		repository,
 	};
-	if (!isValid) return false;
+	if (!isValid) {
+		plugin.console.noticeErrorUpload(prop);
+		return false;
+	}
 	if (!settings.github.dryRun.enable) await PublisherManager.newBranch(prop);
 	const publishSuccess = await PublisherManager.publish(
 		file,
