@@ -1,7 +1,7 @@
 name: "Bug report"
 description: Fill a bug report for the plugin
 title: "[Bug]: "
-labels: ["🐛 Bug"]
+type: "bug"
 assignees:
   - mara-li
 body:
