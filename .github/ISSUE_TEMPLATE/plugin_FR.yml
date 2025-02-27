@@ -1,7 +1,7 @@
 name: "Feature request"
 description: Suggest an idea for the obsidian GitHub Publisher plugin.
 title: "[FR]: "
-labels: ["✨ Enhancement"]
+type: "Enhancement"
 assignees:
   - mara-li
 body:
