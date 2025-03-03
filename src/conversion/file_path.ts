@@ -1,7 +1,7 @@
 import {
+	type EnveloppeSettings,
 	FIND_REGEX,
 	FolderSettings,
-	type EnveloppeSettings,
 	type LinkedNotes,
 	type MultiProperties,
 	type Properties,
@@ -10,10 +10,10 @@ import {
 } from "@interfaces";
 import {
 	type FrontMatterCache,
-	normalizePath,
 	type TFile,
 	TFolder,
 	type Vault,
+	normalizePath,
 } from "obsidian";
 import { createRegexFromText } from "src/conversion/find_and_replace_text";
 import type Enveloppe from "src/main";
@@ -150,6 +150,8 @@ export async function createRelativePath(
 		);
 		return defaultPath;
 	}
+	if (!properties.plugin.settings.conversion.links.relativePath)
+		return { link: targetPath };
 
 	const sourceList = sourcePath.split("/");
 	const targetList = targetPath.split("/");

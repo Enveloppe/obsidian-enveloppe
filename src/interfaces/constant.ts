@@ -75,6 +75,7 @@ export const DEFAULT_SETTINGS: Partial<EnveloppeSettings> = {
 			wiki: false,
 			slugify: "disable",
 			unlink: false,
+			relativePath: true,
 		},
 	},
 	embed: {

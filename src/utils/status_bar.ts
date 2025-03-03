@@ -96,6 +96,7 @@ export class ShareStatusBar {
 
 	finish(displayDurationMillisec: number) {
 		if (
+			// biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
 			activeDocument.querySelector(
 				".status-bar-item.plugin-obsidian-mkdocs-publisher.success"
 			)
