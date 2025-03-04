@@ -732,9 +732,10 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 	 */
 	renderTextConversion() {
 		const textSettings = this.settings.conversion;
-		this.settingsPage.createEl("p", {
-			text: i18next.t("settings.conversion.desc"),
-		});
+
+		this.settingsPage.appendChild(
+			sanitizeHTMLToDom(`<p>${i18next.t("settings.conversion.desc")}</p>`)
+		);
 
 		this.settingsPage.createEl("h5", {
 			text: i18next.t("settings.conversion.links.title"),
@@ -746,15 +747,13 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 		const shareAll = this.settings.plugin.shareAll?.enable
 			? ` ${i18next.t("settings.conversion.links.internals.shareAll")}`
 			: "";
-		const internalLinksDesc = document.createDocumentFragment();
-		internalLinksDesc.createEl("p", {
-			text: i18next.t("settings.conversion.links.internals.desc") + shareAll,
-			cls: "no-margin",
-		});
-		internalLinksDesc.createEl("p", {
-			text: i18next.t("settings.conversion.links.internals.dataview"),
-			cls: "no-margin",
-		});
+
+		const internalLinksDesc = sanitizeHTMLToDom(
+			dedent(`
+			<p class="no-margin">${i18next.t("settings.conversion.links.internals.desc")} ${shareAll}</p>
+			<p class="no-margin">${i18next.t("settings.conversion.links.internals.dataview")}</p>
+		`)
+		);
 
 		new Setting(this.settingsPage)
 			.setName(i18next.t("settings.conversion.links.internals.title"))
@@ -770,27 +769,60 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				});
 			});
 
-		if (textSettings.links.internal && !this.settings.plugin.shareAll?.enable) {
+		if (textSettings.links.internal) {
+			if (!this.settings.plugin.shareAll?.enable) {
+				new Setting(this.settingsPage)
+					.setName(i18next.t("settings.conversion.links.nonShared.title"))
+					.setDesc(i18next.t("settings.conversion.links.nonShared.desc"))
+					.addToggle((toggle) => {
+						toggle.setValue(textSettings.links.unshared).onChange(async (value) => {
+							textSettings.links.unshared = value;
+							await this.renderSettingsPage("text-conversion");
+							await this.plugin.saveSettings();
+						});
+					});
+
+				if (!textSettings.links.unshared) {
+					new Setting(this.settingsPage)
+						.setName(i18next.t("settings.conversion.links.unlink.title"))
+						.setDesc(
+							sanitizeHTMLToDom(i18next.t("settings.conversion.links.unlink.desc"))
+						)
+						.addToggle((toggle) => {
+							toggle.setValue(textSettings.links.unlink).onChange(async (value) => {
+								textSettings.links.unlink = value;
+								await this.plugin.saveSettings();
+							});
+						});
+				}
+			}
+
 			new Setting(this.settingsPage)
-				.setName(i18next.t("settings.conversion.links.nonShared.title"))
-				.setDesc(i18next.t("settings.conversion.links.nonShared.desc"))
+				.setName(i18next.t("settings.conversion.links.relativePath.title"))
+				.setDesc(i18next.t("settings.conversion.links.relativePath.desc"))
 				.addToggle((toggle) => {
-					toggle.setValue(textSettings.links.unshared).onChange(async (value) => {
-						textSettings.links.unshared = value;
-						await this.renderSettingsPage("text-conversion");
+					toggle.setValue(textSettings.links.relativePath).onChange(async (value) => {
+						textSettings.links.relativePath = value;
 						await this.plugin.saveSettings();
+						await this.renderSettingsPage("text-conversion");
 					});
 				});
 
-			if (!textSettings.links.unshared) {
+			if (!textSettings.links.relativePath) {
 				new Setting(this.settingsPage)
-					.setName(i18next.t("settings.conversion.links.unlink.title"))
-					.setDesc(sanitizeHTMLToDom(i18next.t("settings.conversion.links.unlink.desc")))
-					.addToggle((toggle) => {
-						toggle.setValue(textSettings.links.unlink).onChange(async (value) => {
-							textSettings.links.unlink = value;
-							await this.plugin.saveSettings();
-						});
+					.setName(i18next.t("settings.conversion.links.textBefore.title"))
+					.setDesc(
+						sanitizeHTMLToDom(
+							`<span>${i18next.t("settings.conversion.links.textBefore.desc", { slash: "<code>/</code>" })}</span>`
+						)
+					)
+					.addText((cb) => {
+						cb.setPlaceholder("/")
+							.setValue(textSettings.links.textPrefix)
+							.onChange(async (value) => {
+								textSettings.links.textPrefix = value;
+								await this.plugin.saveSettings();
+							});
 					});
 			}
 		}
