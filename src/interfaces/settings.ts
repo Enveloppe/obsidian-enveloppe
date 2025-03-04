@@ -216,6 +216,11 @@ export interface Conversion {
 		 * Disable relative path creation
 		 */
 		relativePath: boolean;
+		/**
+		 * Only used when relative path is disabled, allow to set any text before the path, like a slash (default)
+		 * @default `/`
+		 */
+		textPrefix: string;
 	};
 }
 

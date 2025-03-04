@@ -151,7 +151,9 @@ export async function createRelativePath(
 		return defaultPath;
 	}
 	if (!properties.plugin.settings.conversion.links.relativePath)
-		return { link: targetPath };
+		return {
+			link: `${properties.plugin.settings.conversion.links.textPrefix}${targetPath}`,
+		};
 
 	const sourceList = sourcePath.split("/");
 	const targetList = targetPath.split("/");

@@ -796,6 +796,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 						});
 				}
 			}
+
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.conversion.links.relativePath.title"))
 				.setDesc(i18next.t("settings.conversion.links.relativePath.desc"))
@@ -803,8 +804,27 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					toggle.setValue(textSettings.links.relativePath).onChange(async (value) => {
 						textSettings.links.relativePath = value;
 						await this.plugin.saveSettings();
+						await this.renderSettingsPage("text-conversion");
 					});
 				});
+
+			if (!textSettings.links.relativePath) {
+				new Setting(this.settingsPage)
+					.setName(i18next.t("settings.conversion.links.textBefore.title"))
+					.setDesc(
+						sanitizeHTMLToDom(
+							`<span>${i18next.t("settings.conversion.links.textBefore.desc", { slash: "<code>/</code>" })}</span>`
+						)
+					)
+					.addText((cb) => {
+						cb.setPlaceholder("/")
+							.setValue(textSettings.links.textPrefix)
+							.onChange(async (value) => {
+								textSettings.links.textPrefix = value;
+								await this.plugin.saveSettings();
+							});
+					});
+			}
 		}
 
 		new Setting(this.settingsPage)
