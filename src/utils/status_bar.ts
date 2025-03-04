@@ -96,7 +96,7 @@ export class ShareStatusBar {
 
 	finish(displayDurationMillisec: number) {
 		if (
-			// biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
+			// biome-ignore lint/correctness/noUndeclaredVariables: activeDocument is expected to be available in the runtime environment
 			activeDocument.querySelector(
 				".status-bar-item.plugin-obsidian-mkdocs-publisher.success"
 			)
