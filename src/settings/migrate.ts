@@ -64,9 +64,8 @@ export async function migrateSettings(
 	plugin: Enveloppe,
 	imported?: boolean
 ) {
-	if (plugin.settings.plugin.migrated && !imported) {
-		return;
-	}
+	if (plugin.settings.plugin.migrated && !imported) return;
+
 	await migrateOldSettings(plugin, old);
 	await migrateReplaceTitle(plugin);
 	await migrateSubFolder(plugin);
@@ -356,6 +355,8 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 				wiki: old.migrateWikiLinks,
 				slugify: false,
 				unlink: false,
+				relativePath: true,
+				textPrefix: "/",
 			},
 		},
 		embed: {
