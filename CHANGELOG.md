@@ -1,3 +1,8 @@
+## [7.6.0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.13-3...7.6.0) (2025-03-06)
+### Features
+
+* **settings:** add toggle for relative path ([#386](https://github.com/Enveloppe/obsidian-enveloppe/issues/386)) ([757a277](https://github.com/Enveloppe/obsidian-enveloppe/commit/757a277688ebef2db5e15f349ad00e57b7cce644))
+
 ## [7.5.12](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.11...7.5.12) (2025-02-19)
 ### Bug Fixes
 
