@@ -16,7 +16,7 @@
 		"postrelease": "git push --follow-tags origin master",
 		"predeploy": "bun run bump",
 		"deploy": "bun run export",
-		"sync:locale": "bun run hooks/update-translation.mjs",
+		"sync:locale": "bun run hooks/update-translation.mjs pull",
 		"prepare": "husky install"
 	},
 	"commit-and-tag-version": {
