@@ -25,12 +25,13 @@ export class GithubBranch extends FilesManagement {
 		}
 	}
 
-	private async findMainBranch(prop: Properties) {
+	private async findMainBranch(prop: Properties, branchName?: string) {
 		const allBranch = await this.octokit.request("GET /repos/{owner}/{repo}/branches", {
 			owner: prop.owner,
 			repo: prop.repo,
 		});
-		return allBranch.data.find((branch: { name: string }) => branch.name === prop.branch);
+		branchName = branchName || prop.branch;
+		return allBranch.data.find((branch: { name: string }) => branch.name === branchName);
 	}
 
 	/**
@@ -55,6 +56,7 @@ export class GithubBranch extends FilesManagement {
 			);
 		}
 		try {
+			this.console.debug("Creating branch with", mainBranch, this.branchName);
 			const shaMainBranch = mainBranch!.commit.sha;
 			const branch = await this.octokit.request("POST /repos/{owner}/{repo}/git/refs", {
 				owner: prop.owner,
@@ -67,15 +69,22 @@ export class GithubBranch extends FilesManagement {
 			);
 			return branch.status === 201;
 		} catch (_e) {
-			// catch the old branch
 			try {
-				const mainBranch = await this.findMainBranch(prop);
-				this.console.info(
-					i18next.t("publish.branch.alreadyExists", {
-						branchName: this.branchName,
-						repo: prop,
-					})
-				);
+				this.console.warn("Branch already exists, trying to find it");
+				const mainBranch = await this.findMainBranch(prop, this.branchName);
+				this.console.debug("Branch already exists", mainBranch);
+				if (!!mainBranch) {
+					this.console.info(
+						i18next.t("publish.branch.alreadyExists", {
+							branchName: this.branchName,
+							repo: prop,
+						})
+					);
+				} else {
+					this.console.error(
+						new Error(`No main branch found for ${prop.repo}, please check the branch name in the settings`)
+					);
+				}
 				return !!mainBranch;
 			} catch (e) {
 				this.console.error(e as Error);
