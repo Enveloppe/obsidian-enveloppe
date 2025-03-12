@@ -348,7 +348,7 @@ export default class Publisher {
 		);
 		loadBar.increment();
 		if (!uploaded) {
-			loadBar.error(properties.frontmatter.prop)
+			loadBar.error(properties.frontmatter.prop);
 			return {
 				deleted,
 				uploaded: [],

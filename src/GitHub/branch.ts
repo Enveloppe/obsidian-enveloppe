@@ -5,6 +5,7 @@ import { Notice } from "obsidian";
 import { FilesManagement } from "src/GitHub/files";
 import type Enveloppe from "src/main";
 import { EnveloppeErrors, type Logs } from "../utils/logs";
+import { verifyToken } from "../utils/data_validation_test";
 
 export class GithubBranch extends FilesManagement {
 	console: Logs;
@@ -73,7 +74,7 @@ export class GithubBranch extends FilesManagement {
 				this.console.warn("Branch already exists, trying to find it");
 				const mainBranch = await this.findMainBranch(prop, this.branchName);
 				this.console.debug("Branch already exists", mainBranch);
-				if (!!mainBranch) {
+				if (mainBranch) {
 					this.console.info(
 						i18next.t("publish.branch.alreadyExists", {
 							branchName: this.branchName,
@@ -82,7 +83,9 @@ export class GithubBranch extends FilesManagement {
 					);
 				} else {
 					this.console.error(
-						new Error(`No main branch found for ${prop.repo}, please check the branch name in the settings`)
+						new Error(
+							`No main branch found for ${prop.repo}, please check the branch name in the settings`
+						)
 					);
 				}
 				return !!mainBranch;
@@ -243,6 +246,7 @@ export class GithubBranch extends FilesManagement {
 	 */
 	async checkRepository(prop: Properties | Properties[], silent = true): Promise<void> {
 		prop = Array.isArray(prop) ? prop : [prop];
+		await verifyToken(this.octokit, this.settings.github.user);
 		for (const repo of prop) {
 			const repoExist = await this.octokit
 				.request("GET /repos/{owner}/{repo}", {

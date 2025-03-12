@@ -25,6 +25,7 @@ import {
 	mergeFrontmatter,
 } from "src/utils/parse_frontmatter";
 import { escapeRegex } from "../conversion/links";
+import { EnveloppeErrors } from "./logs";
 
 /**
  * - Check if the file is a valid file to publish
@@ -494,6 +495,16 @@ export function defaultRepo(settings: EnveloppeSettings): Repository {
 	};
 }
 
+export async function verifyToken(octokit: Octokit, owner: string) {
+	try {
+		await octokit.request("GET /user");
+	} catch (_e) {
+		throw new EnveloppeErrors(i18next.t("commands.checkValidity.errorToken", { owner }), {
+			cause: "invalid token",
+		});
+	}
+}
+
 /**
  * This function is used to verify the rate limit of the GitHub API.
  * It checks the remaining number of requests and the reset time of the rate limit.
@@ -546,7 +557,7 @@ export async function verifyRateLimitAPI(
 			(error as any).name === "HttpError"
 		)
 			return 5000;
-		plugin.console.error(error as Error);
+		else if ((error as any).status !== 401) plugin.console.error(error as Error);
 		return 0;
 	}
 }
