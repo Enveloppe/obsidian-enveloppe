@@ -1,3 +1,10 @@
+## [7.6.1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.6.0...7.6.1) (2025-03-12)
+### Bug Fixes
+
+* duplicate statusBar when crashing ([eea7fa0](https://github.com/Enveloppe/obsidian-enveloppe/commit/eea7fa06af268da587e83b7037f5c6b6baaf054d))
+* prevent always true when trying find duplicate branch ([6ed7682](https://github.com/Enveloppe/obsidian-enveloppe/commit/6ed7682745125f82d29fd1e98034a3f62ba11200))
+* **verify:** verify the token before processing anything ([df7d7c9](https://github.com/Enveloppe/obsidian-enveloppe/commit/df7d7c91f28cb0cb5528e24dd0be9db3ce2af2ef))
+
 ## [7.6.0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.13-3...7.6.0) (2025-03-06)
 ### Features
 
