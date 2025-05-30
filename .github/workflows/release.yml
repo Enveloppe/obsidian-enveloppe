@@ -18,19 +18,11 @@ on:
 permissions:
     contents: write
 jobs:
-    echo:
-        runs-on: ubuntu-latest
-        steps:
-            - name: echo
-              run: |
-                  echo EVENT NAME =  ${{ github.event_name }}
-                  echo BETA = ${{ inputs.beta || false}}
-                  echo BUMP = ${{ inputs.bump || false}}
+    
 
     release:
         if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && !inputs.bump)
         uses: mara-li/reusable-workflows/.github/workflows/obsidian-plugin-release.yaml@main
-        needs: echo
         with:
             PLUGIN_NAME: "obsidian-mkdocs-publisher"
             SUBMODULE: true
@@ -43,13 +35,12 @@ jobs:
 
     bump-version-and-release:
         if: ${{ inputs.bump }}
-        needs: echo
         uses: mara-li/reusable-workflows/.github/workflows/obsidian-plugin-bump-version.yaml@main
         with:
             PLUGIN_NAME: "obsidian-mkdocs-publisher"
-            BETA: ${{ inputs.beta }}
+            BETA: ${{ inputs.beta || false}}
             SUBMODULE: true
-            CACHE: "pnpm"
+            CACHE: "bun"
             discord_webhook_avatar: "https://avatars.githubusercontent.com/u/107352364?s=400&u=f2eb1406068b95a58baecdf987ccccde7fcbdd55&v=4"
             discord_webhook_name: "Enveloppe"
         secrets:
