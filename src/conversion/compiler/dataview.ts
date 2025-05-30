@@ -11,11 +11,7 @@ import type {
 } from "@interfaces";
 import i18next from "i18next";
 import { Component, type FrontMatterCache, htmlToMarkdown, TFile } from "obsidian";
-import {
-	type DataviewApi,
-	getAPI,
-	type Literal,
-} from "obsidian-dataview";
+import { type DataviewApi, getAPI, type Literal } from "obsidian-dataview";
 import {
 	convertToInternalGithub,
 	convertWikilinks,
@@ -101,15 +97,8 @@ class DataviewCompiler {
 	 */
 	async dataviewJS(query: string) {
 		const { isInsideCallout, finalQuery } = sanitizeQuery(query);
-		// biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
-		const div = createEl("div");
-		const component = new Component();
-		await this.dvApi.executeJs(finalQuery, div, component, this.path);
-		component.load();
-		const markdown = removeDataviewQueries(
-			div.innerHTML,
-			this.properties.frontmatter.general
-		);
+		const md = await this.tryExecuteJs(finalQuery, 100);
+		const markdown = removeDataviewQueries(md, this.properties.frontmatter.general);
 		if (isInsideCallout) {
 			return surroundWithCalloutBlock(markdown);
 		}
@@ -137,31 +126,54 @@ class DataviewCompiler {
 			);
 		}
 	}
+
+	/**
+	 * ExecuteJs with waiting for all processed files ;
+	 * @credit saberzero1
+	 * @private
+	 * @param evaluateQuery {string} The query to evaluate
+	 * @param max {number} The maximum number of iterations to wait for the query to be processed
+	 * @return {Promise<string>} The markdown converted from the HTML
+	 */
+	private async tryExecuteJs(evaluateQuery: string, max: number = 50): Promise<string> {
+		// biome-ignore lint/correctness/noUndeclaredVariables: createEl is a global function in Obsidian
+		const div = createEl("div");
+		const component = new Component();
+		component.load();
+		await this.dvApi.executeJs(evaluateQuery, div, component, this.path);
+		let counter = 0;
+		while (!div.querySelector("[data-tag-name]") && counter < max) {
+			await this.delay(5);
+			counter++;
+		}
+
+		return htmlToMarkdown(div);
+	}
+
+	private delay(ms: number): Promise<void> {
+		return new Promise((resolve, _) => {
+			setTimeout(resolve, ms);
+		});
+	}
+
 	/**
 	 * Inline DataviewJS - JavaScript API for Dataview in inline
-	 * Syntax : `$=js query`
+	 * Syntax : `$=js query` (by default, the prefix can be changed in the settings)
 	 * For the moment, it is not possible to properly process the inlineJS.
 	 * Temporary solution : encapsulate the query into "pure" JS :
 	 * ```ts
 	 * const query = queryFound;
-	 * dv.paragraph(query);
+	 * dv.el("div", query);
 	 * ```
 	 * After the evaluation, the div is converted to markdown with {@link htmlToMarkdown()} and the dataview queries are removed
 	 */
 	async inlineDataviewJS(query: string) {
 		const evaluateQuery = `
 				const query = ${query};
-				dv.paragraph(query);
-			`;
-		// biome-ignore lint/correctness/noUndeclaredVariables: <explanation>
-		const div = createEl("div");
-		const component = new Component();
-		await this.dvApi.executeJs(evaluateQuery, div, component, this.path);
-		component.load();
-		return removeDataviewQueries(
-			htmlToMarkdown(div.innerHTML),
-			this.properties.frontmatter.general
-		);
+				dv.el("div", query);
+		`;
+		const markdown = await this.tryExecuteJs(evaluateQuery);
+		return removeDataviewQueries(markdown, this.properties.frontmatter.general);
 	}
 }
 
