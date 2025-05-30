@@ -1,3 +1,9 @@
+## [7.6.2-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.6.1...7.6.2-0) (2025-05-30)
+### Bug Fixes
+
+* check dataview enabled correctly even if lazy loaded ([#385](https://github.com/Enveloppe/obsidian-enveloppe/issues/385)) ([b92c8cb](https://github.com/Enveloppe/obsidian-enveloppe/commit/b92c8cbb4626c12922cf91a4d6cbf299054fb728))
+* **dataview:** better handle query with counter ([32b39de](https://github.com/Enveloppe/obsidian-enveloppe/commit/32b39dedfe7ba229fbe7469f11c5335675493710))
+
 ## [7.5.13-3](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.5.12...7.5.13-3) (2025-02-26)
 ### Bug Fixes
 
