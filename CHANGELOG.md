@@ -1,3 +1,8 @@
+## [7.6.3](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.6.2...7.6.3) (2025-07-02)
+### Bug Fixes
+
+* tags.map not found when the tags is not an array ([5c0daee](https://github.com/Enveloppe/obsidian-enveloppe/commit/5c0daee63e5144eaa42d96dc1b1638197ab176f0))
+
 ## [7.6.2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.6.2-0...7.6.2) (2025-06-22)
 
 ## [7.6.1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.6.0...7.6.1) (2025-03-12)
