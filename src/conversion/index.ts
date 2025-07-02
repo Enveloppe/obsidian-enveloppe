@@ -62,6 +62,7 @@ export function addHardLineBreak(
 }
 
 function setTags(toAdd: string[], tags: any) {
+	if (!tags || !Array.isArray(tags)) return toAdd;
 	tags = tags.map((tag: string) => tag.replaceAll("/", "_"));
 	if (Array.isArray(tags)) {
 		return [...new Set([...tags, ...toAdd])];
