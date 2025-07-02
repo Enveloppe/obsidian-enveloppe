@@ -226,10 +226,11 @@ export async function filterGithubFile(
 /**
  * Parse the YAML metadata from github repository files.
  * @param {string} contents file contents to parse
+ * @param filePath
  * @return {string} YAML metadata
  */
 
-function parseYamlFrontmatter(contents: string): unknown {
+function parseYamlFrontmatter(contents: string, filePath: string): unknown {
 	const yamlFrontmatter = contents.split("---");
 	if (yamlFrontmatter.length < 2) return {}; //no frontmatter
 	try {
@@ -237,7 +238,7 @@ function parseYamlFrontmatter(contents: string): unknown {
 		return trimObject(yamlFrontmatterParsed);
 	} catch (e) {
 		//probably not a valid frontmatter, skip
-		console.warn("Error parsing YAML frontmatter", e);
+		console.warn(`Error parsing YAML frontmatter for ${filePath}`, e);
 		return {};
 	}
 }
@@ -267,7 +268,7 @@ async function checkIndexFiles(
 	if (fileRequest.status === 200) {
 		// @ts-ignore
 		const fileContent = Base64.decode(fileRequest.data.content);
-		const fileFrontmatter = parseYamlFrontmatter(fileContent) as any;
+		const fileFrontmatter = parseYamlFrontmatter(fileContent, path) as any;
 		// if not share => don't delete
 		// Key preventing deletion :
 		//	- index: true
