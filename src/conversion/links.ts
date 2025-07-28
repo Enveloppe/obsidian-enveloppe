@@ -274,9 +274,10 @@ function createMarkdownLinks(
 	const markdownName = isAttachment(fileName.trim(), settings.embed.unHandledObsidianExt)
 		? fileName.trim()
 		: `${fileName.replace(/#.*/, "").trim()}.md`;
+	const ext = markdownName.split(".").at(-1) as string;
 	const anchorMatch = fileName.match(/(#.*)/);
 	let anchor = anchorMatch ? anchorMatch[0] : null;
-	const encodedUri = encodeURI(markdownName);
+	const encodedUri = `${slugifyAnchor(markdownName.replace(`.${ext}`, ""), settings, true)}.${ext}`;
 	anchor = slugifyAnchor(anchor, settings);
 	return `${isEmbed}[${altLink}](${encodedUri}${anchor})`;
 }
@@ -285,25 +286,32 @@ function createMarkdownLinks(
  * Slugify the anchor based on the settings
  * @param anchor {string | null} the anchor to slugify
  * @param settings {EnveloppeSettings}
+ * @param {boolean} encode if true, the anchor/text will be encoded to URI
  * @returns {string} the slugified anchor
  */
-function slugifyAnchor(anchor: string | null, settings: EnveloppeSettings): string {
+function slugifyAnchor(
+	anchor: string | null,
+	settings: EnveloppeSettings,
+	encode?: boolean
+): string {
 	const slugifySetting =
 		typeof settings.conversion.links.slugify === "string"
 			? settings.conversion.links.slugify
 			: "disable";
+	const symbol = encode ? "" : "#";
 	if (anchor && slugifySetting !== "disable") {
 		switch (settings.conversion.links.slugify) {
 			case "lower":
 				return anchor.toLowerCase().replaceAll(" ", "-");
 			case "strict":
-				return `#${slugify(anchor, { lower: true, strict: true })}`;
+				return `${symbol}${slugify(anchor, { lower: true, strict: true })}`;
 
 			default:
-				return anchor;
+				return encode ? encodeURI(anchor) : anchor;
 		}
 	}
-	return anchor?.replaceAll(" ", "%20") ?? "";
+	if (!encode) return anchor?.replaceAll(" ", "%20") ?? "";
+	else return anchor ? encodeURI(anchor) : "";
 }
 
 /**
