@@ -1,8 +1,8 @@
 // noinspection JSIgnoredPromiseFromCall
 
 import {
-	ESettingsTabId,
 	type EnveloppeSettings,
+	ESettingsTabId,
 	FolderSettings,
 	GithubTiersVersion,
 	type Repository,
@@ -20,8 +20,8 @@ import {
 } from "obsidian";
 import type EnveloppePlugin from "src/main";
 import {
-	KeyBasedOnSettings,
 	help,
+	KeyBasedOnSettings,
 	multipleRepoExplained,
 	supportMe,
 	usefulLinks,
@@ -1320,13 +1320,13 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				);
 
 			new Setting(this.settingsPage)
-				.setName(i18next.t("settings.plugin.copyLink.slugify.title"))
+				.setName(i18next.t("settings.conversion.links.slugify.title"))
 				.addDropdown((dropdown) => {
 					dropdown
 						.addOptions({
-							disable: i18next.t("settings.plugin.copyLink.slugify.disable"),
-							strict: i18next.t("settings.plugin.copyLink.slugify.strict"),
-							lower: i18next.t("settings.plugin.copyLink.slugify.lower"),
+							disable: i18next.t("settings.conversion.links.slugify.disable"),
+							strict: i18next.t("settings.conversion.links.slugify.strict"),
+							lower: i18next.t("settings.conversion.links.slugify.lower"),
 						})
 						.setValue(
 							pluginSettings.copyLink.transform.slugify as "disable" | "strict" | "lower"
