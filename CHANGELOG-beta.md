@@ -1,3 +1,9 @@
+## [7.6.4-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.6.3...7.6.4-0) (2025-07-28)
+### Bug Fixes
+
+* **dryRun:** crash when the file already exists in the vault ([4c7dfeb](https://github.com/Enveloppe/obsidian-enveloppe/commit/4c7dfebce912de8e18129a0ee40716e9492254fe))
+* should use the slugify when creating markdown links ([7174b46](https://github.com/Enveloppe/obsidian-enveloppe/commit/7174b465020960c7d83164281f34cc36a3709d83)), closes [#394](https://github.com/Enveloppe/obsidian-enveloppe/issues/394)
+
 ## [7.6.2-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.6.1...7.6.2-0) (2025-05-30)
 ### Bug Fixes
 
