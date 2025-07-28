@@ -13,21 +13,21 @@ import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
 import {
+	arrayBufferToBase64,
 	type FrontMatterCache,
 	type MetadataCache,
 	Notice,
+	normalizePath,
+	setIcon,
 	TFile,
 	TFolder,
 	type Vault,
-	arrayBufferToBase64,
-	normalizePath,
-	setIcon,
 } from "obsidian";
-import { deleteFromGithub } from "src/GitHub/delete";
-import { FilesManagement } from "src/GitHub/files";
 import { mainConverting } from "src/conversion";
 import { convertToHTMLSVG } from "src/conversion/compiler/excalidraw";
 import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
+import { deleteFromGithub } from "src/GitHub/delete";
+import { FilesManagement } from "src/GitHub/files";
 import type Enveloppe from "src/main";
 import {
 	checkEmptyConfiguration,
@@ -540,7 +540,11 @@ export default class Publisher {
 			const folderExists = this.vault.getAbstractFileByPath(folder);
 			if (!folderExists || !(folderExists instanceof TFolder))
 				await this.vault.createFolder(folder);
-			await this.vault.create(newPath, text);
+			const alreadyExists = this.vault.getAbstractFileByPath(newPath);
+			if (alreadyExists && alreadyExists instanceof TFile) {
+				await this.vault.modify(alreadyExists, text);
+			} else await this.vault.create(newPath, text);
+
 			return {
 				isUpdated: false,
 				file: title,
