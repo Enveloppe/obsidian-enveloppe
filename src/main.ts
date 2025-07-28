@@ -11,13 +11,12 @@ import i18next from "i18next";
 import {
 	type FrontMatterCache,
 	type Menu,
+	normalizePath,
 	Plugin,
 	type TAbstractFile,
 	TFile,
 	TFolder,
-	normalizePath,
 } from "obsidian";
-import { GithubBranch } from "src/GitHub/branch";
 import {
 	checkRepositoryValidityCallback,
 	createLinkCallback,
@@ -33,9 +32,10 @@ import {
 import { addMenuFile, addMenuFolder } from "src/commands/file_menu";
 import { ChooseWhichRepoToRun } from "src/commands/suggest_other_repo_commands_modal";
 import { getTitleField, regexOnFileName } from "src/conversion/file_path";
+import { GithubBranch } from "src/GitHub/branch";
 import { resources, translationLanguage } from "src/i18n/i18next";
 import { EnveloppeSettingsTab } from "src/settings";
-import { type OldSettings, migrateSettings } from "src/settings/migrate";
+import { migrateSettings, type OldSettings } from "src/settings/migrate";
 import { createTokenPath } from "src/utils";
 import {
 	checkRepositoryValidity,
@@ -345,10 +345,12 @@ export default class Enveloppe extends Plugin {
 	}
 
 	unhandledRejectionListener(e: PromiseRejectionEvent) {
+		if (!this.manifest?.id) return;
 		if (e?.reason?.stack?.includes(this.manifest.id)) this.console.writeToLog(e, "fatal");
 	}
 
 	errorListener(e: ErrorEvent) {
+		if (!this.manifest?.id) return;
 		if (e?.error?.stack?.includes(this.manifest.id)) this.console.writeToLog(e, "error");
 	}
 
