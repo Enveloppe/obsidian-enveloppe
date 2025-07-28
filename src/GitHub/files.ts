@@ -8,9 +8,9 @@ import type {
 } from "@interfaces/main";
 import type { Octokit } from "@octokit/core";
 import { type EmbedCache, type LinkCache, TFile, TFolder } from "obsidian";
-import { type Link, getAPI } from "obsidian-dataview";
-import Publisher from "src/GitHub/upload";
+import { getAPI, type Link } from "obsidian-dataview";
 import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
+import Publisher from "src/GitHub/upload";
 import type Enveloppe from "src/main";
 import { isAttachment, isShared } from "src/utils/data_validation_test";
 import {
