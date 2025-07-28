@@ -596,13 +596,13 @@ class ModalEditingRepository extends Modal {
 				);
 
 			new Setting(contentEl)
-				.setName(i18next.t("settings.plugin.copyLink.slugify.title"))
+				.setName(i18next.t("settings.conversion.links.slugify.title"))
 				.addDropdown((dropdown) => {
 					dropdown
 						.addOptions({
-							disable: i18next.t("settings.plugin.copyLink.slugify.disable"),
-							strict: i18next.t("settings.plugin.copyLink.slugify.strict"),
-							lower: i18next.t("settings.plugin.copyLink.slugify.lower"),
+							disable: i18next.t("settings.conversion.links.slugify.disable"),
+							strict: i18next.t("settings.conversion.links.slugify.strict"),
+							lower: i18next.t("settings.conversion.links.slugify.lower"),
 						})
 						.setValue(
 							this.repository.copyLink.transform.slugify as "disable" | "strict" | "lower"
