@@ -1,3 +1,8 @@
+## [7.6.4](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.6.4-0...7.6.4) (2025-09-10)
+### Bug Fixes
+
+* **branch:** should find directly the branch instead of find it in all branch ([b107762](https://github.com/Enveloppe/obsidian-enveloppe/commit/b107762737947101a1b751b52f133c2ac1ef3951)), closes [#398](https://github.com/Enveloppe/obsidian-enveloppe/issues/398)
+
 ## [7.6.3](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.6.2...7.6.3) (2025-07-02)
 ### Bug Fixes
 
