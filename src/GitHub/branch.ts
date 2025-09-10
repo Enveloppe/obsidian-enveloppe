@@ -1,11 +1,12 @@
 import type { Properties } from "@interfaces/main";
 import type { Octokit } from "@octokit/core";
+import dedent from "dedent";
 import i18next from "i18next";
 import { Notice } from "obsidian";
 import { FilesManagement } from "src/GitHub/files";
 import type Enveloppe from "src/main";
-import { EnveloppeErrors, type Logs } from "../utils/logs";
 import { verifyToken } from "../utils/data_validation_test";
+import { EnveloppeErrors, type Logs } from "../utils/logs";
 
 export class GithubBranch extends FilesManagement {
 	console: Logs;
@@ -27,12 +28,15 @@ export class GithubBranch extends FilesManagement {
 	}
 
 	private async findMainBranch(prop: Properties, branchName?: string) {
-		const allBranch = await this.octokit.request("GET /repos/{owner}/{repo}/branches", {
-			owner: prop.owner,
-			repo: prop.repo,
-		});
-		branchName = branchName || prop.branch;
-		return allBranch.data.find((branch: { name: string }) => branch.name === branchName);
+		const branch = await this.octokit.request(
+			"GET /repos/{owner}/{repo}/branches/{branch}",
+			{
+				owner: prop.owner,
+				repo: prop.repo,
+				branch: branchName || prop.branch,
+			}
+		);
+		return branch.status === 200;
 	}
 
 	/**
@@ -44,21 +48,25 @@ export class GithubBranch extends FilesManagement {
 	 */
 
 	async newBranchOnRepo(prop: Properties): Promise<boolean> {
-		const allBranch = await this.octokit.request("GET /repos/{owner}/{repo}/branches", {
-			owner: prop.owner,
-			repo: prop.repo,
-		});
-		const mainBranch = allBranch.data.find(
-			(branch: { name: string }) => branch.name === prop.branch
+		const mainBranch = await this.octokit.request(
+			"GET /repos/{owner}/{repo}/branches/{branch}",
+			{
+				owner: prop.owner,
+				repo: prop.repo,
+				branch: prop.branch,
+			}
 		);
-		if (!mainBranch) {
+		if (mainBranch.status !== 200) {
 			throw new Error(
-				`No main branch found for ${prop.repo}, please check the branch name in the settings`
+				dedent(`No main branch found for ${prop.repo}, please check the branch name in the settings.
+				- Branch Status: ${mainBranch.status}
+				- Repo: ${prop.owner}/${prop.repo}
+				- Branch: ${prop.branch}`)
 			);
 		}
 		try {
 			this.console.debug("Creating branch with", mainBranch, this.branchName);
-			const shaMainBranch = mainBranch!.commit.sha;
+			const shaMainBranch = mainBranch.data.commit.sha;
 			const branch = await this.octokit.request("POST /repos/{owner}/{repo}/git/refs", {
 				owner: prop.owner,
 				repo: prop.repo,
@@ -88,7 +96,7 @@ export class GithubBranch extends FilesManagement {
 						)
 					);
 				}
-				return !!mainBranch;
+				return mainBranch;
 			} catch (e) {
 				this.console.error(e as Error);
 				return false;
