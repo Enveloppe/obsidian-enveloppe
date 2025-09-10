@@ -112,6 +112,7 @@ export function getProperties(
 	if (checkSet && repository && plugin.repositoryFrontmatter[repository.smartKey]) {
 		const setFrontmatter = plugin.repositoryFrontmatter[repository.smartKey];
 		delete setFrontmatter?.[settings.plugin.shareKey];
+		//@ts-ignore
 		frontmatter = merge.withOptions(
 			{ allowUndefinedOverrides: false },
 			setFrontmatter ?? {},
@@ -699,6 +700,7 @@ export function mergeFrontmatter(
 ) {
 	delete sourceFrontmatter?.[shareKey];
 	if (sourceFrontmatter && frontmatter)
+		//@ts-ignore
 		frontmatter = merge.withOptions(
 			{ allowUndefinedOverrides: false },
 			sourceFrontmatter,

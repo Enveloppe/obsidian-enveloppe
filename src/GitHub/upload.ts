@@ -453,7 +453,7 @@ export default class Publisher {
 	 */
 
 	async uploadImage(imageFile: TFile, properties: MonoProperties) {
-		let imageBin = await this.vault.readBinary(imageFile);
+		let imageBin: ArrayBuffer = await this.vault.readBinary(imageFile);
 		const prop = properties.frontmatter.prop;
 		let image64 = arrayBufferToBase64(imageBin);
 		if (imageFile.name.includes("excalidraw")) {
@@ -461,6 +461,7 @@ export default class Publisher {
 			if (svg) {
 				//convert to base64
 				image64 = Base64.encode(svg).toString();
+				//@ts-ignore
 				imageBin = Buffer.from(image64, "base64");
 			}
 		}
