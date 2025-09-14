@@ -205,6 +205,9 @@ export interface Conversion {
 		/**
 		 * Convert wikilinks to markdown links */
 		wiki: boolean;
+		/**
+		 * Maintain display text when converting wikilinks */
+		wikiDisplayText: boolean;
 		/** Slugify links if needed
 		 * - `disable` : do not slugify the link
 		 * - `strict` : slugify the link in lower case and remove all special characters (including chinese or russian one)

@@ -189,7 +189,10 @@ export class FilesManagement extends Publisher {
 								: imageLink.basename;
 						let frontmatterDestinationFilePath;
 
-						if (this.settings.upload.frontmatterTitle.enable) {
+						if (
+							this.settings.upload.frontmatterTitle.enable &&
+							this.settings.conversion.links.wikiDisplayText
+						) {
 							const frontmatter = this.metadataCache.getCache(
 								imageLink.path
 							)?.frontmatter;
@@ -254,7 +257,10 @@ export class FilesManagement extends Publisher {
 								: linkedFile.basename;
 						let frontmatterDestinationFilePath;
 
-						if (this.settings.upload.frontmatterTitle.enable) {
+						if (
+							this.settings.upload.frontmatterTitle.enable &&
+							!this.settings.conversion.links.wikiDisplayText
+						) {
 							const frontmatter = this.metadataCache.getCache(
 								linkedFile.path
 							)?.frontmatter;
