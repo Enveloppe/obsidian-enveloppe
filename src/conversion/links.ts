@@ -295,12 +295,12 @@ function slugifyAnchor(
 	encode?: boolean
 ): string {
 	const slugifySetting =
-		typeof settings.conversion.links.slugify === "string"
-			? settings.conversion.links.slugify
+		typeof settings.conversion.links.slugifyAnchor === "string"
+			? settings.conversion.links.slugifyAnchor
 			: "disable";
 	const symbol = encode ? "" : "#";
 	if (anchor && slugifySetting !== "disable") {
-		switch (settings.conversion.links.slugify) {
+		switch (settings.conversion.links.slugifyAnchor) {
 			case "lower":
 				return anchor.toLowerCase().replaceAll(" ", "-");
 			case "strict":

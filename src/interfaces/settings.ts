@@ -215,6 +215,7 @@ export interface Conversion {
 		 * @default `disable`
 		 */
 		slugify: "disable" | "strict" | "lower" | boolean;
+		slugifyAnchor: "disable" | "strict" | "lower" | boolean;
 		/**
 		 * Disable relative path creation
 		 */
