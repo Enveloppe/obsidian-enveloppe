@@ -77,6 +77,7 @@ export const DEFAULT_SETTINGS: Partial<EnveloppeSettings> = {
 			unlink: false,
 			relativePath: true,
 			textPrefix: "/",
+			slugifyAnchor: "disable",
 		},
 	},
 	embed: {

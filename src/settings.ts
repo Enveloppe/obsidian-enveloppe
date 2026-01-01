@@ -849,7 +849,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				? textSettings.links.slugifyAnchor
 					? "strict"
 					: "disable"
-				: textSettings.links.slugifyAnchor;
+				: textSettings.links.slugifyAnchor || "disable";
 
 		if (textSettings.links.wiki || textSettings.links.internal) {
 			new Setting(this.settingsPage)

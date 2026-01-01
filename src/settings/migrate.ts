@@ -1,8 +1,8 @@
 import {
 	type FolderSettings,
 	type GithubTiersVersion,
-	TOKEN_PATH,
 	type TextCleaner,
+	TOKEN_PATH,
 	TypeOfEditRegex,
 } from "@interfaces";
 import i18next from "i18next";
@@ -357,6 +357,7 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 				unlink: false,
 				relativePath: true,
 				textPrefix: "/",
+				slugifyAnchor: false,
 			},
 		},
 		embed: {
