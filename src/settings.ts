@@ -843,6 +843,14 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					? "strict"
 					: "disable"
 				: textSettings.links.slugify;
+
+		const slugifyAnchorSettings =
+			typeof textSettings.links.slugifyAnchor == "boolean"
+				? textSettings.links.slugifyAnchor
+					? "strict"
+					: "disable"
+				: textSettings.links.slugifyAnchor;
+
 		if (textSettings.links.wiki || textSettings.links.internal) {
 			new Setting(this.settingsPage)
 				.setName(i18next.t("settings.conversion.links.slugify.title"))
@@ -857,6 +865,27 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 						.setValue(slugifySetting)
 						.onChange(async (value) => {
 							textSettings.links.slugify = ["disable", "strict", "lower"].includes(value)
+								? (value as "disable" | "strict" | "lower")
+								: "disable";
+							await this.plugin.saveSettings();
+						});
+				});
+
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.conversion.links.anchor.title"))
+				.setDesc(i18next.t("settings.conversion.links.anchor.desc"))
+				.addDropdown((dropdown) => {
+					dropdown
+						.addOptions({
+							disable: i18next.t("settings.conversion.links.slugify.disable"),
+							strict: i18next.t("settings.conversion.links.slugify.strict"),
+							lower: i18next.t("settings.conversion.links.slugify.lower"),
+						})
+						.setValue(slugifyAnchorSettings)
+						.onChange(async (value) => {
+							textSettings.links.slugifyAnchor = ["disable", "strict", "lower"].includes(
+								value
+							)
 								? (value as "disable" | "strict" | "lower")
 								: "disable";
 							await this.plugin.saveSettings();
