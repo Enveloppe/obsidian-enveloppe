@@ -1,3 +1,9 @@
+## [7.7.0-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.6.4...7.7.0-0) (2026-01-01)
+### Features
+
+* **slugify:** add support to slugify anchor separately ([e37f014](https://github.com/Enveloppe/obsidian-enveloppe/commit/e37f014455499d1b8b8c171384e363b78ad75135)), closes [#405](https://github.com/Enveloppe/obsidian-enveloppe/issues/405)
+* **slugify:** add support to slugify anchor separately ([12f04f4](https://github.com/Enveloppe/obsidian-enveloppe/commit/12f04f45af26cfa240072dbcf710d849ca5ffb0b))
+
 ## [7.6.4-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.6.3...7.6.4-0) (2025-07-28)
 ### Bug Fixes
 
