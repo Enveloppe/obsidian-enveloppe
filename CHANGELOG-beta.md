@@ -1,3 +1,10 @@
+## [7.7.0-1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.7.0-0...7.7.0-1) (2026-01-01)
+### Features
+
+* add support for "wiki display text" setting ([de6fa36](https://github.com/Enveloppe/obsidian-enveloppe/commit/de6fa361f7396ba329e48d3e7fccd97148f614ab))
+* add support for "wiki display text" setting  ([962fca3](https://github.com/Enveloppe/obsidian-enveloppe/commit/962fca37d6d012ad012ea5048ccf7cddc01de6a8))
+* **slugify:** add support to slugify anchor separately ([26efa39](https://github.com/Enveloppe/obsidian-enveloppe/commit/26efa395b381d8e6d3dc9e3107645450ef2bee42)), closes [#405](https://github.com/Enveloppe/obsidian-enveloppe/issues/405)
+
 ## [7.7.0-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.6.4...7.7.0-0) (2026-01-01)
 ### Features
 
