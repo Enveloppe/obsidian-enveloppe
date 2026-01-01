@@ -837,6 +837,18 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 					await this.renderSettingsPage("text-conversion");
 				});
 			});
+		if (textSettings.links.wiki) {
+			new Setting(this.settingsPage)
+				.setName(i18next.t("settings.conversion.links.wikiDisplayText.title"))
+				.setDesc(i18next.t("settings.conversion.links.wikiDisplayText.desc"))
+				.addToggle((toggle) => {
+					toggle.setValue(textSettings.links.wikiDisplayText).onChange(async (value) => {
+						textSettings.links.wikiDisplayText = value;
+						await this.plugin.saveSettings();
+						await this.renderSettingsPage("text-conversion");
+					});
+				});
+		}
 		const slugifySetting =
 			typeof textSettings.links.slugify == "boolean"
 				? textSettings.links.slugify

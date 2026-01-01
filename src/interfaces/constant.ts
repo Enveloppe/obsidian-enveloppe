@@ -73,6 +73,7 @@ export const DEFAULT_SETTINGS: Partial<EnveloppeSettings> = {
 			internal: false,
 			unshared: false,
 			wiki: false,
+			wikiDisplayText: false,
 			slugify: "disable",
 			unlink: false,
 			relativePath: true,
