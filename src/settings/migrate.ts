@@ -358,6 +358,7 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 				relativePath: true,
 				textPrefix: "/",
 				slugifyAnchor: false,
+				wikiDisplayText: false,
 			},
 		},
 		embed: {
