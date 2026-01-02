@@ -63,6 +63,7 @@ export function convertWikilinks(
 				);
 
 				if (linkedFile && !linkIsInFormatter(linkedFile, sourceFrontmatter)) {
+					console.log("Linked file found for wikilink:", linkedFile);
 					fileContent = isLinkedFile(
 						linkedFile,
 						conditionConvert,
@@ -77,6 +78,10 @@ export function convertWikilinks(
 					!path.startsWith("http") &&
 					!textIsInFrontmatter(path, sourceFrontmatter)
 				) {
+					console.log(
+						"No linked file found for wikilink, applying strict conversion:",
+						path
+					);
 					fileContent = strictStringConversion(
 						isEmbed,
 						isNotAttachment,
@@ -189,6 +194,7 @@ function isLinkedFile(
 		linkCreator = altText;
 	if ((!conditionConvert.attachment && !isNotAttachment) || removeEmbed) linkCreator = "";
 
+	console.log("Final linkCreator:", linkCreator);
 	return replaceText(fileContent, wikiMatch, linkCreator, plugin, true);
 }
 /**
@@ -271,13 +277,19 @@ function createMarkdownLinks(
 	altLink: string,
 	settings: EnveloppeSettings
 ): string {
-	const markdownName = isAttachment(fileName.trim(), settings.embed.unHandledObsidianExt)
+	console.log("Filename to convert to markdown link:", fileName);
+	let markdownName = isAttachment(fileName.trim(), settings.embed.unHandledObsidianExt)
 		? fileName.trim()
 		: `${fileName.replace(/#.*/, "").trim()}.md`;
-	const ext = markdownName.split(".").at(-1) as string;
+	let ext = `.${markdownName.split(".").at(-1)}` as string;
+	if (markdownName === ".md") {
+		markdownName = "";
+		ext = "";
+	}
+
 	const anchorMatch = fileName.match(/(#.*)/);
 	let anchor = anchorMatch ? anchorMatch[0] : null;
-	const encodedUri = `${slugifyAnchor(markdownName.replace(`.${ext}`, ""), settings, true)}.${ext}`;
+	const encodedUri = `${slugifyAnchor(markdownName.replace(`.${ext}`, ""), settings, true)}${ext}`;
 	anchor = slugifyAnchor(anchor, settings);
 	return `${isEmbed}[${altLink}](${encodedUri}${anchor})`;
 }
