@@ -1,3 +1,8 @@
+## [7.7.0-2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.7.0-1...7.7.0-2) (2026-01-02)
+### Bug Fixes
+
+* anchor links only with wikilinks ([bbad429](https://github.com/Enveloppe/obsidian-enveloppe/commit/bbad429f66b1e038aabf2c2522bcf7d129490352)), closes [#404](https://github.com/Enveloppe/obsidian-enveloppe/issues/404)
+
 ## [7.7.0-1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.7.0-0...7.7.0-1) (2026-01-01)
 ### Features
 
