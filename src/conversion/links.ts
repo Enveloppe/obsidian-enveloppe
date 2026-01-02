@@ -63,7 +63,6 @@ export function convertWikilinks(
 				);
 
 				if (linkedFile && !linkIsInFormatter(linkedFile, sourceFrontmatter)) {
-					console.log("Linked file found for wikilink:", linkedFile);
 					fileContent = isLinkedFile(
 						linkedFile,
 						conditionConvert,
@@ -78,10 +77,6 @@ export function convertWikilinks(
 					!path.startsWith("http") &&
 					!textIsInFrontmatter(path, sourceFrontmatter)
 				) {
-					console.log(
-						"No linked file found for wikilink, applying strict conversion:",
-						path
-					);
 					fileContent = strictStringConversion(
 						isEmbed,
 						isNotAttachment,
@@ -194,7 +189,6 @@ function isLinkedFile(
 		linkCreator = altText;
 	if ((!conditionConvert.attachment && !isNotAttachment) || removeEmbed) linkCreator = "";
 
-	console.log("Final linkCreator:", linkCreator);
 	return replaceText(fileContent, wikiMatch, linkCreator, plugin, true);
 }
 /**
@@ -277,7 +271,6 @@ function createMarkdownLinks(
 	altLink: string,
 	settings: EnveloppeSettings
 ): string {
-	console.log("Filename to convert to markdown link:", fileName);
 	let markdownName = isAttachment(fileName.trim(), settings.embed.unHandledObsidianExt)
 		? fileName.trim()
 		: `${fileName.replace(/#.*/, "").trim()}.md`;
