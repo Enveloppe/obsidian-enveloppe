@@ -1,3 +1,5 @@
+## 7.7.0 (2026-02-08)
+
 ## [7.6.4](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.6.4-0...7.6.4) (2025-09-10)
 ### Bug Fixes
 
