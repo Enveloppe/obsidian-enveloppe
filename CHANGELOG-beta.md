@@ -1,3 +1,8 @@
+## [7.8.0-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.7.0...7.8.0-0) (2026-02-22)
+### Features
+
+* support for secrets & fix [#406](https://github.com/Enveloppe/obsidian-enveloppe/issues/406) ([#408](https://github.com/Enveloppe/obsidian-enveloppe/issues/408)) ([ebd5154](https://github.com/Enveloppe/obsidian-enveloppe/commit/ebd5154afdeba7207ae3fc47266e39a258c6a399))
+
 ## [7.7.0-2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.7.0-1...7.7.0-2) (2026-01-02)
 ### Bug Fixes
 
