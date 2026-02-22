@@ -2,7 +2,6 @@ import {
 	type FolderSettings,
 	type GithubTiersVersion,
 	type TextCleaner,
-	TOKEN_PATH,
 	TypeOfEditRegex,
 } from "@interfaces";
 import i18next from "i18next";
@@ -325,7 +324,7 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 					: "",
 			branch: old.githubBranch,
 			automaticallyMergePR: old.automaticallyMergePR,
-			tokenPath: plugin.settings.github.tokenPath ?? TOKEN_PATH,
+			tokenPath: undefined,
 			tokenSecret: plugin.settings.github.tokenSecret ?? "",
 			api: {
 				tiersForApi: old.tiersForApi,

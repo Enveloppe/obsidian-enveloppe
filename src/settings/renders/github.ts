@@ -1,9 +1,7 @@
 import { ESettingsTabId, GithubTiersVersion, type Repository } from "@interfaces";
 import i18next from "i18next";
 import { Notice, SecretComponent, Setting } from "obsidian";
-import { migrateToken } from "src/settings/migrate";
 import { ModalAddingNewRepository } from "src/settings/modals/manage_repo";
-import { TokenEditPath } from "src/settings/modals/token_path";
 import {
 	checkRepositoryValidity,
 	verifyRateLimitAPI,
@@ -81,41 +79,6 @@ export const renderGithubConfiguration = (ctx: RenderContext) => {
 			link.href = "https://github.com/settings/tokens/new?scopes=repo,workflow";
 		});
 	});
-	/**
-	 * @deprecated
-	const tokenSettings = new Setting(ctx.settingsPage)
-		.setName(i18next.t("common.ghToken"))
-		.setDesc(descGhToken)
-		.addText(async (text) => {
-			const decryptedToken: string = await ctx.plugin.loadToken();
-			text
-				.setPlaceholder("ghp_15457498545647987987112184")
-				.setValue(decryptedToken)
-				.onChange(async (value) => {
-					if (value.trim().length === 0) {
-						tokenSettings.controlEl.addClass("error");
-						new Notice(
-							i18next.t("settings.github.ghToken.error"),
-							ctx.settings.plugin.noticeLength
-						);
-					} else {
-						tokenSettings.controlEl.removeClass("error");
-						await migrateToken(ctx.plugin, value.trim());
-					}
-					await ctx.plugin.saveSettings();
-				});
-		})
-		.addExtraButton((button) => {
-			button
-				.setIcon("edit")
-				.setTooltip(i18next.t("settings.github.ghToken.button.tooltip"))
-				.onClick(async () => {
-					const token = await ctx.plugin.loadToken();
-					new TokenEditPath(ctx.app, ctx.plugin, token).open();
-					await ctx.plugin.saveSettings();
-				});
-		});
-		*/
 
 	new Setting(ctx.settingsPage)
 		.setName(i18next.t("common.ghToken"))

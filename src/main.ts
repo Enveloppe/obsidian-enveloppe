@@ -168,6 +168,7 @@ export default class Enveloppe extends Plugin {
 			}
 			if (secret) return secret;
 		}
+		/** @legacy for old version, will be removed in the future **/
 		const tokenPath = createTokenPath(this, this.settings.github.tokenPath);
 
 		const tokenFileExists = await this.app.vault.adapter.exists(`${tokenPath}`);

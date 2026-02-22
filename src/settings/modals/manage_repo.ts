@@ -10,7 +10,6 @@ import {
 	type TFile,
 } from "obsidian";
 import type Enveloppe from "src/main";
-import { migrateToken } from "src/settings/migrate";
 import {
 	checkRepositoryValidity,
 	verifyRateLimitAPI,

@@ -16,8 +16,24 @@ import {
 } from "obsidian";
 import type Enveloppe from "src/main";
 import type { EnveloppeSettingsTab } from "src/settings";
-import { type OldSettings, migrateSettings } from "src/settings/migrate";
+import { migrateSettings, type OldSettings } from "src/settings/migrate";
 import type { Logs } from "../../utils/logs";
+
+function censorData(settings: EnveloppeSettings, original: EnveloppeSettings) {
+	settings.plugin.dev = original.plugin.dev;
+	settings.plugin.migrated = original.plugin.migrated;
+	settings.plugin.displayModalRepoEditing = original.plugin.displayModalRepoEditing;
+	settings.plugin.noticeError = original.plugin.noticeError;
+	settings.plugin.copyLink.addCmd = original.plugin.copyLink.addCmd;
+	settings.plugin.fileMenu = original.plugin.fileMenu;
+	settings.plugin.editorMenu = original.plugin.editorMenu;
+	settings.github.repo = original.github.repo;
+	settings.github.user = original.github.user;
+	settings.github.otherRepo = original.github.otherRepo;
+	settings.tabsId = original.tabsId;
+	settings.plugin.copyLink.links = original.plugin.copyLink.links;
+	settings.github.tokenSecret = original.github.tokenSecret;
+}
 
 /**
  *
@@ -47,20 +63,7 @@ export class ImportModal extends Modal {
 
 	async censorRepositoryData(original: EnveloppeSettings) {
 		this.console.trace("original settings:", original);
-		this.settings.plugin.dev = original.plugin.dev;
-		this.settings.plugin.migrated = original.plugin.migrated;
-		this.settings.plugin.displayModalRepoEditing =
-			original.plugin.displayModalRepoEditing;
-		this.settings.plugin.noticeError = original.plugin.noticeError;
-		this.settings.plugin.copyLink.addCmd = original.plugin.copyLink.addCmd;
-		this.settings.plugin.fileMenu = original.plugin.fileMenu;
-		this.settings.plugin.editorMenu = original.plugin.editorMenu;
-		this.plugin.settings.github.repo = original.github.repo;
-		this.plugin.settings.github.user = original.github.user;
-		this.plugin.settings.github.otherRepo = original.github.otherRepo;
-		this.plugin.settings.tabsId = original.tabsId;
-		this.plugin.settings.plugin.copyLink.links = original.plugin.copyLink.links;
-		this.settings.github.tokenPath = original.github.tokenPath;
+		censorData(this.plugin.settings, original);
 		await this.plugin.saveSettings();
 	}
 
@@ -225,6 +228,7 @@ export class ExportModal extends Modal {
 			delete github.otherRepo;
 			delete github.rateLimit;
 			delete github.tokenPath;
+			delete github.tokenSecret;
 		}
 		if (plugin) {
 			delete plugin.dev;
@@ -389,19 +393,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 				// @ts-ignore
 				this.settings[key] = value;
 			}
-			this.settings.plugin.dev = original.plugin.dev;
-			this.settings.plugin.migrated = original.plugin.migrated;
-			this.settings.plugin.displayModalRepoEditing =
-				original.plugin.displayModalRepoEditing;
-			this.settings.plugin.noticeError = original.plugin.noticeError;
-			this.settings.plugin.copyLink.addCmd = original.plugin.copyLink.addCmd;
-			this.settings.plugin.fileMenu = original.plugin.fileMenu;
-			this.settings.plugin.editorMenu = original.plugin.editorMenu;
-			this.settings.github.repo = original.github.repo;
-			this.settings.github.user = original.github.user;
-			this.settings.github.otherRepo = original.github.otherRepo;
-			this.settings.github.rateLimit = original.github.rateLimit;
-			this.settings.tabsId = original.tabsId;
+			censorData(this.settings, original);
 
 			this.plugin.saveSettings().then();
 			this.page.renderSettingsPage("github-configuration").then();
