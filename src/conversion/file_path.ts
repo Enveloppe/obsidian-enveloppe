@@ -10,10 +10,10 @@ import {
 } from "@interfaces";
 import {
 	type FrontMatterCache,
+	normalizePath,
 	type TFile,
 	TFolder,
 	type Vault,
-	normalizePath,
 } from "obsidian";
 import { createRegexFromText } from "src/conversion/find_and_replace_text";
 import type Enveloppe from "src/main";
@@ -30,6 +30,7 @@ import {
 	getProperties,
 } from "src/utils/parse_frontmatter";
 import { merge } from "ts-deepmerge";
+import { escapeRegex } from "./links";
 
 /** Search a link in the entire frontmatter value */
 /** Link will always be in the form of [[]] */
@@ -40,9 +41,11 @@ export function linkIsInFormatter(
 	if (frontmatter) {
 		for (const key in frontmatter) {
 			const wikiLinks = `[[${linkedFile.linkFrom}]]`;
-			if (frontmatter[key] === wikiLinks) {
-				return true;
-			}
+			const regex = new RegExp(
+				`\\[\\[${escapeRegex(linkedFile.linkFrom)}(\\|(.*))?\\]\\]`,
+				"g"
+			);
+			if (frontmatter[key] === wikiLinks || regex.test(frontmatter[key])) return true;
 		}
 	}
 	return false;
@@ -54,9 +57,8 @@ export function textIsInFrontmatter(
 ): boolean {
 	if (frontmatter) {
 		for (const key in frontmatter) {
-			if (frontmatter[key] === `[[${text}]]`) {
-				return true;
-			}
+			const regex = new RegExp(`\\[\\[${escapeRegex(text)}(\\|(.*))?\\]\\]`, "g");
+			if (frontmatter[key] === `[[${text}]]` || regex.test(frontmatter[key])) return true;
 		}
 	}
 	return false;

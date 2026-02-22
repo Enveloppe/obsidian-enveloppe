@@ -2,7 +2,6 @@ import {
 	type FolderSettings,
 	type GithubTiersVersion,
 	type TextCleaner,
-	TOKEN_PATH,
 	TypeOfEditRegex,
 } from "@interfaces";
 import i18next from "i18next";
@@ -71,7 +70,7 @@ export async function migrateSettings(
 	await migrateSubFolder(plugin);
 	await migrateCensor(plugin);
 	await migrateWorFlow(plugin);
-	await migrateToken(plugin);
+	await migrateToSecret(plugin);
 	await migrateOtherRepository(plugin);
 	plugin.settings.plugin.migrated = true;
 	await plugin.saveSettings();
@@ -144,6 +143,52 @@ async function migrateWorFlow(plugin: Enveloppe) {
 	await plugin.saveSettings();
 }
 
+export async function migrateToSecret(plugin: Enveloppe) {
+	plugin.console.trace("Migrating token to secret");
+	if (plugin.settings.github.tokenSecret) {
+		return;
+	}
+	const oldToken = await plugin.loadToken();
+	if (!oldToken) {
+		return;
+	}
+	//create the secret
+	plugin.app.secretStorage.setSecret("enveloppe-github-token", oldToken);
+	//set the token in the settings
+	plugin.settings.github.tokenSecret = "enveloppe-github-token";
+	//also update all repo
+	if (plugin.settings.github.otherRepo) {
+		for (const repo of plugin.settings.github.otherRepo) {
+			if (repo.token) {
+				plugin.app.secretStorage.setSecret(
+					`enveloppe-github-token-${repo.smartKey}`,
+					repo.token
+				);
+				repo.tokenSecret = `enveloppe-github-token-${repo.smartKey}`;
+				delete repo.token;
+			}
+		}
+	}
+	await plugin.saveSettings();
+}
+
+export async function saveTokenSecret(plugin: Enveloppe, token: string, repo?: string) {
+	plugin.console.trace("Saving token in secret");
+	if (repo) {
+		const repository = plugin.settings.github.otherRepo.find((r) => r.smartKey === repo);
+		if (repository) {
+			plugin.app.secretStorage.setSecret(`enveloppe-github-token-${repo}`, token);
+			repository.tokenSecret = `enveloppe-github-token-${repo}`;
+		}
+	} else {
+		plugin.app.secretStorage.setSecret("enveloppe-github-token", token);
+		plugin.settings.github.tokenSecret = "enveloppe-github-token";
+	}
+}
+
+/**
+ * @deprecated
+ */
 export async function migrateToken(plugin: Enveloppe, token?: string, repo?: string) {
 	plugin.console.trace("migrating token");
 	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
@@ -279,7 +324,8 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 					: "",
 			branch: old.githubBranch,
 			automaticallyMergePR: old.automaticallyMergePR,
-			tokenPath: plugin.settings.github.tokenPath ?? TOKEN_PATH,
+			tokenPath: undefined,
+			tokenSecret: plugin.settings.github.tokenSecret ?? "",
 			api: {
 				tiersForApi: old.tiersForApi,
 				hostname: old.hostname,
@@ -401,6 +447,6 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 			? //@ts-ignore
 				plugin.settings.github.token
 			: undefined;
-	await migrateToken(plugin, token);
+	await saveTokenSecret(plugin, token);
 	await plugin.saveSettings();
 }

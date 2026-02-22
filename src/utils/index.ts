@@ -1,7 +1,7 @@
 import {
 	type Deleted,
-	FIND_REGEX,
 	type EnveloppeSettings,
+	FIND_REGEX,
 	type ListEditedFiles,
 	type MetadataExtractor,
 	type MultiRepoProperties,

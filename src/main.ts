@@ -35,7 +35,7 @@ import { getTitleField, regexOnFileName } from "src/conversion/file_path";
 import { GithubBranch } from "src/GitHub/branch";
 import { resources, translationLanguage } from "src/i18n/i18next";
 import { EnveloppeSettingsTab } from "src/settings";
-import { migrateSettings, type OldSettings } from "src/settings/migrate";
+import { migrateSettings, migrateToSecret, type OldSettings } from "src/settings/migrate";
 import { createTokenPath } from "src/utils";
 import {
 	checkRepositoryValidity,
@@ -155,6 +155,20 @@ export default class Enveloppe extends Plugin {
 
 	async loadToken(repo?: string): Promise<string> {
 		if (repo == "default") repo = undefined;
+		if (this.settings.github.tokenSecret) {
+			const secret = this.app.secretStorage.getSecret(this.settings.github.tokenSecret);
+			if (repo) {
+				const keyPath = this.settings.github.otherRepo.find(
+					(r) => r.smartKey === repo
+				)?.tokenSecret;
+				if (keyPath) {
+					const repoSecret = this.app.secretStorage.getSecret(keyPath);
+					if (repoSecret) return repoSecret;
+				}
+			}
+			if (secret) return secret;
+		}
+		/** @legacy for old version, will be removed in the future **/
 		const tokenPath = createTokenPath(this, this.settings.github.tokenPath);
 
 		const tokenFileExists = await this.app.vault.adapter.exists(`${tokenPath}`);
@@ -220,6 +234,7 @@ export default class Enveloppe extends Plugin {
 			resources,
 			returnNull: false,
 			returnEmptyString: false,
+			showSupportNotice: false,
 		});
 
 		await this.loadSettings();
@@ -241,6 +256,7 @@ export default class Enveloppe extends Plugin {
 
 		const oldSettings = this.settings;
 		await migrateSettings(oldSettings as unknown as OldSettings, this);
+		await migrateToSecret(this);
 
 		this.branchName = `${this.app.vault
 			.getName()

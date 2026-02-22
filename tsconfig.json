@@ -1,43 +1,29 @@
 {
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "@interfaces/*": [
-        "./src/interfaces/*"
-      ],
-      "@interfaces": [
-        "./src/interfaces/index.ts"
-      ],
-      "obsidian-dataview": [
-        "./node_modules/@enveloppe/obsidian-dataview"
-      ]
-    },
-    "noEmit": true,
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "module": "ESNext",
-    "target": "ESNEXT",
-    "allowJs": true,
-    "noImplicitAny": true,
-    "skipLibCheck": true,
-    "removeComments": true,
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "isolatedModules": true,
-    "resolveJsonModule": true,
-    "strict": true,
-    "allowSyntheticDefaultImports": true,
-    "strictNullChecks": true,
-    "lib": [
-      "DOM",
-      "ES5",
-      "ES6",
-      "ES7",
-      "ES2021",
-      "ES2022"
-    ]
-  },
-  "include": [
-    "**/*.ts"
-  ]
+	"compilerOptions": {
+		"baseUrl": "./",
+		"paths": {
+			"@interfaces/*": ["./src/interfaces/*"],
+			"@interfaces": ["./src/interfaces/index.ts"],
+			"obsidian-dataview": ["./node_modules/@enveloppe/obsidian-dataview"]
+		},
+		"types": ["obsidian-typings"],
+		"noEmit": true,
+		"inlineSourceMap": true,
+		"inlineSources": true,
+		"module": "ESNext",
+		"target": "ESNEXT",
+		"allowJs": true,
+		"noImplicitAny": true,
+		"skipLibCheck": true,
+		"removeComments": true,
+		"moduleResolution": "node",
+		"importHelpers": true,
+		"isolatedModules": true,
+		"resolveJsonModule": true,
+		"strict": true,
+		"allowSyntheticDefaultImports": true,
+		"strictNullChecks": true,
+		"lib": ["DOM", "ES5", "ES6", "ES7", "ES2021", "ES2022"]
+	},
+	"include": ["**/*.ts"]
 }

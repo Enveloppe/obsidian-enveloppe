@@ -61,6 +61,10 @@ export interface Repository {
 	 * The github token if needed ; use the default one if not set
 	 */
 	token?: string;
+	/** The github token secret if needed ; use the default one if not set
+	 * @description The token secret is used to encrypt the token in the settings, and decrypt it when needed. It can be set to a custom value, but it should be kept secret and not shared with anyone.
+	 */
+	tokenSecret?: string;
 	/**
 	 * The github API hostname
 	 */

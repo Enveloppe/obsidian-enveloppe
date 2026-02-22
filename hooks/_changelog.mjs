@@ -1,6 +1,6 @@
-import { readFileSync, writeFile } from "fs";
-
+import { readFileSync, writeFileSync } from "node:fs";
 import { Command } from "commander";
+
 const program = new Command();
 
 program.option("-b, --beta", "Pre-release version");
@@ -21,9 +21,7 @@ function removeText(path) {
 	for (const remove of toRemove) changelog = changelog.replace(remove, "").trim();
 	changelog = changelog.replaceAll(/[\n\r]{3,}/gm, "\n\n").trim();
 	changelog = changelog.replaceAll(/## (.*)[\n\r]{2}### /gm, "## $1\n### ").trim();
-	writeFile(path, changelog.trim(), "utf8", (err) => {
-		if (err) return console.error(err);
-	});
+	writeFileSync(path, changelog.trim(), "utf8");
 }
 
 if (!opt.beta) removeText("CHANGELOG.md");

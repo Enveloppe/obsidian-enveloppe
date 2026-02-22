@@ -1,7 +1,8 @@
+import pkg from "ansi-colors";
 import { Command, Option } from "commander";
 import commitAndTagVersion from "commit-and-tag-version";
 import dedent from "dedent";
-import pkg from "ansi-colors";
+
 const { red, dim, gray, italic, bold, cyan, blue, green, underline, yellow, theme } = pkg;
 
 const program = new Command();
@@ -76,6 +77,7 @@ if (opt.beta) {
 		tagPrefix: "",
 		scripts: {
 			postchangelog: "node hooks/_changelog.mjs -b",
+			postbump: "node hooks/_versions.mjs",
 		},
 	})
 		.then(() => {
@@ -118,6 +120,7 @@ if (opt.beta) {
 		releaseAs: opt.releaseAs,
 		scripts: {
 			postchangelog: "node hooks/_changelog.mjs",
+			postbump: "node hooks/_versions.mjs",
 		},
 	})
 		.then(() => {
