@@ -6,7 +6,7 @@
 			"@interfaces": ["./src/interfaces/index.ts"],
 			"obsidian-dataview": ["./node_modules/@enveloppe/obsidian-dataview"]
 		},
-		"types": ["node", "obsidian-typings"],
+		"types": ["obsidian-typings"],
 		"noEmit": true,
 		"inlineSourceMap": true,
 		"inlineSources": true,

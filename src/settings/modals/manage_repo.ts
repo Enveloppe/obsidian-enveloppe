@@ -5,6 +5,7 @@ import {
 	type App,
 	Modal,
 	Notice,
+	SecretComponent,
 	Setting,
 	type TFile,
 } from "obsidian";
@@ -414,17 +415,15 @@ class ModalEditingRepository extends Modal {
 		new Setting(contentEl)
 			.setName(i18next.t("common.ghToken"))
 			.setDesc(descGhToken)
-			.addText(async (text) => {
-				const decryptedToken: string = await this.plugin.loadToken(
-					this.repository.smartKey
-				);
-				text
-					.setPlaceholder("ghp_1234567890")
-					.setValue(decryptedToken)
+			.addComponent((el) =>
+				new SecretComponent(this.app, el)
+					.setValue(
+						this.repository.tokenSecret ?? this.plugin.settings.github.tokenSecret
+					)
 					.onChange(async (value) => {
-						await migrateToken(this.plugin, value.trim(), this.repository.smartKey);
-					});
-			});
+						this.repository.tokenSecret = value;
+					})
+			);
 		new Setting(contentEl)
 			.setName(i18next.t("settings.github.automaticallyMergePR"))
 			.addToggle((toggle) =>

@@ -22,6 +22,7 @@ export const DEFAULT_SETTINGS: Partial<EnveloppeSettings> = {
 			folderName: "enveloppe",
 		},
 		tokenPath: TOKEN_PATH,
+		tokenSecret: "",
 		api: {
 			tiersForApi: GithubTiersVersion.Free,
 			hostname: "",
