@@ -86,10 +86,15 @@ export interface GitHub {
 	 */
 	branch: string;
 	/**
+	 * @depecrated use `tokenSecret` instead, the token is now stored in the Obsidian SecretStorage, and not in the settings directly, to prevent mistake and security issue
 	 * The path where the token is stored (as the token is not saved in the settings directly, to prevent mistake and security issue)
 	 * @default `%configDir%/plugins/%pluginID%/env`
 	 */
 	tokenPath: string;
+	/**
+	 * Since Obsidian 1.11.4, we can use SecretStorage
+	 */
+	tokenSecret: string;
 	/**
 	 * If the PR should be automatically merged
 	 */
