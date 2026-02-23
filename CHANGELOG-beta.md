@@ -1,3 +1,8 @@
+## [7.8.0-1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.8.0-0...7.8.0-1) (2026-02-23)
+### Bug Fixes
+
+* double extension in creating markdown Links ([57b3840](https://github.com/Enveloppe/obsidian-enveloppe/commit/57b3840faeb8e885814ce529c9ee39f5e67c7e45)), closes [#409](https://github.com/Enveloppe/obsidian-enveloppe/issues/409)
+
 ## [7.8.0-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.7.0...7.8.0-0) (2026-02-22)
 ### Features
 
