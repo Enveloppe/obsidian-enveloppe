@@ -90,6 +90,23 @@ export const renderEmbedConfiguration = async (ctx: RenderContext) => {
 			});
 
 		new Setting(ctx.settingsPage)
+			.setName("Strip prefix from attachment links")
+			.setDesc(
+				"If set, this prefix will be removed from attachment paths in generated markdown links. " +
+				"Useful for Astro and other frameworks where files in `public/` are served from the site root. " +
+				"Example: setting this to `public` will convert a link to `public/images/photo.png` into `/images/photo.png`."
+			)
+			.addText((text) => {
+				text
+					.setPlaceholder("public")
+					.setValue(embedSettings.stripPathPrefix ?? "")
+					.onChange(async (value) => {
+						embedSettings.stripPathPrefix = value.replace(/\/$/, "");
+						await ctx.plugin.saveSettings();
+					});
+			});
+
+		new Setting(ctx.settingsPage)
 			.setName(i18next.t("settings.embeds.unHandledObsidianExt.title"))
 			.setDesc(i18next.t("settings.embeds.unHandledObsidianExt.desc"))
 			.addTextArea((text) => {

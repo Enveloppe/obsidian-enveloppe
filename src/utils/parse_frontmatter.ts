@@ -55,6 +55,7 @@ export function getFrontmatterSettings(
 		convertInternalLinks: settings.conversion.links.internal,
 		includeLinks: settings.embed.sendSimpleLinks,
 		unlink: !settings.conversion.links.unshared && settings.conversion.links.unlink,
+		stripPathPrefix: settings.embed.stripPathPrefix,
 	};
 
 	const shareAll = repo ? repo.shareAll?.enable : settings.plugin.shareAll?.enable;
@@ -418,6 +419,10 @@ export function parsePath(
 					splitArrayPath(
 						frontmatter?.attachment?.send ?? frontmatter?.["attachment.folder"]
 					) ?? settings.embed.folder,
+				stripPathPrefix:
+					frontmatter?.attachment?.stripPathPrefix ??
+					frontmatter?.["attachment.stripPathPrefix"] ??
+					settings.embed.stripPathPrefix,
 			},
 		};
 		/** List of alias for path generation */
@@ -684,6 +689,8 @@ function settingAttachment(
 		settingsConversion.attachment = frontmatter[`${key}.send`];
 	if (frontmatter[`${key}.folder`] != undefined)
 		settingsConversion.attachmentLinks = frontmatter[`${key}.folder`];
+	if (frontmatter[`${key}.stripPathPrefix`] != undefined)
+		settingsConversion.stripPathPrefix = frontmatter[`${key}.stripPathPrefix`];
 
 	if (settingsConversion.attachmentLinks) {
 		settingsConversion.attachmentLinks = normalizePath(
