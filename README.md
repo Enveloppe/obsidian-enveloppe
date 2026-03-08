@@ -21,7 +21,7 @@ Here, you will only get a quick setup!
 - And many more :sparkles:
 
 > [!WARNING]
-> Do not use this plugin to sync or save your Obsidian Vault!
+> Do not use this plugin to sync your Obsidian Vault across devices! Consider using [Obsidian Sync](https://obsidian.md/sync) or [obsidian-livesync](https://github.com/vrtmrz/obsidian-livesync) for those purposes instead.
 > Avoid opening the converted files from your repository in Obsidian!
 
 ---
