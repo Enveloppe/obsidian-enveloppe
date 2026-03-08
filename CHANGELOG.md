@@ -1,3 +1,8 @@
+## [7.8.1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.8.0...7.8.1) (2026-03-08)
+### Bug Fixes
+
+* should not confound master with main (wtf github) ([fad8378](https://github.com/Enveloppe/obsidian-enveloppe/commit/fad83781d571300886635a69557682dd4512e36c))
+
 ## [7.8.0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.8.0-1...7.8.0) (2026-03-08)
 
 ## 7.7.0 (2026-02-08)
