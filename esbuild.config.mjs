@@ -132,7 +132,7 @@ async function buildPlugin() {
 		minifyWhitespace: isProd,
 		outdir: outDir,
 		plugins: getPlugins(outDir),
-		pure: isProd ? ["console.log", "debugger", "console.trace", "console.debug"] : [],
+		pure: isProd ? ["console.log", "console.trace", "console.debug"] : [],
 	});
 
 	console.log(`🚀 ${isProd ? "Production" : "Development"} build`);
