@@ -36,7 +36,7 @@ export class GithubBranch extends FilesManagement {
 				branch: branchName || prop.branch,
 			}
 		);
-		return branch.status === 200;
+		return branch.status === 200 && branch?.data.name === (branchName || prop.branch);
 	}
 
 	/**
@@ -65,7 +65,6 @@ export class GithubBranch extends FilesManagement {
 			);
 		}
 		try {
-			this.console.debug("Creating branch with", mainBranch, this.branchName);
 			const shaMainBranch = mainBranch.data.commit.sha;
 			const branch = await this.octokit.request("POST /repos/{owner}/{repo}/git/refs", {
 				owner: prop.owner,
@@ -121,8 +120,14 @@ export class GithubBranch extends FilesManagement {
 				head: this.branchName,
 				base: prop.branch,
 			});
-			return pr.data.number;
+			return pr.status === 201 ? pr.data.number : 0;
 		} catch (e) {
+			if ((e as any)?.status === 422) {
+				this.console.warn(
+					"Github error 422: Unprocessable Entity. Verify your base branch!",
+					(e as any)?.response?.data
+				);
+			}
 			this.console.trace(e);
 			//trying to get the last open PR number
 			try {
@@ -226,6 +231,7 @@ export class GithubBranch extends FilesManagement {
 		if (this.settings.github.dryRun.enable) return true;
 		try {
 			const pullRequest = await this.pullRequestOnRepo(prop);
+			if (pullRequest === 0) return false;
 			if (prop.automaticallyMergePR && pullRequest !== 0) {
 				const prSuccess = await this.mergePullRequestOnRepo(pullRequest, prop);
 				if (prSuccess) {
@@ -256,6 +262,7 @@ export class GithubBranch extends FilesManagement {
 		prop = Array.isArray(prop) ? prop : [prop];
 		await verifyToken(this.octokit, this.settings.github.user);
 		for (const repo of prop) {
+			console.debug("Verify data for repo", repo);
 			const repoExist = await this.octokit
 				.request("GET /repos/{owner}/{repo}", {
 					owner: repo.owner,
