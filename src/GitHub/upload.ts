@@ -185,7 +185,6 @@ export default class Publisher {
 			repo.frontmatter
 		);
 		if (!isShared(frontmatter, this.settings, file, repo.repository)) return false;
-		console.debug(file.name, fileHistory.length);
 		if (
 			!(await shareFiles.wasEditedSinceLastSync(file, repo.repository, filePath)) &&
 			fileHistory.length > 0
