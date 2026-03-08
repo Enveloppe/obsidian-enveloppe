@@ -262,7 +262,6 @@ export class GithubBranch extends FilesManagement {
 		prop = Array.isArray(prop) ? prop : [prop];
 		await verifyToken(this.octokit, this.settings.github.user);
 		for (const repo of prop) {
-			console.debug("Verify data for repo", repo);
 			const repoExist = await this.octokit
 				.request("GET /repos/{owner}/{repo}", {
 					owner: repo.owner,
