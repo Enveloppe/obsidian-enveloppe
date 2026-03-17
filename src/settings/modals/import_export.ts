@@ -414,7 +414,7 @@ export async function loadAllPresets(
 	//load from gitHub repository
 	try {
 		const githubPreset = await octokit.request(
-			"GET /repos/{owner}/{repo}/contents/{path}",
+			"GET /repos/{owner}/{repo}/contents/{+path}",
 			{
 				owner: "ObsidianPublisher",
 				repo: "plugin-presets",
@@ -453,7 +453,7 @@ export async function loadPresetContent(
 	plugin: Enveloppe
 ): Promise<EnveloppeSettings> {
 	const presetContent = await octokit.request(
-		"GET /repos/{owner}/{repo}/contents/{path}",
+		"GET /repos/{owner}/{repo}/contents/{+path}",
 		{
 			owner: "Enveloppe",
 			repo: "plugin-presets",

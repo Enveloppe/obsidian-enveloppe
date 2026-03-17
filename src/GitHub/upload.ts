@@ -191,9 +191,8 @@ export default class Publisher {
 		) {
 			const msg = i18next.t("publish.upToDate", {
 				file: file.name,
-				repo: `${repo.repository?.user ?? this.settings.github.user}/${
-					repo.repository?.repo ?? this.settings.github.repo
-				}:${repo.repository?.branch ?? this.branchName}`,
+				repo: `${repo.repository?.user ?? this.settings.github.user}/${repo.repository?.repo ?? this.settings.github.repo
+					}:${repo.repository?.branch ?? this.branchName}`,
 			});
 			new Notice(msg, this.noticeLength);
 			return false;
@@ -424,7 +423,7 @@ export default class Publisher {
 		};
 		try {
 			const response = await octokit.request(
-				"GET /repos/{owner}/{repo}/contents/{path}",
+				"GET /repos/{owner}/{repo}/contents/{+path}",
 				{
 					owner: prop.owner,
 					repo: prop.repo,
@@ -443,7 +442,7 @@ export default class Publisher {
 		}
 
 		payload.message = msg;
-		await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", payload);
+		await octokit.request("PUT /repos/{owner}/{repo}/contents/{+path}", payload);
 		return result;
 	}
 
@@ -665,7 +664,7 @@ export default class Publisher {
 					}
 					//first search if the file exists
 					const response = await this.octokit.request(
-						"GET /repos/{owner}/{repo}/contents/{path}",
+						"GET /repos/{owner}/{repo}/contents/{+path}",
 						{
 							owner: prop.prop.owner,
 							repo: prop.prop.repo,

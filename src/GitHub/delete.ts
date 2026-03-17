@@ -110,12 +110,12 @@ async function deleteFromGithubOneRepo(
 		);
 		const isMarkdownForAnotherRepo = file.file.trim().endsWith(".md")
 			? !allSharedConverted.some((f) => {
-					let prop = f.repo;
-					if (Array.isArray(prop)) {
-						prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
-					}
-					return (f.converted === file.file || f.otherPath?.includes(file.file)) && prop;
-				})
+				let prop = f.repo;
+				if (Array.isArray(prop)) {
+					prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
+				}
+				return (f.converted === file.file || f.otherPath?.includes(file.file)) && prop;
+			})
 			: false;
 		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
 		if (isNeedToBeDeleted) {
@@ -127,7 +127,7 @@ async function deleteFromGithubOneRepo(
 					`trying to delete file : ${file.file} from ${repo.owner}/${repo.repo}`
 				);
 				const response = await octokit.request(
-					"DELETE /repos/{owner}/{repo}/contents/{path}",
+					"DELETE /repos/{owner}/{repo}/contents/{+path}",
 					{
 						owner: repo.owner,
 						repo: repo.repo,
@@ -260,7 +260,7 @@ async function checkIndexFiles(
 	path: string,
 	prop: Properties
 ): Promise<boolean> {
-	const fileRequest = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+	const fileRequest = await octokit.request("GET /repos/{owner}/{repo}/contents/{+path}", {
 		owner: prop.owner,
 		repo: prop.repo,
 		path,
@@ -339,15 +339,15 @@ function cleanDryRun(
 		);
 		const isMarkdownForAnotherRepo = file.path.trim().endsWith(".md")
 			? !allSharedFiles.some((f) => {
-					let prop = f.repo;
-					if (Array.isArray(prop)) {
-						prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
-					}
-					return (
-						(f.converted === convertedPath || f.otherPath?.includes(convertedPath)) &&
-						prop
-					);
-				})
+				let prop = f.repo;
+				if (Array.isArray(prop)) {
+					prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
+				}
+				return (
+					(f.converted === convertedPath || f.otherPath?.includes(convertedPath)) &&
+					prop
+				);
+			})
 			: false;
 		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
 		if (isNeedToBeDeleted) {
