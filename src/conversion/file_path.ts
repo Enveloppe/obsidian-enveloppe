@@ -19,6 +19,7 @@ import { createRegexFromText } from "src/conversion/find_and_replace_text";
 import type Enveloppe from "src/main";
 import {
 	checkIfRepoIsInAnother,
+	isAttachment,
 	isInternalShared,
 	isShared,
 } from "src/utils/data_validation_test";
@@ -180,9 +181,10 @@ export async function createRelativePath(
 	}
 	if (!properties.plugin.settings.conversion.links.relativePath) {
 		const link = `${properties.plugin.settings.conversion.links.textPrefix}${targetPath}`;
-		const isTargetAttachment =
-			targetFile.linked.extension !== "md" ||
-			targetFile.linked.name.includes("excalidraw");
+		const isTargetAttachment = !!isAttachment(
+			targetFile.linked.name,
+			properties.plugin.settings.embed.unHandledObsidianExt
+		);
 		if (isTargetAttachment && frontmatterSettings.stripPathPrefix) {
 			return {
 				link: stripAttachmentPathPrefix(link, frontmatterSettings.stripPathPrefix),
@@ -229,9 +231,10 @@ export async function createRelativePath(
 	}
 
 	let link = relative;
-	const isTargetAttachment =
-		targetFile.linked.extension !== "md" ||
-		targetFile.linked.name.includes("excalidraw");
+	const isTargetAttachment = !!isAttachment(
+		targetFile.linked.name,
+		properties.plugin.settings.embed.unHandledObsidianExt
+	);
 	if (isTargetAttachment && frontmatterSettings.stripPathPrefix) {
 		link = stripAttachmentPathPrefix(link, frontmatterSettings.stripPathPrefix);
 	}
