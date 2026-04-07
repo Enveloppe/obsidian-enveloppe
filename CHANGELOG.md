@@ -1,3 +1,8 @@
+## [7.8.2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.8.1...7.8.2) (2026-04-07)
+### Bug Fixes
+
+* prevent posting in the root folder with fine grained token (!?) ([799fafe](https://github.com/Enveloppe/obsidian-enveloppe/commit/799fafe6e831dd78fd3ca88cf004a808442f7978)), closes [#411](https://github.com/Enveloppe/obsidian-enveloppe/issues/411)
+
 ## [7.8.1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.8.0...7.8.1) (2026-03-08)
 ### Bug Fixes
 
