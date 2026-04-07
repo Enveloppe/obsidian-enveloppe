@@ -14,12 +14,12 @@ import { klona } from "klona";
 import {
 	type MetadataCache,
 	Notice,
+	normalizePath,
+	parseYaml,
 	type TAbstractFile,
 	TFile,
 	TFolder,
 	Vault,
-	normalizePath,
-	parseYaml,
 } from "obsidian";
 import type { FilesManagement } from "src/GitHub/files";
 import { trimObject } from "src/utils";
@@ -110,12 +110,12 @@ async function deleteFromGithubOneRepo(
 		);
 		const isMarkdownForAnotherRepo = file.file.trim().endsWith(".md")
 			? !allSharedConverted.some((f) => {
-				let prop = f.repo;
-				if (Array.isArray(prop)) {
-					prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
-				}
-				return (f.converted === file.file || f.otherPath?.includes(file.file)) && prop;
-			})
+					let prop = f.repo;
+					if (Array.isArray(prop)) {
+						prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
+					}
+					return (f.converted === file.file || f.otherPath?.includes(file.file)) && prop;
+				})
 			: false;
 		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
 		if (isNeedToBeDeleted) {
@@ -234,7 +234,7 @@ function parseYamlFrontmatter(contents: string, filePath: string): unknown {
 	const yamlFrontmatter = contents.split("---");
 	if (yamlFrontmatter.length < 2) return {}; //no frontmatter
 	try {
-		const yamlFrontmatterParsed = parseYaml(yamlFrontmatter[1]) ?? {};
+		const yamlFrontmatterParsed = parseYaml(yamlFrontmatter[1]);
 		return trimObject(yamlFrontmatterParsed);
 	} catch (e) {
 		//probably not a valid frontmatter, skip
@@ -260,11 +260,14 @@ async function checkIndexFiles(
 	path: string,
 	prop: Properties
 ): Promise<boolean> {
-	const fileRequest = await octokit.request("GET /repos/{owner}/{repo}/contents/{+path}", {
-		owner: prop.owner,
-		repo: prop.repo,
-		path,
-	});
+	const fileRequest = await octokit.request(
+		"GET /repos/{owner}/{repo}/contents/{+path}",
+		{
+			owner: prop.owner,
+			repo: prop.repo,
+			path,
+		}
+	);
 	if (fileRequest.status === 200) {
 		// @ts-ignore
 		const fileContent = Base64.decode(fileRequest.data.content);
@@ -339,15 +342,15 @@ function cleanDryRun(
 		);
 		const isMarkdownForAnotherRepo = file.path.trim().endsWith(".md")
 			? !allSharedFiles.some((f) => {
-				let prop = f.repo;
-				if (Array.isArray(prop)) {
-					prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
-				}
-				return (
-					(f.converted === convertedPath || f.otherPath?.includes(convertedPath)) &&
-					prop
-				);
-			})
+					let prop = f.repo;
+					if (Array.isArray(prop)) {
+						prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
+					}
+					return (
+						(f.converted === convertedPath || f.otherPath?.includes(convertedPath)) &&
+						prop
+					);
+				})
 			: false;
 		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
 		if (isNeedToBeDeleted) {

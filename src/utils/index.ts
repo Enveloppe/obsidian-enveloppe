@@ -206,7 +206,7 @@ export async function createLink(
 /**
  * Trim the object to remove the empty value
  */
-export function trimObject(obj: { [p: string]: string }) {
+export function trimObject(obj: unknown) {
 	const trimmed = JSON.stringify(obj, (_key, value) => {
 		if (typeof value === "string") {
 			return value.trim().toLowerCase();

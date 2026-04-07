@@ -234,7 +234,6 @@ export default class Enveloppe extends Plugin {
 			resources,
 			returnNull: false,
 			returnEmptyString: false,
-			showSupportNotice: false,
 		});
 
 		await this.loadSettings();
