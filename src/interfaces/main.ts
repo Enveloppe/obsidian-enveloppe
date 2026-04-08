@@ -223,6 +223,8 @@ export interface Path {
 		send: boolean;
 		/** Default folder for attachment */
 		folder: string;
+		/** If set, strip this prefix from attachment link paths */
+		stripPathPrefix?: string;
 	};
 }
 
@@ -255,6 +257,8 @@ export interface PropertiesConversion {
 
 	/** Remove link if not shared */
 	unlink: boolean;
+	/** If set, strip this prefix from attachment link paths */
+	stripPathPrefix?: string;
 }
 
 /** A very important interface that handle a repository from the frontmatter and a lot of usefull settings that override the default plugin behavior, including {@link Path}.
