@@ -7,7 +7,13 @@ import type {
 	Repository,
 } from "@interfaces/main";
 import type { Octokit } from "@octokit/core";
-import { type EmbedCache, type LinkCache, TFile, TFolder } from "obsidian";
+import {
+	type EmbedCache,
+	type LinkCache,
+	type Reference,
+	TFile,
+	TFolder,
+} from "obsidian";
 import { getAPI, type Link } from "obsidian-dataview";
 import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
 import Publisher from "src/GitHub/upload";
@@ -240,7 +246,11 @@ export class FilesManagement extends Publisher {
 	 * @return {LinkedNotes[]} the file linked (TFile), the path to it, and the alt text if exists
 	 */
 	getLinkedFiles(file: TFile): LinkedNotes[] {
-		const embedCaches = this.metadataCache.getCache(file.path)?.links;
+		const bodyEmbedCaches: Reference[] =
+			this.metadataCache.getCache(file.path)?.links ?? [];
+		const frontmatterEmbedCaches: Reference[] =
+			this.metadataCache.getCache(file.path)?.frontmatterLinks ?? [];
+		const embedCaches: Reference[] = bodyEmbedCaches.concat(frontmatterEmbedCaches);
 		const embedList: LinkedNotes[] = [];
 		if (embedCaches != undefined) {
 			for (const embedCache of embedCaches) {
