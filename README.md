@@ -59,7 +59,7 @@ The plugin adds 8 commands in the palette, one of which is also available in the
 - `Test the connection to the configured repository`
 - `Check the rate limit of the GitHub API`
 
-Each of the commands are explained [here](https://enveloppe.ovh/Commands).
+Each of the commands are explained [here](https://enveloppe.ovh/Getting%20Started/Commands/).
 
 ## 🤖 How it works
 
