@@ -139,13 +139,13 @@ export class Logs {
 		if (!Platform.isMobile) {
 			return;
 		}
-		const noticeFrag = document.createDocumentFragment();
-		const span = noticeFrag.createEl("span", {
+		const noticeFrag = createFragment();
+		const span = noticeFrag.createSpan({
 			text: message,
 			cls: ["enveloppe", cls, "icons"],
 		});
 		setIcon(span, icon);
-		noticeFrag.createEl("span", {
+		noticeFrag.createSpan({
 			cls: ["enveloppe", cls, "notification"],
 		}).innerHTML = message;
 		return new Notice(noticeFrag, this.noticeLength);
@@ -154,7 +154,7 @@ export class Logs {
 	noticeErrorUpload(properties: Properties | Properties[]) {
 		const repo = Array.isArray(properties) ? properties : [properties];
 		for (const repository of repo) {
-			const notif = document.createDocumentFragment();
+			const notif = createFragment();
 			const notifSpan = notif.createSpan({
 				cls: ["error", "enveloppe", "icons", "notification"],
 			});
@@ -172,7 +172,7 @@ export class Logs {
 	}
 
 	noticeSuccess(message: string) {
-		const notif = document.createDocumentFragment();
+		const notif = createFragment();
 		const notifSpan = notif.createSpan({
 			cls: ["success", "enveloppe", "icons", "notification"],
 		});
@@ -187,7 +187,7 @@ export class Logs {
 	}
 
 	noticeError(message: string) {
-		const notif = document.createDocumentFragment();
+		const notif = createFragment();
 		const notifSpan = notif.createSpan({
 			cls: ["error", "enveloppe", "icons", "notification"],
 		});
@@ -208,7 +208,7 @@ export class Logs {
 		prop: Properties
 	): Promise<void> {
 		const noticeValue = file instanceof TFile ? `"${file.basename}"` : file;
-		const docSuccess = document.createDocumentFragment();
+		const docSuccess = createFragment();
 		const successMsg =
 			file instanceof String
 				? i18next.t("informations.successfulPublish", {
@@ -219,20 +219,20 @@ export class Logs {
 						file: noticeValue,
 						repo: prop,
 					});
-		const span = docSuccess.createEl("span", {
+		const span = docSuccess.createSpan({
 			text: successMsg,
 			cls: ["enveloppe", "success", "icons"],
 		});
 		setIcon(span, "mail-check");
-		docSuccess.createEl("span", {
+		docSuccess.createSpan({
 			cls: ["enveloppe", "success", "notification"],
 		}).innerHTML = successMsg;
 		if (settings.github.workflow.name.length === 0) {
 			new Notice(docSuccess, settings.plugin.noticeLength);
 			return;
 		}
-		const workflowSuccess = document.createDocumentFragment();
-		const WorkflowSpan = workflowSuccess.createEl("span", {
+		const workflowSuccess = createFragment();
+		const WorkflowSpan = workflowSuccess.createSpan({
 			text: i18next.t("informations.successfulPublish", {
 				nbNotes: noticeValue,
 				repo: prop,
@@ -240,7 +240,7 @@ export class Logs {
 			cls: ["enveloppe", "wait", "icons"],
 		});
 		setIcon(WorkflowSpan, "hourglass");
-		workflowSuccess.createEl("span", {
+		workflowSuccess.createSpan({
 			cls: ["enveloppe", "wait", "notification"],
 		}).innerHTML = `${i18next.t("informations.sendMessage", {
 			nbNotes: noticeValue,

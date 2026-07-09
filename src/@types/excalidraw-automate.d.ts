@@ -13,7 +13,7 @@ export declare class ExcalidrawAutomate {
 		templatePath?: string,
 		embedFont?: boolean,
 		exportSettings?: ExportSettings,
-		loader?: any,
+		loader?: unknown,
 		theme?: string,
 		padding?: number
 	): Promise<SVGSVGElement>;
@@ -23,7 +23,7 @@ export declare class ExcalidrawAutomate {
 	 * @param isDark
 	 * @returns
 	 */
-	getEmbeddedFilesLoader(isDark?: boolean): any;
+	getEmbeddedFilesLoader(isDark?: boolean): unknown;
 
 	/**
 	 * utility function to generate ExportSettings object

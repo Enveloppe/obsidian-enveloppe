@@ -230,7 +230,10 @@ export async function filterGithubFile(
  * @return {string} YAML metadata
  */
 
-function parseYamlFrontmatter(contents: string, filePath: string): unknown {
+function parseYamlFrontmatter(
+	contents: string,
+	filePath: string
+): Record<string, unknown> {
 	const yamlFrontmatter = contents.split("---");
 	if (yamlFrontmatter.length < 2) return {}; //no frontmatter
 	try {
@@ -271,7 +274,7 @@ async function checkIndexFiles(
 	if (fileRequest.status === 200) {
 		// @ts-ignore
 		const fileContent = Base64.decode(fileRequest.data.content);
-		const fileFrontmatter = parseYamlFrontmatter(fileContent, path) as any;
+		const fileFrontmatter = parseYamlFrontmatter(fileContent, path);
 		// if not share => don't delete
 		// Key preventing deletion :
 		//	- index: true

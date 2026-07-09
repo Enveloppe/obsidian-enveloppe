@@ -61,16 +61,15 @@ export function addHardLineBreak(
 	}
 }
 
-function setTags(toAdd: string[], tags: any) {
+type YamlObject = Record<string, unknown>;
+
+function setTags(toAdd: string[], tags: unknown) {
 	if (!tags || !Array.isArray(tags)) return toAdd;
-	tags = tags.map((tag: string) => tag.replaceAll("/", "_"));
-	if (Array.isArray(tags)) {
-		return [...new Set([...tags, ...toAdd])];
-	}
-	return [...new Set([...toAdd, tags])];
+	const normalized = (tags as unknown[]).map((tag) => String(tag).replaceAll("/", "_"));
+	return [...new Set([...normalized, ...toAdd])];
 }
 
-function tagsToYaml(toAdd: string[], plugin: Enveloppe, yaml: any) {
+function tagsToYaml(toAdd: string[], plugin: Enveloppe, yaml: YamlObject) {
 	if (yaml.tag) {
 		try {
 			toAdd = [...setTags(toAdd, yaml.tag)];
@@ -113,7 +112,7 @@ export function addToYaml(
 			!properties.plugin.settings.upload.folderNote.addTitle)
 	)
 		return text;
-	let yamlObject = parseYaml(exists ? frontmatter : "{}");
+	let yamlObject = parseYaml(exists ? frontmatter : "{}") as YamlObject;
 	try {
 		if (yamlObject && toAdd.length > 0) {
 			yamlObject = tagsToYaml(toAdd, properties.plugin, yamlObject);
@@ -144,7 +143,7 @@ export function addToYaml(
 	return text;
 }
 
-function titleToYaml(yaml: any, properties: MultiProperties, file: TFile) {
+function titleToYaml(yaml: YamlObject, properties: MultiProperties, file: TFile) {
 	const settings = properties.plugin.settings.upload.folderNote.addTitle;
 	if (!settings) {
 		return yaml;

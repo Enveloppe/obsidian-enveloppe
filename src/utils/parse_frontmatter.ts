@@ -373,7 +373,7 @@ export function parsePath(
 	plugin: Enveloppe,
 	repository: Repository | null,
 	properties: Properties | Properties[],
-	frontmatter?: FrontMatterCache | null | undefined
+	frontmatter?: FrontMatterCache | null
 ): Properties[] | Properties {
 	properties = properties instanceof Array ? properties : [properties];
 	const settings = plugin.settings;

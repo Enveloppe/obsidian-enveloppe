@@ -313,9 +313,9 @@ export default class Publisher {
 	) {
 		const load = this.plugin.addStatusBarItem();
 		//add a little load icon from lucide icons, using SVG
-		load.createEl("span", { cls: ["enveloppe", "loading", "icons"] });
+		load.createSpan({ cls: ["enveloppe", "loading", "icons"] });
 		setIcon(load, "loader");
-		load.createEl("span", {
+		load.createSpan({
 			text: i18next.t("statusBar.loading"),
 			cls: ["enveloppe", "loading", "icons"],
 		});
@@ -611,7 +611,6 @@ export default class Publisher {
 			}
 		);
 		while (!finished) {
-			// biome-ignore lint/correctness/noUndeclaredVariables: directly build with obsidianAPI
 			await sleep(10000);
 			const workflowGet = await octokit.request(
 				"GET /repos/{owner}/{repo}/actions/runs",

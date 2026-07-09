@@ -108,6 +108,15 @@
 		"lineWidth": 90
 	},
 	"javascript": {
+		"globals": [
+			"createEl",
+			"createDiv",
+			"createSpan",
+			"createFragment",
+			"activeWindow",
+			"activeDocument",
+			"sleep"
+		],
 		"formatter": {
 			"quoteStyle": "double",
 			"semicolons": "always",

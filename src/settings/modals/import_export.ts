@@ -75,7 +75,6 @@ export class ImportModal extends Modal {
 			.setDesc(i18next.t("modals.import.desc"));
 
 		new Setting(contentEl).then((setting) => {
-			// biome-ignore lint/correctness/noUndeclaredVariables: createSpan is a function builded with the plugin
 			const errorSpan = createSpan({
 				cls: "enveloppe-import-error",
 				text: i18next.t("modals.import.error.span"),
@@ -287,7 +286,7 @@ export class ExportModal extends Modal {
 									document.execCommand("copy");
 									copyButton.addClass("success");
 
-									setTimeout(() => {
+									window.setTimeout(() => {
 										// If the button is still in the dom, remove the success class
 										if (copyButton.parentNode) {
 											copyButton.removeClass("success");
@@ -320,7 +319,7 @@ export class ExportModal extends Modal {
 								)
 								.then();
 							//open the file with default application
-							(this.app as any).openWithDefaultApp(
+							this.app.openWithDefaultApp(
 								`${this.app.vault.configDir}/plugins/obsidian-mkdocs-publisher/._tempSettings.json`
 							);
 						})
@@ -376,7 +375,6 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 		return item.name;
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	onChooseItem(item: Preset, _evt: MouseEvent | KeyboardEvent): void {
 		const presetSettings = item.settings;
 		try {

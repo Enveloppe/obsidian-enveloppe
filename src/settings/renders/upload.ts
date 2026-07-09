@@ -140,7 +140,7 @@ export const renderUploadConfiguration = (ctx: RenderContext) => {
 				new ModalRegexFilePathName(
 					ctx.app,
 					ctx.settings,
-					ctx.copy(allRegex) as any,
+					ctx.copy(allRegex) ?? allRegex,
 					async (result) => {
 						uploadSettings.replacePath = result.filter((title) => {
 							return title.type === "path";
@@ -208,7 +208,7 @@ export const renderUploadConfiguration = (ctx: RenderContext) => {
 		folderNoteSettings
 	);
 
-	if ((ctx.plugin.app as any).plugins.getPlugin("metadata-extractor")) {
+	if (ctx.plugin.app.plugins.getPlugin("metadata-extractor")) {
 		new Setting(ctx.settingsPage)
 			.setName(i18next.t("settings.githubWorkflow.useMetadataExtractor.title"))
 			.setDesc(i18next.t("settings.githubWorkflow.useMetadataExtractor.desc"))

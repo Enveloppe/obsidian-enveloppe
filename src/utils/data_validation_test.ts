@@ -8,6 +8,7 @@ import {
 	type Repository,
 } from "@interfaces";
 import type { Octokit } from "@octokit/core";
+import type { RequestError } from "@octokit/request-error";
 import i18next from "i18next";
 import {
 	type FrontMatterCache,
@@ -550,14 +551,16 @@ export async function verifyRateLimitAPI(
 		return remaining;
 	} catch (error) {
 		//if the error is 404 and user use enterprise, it's normal
+		const requestError = error as RequestError;
 		if (
-			(error as any).status === 404 &&
+			requestError.status === 404 &&
 			settings.github.api.tiersForApi === GithubTiersVersion.Entreprise &&
-			(error as any).response.data.message === "Rate limiting is not enabled." &&
-			(error as any).name === "HttpError"
+			(requestError.response?.data as { message?: string })?.message ===
+				"Rate limiting is not enabled." &&
+			requestError.name === "HttpError"
 		)
 			return 5000;
-		else if ((error as any).status !== 401) plugin.console.error(error as Error);
+		else if (requestError.status !== 401) plugin.console.error(error as Error);
 		return 0;
 	}
 }

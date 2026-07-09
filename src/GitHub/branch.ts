@@ -1,5 +1,6 @@
 import type { Properties } from "@interfaces/main";
 import type { Octokit } from "@octokit/core";
+import type { RequestError } from "@octokit/request-error";
 import dedent from "dedent";
 import i18next from "i18next";
 import { Notice } from "obsidian";
@@ -122,10 +123,11 @@ export class GithubBranch extends FilesManagement {
 			});
 			return pr.status === 201 ? pr.data.number : 0;
 		} catch (e) {
-			if ((e as any)?.status === 422) {
+			const requestError = e as RequestError;
+			if (requestError?.status === 422) {
 				this.console.warn(
 					"Github error 422: Unprocessable Entity. Verify your base branch!",
-					(e as any)?.response?.data
+					requestError?.response?.data
 				);
 			}
 			this.console.trace(e);

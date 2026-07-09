@@ -27,7 +27,7 @@ export class ListChangedFiles extends Modal {
 				emoji = "📄";
 			}
 			const li = ul.createEl("li");
-			li.createEl("span", { text: emoji, cls: "emoji" });
+			li.createSpan({ text: emoji, cls: "emoji" });
 			li.createEl("code", { text: file, cls: "code-title" });
 		});
 	}

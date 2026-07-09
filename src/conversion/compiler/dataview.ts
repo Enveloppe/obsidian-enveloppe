@@ -136,8 +136,7 @@ class DataviewCompiler {
 	 * @return {Promise<string>} The markdown converted from the HTML
 	 */
 	private async tryExecuteJs(evaluateQuery: string, max: number = 50): Promise<string> {
-		// biome-ignore lint/correctness/noUndeclaredVariables: createEl is a global function in Obsidian
-		const div = createEl("div");
+		const div = createDiv();
 		const component = new Component();
 		component.load();
 		await this.dvApi.executeJs(evaluateQuery, div, component, this.path);
@@ -152,7 +151,7 @@ class DataviewCompiler {
 
 	private delay(ms: number): Promise<void> {
 		return new Promise((resolve, _) => {
-			setTimeout(resolve, ms);
+			window.setTimeout(resolve, ms);
 		});
 	}
 

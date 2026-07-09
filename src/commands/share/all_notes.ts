@@ -178,7 +178,7 @@ export async function shareAllMarkedNotes(
 		}
 	} catch (error) {
 		plugin.console.trace(error);
-		const errorFrag = document.createDocumentFragment();
+		const errorFrag = createFragment();
 		const errorSpan = errorFrag.createSpan({
 			cls: ["error", "enveloppe", "icons", "notification"],
 		});

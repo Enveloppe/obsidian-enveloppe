@@ -57,7 +57,7 @@ async function purge(
 	branchName: string,
 	monoRepo: MonoRepoProperties
 ): Promise<void | boolean> {
-	const noticeFragment = document.createDocumentFragment();
+	const noticeFragment = createFragment();
 	noticeFragment.createSpan({ cls: ["enveloppe", "notification"] }).innerHTML = i18next.t(
 		"informations.startingClean",
 		{ repo: monoRepo.frontmatter }

@@ -71,8 +71,8 @@ export const renderGithubConfiguration = (ctx: RenderContext) => {
 				})
 		);
 
-	const descGhToken = document.createDocumentFragment();
-	descGhToken.createEl("span", undefined, (span) => {
+	const descGhToken = createFragment();
+	descGhToken.createSpan(undefined, (span) => {
 		span.innerText = i18next.t("settings.github.ghToken.desc");
 		span.createEl("a", undefined, (link) => {
 			link.innerText = `${i18next.t("common.here")}.`;

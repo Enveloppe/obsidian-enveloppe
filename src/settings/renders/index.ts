@@ -9,7 +9,7 @@ export interface RenderContext {
 	settingsPage: HTMLElement;
 	branchName: string;
 	renderSettingsPage: (tabId: string | ESettingsTabId) => Promise<void>;
-	copy: (object: any) => any;
+	copy: <T>(object: T) => T | undefined;
 }
 
 export const splitByCommaOrNewLine = (value: string): string[] => {

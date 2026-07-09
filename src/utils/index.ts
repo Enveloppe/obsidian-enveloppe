@@ -206,14 +206,14 @@ export async function createLink(
 /**
  * Trim the object to remove the empty value
  */
-export function trimObject(obj: unknown) {
+export function trimObject(obj: unknown): Record<string, unknown> {
 	const trimmed = JSON.stringify(obj, (_key, value) => {
 		if (typeof value === "string") {
 			return value.trim().toLowerCase();
 		}
 		return value;
 	});
-	return JSON.parse(trimmed);
+	return JSON.parse(trimmed) as Record<string, unknown>;
 }
 
 /**

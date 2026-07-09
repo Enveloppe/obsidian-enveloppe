@@ -104,14 +104,14 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 		});
 
 		for (const [tabId, tabInfo] of Object.entries(enveloppeTabs)) {
-			const tabEl = tabBar.createEl("div", {
+			const tabEl = tabBar.createDiv({
 				cls: "settings-tab",
 			});
-			const tabIcon = tabEl.createEl("div", {
+			const tabIcon = tabEl.createDiv({
 				cls: "settings-tab-icon",
 			});
 			setIcon(tabIcon, tabInfo.icon);
-			tabEl.createEl("div", {
+			tabEl.createDiv({
 				cls: "settings-tab-name",
 				text: tabInfo.name,
 			});
@@ -125,7 +125,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				await this.renderSettingsPage(tabId);
 			});
 		}
-		this.settingsPage = containerEl.createEl("div", {
+		this.settingsPage = containerEl.createDiv({
 			cls: "settings-tab-page",
 		});
 		this.renderSettingsPage(savedId);
@@ -253,11 +253,12 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 		});
 	}
 
-	copy(object: any) {
+	copy<T>(object: T): T | undefined {
 		try {
 			return klona(object);
 		} catch (_e) {
 			this.plugin.console.debug("error with stringify for", object);
+			return undefined;
 		}
 	}
 }

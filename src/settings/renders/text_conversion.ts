@@ -187,7 +187,7 @@ export const renderTextConversion = (ctx: RenderContext) => {
 				await ctx.plugin.saveSettings();
 			});
 		});
-	const isDataviewEnabled = (ctx.plugin.app as any).plugins.plugins.dataview;
+	const isDataviewEnabled = ctx.plugin.app.plugins.plugins.dataview;
 	new Setting(ctx.settingsPage)
 		.setName(i18next.t("settings.conversion.dataview.title"))
 		.setDesc(i18next.t("settings.conversion.dataview.desc"))
@@ -210,7 +210,7 @@ export const renderTextConversion = (ctx: RenderContext) => {
 			button.setIcon("pencil").onClick(async () => {
 				new ModalRegexOnContents(
 					ctx.app,
-					ctx.copy(ctx.settings) as any,
+					ctx.copy(ctx.settings) ?? ctx.settings,
 					async (result) => {
 						ctx.settings.conversion.censorText = result.conversion.censorText;
 						await ctx.plugin.saveSettings();

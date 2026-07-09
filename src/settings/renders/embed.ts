@@ -80,7 +80,8 @@ export const renderEmbedConfiguration = async (ctx: RenderContext) => {
 					new OverrideAttachmentsModal(
 						ctx.app,
 						ctx.settings,
-						ctx.copy(embedSettings.overrideAttachments) as any,
+						ctx.copy(embedSettings.overrideAttachments) ??
+							embedSettings.overrideAttachments,
 						async (result) => {
 							embedSettings.overrideAttachments = result;
 							await ctx.plugin.saveSettings();
