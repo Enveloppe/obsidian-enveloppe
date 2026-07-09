@@ -39,12 +39,12 @@ export function linkIsInFormatter(
 	frontmatter: FrontMatterCache | undefined | null
 ): boolean {
 	if (frontmatter) {
+		const wikiLinks = `[[${linkedFile.linkFrom}]]`;
+		// No "g" flag: we only ever call .test() for a boolean check, and a global
+		// regex's statefulness (lastIndex) would corrupt results across the loop
+		// since it's tested against a different string on every iteration.
+		const regex = new RegExp(`\\[\\[${escapeRegex(linkedFile.linkFrom)}(\\|(.*))?\\]\\]`);
 		for (const key in frontmatter) {
-			const wikiLinks = `[[${linkedFile.linkFrom}]]`;
-			const regex = new RegExp(
-				`\\[\\[${escapeRegex(linkedFile.linkFrom)}(\\|(.*))?\\]\\]`,
-				"g"
-			);
 			if (frontmatter[key] === wikiLinks || regex.test(String(frontmatter[key])))
 				return true;
 		}
@@ -57,9 +57,10 @@ export function textIsInFrontmatter(
 	frontmatter: FrontMatterCache | undefined | null
 ): boolean {
 	if (frontmatter) {
+		const wikiLink = `[[${text}]]`;
+		const regex = new RegExp(`\\[\\[${escapeRegex(text)}(\\|(.*))?\\]\\]`);
 		for (const key in frontmatter) {
-			const regex = new RegExp(`\\[\\[${escapeRegex(text)}(\\|(.*))?\\]\\]`, "g");
-			if (frontmatter[key] === `[[${text}]]` || regex.test(String(frontmatter[key])))
+			if (frontmatter[key] === wikiLink || regex.test(String(frontmatter[key])))
 				return true;
 		}
 	}
@@ -565,21 +566,22 @@ function applyOverriddenPath(
 	settings: EnveloppeSettings
 ): { filePath: string; overridden: boolean } {
 	let overridden = false;
-	const isOverridden = settings.embed.overrideAttachments.filter((override) => {
-		const isRegex = override.path.match(FIND_REGEX);
-		const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : undefined;
-		return (
-			(regex?.test(filePath) ||
-				filePath === override.path ||
-				override.path.contains("{{all}}")) &&
-			!override.destination.contains("{{default}}")
+	const isOverridden = settings.embed.overrideAttachments
+		.map((override) => {
+			const isRegex = override.path.match(FIND_REGEX);
+			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : undefined;
+			return { override, regex };
+		})
+		.filter(
+			({ override, regex }) =>
+				(regex?.test(filePath) ||
+					filePath === override.path ||
+					override.path.contains("{{all}}")) &&
+				!override.destination.contains("{{default}}")
 		);
-	});
 	if (isOverridden.length > 0) {
 		overridden = true;
-		for (const override of isOverridden) {
-			const isRegex = override.path.match(FIND_REGEX);
-			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
+		for (const { override, regex } of isOverridden) {
 			const dest = override.destination.replace("{{name}}", fileName);
 			filePath = regex
 				? normalizePath(filePath.replace(regex, dest))

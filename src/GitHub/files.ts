@@ -442,9 +442,10 @@ export class FilesManagement extends Publisher {
 		githubSharedFiles: GithubRepo[]
 	): TFile[] {
 		const newFiles: TFile[] = []; //new file : present in allFileswithPath but not in githubSharedFiles
+		const githubSharedFilePaths = new Set(githubSharedFiles.map((x) => x.file));
 
 		for (const file of allFileWithPath) {
-			if (!githubSharedFiles.some((x) => x.file === file.converted.trim())) {
+			if (!githubSharedFilePaths.has(file.converted.trim())) {
 				//get TFile from file
 				const fileInVault = this.vault.getAbstractFileByPath(file.real.path.trim());
 				const isMarkdown =
@@ -594,11 +595,10 @@ export class FilesManagement extends Publisher {
 		newFiles: TFile[]
 	): Promise<TFile[]> {
 		for (const file of allFileWithPath) {
-			if (githubSharedFiles.some((x) => x.file === file.converted.trim())) {
-				const githubSharedFile = githubSharedFiles.find(
-					(x) => x.file === file.converted.trim()
-				);
-				if (!githubSharedFile) continue;
+			const githubSharedFile = githubSharedFiles.find(
+				(x) => x.file === file.converted.trim()
+			);
+			if (githubSharedFile) {
 				const repoEditedTime = await this.getLastEditedTimeRepo(githubSharedFile);
 				const fileInVault = this.vault.getAbstractFileByPath(file.real.path.trim());
 				const isMarkdown =
