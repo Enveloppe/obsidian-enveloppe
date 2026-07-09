@@ -16,7 +16,7 @@ import {
 	resolveSubpath,
 	type TFile,
 } from "obsidian";
-import { getAPI, type Link } from "obsidian-dataview";
+import { getAPI, Link } from "obsidian-dataview";
 import { addToYaml } from "src/conversion";
 import {
 	createRelativePath,
@@ -297,6 +297,21 @@ function changeTitle(
  * @return {Promise<string>} the converted text
  */
 
+/**
+ * Dataview field values (`Literal`) can be primitives, DateTime/Duration
+ * (both have meaningful toString()), or plain objects/functions/widgets that
+ * don't. Tag fields are expected to hold the former; JSON.stringify the rest
+ * rather than risk silently emitting "[object Object]" as a tag.
+ */
+function literalToString(value: unknown): string {
+	if (typeof value === "object" && value !== null) {
+		const hasCustomToString = value.toString !== Object.prototype.toString;
+		// eslint-disable-next-line @typescript-eslint/no-base-to-string -- toString identity checked above
+		return hasCustomToString ? String(value) : JSON.stringify(value);
+	}
+	return String(value);
+}
+
 export async function convertInlineDataview(
 	text: string,
 	plugin: Enveloppe,
@@ -319,30 +334,26 @@ export async function convertInlineDataview(
 	}
 	const valueToAdd: string[] = [];
 	for (const field of settings.conversion.tags.fields) {
-		let fieldValue = dataviewLinks[field];
+		const fieldValue = dataviewLinks[field];
 		if (fieldValue) {
-			if (fieldValue.constructor.name === "Link") {
-				fieldValue = fieldValue as Link;
+			if (fieldValue instanceof Link) {
 				const stringifyField = dataviewExtract(fieldValue, settings);
 				if (stringifyField) valueToAdd.push(stringifyField);
 			} else if (fieldValue instanceof Array) {
 				for (const item of fieldValue) {
-					let stringifyField = item;
-					if (item && item.constructor.name === "Link") {
-						stringifyField = dataviewExtract(item as Link, settings);
+					if (item instanceof Link) {
+						const stringifyField = dataviewExtract(item, settings);
 						if (stringifyField) valueToAdd.push(stringifyField);
 					} else if (
-						stringifyField &&
-						!settings.conversion.tags.exclude.includes(
-							stringifyField.toString() as string
-						)
+						item &&
+						!settings.conversion.tags.exclude.includes(literalToString(item))
 					)
-						valueToAdd.push(stringifyField.toString() as string);
+						valueToAdd.push(literalToString(item));
 				}
 			} else if (
-				!settings.conversion.tags.exclude.includes(fieldValue.toString() as string)
+				!settings.conversion.tags.exclude.includes(literalToString(fieldValue))
 			) {
-				valueToAdd.push(fieldValue.toString() as string);
+				valueToAdd.push(literalToString(fieldValue));
 			}
 		}
 	}

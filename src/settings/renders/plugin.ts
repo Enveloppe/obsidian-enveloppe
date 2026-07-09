@@ -162,9 +162,7 @@ export const renderPluginSettings = (ctx: RenderContext) => {
 						strict: i18next.t("settings.conversion.links.slugify.strict"),
 						lower: i18next.t("settings.conversion.links.slugify.lower"),
 					})
-					.setValue(
-						pluginSettings.copyLink.transform.slugify as "disable" | "strict" | "lower"
-					)
+					.setValue(pluginSettings.copyLink.transform.slugify)
 					.onChange(async (value) => {
 						pluginSettings.copyLink.transform.slugify = value as
 							| "disable"

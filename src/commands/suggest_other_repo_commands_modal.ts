@@ -195,28 +195,28 @@ export class SuggestOtherRepoCommandsModal extends FuzzySuggestModal<EnveloppeCo
 	onChooseItem(item: EnveloppeCommands, _evt: MouseEvent | KeyboardEvent): void {
 		switch (item.commands) {
 			case "shareAllMarkedNotes":
-				uploadAllNotes(this.plugin, this.repo, this.branchName);
+				void uploadAllNotes(this.plugin, this.repo, this.branchName);
 				break;
 			case "deleteUnsharedDeletedNotes":
-				deleteCommands(this.plugin, this.repo, this.branchName);
+				void deleteCommands(this.plugin, this.repo, this.branchName);
 				break;
 			case "shareNewNote":
-				uploadNewNotes(this.plugin, this.branchName, this.repo);
+				void uploadNewNotes(this.plugin, this.branchName, this.repo);
 				break;
 			case "shareAllEditedNotes":
-				uploadAllEditedNotes(this.plugin, this.branchName, this.repo);
+				void uploadAllEditedNotes(this.plugin, this.branchName, this.repo);
 				break;
 			case "shareOnlyEdited":
-				shareEditedOnly(this.branchName, this.repo, this.plugin);
+				void shareEditedOnly(this.branchName, this.repo, this.plugin);
 				break;
 			case "shareOneNote":
-				shareActiveFile(this.plugin, this.repo);
+				void shareActiveFile(this.plugin, this.repo);
 				break;
 			case "createLink":
-				createLinkOnActiveFile(this.repo, this.plugin);
+				void createLinkOnActiveFile(this.repo, this.plugin);
 				break;
 			case "checkRepositoryValidity":
-				repositoryValidityActiveFile(this.plugin, this.repo);
+				void repositoryValidityActiveFile(this.plugin, this.repo);
 				break;
 		}
 	}

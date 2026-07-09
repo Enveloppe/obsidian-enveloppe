@@ -69,7 +69,7 @@ export class ModalAddingNewRepository extends Modal {
 	plugin: Enveloppe;
 	branchName: string;
 	repository: Repository[];
-	onSubmit: (result: Repository[]) => void;
+	onSubmit: (result: Repository[]) => void | Promise<void>;
 
 	constructor(
 		app: App,
@@ -77,7 +77,7 @@ export class ModalAddingNewRepository extends Modal {
 		branchName: string,
 		plugin: Enveloppe,
 		repository: Repository[],
-		onSubmit: (result: Repository[]) => void
+		onSubmit: (result: Repository[]) => void | Promise<void>
 	) {
 		super(app);
 		this.settings = settings;
@@ -192,7 +192,7 @@ export class ModalAddingNewRepository extends Modal {
 					if (error.type === "None") {
 						//remove error
 						input?.classList?.remove("error");
-						this.onSubmit(this.repository);
+						void this.onSubmit(this.repository);
 						this.close();
 					}
 					input?.classList?.add("error");
@@ -273,7 +273,7 @@ export class ModalAddingNewRepository extends Modal {
 				this.settings.plugin.noticeLength
 			);
 		}
-		this.onSubmit(this.repository);
+		void this.onSubmit(this.repository);
 		contentEl.empty();
 	}
 }

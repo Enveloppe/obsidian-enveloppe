@@ -60,7 +60,7 @@ export class GithubBranch extends FilesManagement {
 		if (mainBranch.status !== 200) {
 			throw new Error(
 				dedent(`No main branch found for ${prop.repo}, please check the branch name in the settings.
-				- Branch Status: ${mainBranch.status}
+				- Branch Status: ${String(mainBranch.status)}
 				- Repo: ${prop.owner}/${prop.repo}
 				- Branch: ${prop.branch}`)
 			);
@@ -77,7 +77,7 @@ export class GithubBranch extends FilesManagement {
 				i18next.t("publish.branch.success", { branchStatus: branch.status, repo: prop })
 			);
 			return branch.status === 201;
-		} catch (_e) {
+		} catch {
 			try {
 				this.console.warn("Branch already exists, trying to find it");
 				const mainBranch = await this.findMainBranch(prop, this.branchName);
@@ -269,7 +269,7 @@ export class GithubBranch extends FilesManagement {
 					owner: repo.owner,
 					repo: repo.repo,
 				})
-				.catch((e) => {
+				.catch((e: RequestError) => {
 					//check the error code
 					if (e.status === 404) {
 						new Notice(
