@@ -22,6 +22,7 @@ import {
 	Vault,
 } from "obsidian";
 import type { FilesManagement } from "src/GitHub/files";
+import type { ContentFile } from "src/GitHub/octokit_types";
 import { trimObject } from "src/utils";
 import { isAttachment, verifyRateLimitAPI } from "src/utils/data_validation_test";
 import { frontmatterSettingsRepository } from "src/utils/parse_frontmatter";
@@ -40,15 +41,16 @@ export async function deleteFromGithub(
 	filesManagement: FilesManagement,
 	repoProperties: MonoRepoProperties
 ): Promise<Deleted> {
-	const prop = Array.isArray(repoProperties.frontmatter)
-		? repoProperties.frontmatter
-		: [repoProperties.frontmatter];
+	const prop = [repoProperties.frontmatter];
 	const deleted: Deleted[] = [];
 	for (const repo of prop) {
 		const monoProperties: MonoRepoProperties = {
 			frontmatter: repo,
 			repository: repoProperties.repository,
-			convert: frontmatterSettingsRepository(filesManagement.plugin, repo),
+			convert: frontmatterSettingsRepository(
+				filesManagement.plugin,
+				repoProperties.repository
+			),
 		};
 		deleted.push(
 			await deleteFromGithubOneRepo(silent, branchName, filesManagement, monoProperties)
@@ -263,16 +265,15 @@ async function checkIndexFiles(
 	path: string,
 	prop: Properties
 ): Promise<boolean> {
-	const fileRequest = await octokit.request(
+	const fileRequest = (await octokit.request(
 		"GET /repos/{owner}/{repo}/contents/{+path}",
 		{
 			owner: prop.owner,
 			repo: prop.repo,
 			path,
 		}
-	);
+	)) as { status: number; data: ContentFile };
 	if (fileRequest.status === 200) {
-		// @ts-ignore
 		const fileContent = Base64.decode(fileRequest.data.content);
 		const fileFrontmatter = parseYamlFrontmatter(fileContent, path);
 		// if not share => don't delete
@@ -309,10 +310,10 @@ function cleanDryRun(
 	if (dryRunFolderPath.trim().length === 0 || dryRunFolderPath === "/")
 		throw new Error("DryRun folder path is empty, please check your settings");
 	const dryRunFolder = vault.getAbstractFileByPath(dryRunFolderPath);
-	if (!dryRunFolder || dryRunFolder instanceof TFile)
+	if (!(dryRunFolder instanceof TFolder))
 		return { success: false, deleted: [], undeleted: [] };
 	const dryRunFiles: TFile[] = [];
-	Vault.recurseChildren(dryRunFolder as TFolder, (file: TAbstractFile) => {
+	Vault.recurseChildren(dryRunFolder, (file: TAbstractFile) => {
 		const enabledAttachments =
 			settings.upload.autoclean.includeAttachments &&
 			isAttachment(file.path, settings.embed.unHandledObsidianExt);
@@ -358,13 +359,13 @@ function cleanDryRun(
 		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
 		if (isNeedToBeDeleted) {
 			const indexFile = convertedPath.contains(settings.upload.folderNote.rename)
-				? indexFileDryRun(file as TFile, app.metadataCache)
+				? indexFileDryRun(file, app.metadataCache)
 				: false;
 			if (!indexFile) {
 				pconsole.trace(
 					`[DRY-RUN] trying to delete file : ${file.path} from ${dryRunFolderPath}`
 				);
-				vault.trash(file, false);
+				void app.fileManager.trashFile(file);
 				deletedSuccess++;
 				deletedFolder.push(file);
 			}
@@ -374,19 +375,19 @@ function cleanDryRun(
 	//recursive delete empty folder in dryRunFolder
 	//empty folder are folder with children.length === 0
 	const dryRunFolders: TFolder[] = [];
-	Vault.recurseChildren(
-		vault.getAbstractFileByPath(dryRunFolderPath) as TFolder,
-		(file: TAbstractFile) => {
+	const dryRunFolderAgain = vault.getAbstractFileByPath(dryRunFolderPath);
+	if (dryRunFolderAgain instanceof TFolder) {
+		Vault.recurseChildren(dryRunFolderAgain, (file: TAbstractFile) => {
 			if (file instanceof TFolder) {
 				dryRunFolders.push(file);
 			}
-		}
-	);
+		});
+	}
 	for (const folder of dryRunFolders.reverse()) {
 		const children = folder.children.filter((child) => !deletedFolder.includes(child));
 		if (children.length === 0) {
 			deletedFolder.push(folder);
-			vault.trash(folder, false);
+			void app.fileManager.trashFile(folder);
 			deletedSuccess++;
 		}
 	}
@@ -403,9 +404,9 @@ function cleanDryRun(
 function indexFileDryRun(file: TFile, metadataCache: MetadataCache): boolean {
 	const frontmatter = metadataCache.getFileCache(file)?.frontmatter;
 	if (frontmatter) {
-		const index = frontmatter.index;
-		const deleteFile = frontmatter.delete;
-		const share = frontmatter.share;
+		const index = frontmatter.index as boolean | undefined;
+		const deleteFile = frontmatter.delete as boolean | undefined;
+		const share = frontmatter.share as boolean | undefined;
 		if (index === true || deleteFile === false || share === false) {
 			return true;
 		}
