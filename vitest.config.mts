@@ -6,6 +6,7 @@ export default defineConfig({
 		tsconfigPaths: true,
 		alias: {
 			obsidian: path.resolve(__dirname, "tests/mocks/obsidian.ts"),
+			"obsidian-dataview": path.resolve(__dirname, "tests/mocks/obsidian-dataview.ts"),
 		},
 	},
 	test: {

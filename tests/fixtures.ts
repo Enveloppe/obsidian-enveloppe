@@ -5,8 +5,10 @@ import type {
 	PropertiesConversion,
 	Repository,
 } from "@interfaces/main";
+import type { MultiProperties } from "@interfaces/properties";
 import { klona } from "klona";
 import type { FrontMatterCache } from "obsidian";
+import type Enveloppe from "src/main";
 import { merge } from "ts-deepmerge";
 
 /**
@@ -98,4 +100,36 @@ export function createFile(overrides: {
 	const extension = overrides.extension ?? name.split(".").pop() ?? "";
 	const basename = overrides.basename ?? name.replace(new RegExp(`\\.${extension}$`), "");
 	return { path, name, basename, extension, stat: { mtime: 0, ctime: 0, size: 0 } };
+}
+
+/** A minimal Enveloppe plugin stub, enough for the conversion functions under test. */
+export function createPlugin(
+	overrides: Partial<EnveloppeSettings> = {},
+	extra: Record<string, unknown> = {}
+): Enveloppe {
+	return {
+		settings: createSettings(overrides),
+		repositoryFrontmatter: {},
+		console: {
+			debug: () => undefined,
+			trace: () => undefined,
+			info: () => undefined,
+			warn: () => undefined,
+			error: () => undefined,
+		},
+		app: { metadataCache: { getFileCache: () => undefined } },
+		...extra,
+	} as unknown as Enveloppe;
+}
+
+export function createMultiProperties(
+	overrides: Partial<MultiProperties> = {}
+): MultiProperties {
+	return {
+		plugin: createPlugin(),
+		frontmatter: { general: createPropertiesConversion(), prop: createProperties() },
+		repository: null,
+		filepath: "note.md",
+		...overrides,
+	};
 }
