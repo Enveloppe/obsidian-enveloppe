@@ -205,8 +205,7 @@ export async function migrateToken(plugin: Enveloppe, token?: string, repo?: str
 		return;
 	}
 	plugin.console.trace(
-		`Moving the GitHub Token in the file : ${tokenPath} for ${
-			repo ?? "default"
+		`Moving the GitHub Token in the file : ${tokenPath} for ${repo ?? "default"
 		} repository`
 	);
 	const exists = await plugin.app.vault.adapter.exists(tokenPath);
@@ -218,15 +217,15 @@ export async function migrateToken(plugin: Enveloppe, token?: string, repo?: str
 	if (tokenPath.endsWith(".json")) {
 		const envToken = repo
 			? {
-					// biome-ignore lint/style/useNamingConvention: it's a constant
-					GITHUB_PUBLISHER_REPOS: {
-						[repo]: token,
-					},
-				}
+				// biome-ignore lint/style/useNamingConvention: it's a constant
+				GITHUB_PUBLISHER_REPOS: {
+					[repo]: token,
+				},
+			}
 			: {
-					// biome-ignore lint/style/useNamingConvention: it's a constant
-					GITHUB_PUBLISHER_TOKEN: token,
-				};
+				// biome-ignore lint/style/useNamingConvention: it's a constant
+				GITHUB_PUBLISHER_TOKEN: token,
+			};
 		if (!exists) {
 			await plugin.app.vault.adapter.write(tokenPath, JSON.stringify(envToken, null, 2));
 			return;
@@ -417,6 +416,7 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 			overrideAttachments: [],
 			unHandledObsidianExt: [],
 			sendSimpleLinks: true,
+			stripPathPrefix: "",
 		},
 		plugin: {
 			shareKey: old.shareKey,
@@ -443,9 +443,9 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 	const token = old.GhToken
 		? old.GhToken
 		: //@ts-ignore
-			plugin.settings.github.token
+		plugin.settings.github.token
 			? //@ts-ignore
-				plugin.settings.github.token
+			plugin.settings.github.token
 			: undefined;
 	await saveTokenSecret(plugin, token);
 	await plugin.saveSettings();

@@ -277,6 +277,12 @@ export interface Embed {
 	 */
 	sendSimpleLinks: boolean;
 	/**
+	 * If set, strip this prefix from attachment paths in generated markdown links.
+	 * Useful for Astro and other frameworks where files in `public/` are served from the site root.
+	 * @default ""
+	 */
+	stripPathPrefix: string;
+	/**
 	 * Force the note to be uploaded even if they are not edited (and exists on repo)
 	 * @default true
 	 */

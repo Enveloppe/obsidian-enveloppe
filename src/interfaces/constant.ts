@@ -92,6 +92,7 @@ export const DEFAULT_SETTINGS: Partial<EnveloppeSettings> = {
 		charConvert: "->",
 		unHandledObsidianExt: [],
 		sendSimpleLinks: true,
+		stripPathPrefix: "",
 		forcePush: true,
 	},
 	plugin: {
