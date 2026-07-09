@@ -1,4 +1,4 @@
-import { ESettingsTabId, FolderSettings } from "@interfaces";
+import { ESettingsTabId, FolderSettings, TypeOfEditRegex } from "@interfaces";
 import i18next from "i18next";
 import { Setting } from "obsidian";
 import type { EnveloppeSettingsTab } from "src/settings";
@@ -143,10 +143,10 @@ export const renderUploadConfiguration = (ctx: RenderContext) => {
 					ctx.copy(allRegex) ?? allRegex,
 					async (result) => {
 						uploadSettings.replacePath = result.filter((title) => {
-							return title.type === "path";
+							return title.type === TypeOfEditRegex.Path;
 						});
 						uploadSettings.replaceTitle = result.filter((title) => {
-							return title.type === "title";
+							return title.type === TypeOfEditRegex.Title;
 						});
 						await ctx.plugin.saveSettings();
 					}
@@ -230,13 +230,13 @@ export const renderUploadConfiguration = (ctx: RenderContext) => {
 			toggle.setValue(uploadSettings.autoclean.enable).onChange(async (value) => {
 				if (
 					value &&
-					((ctx.settings.upload.behavior === "yaml" &&
+					((ctx.settings.upload.behavior === FolderSettings.Yaml &&
 						ctx.settings.upload.defaultName.length === 0) ||
 						ctx.settings.upload.rootFolder.length === 0)
 				)
 					new AutoCleanPopup(ctx.app, ctx.settings, (result) => {
 						uploadSettings.autoclean.enable = result;
-						ctx.renderSettingsPage(ESettingsTabId.Upload);
+						void ctx.renderSettingsPage(ESettingsTabId.Upload);
 					}).open();
 				else uploadSettings.autoclean.enable = value;
 				await ctx.plugin.saveSettings();
@@ -277,7 +277,7 @@ export const renderUploadConfiguration = (ctx: RenderContext) => {
 			});
 	}
 
-	folderHideShowSettings(
+	void folderHideShowSettings(
 		frontmatterKeySettings,
 		rootFolderSettings,
 		autoCleanSetting,

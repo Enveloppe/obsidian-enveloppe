@@ -29,12 +29,12 @@ function isRegexValid(regexString: string) {
 export class OverrideAttachmentsModal extends Modal {
 	settings: EnveloppeSettings;
 	allOverrides: OverrideAttachments[];
-	onSubmit: (result: OverrideAttachments[]) => void;
+	onSubmit: (result: OverrideAttachments[]) => void | Promise<void>;
 	constructor(
 		app: App,
 		settings: EnveloppeSettings,
 		allOverrides: OverrideAttachments[],
-		onSubmit: (result: OverrideAttachments[]) => void
+		onSubmit: (result: OverrideAttachments[]) => void | Promise<void>
 	) {
 		super(app);
 		this.allOverrides = allOverrides;
@@ -153,8 +153,8 @@ export class OverrideAttachmentsModal extends Modal {
 						canBeValidated.push(isForbiddenEntry.isForbidden);
 						canBeValidated.push(isForbiddenReplace.isForbidden);
 						if (isForbiddenEntry.isForbidden || isForbiddenReplace.isForbidden) {
-							override.path = isForbiddenEntry.value as string;
-							override.destination = isForbiddenReplace.value as string;
+							override.path = isForbiddenEntry.value;
+							override.destination = isForbiddenReplace.value;
 							const faultyInputValue = contentEl.querySelector(
 								`[value="${escapeRegex(override.path)}"] input`
 							);
@@ -167,7 +167,7 @@ export class OverrideAttachmentsModal extends Modal {
 					});
 					if (!canBeValidated.includes(true)) {
 						//remove empty regex
-						this.onSubmit(this.allOverrides);
+						void this.onSubmit(this.allOverrides);
 						this.close();
 					}
 				});
@@ -182,12 +182,12 @@ export class OverrideAttachmentsModal extends Modal {
 export class ModalRegexFilePathName extends Modal {
 	settings: EnveloppeSettings;
 	allRegex: RegexReplace[];
-	onSubmit: (result: RegexReplace[]) => void;
+	onSubmit: (result: RegexReplace[]) => void | Promise<void>;
 	constructor(
 		app: App,
 		settings: EnveloppeSettings,
 		allRegex: RegexReplace[],
-		onSubmit: (result: RegexReplace[]) => void
+		onSubmit: (result: RegexReplace[]) => void | Promise<void>
 	) {
 		super(app);
 		this.allRegex = allRegex;
@@ -379,8 +379,8 @@ export class ModalRegexFilePathName extends Modal {
 						canBeValidated.push(isForbiddenEntry.isForbidden);
 						canBeValidated.push(isForbiddenReplace.isForbidden);
 						if (isForbiddenEntry.isForbidden || isForbiddenReplace.isForbidden) {
-							title.regex = isForbiddenEntry.value as string;
-							title.replacement = isForbiddenReplace.value as string;
+							title.regex = isForbiddenEntry.value;
+							title.replacement = isForbiddenReplace.value;
 							const faultyInputValue = contentEl.querySelector(
 								`[value="${escapeRegex(title.regex)}"] input`
 							);
@@ -394,7 +394,7 @@ export class ModalRegexFilePathName extends Modal {
 					if (!canBeValidated.includes(true)) {
 						//remove empty regex
 
-						this.onSubmit(this.allRegex);
+						void this.onSubmit(this.allRegex);
 						this.close();
 					}
 				});
@@ -409,11 +409,11 @@ export class ModalRegexFilePathName extends Modal {
 
 export class ModalRegexOnContents extends Modal {
 	settings: EnveloppeSettings;
-	onSubmit: (settings: EnveloppeSettings) => void;
+	onSubmit: (settings: EnveloppeSettings) => void | Promise<void>;
 	constructor(
 		app: App,
 		settings: EnveloppeSettings,
-		onSubmit: (settings: EnveloppeSettings) => void
+		onSubmit: (settings: EnveloppeSettings) => void | Promise<void>
 	) {
 		super(app);
 		this.settings = settings;
@@ -573,7 +573,7 @@ export class ModalRegexOnContents extends Modal {
 							}
 						}
 						if (!canBeValidated.includes(false)) {
-							this.onSubmit(this.settings);
+							void this.onSubmit(this.settings);
 							this.close();
 						}
 					});
