@@ -1,4 +1,3 @@
-import { ESettingsTabId } from "@interfaces";
 import type { EnveloppeSettings, Preset, RegexReplace } from "@interfaces/main";
 import type { GitHub, PluginBehavior } from "@interfaces/settings";
 import type { Octokit } from "@octokit/core";
@@ -31,7 +30,6 @@ function censorData(settings: EnveloppeSettings, original: EnveloppeSettings) {
 	settings.github.repo = original.github.repo;
 	settings.github.user = original.github.user;
 	settings.github.otherRepo = original.github.otherRepo;
-	settings.tabsId = original.tabsId;
 	settings.plugin.copyLink.links = original.plugin.copyLink.links;
 	settings.github.tokenSecret = original.github.tokenSecret;
 }
@@ -44,19 +42,12 @@ function censorData(settings: EnveloppeSettings, original: EnveloppeSettings) {
 
 export class ImportModal extends Modal {
 	plugin: Enveloppe;
-	settingsPage: HTMLElement;
 	settingsTab: EnveloppeSettingsTab;
 	settings: EnveloppeSettings;
 	console: Logs;
-	constructor(
-		app: App,
-		plugin: Enveloppe,
-		settingsPage: HTMLElement,
-		settingsTab: EnveloppeSettingsTab
-	) {
+	constructor(app: App, plugin: Enveloppe, settingsTab: EnveloppeSettingsTab) {
 		super(app);
 		this.plugin = plugin;
-		this.settingsPage = settingsPage;
 		this.settingsTab = settingsTab;
 		this.settings = plugin.settings;
 		this.console = plugin.console;
@@ -170,33 +161,7 @@ export class ImportModal extends Modal {
 	onClose() {
 		const { contentEl } = this;
 		contentEl.empty();
-		this.settingsPage.empty();
-		let openedTab =
-			this.plugin.settings.tabsId ??
-			document.querySelector(".settings-tab.settings-tab-active .settings-tab-name")
-				?.textContent ??
-			i18next.t("settings.github.title");
-		openedTab = openedTab.trim();
-		switch (openedTab as ESettingsTabId) {
-			case ESettingsTabId.Github:
-				this.settingsTab.renderGithubConfiguration();
-				break;
-			case ESettingsTabId.Upload:
-				this.settingsTab.renderUploadConfiguration();
-				break;
-			case ESettingsTabId.Text:
-				this.settingsTab.renderTextConversion();
-				break;
-			case ESettingsTabId.Embed:
-				void this.settingsTab.renderEmbedConfiguration();
-				break;
-			case ESettingsTabId.Plugin:
-				this.settingsTab.renderPluginSettings();
-				break;
-			case ESettingsTabId.Help:
-				this.settingsTab.renderHelp();
-				break;
-		}
+		this.settingsTab.update();
 	}
 }
 
@@ -216,9 +181,6 @@ export class ExportModal extends Modal {
 		const cloneCensored = klona(censuredSettings);
 		const github: Partial<GitHub> | undefined = cloneCensored.github;
 		const plugin: Partial<PluginBehavior> | undefined = cloneCensored.plugin;
-		if (censuredSettings.tabsId) delete cloneCensored.tabsId;
-		//@ts-ignore
-		if (censuredSettings.tabsID) delete cloneCensored.tabsID;
 		if (github) {
 			delete github.repo;
 			delete github.user;
@@ -387,7 +349,7 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 			censorData(this.settings, original);
 
 			void this.plugin.saveSettings();
-			void this.page.renderSettingsPage("github-configuration");
+			this.page.update();
 		} catch (e) {
 			new Notice(
 				i18next.t("modals.import.error.span") + String(e),

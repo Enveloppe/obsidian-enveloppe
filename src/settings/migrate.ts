@@ -158,7 +158,6 @@ async function migrateWorFlow(plugin: Enveloppe) {
 }
 
 export async function migrateToSecret(plugin: Enveloppe) {
-	plugin.console.trace("Migrating token to secret");
 	if (plugin.settings.github.tokenSecret) {
 		return;
 	}
@@ -166,6 +165,7 @@ export async function migrateToSecret(plugin: Enveloppe) {
 	if (!oldToken) {
 		return;
 	}
+	plugin.console.trace("Migrating token to secret");
 	//create the secret
 	plugin.app.secretStorage.setSecret("enveloppe-github-token", oldToken);
 	//set the token in the settings

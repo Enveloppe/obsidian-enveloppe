@@ -16,6 +16,7 @@ program
 	.option("-p, --production", "Production build")
 	.option("-v, --vault [vault]", "Use vault path", false)
 	.option("-o, --output-dir <path>", "Output path")
+	.option("-k, --keep", "Do not clear folder")
 	.option("-b, --beta", "Pre-release version")
 	.parse();
 
@@ -23,6 +24,7 @@ program
 const options = program.opts();
 const isProd = !!options.production;
 const isBeta = !!options.beta;
+const keep = options.keep;
 const isStyled = fs.existsSync("src/styles.css");
 const pluginID = manifest.id;
 
@@ -55,6 +57,7 @@ function resolveOutputDir() {
 
 // Prepare the output directory
 function prepareOutputDir(dir) {
+	if (keep) return;
 	if ((isProd || options.outputDir) && fs.existsSync(dir)) {
 		fs.rmSync(dir, { recursive: true });
 	}
