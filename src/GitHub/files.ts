@@ -14,7 +14,7 @@ import {
 	TFile,
 	TFolder,
 } from "obsidian";
-import { getAPI, type Link } from "obsidian-dataview";
+import { getAPI, Link } from "obsidian-dataview";
 import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
 import Publisher from "src/GitHub/upload";
 import type Enveloppe from "src/main";
@@ -75,11 +75,11 @@ export class FilesManagement extends Publisher {
 		for (const file of folder.children) {
 			if (file instanceof TFolder) {
 				files.push(...this.getSharedFileOfFolder(file, repo));
-			} else {
+			} else if (file instanceof TFile) {
 				try {
 					const frontMatter = this.metadataCache.getCache(file.path)?.frontmatter;
-					if (isShared(frontMatter, this.settings, file as TFile, repo)) {
-						files.push(file as TFile);
+					if (isShared(frontMatter, this.settings, file, repo)) {
+						files.push(file);
 					}
 				} catch (e) {
 					this.console.trace(e);
@@ -208,8 +208,9 @@ export class FilesManagement extends Publisher {
 							 * `filename` so we can later use that to convert wikilinks.
 							 */
 							if (frontmatter?.[this.settings.upload.frontmatterTitle.key]) {
-								frontmatterDestinationFilePath =
-									frontmatter[this.settings.upload.frontmatterTitle.key];
+								frontmatterDestinationFilePath = frontmatter[
+									this.settings.upload.frontmatterTitle.key
+								] as string;
 								if (altText === imageLink.basename) {
 									altText = frontmatterDestinationFilePath;
 								}
@@ -261,7 +262,7 @@ export class FilesManagement extends Publisher {
 					);
 					if (linkedFile) {
 						let altText = embedCache.original.match(/\[.*\]\(.*\)/)
-							? embedCache.original!.match(/\[(.*)\]/)![1]
+							? embedCache.original.match(/\[(.*)\]/)![1]
 							: embedCache.displayText !== linkedFile.path.replace(".md", "")
 								? embedCache.displayText
 								: linkedFile.basename;
@@ -280,8 +281,9 @@ export class FilesManagement extends Publisher {
 							 * `filename` so we can later use that to convert wikilinks.
 							 */
 							if (frontmatter?.[this.settings.upload.frontmatterTitle.key]) {
-								frontmatterDestinationFilePath =
-									frontmatter[this.settings.upload.frontmatterTitle.key];
+								frontmatterDestinationFilePath = frontmatter[
+									this.settings.upload.frontmatterTitle.key
+								] as string;
 								if (altText === linkedFile.basename) {
 									altText = frontmatterDestinationFilePath;
 								}
@@ -356,11 +358,7 @@ export class FilesManagement extends Publisher {
 				file.path
 			);
 			if (imageLink)
-				return this.imageSharedOrNote(
-					imageLink as TFile,
-					frontmatterSourceFile,
-					fromWhat
-				) as TFile;
+				return this.imageSharedOrNote(imageLink, frontmatterSourceFile, fromWhat);
 		} catch (e) {
 			this.console.debug(`Error with this file : ${embed.displayText}`, e);
 		}
@@ -472,18 +470,11 @@ export class FilesManagement extends Publisher {
 		field: Link | string,
 		frontmatterSourceFile: PropertiesConversion
 	): TFile | undefined {
-		if (field.constructor.name === "Link") {
-			// @ts-ignore
-			field = field.path;
-		}
-		if (source.constructor.name === "Link") {
-			// @ts-ignore
-			source = source.path;
-		}
-		// @ts-ignore
-		const imageLink = this.metadataCache.getFirstLinkpathDest(field, source);
+		const fieldPath = field instanceof Link ? field.path : field;
+		const sourcePath = source instanceof Link ? source.path : source;
+		const imageLink = this.metadataCache.getFirstLinkpathDest(fieldPath, sourcePath);
 		if (imageLink) {
-			return this.imageSharedOrNote(imageLink as TFile, frontmatterSourceFile) as TFile;
+			return this.imageSharedOrNote(imageLink, frontmatterSourceFile);
 		}
 		return undefined;
 	}
@@ -548,9 +539,8 @@ export class FilesManagement extends Publisher {
 					this.metadataCache.getFirstLinkpathDest(path, file.path) ??
 					this.vault.getAbstractFileByPath(path);
 				if (imageLink instanceof TFile && !embedFiles.includes(imageLink)) {
-					embedFiles.push(
-						this.imageSharedOrNote(imageLink, frontmatterSettings) as TFile
-					);
+					const sharedFile = this.imageSharedOrNote(imageLink, frontmatterSettings);
+					if (sharedFile) embedFiles.push(sharedFile);
 				}
 			}
 		}
@@ -564,16 +554,21 @@ export class FilesManagement extends Publisher {
 			for (const field of this.settings.embed.keySendFile) {
 				const fieldValue = dataviewMetadata[field];
 				if (fieldValue != undefined) {
-					if (fieldValue.constructor.name === "Array") {
-						// @ts-ignore
+					const toLinkOrPath = (value: unknown): Link | string =>
+						value instanceof Link ? value : String(value);
+					if (Array.isArray(fieldValue)) {
 						for (const value of fieldValue) {
-							const path = this.getImageByPath(file.path, value, frontmatterSettings);
+							const path = this.getImageByPath(
+								file.path,
+								toLinkOrPath(value),
+								frontmatterSettings
+							);
 							if (path) embedFiles.push(path);
 						}
 					} else {
 						const path = this.getImageByPath(
 							file.path,
-							fieldValue.toString() as string,
+							toLinkOrPath(fieldValue),
 							frontmatterSettings
 						);
 						if (path) embedFiles.push(path);
@@ -614,7 +609,7 @@ export class FilesManagement extends Publisher {
 					const vaultEditedTime = new Date(fileInVault.stat.mtime);
 					if (repoEditedTime && vaultEditedTime > repoEditedTime) {
 						this.console.debug(
-							`edited file : ${fileInVault.path} / ${vaultEditedTime} vs ${repoEditedTime}`
+							`edited file : ${fileInVault.path} / ${vaultEditedTime.toISOString()} vs ${repoEditedTime.toISOString()}`
 						);
 						newFiles.push(fileInVault);
 					}
