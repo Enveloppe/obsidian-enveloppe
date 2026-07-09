@@ -303,7 +303,7 @@ function changeTitle(
  * don't. Tag fields are expected to hold the former; JSON.stringify the rest
  * rather than risk silently emitting "[object Object]" as a tag.
  */
-function literalToString(value: unknown): string {
+export function literalToString(value: unknown): string {
 	if (typeof value === "object" && value !== null) {
 		const hasCustomToString = value.toString !== Object.prototype.toString;
 		// eslint-disable-next-line @typescript-eslint/no-base-to-string -- toString identity checked above

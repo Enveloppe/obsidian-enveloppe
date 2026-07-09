@@ -96,7 +96,7 @@ export function replaceText(
 			return match;
 		} else {
 			try {
-				const replaceWithParsed = JSON.parse(`"${replaceWith}"`);
+				const replaceWithParsed = JSON.parse(`"${replaceWith}"`) as string;
 				return match.replace(pattern, replaceWithParsed);
 			} catch (e) {
 				plugin.console.debug(e);

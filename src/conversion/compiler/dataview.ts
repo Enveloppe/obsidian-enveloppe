@@ -12,6 +12,7 @@ import type {
 import i18next from "i18next";
 import { Component, type FrontMatterCache, htmlToMarkdown, TFile } from "obsidian";
 import { type DataviewApi, getAPI, type Literal } from "obsidian-dataview";
+import { literalToString } from "src/conversion/compiler/embeds";
 import {
 	convertToInternalGithub,
 	convertWikilinks,
@@ -82,7 +83,7 @@ class DataviewCompiler {
 	async dataviewDQL(query: string) {
 		const { isInsideCallout, finalQuery } = sanitizeQuery(query);
 		const markdown = removeDataviewQueries(
-			(await this.dvApi.tryQueryMarkdown(finalQuery, this.path)) as string,
+			await this.dvApi.tryQueryMarkdown(finalQuery, this.path),
 			this.properties.frontmatter.general
 		);
 		if (isInsideCallout) {
@@ -276,7 +277,7 @@ function removeDataviewQueries(
 	dataviewMarkdown: Literal,
 	frontmatterSettings: PropertiesConversion
 ): string {
-	const toStr = dataviewMarkdown?.toString();
+	const toStr = dataviewMarkdown ? literalToString(dataviewMarkdown) : "";
 	return frontmatterSettings.dataview && dataviewMarkdown && toStr ? toStr : "";
 }
 
@@ -323,10 +324,8 @@ export function getDataviewPath(markdown: string, plugin: Enveloppe): LinkedNote
 		for (const wikiMatch of wikiMatches) {
 			const altText = wikiMatch[1].replace(/(.*)\\?\|/i, "");
 			const linkFrom = wikiMatch[1].replace(/\\?\|(.*)/, "");
-			const linked =
-				vault.getAbstractFileByPath(linkFrom) instanceof TFile
-					? (vault.getAbstractFileByPath(linkFrom) as TFile)
-					: null;
+			const abstractFile = vault.getAbstractFileByPath(linkFrom);
+			const linked = abstractFile instanceof TFile ? abstractFile : null;
 			if (linked) {
 				linkedFiles.push({
 					linked,

@@ -274,7 +274,7 @@ function createMarkdownLinks(
 	let markdownName = isAttachment(fileName.trim(), settings.embed.unHandledObsidianExt)
 		? fileName.trim()
 		: `${fileName.replace(/#.*/, "").trim()}.md`;
-	let ext = `.${markdownName.split(".").at(-1)}` as string;
+	let ext = `.${markdownName.split(".").at(-1)}`;
 	if (markdownName === ".md") {
 		markdownName = "";
 		ext = "";

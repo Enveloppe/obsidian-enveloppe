@@ -1,3 +1,4 @@
+import { FolderSettings } from "@interfaces";
 import type { EnveloppeSettings } from "@interfaces/main";
 import i18next from "i18next";
 import { type App, Modal, Setting } from "obsidian";
@@ -17,7 +18,7 @@ export class AutoCleanPopup extends Modal {
 
 	whatIsEmpty() {
 		if (
-			this.settings.upload.behavior === "yaml" &&
+			this.settings.upload.behavior === FolderSettings.Yaml &&
 			this.settings.upload.defaultName.length === 0
 		) {
 			return i18next.t("common.defaultName");

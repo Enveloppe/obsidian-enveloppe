@@ -78,7 +78,7 @@
 		},
 		"includes": [
 			"**",
-			"!**/npm node_modules",
+			"!**/node_modules",
 			"!**/build",
 			"!**/dist",
 			"!**/src/i18n/locales"

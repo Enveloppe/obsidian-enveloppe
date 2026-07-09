@@ -47,7 +47,8 @@ export const resources = {
 	},
 } as const;
 /** ---- RESOURCE OBJECT ---- */
-const localeUsed: string = window.localStorage.language || moment.locale();
+const localeUsed: string =
+	(window.localStorage.language as string | undefined) || moment.locale();
 export const translationLanguage = Object.keys(resources).find(
 	(i) => i.toLocaleLowerCase() == localeUsed.toLowerCase()
 )

@@ -48,19 +48,19 @@ export class ListChangedFiles extends Modal {
 			cls: "success",
 		});
 		if (Object.keys(this.listChanged).contains("edited")) {
-			this.listChanged = this.listChanged as ListEditedFiles;
+			const listChanged = this.listChanged as ListEditedFiles;
 			contentEl.createEl("h3", {
 				text: `📤 ${i18next.t("modals.listChangedFiles.added")}`,
 			});
-			this.displayListOfFile(this.listChanged.added, contentEl);
+			this.displayListOfFile(listChanged.added, contentEl);
 			contentEl.createEl("h3", {
 				text: `✒️ ${i18next.t("modals.listChangedFiles.edited")}`,
 			});
-			this.displayListOfFile(this.listChanged.edited, contentEl);
+			this.displayListOfFile(listChanged.edited, contentEl);
 			contentEl.createEl("h3", {
 				text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`,
 			});
-			this.displayListOfFile(this.listChanged.deleted, contentEl);
+			this.displayListOfFile(listChanged.deleted, contentEl);
 
 			const span = contentEl.createDiv({ cls: "error" });
 			span.createEl("h2", {
@@ -69,17 +69,17 @@ export class ListChangedFiles extends Modal {
 			span.createEl("h3", {
 				text: `📤 ${i18next.t("modals.listChangedFiles.unpublished")}`,
 			});
-			this.displayListOfFile(this.listChanged.unpublished, span);
+			this.displayListOfFile(listChanged.unpublished, span);
 			span.createEl("h3", {
 				text: `♻️ ${i18next.t("modals.listChangedFiles.notDeleted")}`,
 			});
-			this.displayListOfFile(this.listChanged.notDeleted, span);
+			this.displayListOfFile(listChanged.notDeleted, span);
 		} else {
-			this.listChanged = this.listChanged as Deleted;
+			const listChanged = this.listChanged as Deleted;
 			contentEl.createEl("h3", {
 				text: `🗑️ ${i18next.t("modals.listChangedFiles.deleted")}`,
 			});
-			this.displayListOfFile(this.listChanged.deleted, contentEl);
+			this.displayListOfFile(listChanged.deleted, contentEl);
 			const span = contentEl.createSpan({ cls: "error" });
 			span.createEl("h3", {
 				text: `❌ ${i18next.t("modals.listChangedFiles.error")}`,
@@ -87,7 +87,7 @@ export class ListChangedFiles extends Modal {
 			span.createEl("h3", {
 				text: `♻️ ${i18next.t("modals.listChangedFiles.notDeleted")}`,
 			});
-			this.displayListOfFile(this.listChanged.undeleted, span);
+			this.displayListOfFile(listChanged.undeleted, span);
 		}
 	}
 

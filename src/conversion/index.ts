@@ -129,7 +129,7 @@ export function addToYaml(
 				exists ? text.slice(contentStart) : text
 			}`;
 		}
-	} catch (_e) {
+	} catch {
 		new Notice(
 			i18next.t("error.parseYaml"),
 			properties.plugin.settings.plugin.noticeLength
