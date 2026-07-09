@@ -26,6 +26,6 @@
 		"strictNullChecks": true,
 		"lib": ["DOM", "ES5", "ES6", "ES7", "ES2021", "ES2022"]
 	},
-	"include": ["**/*.ts"],
+	"include": ["**/*.ts", "**/*.mts"],
 	"exclude": ["e2e/**"]
 }

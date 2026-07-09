@@ -5,12 +5,12 @@ export default defineConfig({
 	resolve: {
 		tsconfigPaths: true,
 		alias: {
-			obsidian: path.resolve(__dirname, "tests/mocks/obsidian.ts"),
-			"obsidian-dataview": path.resolve(__dirname, "tests/mocks/obsidian-dataview.ts"),
+			obsidian: path.resolve(__dirname, "tests/unit/mocks/obsidian.ts"),
+			"obsidian-dataview": path.resolve(__dirname, "tests/unit/mocks/obsidian-dataview.ts"),
 		},
 	},
 	test: {
-		include: ["tests/**/*.{test,spec}.ts"],
+		include: ["tests/unit/**/*.{test,spec}.ts"],
 		environment: "node",
 	},
 });
