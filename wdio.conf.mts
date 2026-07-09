@@ -27,7 +27,7 @@ export const config: WebdriverIO.Config = {
 	runner: "local",
 	framework: "mocha",
 
-	specs: ["./test/specs/**/*.e2e.ts"],
+	specs: ["./e2e/specs/**/*.e2e.ts"],
 
 	// How many instances of Obsidian should be launched in parallel during testing.
 	maxInstances: Number(env.WDIO_MAX_INSTANCES || 4),
@@ -41,7 +41,7 @@ export const config: WebdriverIO.Config = {
 				installerVersion,
 				// The plugin is built to ./dist by `npm run build` before tests run.
 				plugins: ["./dist"],
-				vault: "test/vaults/simple",
+				vault: "e2e/vaults/simple",
 			},
 		})
 	),

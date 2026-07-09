@@ -12,7 +12,7 @@ async function openPluginSettings() {
 
 describe("Enveloppe settings tab", function () {
 	before(async function () {
-		await browser.reloadObsidian({ vault: "test/vaults/simple" });
+		await browser.reloadObsidian({ vault: "e2e/vaults/simple" });
 	});
 
 	afterEach(async function () {

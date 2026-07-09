@@ -15,11 +15,11 @@ async function isShareCommandAvailable(): Promise<boolean> {
 
 describe("share-one command availability", function () {
 	before(async function () {
-		await browser.reloadObsidian({ vault: "test/vaults/simple" });
+		await browser.reloadObsidian({ vault: "e2e/vaults/simple" });
 	});
 
 	beforeEach(async function () {
-		await obsidianPage.resetVault("test/vaults/simple");
+		await obsidianPage.resetVault("e2e/vaults/simple");
 	});
 
 	it("is unavailable on a note without a share flag in its frontmatter", async function () {

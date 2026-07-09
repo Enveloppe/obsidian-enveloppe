@@ -19,7 +19,7 @@ const BASE_COMMAND_IDS = [
 
 describe("Enveloppe plugin bootstrap", function () {
 	before(async function () {
-		await browser.reloadObsidian({ vault: "test/vaults/simple" });
+		await browser.reloadObsidian({ vault: "e2e/vaults/simple" });
 	});
 
 	it("loads and is enabled", async function () {

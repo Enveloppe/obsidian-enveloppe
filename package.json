@@ -7,7 +7,7 @@
 	"scripts": {
 		"lint": "biome format --write src/",
 		"prebuild": "tsc --noEmit --skipLibCheck",
-		"typecheck:e2e": "tsc --noEmit --skipLibCheck -p test/tsconfig.json",
+		"typecheck:e2e": "tsc --noEmit --skipLibCheck -p e2e/tsconfig.json",
 		"build": "node esbuild.config.mjs --production",
 		"dev:prod": "node esbuild.config.mjs --vault",
 		"dev": "node esbuild.config.mjs",
