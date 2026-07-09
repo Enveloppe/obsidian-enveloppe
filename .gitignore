@@ -33,3 +33,6 @@ act.json
 tokens.json
 logs.txt
 *.zip
+
+# vitest
+coverage/

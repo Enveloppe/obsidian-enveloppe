@@ -17,7 +17,9 @@
 		"predeploy": "bun run bump",
 		"deploy": "bun run export",
 		"sync:locale": "bun run hooks/update-translation.mjs pull",
-		"prepare": "husky"
+		"prepare": "husky",
+		"test": "vitest run",
+		"test:watch": "vitest"
 	},
 	"commit-and-tag-version": {
 		"t": ""
@@ -57,7 +59,8 @@
 		"ts-dedent": "^2.3.0",
 		"tslib": "^2.8.1",
 		"typescript": "5.9.3",
-		"typescript-eslint": "^8.63.0"
+		"typescript-eslint": "^8.63.0",
+		"vitest": "^4.1.10"
 	},
 	"peerDependencies": {
 		"typescript": "^6.0.2"

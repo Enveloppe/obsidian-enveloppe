@@ -34,5 +34,6 @@ export default defineConfig([
 		"wdio.conf.mts",
 		"commit-and-tag-version.mjs",
 		"hooks/*.mjs",
+		"vitest.config.mts",
 	]),
 ]);
