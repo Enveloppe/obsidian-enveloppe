@@ -602,9 +602,7 @@ class ModalEditingRepository extends Modal {
 							strict: i18next.t("settings.conversion.links.slugify.strict"),
 							lower: i18next.t("settings.conversion.links.slugify.lower"),
 						})
-						.setValue(
-							this.repository.copyLink.transform.slugify as "disable" | "strict" | "lower"
-						)
+						.setValue(this.repository.copyLink.transform.slugify)
 						.onChange(async (value) => {
 							this.repository.copyLink.transform.slugify = value as
 								| "disable"

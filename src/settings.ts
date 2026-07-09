@@ -41,7 +41,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 			//real false
 			this.settings.tabsId = defaultTabId;
 			savedId = defaultTabId;
-			this.plugin.saveSettings();
+			void this.plugin.saveSettings();
 		}
 
 		const enveloppeTabs = {
@@ -115,20 +115,23 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 				cls: "settings-tab-name",
 				text: tabInfo.name,
 			});
-			if (tabId === savedId) tabEl.addClass("settings-tab-active");
+			if (tabId === (savedId as string)) tabEl.addClass("settings-tab-active");
 
-			tabEl.addEventListener("click", async () => {
-				// @ts-ignore
-				for (const tabEl of tabBar.children) tabEl.removeClass("settings-tab-active");
+			tabEl.addEventListener("click", () => {
+				void (async () => {
+					for (const otherTabEl of Array.from(tabBar.children)) {
+						otherTabEl.removeClass("settings-tab-active");
+					}
 
-				tabEl.addClass("settings-tab-active");
-				await this.renderSettingsPage(tabId);
+					tabEl.addClass("settings-tab-active");
+					await this.renderSettingsPage(tabId);
+				})();
 			});
 		}
 		this.settingsPage = containerEl.createDiv({
 			cls: "settings-tab-page",
 		});
-		this.renderSettingsPage(savedId);
+		void this.renderSettingsPage(savedId);
 	}
 
 	/**
@@ -256,7 +259,7 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 	copy<T>(object: T): T | undefined {
 		try {
 			return klona(object);
-		} catch (_e) {
+		} catch {
 			this.plugin.console.debug("error with stringify for", object);
 			return undefined;
 		}
