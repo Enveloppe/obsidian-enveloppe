@@ -2,7 +2,7 @@
 
 import type { Properties } from "@interfaces";
 import i18next from "i18next";
-import { type Notice, setIcon } from "obsidian";
+import { type Notice, sanitizeHTMLToDom, setIcon } from "obsidian";
 import type { Logs } from "./logs";
 // Credit : https://github.com/oleeskild/obsidian-digital-garden/ @oleeskild
 
@@ -81,7 +81,7 @@ export class ShareStatusBar {
 		this.statusBarItem.addClass("sharing");
 		this.statusBarItem.removeClass("found-attachments");
 
-		if (!this.noticeMobile?.noticeEl?.children[0]?.classList?.contains("load")) {
+		if (!this.noticeMobile?.messageEl?.children[0]?.classList?.contains("load")) {
 			window.setTimeout(() => {
 				this.noticeMobile?.hide();
 			}, 4000);
@@ -142,7 +142,10 @@ export class ShareStatusBar {
 		this.statusBarItem.removeClass("sharing");
 		this.statusBarItem.removeClass("found-attachments");
 		setIcon(this.icon, "mail-warning");
-		this.status.innerHTML = i18next.t("error.errorPublish", { repo: prop });
+		this.status.empty();
+		this.status.appendChild(
+			sanitizeHTMLToDom(i18next.t("error.errorPublish", { repo: prop }))
+		);
 		this.noticeMobile?.hide();
 		window.setTimeout(() => {
 			this.statusBarItem.remove();

@@ -36,7 +36,7 @@ export class Logs {
 			if (error instanceof Error && error.message) {
 				return error.message;
 			}
-			const parsedError = JSON.parse(JSON.stringify(error));
+			const parsedError = JSON.parse(JSON.stringify(error)) as unknown;
 			if (Array.isArray(parsedError)) {
 				return parsedError.join(", ");
 			}
@@ -94,7 +94,7 @@ export class Logs {
 	}
 
 	info(...messages: unknown[]) {
-		console.info(...messages);
+		console.debug(...messages);
 		this.notif(messages);
 		this.writeToLog(messages, "info");
 	}
@@ -109,7 +109,7 @@ export class Logs {
 
 	trace(...messages: unknown[]) {
 		if (this.plugin.settings.plugin?.dev) {
-			console.trace(...messages);
+			console.debug(...messages);
 			this.notif(messages);
 			this.writeToLog(messages, "debug");
 		}
@@ -117,7 +117,7 @@ export class Logs {
 
 	silly(...messages: unknown[]) {
 		if (this.plugin.settings.plugin?.dev) {
-			console.log(...messages);
+			console.debug(...messages);
 			this.notif(messages);
 			this.writeToLog(messages, "silly");
 		}
@@ -145,9 +145,11 @@ export class Logs {
 			cls: ["enveloppe", cls, "icons"],
 		});
 		setIcon(span, icon);
-		noticeFrag.createSpan({
-			cls: ["enveloppe", cls, "notification"],
-		}).innerHTML = message;
+		noticeFrag
+			.createSpan({
+				cls: ["enveloppe", cls, "notification"],
+			})
+			.appendChild(sanitizeHTMLToDom(message));
 		return new Notice(noticeFrag, this.noticeLength);
 	}
 
@@ -224,9 +226,11 @@ export class Logs {
 			cls: ["enveloppe", "success", "icons"],
 		});
 		setIcon(span, "mail-check");
-		docSuccess.createSpan({
-			cls: ["enveloppe", "success", "notification"],
-		}).innerHTML = successMsg;
+		docSuccess
+			.createSpan({
+				cls: ["enveloppe", "success", "notification"],
+			})
+			.appendChild(sanitizeHTMLToDom(successMsg));
 		if (settings.github.workflow.name.length === 0) {
 			new Notice(docSuccess, settings.plugin.noticeLength);
 			return;
@@ -240,12 +244,15 @@ export class Logs {
 			cls: ["enveloppe", "wait", "icons"],
 		});
 		setIcon(WorkflowSpan, "hourglass");
-		workflowSuccess.createSpan({
-			cls: ["enveloppe", "wait", "notification"],
-		}).innerHTML = `${i18next.t("informations.sendMessage", {
+		const waitingMessage = `${i18next.t("informations.sendMessage", {
 			nbNotes: noticeValue,
 			repo: prop,
 		})}.<br>${i18next.t("informations.waitingWorkflow")}`;
+		workflowSuccess
+			.createSpan({
+				cls: ["enveloppe", "wait", "notification"],
+			})
+			.appendChild(sanitizeHTMLToDom(waitingMessage));
 		new Notice(workflowSuccess, PublisherManager.settings.plugin.noticeLength);
 		const successWorkflow = await PublisherManager.workflowGestion(prop);
 		if (successWorkflow) {
