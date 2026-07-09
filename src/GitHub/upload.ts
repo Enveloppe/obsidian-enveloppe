@@ -28,6 +28,7 @@ import { convertToHTMLSVG } from "src/conversion/compiler/excalidraw";
 import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
 import { deleteFromGithub } from "src/GitHub/delete";
 import { FilesManagement } from "src/GitHub/files";
+import type { ContentFile } from "src/GitHub/octokit_types";
 import type Enveloppe from "src/main";
 import {
 	checkEmptyConfiguration,
@@ -391,17 +392,17 @@ export default class Publisher {
 	async upload(content: string, path: string, title: string = "", prop: Properties) {
 		if (!prop.repo) {
 			new Notice(
-				"Config error : You need to define a github repo in the plugin settings",
+				"Config error : You need to define a GitHub repo in the plugin settings",
 				this.noticeLength
 			);
-			throw {};
+			throw new Error("Config error : missing GitHub repo in the plugin settings");
 		}
 		if (!prop.owner) {
 			new Notice(
-				"Config error : You need to define your github username in the plugin settings",
+				"Config error : You need to define your GitHub username in the plugin settings",
 				this.noticeLength
 			);
-			throw {};
+			throw new Error("Config error : missing GitHub username in the plugin settings");
 		}
 		const octokit = this.octokit;
 		let msg = `PUSH NOTE : ${title}`;
@@ -423,7 +424,7 @@ export default class Publisher {
 			file: title,
 		};
 		try {
-			const response = await octokit.request(
+			const response = (await octokit.request(
 				"GET /repos/{owner}/{repo}/contents/{+path}",
 				{
 					owner: prop.owner,
@@ -431,10 +432,8 @@ export default class Publisher {
 					path,
 					ref: this.branchName,
 				}
-			);
-			// @ts-ignore
+			)) as { status: number; data: ContentFile };
 			if (response.status === 200 && response.data.type === "file") {
-				// @ts-ignore
 				payload.sha = response.data.sha;
 				result.isUpdated = true;
 			}
@@ -460,8 +459,7 @@ export default class Publisher {
 			if (svg) {
 				//convert to base64
 				image64 = Base64.encode(svg).toString();
-				//@ts-ignore
-				imageBin = Buffer.from(image64, "base64");
+				imageBin = Base64.toUint8Array(image64).buffer as ArrayBuffer;
 			}
 		}
 		const path = getImagePath(
@@ -554,7 +552,7 @@ export default class Publisher {
 			const contentBase64 = Base64.encode(text).toString();
 			return await this.upload(contentBase64, path, title, prop);
 		} catch (e) {
-			console.error(e as Error);
+			console.error(e);
 			return undefined;
 		}
 	}
@@ -572,15 +570,19 @@ export default class Publisher {
 	): Promise<void> {
 		if (metadataExtractor) {
 			if (this.settings.github.dryRun.enable) return;
-			for (const file of Object.values(metadataExtractor)) {
+			const files: (string | null)[] = [
+				metadataExtractor.allExceptMdFile,
+				metadataExtractor.metadataFile,
+				metadataExtractor.tagsFile,
+			];
+			for (const file of files) {
 				if (file) {
 					const contents = await this.vault.adapter.read(file);
-					const path = `${this.settings.upload.metadataExtractorPath}/${file
-						.split("/")
-						.pop()}`;
+					const filename = file.split("/").pop();
+					const path = `${this.settings.upload.metadataExtractorPath}/${filename}`;
 					prop = Array.isArray(prop) ? prop : [prop];
 					for (const repo of prop) {
-						await this.uploadText(contents, path, file.split("/").pop(), repo);
+						await this.uploadText(contents, path, filename, repo);
 					}
 				}
 			}
@@ -699,7 +701,7 @@ export default class Publisher {
 								this.console.trace(i18next.t("error.alreadyExists", { file: file.name }));
 						}
 					}
-				} catch (_e) {
+				} catch {
 					newLinkedFiles.push(file);
 				}
 				//pass non image file as they are updated basically by GitHub with checking the content (basic git behavior)

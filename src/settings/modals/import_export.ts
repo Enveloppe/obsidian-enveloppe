@@ -2,7 +2,6 @@ import { ESettingsTabId } from "@interfaces";
 import type { EnveloppeSettings, Preset, RegexReplace } from "@interfaces/main";
 import type { GitHub, PluginBehavior } from "@interfaces/settings";
 import type { Octokit } from "@octokit/core";
-import type { Endpoints } from "@octokit/types";
 import i18next from "i18next";
 import { klona } from "klona";
 import {
@@ -15,6 +14,7 @@ import {
 	Setting,
 	TextAreaComponent,
 } from "obsidian";
+import type { ContentFile, ContentsResponseData } from "src/GitHub/octokit_types";
 import type Enveloppe from "src/main";
 import type { EnveloppeSettingsTab } from "src/settings";
 import { migrateSettings, type OldSettings } from "src/settings/migrate";
@@ -397,17 +397,6 @@ export class ImportLoadPreset extends FuzzySuggestModal<Preset> {
 		}
 	}
 }
-
-/**
- * `octokit.request()` only returns a typed response for routes it recognizes
- * literally; the `{+path}` reserved-expansion form used here (needed so paths
- * with slashes aren't percent-encoded) isn't in Octokit's route map, so the
- * call falls back to an untyped response. The `{path}` route has the same
- * response shape, so we borrow its type for these calls.
- */
-type ContentsResponseData =
-	Endpoints["GET /repos/{owner}/{repo}/contents/{path}"]["response"]["data"];
-type ContentFile = Extract<ContentsResponseData, { type: "file" }>;
 
 export async function loadAllPresets(
 	octokit: Octokit,
