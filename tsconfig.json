@@ -19,6 +19,7 @@
 		"moduleResolution": "node",
 		"importHelpers": true,
 		"isolatedModules": true,
+		"esModuleInterop": true,
 		"resolveJsonModule": true,
 		"strict": true,
 		"allowSyntheticDefaultImports": true,
