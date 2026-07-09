@@ -8,7 +8,7 @@ import {
 	TOKEN_PATH,
 	type UploadedFiles,
 } from "@interfaces";
-import { type App, normalizePath, Platform, type TFile } from "obsidian";
+import { type App, normalizePath, Platform, type Plugin, type TFile } from "obsidian";
 import slugify from "slugify";
 import { getReceiptFolder } from "src/conversion/file_path";
 import { createRegexFromText } from "src/conversion/find_and_replace_text";
@@ -57,6 +57,14 @@ export function createListEdited(
  * @returns {Promise<MetadataExtractor | null>}
  */
 
+interface MetadataExtractorPlugin extends Plugin {
+	settings?: {
+		allExceptMdFile?: string;
+		metadataFile?: string;
+		tagFile?: string;
+	};
+}
+
 export async function getSettingsOfMetadataExtractor(
 	app: App,
 	settings: EnveloppeSettings
@@ -74,23 +82,17 @@ export async function getSettingsOfMetadataExtractor(
 	};
 
 	const path = `${app.vault.configDir}/plugins/metadata-extractor`;
-	const plugin = app.plugins.getPlugin("metadata-extractor");
-	//@ts-ignore
+	const plugin: MetadataExtractorPlugin | null =
+		app.plugins.getPlugin("metadata-extractor");
 	if (plugin?.settings) {
-		//@ts-ignore
-		if (plugin.settings.allExceptMdFile.length > 0) {
+		if (plugin.settings.allExceptMdFile && plugin.settings.allExceptMdFile.length > 0) {
 			//get file from plugins folder in .obsidian folder
-			//@ts-ignore
 			metadataExtractor.allExceptMdFile = `${path}/${plugin.settings.allExceptMdFile}`;
 		}
-		//@ts-ignore
-		if (plugin.settings["metadataFile"].length > 0) {
-			//@ts-ignore
+		if (plugin.settings.metadataFile && plugin.settings.metadataFile.length > 0) {
 			metadataExtractor.metadataFile = `${path}/${plugin.settings.metadataFile}`;
 		}
-		//@ts-ignore
-		if (plugin.settings.tagFile.length > 0) {
-			//@ts-ignore
+		if (plugin.settings.tagFile && plugin.settings.tagFile.length > 0) {
 			metadataExtractor.tagsFile = `${path}/${plugin.settings.tagFile}`;
 		}
 		return metadataExtractor;
@@ -140,26 +142,26 @@ export async function createLink(
 				? `https://${github.user}.github.io/${settings.github.repo}/`
 				: `https://${repo.owner}.github.io/${repo.repo}/`;
 	}
-	const frontmatter = frontmatterFromFile(file, plugin, otherRepo);
+	const frontmatter = frontmatterFromFile(file, plugin, otherRepo) as
+		| Record<string, unknown>
+		| null
+		| undefined;
 	let removePart = copyLink.removePart;
 	const smartKey = otherRepo?.smartKey ? `${otherRepo.smartKey}.` : "";
 	if (frontmatter) {
+		const copylinkValue = frontmatter[`${smartKey}copylink`];
 		if (frontmatter[`${smartKey}baselink`] != undefined) {
-			baseLink = frontmatter[`${smartKey}baselink`] as unknown as string;
+			baseLink = frontmatter[`${smartKey}baselink`] as string;
 			removePart = [];
-		} else if (
-			frontmatter[`${smartKey}copylink`] &&
-			typeof frontmatter[`${smartKey}.copylink`] === "object"
-		) {
-			baseLink = frontmatter[`${smartKey}copylink`].base as unknown as string;
-			removePart =
-				(frontmatter[`${smartKey}copylink`].remove as unknown as string[]) ?? [];
+		} else if (copylinkValue && typeof copylinkValue === "object") {
+			const copylinkRecord = copylinkValue as { base?: string; remove?: string[] };
+			baseLink = copylinkRecord.base ?? baseLink;
+			removePart = copylinkRecord.remove ?? [];
 		}
 		if (frontmatter[`${smartKey}copylink.base`])
-			baseLink = frontmatter[`${smartKey}copylink.base`] as unknown as string;
+			baseLink = frontmatter[`${smartKey}copylink.base`] as string;
 		if (frontmatter[`${smartKey}copylink.remove`])
-			removePart =
-				(frontmatter[`${smartKey}copylink.remove`] as unknown as string[]) ?? [];
+			removePart = (frontmatter[`${smartKey}copylink.remove`] as string[]) ?? [];
 	}
 
 	baseLink = checkSlash(baseLink);
@@ -207,7 +209,7 @@ export async function createLink(
  * Trim the object to remove the empty value
  */
 export function trimObject(obj: unknown): Record<string, unknown> {
-	const trimmed = JSON.stringify(obj, (_key, value) => {
+	const trimmed = JSON.stringify(obj, (_key: string, value: unknown) => {
 		if (typeof value === "string") {
 			return value.trim().toLowerCase();
 		}
