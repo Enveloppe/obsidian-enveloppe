@@ -1,0 +1,14 @@
+{
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
+		"types": [
+			"node",
+			"obsidian-typings",
+			"@wdio/globals/types",
+			"webdriverio",
+			"wdio-obsidian-service"
+		]
+	},
+	"include": ["**/*.ts"],
+	"exclude": []
+}

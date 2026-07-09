@@ -36,3 +36,9 @@ logs.txt
 
 # vitest
 coverage/
+
+# wdio-obsidian-service
+.obsidian-cache/
+wdio-logs/
+allure-results/
+obsidian-versions-lock.txt
