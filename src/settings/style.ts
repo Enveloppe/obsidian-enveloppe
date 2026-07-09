@@ -1,6 +1,6 @@
 import { type EnveloppeSettings, ESettingsTabId, FolderSettings } from "@interfaces";
 import i18next from "i18next";
-import { Notice, type Setting } from "obsidian";
+import { Notice, type Setting, type ToggleComponent } from "obsidian";
 import type Enveloppe from "src/main";
 import type { EnveloppeSettingsTab } from "src/settings";
 /**
@@ -11,7 +11,7 @@ import type { EnveloppeSettingsTab } from "src/settings";
 export function showSettings(containerEl: Setting) {
 	for (const [type, elem] of Object.entries(containerEl)) {
 		if (type != "components") {
-			elem.show();
+			(elem as HTMLElement).show();
 		}
 	}
 }
@@ -24,9 +24,13 @@ export function showSettings(containerEl: Setting) {
 export function hideSettings(containerEl: Setting) {
 	for (const [type, elem] of Object.entries(containerEl)) {
 		if (type != "components") {
-			elem.hide();
+			(elem as HTMLElement).hide();
 		}
 	}
+}
+
+function toggleEl(setting: Setting): HTMLElement {
+	return (setting.components[0] as ToggleComponent).toggleEl;
 }
 
 export function showHideBasedOnFolder(
@@ -75,8 +79,7 @@ export async function autoCleanCondition(
 			);
 		settings.autoclean.enable = false;
 		await plugin.saveSettings();
-		// @ts-ignore
-		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
+		toggleEl(autoCleanSetting).classList.remove("is-enabled");
 		await settingsTab.renderSettingsPage(ESettingsTabId.Upload);
 	}
 	if (value.length === 0 && settings.behavior !== FolderSettings.Yaml) {
@@ -86,13 +89,11 @@ export async function autoCleanCondition(
 				plugin.settings.plugin.noticeLength
 			);
 		settings.autoclean.enable = false;
-		// @ts-ignore
-		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
+		toggleEl(autoCleanSetting).classList.remove("is-enabled");
 		await settingsTab.renderSettingsPage(ESettingsTabId.Upload);
 	}
 	if (settings.autoclean.enable) {
-		// @ts-ignore
-		autoCleanSetting.components[0].toggleEl.classList.add("is-enabled");
+		toggleEl(autoCleanSetting).classList.add("is-enabled");
 	}
 }
 
@@ -117,14 +118,13 @@ export async function folderHideShowSettings(
 	plugin: Enveloppe
 ) {
 	const settings = plugin.settings.upload;
-	if (value === FolderSettings.Yaml) {
+	if (value === (FolderSettings.Yaml as string)) {
 		showSettings(frontmatterKeySettings);
 		showSettings(rootFolderSettings);
 		return;
 	}
 	if (settings.defaultName.length > 0 && settings.autoclean.enable) {
-		// @ts-ignore
-		autoCleanSetting.components[0].toggleEl.classList.add("is-enabled");
+		toggleEl(autoCleanSetting).classList.add("is-enabled");
 	}
 	hideSettings(frontmatterKeySettings);
 	hideSettings(rootFolderSettings);
@@ -144,15 +144,13 @@ export function autoCleanUpSettingsOnCondition(
 ) {
 	const settings = plugin.settings.upload;
 	if (condition) {
-		// @ts-ignore
-		autoCleanSetting.components[0].toggleEl.classList.remove("is-enabled");
+		toggleEl(autoCleanSetting).classList.remove("is-enabled");
 		settings.autoclean.enable = false;
-		plugin.saveSettings().then();
+		void plugin.saveSettings();
 		return;
 	}
 	if (settings.autoclean.enable) {
-		// @ts-ignore
-		autoCleanSetting.components[0].toggleEl.classList.add("is-enabled");
+		toggleEl(autoCleanSetting).classList.add("is-enabled");
 	}
 }
 
