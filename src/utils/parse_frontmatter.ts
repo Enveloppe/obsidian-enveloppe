@@ -16,6 +16,21 @@ import { type FrontMatterCache, normalizePath, TFile } from "obsidian";
 import type Enveloppe from "src/main";
 import { merge } from "ts-deepmerge";
 
+/**
+ * FrontMatterCache is typed as `Record<string, any>` by Obsidian since YAML
+ * frontmatter is arbitrary user data. These helpers read it as `unknown` and
+ * narrow explicitly, instead of letting `any` propagate through every call site.
+ */
+function fmGet(frontmatter: FrontMatterCache | null | undefined, key: string): unknown {
+	return frontmatter ? (frontmatter as Record<string, unknown>)[key] : undefined;
+}
+
+function asRecord(value: unknown): Record<string, unknown> | undefined {
+	return typeof value === "object" && value !== null && !Array.isArray(value)
+		? (value as Record<string, unknown>)
+		: undefined;
+}
+
 export function frontmatterSettingsRepository(
 	plugin: Enveloppe,
 	repo: Repository | null
@@ -66,11 +81,13 @@ export function getFrontmatterSettings(
 	settingsConversion = settingsLink(frontmatter, settingsConversion);
 	settingsConversion = settingsEmbed(frontmatter, settingsConversion);
 	settingsConversion = settingAttachment(frontmatter, settingsConversion);
-	if (frontmatter.dataview != undefined) {
-		settingsConversion.dataview = frontmatter.dataview;
+	const dataview = fmGet(frontmatter, "dataview");
+	if (dataview != undefined) {
+		settingsConversion.dataview = dataview as boolean;
 	}
-	if (frontmatter.hardbreak != undefined) {
-		settingsConversion.hardbreak = frontmatter.hardbreak;
+	const hardbreak = fmGet(frontmatter, "hardbreak");
+	if (hardbreak != undefined) {
+		settingsConversion.hardbreak = hardbreak as boolean;
 	}
 	return getFrontmatterSettingRepository(repo, frontmatter, settingsConversion);
 }
@@ -119,12 +136,9 @@ export function getProperties(
 			frontmatter ?? {}
 		);
 	}
-	if (
-		frontmatter &&
-		typeof frontmatter.shortRepo === "string" &&
-		frontmatter.shortRepo !== "default"
-	) {
-		const smartKey = frontmatter.shortRepo.toLowerCase();
+	const shortRepoValue = fmGet(frontmatter, "shortRepo");
+	if (frontmatter && typeof shortRepoValue === "string" && shortRepoValue !== "default") {
+		const smartKey = shortRepoValue.toLowerCase();
 		const allOtherRepo = settings.github.otherRepo;
 		const shortRepo = allOtherRepo.find((repo) => {
 			return repo.smartKey.toLowerCase() === smartKey;
@@ -149,39 +163,42 @@ export function getProperties(
 	if (settings.upload.behavior === FolderSettings.Fixed) {
 		Properties.autoclean = false;
 	}
+	const multipleRepoValue = fmGet(frontmatter, "multipleRepo");
+	const repoValue = fmGet(frontmatter, "repo");
 	if (
 		!frontmatter ||
-		(frontmatter.multipleRepo === undefined &&
-			frontmatter.repo === undefined &&
-			frontmatter.shortRepo === undefined)
+		(multipleRepoValue === undefined &&
+			repoValue === undefined &&
+			shortRepoValue === undefined)
 	) {
 		return parsePath(plugin, repository, Properties, frontmatter);
 	}
 	let isFrontmatterAutoClean = null;
-	if (frontmatter.multipleRepo) {
+	if (multipleRepoValue) {
 		const multipleRepo = parseMultipleRepo(frontmatter, Properties);
 		return parsePath(plugin, repository, multipleRepo, frontmatter);
-	} else if (frontmatter.repo) {
-		if (typeof frontmatter.repo === "object") {
-			if (frontmatter.repo.branch != undefined) {
-				Properties.branch = frontmatter.repo.branch;
+	} else if (repoValue) {
+		const repoRecord = asRecord(repoValue);
+		if (repoRecord) {
+			if (repoRecord.branch != undefined) {
+				Properties.branch = repoRecord.branch as string;
 			}
-			if (frontmatter.repo.repo != undefined) {
-				Properties.repo = frontmatter.repo.repo;
+			if (repoRecord.repo != undefined) {
+				Properties.repo = repoRecord.repo as string;
 			}
-			if (frontmatter.repo.owner != undefined) {
-				Properties.owner = frontmatter.repo.owner;
+			if (repoRecord.owner != undefined) {
+				Properties.owner = repoRecord.owner as string;
 			}
-			if (frontmatter.repo.autoclean != undefined) {
-				Properties.autoclean = frontmatter.repo.autoclean;
+			if (repoRecord.autoclean != undefined) {
+				Properties.autoclean = repoRecord.autoclean as boolean;
 				isFrontmatterAutoClean = true;
 			}
 		} else {
-			const repo = frontmatter.repo.split("/");
+			const repo = (repoValue as string).split("/");
 			isFrontmatterAutoClean = repo.length > 4 ? true : null;
 			Properties = repositoryStringSlice(repo, Properties);
 		}
-	} else if (frontmatter.shortRepo instanceof Array) {
+	} else if (shortRepoValue instanceof Array) {
 		return multipleShortKeyRepo(
 			frontmatter,
 			settings.github.otherRepo,
@@ -189,8 +206,9 @@ export function getProperties(
 			plugin
 		);
 	}
-	if (frontmatter.autoclean != undefined && isFrontmatterAutoClean === null) {
-		Properties.autoclean = frontmatter.autoclean;
+	const autocleanValue = fmGet(frontmatter, "autoclean");
+	if (autocleanValue != undefined && isFrontmatterAutoClean === null) {
+		Properties.autoclean = autocleanValue as boolean;
 	}
 	return parsePath(plugin, repository, Properties);
 }
@@ -217,26 +235,28 @@ function parseMultipleRepo(
 	Properties: Properties
 ): Properties[] {
 	const multipleRepo: Properties[] = [];
-	if (frontmatter.multipleRepo instanceof Array && frontmatter.multipleRepo.length > 0) {
-		for (const repo of frontmatter.multipleRepo) {
-			if (typeof repo === "object") {
+	const multipleRepoValue = fmGet(frontmatter, "multipleRepo");
+	if (multipleRepoValue instanceof Array && multipleRepoValue.length > 0) {
+		for (const repo of multipleRepoValue as unknown[]) {
+			const repoRecord = asRecord(repo);
+			if (repoRecord) {
 				const repository: Properties = klona(Properties);
-				if (repo.branch != undefined) {
-					repository.branch = repo.branch;
+				if (repoRecord.branch != undefined) {
+					repository.branch = repoRecord.branch as string;
 				}
-				if (repo.repo != undefined) {
-					repository.repo = repo.repo;
+				if (repoRecord.repo != undefined) {
+					repository.repo = repoRecord.repo as string;
 				}
-				if (repo.owner != undefined) {
-					repository.owner = repo.owner;
+				if (repoRecord.owner != undefined) {
+					repository.owner = repoRecord.owner as string;
 				}
-				if (repo.autoclean != undefined) {
-					repository.autoclean = repo.autoclean;
+				if (repoRecord.autoclean != undefined) {
+					repository.autoclean = repoRecord.autoclean as boolean;
 				}
 				multipleRepo.push(repository);
 			} else {
 				//is string
-				const repoString = repo.split("/");
+				const repoString = (repo as string).split("/");
 				const repository: Properties = klona(Properties);
 				multipleRepo.push(repositoryStringSlice(repoString, repository));
 			}
@@ -278,9 +298,10 @@ function multipleShortKeyRepo(
 	properties: Properties,
 	plugin: Enveloppe
 ) {
-	if (frontmatter.shortRepo instanceof Array) {
+	const shortRepoValue = fmGet(frontmatter, "shortRepo");
+	if (shortRepoValue instanceof Array) {
 		const multipleRepo: Properties[] = [];
-		for (const repo of frontmatter.shortRepo) {
+		for (const repo of shortRepoValue as string[]) {
 			const smartKey = repo.toLowerCase();
 			if (smartKey === "default") {
 				multipleRepo.push(properties);
@@ -320,12 +341,12 @@ function multipleShortKeyRepo(
  * repo: owner/repo
  * @example
  * repo: repo1
- * @param {string} repo
+ * @param {string[]} repo the repo string already split by "/"
  * @param {Properties} properties
  * @return {Properties}
  */
 
-function repositoryStringSlice(repo: string, properties: Properties): Properties {
+function repositoryStringSlice(repo: string[], properties: Properties): Properties {
 	const newRepo: Properties = klona(properties);
 	if (repo.length === 4) {
 		newRepo.branch = repo[2];
@@ -359,14 +380,15 @@ export function getCategory(
 	paths: Path | undefined
 ): string {
 	const key = paths?.category?.key ?? settings.upload.yamlFolderKey;
+	const rawCategory = fmGet(frontmatter, key);
 	const category =
-		frontmatter && frontmatter[key] != undefined
-			? frontmatter[key]
+		frontmatter && rawCategory != undefined
+			? rawCategory
 			: (paths?.defaultName ?? settings.upload.defaultName);
 	if (category instanceof Array) {
-		return category.join("/");
+		return (category as string[]).join("/");
 	}
-	return category;
+	return category as string;
 }
 
 export function parsePath(
@@ -377,76 +399,80 @@ export function parsePath(
 ): Properties[] | Properties {
 	properties = properties instanceof Array ? properties : [properties];
 	const settings = plugin.settings;
-	const splitArrayPath = (path?: string[] | string): string | undefined => {
+	const splitArrayPath = (path?: unknown): string | undefined => {
 		if (!path) return;
 		if (path instanceof Array) {
-			return path.join("/");
+			return (path as unknown[]).join("/");
 		}
-		return path;
+		return path as string;
 	};
 
-	const matchType = (type?: string) => {
-		if (!type) return settings.upload.behavior;
-		if (type.match(/^(fixed|obsidian|yaml)$/i)) return type as FolderSettings;
+	const matchType = (type?: unknown): FolderSettings => {
+		if (typeof type !== "string" || !type) return settings.upload.behavior;
+		if (type.match(/^(fixed|obsidian|yaml)$/i))
+			return type.toLowerCase() as FolderSettings;
 		return settings.upload.behavior;
 	};
 	for (const repo of properties) {
 		const smartKey = repository ? repository.smartKey : "default";
+		const category = asRecord(fmGet(frontmatter, "category"));
+		const attachment = asRecord(fmGet(frontmatter, "attachment"));
 
 		const path: Path = {
-			type: matchType(frontmatter?.behavior),
+			type: matchType(fmGet(frontmatter, "behavior")),
 			defaultName:
-				frontmatter?.defaultName ??
-				frontmatter?.category?.value ??
-				frontmatter?.["category.value"] ??
+				(fmGet(frontmatter, "defaultName") as string | undefined) ??
+				(category?.value as string | undefined) ??
+				(fmGet(frontmatter, "category.value") as string | undefined) ??
 				settings.upload.defaultName,
-			rootFolder: frontmatter?.rootFolder ?? settings.upload.rootFolder,
+			rootFolder:
+				(fmGet(frontmatter, "rootFolder") as string | undefined) ??
+				settings.upload.rootFolder,
 			category: {
 				key:
-					splitArrayPath(frontmatter?.category?.key ?? frontmatter?.["category.key"]) ??
+					splitArrayPath(category?.key ?? fmGet(frontmatter, "category.key")) ??
 					settings.upload.yamlFolderKey,
 				value: getCategory(frontmatter, settings, undefined),
 			},
-			override: splitArrayPath(frontmatter?.path),
+			override: splitArrayPath(fmGet(frontmatter, "path")),
 			smartkey: smartKey,
 			attachment: {
 				send:
-					frontmatter?.attachment?.send ??
-					frontmatter?.["attachment.send"] ??
+					(attachment?.send as boolean | undefined) ??
+					(fmGet(frontmatter, "attachment.send") as boolean | undefined) ??
 					settings.embed.attachments,
 				folder:
-					splitArrayPath(
-						frontmatter?.attachment?.send ?? frontmatter?.["attachment.folder"]
-					) ?? settings.embed.folder,
+					splitArrayPath(attachment?.send ?? fmGet(frontmatter, "attachment.folder")) ??
+					settings.embed.folder,
 			},
 		};
 		/** List of alias for path generation */
 		const smartkeys = {
 			/** Overriding path, will skip the rest if exists */
-			path: frontmatter?.[`${smartKey}.path`],
+			path: fmGet(frontmatter, `${smartKey}.path`),
 			/** Overriding the default category name. Can be a literal string or an object */
-			category: frontmatter?.[`${smartKey}.category`],
+			category: fmGet(frontmatter, `${smartKey}.category`),
 			/** Overriding the default behavior, can be only yaml | obsidian | fixed */
-			behavior: frontmatter?.[`${smartKey}.behavior`],
+			behavior: fmGet(frontmatter, `${smartKey}.behavior`),
 			/** Overriding attachment */
-			attachment: frontmatter?.[`${smartKey}.attachment`],
+			attachment: fmGet(frontmatter, `${smartKey}.attachment`),
 			/** Alias of attachment.folder */
-			attachmentLinks: frontmatter?.[`${smartKey}.attachmentLinks`],
+			attachmentLinks: fmGet(frontmatter, `${smartKey}.attachmentLinks`),
 			/** Overriding the root folder */
-			rootFolder: frontmatter?.[`${smartKey}.rootFolder`],
+			rootFolder: fmGet(frontmatter, `${smartKey}.rootFolder`),
 			/** DefaultName is only used if yaml, but we parse it in case */
 			defaultName: {
 				/** Direct with smartkey.defaultName */
-				direct: frontmatter?.[`${smartKey}.defaultName`],
+				direct: fmGet(frontmatter, `${smartKey}.defaultName`),
 				/** Is used in the category.value as literal string */
-				asCategoryValue: frontmatter?.[`${smartKey}.category.value`],
+				asCategoryValue: fmGet(frontmatter, `${smartKey}.category.value`),
 			},
 			/** Overriding of the category key */
 			categoryKey: {
 				/** Can be direct with smarkey.<categoryName> like smartkey.folder: category */
-				direct: frontmatter?.[`${smartKey}.${path.category}`],
+				direct: fmGet(frontmatter, `${smartKey}.${path.category.key}`),
 				/** Can be a key in a literal string: smartkey.category.key: category will rename the category  */
-				asKey: frontmatter?.[`${smartKey}.category.key`],
+				asKey: fmGet(frontmatter, `${smartKey}.category.key`),
 			},
 		};
 
@@ -454,7 +480,8 @@ export function parsePath(
 			path.override = splitArrayPath(smartkeys.path);
 			continue;
 		}
-		if (smartkeys.categoryKey.direct) path.category.key = smartkeys.categoryKey.direct;
+		if (smartkeys.categoryKey.direct)
+			path.category.key = smartkeys.categoryKey.direct as string;
 		if (smartkeys.categoryKey.asKey)
 			path.category.key =
 				splitArrayPath(smartkeys.categoryKey.asKey) ?? path.category.key;
@@ -469,26 +496,28 @@ export function parsePath(
 				splitArrayPath(smartkeys.defaultName.asCategoryValue) ?? path.defaultName;
 
 		if (smartkeys.category) {
-			if (typeof smartkeys.category === "object") {
-				if (smartkeys.category.value)
-					path.defaultName = splitArrayPath(smartkeys.category.value) ?? path.defaultName;
-				if (smartkeys.category.key)
-					path.category.key = splitArrayPath(smartkeys.category.key) ?? path.category.key;
+			const categoryRecord = asRecord(smartkeys.category);
+			if (categoryRecord) {
+				if (categoryRecord.value)
+					path.defaultName = splitArrayPath(categoryRecord.value) ?? path.defaultName;
+				if (categoryRecord.key)
+					path.category.key = splitArrayPath(categoryRecord.key) ?? path.category.key;
 			} else path.category.key = splitArrayPath(smartkeys.category) ?? path.category.key;
 		}
-		if (smartkeys.behavior) path.type = matchType(smartkeys.behavior.toLowerCase());
+		if (smartkeys.behavior) path.type = matchType(smartkeys.behavior);
 
 		if (smartkeys.attachment) {
-			if (typeof smartkeys.attachment === "object") {
+			const attachmentRecord = asRecord(smartkeys.attachment);
+			if (attachmentRecord) {
 				path.attachment = {
-					send: smartkeys.attachment?.send ?? path.attachment?.send,
-					folder: splitArrayPath(smartkeys.attachment?.folder) ?? path.attachment!.folder,
+					send: (attachmentRecord.send as boolean | undefined) ?? path.attachment!.send,
+					folder: splitArrayPath(attachmentRecord.folder) ?? path.attachment!.folder,
 				};
-			} else path.attachment!.send = smartkeys.attachment;
+			} else path.attachment!.send = smartkeys.attachment as boolean;
 		}
 		if (smartkeys.attachmentLinks)
 			path.attachment!.folder = normalizePath(
-				smartkeys.attachmentLinks.toString().replace(/\/$/, "")
+				(smartkeys.attachmentLinks as string).replace(/\/$/, "")
 			);
 		path.category.value = getCategory(frontmatter, settings, path);
 		repo.path = path;
@@ -508,14 +537,17 @@ function getFrontmatterSettingRepository(
 	frontConvert = settingAttachment(frontmatter, frontConvert, smartKey);
 	frontConvert = settingsEmbed(frontmatter, frontConvert, smartKey);
 	const key = `${smartKey}.`;
-	if (frontmatter?.[`${key}dataview`] != undefined) {
-		frontConvert.dataview = frontmatter[`${smartKey}dataview`];
+	const dataview = fmGet(frontmatter, `${key}dataview`);
+	if (dataview != undefined) {
+		frontConvert.dataview = dataview as boolean;
 	}
-	if (frontmatter?.[`${key}hardbreak`] != undefined) {
-		frontConvert.hardbreak = frontmatter[`${smartKey}hardbreak`];
+	const hardbreak = fmGet(frontmatter, `${key}hardbreak`);
+	if (hardbreak != undefined) {
+		frontConvert.hardbreak = hardbreak as boolean;
 	}
-	if (frontmatter?.[`${key}includeLinks`] != undefined) {
-		frontConvert.includeLinks = frontmatter[`${smartKey}includeLinks`];
+	const includeLinks = fmGet(frontmatter, `${key}includeLinks`);
+	if (includeLinks != undefined) {
+		frontConvert.includeLinks = includeLinks as boolean;
 	}
 	return frontConvert;
 }
@@ -529,7 +561,7 @@ export function getLinkedFrontmatter(
 	const { metadataCache, vault } = plugin.app;
 	const linkedKey = settings.plugin.setFrontmatterKey;
 	if (!linkedKey || !originalFrontmatter || !sourceFile) return undefined;
-	const linkedFrontmatter = originalFrontmatter?.[linkedKey];
+	const linkedFrontmatter = fmGet(originalFrontmatter, linkedKey);
 	if (!linkedFrontmatter) return undefined;
 	let linkedFile: undefined | string;
 	metadataCache.getFileCache(sourceFile)?.frontmatterLinks?.forEach((link) => {
@@ -580,46 +612,55 @@ function settingsLink(
 	let key = "links";
 	if (smartKey) key = `${smartKey}.${key}`;
 	if (!frontmatter) return settingsConversion;
-	if (frontmatter[key] != undefined) {
-		if (typeof frontmatter[key] === "object") {
-			if (frontmatter[key].convert != undefined) {
-				settingsConversion.links = frontmatter[key].convert;
+	const linksValue = fmGet(frontmatter, key);
+	if (linksValue != undefined) {
+		const linksRecord = asRecord(linksValue);
+		if (linksRecord) {
+			if (linksRecord.convert != undefined) {
+				settingsConversion.links = linksRecord.convert as boolean;
 			}
-			if (frontmatter[key].internals != undefined) {
-				settingsConversion.convertInternalLinks = frontmatter[key].internals;
+			if (linksRecord.internals != undefined) {
+				settingsConversion.convertInternalLinks = linksRecord.internals as boolean;
 			}
-			if (frontmatter[key].mdlinks != undefined) {
-				settingsConversion.convertWiki = frontmatter[key].mdlinks;
+			if (linksRecord.mdlinks != undefined) {
+				settingsConversion.convertWiki = linksRecord.mdlinks as boolean;
 			}
-			if (frontmatter[key].nonShared != undefined) {
-				settingsConversion.unshared = frontmatter[key].nonShared;
+			if (linksRecord.nonShared != undefined) {
+				settingsConversion.unshared = linksRecord.nonShared as boolean;
 			}
-			if (frontmatter[key].unlink != undefined) {
-				settingsConversion.unlink = frontmatter[key].unlink;
+			if (linksRecord.unlink != undefined) {
+				settingsConversion.unlink = linksRecord.unlink as boolean;
 			}
 		} else {
-			settingsConversion.links = frontmatter[key];
+			settingsConversion.links = linksValue as boolean;
 		}
 	}
-	if (frontmatter[`${key}.convert`] != undefined)
-		settingsConversion.links = frontmatter[`${key}.convert`];
-	if (frontmatter[`${key}.internals`] != undefined)
-		settingsConversion.convertInternalLinks = frontmatter[`${key}.internals`];
-	if (frontmatter[`${key}.mdlinks`] != undefined)
-		settingsConversion.convertWiki = frontmatter[`${key}.mdlinks`];
-	if (frontmatter[`${key}.nonShared`] != undefined)
-		settingsConversion.unshared = frontmatter[`${key}.nonShared`];
-	if (frontmatter[`${key}.unlink`] != undefined)
-		settingsConversion.unlink = frontmatter[`${key}.unlink`];
-	if (frontmatter[smartKey ? `${smartKey}.mdlinks` : "mdlinks"] != undefined)
-		settingsConversion.convertWiki =
-			frontmatter[smartKey ? `${smartKey}.mdlinks` : "mdlinks"];
-	if (frontmatter[smartKey ? `${smartKey}.internals` : "internals"] != undefined)
-		settingsConversion.convertInternalLinks =
-			frontmatter[smartKey ? `${smartKey}.internals` : "internals"];
-	if (frontmatter[smartKey ? `${smartKey}.nonShared` : "nonShared"] != undefined)
-		settingsConversion.unshared =
-			frontmatter[smartKey ? `${smartKey}.nonShared` : "nonShared"];
+	const convert = fmGet(frontmatter, `${key}.convert`);
+	if (convert != undefined) settingsConversion.links = convert as boolean;
+	const internals = fmGet(frontmatter, `${key}.internals`);
+	if (internals != undefined)
+		settingsConversion.convertInternalLinks = internals as boolean;
+	const mdlinks = fmGet(frontmatter, `${key}.mdlinks`);
+	if (mdlinks != undefined) settingsConversion.convertWiki = mdlinks as boolean;
+	const nonShared = fmGet(frontmatter, `${key}.nonShared`);
+	if (nonShared != undefined) settingsConversion.unshared = nonShared as boolean;
+	const unlink = fmGet(frontmatter, `${key}.unlink`);
+	if (unlink != undefined) settingsConversion.unlink = unlink as boolean;
+	const aliasedMdlinks = fmGet(frontmatter, smartKey ? `${smartKey}.mdlinks` : "mdlinks");
+	if (aliasedMdlinks != undefined)
+		settingsConversion.convertWiki = aliasedMdlinks as boolean;
+	const aliasedInternals = fmGet(
+		frontmatter,
+		smartKey ? `${smartKey}.internals` : "internals"
+	);
+	if (aliasedInternals != undefined)
+		settingsConversion.convertInternalLinks = aliasedInternals as boolean;
+	const aliasedNonShared = fmGet(
+		frontmatter,
+		smartKey ? `${smartKey}.nonShared` : "nonShared"
+	);
+	if (aliasedNonShared != undefined)
+		settingsConversion.unshared = aliasedNonShared as boolean;
 
 	return settingsConversion;
 }
@@ -631,30 +672,33 @@ function settingsEmbed(
 ) {
 	if (!frontmatter) return settingsConversion;
 	const key = smartkey ? `${smartkey}.embed` : "embed";
-	if (frontmatter[key] != undefined) {
-		if (typeof frontmatter[key] === "object") {
-			if (frontmatter[key].send != undefined) {
-				settingsConversion.embed = frontmatter[key].send;
+	const embedValue = fmGet(frontmatter, key);
+	if (embedValue != undefined) {
+		const embedRecord = asRecord(embedValue);
+		if (embedRecord) {
+			if (embedRecord.send != undefined) {
+				settingsConversion.embed = embedRecord.send as boolean;
 			}
-			if (frontmatter[key].remove != undefined) {
-				settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter[key].remove);
+			if (embedRecord.remove != undefined) {
+				settingsConversion.removeEmbed = booleanRemoveEmbed(embedRecord.remove);
 			}
-			if (frontmatter[key].char != undefined) {
-				settingsConversion.charEmbedLinks = frontmatter[key].char;
+			if (embedRecord.char != undefined) {
+				settingsConversion.charEmbedLinks = embedRecord.char as string;
 			}
 		} else {
-			settingsConversion.embed = frontmatter[key];
+			settingsConversion.embed = embedValue as boolean;
 		}
 	}
-	if (frontmatter[`${key}.send`] != undefined)
-		settingsConversion.embed = frontmatter[`${key}.send`];
-	if (frontmatter[`${key}.remove`] != undefined)
-		settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter[`${key}.remove`]);
-	if (frontmatter[`${key}.char`] != undefined)
-		settingsConversion.charEmbedLinks = frontmatter[`${key}.char`];
+	const send = fmGet(frontmatter, `${key}.send`);
+	if (send != undefined) settingsConversion.embed = send as boolean;
+	const remove = fmGet(frontmatter, `${key}.remove`);
+	if (remove != undefined) settingsConversion.removeEmbed = booleanRemoveEmbed(remove);
+	const char = fmGet(frontmatter, `${key}.char`);
+	if (char != undefined) settingsConversion.charEmbedLinks = char as string;
 	const removeEmbedKey = smartkey ? `${smartkey}.removeEmbed` : "removeEmbed";
-	if (frontmatter[removeEmbedKey] != undefined)
-		settingsConversion.removeEmbed = booleanRemoveEmbed(frontmatter[removeEmbedKey]);
+	const removeEmbedValue = fmGet(frontmatter, removeEmbedKey);
+	if (removeEmbedValue != undefined)
+		settingsConversion.removeEmbed = booleanRemoveEmbed(removeEmbedValue);
 
 	return settingsConversion;
 }
@@ -667,23 +711,25 @@ function settingAttachment(
 	if (!frontmatter) return settingsConversion;
 	let key = "attachment";
 	if (smartKey) key = `${smartKey}.${key}`;
-	if (frontmatter[key]) {
-		if (typeof frontmatter[key] === "object") {
-			if (frontmatter[key].send != undefined) {
-				settingsConversion.attachment = frontmatter[key].send;
+	const attachmentValue = fmGet(frontmatter, key);
+	if (attachmentValue) {
+		const attachmentRecord = asRecord(attachmentValue);
+		if (attachmentRecord) {
+			if (attachmentRecord.send != undefined) {
+				settingsConversion.attachment = attachmentRecord.send as boolean;
 			}
-			if (frontmatter[key].folder != undefined) {
-				settingsConversion.attachmentLinks = frontmatter[key].folder;
+			if (attachmentRecord.folder != undefined) {
+				settingsConversion.attachmentLinks = attachmentRecord.folder as string;
 			}
 		} else {
-			settingsConversion.attachment = frontmatter[key];
+			settingsConversion.attachment = attachmentValue as boolean;
 		}
 	}
 
-	if (frontmatter[`${key}.send`] != undefined)
-		settingsConversion.attachment = frontmatter[`${key}.send`];
-	if (frontmatter[`${key}.folder`] != undefined)
-		settingsConversion.attachmentLinks = frontmatter[`${key}.folder`];
+	const send = fmGet(frontmatter, `${key}.send`);
+	if (send != undefined) settingsConversion.attachment = send as boolean;
+	const folder = fmGet(frontmatter, `${key}.folder`);
+	if (folder != undefined) settingsConversion.attachmentLinks = folder as string;
 
 	if (settingsConversion.attachmentLinks) {
 		settingsConversion.attachmentLinks = normalizePath(
