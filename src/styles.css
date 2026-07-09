@@ -4,8 +4,9 @@
 	--main-success: #5caf1a;
 }
 
-/* ---------- MODALS REGEX ---------- */
-.enveloppe.modals .setting-item.entry {
+/* ---------- MODALS REGEX + LIST-ITEM ROWS ("entry" is used both by legacy
+   modals and by the new declarative list pages) ---------- */
+.enveloppe .setting-item.entry {
 	border: 0 !important;
 	padding: 5px !important;
 }
@@ -19,12 +20,13 @@ hr.enveloppe-hr {
 	padding-bottom: 1px;
 }
 
-.enveloppe.modals .setting-item.entry input {
-	width: 38%;
+.enveloppe .setting-item.entry input {
+	width: 38% !important;
+	flex: 1 1 auto !important;
 	margin: 0 2px;
 }
 
-.enveloppe.modals .setting-item.entry .setting-item-info {
+.enveloppe .setting-item.entry .setting-item-info {
 	display: none;
 }
 
@@ -171,12 +173,14 @@ a.enveloppe-download:hover {
 }
 
 .enveloppe textarea {
-	width: 250px;
-	height: 100px;
+	width: 100% !important;
+	height: 160px !important;
+	flex: 1 1 auto !important;
 }
 
 .enveloppe .mini textarea {
-	height: 50px;
+	width: 100% !important;
+	height: 50px !important;
 }
 
 .enveloppe .border-bottom {
@@ -184,44 +188,44 @@ a.enveloppe-download:hover {
 	padding-bottom: 10px;
 }
 
-.enveloppe .mini textarea {
-	width: 100%;
-	height: 50px;
-}
-
 .enveloppe .mid-height {
-	height: 50%;
+	height: 220px;
 }
 
 .enveloppe .bake ul {
 	margin-top: 0;
 }
 
-/* --------- SETTINGS TABS BAR --------- */
-.enveloppe .settings-tab-bar {
-	display: flex;
-	flex-direction: row;
-	gap: 4px;
-	overflow: hidden;
-	padding: 0;
+/* rows built via rawContent()/markdownContent() drop the two-column setting-item
+   layout in favor of plain stacked block content; infoEl is removed and content is
+   rendered into controlEl (the element the framework keeps and re-lays-out) */
+.enveloppe .enveloppe-raw-content {
+	border: 0 !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	min-height: 0 !important;
+	background: none !important;
+	box-shadow: none !important;
+	/* escape the shared subgrid the settings list uses to line up name/control
+	   columns across rows, so this row isn't confined to the "control" track */
+	grid-template-columns: unset !important;
+	grid-column: 1 / -1 !important;
 }
 
-.enveloppe .settings-tab {
-	padding: 10px;
-	border: 1px solid var(--background-modifier-border);
-	border-radius: 5px;
+.enveloppe .enveloppe-raw-content:hover {
+	background: none !important;
 }
 
-.enveloppe .settings-tab:hover {
-	background-color: var(--background-modifier-hover);
+.enveloppe .setting-item-control.enveloppe-raw-content-control {
+	display: block !important;
+	text-align: initial !important;
+	width: 100%;
+	flex: auto !important;
+	columns: initial !important;
+	grid-column: 1 / -1 !important;
 }
 
 @media screen and (max-width: 900px) {
-	.enveloppe .settings-tab-bar {
-		flex-direction: column;
-		width: 100%;
-	}
-
 	.setting-item.import-export > .setting-item-control {
 		display: grid;
 		grid-template-columns: 1fr;
@@ -242,18 +246,6 @@ a.enveloppe-download:hover {
 }
 
 @media screen and (max-width: 1200px) {
-	.enveloppe .settings-tab-bar {
-		flex-wrap: wrap;
-	}
-
-	.enveloppe .settings-tab {
-		border-bottom: 1px solid var(--background-modifier-border);
-	}
-
-	.enveloppe .settings-tab-bar {
-		border-bottom: 0;
-	}
-
 	.enveloppe.manage-repo button.connect {
 		margin: 0 !important;
 	}
@@ -263,34 +255,17 @@ a.enveloppe-download:hover {
 	margin: 0 50%;
 }
 
-.enveloppe .settings-tab-active {
-	background-color: var(--color-accent);
-	color: var(--text-on-accent);
-	border: 0;
-	border-bottom-right-radius: 0;
-	border-bottom-left-radius: 0;
-}
-.enveloppe .settings-tab-name {
-	font-weight: bold;
-	text-align: center;
-}
-.enveloppe .settings-tab-icon {
-	text-align: center;
-}
-
 span.enveloppe.icons {
 	vertical-align: middle;
 	position: relative;
 	padding-right: 5px;
 }
 
-.enveloppe .settings-tab-page > .setting-item:first-child {
-	margin-top: 15px;
+.enveloppe h5 {
+	margin-bottom: 10px;
 }
-.enveloppe .settings-tab-page h5 {
-	margin-bottom: 10px !important;
-}
-.settings-tab-page code,
+
+.enveloppe code,
 .enveloppe.list-changed code.code-title,
 .code {
 	color: var(--code-normal);
@@ -300,15 +275,10 @@ span.enveloppe.icons {
 	font-size: var(--code-size);
 }
 
-.enveloppe.list-changed .settings-tab-page code.code-title,
-.settings-tab-page code.code-title {
+.enveloppe code.code-title {
 	font-size: calc(var(--code-size) * 12px);
 	font-weight: bolder;
 	text-decoration: underline;
-}
-
-.enveloppe .setting-item.title input[type="text"][placeholder="title"] {
-	width: 100%;
 }
 
 .enveloppe .setting-item.no-display > .setting-item-info {
@@ -384,7 +354,8 @@ span.enveloppe.icons {
 }
 .enveloppe .max-width input,
 .enveloppe .max-width button {
-	width: 100%;
+	width: 100% !important;
+	flex: 1 1 auto !important;
 }
 
 .enveloppe input.error:active,

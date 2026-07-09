@@ -315,10 +315,6 @@ export interface PluginBehavior {
 	displayModalRepoEditing: boolean;
 	/** If the settings was migrated from previous version. */
 	migrated?: boolean;
-	/** Allow to save the tabsId.
-	 * If disabled, the user will always return to the default tab when the settings are closed.
-	 */
-	saveTabId?: boolean;
 	/** Key used for "link" a frontmatter (overriding default settings) into another frontmatter
 	 * @default `Set`
 	 * @example `Set: [[frontmatter]]`

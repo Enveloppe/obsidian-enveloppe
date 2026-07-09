@@ -1,9 +1,7 @@
-// noinspection JSIgnoredPromiseFromCall
-
-import { type EnveloppeSettings, ESettingsTabId } from "@interfaces";
+import type { EnveloppeSettings } from "@interfaces";
 import i18next from "i18next";
 import { klona } from "klona";
-import { type App, PluginSettingTab, Setting, setIcon } from "obsidian";
+import { type App, PluginSettingTab, type SettingDefinitionItem } from "obsidian";
 import type EnveloppePlugin from "src/main";
 import {
 	ExportModal,
@@ -11,16 +9,16 @@ import {
 	ImportModal,
 	loadAllPresets,
 } from "src/settings/modals/import_export";
-import { renderEmbedConfiguration } from "src/settings/renders/embed";
-import { renderGithubConfiguration } from "src/settings/renders/github";
-import { renderHelp } from "src/settings/renders/help";
-import { renderPluginSettings } from "src/settings/renders/plugin";
-import { renderTextConversion } from "src/settings/renders/text_conversion";
-import { renderUploadConfiguration } from "src/settings/renders/upload";
+import { buildEmbedItems } from "src/settings/renders/embed";
+import { buildGithubItems } from "src/settings/renders/github";
+import { buildHelpItems } from "src/settings/renders/help";
+import type { RenderContext } from "src/settings/renders/index";
+import { buildPluginItems } from "src/settings/renders/plugin";
+import { buildTextConversionItems } from "src/settings/renders/text_conversion";
+import { buildUploadItems } from "src/settings/renders/upload";
 
 export class EnveloppeSettingsTab extends PluginSettingTab {
 	plugin: EnveloppePlugin;
-	settingsPage!: HTMLElement;
 	branchName: string;
 	settings: EnveloppeSettings;
 
@@ -29,231 +27,114 @@ export class EnveloppeSettingsTab extends PluginSettingTab {
 		this.plugin = plugin;
 		this.branchName = branchName;
 		this.settings = plugin.settings;
+		this.containerEl.addClass("enveloppe");
 	}
 
-	display(): void {
-		const { containerEl } = this;
-		containerEl.empty();
-		containerEl.addClass("enveloppe");
-		const defaultTabId = ESettingsTabId.Github;
-		let savedId = this.settings.tabsId ?? defaultTabId;
-		if (this.settings.plugin.saveTabId != undefined && !this.settings.plugin.saveTabId) {
-			//real false
-			this.settings.tabsId = defaultTabId;
-			savedId = defaultTabId;
-			void this.plugin.saveSettings();
-		}
-
-		const enveloppeTabs = {
-			"github-configuration": {
+	getSettingDefinitions(): SettingDefinitionItem[] {
+		const ctx = this.context();
+		return [
+			{
+				name: "",
+				searchable: false,
+				render: (setting) => {
+					setting
+						.setClass("import-export")
+						.addButton((button) => {
+							button.setButtonText(i18next.t("modals.export.title")).onClick(() => {
+								new ExportModal(this.app, this.plugin).open();
+							});
+						})
+						.addButton((button) => {
+							button.setButtonText(i18next.t("modals.import.title")).onClick(() => {
+								new ImportModal(this.app, this.plugin, this).open();
+							});
+						})
+						.addButton((button) => {
+							button
+								.setButtonText(i18next.t("modals.import.presets.title"))
+								.setTooltip(i18next.t("modals.import.presets.desc"))
+								.onClick(async () => {
+									const octokit = await this.plugin.reloadOctokit();
+									const presetLists = await loadAllPresets(octokit.octokit, this.plugin);
+									new ImportLoadPreset(
+										this.app,
+										this.plugin,
+										presetLists,
+										octokit.octokit,
+										this
+									).open();
+								});
+						});
+				},
+			},
+			{
+				type: "page",
 				name: i18next.t("settings.github.title"),
-				icon: "cloud",
+				items: buildGithubItems(ctx),
 			},
-			"upload-configuration": {
+			{
+				type: "page",
 				name: i18next.t("settings.upload.title"),
-				icon: "upload",
+				items: buildUploadItems(ctx),
 			},
-			"text-conversion": {
+			{
+				type: "page",
 				name: i18next.t("settings.conversion.title"),
-				icon: "file-text",
+				items: buildTextConversionItems(ctx),
 			},
-			"embed-configuration": {
+			{
+				type: "page",
 				name: i18next.t("settings.embed.title"),
-				icon: "link",
+				items: buildEmbedItems(ctx),
 			},
-			"plugin-settings": {
+			{
+				type: "page",
 				name: i18next.t("settings.plugin.title"),
-				icon: "gear",
+				items: buildPluginItems(ctx),
 			},
-			help: {
+			{
+				type: "page",
 				name: i18next.t("settings.help.title"),
-				icon: "info",
+				items: buildHelpItems(ctx),
 			},
+		];
+	}
+
+	/**
+	 * Settings are stored as a nested object (`github.user`, `conversion.links.wiki`…) rather
+	 * than flat keys, so control bindings use dot-notation paths resolved against `plugin.settings`.
+	 */
+	getControlValue(key: string): unknown {
+		return key
+			.split(".")
+			.reduce<unknown>(
+				(value, part) => (value as Record<string, unknown> | undefined)?.[part],
+				this.plugin.settings
+			);
+	}
+
+	async setControlValue(key: string, value: unknown): Promise<void> {
+		const parts = key.split(".");
+		const last = parts.pop()!;
+		let target = this.plugin.settings as unknown as Record<string, unknown>;
+		for (const part of parts) {
+			if (target[part] == null) target[part] = {};
+			target = target[part] as Record<string, unknown>;
+		}
+		target[last] = value;
+		await this.plugin.saveSettings();
+	}
+
+	context(): RenderContext {
+		return {
+			app: this.app,
+			plugin: this.plugin,
+			settings: this.settings,
+			branchName: this.branchName,
+			copy: this.copy.bind(this),
+			refresh: () => this.refreshDomState(),
+			update: () => this.update(),
 		};
-
-		new Setting(containerEl)
-			.setClass("import-export")
-			.addButton((button) => {
-				button.setButtonText(i18next.t("modals.export.title")).onClick(() => {
-					new ExportModal(this.app, this.plugin).open();
-				});
-			})
-			.addButton((button) => {
-				button.setButtonText(i18next.t("modals.import.title")).onClick(() => {
-					new ImportModal(this.app, this.plugin, this.settingsPage, this).open();
-				});
-			})
-			.addButton((button) => {
-				button
-					.setButtonText(i18next.t("modals.import.presets.title"))
-					.setTooltip(i18next.t("modals.import.presets.desc"))
-					.onClick(async () => {
-						const octokit = await this.plugin.reloadOctokit();
-						const presetLists = await loadAllPresets(octokit.octokit, this.plugin);
-						new ImportLoadPreset(
-							this.app,
-							this.plugin,
-							presetLists,
-							octokit.octokit,
-							this
-						).open();
-					});
-			});
-		const tabBar = containerEl.createEl("nav", {
-			cls: "settings-tab-bar",
-		});
-
-		for (const [tabId, tabInfo] of Object.entries(enveloppeTabs)) {
-			const tabEl = tabBar.createDiv({
-				cls: "settings-tab",
-			});
-			const tabIcon = tabEl.createDiv({
-				cls: "settings-tab-icon",
-			});
-			setIcon(tabIcon, tabInfo.icon);
-			tabEl.createDiv({
-				cls: "settings-tab-name",
-				text: tabInfo.name,
-			});
-			if (tabId === (savedId as string)) tabEl.addClass("settings-tab-active");
-
-			tabEl.addEventListener("click", () => {
-				void (async () => {
-					for (const otherTabEl of Array.from(tabBar.children)) {
-						otherTabEl.removeClass("settings-tab-active");
-					}
-
-					tabEl.addClass("settings-tab-active");
-					await this.renderSettingsPage(tabId);
-				})();
-			});
-		}
-		this.settingsPage = containerEl.createDiv({
-			cls: "settings-tab-page",
-		});
-		void this.renderSettingsPage(savedId);
-	}
-
-	/**
-	 * Render the settings tab
-	 * @param {string} tabId - to know which tab to render
-	 */
-	async renderSettingsPage(tabId: string | ESettingsTabId) {
-		if (this.settings.plugin.saveTabId || this.settings.plugin.saveTabId === undefined) {
-			this.settings.tabsId = tabId as ESettingsTabId;
-			await this.plugin.saveSettings();
-		}
-		this.settingsPage.empty();
-		switch (tabId) {
-			case "github-configuration":
-				this.renderGithubConfiguration();
-				break;
-			case "upload-configuration":
-				this.renderUploadConfiguration();
-				break;
-			case "text-conversion":
-				this.renderTextConversion();
-				break;
-			case "embed-configuration":
-				await this.renderEmbedConfiguration();
-				break;
-			case "plugin-settings":
-				this.renderPluginSettings();
-				break;
-			case "help":
-				this.renderHelp();
-				break;
-		}
-	}
-
-	/**
-	 * Render the github configuration tab
-	 */
-	renderGithubConfiguration() {
-		renderGithubConfiguration({
-			app: this.app,
-			plugin: this.plugin,
-			settings: this.settings,
-			settingsPage: this.settingsPage,
-			branchName: this.branchName,
-			renderSettingsPage: this.renderSettingsPage.bind(this),
-			copy: this.copy.bind(this),
-		});
-	}
-
-	/**
-	 * Render the settings tab for the upload configuration
-	 */
-	renderUploadConfiguration() {
-		renderUploadConfiguration({
-			app: this.app,
-			plugin: this.plugin,
-			settings: this.settings,
-			settingsPage: this.settingsPage,
-			branchName: this.branchName,
-			renderSettingsPage: this.renderSettingsPage.bind(this),
-			copy: this.copy.bind(this),
-		});
-	}
-
-	/**
-	 * Render the settings page for the text conversion parameters
-	 */
-	renderTextConversion() {
-		renderTextConversion({
-			app: this.app,
-			plugin: this.plugin,
-			settings: this.settings,
-			settingsPage: this.settingsPage,
-			branchName: this.branchName,
-			renderSettingsPage: this.renderSettingsPage.bind(this),
-			copy: this.copy.bind(this),
-		});
-	}
-
-	/**
-	 * Render the settings page for the embeds settings
-	 */
-	async renderEmbedConfiguration() {
-		await renderEmbedConfiguration({
-			app: this.app,
-			plugin: this.plugin,
-			settings: this.settings,
-			settingsPage: this.settingsPage,
-			branchName: this.branchName,
-			renderSettingsPage: this.renderSettingsPage.bind(this),
-			copy: this.copy.bind(this),
-		});
-	}
-
-	/**
-	 * Render the settings page for the plugin settings (general settings, as shareKey)
-	 */
-	renderPluginSettings() {
-		renderPluginSettings({
-			app: this.app,
-			plugin: this.plugin,
-			settings: this.settings,
-			settingsPage: this.settingsPage,
-			branchName: this.branchName,
-			renderSettingsPage: this.renderSettingsPage.bind(this),
-			copy: this.copy.bind(this),
-		});
-	}
-
-	/**
-	 * Render the help page
-	 */
-	renderHelp() {
-		renderHelp({
-			app: this.app,
-			plugin: this.plugin,
-			settings: this.settings,
-			settingsPage: this.settingsPage,
-			branchName: this.branchName,
-			renderSettingsPage: this.renderSettingsPage.bind(this),
-			copy: this.copy.bind(this),
-		});
 	}
 
 	copy<T>(object: T): T | undefined {

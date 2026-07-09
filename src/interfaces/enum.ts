@@ -9,15 +9,6 @@ export enum TypeOfEditRegex {
 	Title = "title",
 }
 
-export enum ESettingsTabId {
-	Github = "github-configuration",
-	Upload = "upload-configuration",
-	Text = "text-conversion",
-	Embed = "embed-configuration",
-	Plugin = "plugin-settings",
-	Help = "help",
-}
-
 /**
  * Allow to set a value for the folder settings
  * @enum FolderSettings
