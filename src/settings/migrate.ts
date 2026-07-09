@@ -9,6 +9,27 @@ import { normalizePath } from "obsidian";
 import type Enveloppe from "src/main";
 import { createTokenPath } from "src/utils";
 
+/**
+ * Fields that used to exist in settings/repository objects in older plugin
+ * versions and have since been removed from the current types, but may
+ * still be present on the persisted (untyped) JSON this module migrates
+ * away from.
+ */
+interface LegacyWorkflow {
+	workflowName?: string;
+	customCommitMsg?: string;
+}
+interface LegacyGithubSettings {
+	token?: string;
+	worflow?: LegacyWorkflow;
+}
+interface LegacyUploadSettings {
+	subFolder?: string;
+}
+interface LegacyRepository {
+	worflow?: LegacyWorkflow;
+}
+
 export interface OldSettings {
 	githubRepo: string;
 	githubName: string;
@@ -88,27 +109,23 @@ async function migrateReplaceTitle(plugin: Enveloppe) {
 }
 
 async function migrateSubFolder(plugin: Enveloppe) {
+	const legacyUpload = plugin.settings.upload as unknown as LegacyUploadSettings;
 	if (
-		//@ts-ignore
-		plugin.settings.upload.subFolder &&
+		legacyUpload.subFolder &&
 		!plugin.settings.upload.replacePath.find(
-			//@ts-ignore
-			(e) => e.regex === `/${plugin.settings.upload.subFolder}`
+			(e) => e.regex === `/${legacyUpload.subFolder}`
 		)
 	) {
 		plugin.console.trace(i18next.t("informations.migrating.subFolder"));
-		//@ts-ignore
-		if (plugin.settings.upload.subFolder.length > 0) {
+		if (legacyUpload.subFolder.length > 0) {
 			plugin.settings.upload.replacePath.push({
-				//@ts-ignore
-				regex: `/${plugin.settings.upload.subFolder}`,
+				regex: `/${legacyUpload.subFolder}`,
 				replacement: "",
 				type: TypeOfEditRegex.Path,
 			});
 		}
 		//delete plugin.settings.upload.subFolder from settings;
-		//@ts-ignore
-		delete plugin.settings.upload.subFolder;
+		delete legacyUpload.subFolder;
 		await plugin.saveSettings();
 	}
 }
@@ -126,20 +143,17 @@ async function migrateCensor(plugin: Enveloppe) {
 
 async function migrateWorFlow(plugin: Enveloppe) {
 	plugin.console.trace("Migrating workflow");
-	//@ts-ignore
-	if (!plugin.settings.github.worflow) {
+	const legacyGithub = plugin.settings.github as unknown as LegacyGithubSettings;
+	const worflow = legacyGithub.worflow;
+	if (!worflow) {
 		return;
 	}
-	//@ts-ignore
-	const worflow = plugin.settings.github.worflow;
 	plugin.settings.github.workflow = {
-		//@ts-ignore
-		name: worflow.workflowName,
-		//@ts-ignore
-		commitMessage: worflow.customCommitMsg,
+		name: worflow.workflowName ?? plugin.settings.github.workflow.name,
+		commitMessage:
+			worflow.customCommitMsg ?? plugin.settings.github.workflow.commitMessage,
 	};
-	//@ts-ignore
-	delete plugin.settings.github.worflow;
+	delete legacyGithub.worflow;
 	await plugin.saveSettings();
 }
 
@@ -192,13 +206,11 @@ export async function saveTokenSecret(plugin: Enveloppe, token: string, repo?: s
 export async function migrateToken(plugin: Enveloppe, token?: string, repo?: string) {
 	plugin.console.trace("migrating token");
 	const tokenPath = createTokenPath(plugin, plugin.settings.github.tokenPath);
-	//@ts-ignore
-	if (plugin.settings.github.token && !token) {
+	const legacyGithub = plugin.settings.github as unknown as LegacyGithubSettings;
+	if (legacyGithub.token && !token) {
 		plugin.console.trace(`Moving the GitHub Token in the file : ${tokenPath}`);
-		//@ts-ignore
-		token = plugin.settings.github.token;
-		//@ts-ignore
-		delete plugin.settings.github.token;
+		token = legacyGithub.token;
+		delete legacyGithub.token;
 		await plugin.saveSettings();
 	}
 	if (token === undefined) {
@@ -231,7 +243,10 @@ export async function migrateToken(plugin: Enveloppe, token?: string, repo?: str
 			await plugin.app.vault.adapter.write(tokenPath, JSON.stringify(envToken, null, 2));
 			return;
 		}
-		const oldToken = JSON.parse(await plugin.app.vault.adapter.read(tokenPath));
+		const oldToken = JSON.parse(await plugin.app.vault.adapter.read(tokenPath)) as Record<
+			string,
+			unknown
+		>;
 		const newToken = { ...oldToken, ...envToken };
 		await plugin.app.vault.adapter.write(tokenPath, JSON.stringify(newToken, null, 2));
 	} else {
@@ -263,31 +278,23 @@ async function migrateOtherRepository(plugin: Enveloppe) {
 	const otherRepo = plugin.settings.github?.otherRepo ?? [];
 	for (const repo of otherRepo) {
 		const workflow = {
-			name:
-				//@ts-ignore
-				plugin.settings.github.workflow?.workflowName ??
-				plugin.settings.github.workflow.name,
-			commitMessage:
-				//@ts-ignore
-				plugin.settings.github.workflow?.commitMessage ??
-				plugin.settings.github.workflow.commitMessage,
+			name: plugin.settings.github.workflow.name,
+			commitMessage: plugin.settings.github.workflow.commitMessage,
 		};
 		if (!repo.workflow) {
 			repo.workflow = workflow;
 			await plugin.saveSettings();
 		}
-		//@ts-ignore
-		if (repo.worflow) {
-			//@ts-ignore
-			const worflow = repo.worflow;
+		const legacyRepo = repo as unknown as LegacyRepository;
+		if (legacyRepo.worflow) {
+			const worflow = legacyRepo.worflow;
 			if (worflow.workflowName) {
 				repo.workflow.name = worflow.workflowName;
 			}
 			if (worflow.customCommitMsg) {
 				repo.workflow.commitMessage = worflow.customCommitMsg;
 			}
-			//@ts-ignore
-			delete repo.worflow;
+			delete legacyRepo.worflow;
 			await plugin.saveSettings();
 		}
 		if (!repo.copyLink) {
@@ -439,14 +446,8 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 			setFrontmatterKey: "Set",
 		},
 	};
-	//@ts-ignore
-	const token = old.GhToken
-		? old.GhToken
-		: //@ts-ignore
-			plugin.settings.github.token
-			? //@ts-ignore
-				plugin.settings.github.token
-			: undefined;
-	await saveTokenSecret(plugin, token);
+	const legacyToken = (plugin.settings.github as unknown as LegacyGithubSettings).token;
+	const token = old.GhToken || legacyToken;
+	if (token) await saveTokenSecret(plugin, token);
 	await plugin.saveSettings();
 }

@@ -62,10 +62,10 @@ export function isInternalShared(
 		properties.repository?.shareKey || properties.plugin.settings.plugin.shareKey;
 	if (
 		frontmatter?.[shareKey] == null ||
-		["false", "0", "no"].includes(frontmatter[shareKey].toString().toLowerCase())
+		["false", "0", "no"].includes(String(frontmatter[shareKey]).toLowerCase())
 	)
 		return false;
-	return ["true", "1", "yes"].includes(frontmatter[shareKey].toString().toLowerCase());
+	return ["true", "1", "yes"].includes(String(frontmatter[shareKey]).toLowerCase());
 }
 /**
  * Retrieves the shared key for a repository based on the provided settings, app, frontmatter, and file.
@@ -124,11 +124,11 @@ export function isShared(
 			meta == null ||
 			meta?.[shareKey] == null ||
 			isExcludedPath(settings, file, otherRepo) ||
-			["false", "0", "no"].includes(meta[shareKey].toString().toLowerCase())
+			["false", "0", "no"].includes(String(meta[shareKey]).toLowerCase())
 		) {
 			return false;
 		}
-		const shareKeyInFrontmatter: string = meta[shareKey].toString().toLowerCase();
+		const shareKeyInFrontmatter: string = String(meta[shareKey]).toLowerCase();
 		return ["true", "1", "yes"].includes(shareKeyInFrontmatter);
 	} else if (settings.plugin.shareAll?.enable || otherRepoWithShareAll.length > 0) {
 		const allExcludedFileName = otherRepoWithShareAll.map(
@@ -499,7 +499,7 @@ export function defaultRepo(settings: EnveloppeSettings): Repository {
 export async function verifyToken(octokit: Octokit, owner: string) {
 	try {
 		await octokit.request("GET /user");
-	} catch (_e) {
+	} catch {
 		throw new EnveloppeErrors(i18next.t("commands.checkValidity.errorToken", { owner }), {
 			cause: "invalid token",
 		});
