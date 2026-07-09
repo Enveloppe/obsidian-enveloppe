@@ -67,7 +67,7 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 	type: "folder" | "file";
 	settings: EnveloppeSettings;
 	fileName: string | null;
-	onSubmit: (item: Repository) => void;
+	onSubmit: (item: Repository) => void | Promise<void>;
 
 	constructor(
 		app: App,
@@ -76,7 +76,7 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 		branchName: string,
 		type: "folder" | "file",
 		fileName: string | null,
-		onSubmit: (item: Repository) => void
+		onSubmit: (item: Repository) => void | Promise<void>
 	) {
 		super(app);
 		this.plugin = plugin;
@@ -124,7 +124,7 @@ export class ChooseRepoToRun extends FuzzySuggestModal<Repository> {
 		return item.smartKey;
 	}
 	onChooseItem(item: Repository, _evt: MouseEvent | KeyboardEvent): void {
-		this.onSubmit(item);
+		void this.onSubmit(item);
 	}
 }
 

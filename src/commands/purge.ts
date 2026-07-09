@@ -1,6 +1,6 @@
 import type { MonoRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
-import { type Command, Notice } from "obsidian";
+import { type Command, Notice, sanitizeHTMLToDom } from "obsidian";
 import type { GithubBranch } from "src/GitHub/branch";
 import { deleteFromGithub } from "src/GitHub/delete";
 import type Enveloppe from "src/main";
@@ -42,7 +42,7 @@ export async function purgeCallback(
 			const publisher = await plugin.reloadOctokit(repo?.smartKey);
 			await purge(publisher, branchName, monoRepo);
 		},
-	} as Command;
+	};
 }
 
 /**
@@ -58,10 +58,13 @@ async function purge(
 	monoRepo: MonoRepoProperties
 ): Promise<void | boolean> {
 	const noticeFragment = createFragment();
-	noticeFragment.createSpan({ cls: ["enveloppe", "notification"] }).innerHTML = i18next.t(
-		"informations.startingClean",
-		{ repo: monoRepo.frontmatter }
-	);
+	noticeFragment
+		.createSpan({ cls: ["enveloppe", "notification"] })
+		.appendChild(
+			sanitizeHTMLToDom(
+				i18next.t("informations.startingClean", { repo: monoRepo.frontmatter })
+			)
+		);
 	new Notice(noticeFragment, PublisherManager.noticeLength);
 	const isValid = await checkRepositoryValidityWithProperties(
 		PublisherManager,

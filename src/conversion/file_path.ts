@@ -45,7 +45,8 @@ export function linkIsInFormatter(
 				`\\[\\[${escapeRegex(linkedFile.linkFrom)}(\\|(.*))?\\]\\]`,
 				"g"
 			);
-			if (frontmatter[key] === wikiLinks || regex.test(frontmatter[key])) return true;
+			if (frontmatter[key] === wikiLinks || regex.test(String(frontmatter[key])))
+				return true;
 		}
 	}
 	return false;
@@ -58,7 +59,8 @@ export function textIsInFrontmatter(
 	if (frontmatter) {
 		for (const key in frontmatter) {
 			const regex = new RegExp(`\\[\\[${escapeRegex(text)}(\\|(.*))?\\]\\]`, "g");
-			if (frontmatter[key] === `[[${text}]]` || regex.test(frontmatter[key])) return true;
+			if (frontmatter[key] === `[[${text}]]` || regex.test(String(frontmatter[key])))
+				return true;
 		}
 	}
 	return false;
@@ -178,8 +180,8 @@ export async function createRelativePath(
 		return sourceList.slice(i);
 	};
 
-	const diffTarget = (folderPath: string[]) =>
-		folderPath.length > 1 ? Array(folderPath.length - 1).fill("..") : ["."];
+	const diffTarget = (folderPath: string[]): string[] =>
+		folderPath.length > 1 ? Array<string>(folderPath.length - 1).fill("..") : ["."];
 
 	const diffSourcePath = excludeUtilDiff(sourceList, targetList);
 	const diffTargetPath = excludeUtilDiff(targetList, sourceList);

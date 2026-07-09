@@ -46,13 +46,13 @@ export async function shareOneNoteCallback(
 			const frontmatter = frontmatterFromFile(file, plugin, repo);
 			if (file && frontmatter && isShared(frontmatter, plugin.settings, file, repo)) {
 				if (!checking) {
-					shareOneNote(octokit, file, repo, frontmatter, file.basename);
+					void shareOneNote(octokit, file, repo, frontmatter, file.basename);
 				}
 				return true;
 			}
 			return false;
 		},
-	} as Command;
+	};
 }
 
 /**

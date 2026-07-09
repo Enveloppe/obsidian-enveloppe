@@ -43,7 +43,7 @@ export async function uploadAllNotesCallback(
 		callback: async () => {
 			await uploadAllNotes(plugin, repo, branchName);
 		},
-	} as Command;
+	};
 }
 /**
  * Command to share all the notes

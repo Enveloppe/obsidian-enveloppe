@@ -115,7 +115,7 @@ function subMenuCommandsFile(
 ): Menu {
 	const frontmatter = frontmatterFromFile(file, plugin, repo);
 	const fileName = plugin.getTitleFieldForCommand(file, frontmatter).replace(".md", "");
-	const subMenu = Platform.isDesktop ? (item.setSubmenu() as Menu) : originalMenu;
+	const subMenu = Platform.isDesktop ? item.setSubmenu() : originalMenu;
 	let prop = getProperties(plugin, repo, frontmatter, true);
 	prop = prop instanceof Array ? prop : [prop];
 	/**

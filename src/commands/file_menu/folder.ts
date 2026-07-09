@@ -64,7 +64,7 @@ function addSubMenuCommandsFolder(
 	branchName: string,
 	originalMenu: Menu
 ): Menu {
-	const subMenu = Platform.isDesktop ? (item.setSubmenu() as Menu) : originalMenu;
+	const subMenu = Platform.isDesktop ? item.setSubmenu() : originalMenu;
 	if (!isExcludedPath(plugin.settings, folder, defaultRepo(plugin.settings))) {
 		subMenu.addItem((subItem) => {
 			subItem

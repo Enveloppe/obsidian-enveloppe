@@ -33,7 +33,7 @@ export async function createLinkCallback(
 						frontmatter: getProperties(plugin, repo, frontmatter, true),
 						repository: repo,
 					};
-					createLink(file, multiRepo, plugin);
+					void createLink(file, multiRepo, plugin);
 					new Notice(
 						i18next.t("commands.copyLink.onActivation"),
 						plugin.settings.plugin.noticeLength
@@ -43,7 +43,7 @@ export async function createLinkCallback(
 			}
 			return false;
 		},
-	} as Command;
+	};
 }
 
 /**

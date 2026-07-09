@@ -32,7 +32,7 @@ export async function uploadNewNotesCallback(
 		callback: async () => {
 			await uploadNewNotes(plugin, branchName, repo);
 		},
-	} as Command;
+	};
 }
 
 /**

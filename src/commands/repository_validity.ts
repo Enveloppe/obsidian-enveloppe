@@ -47,11 +47,15 @@ export async function checkRepositoryValidityCallback(
 		checkCallback: (checking) => {
 			if (plugin.app.workspace.getActiveFile()) {
 				if (!checking) {
-					checkRepositoryValidity(octokit, repo, plugin.app.workspace.getActiveFile());
+					void checkRepositoryValidity(
+						octokit,
+						repo,
+						plugin.app.workspace.getActiveFile()
+					);
 				}
 				return true;
 			}
 			return false;
 		},
-	} as Command;
+	};
 }

@@ -34,7 +34,7 @@ export async function uploadAllEditedNotesCallback(
 		callback: async () => {
 			await uploadAllEditedNotes(plugin, branchName, repo);
 		},
-	} as Command;
+	};
 }
 
 /**
@@ -211,5 +211,5 @@ export async function shareEditedOnlyCallback(
 		callback: async () => {
 			await shareEditedOnly(branchName, repo, plugin);
 		},
-	} as Command;
+	};
 }
