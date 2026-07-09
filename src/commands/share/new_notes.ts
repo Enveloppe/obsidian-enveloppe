@@ -1,8 +1,8 @@
 import type { MonoRepoProperties, Repository } from "@interfaces";
 import i18next from "i18next";
 import { type Command, Notice } from "obsidian";
-import type { GithubBranch } from "src/GitHub/branch";
 import { shareAllMarkedNotes } from "src/commands";
+import type { GithubBranch } from "src/GitHub/branch";
 import type Enveloppe from "src/main";
 import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
 import {

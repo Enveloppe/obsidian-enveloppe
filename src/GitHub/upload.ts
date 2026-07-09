@@ -191,8 +191,9 @@ export default class Publisher {
 		) {
 			const msg = i18next.t("publish.upToDate", {
 				file: file.name,
-				repo: `${repo.repository?.user ?? this.settings.github.user}/${repo.repository?.repo ?? this.settings.github.repo
-					}:${repo.repository?.branch ?? this.branchName}`,
+				repo: `${repo.repository?.user ?? this.settings.github.user}/${
+					repo.repository?.repo ?? this.settings.github.repo
+				}:${repo.repository?.branch ?? this.branchName}`,
 			});
 			new Notice(msg, this.noticeLength);
 			return false;

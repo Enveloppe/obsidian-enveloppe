@@ -12,9 +12,9 @@ import i18next from "i18next";
 import {
 	type FrontMatterCache,
 	Notice,
+	normalizePath,
 	type TFile,
 	type TFolder,
-	normalizePath,
 } from "obsidian";
 import type { GithubBranch } from "src/GitHub/branch";
 import type Enveloppe from "src/main";

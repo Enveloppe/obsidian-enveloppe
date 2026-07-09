@@ -33,16 +33,6 @@ import type {
 } from "src/interfaces/properties";
 import type { MetadataExtractor } from "src/interfaces/settings";
 
-export {
-	DEFAULT_SETTINGS,
-	ESettingsTabId,
-	FIND_REGEX,
-	FolderSettings,
-	GithubTiersVersion,
-	TOKEN_PATH,
-	TypeOfEditRegex,
-};
-
 export type {
 	Deleted,
 	EnveloppeSettings,
@@ -63,4 +53,13 @@ export type {
 	SetRepositoryFrontmatter,
 	TextCleaner,
 	UploadedFiles,
+};
+export {
+	DEFAULT_SETTINGS,
+	ESettingsTabId,
+	FIND_REGEX,
+	FolderSettings,
+	GithubTiersVersion,
+	TOKEN_PATH,
+	TypeOfEditRegex,
 };

@@ -3,11 +3,11 @@ import i18next from "i18next";
 import {
 	type App,
 	Notice,
-	Platform,
-	TFile,
 	normalizePath,
+	Platform,
 	sanitizeHTMLToDom,
 	setIcon,
+	TFile,
 } from "obsidian";
 import type Publisher from "../GitHub/upload";
 import type Enveloppe from "../main";

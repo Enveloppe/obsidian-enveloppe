@@ -1,9 +1,9 @@
-import { FolderSettings, type EnveloppeSettings } from "@interfaces";
+import { type EnveloppeSettings, FolderSettings } from "@interfaces";
+import { DOCUMENTATION_LINK } from "@interfaces/constant";
+import { DISCORD_ICON, DISCUSSION_ICON, DOCUMENTATION, GITHUB_ICON, ISSUE, TRANSLATION_ICON } from "@interfaces/icons";
 import dedent from "dedent";
 import i18next from "i18next";
 import { normalizePath, sanitizeHTMLToDom } from "obsidian";
-import { DISCORD_ICON, DISCUSSION_ICON, DOCUMENTATION, GITHUB_ICON, ISSUE, TRANSLATION_ICON } from "@interfaces/icons";
-import { DOCUMENTATION_LINK } from "@interfaces/constant";
 
 /**
  * Export the YAML help to create an example of yaml with the value based on the Settings

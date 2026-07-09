@@ -5,8 +5,8 @@ import {
 	type FrontMatterCache,
 	Notice,
 	Platform,
-	type TFile,
 	setIcon,
+	type TFile,
 } from "obsidian";
 import type { GithubBranch } from "src/GitHub/branch";
 import { deleteFromGithub } from "src/GitHub/delete";

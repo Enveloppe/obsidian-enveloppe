@@ -7,13 +7,13 @@ import type {
 import i18next from "i18next";
 import {
 	type FrontMatterCache,
+	getFrontMatterInfo,
 	type MetadataCache,
 	Notice,
-	type TFile,
-	getFrontMatterInfo,
 	parseFrontMatterTags,
 	parseYaml,
 	stringifyYaml,
+	type TFile,
 } from "obsidian";
 import { convertDataviewQueries } from "src/conversion/compiler/dataview";
 import { bakeEmbeds, convertInlineDataview } from "src/conversion/compiler/embeds";
