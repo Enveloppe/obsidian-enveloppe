@@ -1,3 +1,8 @@
+## [7.8.3-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.8.2...7.8.3-0) (2026-07-10)
+### Bug Fixes
+
+* frontmatter links not transforming correctly ([32b136d](https://github.com/Enveloppe/obsidian-enveloppe/commit/32b136db827298bcf0ab6a8de4c52a6faf3c4b32)), closes [#406](https://github.com/Enveloppe/obsidian-enveloppe/issues/406)
+
 ## [7.8.0-1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.8.0-0...7.8.0-1) (2026-02-23)
 ### Bug Fixes
 
