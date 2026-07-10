@@ -26,6 +26,13 @@
 		"strictNullChecks": true,
 		"lib": ["DOM", "ES5", "ES6", "ES7", "ES2021", "ES2022"]
 	},
-	"include": ["**/*.ts", "**/*.mts"],
-	"exclude": ["tests/**"]
+	"include": ["**/*.ts"],
+	"exclude": [
+		"tests/**",
+		"node_modules/**",
+		"dist/**",
+		"build/**",
+		"vitest.config.mts",
+		"wdio.conf.mts"
+	]
 }

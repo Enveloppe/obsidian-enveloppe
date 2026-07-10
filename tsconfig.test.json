@@ -1,5 +1,5 @@
 {
-	"extends": "../../tsconfig.json",
+	"extends": "./tsconfig.json",
 	"compilerOptions": {
 		"types": [
 			"node",
@@ -9,6 +9,6 @@
 			"wdio-obsidian-service"
 		]
 	},
-	"include": ["**/*.ts"],
+	"include": ["**/*.ts", "**/*.mts"],
 	"exclude": []
 }
