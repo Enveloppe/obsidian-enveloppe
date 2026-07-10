@@ -342,13 +342,11 @@ class ManageRepoPage extends SettingPage {
 			.setDesc(i18next.t("settings.githubWorkflow.prRequest.desc"))
 			.addText((text) =>
 				text
-					// eslint-disable-next-line eslint-comments/no-restricted-disable -- This is a placeholder for a commit message, which is usually in all caps.
-					// eslint-disable-next-line obsidianmd/ui/sentence-case -- This is a placeholder for a commit message, which is usually in all caps.
-					.setPlaceholder("[PUBLISHER] MERGE")
+					.setPlaceholder(Placeholder.Merge)
 					.setValue(repo.workflow.commitMessage)
 					.onChange(async (value) => {
 						if (value.trim().length === 0) {
-							value = "[PUBLISHER] MERGE";
+							value = Placeholder.Merge;
 							new Notice(
 								i18next.t("settings.githubWorkflow.prRequest.error"),
 								ctx.settings.plugin.noticeLength

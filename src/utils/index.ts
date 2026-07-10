@@ -82,8 +82,9 @@ export async function getSettingsOfMetadataExtractor(
 	};
 
 	const path = `${app.vault.configDir}/plugins/metadata-extractor`;
-	const plugin: MetadataExtractorPlugin | null =
-		app.plugins.getPlugin("metadata-extractor");
+	const plugin = app.plugins.getPlugin(
+		"metadata-extractor"
+	) as unknown as MetadataExtractorPlugin | null;
 	if (plugin?.settings) {
 		if (plugin.settings.allExceptMdFile && plugin.settings.allExceptMdFile.length > 0) {
 			//get file from plugins folder in .obsidian folder
