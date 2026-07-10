@@ -86,7 +86,7 @@ export interface GitHub {
 	 */
 	branch: string;
 	/**
-	 * @deprecated
+	 * @legacy
 	 * Use `tokenSecret` instead, the token is now stored in the Obsidian SecretStorage, and not in the settings directly, to prevent mistake and security issue
 	 */
 	tokenPath: string | undefined;
