@@ -100,8 +100,6 @@ export function usefulLinksMarkdown(): string {
 		- [${GITHUB_ICON} ${i18next.t("common.repository")}](https://github.com/Enveloppe/obsidian-enveloppe)
 		- [${ISSUE} ${i18next.t("settings.help.usefulLinks.issue")}](https://github.com/Enveloppe/obsidian-enveloppe/issues)
 		- [${DISCUSSION_ICON} ${i18next.t("settings.help.usefulLinks.discussion")}](https://github.com/orgs/Enveloppe/discussions)
-		- [${DISCORD_ICON} Discord](https://discord.gg/6DyY779Nbn)
-		- [${TRANSLATION_ICON} ${i18next.t("settings.help.usefulLinks.translation")}](https://hosted.weblate.org/projects/enveloppe/locales/)
 	`);
 }
 

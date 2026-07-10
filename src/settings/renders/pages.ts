@@ -114,6 +114,7 @@ export function buildRegexFilePathPage(ctx: RenderContext): SettingDefinitionPag
 		desc: i18next.t("settings.upload.regexFilePathTitle.desc"),
 		items: [
 			{
+				cls: "enveloppe",
 				type: "list",
 				heading: i18next.t("settings.regexReplacing.modal.desc"),
 				addItem: {
@@ -140,9 +141,9 @@ export function buildRegexFilePathPage(ctx: RenderContext): SettingDefinitionPag
 					searchable: false,
 					render: (setting) => {
 						setting
-							.setClass("no-display")
+							.setNoInfo()
 							.addText((text) => {
-								widenInput(text)
+								text
 									.setPlaceholder(i18next.t("regex.entry"))
 									.setValue(item.regex)
 									.onChange(async (value) => {
@@ -158,7 +159,7 @@ export function buildRegexFilePathPage(ctx: RenderContext): SettingDefinitionPag
 									});
 							})
 							.addText((text) => {
-								widenInput(text)
+								text
 									.setPlaceholder(i18next.t("regex.replace"))
 									.setValue(item.replacement)
 									.onChange(async (value) => {
@@ -340,8 +341,8 @@ export function buildCensorTextPage(ctx: RenderContext): SettingDefinitionPage {
 		desc: i18next.t("settings.regexReplacing.modal.desc"),
 		items: [
 			{
+				cls: "enveloppe",
 				type: "list",
-				heading: i18next.t("settings.regexReplacing.modal.title.text"),
 				emptyState: i18next.t("settings.regexReplacing.empty"),
 				addItem: {
 					name: i18next.t("common.add", { things: "Regex" }),

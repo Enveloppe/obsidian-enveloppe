@@ -25,8 +25,11 @@ export function widenTextarea(text: TextAreaComponent, cls?: string): TextAreaCo
  * shrinking to its default size. Styled via the "enveloppe-wide-input" class
  * in styles.css.
  */
-export function widenInput(text: TextComponent): TextComponent {
-	text.inputEl.addClass("enveloppe-wide-input");
+export function widenInput(
+	text: TextComponent,
+	cls: string = "enveloppe-wide-input"
+): TextComponent {
+	text.inputEl.addClass(cls);
 	return text;
 }
 

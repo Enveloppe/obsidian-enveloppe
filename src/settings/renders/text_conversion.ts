@@ -167,7 +167,6 @@ export const buildTextConversionItems = (ctx: RenderContext): SettingDefinitionI
 		{
 			type: "group",
 			cls: "enveloppe",
-
 			heading: i18next.t("settings.conversion.sectionTitle"),
 			items: [
 				{

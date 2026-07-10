@@ -111,8 +111,9 @@ export const buildGithubItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 			name: "",
 			searchable: false,
 			render: (setting) => {
-				setting.setClass("no-display").addButton((button) =>
+				setting.setNoInfo().addButton((button) =>
 					button
+						.setCta()
 						.setButtonText(i18next.t("settings.github.testConnection"))
 						.setClass("connect-button")
 						.onClick(async () => {

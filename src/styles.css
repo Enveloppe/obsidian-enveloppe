@@ -208,6 +208,21 @@ a.enveloppe-download:hover {
 	width: 100%;
 }
 
+/* Rows with more than one <input> (regex + replacement, smartkey + …) must share
+   the row instead of each claiming 100% of it. */
+.enveloppe .setting-item-control input:not(:only-of-type) {
+	width: auto;
+	min-width: 0;
+	flex: 1 1 0;
+}
+
+.enveloppe .enveloppe-repo-details {
+	margin-left: 1em;
+	margin-top: 0.5em;
+	padding-left: 1em;
+	border-left: 2px solid var(--background-modifier-border);
+}
+
 .setting-item-control.enveloppe-raw-content-control {
 	text-align: initial;
 	width: 100%;
