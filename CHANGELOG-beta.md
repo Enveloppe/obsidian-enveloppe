@@ -1,3 +1,5 @@
+## [7.8.3-1](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.8.3-0...7.8.3-1) (2026-07-10)
+
 ## [7.8.3-0](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.8.2...7.8.3-0) (2026-07-10)
 ### Bug Fixes
 
