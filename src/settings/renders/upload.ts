@@ -1,4 +1,5 @@
 import { FolderSettings } from "@interfaces";
+import { Placeholder } from "@interfaces/enum";
 import i18next from "i18next";
 import type { SettingDefinitionItem } from "obsidian";
 import { AutoCleanPopup } from "src/settings/modals/popup";
@@ -74,7 +75,7 @@ export const buildUploadItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 			render: (setting) => {
 				setting.addText((text) => {
 					text
-						.setPlaceholder("docs")
+						.setPlaceholder(Placeholder.Docs)
 						.setValue(uploadSettings.rootFolder)
 						.onChange(async (value) => {
 							uploadSettings.rootFolder = value.replace(/\/$/, "");
@@ -187,7 +188,7 @@ export const buildUploadItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 						: uploadSettings.autoclean.excluded;
 				setting.addTextArea((textArea) => {
 					widenTextarea(textArea, "enveloppe-wide-input")
-						.setPlaceholder("docs/assets/js, docs/assets/logo, /\\.js$/")
+						.setPlaceholder(Placeholder.AutoCleanFolder)
 						.setValue(excluded.join(", "))
 						.onChange(async (value) => {
 							uploadSettings.autoclean.excluded = splitByCommaOrNewLine(value);

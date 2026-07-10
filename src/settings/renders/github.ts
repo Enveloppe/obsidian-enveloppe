@@ -1,4 +1,5 @@
 import { GithubTiersVersion } from "@interfaces";
+import { Placeholder } from "@interfaces/enum";
 import i18next from "i18next";
 import { SecretComponent, type SettingDefinitionItem } from "obsidian";
 import {
@@ -157,7 +158,7 @@ export const buildGithubItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 					render: (setting) => {
 						setting.addText((text) => {
 							text
-								.setPlaceholder("ci")
+								.setPlaceholder(Placeholder.Ci)
 								.setValue(githubSettings.workflow.name)
 								.onChange(async (value) => {
 									if (value.length > 0) {

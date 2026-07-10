@@ -1,4 +1,5 @@
 import { GithubTiersVersion, type Repository } from "@interfaces";
+import { Placeholder } from "@interfaces/enum";
 import i18next from "i18next";
 import {
 	AbstractInputSuggest,
@@ -138,7 +139,7 @@ class ManageRepoPage extends SettingPage {
 					.setNoInfo()
 					.addText((text) => {
 						text
-							.setPlaceholder("smartkey")
+							.setPlaceholder(Placeholder.Smartkey)
 							.setValue(repo.smartKey)
 							.onChange((value) => {
 								draft = value.toLowerCase();
@@ -272,7 +273,7 @@ class ManageRepoPage extends SettingPage {
 			.setDesc(i18next.t("settings.github.branch.desc"))
 			.addText((text) =>
 				text
-					.setPlaceholder("main")
+					.setPlaceholder(Placeholder.Main)
 					.setValue(repo.branch)
 					.onChange(async (value) => {
 						repo.branch = value.trim();
@@ -334,13 +335,15 @@ class ManageRepoPage extends SettingPage {
 				})
 			);
 
-		containerEl.createEl("h3", { text: "GitHub Workflow" });
+		containerEl.createEl("h3", { text: "GitHub workflow" });
 
 		new Setting(containerEl)
 			.setName(i18next.t("settings.githubWorkflow.prRequest.title"))
 			.setDesc(i18next.t("settings.githubWorkflow.prRequest.desc"))
 			.addText((text) =>
 				text
+					// eslint-disable-next-line eslint-comments/no-restricted-disable -- This is a placeholder for a commit message, which is usually in all caps.
+					// eslint-disable-next-line obsidianmd/ui/sentence-case -- This is a placeholder for a commit message, which is usually in all caps.
 					.setPlaceholder("[PUBLISHER] MERGE")
 					.setValue(repo.workflow.commitMessage)
 					.onChange(async (value) => {
@@ -361,7 +364,7 @@ class ManageRepoPage extends SettingPage {
 			.setDesc(i18next.t("settings.githubWorkflow.githubAction.desc"))
 			.addText((text) => {
 				text
-					.setPlaceholder("ci")
+					.setPlaceholder(Placeholder.Ci)
 					.setValue(repo.workflow.name)
 					.onChange(async (value) => {
 						if (value.length > 0) {
@@ -416,7 +419,7 @@ class ManageRepoPage extends SettingPage {
 				.setDesc(i18next.t("settings.plugin.shareKey.desc"))
 				.addText((text) =>
 					text
-						.setPlaceholder("share")
+						.setPlaceholder(Placeholder.Share)
 						.setValue(repo.shareKey)
 						.onChange(async (value) => {
 							repo.shareKey = value.trim();
@@ -460,7 +463,7 @@ class ManageRepoPage extends SettingPage {
 				.setDesc(i18next.t("settings.plugin.copyLink.linkPathRemover.desc"))
 				.addText((text) => {
 					text
-						.setPlaceholder("docs")
+						.setPlaceholder(Placeholder.Docs)
 						.setValue(repo.copyLink.removePart.join(", "))
 						.onChange(async (value) => {
 							repo.copyLink.removePart = splitByCommaOrNewLineAndSpaces(value);
@@ -518,7 +521,7 @@ class ManageRepoPage extends SettingPage {
 					.setClass("no-display")
 					.addText((text) => {
 						text
-							.setPlaceholder("regex")
+							.setPlaceholder(Placeholder.Docs)
 							.setValue(apply.regex)
 							.onChange(async (value) => {
 								apply.regex = value;
@@ -527,7 +530,7 @@ class ManageRepoPage extends SettingPage {
 					})
 					.addText((text) => {
 						text
-							.setPlaceholder("replacement")
+							.setPlaceholder(i18next.t("regex.replace"))
 							.setValue(apply.replacement)
 							.onChange(async (value) => {
 								apply.replacement = value;

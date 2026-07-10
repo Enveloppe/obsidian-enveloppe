@@ -50,7 +50,7 @@ import { Logs } from "./utils/logs";
  */
 
 export default class Enveloppe extends Plugin {
-	settings!: EnveloppeSettings;
+	declare settings: EnveloppeSettings;
 	branchName: string = "";
 	repositoryFrontmatter: SetRepositoryFrontmatter = {};
 	console!: Logs;

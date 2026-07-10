@@ -30,3 +30,18 @@ export enum GithubTiersVersion {
 	Free = "Github Free/Pro/Team (default)",
 	Entreprise = "Enterprise",
 }
+
+export enum Placeholder {
+	Smartkey = "smartkey",
+	Main = "main",
+	Ci = "ci",
+	Share = "share",
+	Docs = "docs",
+	Regex = "regex",
+	FolderImage = "docs/images",
+	Format = "py, mdx",
+	Banner = "banner",
+	ExcludedFolder = "_assets, Archive, /^_(.*)/gi",
+	FieldName = "field_name",
+	AutoCleanFolder = "docs/assets/js, docs/assets/logo, /\\.js$/",
+}

@@ -1,3 +1,4 @@
+import { Placeholder } from "@interfaces/enum";
 import dedent from "dedent";
 import i18next from "i18next";
 import { type SettingDefinitionItem, sanitizeHTMLToDom } from "obsidian";
@@ -63,7 +64,7 @@ export const buildEmbedItems = (ctx: RenderContext): SettingDefinitionItem[] => 
 					render: (setting) => {
 						setting.addText((text) => {
 							text
-								.setPlaceholder("docs/images")
+								.setPlaceholder(Placeholder.FolderImage)
 								.setValue(embedSettings.folder)
 								.onChange(async (value) => {
 									embedSettings.folder = value.replace(/\/$/, "");
@@ -83,7 +84,7 @@ export const buildEmbedItems = (ctx: RenderContext): SettingDefinitionItem[] => 
 					render: (setting) => {
 						setting.addTextArea((text) => {
 							widenTextarea(text, "enveloppe-wide-input")
-								.setPlaceholder("py, mdx")
+								.setPlaceholder(Placeholder.Format)
 								.setValue((embedSettings.unHandledObsidianExt || []).join(", "))
 								.onChange(async (value) => {
 									embedSettings.unHandledObsidianExt =
@@ -102,7 +103,7 @@ export const buildEmbedItems = (ctx: RenderContext): SettingDefinitionItem[] => 
 			render: (setting) => {
 				setting.addTextArea((text) => {
 					widenTextarea(text, "enveloppe-wide-input")
-						.setPlaceholder("banner")
+						.setPlaceholder(Placeholder.Banner)
 						.setValue((embedSettings.keySendFile || []).join(", "))
 						.onChange(async (value) => {
 							embedSettings.keySendFile = splitByCommaOrNewLineAndNonWord(value);

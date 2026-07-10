@@ -1,3 +1,4 @@
+import { Placeholder } from "@interfaces/enum";
 import dedent from "dedent";
 import i18next from "i18next";
 import { type SettingDefinitionItem, sanitizeHTMLToDom } from "obsidian";
@@ -202,7 +203,7 @@ export const buildTextConversionItems = (ctx: RenderContext): SettingDefinitionI
 					render: (setting) => {
 						setting.addTextArea((text) => {
 							widenTextarea(text, "mid-height")
-								.setPlaceholder("field_name")
+								.setPlaceholder(Placeholder.FieldName)
 								.setValue(textSettings.tags.fields.join(","))
 								.onChange(async (value) => {
 									textSettings.tags.fields = splitByCommaOrNewLineAndNonWord(value);

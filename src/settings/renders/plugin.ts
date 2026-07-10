@@ -1,3 +1,4 @@
+import { Placeholder } from "@interfaces/enum";
 import i18next from "i18next";
 import type { SettingDefinitionItem } from "obsidian";
 import {
@@ -59,7 +60,7 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 					render: (setting) => {
 						setting.addTextArea((textArea) =>
 							widenTextarea(textArea)
-								.setPlaceholder("_assets, Archive, /^_(.*)/gi")
+								.setPlaceholder(Placeholder.ExcludedFolder)
 								.setValue(pluginSettings.excludedFolder.join(", "))
 								.onChange(async (value) => {
 									pluginSettings.excludedFolder = splitByCommaOrNewLineAndNonWord(value);
@@ -120,7 +121,7 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 					render: (setting) => {
 						setting.addText((text) => {
 							text
-								.setPlaceholder("docs")
+								.setPlaceholder(Placeholder.Docs)
 								.setValue(pluginSettings.copyLink.removePart.join(", "))
 								.onChange(async (value) => {
 									pluginSettings.copyLink.removePart =
@@ -189,7 +190,7 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 						.setClass("no-display")
 						.addText((text) => {
 							widenInput(text)
-								.setPlaceholder("regex")
+								.setPlaceholder(i18next.t("common.regex"))
 								.setValue(apply.regex)
 								.onChange(async (value) => {
 									apply.regex = value;
@@ -198,7 +199,7 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 						})
 						.addText((text) => {
 							widenInput(text)
-								.setPlaceholder("replacement")
+								.setPlaceholder(i18next.t("regex.replace"))
 								.setValue(apply.replacement)
 								.onChange(async (value) => {
 									apply.replacement = value;
