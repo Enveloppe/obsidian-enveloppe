@@ -17,9 +17,9 @@ on:
             - "*"
 permissions:
     contents: write
+    attestations: write
+    id-token: write
 jobs:
-    
-
     release:
         if: (github.event_name == 'push') || (github.event_name == 'workflow_dispatch' && !inputs.bump)
         uses: mara-li/reusable-workflows/.github/workflows/obsidian-plugin-release.yaml@main
