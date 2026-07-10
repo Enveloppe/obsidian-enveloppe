@@ -200,11 +200,15 @@ a.enveloppe-download:hover {
 	margin-top: 0;
 }
 
-.enveloppe .enveloppe-raw-content:hover {
+.enveloppe-raw-content:hover {
 	background: none !important;
 }
 
-.enveloppe .setting-item-control.enveloppe-raw-content-control {
+.enveloppe input {
+	width: 100%;
+}
+
+.setting-item-control.enveloppe-raw-content-control {
 	text-align: initial;
 	width: 100%;
 	display: inline;

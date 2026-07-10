@@ -106,7 +106,7 @@ export const buildUploadItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 			control: { type: "toggle", key: "upload.folderNote.enable" },
 		},
 		{
-			name: "Folder note name",
+			name: i18next.t("settings.conversion.folderNote.name"),
 			visible: () =>
 				uploadSettings.behavior !== FolderSettings.Fixed &&
 				uploadSettings.folderNote.enable,
@@ -186,7 +186,7 @@ export const buildUploadItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 						? [uploadSettings.autoclean.excluded]
 						: uploadSettings.autoclean.excluded;
 				setting.addTextArea((textArea) => {
-					widenTextarea(textArea)
+					widenTextarea(textArea, "enveloppe-wide-input")
 						.setPlaceholder("docs/assets/js, docs/assets/logo, /\\.js$/")
 						.setValue(excluded.join(", "))
 						.onChange(async (value) => {

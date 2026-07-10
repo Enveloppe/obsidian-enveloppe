@@ -1,12 +1,12 @@
 import { GithubTiersVersion } from "@interfaces";
 import i18next from "i18next";
-import { Notice, SecretComponent, type SettingDefinitionItem } from "obsidian";
+import { SecretComponent, type SettingDefinitionItem } from "obsidian";
 import {
 	checkRepositoryValidity,
 	verifyRateLimitAPI,
 } from "src/utils/data_validation_test";
 import type { RenderContext } from "./index";
-import { buildManageRepoPage } from "./pages";
+import { buildManageRepoPage } from "./manage_repo";
 
 export const buildGithubItems = (ctx: RenderContext): SettingDefinitionItem[] => {
 	const githubSettings = ctx.settings.github;
@@ -133,28 +133,21 @@ export const buildGithubItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 		},
 		{
 			type: "group",
+			cls: "enveloppe",
 			heading: "GitHub Workflow",
 			items: [
 				{
 					name: i18next.t("settings.githubWorkflow.prRequest.title"),
 					desc: i18next.t("settings.githubWorkflow.prRequest.desc"),
-					render: (setting) => {
-						setting.addText((text) =>
-							text
-								.setPlaceholder("[PUBLISHER] MERGE")
-								.setValue(githubSettings.workflow.commitMessage)
-								.onChange(async (value) => {
-									if (value.trim().length === 0) {
-										value = "[PUBLISHER] MERGE";
-										new Notice(
-											i18next.t("settings.githubWorkflow.prRequest.error"),
-											ctx.settings.plugin.noticeLength
-										);
-									}
-									githubSettings.workflow.commitMessage = value;
-									await ctx.plugin.saveSettings();
-								})
-						);
+					control: {
+						type: "text",
+						key: "github.workflow.commitMessage",
+						placeholder: "[PUBLISHER] MERGE",
+						defaultValue: "[PUBLISHER] MERGE",
+						validate: (value) =>
+							value.trim().length === 0
+								? i18next.t("settings.githubWorkflow.prRequest.error")
+								: undefined,
 					},
 				},
 				{

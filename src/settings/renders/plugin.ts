@@ -14,6 +14,7 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 	return [
 		{
 			type: "group",
+			cls: "enveloppe",
 			heading: i18next.t("settings.plugin.head.share"),
 			items: [
 				{
@@ -76,6 +77,7 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 		},
 		{
 			type: "group",
+			cls: "enveloppe",
 			heading: i18next.t("settings.plugin.head.menu"),
 			items: [
 				{
@@ -92,6 +94,8 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 		},
 		{
 			type: "group",
+			cls: "enveloppe",
+
 			heading: i18next.t("settings.plugin.head.copyLinks"),
 			items: [
 				{
@@ -206,6 +210,8 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 		},
 		{
 			type: "group",
+			cls: "enveloppe",
+
 			heading: i18next.t("settings.plugin.head.other"),
 			items: [
 				{
@@ -217,6 +223,8 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 		},
 		{
 			type: "group",
+			cls: "enveloppe",
+
 			heading: i18next.t("settings.plugin.head.log"),
 			items: [
 				{

@@ -45,6 +45,7 @@ export const buildTextConversionItems = (ctx: RenderContext): SettingDefinitionI
 		}),
 		{
 			type: "group",
+			cls: "enveloppe",
 			heading: i18next.t("settings.conversion.links.title"),
 			items: [
 				rawContent((el) => {
@@ -165,6 +166,8 @@ export const buildTextConversionItems = (ctx: RenderContext): SettingDefinitionI
 		},
 		{
 			type: "group",
+			cls: "enveloppe",
+
 			heading: i18next.t("settings.conversion.sectionTitle"),
 			items: [
 				{
@@ -186,6 +189,7 @@ export const buildTextConversionItems = (ctx: RenderContext): SettingDefinitionI
 		},
 		{
 			type: "group",
+			cls: "enveloppe",
 			heading: "Tags",
 			items: [
 				{

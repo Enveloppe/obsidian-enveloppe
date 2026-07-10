@@ -48,6 +48,7 @@ export const buildEmbedItems = (ctx: RenderContext): SettingDefinitionItem[] => 
 				},
 				{
 					name: i18next.t("settings.embed.imagePath.title"),
+					desc: i18next.t("settings.embed.imagePath.desc"),
 					visible: () => embedSettings.attachments,
 					control: {
 						type: "toggle",
@@ -157,31 +158,13 @@ export const buildEmbedItems = (ctx: RenderContext): SettingDefinitionItem[] => 
 					name: i18next.t("settings.embed.bake.textBefore.title"),
 					visible: () =>
 						embedSettings.notes && embedSettings.convertEmbedToLinks === "bake",
-					render: (setting) => {
-						setting.addTextArea((text) => {
-							widenTextarea(text)
-								.setValue(embedSettings.bake?.textBefore ?? "")
-								.onChange(async (value) => {
-									embedSettings.bake!.textBefore = value;
-									await ctx.plugin.saveSettings();
-								});
-						});
-					},
+					control: { type: "textarea", key: "embed.bake.textBefore" },
 				},
 				{
 					name: i18next.t("settings.embed.bake.textAfter.title"),
 					visible: () =>
 						embedSettings.notes && embedSettings.convertEmbedToLinks === "bake",
-					render: (setting) => {
-						setting.addTextArea((text) => {
-							widenTextarea(text)
-								.setValue(embedSettings.bake?.textAfter ?? "")
-								.onChange(async (value) => {
-									embedSettings.bake!.textAfter = value;
-									await ctx.plugin.saveSettings();
-								});
-						});
-					},
+					control: { type: "textarea", key: "embed.bake.textAfter" },
 				},
 			],
 		},
