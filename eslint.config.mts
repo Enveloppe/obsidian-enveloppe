@@ -23,6 +23,7 @@ export default defineConfig([
 	...obsidianmd.configs.recommended,
 	globalIgnores([
 		"node_modules",
+		".obsidian-cache",
 		"dist",
 		"esbuild.config.mjs",
 		"eslint.config.js",

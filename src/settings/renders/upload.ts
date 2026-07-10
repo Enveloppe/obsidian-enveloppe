@@ -157,11 +157,13 @@ export const buildUploadItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 								ctx.settings.upload.defaultName.length === 0) ||
 								ctx.settings.upload.rootFolder.length === 0)
 						) {
-							new AutoCleanPopup(ctx.app, ctx.settings, async (result) => {
-								uploadSettings.autoclean.enable = result;
-								await ctx.plugin.saveSettings();
-								await ctx.plugin.reloadCommands(true, result);
-								ctx.update();
+							new AutoCleanPopup(ctx.app, ctx.settings, (result) => {
+								void (async () => {
+									uploadSettings.autoclean.enable = result;
+									await ctx.plugin.saveSettings();
+									await ctx.plugin.reloadCommands(true, result);
+									ctx.update();
+								})();
 							}).open();
 							return;
 						}

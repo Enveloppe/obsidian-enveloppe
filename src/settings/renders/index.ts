@@ -11,24 +11,22 @@ import {
 import type EnveloppePlugin from "src/main";
 
 /**
- * Force a textarea to be wide instead of the browser's tiny default. Set inline
- * (not via a CSS class) for the same reason as `prepareRawRow`: nested pages
- * aren't reliably reachable by class selectors scoped under "enveloppe".
+ * Force a textarea to be wide instead of the browser's tiny default. The base
+ * width/height/flex come from the `.enveloppe textarea` rule in styles.css;
+ * pass a class name (e.g. "mid-height") to override the default height.
  */
-export function widenTextarea(
-	text: TextAreaComponent,
-	height = "160px"
-): TextAreaComponent {
-	Object.assign(text.inputEl.style, { width: "100%", height, flex: "1 1 auto" });
+export function widenTextarea(text: TextAreaComponent, cls?: string): TextAreaComponent {
+	if (cls) text.inputEl.addClass(cls);
 	return text;
 }
 
 /**
  * Let a text input actually grow inside a multi-field list row instead of
- * shrinking to its default size. Inline for the same reason as `widenTextarea`.
+ * shrinking to its default size. Styled via the "enveloppe-wide-input" class
+ * in styles.css.
  */
 export function widenInput(text: TextComponent): TextComponent {
-	Object.assign(text.inputEl.style, { width: "100%", flex: "1 1 auto" });
+	text.inputEl.addClass("enveloppe-wide-input");
 	return text;
 }
 
@@ -36,35 +34,14 @@ export function widenInput(text: TextComponent): TextComponent {
  * Strip a Setting row down to plain flowing content: drop the name/desc column
  * entirely and render into the control column, which is the element the
  * framework actually keeps around (unlike settingEl, whose two-column layout is
- * re-applied around whatever it contains).
- *
- * Styles are set inline rather than via a CSS class: nested declarative pages
- * don't reliably render underneath the containerEl the "enveloppe" class is
- * applied to, so class-based selectors silently fail to match there. Inline
- * styles work regardless of which ancestor (if any) carries that class.
+ * re-applied around whatever it contains). Styled via the "enveloppe-raw-content"
+ * and "enveloppe-raw-content-control" classes in styles.css.
  */
 function prepareRawRow(setting: Setting): HTMLElement {
 	setting.settingEl.addClass("enveloppe-raw-content");
-	Object.assign(setting.settingEl.style, {
-		border: "0",
-		padding: "0",
-		margin: "0",
-		minHeight: "0",
-		background: "none",
-		boxShadow: "none",
-		gridTemplateColumns: "unset",
-		gridColumn: "1 / -1",
-	});
 	setting.infoEl.remove();
 	setting.controlEl.empty();
-	Object.assign(setting.controlEl.style, {
-		display: "block",
-		textAlign: "initial",
-		width: "100%",
-		flex: "auto",
-		columns: "initial",
-		gridColumn: "1 / -1",
-	});
+	setting.controlEl.addClass("enveloppe-raw-content-control");
 	return setting.controlEl;
 }
 

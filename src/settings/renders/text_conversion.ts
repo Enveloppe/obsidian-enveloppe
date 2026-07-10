@@ -198,7 +198,7 @@ export const buildTextConversionItems = (ctx: RenderContext): SettingDefinitionI
 					desc: i18next.t("settings.conversion.tags.desc"),
 					render: (setting) => {
 						setting.addTextArea((text) => {
-							widenTextarea(text, "220px")
+							widenTextarea(text, "mid-height")
 								.setPlaceholder("field_name")
 								.setValue(textSettings.tags.fields.join(","))
 								.onChange(async (value) => {

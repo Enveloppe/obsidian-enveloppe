@@ -172,12 +172,6 @@ a.enveloppe-download:hover {
 	user-select: text;
 }
 
-.enveloppe textarea {
-	width: 100% !important;
-	height: 160px !important;
-	flex: 1 1 auto !important;
-}
-
 .enveloppe .mini textarea {
 	width: 100% !important;
 	height: 50px !important;
@@ -189,27 +183,21 @@ a.enveloppe-download:hover {
 }
 
 .enveloppe .mid-height {
-	height: 220px;
+	height: 220px !important;
+}
+
+.enveloppe textarea {
+	width: 20rem;
+	height: 10rem;
+}
+
+.enveloppe-wide-input {
+	width: 20rem;
+	height: 10rem;
 }
 
 .enveloppe .bake ul {
 	margin-top: 0;
-}
-
-/* rows built via rawContent()/markdownContent() drop the two-column setting-item
-   layout in favor of plain stacked block content; infoEl is removed and content is
-   rendered into controlEl (the element the framework keeps and re-lays-out) */
-.enveloppe .enveloppe-raw-content {
-	border: 0 !important;
-	padding: 0 !important;
-	margin: 0 !important;
-	min-height: 0 !important;
-	background: none !important;
-	box-shadow: none !important;
-	/* escape the shared subgrid the settings list uses to line up name/control
-	   columns across rows, so this row isn't confined to the "control" track */
-	grid-template-columns: unset !important;
-	grid-column: 1 / -1 !important;
 }
 
 .enveloppe .enveloppe-raw-content:hover {
@@ -217,12 +205,9 @@ a.enveloppe-download:hover {
 }
 
 .enveloppe .setting-item-control.enveloppe-raw-content-control {
-	display: block !important;
-	text-align: initial !important;
+	text-align: initial;
 	width: 100%;
-	flex: auto !important;
-	columns: initial !important;
-	grid-column: 1 / -1 !important;
+	display: inline;
 }
 
 @media screen and (max-width: 900px) {
@@ -259,6 +244,23 @@ span.enveloppe.icons {
 	vertical-align: middle;
 	position: relative;
 	padding-right: 5px;
+}
+
+.enveloppe .enveloppe-icon {
+	vertical-align: -2px;
+}
+
+.enveloppe .enveloppe-icon-translation {
+	vertical-align: -3px;
+}
+
+.enveloppe .enveloppe-kofi {
+	text-align: center;
+}
+
+.enveloppe .enveloppe-kofi-img {
+	height: 60px !important;
+	width: 217px !important;
 }
 
 .enveloppe h5 {

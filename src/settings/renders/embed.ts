@@ -39,6 +39,7 @@ export const buildEmbedItems = (ctx: RenderContext): SettingDefinitionItem[] => 
 		},
 		{
 			type: "group",
+			cls: "enveloppe",
 			heading: i18next.t("settings.embed.attachment"),
 			items: [
 				{
@@ -80,7 +81,7 @@ export const buildEmbedItems = (ctx: RenderContext): SettingDefinitionItem[] => 
 					visible: () => embedSettings.attachments,
 					render: (setting) => {
 						setting.addTextArea((text) => {
-							widenTextarea(text)
+							widenTextarea(text, "enveloppe-wide-input")
 								.setPlaceholder("py, mdx")
 								.setValue((embedSettings.unHandledObsidianExt || []).join(", "))
 								.onChange(async (value) => {
@@ -95,10 +96,11 @@ export const buildEmbedItems = (ctx: RenderContext): SettingDefinitionItem[] => 
 		},
 		{
 			name: i18next.t("settings.embed.transferMetaFile.title"),
+			cls: "enveloppe",
 			desc: i18next.t("settings.embed.transferMetaFile.desc"),
 			render: (setting) => {
 				setting.addTextArea((text) => {
-					widenTextarea(text)
+					widenTextarea(text, "enveloppe-wide-input")
 						.setPlaceholder("banner")
 						.setValue((embedSettings.keySendFile || []).join(", "))
 						.onChange(async (value) => {
@@ -110,6 +112,7 @@ export const buildEmbedItems = (ctx: RenderContext): SettingDefinitionItem[] => 
 		},
 		{
 			type: "group",
+			cls: "enveloppe",
 			heading: i18next.t("settings.embed.notes"),
 			items: [
 				{

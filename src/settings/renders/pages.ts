@@ -126,18 +126,22 @@ export function buildRegexFilePathPage(ctx: RenderContext): SettingDefinitionPag
 				heading: i18next.t("settings.regexReplacing.modal.desc"),
 				addItem: {
 					name: i18next.t("common.add", { things: "regex" }),
-					action: async () => {
-						const list = combined();
-						list.push({ regex: "", replacement: "", type: TypeOfEditRegex.Title });
-						await persist(list);
-						ctx.update();
+					action: () => {
+						void (async () => {
+							const list = combined();
+							list.push({ regex: "", replacement: "", type: TypeOfEditRegex.Title });
+							await persist(list);
+							ctx.update();
+						})();
 					},
 				},
-				onDelete: async (index) => {
-					const list = combined();
-					list.splice(index, 1);
-					await persist(list);
-					ctx.update();
+				onDelete: (index) => {
+					void (async () => {
+						const list = combined();
+						list.splice(index, 1);
+						await persist(list);
+						ctx.update();
+					})();
 				},
 				items: combined().map((item) => ({
 					name: "",
@@ -249,20 +253,24 @@ export function buildOverrideAttachmentsPage(ctx: RenderContext): SettingDefinit
 				heading: i18next.t("settings.embed.overrides.modal.title"),
 				addItem: {
 					name: i18next.t("common.add", { things: "override" }),
-					action: async () => {
-						embed.overrideAttachments.push({
-							path: "",
-							destination: "",
-							forcePush: false,
-						});
-						await ctx.plugin.saveSettings();
-						ctx.update();
+					action: () => {
+						void (async () => {
+							embed.overrideAttachments.push({
+								path: "",
+								destination: "",
+								forcePush: false,
+							});
+							await ctx.plugin.saveSettings();
+							ctx.update();
+						})();
 					},
 				},
-				onDelete: async (index) => {
-					embed.overrideAttachments.splice(index, 1);
-					await ctx.plugin.saveSettings();
-					ctx.update();
+				onDelete: (index) => {
+					void (async () => {
+						embed.overrideAttachments.splice(index, 1);
+						await ctx.plugin.saveSettings();
+						ctx.update();
+					})();
 				},
 				items: embed.overrideAttachments.map((override) => ({
 					name: "",
@@ -334,27 +342,33 @@ export function buildCensorTextPage(ctx: RenderContext): SettingDefinitionPage {
 				emptyState: i18next.t("settings.regexReplacing.empty"),
 				addItem: {
 					name: i18next.t("common.add", { things: "Regex" }),
-					action: async () => {
-						const censorText: TextCleaner = {
-							entry: "",
-							replace: "",
-							flags: "",
-							after: false,
-						};
-						conversion.censorText.push(censorText);
-						await ctx.plugin.saveSettings();
-						ctx.update();
+					action: () => {
+						void (async () => {
+							const censorText: TextCleaner = {
+								entry: "",
+								replace: "",
+								flags: "",
+								after: false,
+							};
+							conversion.censorText.push(censorText);
+							await ctx.plugin.saveSettings();
+							ctx.update();
+						})();
 					},
 				},
-				onReorder: async (oldIndex, newIndex) => {
-					const [moved] = conversion.censorText.splice(oldIndex, 1);
-					conversion.censorText.splice(newIndex, 0, moved);
-					await ctx.plugin.saveSettings();
+				onReorder: (oldIndex, newIndex) => {
+					void (async () => {
+						const [moved] = conversion.censorText.splice(oldIndex, 1);
+						conversion.censorText.splice(newIndex, 0, moved);
+						await ctx.plugin.saveSettings();
+					})();
 				},
-				onDelete: async (index) => {
-					conversion.censorText.splice(index, 1);
-					await ctx.plugin.saveSettings();
-					ctx.update();
+				onDelete: (index) => {
+					void (async () => {
+						conversion.censorText.splice(index, 1);
+						await ctx.plugin.saveSettings();
+						ctx.update();
+					})();
 				},
 				items: conversion.censorText.map((censorText) => ({
 					name: "",
@@ -879,16 +893,20 @@ function buildRepositoryEditItems(
 			emptyState: i18next.t("settings.plugin.copyLink.applyRegex.desc"),
 			addItem: {
 				name: i18next.t("settings.plugin.copyLink.applyRegex.title"),
-				action: async () => {
-					repo.copyLink.transform.applyRegex.push({ regex: "", replacement: "" });
-					await save();
-					ctx.update();
+				action: () => {
+					void (async () => {
+						repo.copyLink.transform.applyRegex.push({ regex: "", replacement: "" });
+						await save();
+						ctx.update();
+					})();
 				},
 			},
-			onDelete: async (index) => {
-				repo.copyLink.transform.applyRegex.splice(index, 1);
-				await save();
-				ctx.update();
+			onDelete: (index) => {
+				void (async () => {
+					repo.copyLink.transform.applyRegex.splice(index, 1);
+					await save();
+					ctx.update();
+				})();
 			},
 			items: repo.copyLink.transform.applyRegex.map((apply) => ({
 				name: "",
@@ -941,44 +959,48 @@ export function buildManageRepoPage(ctx: RenderContext): SettingDefinitionPage {
 				heading: i18next.t("settings.github.smartRepo.modals.title"),
 				addItem: {
 					name: i18next.t("settings.github.smartRepo.modals.newRepo"),
-					action: async () => {
-						const defaultRepository: Repository = {
-							smartKey: `smartkey-${github.otherRepo.length}`,
-							user: github.user,
-							repo: github.repo,
-							branch: github.branch,
-							automaticallyMergePR: github.automaticallyMergePR,
-							api: {
-								tiersForApi: github.api.tiersForApi,
-								hostname: github.api.hostname,
-							},
-							workflow: {
-								commitMessage: github.workflow.commitMessage,
-								name: "",
-							},
-							createShortcuts: false,
-							shareKey: ctx.settings.plugin.shareKey,
-							copyLink: {
-								links: ctx.settings.plugin.copyLink.links,
-								removePart: [],
-								transform: {
-									toUri: ctx.settings.plugin.copyLink.transform.toUri,
-									slugify: ctx.settings.plugin.copyLink.transform.slugify,
-									applyRegex: ctx.settings.plugin.copyLink.transform.applyRegex,
+					action: () => {
+						void (async () => {
+							const defaultRepository: Repository = {
+								smartKey: `smartkey-${github.otherRepo.length}`,
+								user: github.user,
+								repo: github.repo,
+								branch: github.branch,
+								automaticallyMergePR: github.automaticallyMergePR,
+								api: {
+									tiersForApi: github.api.tiersForApi,
+									hostname: github.api.hostname,
 								},
-							},
-							set: null,
-						};
-						github.otherRepo.push(defaultRepository);
-						await ctx.plugin.saveSettings();
-						ctx.update();
+								workflow: {
+									commitMessage: github.workflow.commitMessage,
+									name: "",
+								},
+								createShortcuts: false,
+								shareKey: ctx.settings.plugin.shareKey,
+								copyLink: {
+									links: ctx.settings.plugin.copyLink.links,
+									removePart: [],
+									transform: {
+										toUri: ctx.settings.plugin.copyLink.transform.toUri,
+										slugify: ctx.settings.plugin.copyLink.transform.slugify,
+										applyRegex: ctx.settings.plugin.copyLink.transform.applyRegex,
+									},
+								},
+								set: null,
+							};
+							github.otherRepo.push(defaultRepository);
+							await ctx.plugin.saveSettings();
+							ctx.update();
+						})();
 					},
 				},
-				onDelete: async (index) => {
-					github.otherRepo.splice(index, 1);
-					await ctx.plugin.saveSettings();
-					await ctx.plugin.reloadCommands();
-					ctx.update();
+				onDelete: (index) => {
+					void (async () => {
+						github.otherRepo.splice(index, 1);
+						await ctx.plugin.saveSettings();
+						await ctx.plugin.reloadCommands();
+						ctx.update();
+					})();
 				},
 				items: github.otherRepo.map((repo) => ({
 					type: "page",

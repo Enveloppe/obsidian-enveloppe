@@ -159,19 +159,23 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 			emptyState: i18next.t("settings.plugin.copyLink.applyRegex.desc"),
 			addItem: {
 				name: i18next.t("settings.plugin.copyLink.applyRegex.title"),
-				action: async () => {
-					pluginSettings.copyLink.transform.applyRegex.push({
-						regex: "",
-						replacement: "",
-					});
-					await ctx.plugin.saveSettings();
-					ctx.update();
+				action: () => {
+					void (async () => {
+						pluginSettings.copyLink.transform.applyRegex.push({
+							regex: "",
+							replacement: "",
+						});
+						await ctx.plugin.saveSettings();
+						ctx.update();
+					})();
 				},
 			},
-			onDelete: async (index) => {
-				pluginSettings.copyLink.transform.applyRegex.splice(index, 1);
-				await ctx.plugin.saveSettings();
-				ctx.update();
+			onDelete: (index) => {
+				void (async () => {
+					pluginSettings.copyLink.transform.applyRegex.splice(index, 1);
+					await ctx.plugin.saveSettings();
+					ctx.update();
+				})();
 			},
 			items: pluginSettings.copyLink.transform.applyRegex.map((apply) => ({
 				name: "",

@@ -239,7 +239,7 @@ function parseYamlFrontmatter(
 	const yamlFrontmatter = contents.split("---");
 	if (yamlFrontmatter.length < 2) return {}; //no frontmatter
 	try {
-		const yamlFrontmatterParsed = parseYaml(yamlFrontmatter[1]);
+		const yamlFrontmatterParsed: unknown = parseYaml(yamlFrontmatter[1]);
 		return trimObject(yamlFrontmatterParsed);
 	} catch (e) {
 		//probably not a valid frontmatter, skip

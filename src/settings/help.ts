@@ -56,7 +56,7 @@ export function keyBasedOnSettingsMarkdown(settings: EnveloppeSettings): string 
  */
 export function helpMarkdown(settings: EnveloppeSettings): string {
 	return dedent(`
-		- \`${settings.plugin.shareKey}\`${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.share.title")}\n\t${i18next.t("settings.help.frontmatter.share.other")}
+		- \`${settings.plugin.shareKey}\`${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.share.title")}\n\t\t${i18next.t("settings.help.frontmatter.share.other")}
 		- \`path\`${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.path")}
 		- \`links\`${i18next.t("common.points")}
 		  - \`mdlinks\`${i18next.t("common.points")}${i18next.t("settings.help.frontmatter.mdlinks")} \`[[markdown|alias]]\` ${i18next.t("common.in")} \`[alias](markdown)\`
@@ -141,6 +141,6 @@ export function multipleRepoExplainedMarkdown(settings: EnveloppeSettings): stri
  */
 export function supportMeMarkdown(): string {
 	return dedent(`
-		<p style="text-align:center"><a href="https://ko-fi.com/lisandra_dev"><img src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;"></a></p>
+		<p class="enveloppe-kofi"><a href="https://ko-fi.com/lisandra_dev"><img src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" alt="Buy Me A Coffee" class="enveloppe-kofi-img"></a></p>
 	`);
 }

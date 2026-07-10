@@ -12,10 +12,10 @@ import {
 import { buildEmbedItems } from "src/settings/renders/embed";
 import { buildGithubItems } from "src/settings/renders/github";
 import { buildHelpItems } from "src/settings/renders/help";
-import type { RenderContext } from "src/settings/renders/index";
 import { buildPluginItems } from "src/settings/renders/plugin";
 import { buildTextConversionItems } from "src/settings/renders/text_conversion";
 import { buildUploadItems } from "src/settings/renders/upload";
+import type { RenderContext } from "./settings/renders";
 
 export class EnveloppeSettingsTab extends PluginSettingTab {
 	plugin: EnveloppePlugin;

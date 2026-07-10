@@ -15,8 +15,10 @@ export const buildHelpItems = (ctx: RenderContext): SettingDefinitionItem[] => {
 			type: "group",
 			heading: i18next.t("settings.help.usefulLinks.title"),
 			items: [markdownContent(ctx, usefulLinksMarkdown())],
+			cls: "enveloppe",
 		},
 		{
+			cls: "enveloppe",
 			type: "group",
 			heading: i18next.t("settings.help.frontmatter.title"),
 			items: [
@@ -32,6 +34,8 @@ export const buildHelpItems = (ctx: RenderContext): SettingDefinitionItem[] => {
 			],
 		},
 		{
+			cls: "enveloppe",
+
 			type: "group",
 			heading: i18next.t("settings.help.multiRepoHelp.title"),
 			items: [
