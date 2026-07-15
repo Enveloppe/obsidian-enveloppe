@@ -1,13 +1,7 @@
 import { Placeholder } from "@interfaces/enum";
 import i18next from "i18next";
 import type { SettingDefinitionItem } from "obsidian";
-import {
-	type RenderContext,
-	splitByCommaOrNewLineAndNonWord,
-	splitByCommaOrNewLineAndSpaces,
-	widenInput,
-	widenTextarea,
-} from "./index";
+import { type RenderContext, stringListItems, widenInput } from "./index";
 
 export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] => {
 	const pluginSettings = ctx.settings.plugin;
@@ -57,18 +51,14 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 				{
 					name: i18next.t("settings.plugin.excludedFolder.title"),
 					desc: i18next.t("settings.plugin.excludedFolder.desc"),
-					render: (setting) => {
-						setting.addTextArea((textArea) =>
-							widenTextarea(textArea)
-								.setPlaceholder(Placeholder.ExcludedFolder)
-								.setValue(pluginSettings.excludedFolder.join(", "))
-								.onChange(async (value) => {
-									pluginSettings.excludedFolder = splitByCommaOrNewLineAndNonWord(value);
-									await ctx.plugin.saveSettings();
-								})
-						);
-					},
 				},
+				stringListItems(ctx, {
+					heading: i18next.t("settings.plugin.excludedFolder.title"),
+					addItemName: i18next.t("common.add", { things: "folder" }),
+					placeholder: Placeholder.ExcludedFolder,
+					values: pluginSettings.excludedFolder,
+					save: () => ctx.plugin.saveSettings(),
+				}),
 				{
 					name: i18next.t("settings.plugin.set.title"),
 					desc: i18next.t("settings.plugin.set.desc"),
@@ -118,18 +108,16 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 					name: i18next.t("settings.plugin.copyLink.linkPathRemover.title"),
 					desc: i18next.t("settings.plugin.copyLink.linkPathRemover.desc"),
 					visible: () => pluginSettings.copyLink.enable,
-					render: (setting) => {
-						setting.addText((text) => {
-							text
-								.setPlaceholder(Placeholder.Docs)
-								.setValue(pluginSettings.copyLink.removePart.join(", "))
-								.onChange(async (value) => {
-									pluginSettings.copyLink.removePart =
-										splitByCommaOrNewLineAndSpaces(value);
-									await ctx.plugin.saveSettings();
-								});
-						});
-					},
+				},
+				{
+					...stringListItems(ctx, {
+						heading: i18next.t("settings.plugin.copyLink.linkPathRemover.title"),
+						addItemName: i18next.t("common.add", { things: "part" }),
+						placeholder: Placeholder.Docs,
+						values: pluginSettings.copyLink.removePart,
+						save: () => ctx.plugin.saveSettings(),
+					}),
+					visible: () => pluginSettings.copyLink.enable,
 				},
 				{
 					name: i18next.t("settings.plugin.copyLink.toUri.title"),

@@ -4,11 +4,17 @@ import i18next from "i18next";
 import type { SettingDefinitionItem } from "obsidian";
 import { AutoCleanPopup } from "src/settings/modals/popup";
 import { autoCleanCondition } from "src/settings/style";
-import { type RenderContext, splitByCommaOrNewLine, widenTextarea } from "./index";
+import { type RenderContext, stringListItems } from "./index";
 import { buildRegexFilePathPage } from "./pages";
 
 export const buildUploadItems = (ctx: RenderContext): SettingDefinitionItem[] => {
 	const uploadSettings = ctx.settings.upload;
+	// in some legacy settings files, this can be a plain string instead of an array
+	if (typeof uploadSettings.autoclean.excluded === "string") {
+		uploadSettings.autoclean.excluded = uploadSettings.autoclean.excluded
+			? [uploadSettings.autoclean.excluded]
+			: [];
+	}
 
 	const defaultFolder =
 		uploadSettings.behavior === FolderSettings.Yaml
@@ -180,22 +186,16 @@ export const buildUploadItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 			name: i18next.t("settings.githubWorkflow.excludedFiles.title"),
 			desc: i18next.t("settings.githubWorkflow.excludedFiles.desc"),
 			visible: () => uploadSettings.autoclean.enable,
-			render: (setting) => {
-				// in some legacy settings files, this can be a plain string instead of an array
-				const excluded: string[] =
-					typeof uploadSettings.autoclean.excluded === "string"
-						? [uploadSettings.autoclean.excluded]
-						: uploadSettings.autoclean.excluded;
-				setting.addTextArea((textArea) => {
-					widenTextarea(textArea, "enveloppe-wide-input")
-						.setPlaceholder(Placeholder.AutoCleanFolder)
-						.setValue(excluded.join(", "))
-						.onChange(async (value) => {
-							uploadSettings.autoclean.excluded = splitByCommaOrNewLine(value);
-							await ctx.plugin.saveSettings();
-						});
-				});
-			},
+		},
+		{
+			...stringListItems(ctx, {
+				heading: i18next.t("settings.githubWorkflow.excludedFiles.title"),
+				addItemName: i18next.t("common.add", { things: "folder" }),
+				placeholder: Placeholder.AutoCleanFolder,
+				values: uploadSettings.autoclean.excluded,
+				save: () => ctx.plugin.saveSettings(),
+			}),
+			visible: () => uploadSettings.autoclean.enable,
 		},
 		{
 			name: i18next.t("settings.githubWorkflow.includeAttachments.title"),

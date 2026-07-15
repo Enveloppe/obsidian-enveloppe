@@ -5,19 +5,62 @@ import {
 	MarkdownRenderer,
 	type Setting,
 	type SettingDefinition,
-	type TextAreaComponent,
+	type SettingDefinitionList,
 	type TextComponent,
 } from "obsidian";
 import type EnveloppePlugin from "src/main";
 
 /**
- * Force a textarea to be wide instead of the browser's tiny default. The base
- * width/height/flex come from the `.enveloppe textarea` rule in styles.css;
- * pass a class name (e.g. "mid-height") to override the default height.
+ * Builds a `type: "list"` for a plain array of strings (extensions, folder names,
+ * tag names…) — one row per entry, each with its own editable text field, add and
+ * delete affordances. Replaces the older pattern of splitting a single
+ * comma/newline-separated textarea into an array.
  */
-export function widenTextarea(text: TextAreaComponent, cls?: string): TextAreaComponent {
-	if (cls) text.inputEl.addClass(cls);
-	return text;
+export function stringListItems(
+	ctx: RenderContext,
+	options: {
+		heading: string;
+		emptyState?: string;
+		addItemName: string;
+		placeholder?: string;
+		values: string[];
+		save: () => Promise<void> | void;
+	}
+): SettingDefinitionList {
+	const { values } = options;
+	return {
+		type: "list",
+		heading: options.heading,
+		emptyState: options.emptyState,
+		addItem: {
+			name: options.addItemName,
+			action: () => {
+				values.push("");
+				void options.save();
+				ctx.update();
+			},
+		},
+		onDelete: (index) => {
+			values.splice(index, 1);
+			void options.save();
+			ctx.update();
+		},
+		items: values.map((value, index) => ({
+			name: "",
+			searchable: false,
+			render: (setting) => {
+				setting.setClass("no-display").addText((text) => {
+					text
+						.setPlaceholder(options.placeholder ?? "")
+						.setValue(value)
+						.onChange(async (v) => {
+							values[index] = v;
+							await options.save();
+						});
+				});
+			},
+		})),
+	};
 }
 
 /**
@@ -92,24 +135,3 @@ export interface RenderContext {
 	/** Rebuild the page's setting definitions (item added/removed). */
 	update: () => void;
 }
-
-export const splitByCommaOrNewLine = (value: string): string[] => {
-	return value
-		.split(/[,\n]/)
-		.map((item) => item.trim())
-		.filter((item) => item.length > 0);
-};
-
-export const splitByCommaOrNewLineAndNonWord = (value: string): string[] => {
-	return value
-		.split(/[,\n]\W*/)
-		.map((item) => item.trim())
-		.filter((item) => item.length > 0);
-};
-
-export const splitByCommaOrNewLineAndSpaces = (value: string): string[] => {
-	return value
-		.split(/[,\n]\s*/)
-		.map((item) => item.trim())
-		.filter((item) => item.length > 0);
-};

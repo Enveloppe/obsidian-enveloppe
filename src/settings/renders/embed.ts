@@ -2,20 +2,17 @@ import { Placeholder } from "@interfaces/enum";
 import dedent from "dedent";
 import i18next from "i18next";
 import { type SettingDefinitionItem, sanitizeHTMLToDom } from "obsidian";
-import {
-	type RenderContext,
-	rawContent,
-	splitByCommaOrNewLineAndNonWord,
-	widenTextarea,
-} from "./index";
+import { type RenderContext, rawContent, stringListItems } from "./index";
 import { buildOverrideAttachmentsPage } from "./pages";
 
 export const buildEmbedItems = (ctx: RenderContext): SettingDefinitionItem[] => {
 	const embedSettings = ctx.settings.embed;
-	// lazily seed the bake block in memory; it is persisted on first edit
+	// lazily seed in memory; persisted on first edit
 	if (!embedSettings.bake) {
 		embedSettings.bake = { textBefore: "", textAfter: "" };
 	}
+	if (!embedSettings.unHandledObsidianExt) embedSettings.unHandledObsidianExt = [];
+	if (!embedSettings.keySendFile) embedSettings.keySendFile = [];
 
 	const bakeDesc = dedent(`
 		<h5>${i18next.t("settings.embed.bake.title")}</h5>
@@ -78,21 +75,21 @@ export const buildEmbedItems = (ctx: RenderContext): SettingDefinitionItem[] => 
 					visible: () => embedSettings.attachments,
 				},
 				{
-					name: i18next.t("settings.embeds.unHandledObsidianExt.title"),
-					desc: i18next.t("settings.embeds.unHandledObsidianExt.desc"),
-					visible: () => embedSettings.attachments,
-					render: (setting) => {
-						setting.addTextArea((text) => {
-							widenTextarea(text, "enveloppe-wide-input")
-								.setPlaceholder(Placeholder.Format)
-								.setValue((embedSettings.unHandledObsidianExt || []).join(", "))
-								.onChange(async (value) => {
-									embedSettings.unHandledObsidianExt =
-										splitByCommaOrNewLineAndNonWord(value);
-									await ctx.plugin.saveSettings();
-								});
+					...rawContent((el) => {
+						el.createEl("p", {
+							text: i18next.t("settings.embeds.unHandledObsidianExt.desc"),
 						});
-					},
+					}),
+					visible: () => embedSettings.attachments,
+				},
+				{
+					...stringListItems(ctx, {
+						heading: i18next.t("settings.embeds.unHandledObsidianExt.title"),
+						addItemName: i18next.t("common.add", { things: "extension" }),
+						values: embedSettings.unHandledObsidianExt,
+						save: () => ctx.plugin.saveSettings(),
+					}),
+					visible: () => embedSettings.attachments,
 				},
 			],
 		},
@@ -100,18 +97,14 @@ export const buildEmbedItems = (ctx: RenderContext): SettingDefinitionItem[] => 
 			name: i18next.t("settings.embed.transferMetaFile.title"),
 			cls: "enveloppe",
 			desc: i18next.t("settings.embed.transferMetaFile.desc"),
-			render: (setting) => {
-				setting.addTextArea((text) => {
-					widenTextarea(text, "enveloppe-wide-input")
-						.setPlaceholder(Placeholder.Banner)
-						.setValue((embedSettings.keySendFile || []).join(", "))
-						.onChange(async (value) => {
-							embedSettings.keySendFile = splitByCommaOrNewLineAndNonWord(value);
-							await ctx.plugin.saveSettings();
-						});
-				});
-			},
 		},
+		stringListItems(ctx, {
+			heading: i18next.t("settings.embed.transferMetaFile.title"),
+			addItemName: i18next.t("common.add", { things: "metadata field" }),
+			placeholder: Placeholder.Banner,
+			values: embedSettings.keySendFile,
+			save: () => ctx.plugin.saveSettings(),
+		}),
 		{
 			type: "group",
 			cls: "enveloppe",

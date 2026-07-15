@@ -16,7 +16,7 @@ import {
 	checkRepositoryValidity,
 	verifyRateLimitAPI,
 } from "src/utils/data_validation_test";
-import { type RenderContext, splitByCommaOrNewLineAndSpaces } from "./index";
+import type { RenderContext } from "./index";
 
 class SetClassSuggester extends AbstractInputSuggest<TFile> {
 	plugin: Enveloppe;
@@ -456,18 +456,41 @@ class ManageRepoPage extends SettingPage {
 						})
 				);
 
-			new Setting(containerEl)
-				.setName(i18next.t("settings.plugin.copyLink.linkPathRemover.title"))
-				.setDesc(i18next.t("settings.plugin.copyLink.linkPathRemover.desc"))
-				.addText((text) => {
-					text
-						.setPlaceholder(Placeholder.Docs)
-						.setValue(repo.copyLink.removePart.join(", "))
-						.onChange(async (value) => {
-							repo.copyLink.removePart = splitByCommaOrNewLineAndSpaces(value);
+			const removePartGroup = new SettingGroup(containerEl)
+				.setHeading(i18next.t("settings.plugin.copyLink.linkPathRemover.title"))
+				.addExtraButton((button) => {
+					button.setIcon("plus").onClick(() => {
+						void (async () => {
+							repo.copyLink.removePart.push("");
 							await save();
+							this.display();
+						})();
+					});
+				});
+			for (let index = 0; index < repo.copyLink.removePart.length; index++) {
+				removePartGroup.addSetting((setting) => {
+					setting
+						.setClass("no-display")
+						.addText((text) => {
+							text
+								.setPlaceholder(Placeholder.Docs)
+								.setValue(repo.copyLink.removePart[index])
+								.onChange(async (value) => {
+									repo.copyLink.removePart[index] = value;
+									await save();
+								});
+						})
+						.addExtraButton((button) => {
+							button.setIcon("trash").onClick(() => {
+								void (async () => {
+									repo.copyLink.removePart.splice(index, 1);
+									await save();
+									this.display();
+								})();
+							});
 						});
 				});
+			}
 
 			new Setting(containerEl)
 				.setName(i18next.t("settings.plugin.copyLink.toUri.title"))

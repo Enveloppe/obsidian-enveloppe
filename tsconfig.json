@@ -1,10 +1,10 @@
 {
 	"compilerOptions": {
-		"baseUrl": "./",
 		"paths": {
 			"@interfaces/*": ["./src/interfaces/*"],
 			"@interfaces": ["./src/interfaces/index.ts"],
-			"obsidian-dataview": ["./node_modules/@enveloppe/obsidian-dataview"]
+			"obsidian-dataview": ["./node_modules/@enveloppe/obsidian-dataview"],
+			"*": ["./*"]
 		},
 		"types": ["obsidian-typings"],
 		"noEmit": true,
