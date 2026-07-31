@@ -280,10 +280,9 @@ function createMarkdownLinks(
 		ext = "";
 	}
 
-	const anchorMatch = fileName.match(/(#.*)/);
-	let anchor = anchorMatch ? anchorMatch[0] : null;
+	const anchorMatch = fileName.match(/#.*/);
+	const anchor = anchorMatch ? slugifyAnchor(anchorMatch[0], settings) : '';
 	const encodedUri = `${slugifyAnchor(markdownName.replace(ext, ""), settings, true)}${ext}`;
-	anchor = slugifyAnchor(anchor, settings);
 	return `${isEmbed}[${altLink}](${encodedUri}${anchor})`;
 }
 
@@ -297,26 +296,27 @@ function createMarkdownLinks(
 function slugifyAnchor(
 	anchor: string | null,
 	settings: EnveloppeSettings,
-	encode?: boolean
+	encode?: boolean,
 ): string {
-	const slugifySetting =
-		typeof settings.conversion.links.slugifyAnchor === "string"
-			? settings.conversion.links.slugifyAnchor
-			: "disable";
-	const symbol = encode ? "" : "#";
-	if (anchor && slugifySetting !== "disable") {
+	const anchorParts = anchor?.match(/^(#?)(.*)/);
+	if (anchorParts) {
+		const anchorSymbol = anchorParts[1];
+		let anchorText = anchorParts[2];
+
 		switch (settings.conversion.links.slugifyAnchor) {
 			case "lower":
-				return anchor.toLowerCase().replaceAll(" ", "-");
+				anchorText = anchorText.toLowerCase().replaceAll(" ", "-");
 			case "strict":
-				return `${symbol}${slugify(anchor, { lower: true, strict: true })}`;
+				anchorText = `${slugify(anchorText, { lower: true, strict: true })}`;
 
 			default:
-				return encode ? encodeURI(anchor) : anchor;
+				anchorText = encode
+					? encodeURI(anchorText)
+					: anchorText.replaceAll(" ", "%20");
 		}
+		return anchorSymbol + anchorText;
 	}
-	if (!encode) return anchor?.replaceAll(" ", "%20") ?? "";
-	else return anchor ? encodeURI(anchor) : "";
+	return "";
 }
 
 /**
@@ -400,6 +400,7 @@ export async function convertToInternalGithub(
 				if (linkedFile.anchor) {
 					pathInGithub = pathInGithub.replace(/#.*/, "");
 					pathInGithubWithAnchor += linkedFile.anchor;
+					anchor = slugifyAnchor(anchor, settings);
 				}
 
 				let newLink = link.replace(regToReplace, pathInGithubWithAnchor);
@@ -408,8 +409,7 @@ export async function convertToInternalGithub(
 						linkedFile.linked.extension === "md" &&
 						!linkedFile.linked.name.includes("excalidraw")
 					) {
-						anchor = slugifyAnchor(anchor, settings);
-						pathInGithub = `${pathInGithub.replaceAll(" ", "%20")}.md#${anchor}`;
+						pathInGithub = `${pathInGithub.replaceAll(" ", "%20")}.md${anchor}`;
 						pathInGithub =
 							!pathInGithub.match(/(#.*)/) && !pathInGithub.endsWith(".md")
 								? `${pathInGithub}.md`
