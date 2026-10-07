@@ -424,6 +424,7 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 			overrideAttachments: [],
 			unHandledObsidianExt: [],
 			sendSimpleLinks: true,
+			stripPathPrefix: "",
 		},
 		plugin: {
 			shareKey: old.shareKey,

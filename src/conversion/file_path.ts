@@ -19,6 +19,7 @@ import { createRegexFromText } from "src/conversion/find_and_replace_text";
 import type Enveloppe from "src/main";
 import {
 	checkIfRepoIsInAnother,
+	isAttachment,
 	isInternalShared,
 	isShared,
 } from "src/utils/data_validation_test";
@@ -75,6 +76,29 @@ export function textIsInFrontmatter(
  * @param properties - The properties of the source file
  * @return {string} relative path
  */
+
+/**
+ * Strip a directory prefix from an attachment link path.
+ * If the path starts with the given prefix, it is removed and the result is prefixed with `/`.
+ * @param linkPath - The path to potentially strip
+ * @param prefix - The prefix to strip (e.g., "public")
+ * @returns The stripped path, or the original path if the prefix doesn't match
+ */
+export function stripAttachmentPathPrefix(linkPath: string, prefix: string): string {
+	if (!prefix || prefix.trim().length === 0) return linkPath;
+	// Normalize: remove leading/trailing slashes from prefix
+	const normalizedPrefix = prefix.replace(/^\/+/, "").replace(/\/+$/, "");
+	if (normalizedPrefix.length === 0) return linkPath;
+	// Remove leading slash from path for comparison
+	const normalizedPath = linkPath.replace(/^\/+/, "");
+	if (normalizedPath.startsWith(normalizedPrefix + "/")) {
+		return "/" + normalizedPath.slice(normalizedPrefix.length + 1);
+	}
+	if (normalizedPath === normalizedPrefix) {
+		return "/";
+	}
+	return linkPath;
+}
 
 export async function createRelativePath(
 	sourceFile: TFile,
@@ -155,10 +179,19 @@ export async function createRelativePath(
 		);
 		return defaultPath;
 	}
-	if (!properties.plugin.settings.conversion.links.relativePath)
-		return {
-			link: `${properties.plugin.settings.conversion.links.textPrefix}${targetPath}`,
-		};
+	if (!properties.plugin.settings.conversion.links.relativePath) {
+		const link = `${properties.plugin.settings.conversion.links.textPrefix}${targetPath}`;
+		const isTargetAttachment = !!isAttachment(
+			targetFile.linked.name,
+			properties.plugin.settings.embed.unHandledObsidianExt
+		);
+		if (isTargetAttachment && frontmatterSettings.stripPathPrefix) {
+			return {
+				link: stripAttachmentPathPrefix(link, frontmatterSettings.stripPathPrefix),
+			};
+		}
+		return { link };
+	}
 
 	const sourceList = sourcePath.split("/");
 	const targetList = targetPath.split("/");
@@ -197,7 +230,16 @@ export async function createRelativePath(
 		return defaultPath;
 	}
 
-	return { link: relative };
+	let link = relative;
+	const isTargetAttachment = !!isAttachment(
+		targetFile.linked.name,
+		properties.plugin.settings.embed.unHandledObsidianExt
+	);
+	if (isTargetAttachment && frontmatterSettings.stripPathPrefix) {
+		link = stripAttachmentPathPrefix(link, frontmatterSettings.stripPathPrefix);
+	}
+
+	return { link };
 }
 
 /**
