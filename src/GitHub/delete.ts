@@ -5,6 +5,7 @@ import {
 	FolderSettings,
 	type GithubRepo,
 	type MonoRepoProperties,
+	type MultiRepoProperties,
 	type Properties,
 } from "@interfaces";
 import type { Octokit } from "@octokit/core";
@@ -39,9 +40,12 @@ export async function deleteFromGithub(
 	silent: boolean = false,
 	branchName: string,
 	filesManagement: FilesManagement,
-	repoProperties: MonoRepoProperties
+	repoProperties: MonoRepoProperties | MultiRepoProperties
 ): Promise<Deleted> {
-	const prop = [repoProperties.frontmatter];
+	// publish() can replace frontmatter with an array
+	const prop = Array.isArray(repoProperties.frontmatter)
+		? repoProperties.frontmatter
+		: [repoProperties.frontmatter];
 	const deleted: Deleted[] = [];
 	for (const repo of prop) {
 		const monoProperties: MonoRepoProperties = {
