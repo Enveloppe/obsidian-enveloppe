@@ -131,14 +131,30 @@ export class GithubBranch extends FilesManagement {
 				);
 			}
 			this.console.trace(e);
-			//trying to get the last open PR number
+			//creation failed: only reuse an open PR matching the publishing head and base
 			try {
 				const pr = await this.octokit.request("GET /repos/{owner}/{repo}/pulls", {
 					owner: prop.owner,
 					repo: prop.repo,
 					state: "open",
+					head: `${prop.owner}:${this.branchName}`,
+					base: prop.branch,
 				});
-				return pr.data[0]?.number || 0;
+				const existing = pr.data.find(
+					(openPr) =>
+						openPr.head?.ref === this.branchName &&
+						openPr.base?.ref === prop.branch &&
+						(!openPr.head?.repo?.owner?.login ||
+							openPr.head.repo.owner.login === prop.owner)
+				);
+				if (!existing) {
+					this.console.error(
+						new Error(
+							`Unable to create the pull request from ${this.branchName} to ${prop.branch}, and no matching open pull request exists.`
+						)
+					);
+				}
+				return existing?.number || 0;
 			} catch (e) {
 				// there is no open PR and impossible to create a new one
 				this.console.info(i18next.t("publish.branch.error", { error: e, repo: prop }));
