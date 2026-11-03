@@ -97,7 +97,7 @@ export const buildUploadItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 			control: { type: "toggle", key: "upload.frontmatterTitle.enable" },
 		},
 		{
-			name: "Frontmatter title key",
+			name: i18next.t("settings.upload.useFrontmatterTitle.key"),
 			visible: () => uploadSettings.frontmatterTitle.enable,
 			control: {
 				type: "text",
