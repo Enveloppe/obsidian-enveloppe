@@ -444,6 +444,10 @@ export function parsePath(
 				folder:
 					splitArrayPath(attachment?.send ?? fmGet(frontmatter, "attachment.folder")) ??
 					settings.embed.folder,
+				stripPathPrefix:
+					(attachment?.stripPathPrefix as string | undefined) ??
+					(fmGet(frontmatter, "attachment.stripPathPrefix") as string | undefined) ??
+					settings.embed.stripPathPrefix,
 			},
 		};
 		/** List of alias for path generation */
@@ -730,6 +734,9 @@ function settingAttachment(
 	if (send != undefined) settingsConversion.attachment = send as boolean;
 	const folder = fmGet(frontmatter, `${key}.folder`);
 	if (folder != undefined) settingsConversion.attachmentLinks = folder as string;
+	const stripPathPrefix = fmGet(frontmatter, `${key}.stripPathPrefix`);
+	if (stripPathPrefix != undefined)
+		settingsConversion.stripPathPrefix = stripPathPrefix as string;
 
 	if (settingsConversion.attachmentLinks) {
 		settingsConversion.attachmentLinks = normalizePath(
