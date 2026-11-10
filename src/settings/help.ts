@@ -1,6 +1,6 @@
 import { type EnveloppeSettings, FolderSettings } from "@interfaces";
 import { DOCUMENTATION_LINK } from "@interfaces/constant";
-import { DISCORD_ICON, DISCUSSION_ICON, DOCUMENTATION, GITHUB_ICON, ISSUE, TRANSLATION_ICON } from "@interfaces/icons";
+import { DISCUSSION_ICON, DOCUMENTATION, GITHUB_ICON, ISSUE } from "@interfaces/icons";
 import dedent from "dedent";
 import i18next from "i18next";
 import { normalizePath } from "obsidian";

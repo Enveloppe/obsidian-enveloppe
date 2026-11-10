@@ -6,7 +6,6 @@ import type {
 	PropertiesConversion,
 	Repository,
 } from "@interfaces/main";
-import type { Octokit } from "@octokit/core";
 import {
 	type EmbedCache,
 	type LinkCache,
@@ -17,27 +16,17 @@ import {
 import { getAPI, Link } from "obsidian-dataview";
 import { getImagePath, getReceiptFolder } from "src/conversion/file_path";
 import Publisher from "src/GitHub/upload";
-import type Enveloppe from "src/main";
-import { isAttachment, isShared } from "src/utils/data_validation_test";
+import { isAttachment, isInDryRunFolder, isShared } from "src/utils/data_validation_test";
 import {
 	frontmatterFromFile,
 	getFrontmatterSettings,
 	getProperties,
 } from "src/utils/parse_frontmatter";
-import type { Logs } from "../utils/logs";
+
+const isSharedNote = (file: TFile) =>
+	file.extension === "md" && !file.name.endsWith(".excalidraw.md");
 
 export class FilesManagement extends Publisher {
-	/**
-	 * @param {Octokit} octokit The octokit instance
-	 * @param {EnveloppeSettings} plugin The plugin
-	 */
-	console: Logs;
-
-	constructor(octokit: Octokit, plugin: Enveloppe) {
-		super(octokit, plugin);
-		this.console = plugin.console;
-	}
-
 	/**
 	 * Get all shared files in the vault, by scanning the frontmatter and the state of the shareKey
 	 * @return {TFile[]} The shared files
@@ -88,8 +77,8 @@ export class FilesManagement extends Publisher {
 		}
 		/* get if external folder note exists */
 		if (addFolderNote) {
-			const folderNote = this.vault.getAbstractFileByPath(`${folder.path}.md`);
-			if (folderNote && folderNote instanceof TFile) {
+			const folderNote = this.vault.getFileByPath(`${folder.path}.md`);
+			if (folderNote) {
 				const frontMatter = this.metadataCache.getCache(folderNote.path)?.frontmatter;
 				if (
 					isShared(frontMatter, this.settings, folderNote, repo) &&
@@ -117,7 +106,7 @@ export class FilesManagement extends Publisher {
 	): ConvertedLink[] {
 		const files = this.vault
 			.getFiles()
-			.filter((x) => !x.path.startsWith(this.settings.github.dryRun.folderName));
+			.filter((x) => !isInDryRunFolder(this.settings, repo, x));
 		const allFileWithPath: ConvertedLink[] = [];
 		const sourceFrontmatter = getProperties(this.plugin, repo, null, true);
 		for (const file of files) {
@@ -154,9 +143,8 @@ export class FilesManagement extends Publisher {
 		if (backlinks.count() === 0) return undefined;
 		const otherPath: string[] = [];
 		for (const backlink of backlinks.keys()) {
-			//get tfile of theses files
-			const tfile = this.vault.getAbstractFileByPath(backlink);
-			if (tfile && tfile instanceof TFile) {
+			const tfile = this.vault.getFileByPath(backlink);
+			if (tfile) {
 				const frontmatter = this.metadataCache.getFileCache(tfile)?.frontmatter;
 				if (!frontmatter) continue;
 				const propertiesConversion = getFrontmatterSettings(
@@ -368,14 +356,21 @@ export class FilesManagement extends Publisher {
 	/**
 	 * Get the last time the file from the github Repo was edited
 	 * @param {GithubRepo} githubRepo
+	 * @param {Properties} prop The repository where the file is
 	 * @return {Promise<Date>}
 	 */
 
-	async getLastEditedTimeRepo(githubRepo: GithubRepo): Promise<Date | null> {
+	async getLastEditedTimeRepo(
+		githubRepo: GithubRepo,
+		prop: Properties
+	): Promise<Date | null> {
 		const commits = await this.octokit.request("GET /repos/{owner}/{repo}/commits", {
-			owner: this.settings.github.user,
-			repo: this.settings.github.repo,
+			owner: prop.owner,
+			repo: prop.repo,
+			sha: prop.branch,
 			path: githubRepo.file,
+			// biome-ignore lint/style/useNamingConvention: github api
+			per_page: 1,
 		});
 		const lastCommittedFile = commits.data[0];
 		if (
@@ -445,15 +440,8 @@ export class FilesManagement extends Publisher {
 		const githubSharedFilePaths = new Set(githubSharedFiles.map((x) => x.file));
 
 		for (const file of allFileWithPath) {
-			if (!githubSharedFilePaths.has(file.converted.trim())) {
-				//get TFile from file
-				const fileInVault = this.vault.getAbstractFileByPath(file.real.path.trim());
-				const isMarkdown =
-					fileInVault instanceof TFile &&
-					fileInVault.extension === "md" &&
-					!fileInVault.name.endsWith(".excalidraw.md");
-				if (fileInVault && isMarkdown) newFiles.push(fileInVault);
-			}
+			if (!githubSharedFilePaths.has(file.converted.trim()) && isSharedNote(file.real))
+				newFiles.push(file.real);
 		}
 		return newFiles;
 	}
@@ -524,22 +512,18 @@ export class FilesManagement extends Publisher {
 		embedFiles: TFile[],
 		frontmatterSettings: PropertiesConversion
 	): Promise<TFile[]> {
+		const frontmatterLinks =
+			this.metadataCache.getFileCache(file)?.frontmatterLinks ?? [];
 		for (const field of this.settings.embed.keySendFile) {
-			const frontmatterLink = this.metadataCache.getFileCache(file)?.frontmatterLinks;
-			const imageLinkPath: string[] = [];
-			if (frontmatterLink) {
-				frontmatterLink.forEach((link) => {
-					const fieldRegex = new RegExp(`${field}(\\.\\d+)?`, "g");
-					if (link.key.match(fieldRegex)) {
-						imageLinkPath.push(link.link);
-					}
-				});
-			}
+			const fieldRegex = new RegExp(`${field}(\\.\\d+)?`);
+			const imageLinkPath = frontmatterLinks
+				.filter((link) => fieldRegex.test(link.key))
+				.map((link) => link.link);
 			for (const path of imageLinkPath) {
 				const imageLink =
 					this.metadataCache.getFirstLinkpathDest(path, file.path) ??
-					this.vault.getAbstractFileByPath(path);
-				if (imageLink instanceof TFile && !embedFiles.includes(imageLink)) {
+					this.vault.getFileByPath(path);
+				if (imageLink && !embedFiles.includes(imageLink)) {
 					const sharedFile = this.imageSharedOrNote(imageLink, frontmatterSettings);
 					if (sharedFile) embedFiles.push(sharedFile);
 				}
@@ -586,34 +570,29 @@ export class FilesManagement extends Publisher {
 	 * @param {ConvertedLink[]} allFileWithPath - all shared file with their path
 	 * @param {GithubRepo[]} githubSharedFiles - all file in the github repo
 	 * @param {TFile[]} newFiles - new file to add to the repo
+	 * @param {Properties} prop - The repository to compare with
 	 * @return {Promise<TFile[]>} newFiles - File to add in the repo
 	 */
 
 	async getEditedFiles(
 		allFileWithPath: ConvertedLink[],
 		githubSharedFiles: GithubRepo[],
-		newFiles: TFile[]
+		newFiles: TFile[],
+		prop: Properties
 	): Promise<TFile[]> {
+		const githubFilesByPath = new Map(githubSharedFiles.map((x) => [x.file, x]));
 		for (const file of allFileWithPath) {
-			const githubSharedFile = githubSharedFiles.find(
-				(x) => x.file === file.converted.trim()
-			);
-			if (githubSharedFile) {
-				const repoEditedTime = await this.getLastEditedTimeRepo(githubSharedFile);
-				const fileInVault = this.vault.getAbstractFileByPath(file.real.path.trim());
-				const isMarkdown =
-					fileInVault instanceof TFile &&
-					fileInVault?.extension === "md" &&
-					!fileInVault?.name.endsWith(".excalidraw.md");
-				if (fileInVault && isMarkdown) {
-					const vaultEditedTime = new Date(fileInVault.stat.mtime);
-					if (repoEditedTime && vaultEditedTime > repoEditedTime) {
-						this.console.debug(
-							`edited file : ${fileInVault.path} / ${vaultEditedTime.toISOString()} vs ${repoEditedTime.toISOString()}`
-						);
-						newFiles.push(fileInVault);
-					}
-				}
+			// filter before requesting GitHub: one API call per file
+			if (!isSharedNote(file.real)) continue;
+			const githubSharedFile = githubFilesByPath.get(file.converted.trim());
+			if (!githubSharedFile) continue;
+			const repoEditedTime = await this.getLastEditedTimeRepo(githubSharedFile, prop);
+			const vaultEditedTime = new Date(file.real.stat.mtime);
+			if (repoEditedTime && vaultEditedTime > repoEditedTime) {
+				this.console.debug(
+					`edited file : ${file.real.path} / ${vaultEditedTime.toISOString()} vs ${repoEditedTime.toISOString()}`
+				);
+				newFiles.push(file.real);
 			}
 		}
 		return newFiles;
@@ -635,6 +614,8 @@ export class FilesManagement extends Publisher {
 			owner: repo?.user ?? this.settings.github.user,
 			repo: repo?.repo ?? this.settings.github.repo,
 			path: repoPath,
+			// biome-ignore lint/style/useNamingConvention: github api
+			per_page: 1,
 		});
 		if (githubFile.status !== 200) return true; //doesn't exists
 		const vaultEditedTime = new Date(file.stat.mtime);

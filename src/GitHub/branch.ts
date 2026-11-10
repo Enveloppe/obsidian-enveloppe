@@ -1,21 +1,13 @@
 import type { Properties } from "@interfaces/main";
-import type { Octokit } from "@octokit/core";
 import type { RequestError } from "@octokit/request-error";
 import dedent from "dedent";
 import i18next from "i18next";
 import { Notice } from "obsidian";
 import { FilesManagement } from "src/GitHub/files";
-import type Enveloppe from "src/main";
 import { verifyToken } from "../utils/data_validation_test";
-import { EnveloppeErrors, type Logs } from "../utils/logs";
+import { EnveloppeErrors } from "../utils/logs";
 
 export class GithubBranch extends FilesManagement {
-	console: Logs;
-	constructor(octokit: Octokit, plugin: Enveloppe) {
-		super(octokit, plugin);
-		this.console = plugin.console;
-	}
-
 	/**
 	 * Check if Properties is an array or not and run the newBranchOnRepo function on each repo
 	 * @param {Properties[] | Properties} prop The repo to use
@@ -173,13 +165,14 @@ export class GithubBranch extends FilesManagement {
 	async deleteBranchOnRepo(prop: Properties): Promise<boolean> {
 		try {
 			const branch = await this.octokit.request(
-				`DELETE /repos/{owner}/{repo}/git/refs/heads/${this.branchName}`,
+				"DELETE /repos/{owner}/{repo}/git/refs/{ref}",
 				{
 					owner: prop.owner,
 					repo: prop.repo,
+					ref: `heads/${this.branchName}`,
 				}
 			);
-			return branch.status === 200;
+			return branch.status === 204;
 		} catch (e) {
 			this.console.trace(e);
 			return false;
@@ -195,7 +188,7 @@ export class GithubBranch extends FilesManagement {
 
 	async mergePullRequestOnRepo(pullRequestNumber: number, prop: Properties) {
 		const commitMsg =
-			prop.commitMsg || prop.commitMsg.trim().length > 0
+			prop.commitMsg?.trim().length > 0
 				? `${prop.commitMsg} #${pullRequestNumber}`
 				: `[PUBLISHER] Merge #${pullRequestNumber}`;
 		try {
@@ -235,7 +228,7 @@ export class GithubBranch extends FilesManagement {
 		for (const repo of prop) {
 			success.push(await this.updateRepositoryOnOne(repo));
 		}
-		return !success.every((value) => !value);
+		return success.some(Boolean);
 	}
 
 	/**
@@ -250,7 +243,7 @@ export class GithubBranch extends FilesManagement {
 		try {
 			const pullRequest = await this.pullRequestOnRepo(prop);
 			if (pullRequest === 0) return false;
-			if (prop.automaticallyMergePR && pullRequest !== 0) {
+			if (prop.automaticallyMergePR) {
 				const prSuccess = await this.mergePullRequestOnRepo(pullRequest, prop);
 				if (prSuccess) {
 					await this.deleteBranchOnRepo(prop);
@@ -286,34 +279,15 @@ export class GithubBranch extends FilesManagement {
 					repo: repo.repo,
 				})
 				.catch((e: RequestError) => {
-					//check the error code
-					if (e.status === 404) {
-						new Notice(
-							i18next.t("commands.checkValidity.inRepo.error404", { repo }),
-							this.noticeLength
-						);
-						throw new EnveloppeErrors(
-							i18next.t("commands.checkValidity.inRepo.error404", { repo })
-						);
-					} else if (e.status === 403) {
-						new Notice(
-							i18next.t("commands.checkValidity.inRepo.error403", { repo }),
-							this.noticeLength
-						);
-						throw new EnveloppeErrors(
-							i18next.t("commands.checkValidity.inRepo.error403", { repo })
-						);
-					} else if (e.status === 301) {
-						new Notice(
-							i18next.t("commands.checkValidity.inRepo.error301", { repo }),
-							this.noticeLength
-						);
-						throw new EnveloppeErrors(
-							i18next.t("commands.checkValidity.inRepo.error301", { repo })
-						);
+					if (e.status === 404 || e.status === 403 || e.status === 301) {
+						const msg = i18next.t(`commands.checkValidity.inRepo.error${e.status}`, {
+							repo,
+						});
+						new Notice(msg, this.noticeLength);
+						throw new EnveloppeErrors(msg);
 					}
+					throw e;
 				});
-			//@ts-ignore
 			if (repoExist.status === 200) {
 				this.console.info(
 					i18next.t("commands.checkValidity.repoExistsTestBranch", { repo })

@@ -22,13 +22,11 @@ export class Logs {
 		this.noticeLength = plugin.settings.plugin.noticeLength;
 	}
 
+	/** Start each session with an empty log file */
 	async createLogFile() {
 		const path = normalizePath(`${this.plugin.manifest.dir}/logs.txt`);
-		if (await this.app.vault.adapter.exists(path)) {
-			await this.app.vault.adapter.remove(
-				normalizePath(`${this.plugin.manifest.dir}/logs.txt`)
-			);
-		}
+		if (await this.app.vault.adapter.exists(path))
+			await this.app.vault.adapter.remove(path);
 	}
 
 	private errorToMessage(error: unknown) {
@@ -89,20 +87,20 @@ export class Logs {
 
 	warn(...messages: unknown[]) {
 		console.warn(...messages);
-		this.notif(messages);
+		this.notif(...messages);
 		this.writeToLog(messages, "warn");
 	}
 
 	info(...messages: unknown[]) {
 		console.debug(...messages);
-		this.notif(messages);
+		this.notif(...messages);
 		this.writeToLog(messages, "info");
 	}
 
 	debug(...messages: unknown[]) {
 		if (this.plugin.settings.plugin?.dev) {
 			console.debug(...messages);
-			this.notif(messages);
+			this.notif(...messages);
 			this.writeToLog(messages, "debug");
 		}
 	}
@@ -110,7 +108,7 @@ export class Logs {
 	trace(...messages: unknown[]) {
 		if (this.plugin.settings.plugin?.dev) {
 			console.debug(...messages);
-			this.notif(messages);
+			this.notif(...messages);
 			this.writeToLog(messages, "debug");
 		}
 	}
@@ -118,7 +116,7 @@ export class Logs {
 	silly(...messages: unknown[]) {
 		if (this.plugin.settings.plugin?.dev) {
 			console.debug(...messages);
-			this.notif(messages);
+			this.notif(...messages);
 			this.writeToLog(messages, "silly");
 		}
 	}
@@ -205,14 +203,20 @@ export class Logs {
 
 	async publisherNotificationOneRepo(
 		PublisherManager: Publisher,
-		file: TFile | string | undefined,
+		file: TFile | string | number | undefined,
 		settings: EnveloppeSettings,
 		prop: Properties
 	): Promise<void> {
-		const noticeValue = file instanceof TFile ? `"${file.basename}"` : file;
+		// a number is the count of notes sent by a batch command, a string is the note title
+		const noticeValue =
+			file instanceof TFile
+				? `"${file.basename}"`
+				: typeof file === "number"
+					? `${file} notes`
+					: file;
 		const docSuccess = createFragment();
 		const successMsg =
-			file instanceof String
+			typeof file === "number"
 				? i18next.t("informations.successfulPublish", {
 						nbNotes: noticeValue,
 						repo: prop,
@@ -231,7 +235,7 @@ export class Logs {
 				cls: ["enveloppe", "success", "notification"],
 			})
 			.appendChild(sanitizeHTMLToDom(successMsg));
-		if (settings.github.workflow.name.length === 0) {
+		if (prop.workflowName.length === 0) {
 			new Notice(docSuccess, settings.plugin.noticeLength);
 			return;
 		}
@@ -262,7 +266,7 @@ export class Logs {
 
 	async publisherNotification(
 		PublisherManager: Publisher,
-		file: TFile | string | undefined,
+		file: TFile | string | number | undefined,
 		settings: EnveloppeSettings,
 		prop: Properties | Properties[]
 	) {

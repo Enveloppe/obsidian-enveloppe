@@ -11,8 +11,8 @@ import {
 import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
-import { klona } from "klona";
 import {
+	getFrontMatterInfo,
 	type MetadataCache,
 	Notice,
 	normalizePath,
@@ -25,7 +25,11 @@ import {
 import type { FilesManagement } from "src/GitHub/files";
 import type { ContentFile } from "src/GitHub/octokit_types";
 import { trimObject } from "src/utils";
-import { isAttachment, verifyRateLimitAPI } from "src/utils/data_validation_test";
+import {
+	getDryRunFolder,
+	isAttachment,
+	verifyRateLimitAPI,
+} from "src/utils/data_validation_test";
 import { frontmatterSettingsRepository } from "src/utils/parse_frontmatter";
 
 /**
@@ -88,7 +92,7 @@ async function deleteFromGithubOneRepo(
 		(settings.github.rateLimit === 0 || filesInRepo.length > settings.github.rateLimit) &&
 		(await verifyRateLimitAPI(octokit, plugin, false, filesInRepo.length)) === 0
 	) {
-		console.warn("Rate limited exceeded, please try again later");
+		pconsole.warn("Rate limited exceeded, please try again later");
 		return { success: false, deleted: [], undeleted: [] };
 	}
 	if (filesInRepo.length === 0) {
@@ -118,7 +122,7 @@ async function deleteFromGithubOneRepo(
 			? !allSharedConverted.some((f) => {
 					let prop = f.repo;
 					if (Array.isArray(prop)) {
-						prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
+						prop = prop.find((r) => r.repo === repo.repo);
 					}
 					return (f.converted === file.file || f.otherPath?.includes(file.file)) && prop;
 				})
@@ -126,27 +130,25 @@ async function deleteFromGithubOneRepo(
 		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
 		if (isNeedToBeDeleted) {
 			const checkingIndex = file.file.contains(settings.upload.folderNote.rename)
-				? await checkIndexFiles(octokit, file.file, repo)
+				? await checkIndexFiles(octokit, file.file, repo, branchName)
 				: false;
 			if (!checkingIndex) {
 				pconsole.trace(
 					`trying to delete file : ${file.file} from ${repo.owner}/${repo.repo}`
 				);
-				const response = await octokit.request(
-					"DELETE /repos/{owner}/{repo}/contents/{+path}",
-					{
+				try {
+					await octokit.request("DELETE /repos/{owner}/{repo}/contents/{+path}", {
 						owner: repo.owner,
 						repo: repo.repo,
 						path: file.file,
 						message: `DELETE FILE : ${file.file}`,
 						sha: file.sha,
 						branch: branchName,
-					}
-				);
-				if (response.status === 200) {
+					});
 					deletedSuccess++;
 					result.deleted.push(file.file);
-				} else {
+				} catch (e) {
+					pconsole.trace(e);
 					deletedFailed++;
 					result.undeleted.push(file.file);
 				}
@@ -221,7 +223,7 @@ export async function filterGithubFile(
 				(behavior === FolderSettings.Yaml && file.file.includes(root)) ||
 				(attachmentFolder.length > 0 && file.file.includes(attachmentFolder))) &&
 			!excludedFileFromDelete(file.file, settings) &&
-			(enabledAttachments || file.file.match("md$"))
+			(enabledAttachments || file.file.endsWith(".md"))
 		) {
 			sharedFilesInRepo.push(file);
 		}
@@ -236,18 +238,13 @@ export async function filterGithubFile(
  * @return {string} YAML metadata
  */
 
-function parseYamlFrontmatter(
-	contents: string,
-	filePath: string
-): Record<string, unknown> {
-	const yamlFrontmatter = contents.split("---");
-	if (yamlFrontmatter.length < 2) return {}; //no frontmatter
+function parseYamlFrontmatter(contents: string): Record<string, unknown> {
+	const { exists, frontmatter } = getFrontMatterInfo(contents);
+	if (!exists) return {};
 	try {
-		const yamlFrontmatterParsed: unknown = parseYaml(yamlFrontmatter[1]);
-		return trimObject(yamlFrontmatterParsed);
-	} catch (e) {
+		return trimObject(parseYaml(frontmatter));
+	} catch {
 		//probably not a valid frontmatter, skip
-		console.warn(`Error parsing YAML frontmatter for ${filePath}`, e);
 		return {};
 	}
 }
@@ -261,13 +258,15 @@ function parseYamlFrontmatter(
  * @param {Octokit} octokit GitHub API
  * @param {string} path path of the file to check
  * @param {Properties} prop repository informations
- * @return {Promise<boolean>} true if the file must be deleted
+ * @param {string} branchName branch where the file will be deleted
+ * @return {Promise<boolean>} true if the file must be kept
  */
 
 async function checkIndexFiles(
 	octokit: Octokit,
 	path: string,
-	prop: Properties
+	prop: Properties,
+	branchName: string
 ): Promise<boolean> {
 	const fileRequest = (await octokit.request(
 		"GET /repos/{owner}/{repo}/contents/{+path}",
@@ -275,19 +274,18 @@ async function checkIndexFiles(
 			owner: prop.owner,
 			repo: prop.repo,
 			path,
+			ref: branchName,
 		}
 	)) as { status: number; data: ContentFile };
 	if (fileRequest.status === 200) {
 		const fileContent = Base64.decode(fileRequest.data.content);
-		const fileFrontmatter = parseYamlFrontmatter(fileContent, path);
-		// if not share => don't delete
-		// Key preventing deletion :
-		//	- index: true
-		//	- delete: false
-		// return true for NO DELETION
+		const fileFrontmatter = parseYamlFrontmatter(fileContent);
+		// YAML gives booleans, but quoted values stay strings
+		const is = (value: unknown, expected: boolean) =>
+			value === expected || value === String(expected);
 		return (
-			fileFrontmatter.index === "true" ||
-			fileFrontmatter.delete === "false" ||
+			is(fileFrontmatter.index, true) ||
+			is(fileFrontmatter.delete, false) ||
 			!fileFrontmatter.share
 		);
 	}
@@ -303,19 +301,11 @@ function cleanDryRun(
 	const app = plugin.app;
 	const repo = repoProperties.frontmatter;
 	const pconsole = filesManagement.console;
-	if (!repo.dryRun.folderName || repo.dryRun.folderName.length === 0)
+	const dryRunFolderPath = getDryRunFolder(repo.dryRun.folderName, repo);
+	if (dryRunFolderPath === "/")
 		throw new Error("DryRun folder path is empty, please check your settings");
-	const dryRunFolderPath = normalizePath(
-		repo.dryRun.folderName
-			.replace("{{owner}}", repo.owner)
-			.replace("{{repo}}", repo.repo)
-			.replace("{{branch}}", repo.branch)
-	);
-	if (dryRunFolderPath.trim().length === 0 || dryRunFolderPath === "/")
-		throw new Error("DryRun folder path is empty, please check your settings");
-	const dryRunFolder = vault.getAbstractFileByPath(dryRunFolderPath);
-	if (!(dryRunFolder instanceof TFolder))
-		return { success: false, deleted: [], undeleted: [] };
+	const dryRunFolder = vault.getFolderByPath(dryRunFolderPath);
+	if (!dryRunFolder) return { success: false, deleted: [], undeleted: [] };
 	const dryRunFiles: TFile[] = [];
 	Vault.recurseChildren(dryRunFolder, (file: TAbstractFile) => {
 		const enabledAttachments =
@@ -326,8 +316,8 @@ function cleanDryRun(
 				normalizePath(file.path.replace(dryRunFolderPath, "")),
 				settings
 			) &&
-			(enabledAttachments || file.path.match("md$")) &&
-			file instanceof TFile
+			file instanceof TFile &&
+			(enabledAttachments || file.extension === "md")
 		)
 			dryRunFiles.push(file);
 	});
@@ -352,7 +342,7 @@ function cleanDryRun(
 			? !allSharedFiles.some((f) => {
 					let prop = f.repo;
 					if (Array.isArray(prop)) {
-						prop = prop.find((r) => klona(r.repo) === klona(repo.repo));
+						prop = prop.find((r) => r.repo === repo.repo);
 					}
 					return (
 						(f.converted === convertedPath || f.otherPath?.includes(convertedPath)) &&
@@ -372,6 +362,7 @@ function cleanDryRun(
 				void app.fileManager.trashFile(file);
 				deletedSuccess++;
 				deletedFolder.push(file);
+				result.deleted.push(file.path);
 			}
 		}
 	}
@@ -379,14 +370,9 @@ function cleanDryRun(
 	//recursive delete empty folder in dryRunFolder
 	//empty folder are folder with children.length === 0
 	const dryRunFolders: TFolder[] = [];
-	const dryRunFolderAgain = vault.getAbstractFileByPath(dryRunFolderPath);
-	if (dryRunFolderAgain instanceof TFolder) {
-		Vault.recurseChildren(dryRunFolderAgain, (file: TAbstractFile) => {
-			if (file instanceof TFolder) {
-				dryRunFolders.push(file);
-			}
-		});
-	}
+	Vault.recurseChildren(dryRunFolder, (file: TAbstractFile) => {
+		if (file instanceof TFolder) dryRunFolders.push(file);
+	});
 	for (const folder of dryRunFolders.reverse()) {
 		const children = folder.children.filter((child) => !deletedFolder.includes(child));
 		if (children.length === 0) {
@@ -401,7 +387,7 @@ function cleanDryRun(
 			? i18next.t("deletion.success", { nb: deletedSuccess.toString() })
 			: i18next.t("deletion.noFile");
 	if (!silent) new Notice(successMsg, noticeLength);
-	result.success = deletedSuccess === 0;
+	result.success = true;
 	return result;
 }
 

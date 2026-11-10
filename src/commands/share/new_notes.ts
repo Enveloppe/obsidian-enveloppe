@@ -91,7 +91,6 @@ export async function shareNewNote(
 			PublisherManager.noticeLength
 		);
 
-		const statusBarElement = plugin.addStatusBarItem();
 		const isValid = await checkRepositoryValidityWithProperties(
 			PublisherManager,
 			monoRepo.frontmatter,
@@ -101,7 +100,7 @@ export async function shareNewNote(
 		await PublisherManager.newBranch(monoRepo.frontmatter);
 		await shareAllMarkedNotes(
 			PublisherManager,
-			statusBarElement,
+			plugin.addStatusBarItem(),
 			branchName,
 			monoRepo,
 			newlySharedNotes,

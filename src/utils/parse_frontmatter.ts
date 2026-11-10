@@ -127,42 +127,26 @@ export function getProperties(
 	const settings = plugin.settings;
 	let github = repository ?? settings.github;
 	if (checkSet && repository && plugin.repositoryFrontmatter[repository.smartKey]) {
-		const setFrontmatter = plugin.repositoryFrontmatter[repository.smartKey];
-		delete setFrontmatter?.[settings.plugin.shareKey];
-		//@ts-ignore
+		// copy: the set frontmatter is the object cached by Obsidian's metadata cache
+		const setFrontmatter = { ...plugin.repositoryFrontmatter[repository.smartKey] };
+		delete setFrontmatter[settings.plugin.shareKey];
 		frontmatter = merge.withOptions(
 			{ allowUndefinedOverrides: false },
-			setFrontmatter ?? {},
+			setFrontmatter,
 			frontmatter ?? {}
 		);
 	}
 	const shortRepoValue = fmGet(frontmatter, "shortRepo");
-	if (frontmatter && typeof shortRepoValue === "string" && shortRepoValue !== "default") {
+	if (frontmatter && typeof shortRepoValue === "string") {
 		const smartKey = shortRepoValue.toLowerCase();
-		const allOtherRepo = settings.github.otherRepo;
-		const shortRepo = allOtherRepo.find((repo) => {
-			return repo.smartKey.toLowerCase() === smartKey;
-		});
-		github = shortRepo ?? github;
+		if (smartKey === "default") github = settings.github;
+		else
+			github =
+				settings.github.otherRepo.find(
+					(repo) => repo.smartKey.toLowerCase() === smartKey
+				) ?? github;
 	}
-	let Properties: Properties = {
-		branch: github.branch,
-		repo: github.repo,
-		owner: github.user,
-		autoclean: !settings.github.dryRun.enable && settings.upload.autoclean.enable,
-		workflowName: github.workflow.name,
-		commitMsg: github.workflow.commitMessage,
-		automaticallyMergePR: github.automaticallyMergePR,
-		verifiedRepo: github.verifiedRepo ?? false,
-		rateLimit: github.rateLimit,
-		dryRun: {
-			...settings.github.dryRun,
-			autoclean: settings.upload.autoclean.enable && settings.github.dryRun.enable,
-		},
-	};
-	if (settings.upload.behavior === FolderSettings.Fixed) {
-		Properties.autoclean = false;
-	}
+	let Properties = createProperties(settings, github);
 	const multipleRepoValue = fmGet(frontmatter, "multipleRepo");
 	const repoValue = fmGet(frontmatter, "repo");
 	if (
@@ -211,6 +195,36 @@ export function getProperties(
 		Properties.autoclean = autocleanValue as boolean;
 	}
 	return parsePath(plugin, repository, Properties);
+}
+
+/**
+ * Build the Properties of a repository, before any frontmatter override
+ * @param {EnveloppeSettings} settings
+ * @param {Repository | EnveloppeSettings["github"]} github the repository, or the main one from the settings
+ * @return {Properties}
+ */
+function createProperties(
+	settings: EnveloppeSettings,
+	github: Repository | EnveloppeSettings["github"]
+): Properties {
+	return {
+		branch: github.branch,
+		repo: github.repo,
+		owner: github.user,
+		autoclean:
+			settings.upload.behavior !== FolderSettings.Fixed &&
+			!settings.github.dryRun.enable &&
+			settings.upload.autoclean.enable,
+		workflowName: github.workflow.name,
+		commitMsg: github.workflow.commitMessage,
+		automaticallyMergePR: github.automaticallyMergePR,
+		verifiedRepo: github.verifiedRepo ?? false,
+		rateLimit: github.rateLimit,
+		dryRun: {
+			...settings.github.dryRun,
+			autoclean: settings.upload.autoclean.enable && settings.github.dryRun.enable,
+		},
+	};
 }
 
 /**
@@ -286,7 +300,8 @@ function removeDuplicateRepo(multipleRepo: Properties[]) {
 
 /**
  * Get the Properties from the `shortRepo` string ;
- * Using the `default` key will put the default Properties in the list
+ * Using the `default` key will put the main repository (from the settings) in the list,
+ * whatever repository the command is run for
  * @param {FrontMatterCache} frontmatter - The frontmatter of the file
  * @param {Repository[]} allRepo - The list of all repo from the settings
  * @param {Properties} properties - The default Properties (from the default settings)
@@ -304,7 +319,12 @@ function multipleShortKeyRepo(
 		for (const repo of shortRepoValue as string[]) {
 			const smartKey = repo.toLowerCase();
 			if (smartKey === "default") {
-				multipleRepo.push(properties);
+				const main = parsePath(
+					plugin,
+					null,
+					createProperties(plugin.settings, plugin.settings.github)
+				);
+				multipleRepo.push(...(Array.isArray(main) ? main : [main]));
 			} else {
 				const shortRepo = allRepo.find((repo) => {
 					return repo.smartKey.toLowerCase() === smartKey;
@@ -326,7 +346,7 @@ function multipleShortKeyRepo(
 				}
 			}
 		}
-		return multipleRepo;
+		return removeDuplicateRepo(multipleRepo);
 	}
 	return properties;
 }
@@ -602,7 +622,7 @@ export function frontmatterFromFile(
 			setFrontmatter ?? {},
 			linkedFrontmatter ?? {},
 			frontmatter ?? {}
-		) as FrontMatterCache;
+		);
 	}
 
 	return frontmatter;

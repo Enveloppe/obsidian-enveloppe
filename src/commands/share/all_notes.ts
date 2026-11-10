@@ -109,72 +109,71 @@ export async function shareAllMarkedNotes(
 	try {
 		const fileError: string[] = [];
 		const listStateUploaded: UploadedFiles[] = [];
-		if (sharedFiles.length > 0) {
-			if (createGithubBranch) {
-				const isValid = await checkRepositoryValidityWithProperties(
-					PublisherManager,
-					prop,
-					sharedFiles.length
-				);
-				if (!isValid) return false;
-				await PublisherManager.newBranch(prop);
-			}
-			for (const sharedFile of sharedFiles) {
-				try {
-					statusBar.increment();
-					const uploaded = await PublisherManager.publish(
-						sharedFile,
-						false,
-						monoRepo,
-						undefined,
-						undefined,
-						sourceFrontmatter
-					);
-					if (uploaded) {
-						listStateUploaded.push(...uploaded.uploaded);
-					}
-				} catch (e) {
-					fileError.push(sharedFile.name);
-					new Notice(
-						i18next.t("error.unablePublishNote", { file: sharedFile.name }),
-						PublisherManager.noticeLength
-					);
-					plugin.console.trace(e);
-				}
-			}
-			statusBar.finish(8000);
-			const noticeValue = `${listStateUploaded.length} notes`;
-			const deleted = await deleteFromGithub(
-				true,
-				branchName,
+		if (sharedFiles.length === 0) {
+			statusBar.remove();
+			return;
+		}
+		if (createGithubBranch) {
+			const isValid = await checkRepositoryValidityWithProperties(
 				PublisherManager,
-				monoRepo
+				prop,
+				sharedFiles.length
 			);
-			const settings = PublisherManager.settings;
-			if (settings.upload.metadataExtractorPath.length > 0 && Platform.isDesktop) {
-				const metadataExtractor = await getSettingsOfMetadataExtractor(
-					PublisherManager.plugin.app,
-					settings
-				);
-				if (metadataExtractor) {
-					await PublisherManager.uploadMetadataExtractorFiles(metadataExtractor, prop);
-				}
+			if (!isValid) {
+				statusBar.remove();
+				return false;
 			}
-			const update = await PublisherManager.updateRepository(prop);
-			if (update) {
-				await plugin.console.publisherNotification(
-					PublisherManager,
-					noticeValue,
-					settings,
-					prop
+			await PublisherManager.newBranch(prop);
+		}
+		for (const sharedFile of sharedFiles) {
+			try {
+				statusBar.increment();
+				const uploaded = await PublisherManager.publish(
+					sharedFile,
+					false,
+					monoRepo,
+					undefined,
+					undefined,
+					sourceFrontmatter
 				);
-				if (settings.plugin.displayModalRepoEditing) {
-					const listEdited = createListEdited(listStateUploaded, deleted, fileError);
-					new ListChangedFiles(PublisherManager.plugin.app, listEdited).open();
+				if (uploaded) {
+					listStateUploaded.push(...uploaded.uploaded);
 				}
-			} else {
-				plugin.console.noticeErrorUpload(prop);
+			} catch (e) {
+				fileError.push(sharedFile.name);
+				new Notice(
+					i18next.t("error.unablePublishNote", { file: sharedFile.name }),
+					PublisherManager.noticeLength
+				);
+				plugin.console.trace(e);
 			}
+		}
+		statusBar.finish(8000);
+		const deleted = await deleteFromGithub(true, branchName, PublisherManager, monoRepo);
+		const settings = PublisherManager.settings;
+		if (settings.upload.metadataExtractorPath.length > 0 && Platform.isDesktop) {
+			const metadataExtractor = await getSettingsOfMetadataExtractor(
+				PublisherManager.plugin.app,
+				settings
+			);
+			if (metadataExtractor) {
+				await PublisherManager.uploadMetadataExtractorFiles(metadataExtractor, prop);
+			}
+		}
+		const update = await PublisherManager.updateRepository(prop);
+		if (update) {
+			await plugin.console.publisherNotification(
+				PublisherManager,
+				listStateUploaded.length,
+				settings,
+				prop
+			);
+			if (settings.plugin.displayModalRepoEditing) {
+				const listEdited = createListEdited(listStateUploaded, deleted, fileError);
+				new ListChangedFiles(PublisherManager.plugin.app, listEdited).open();
+			}
+		} else {
+			plugin.console.noticeErrorUpload(prop);
 		}
 	} catch (error) {
 		plugin.console.trace(error);
@@ -187,6 +186,7 @@ export async function shareAllMarkedNotes(
 			cls: ["error", "enveloppe", "notification"],
 			text: i18next.t("error.unablePublishMultiNotes"),
 		});
+		new Notice(errorFrag, PublisherManager.noticeLength);
 		statusBar.error(prop);
 	}
 }

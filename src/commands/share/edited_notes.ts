@@ -86,7 +86,8 @@ async function shareAllEditedNotes(
 	const newlySharedNotes = await PublisherManager.getEditedFiles(
 		sharedFilesWithPaths,
 		githubSharedNotes,
-		newSharedFiles
+		newSharedFiles,
+		monoRepo.frontmatter
 	);
 	if (newlySharedNotes.length > 0) {
 		new Notice(
@@ -94,7 +95,6 @@ async function shareAllEditedNotes(
 			PublisherManager.noticeLength
 		);
 
-		const statusBarElement = plugin.addStatusBarItem();
 		const isValid = await checkRepositoryValidityWithProperties(
 			PublisherManager,
 			monoRepo.frontmatter,
@@ -104,7 +104,7 @@ async function shareAllEditedNotes(
 		await PublisherManager.newBranch(monoRepo.frontmatter);
 		await shareAllMarkedNotes(
 			PublisherManager,
-			statusBarElement,
+			plugin.addStatusBarItem(),
 			branchName,
 			monoRepo,
 			newlySharedNotes,
@@ -138,14 +138,14 @@ async function shareOnlyEdited(
 	const newlySharedNotes = await PublisherManager.getEditedFiles(
 		sharedFilesWithPaths,
 		githubSharedNotes,
-		newSharedFiles
+		newSharedFiles,
+		prop
 	);
 	if (newlySharedNotes.length > 0) {
 		new Notice(
 			i18next.t("informations.foundNoteToSend", { nbNotes: newlySharedNotes.length }),
 			PublisherManager.noticeLength
 		);
-		const statusBarElement = PublisherManager.plugin.addStatusBarItem();
 		const isValid = await checkRepositoryValidityWithProperties(
 			PublisherManager,
 			prop,
@@ -155,7 +155,7 @@ async function shareOnlyEdited(
 		await PublisherManager.newBranch(prop);
 		await shareAllMarkedNotes(
 			PublisherManager,
-			statusBarElement,
+			PublisherManager.plugin.addStatusBarItem(),
 			branchName,
 			monoRepo,
 			newlySharedNotes,

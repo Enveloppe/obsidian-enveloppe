@@ -281,7 +281,7 @@ function createMarkdownLinks(
 	}
 
 	const anchorMatch = fileName.match(/#.*/);
-	const anchor = anchorMatch ? slugifyAnchor(anchorMatch[0], settings) : '';
+	const anchor = anchorMatch ? slugifyAnchor(anchorMatch[0], settings) : "";
 	const encodedUri = `${slugifyAnchor(markdownName.replace(ext, ""), settings, true)}${ext}`;
 	return `${isEmbed}[${altLink}](${encodedUri}${anchor})`;
 }
@@ -296,7 +296,7 @@ function createMarkdownLinks(
 function slugifyAnchor(
 	anchor: string | null,
 	settings: EnveloppeSettings,
-	encode?: boolean,
+	encode?: boolean
 ): string {
 	const anchorParts = anchor?.match(/^(#?)(.*)/);
 	if (anchorParts) {
@@ -306,13 +306,12 @@ function slugifyAnchor(
 		switch (settings.conversion.links.slugifyAnchor) {
 			case "lower":
 				anchorText = anchorText.toLowerCase().replaceAll(" ", "-");
+				break;
 			case "strict":
 				anchorText = `${slugify(anchorText, { lower: true, strict: true })}`;
-
+				break;
 			default:
-				anchorText = encode
-					? encodeURI(anchorText)
-					: anchorText.replaceAll(" ", "%20");
+				anchorText = encode ? encodeURI(anchorText) : anchorText.replaceAll(" ", "%20");
 		}
 		return anchorSymbol + anchorText;
 	}

@@ -133,6 +133,12 @@ export class ShareStatusBar {
 		}, displayDurationMillisec - 4000);
 	}
 
+	/** Remove the status bar right away, when there is nothing to publish */
+	remove() {
+		this.statusBarItem.remove();
+		this.noticeMobile?.hide();
+	}
+
 	/**
 	 * Remove the status bar if error occurs
 	 */

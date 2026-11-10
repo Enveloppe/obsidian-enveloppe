@@ -19,8 +19,7 @@ import {
 	Notice,
 	normalizePath,
 	setIcon,
-	TFile,
-	TFolder,
+	type TFile,
 	type Vault,
 } from "obsidian";
 import { mainConverting } from "src/conversion";
@@ -32,8 +31,9 @@ import type { ContentFile } from "src/GitHub/octokit_types";
 import type Enveloppe from "src/main";
 import {
 	checkEmptyConfiguration,
-	checkIfRepoIsInAnother,
 	forcePushAttachment,
+	getDryRunFolder,
+	getPublishTargets,
 	isAttachment,
 	isShared,
 } from "src/utils/data_validation_test";
@@ -47,6 +47,10 @@ import {
 import { ShareStatusBar } from "src/utils/status_bar";
 import { merge } from "ts-deepmerge";
 import { EnveloppeErrors, type Logs } from "../utils/logs";
+
+const WORKFLOW_POLL_INTERVAL = 10_000;
+/** Stop waiting for the GitHub Action after 30 minutes */
+const WORKFLOW_MAX_ATTEMPTS = 180;
 
 /** Class to manage the branch
  * @extends FilesManagement
@@ -204,14 +208,14 @@ export default class Publisher {
 			sourceFrontmatter,
 			this.settings.plugin.shareKey
 		);
-		const prop = getProperties(this.plugin, repo.repository, frontmatter);
-		const isNotEmpty = await checkEmptyConfiguration(prop, this.plugin);
-		repo.frontmatter = prop;
-
+		const props = getPublishTargets(
+			getProperties(this.plugin, repo.repository, frontmatter),
+			repo.frontmatter
+		);
 		if (
 			fileHistory.includes(file) ||
-			!checkIfRepoIsInAnother(prop, repo.frontmatter) ||
-			!isNotEmpty
+			props.length === 0 ||
+			!(await checkEmptyConfiguration(props, this.plugin))
 		) {
 			return false;
 		}
@@ -236,7 +240,7 @@ export default class Publisher {
 			plugin: this.plugin,
 			frontmatter: {
 				general: frontmatterSettings,
-				prop: repo.frontmatter,
+				prop: props,
 			},
 			repository: repo.repository,
 			filepath: filePath,
@@ -248,7 +252,6 @@ export default class Publisher {
 		let text = await this.vault.cachedRead(file);
 		text = await mainConverting(text, file, frontmatter, linkedFiles, multiProperties);
 		const path = multiProperties.filepath;
-		const props = Array.isArray(repo.frontmatter) ? repo.frontmatter : [repo.frontmatter];
 		let multiRepMsg = "";
 		for (const prop of props) {
 			multiRepMsg += `[${prop.owner}/${prop.repo}/${prop.branch}] `;
@@ -335,7 +338,7 @@ export default class Publisher {
 			deleted: [],
 			undeleted: [],
 		};
-		load.hide();
+		load.remove();
 		notifMob?.hide();
 		const statusBarItems = this.plugin.addStatusBarItem();
 		const loadBar = new ShareStatusBar(statusBarItems, 1, false, this.console, true);
@@ -459,7 +462,7 @@ export default class Publisher {
 			if (svg) {
 				//convert to base64
 				image64 = Base64.encode(svg).toString();
-				imageBin = Base64.toUint8Array(image64).buffer as ArrayBuffer;
+				imageBin = Base64.toUint8Array(image64).buffer;
 			}
 		}
 		const path = getImagePath(
@@ -469,30 +472,17 @@ export default class Publisher {
 			properties.frontmatter.prop
 		);
 		if (this.settings.github.dryRun.enable) {
-			const originalFolderName =
-				this.settings.github.dryRun.folderName.trim().length > 0
-					? this.settings.github.dryRun.folderName
-					: "enveloppe";
-			const folderName = originalFolderName
-				.replace("{{repo}}", prop.repo)
-				.replace("{{branch}}", prop.branch)
-				.replace("{{owner}}", prop.owner);
-			const dryRunPath = normalizePath(`${folderName}/${path}`);
-			const isAlreadyExist = this.vault.getAbstractFileByPath(dryRunPath);
-			if (isAlreadyExist && isAlreadyExist instanceof TFile) {
-				const needToByUpdated = isAlreadyExist.stat.mtime > imageFile.stat.mtime;
-				if (needToByUpdated) {
-					await this.vault.modifyBinary(isAlreadyExist, imageBin);
-				}
+			const dryRunPath = this.dryRunPath(path, prop);
+			const existing = this.vault.getFileByPath(dryRunPath);
+			if (existing) {
+				const needToBeUpdated = imageFile.stat.mtime > existing.stat.mtime;
+				if (needToBeUpdated) await this.vault.modifyBinary(existing, imageBin);
 				return {
-					isUpdated: needToByUpdated,
+					isUpdated: needToBeUpdated,
 					file: imageFile.name,
 				};
 			}
-			const folder = dryRunPath.split("/").slice(0, -1).join("/");
-			const folderExists = this.vault.getAbstractFileByPath(folder);
-			if (!folderExists || !(folderExists instanceof TFolder))
-				await this.vault.createFolder(folder);
+			await this.createParentFolder(dryRunPath);
 			await this.vault.createBinary(dryRunPath, imageBin);
 			return {
 				isUpdated: true,
@@ -518,31 +508,17 @@ export default class Publisher {
 		prop: Properties
 	): Promise<UploadedFiles | undefined> {
 		if (this.settings.github.dryRun.enable) {
-			//create a new file in the vault
-			const folderName = this.settings.github.dryRun.folderName
-				.replace("{{repo}}", prop.repo)
-				.replace("{{branch}}", prop.branch)
-				.replace("{{owner}}", prop.owner);
-
-			const newPath = normalizePath(`${folderName}/${path}`);
-			const isAlreadyExist = this.vault.getAbstractFileByPath(newPath);
-			if (isAlreadyExist && isAlreadyExist instanceof TFile) {
-				//modify
-				await this.vault.modify(isAlreadyExist, text);
+			const newPath = this.dryRunPath(path, prop);
+			const existing = this.vault.getFileByPath(newPath);
+			if (existing) {
+				await this.vault.modify(existing, text);
 				return {
 					isUpdated: true,
 					file: title,
 				};
-			} //create
-			const folder = newPath.split("/").slice(0, -1).join("/");
-			const folderExists = this.vault.getAbstractFileByPath(folder);
-			if (!folderExists || !(folderExists instanceof TFolder))
-				await this.vault.createFolder(folder);
-			const alreadyExists = this.vault.getAbstractFileByPath(newPath);
-			if (alreadyExists && alreadyExists instanceof TFile) {
-				await this.vault.modify(alreadyExists, text);
-			} else await this.vault.create(newPath, text);
-
+			}
+			await this.createParentFolder(newPath);
+			await this.vault.create(newPath, text);
 			return {
 				isUpdated: false,
 				file: title,
@@ -552,9 +528,20 @@ export default class Publisher {
 			const contentBase64 = Base64.encode(text).toString();
 			return await this.upload(contentBase64, path, title, prop);
 		} catch (e) {
-			console.error(e);
+			this.console.error(e as Error);
 			return undefined;
 		}
+	}
+
+	private dryRunPath(path: string, prop: Properties): string {
+		const folder = getDryRunFolder(this.settings.github.dryRun.folderName, prop);
+		return normalizePath(`${folder}/${path}`);
+	}
+
+	private async createParentFolder(path: string) {
+		const folder = path.split("/").slice(0, -1).join("/");
+		if (folder.length > 0 && !this.vault.getFolderByPath(folder))
+			await this.vault.createFolder(folder);
 	}
 
 	/**
@@ -568,41 +555,37 @@ export default class Publisher {
 		metadataExtractor: MetadataExtractor,
 		prop: Properties | Properties[]
 	): Promise<void> {
-		if (metadataExtractor) {
-			if (this.settings.github.dryRun.enable) return;
-			const files: (string | null)[] = [
-				metadataExtractor.allExceptMdFile,
-				metadataExtractor.metadataFile,
-				metadataExtractor.tagsFile,
-			];
-			for (const file of files) {
-				if (file) {
-					const contents = await this.vault.adapter.read(file);
-					const filename = file.split("/").pop();
-					const path = `${this.settings.upload.metadataExtractorPath}/${filename}`;
-					prop = Array.isArray(prop) ? prop : [prop];
-					for (const repo of prop) {
-						await this.uploadText(contents, path, filename, repo);
-					}
-				}
+		if (!metadataExtractor || this.settings.github.dryRun.enable) return;
+		const repos = Array.isArray(prop) ? prop : [prop];
+		const files = [
+			metadataExtractor.allExceptMdFile,
+			metadataExtractor.metadataFile,
+			metadataExtractor.tagsFile,
+		];
+		for (const file of files) {
+			if (!file) continue;
+			// metadata-extractor writes in the config folder, which the vault does not index
+			const contents = await this.vault.adapter.read(file);
+			const filename = file.split("/").pop();
+			const path = `${this.settings.upload.metadataExtractorPath}/${filename}`;
+			for (const repo of repos) {
+				await this.uploadText(contents, path, filename, repo);
 			}
 		}
 	}
 
 	/**
-	 * Allow to activate a workflow dispatch github actions
+	 * Trigger the workflow_dispatch GitHub Action and wait for the run it started
 	 * @param {Properties} prop frontmatter settings
-	 * @return {Promise<boolean>}
+	 * @return {Promise<boolean>} true if the run completed successfully
 	 */
 
 	async workflowGestion(prop: Properties): Promise<boolean> {
-		if (this.settings.github.dryRun.enable) return false;
-		let finished = false;
-		if (prop.workflowName.length === 0) {
+		if (this.settings.github.dryRun.enable || prop.workflowName.length === 0)
 			return false;
-		}
-		const octokit = this.octokit;
-		await octokit.request(
+		// one minute of margin for the clock difference with GitHub
+		const since = new Date(Date.now() - 60_000).toISOString().replace(/\.\d{3}Z$/, "Z");
+		await this.octokit.request(
 			"POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
 			{
 				owner: prop.owner,
@@ -612,25 +595,26 @@ export default class Publisher {
 				ref: prop.branch,
 			}
 		);
-		while (!finished) {
-			await sleep(10000);
-			const workflowGet = await octokit.request(
-				"GET /repos/{owner}/{repo}/actions/runs",
+		for (let attempt = 0; attempt < WORKFLOW_MAX_ATTEMPTS; attempt++) {
+			await sleep(WORKFLOW_POLL_INTERVAL);
+			const runs = await this.octokit.request(
+				"GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs",
 				{
 					owner: prop.owner,
 					repo: prop.repo,
+					// biome-ignore lint/style/useNamingConvention: GitHub API :(
+					workflow_id: prop.workflowName,
+					branch: prop.branch,
+					event: "workflow_dispatch",
+					created: `>=${since}`,
+					// biome-ignore lint/style/useNamingConvention: GitHub API :(
+					per_page: 1,
 				}
 			);
-			if (workflowGet.data.workflow_runs.length > 0) {
-				const build = workflowGet.data.workflow_runs.find(
-					(run) => run.name === prop.workflowName.replace(".yml", "").replace(".yaml", "")
-				);
-				if (build && build.status === "completed") {
-					finished = true;
-					return true;
-				}
-			}
+			const run = runs.data.workflow_runs[0];
+			if (run?.status === "completed") return run.conclusion === "success";
 		}
+		this.console.warn(`Stopped waiting for the workflow ${prop.workflowName}`);
 		return false;
 	}
 

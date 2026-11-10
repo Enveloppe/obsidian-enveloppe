@@ -11,7 +11,6 @@ import i18next from "i18next";
 import {
 	type FrontMatterCache,
 	type Menu,
-	normalizePath,
 	Plugin,
 	type TAbstractFile,
 	TFile,
@@ -154,7 +153,7 @@ export default class Enveloppe extends Plugin {
 	 */
 
 	async loadToken(repo?: string): Promise<string> {
-		if (repo == "default") repo = undefined;
+		if (repo === "default") repo = undefined;
 		if (this.settings.github.tokenSecret) {
 			const secret = this.app.secretStorage.getSecret(this.settings.github.tokenSecret);
 			if (repo) {
@@ -249,14 +248,6 @@ export default class Enveloppe extends Plugin {
 		);
 		await this.console.createLogFile();
 
-		if (
-			!this.settings.plugin.dev &&
-			(await this.app.vault.adapter.exists(
-				normalizePath(`${this.manifest.dir}/logs.txt`)
-			))
-		)
-			await this.app.vault.adapter.remove(normalizePath(`${this.manifest.dir}/logs.txt`));
-
 		const oldSettings = this.settings;
 		await migrateSettings(oldSettings as unknown as OldSettings, this);
 		await migrateToSecret(this);
@@ -268,51 +259,8 @@ export default class Enveloppe extends Plugin {
 			.toLocaleDateString("en-US")
 			.replace(/\//g, "-")}`;
 		this.addSettingTab(new EnveloppeSettingsTab(this.app, this, this.branchName));
-		// verify rate limit
-
-		if (!this.settings.github.verifiedRepo && (await this.loadToken()) !== "") {
-			const octokit = await this.reloadOctokit();
-			this.settings.github.verifiedRepo = await checkRepositoryValidity(
-				octokit,
-				null,
-				null,
-				true
-			);
-			this.settings.github.rateLimit = await verifyRateLimitAPI(
-				octokit.octokit,
-				this,
-				false
-			);
-			await this.saveSettings();
-		}
-
-		for (const repository of this.settings.github.otherRepo) {
-			if (
-				!repository.verifiedRepo &&
-				(await this.loadToken(repository.smartKey)) !== ""
-			) {
-				const repoOctokit = await this.reloadOctokit(repository.smartKey);
-				repository.verifiedRepo = await checkRepositoryValidity(
-					repoOctokit,
-					repository,
-					null,
-					false
-				);
-				repository.rateLimit = await verifyRateLimitAPI(repoOctokit.octokit, this);
-			}
-
-			if (repository.set) {
-				//take the file and update the frontmatter
-				const file = this.app.vault.getAbstractFileByPath(repository.set);
-				if (file && file instanceof TFile) {
-					const frontmatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
-					if (frontmatter) {
-						this.repositoryFrontmatter[repository.smartKey] = frontmatter;
-					}
-				}
-			}
-		}
-		await this.saveSettings();
+		// network calls and metadata cache reads must not delay Obsidian's startup
+		this.app.workspace.onLayoutReady(() => void this.verifyRepositories());
 
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu: Menu, folder: TAbstractFile) => {
@@ -359,8 +307,53 @@ export default class Enveloppe extends Plugin {
 		}
 		this.addCommand(refreshOpenedSet(this));
 		this.addCommand(refreshAllSets(this));
-		window.addEventListener("unhandledrejection", this.unhandledRejectionListener);
-		window.addEventListener("error", this.errorListener);
+		this.registerDomEvent(window, "unhandledrejection", this.unhandledRejectionListener);
+		this.registerDomEvent(window, "error", this.errorListener);
+	}
+
+	/**
+	 * Check the repositories not yet verified and load the frontmatter of the "set" files
+	 */
+	private async verifyRepositories() {
+		if (!this.settings.github.verifiedRepo && (await this.loadToken()) !== "") {
+			const octokit = await this.reloadOctokit();
+			this.settings.github.verifiedRepo = await checkRepositoryValidity(
+				octokit,
+				null,
+				null,
+				true
+			);
+			this.settings.github.rateLimit = await verifyRateLimitAPI(
+				octokit.octokit,
+				this,
+				false
+			);
+		}
+
+		for (const repository of this.settings.github.otherRepo) {
+			if (
+				!repository.verifiedRepo &&
+				(await this.loadToken(repository.smartKey)) !== ""
+			) {
+				const repoOctokit = await this.reloadOctokit(repository.smartKey);
+				repository.verifiedRepo = await checkRepositoryValidity(
+					repoOctokit,
+					repository,
+					null,
+					false
+				);
+				repository.rateLimit = await verifyRateLimitAPI(repoOctokit.octokit, this);
+			}
+
+			if (repository.set) {
+				const file = this.app.vault.getFileByPath(repository.set);
+				const frontmatter = file
+					? this.app.metadataCache.getFileCache(file)?.frontmatter
+					: undefined;
+				if (frontmatter) this.repositoryFrontmatter[repository.smartKey] = frontmatter;
+			}
+		}
+		await this.saveSettings();
 	}
 
 	unhandledRejectionListener = (e: PromiseRejectionEvent) => {
@@ -382,9 +375,6 @@ export default class Enveloppe extends Plugin {
 	 */
 	onunload() {
 		this.console.warn("[Obsidian Enveloppe] Unloaded");
-		//remove the event listener
-		window.removeEventListener("unhandledrejection", this.unhandledRejectionListener);
-		window.removeEventListener("error", this.errorListener);
 	}
 
 	/**

@@ -195,11 +195,8 @@ export function multipleSharedKey(
 	const { settings } = plugin;
 	if (settings.plugin.shareAll?.enable) keysInFile.push("share"); //add a key to count the shareAll
 
-	const otherRepoWithShareAll = settings.github.otherRepo.filter((repo) => repo.shareAll);
-	if (otherRepoWithShareAll.length > 0) {
-		for (const repo of otherRepoWithShareAll) {
-			keysInFile.push(repo.smartKey);
-		}
+	for (const repo of settings.github.otherRepo) {
+		if (repo.shareAll?.enable) keysInFile.push(repo.smartKey);
 	}
 	if (!frontmatter) return keysInFile;
 	const linkedRepo = getLinkedFrontmatter(frontmatter, file, plugin);
@@ -271,39 +268,26 @@ export function checkIfRepoIsInAnother(
 	source: Properties | Properties[],
 	target: Properties | Properties[]
 ): boolean {
-	source = source instanceof Array ? source : [source];
-	target = target instanceof Array ? target : [target];
+	const sources = Array.isArray(source) ? source : [source];
+	const targets = Array.isArray(target) ? target : [target];
+	return sources.some((s) =>
+		targets.some((t) => s.owner === t.owner && s.repo === t.repo && s.branch === t.branch)
+	);
+}
 
-	/**
-	 * A function to compare two prop
-	 * @param {Properties} source
-	 * @param {Properties} target
-	 * @return {boolean}
-	 */
-	const isSame = (source: Properties, target: Properties): boolean => {
-		return (
-			source.owner === target.owner &&
-			source.repo === target.repo &&
-			source.branch === target.branch
-		);
-	};
-
-	for (const repoTarget of target) {
-		for (const repoSource of source) {
-			if (isSame(repoTarget, repoSource)) {
-				return true;
-			}
-		}
-	}
-	for (const sourceRepo of source) {
-		for (const targetRepo of target) {
-			if (isSame(sourceRepo, targetRepo)) {
-				return true;
-			}
-		}
-	}
-
-	return false;
+/**
+ * Keep only the repositories of a note that are targeted by the current publication.
+ * A note set to another repository in its frontmatter is published there, never in the caller's one.
+ * @param {Properties | Properties[]} noteRepos repositories resolved from the note frontmatter
+ * @param {Properties | Properties[]} target repositories the caller is publishing to
+ * @return {Properties[]} the note's own properties for each targeted repository
+ */
+export function getPublishTargets(
+	noteRepos: Properties | Properties[],
+	target: Properties | Properties[]
+): Properties[] {
+	const repos = Array.isArray(noteRepos) ? noteRepos : [noteRepos];
+	return repos.filter((repo) => checkIfRepoIsInAnother(repo, target));
 }
 
 /**
@@ -603,6 +587,23 @@ export function isFolderNote(properties: MultiProperties): boolean {
 }
 
 /**
+ * Resolve the dry-run folder, replacing the `{{owner}}`, `{{repo}}` and `{{branch}}` variables.
+ * Falls back to "enveloppe" so a dry run never writes at the root of the vault.
+ */
+export function getDryRunFolder(
+	folderName: string,
+	target: { owner: string; repo: string; branch: string }
+): string {
+	const folder = folderName.trim().length > 0 ? folderName : "enveloppe";
+	return normalizePath(
+		folder
+			.replaceAll("{{owner}}", target.owner)
+			.replaceAll("{{repo}}", target.repo)
+			.replaceAll("{{branch}}", target.branch)
+	);
+}
+
+/**
  * Checks if a file or folder is located within the dry run folder specified in the Enveloppe settings.
  *
  * @param settings - The Enveloppe settings.
@@ -616,14 +617,10 @@ export function isInDryRunFolder(
 	file: TFile | TFolder
 ) {
 	if (settings.github.dryRun.folderName.trim().length === 0) return false;
-	const variables = {
+	const folder = getDryRunFolder(settings.github.dryRun.folderName, {
 		owner: repo?.user ?? settings.github.user,
 		repo: repo?.repo ?? settings.github.repo,
 		branch: repo?.branch ?? settings.github.branch,
-	};
-	const folder = settings.github.dryRun.folderName
-		.replace("{{owner}}", variables.owner)
-		.replace("{{repo}}", variables.repo)
-		.replace("{{branch}}", variables.branch);
-	return file.path.startsWith(normalizePath(folder));
+	});
+	return file.path === folder || file.path.startsWith(`${folder}/`);
 }

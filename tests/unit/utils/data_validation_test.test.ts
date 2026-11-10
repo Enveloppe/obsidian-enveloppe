@@ -2,6 +2,8 @@ import type { PropertiesConversion } from "@interfaces/main";
 import {
 	checkIfRepoIsInAnother,
 	defaultRepo,
+	getDryRunFolder,
+	getPublishTargets,
 	isAttachment,
 	isExcludedPath,
 	isInDryRunFolder,
@@ -64,6 +66,35 @@ describe("checkIfRepoIsInAnother", () => {
 
 	it("returns false when no entries match across both arrays", () => {
 		expect(checkIfRepoIsInAnother([repoA] as never, [repoB] as never)).toBe(false);
+	});
+});
+
+describe("getPublishTargets", () => {
+	const main = { owner: "me", repo: "main", branch: "main" };
+	const other = { owner: "me", repo: "other", branch: "main" };
+
+	it("skips a note set to another repository than the one published", () => {
+		expect(getPublishTargets(other as never, main as never)).toEqual([]);
+	});
+
+	it("keeps a note without repository override (resolved to the published one)", () => {
+		expect(getPublishTargets({ ...main } as never, main as never)).toEqual([main]);
+	});
+
+	it("only sends a multi-repository note to the published repository", () => {
+		expect(getPublishTargets([main, other] as never, main as never)).toEqual([main]);
+	});
+
+	it("sends to every repository of the note when all of them are published", () => {
+		expect(getPublishTargets([main, other] as never, [main, other] as never)).toEqual([
+			main,
+			other,
+		]);
+	});
+
+	it("keeps the note's own properties rather than the caller's", () => {
+		const noteMain = { ...main, path: { rootFolder: "notes" } };
+		expect(getPublishTargets(noteMain as never, main as never)).toEqual([noteMain]);
 	});
 });
 
@@ -139,6 +170,20 @@ describe("isExcludedPath", () => {
 	});
 });
 
+describe("getDryRunFolder", () => {
+	const target = { owner: "octocat", repo: "hello-world", branch: "main" };
+
+	it("replaces every variable", () => {
+		expect(getDryRunFolder("{{owner}}/{{repo}}/{{branch}}/{{repo}}", target)).toBe(
+			"octocat/hello-world/main/hello-world"
+		);
+	});
+
+	it("falls back to the default folder instead of the vault root", () => {
+		expect(getDryRunFolder("  ", target)).toBe("enveloppe");
+	});
+});
+
 describe("isInDryRunFolder", () => {
 	it("returns false when no dry-run folder is configured", () => {
 		const settings = createSettings({
@@ -159,6 +204,14 @@ describe("isInDryRunFolder", () => {
 		});
 		const file = createFile({ path: "octocat/hello-world/main/note.md" });
 		expect(isInDryRunFolder(settings, null, file as never)).toBe(true);
+	});
+
+	it("does not match a sibling folder sharing the same prefix", () => {
+		const settings = createSettings({
+			github: { dryRun: { folderName: "dry" } } as never,
+		});
+		const file = createFile({ path: "dry-notes/note.md" });
+		expect(isInDryRunFolder(settings, null, file as never)).toBe(false);
 	});
 
 	it("does not match a file outside the dry-run folder", () => {

@@ -336,7 +336,7 @@ class ManageRepoPage extends SettingPage {
 				})
 			);
 
-		containerEl.createEl("h3", { text: "GitHub workflow" });
+		new Setting(containerEl).setName("GitHub workflow").setHeading();
 
 		new Setting(containerEl)
 			.setName(i18next.t("settings.githubWorkflow.prRequest.title"))
@@ -378,9 +378,9 @@ class ManageRepoPage extends SettingPage {
 					});
 			});
 
-		containerEl.createEl("h3", {
-			text: i18next.t("settings.github.smartRepo.modals.otherConfig"),
-		});
+		new Setting(containerEl)
+			.setName(i18next.t("settings.github.smartRepo.modals.otherConfig"))
+			.setHeading();
 
 		new Setting(containerEl)
 			.setName(i18next.t("settings.plugin.setImport.title"))

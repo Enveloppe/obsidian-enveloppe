@@ -8,13 +8,7 @@ import {
 	type PropertiesConversion,
 	type Repository,
 } from "@interfaces";
-import {
-	type FrontMatterCache,
-	normalizePath,
-	type TFile,
-	TFolder,
-	type Vault,
-} from "obsidian";
+import { type FrontMatterCache, normalizePath, type TFile, type Vault } from "obsidian";
 import { createRegexFromText } from "src/conversion/find_and_replace_text";
 import type Enveloppe from "src/main";
 import {
@@ -91,8 +85,8 @@ export function stripAttachmentPathPrefix(linkPath: string, prefix: string): str
 	if (normalizedPrefix.length === 0) return linkPath;
 	// Remove leading slash from path for comparison
 	const normalizedPath = linkPath.replace(/^\/+/, "");
-	if (normalizedPath.startsWith(normalizedPrefix + "/")) {
-		return "/" + normalizedPath.slice(normalizedPrefix.length + 1);
+	if (normalizedPath.startsWith(`${normalizedPrefix}/`)) {
+		return `/${normalizedPath.slice(normalizedPrefix.length + 1)}`;
 	}
 	if (normalizedPath === normalizedPrefix) {
 		return "/";
@@ -263,11 +257,10 @@ function folderNoteIndexObs(
 	const defaultPath = `${folderParent}${regexOnFileName(fileName, settings)}`;
 	if (!settings.upload.folderNote.enable) return defaultPath;
 	const parentFolderName = file.parent ? file.parent.name : "";
-	if (fileName.replace(".md", "") === parentFolderName)
+	if (fileName.replace(/\.md$/, "") === parentFolderName)
 		return `/${file.parent!.path}/${index}`;
-	const outsideFolder = vault.getAbstractFileByPath(file.path.replace(".md", ""));
-	if (outsideFolder && outsideFolder instanceof TFolder)
-		return `/${outsideFolder.path}/${index}`;
+	const outsideFolder = vault.getFolderByPath(file.path.replace(/\.md$/, ""));
+	if (outsideFolder) return `/${outsideFolder.path}/${index}`;
 	return defaultPath;
 }
 

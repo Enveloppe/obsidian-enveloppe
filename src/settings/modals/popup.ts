@@ -51,7 +51,7 @@ export class AutoCleanPopup extends Modal {
 			.addButton((button) => {
 				button
 					.setButtonText(i18next.t("common.yes"))
-					.setWarning()
+					.setDestructive()
 					.onClick(() => {
 						this.onSubmit(true);
 						this.close();
