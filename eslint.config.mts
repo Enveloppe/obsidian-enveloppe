@@ -36,5 +36,6 @@ export default defineConfig([
 		"commit-and-tag-version.mjs",
 		"hooks/*.mjs",
 		"vitest.config.mts",
+		"tests/**"
 	]),
 ]);

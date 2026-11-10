@@ -4,7 +4,7 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": false,
+			"preset": "none",
 			"complexity": {
 				"noExtraBooleanCast": "error",
 				"noUselessCatch": "error",
