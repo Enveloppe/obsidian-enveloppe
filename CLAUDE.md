@@ -18,7 +18,7 @@ Package manager is bun (a `pnpm-lock.yaml` also exists).
 
 `src/i18n/locales` is a git submodule (Enveloppe/locales, SSH URL). Translation strings are not edited in this repo.
 
-Unit tests mock `obsidian` and `obsidian-dataview` (`tests/unit/mocks/`). Import paths use `src/...` and the `@interfaces` alias (see `tsconfig.json` `paths`); vitest relies on `resolve.tsconfigPaths` in `vitest.config.mts`, so an older Vite will fail to resolve `src/...`.
+Unit tests mock `obsidian` and `obsidian-dataview` (`tests/unit/mocks/`). Import paths use `src/...` and the `@interfaces` alias (see `tsconfig.json` `paths`). `tests/` is excluded from `tsconfig.json`, so `vitest.config.mts` declares these aliases itself: keep them in sync with `paths`.
 
 ## Architecture
 
@@ -33,7 +33,9 @@ Publish pipeline:
 
 ### Properties shapes
 
-A note can publish to several repositories, so repository config travels in these types (`src/interfaces/properties.ts`): `MonoRepoProperties` (one `Properties`), `MultiRepoProperties` (`Properties | Properties[]`), and `MonoProperties`/`MultiProperties` (the same plus plugin and path info). `getProperties()` returns `Properties | Properties[]`, even for a single repository. Code receiving a `frontmatter` of these types must normalise to an array rather than assume a single object. For example, `publish()` overwrites `repo.frontmatter` with the `getProperties()` result, and the batch commands then pass that same object to `deleteFromGithub` (see issue #424).
+A note can publish to several repositories, so repository config travels in these types (`src/interfaces/properties.ts`): `MonoRepoProperties` (one `Properties`), `MultiRepoProperties` (`Properties | Properties[]`), and `MonoProperties`/`MultiProperties` (the same plus plugin and path info). `getProperties()` returns `Properties | Properties[]`, even for a single repository. Code receiving a `frontmatter` of these types must normalise to an array rather than assume a single object.
+
+`publish()` treats the caller's `repo.frontmatter` as the target and never mutates it: a note is only sent to the repositories of its own frontmatter that are part of that target (`getPublishTargets`). A note set to another repository is skipped by the other repositories' batch commands and by the deep scan of embeds.
 
 ## Conventions
 
