@@ -7,6 +7,7 @@ import {
 	getProperties,
 	parsePath,
 } from "src/utils/parse_frontmatter";
+import { getPublishTargets } from "src/utils/data_validation_test";
 import { describe, expect, it } from "vitest";
 import { createProperties, createRepository, createSettings, fm } from "../fixtures";
 
@@ -181,5 +182,55 @@ describe("parsePath", () => {
 		);
 		const single = Array.isArray(result) ? result[0] : result;
 		expect(single.path?.override).toBe("custom/exact/path.md");
+	});
+});
+
+// Same resolution as the commands (target) and publish() (repositories of the note)
+describe("publish targets from frontmatter", () => {
+	const other = createRepository({
+		smartKey: "blog",
+		user: "me",
+		repo: "blog",
+		branch: "main",
+		shareKey: "blog",
+	});
+	const plugin = createPlugin({
+		github: { user: "me", repo: "main", branch: "main", otherRepo: [other] } as never,
+	});
+	const targetOf = (repo: typeof other | null) => getProperties(plugin, repo, null, true);
+	const publishedTo = (repo: typeof other | null, frontmatter: ReturnType<typeof fm>) =>
+		getPublishTargets(getProperties(plugin, repo, frontmatter), targetOf(repo)).map(
+			(p) => p.repo
+		);
+
+	it("publishes a note with only the share key to the main repository", () => {
+		expect(publishedTo(null, fm({ share: true }))).toEqual(["main"]);
+	});
+
+	it("publishes a note without any key (share all) to the main repository", () => {
+		expect(publishedTo(null, fm({}))).toEqual(["main"]);
+	});
+
+	it("publishes a note shared with another repository key to that repository", () => {
+		expect(publishedTo(other, fm({ blog: true }))).toEqual(["blog"]);
+	});
+
+	it("skips a note set to another repository in the main repository batch", () => {
+		expect(publishedTo(null, fm({ share: true, repo: "me/elsewhere" }))).toEqual([]);
+		expect(publishedTo(null, fm({ share: true, shortRepo: "blog" }))).toEqual([]);
+	});
+
+	it("sends shortRepo: default to the main repository, even from another repository", () => {
+		expect(publishedTo(null, fm({ share: true, shortRepo: "default" }))).toEqual([
+			"main",
+		]);
+		expect(publishedTo(other, fm({ blog: true, shortRepo: "default" }))).toEqual([]);
+	});
+
+	it("only keeps the targeted repository of a multi-repository note", () => {
+		expect(
+			publishedTo(null, fm({ share: true, shortRepo: ["default", "blog"] }))
+		).toEqual(["main"]);
+		expect(publishedTo(other, fm({ shortRepo: ["default", "blog"] }))).toEqual(["blog"]);
 	});
 });

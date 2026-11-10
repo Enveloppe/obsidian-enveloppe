@@ -182,7 +182,7 @@ export default class Publisher {
 		sourceFrontmatter: FrontMatterCache | null | undefined
 	) {
 		const shareFiles = new FilesManagement(this.octokit, this.plugin);
-		let frontmatter = frontmatterFromFile(file, this.plugin, null);
+		let frontmatter = frontmatterFromFile(file, this.plugin, repo.repository);
 		const filePath = getReceiptFolder(
 			file,
 			repo.repository,

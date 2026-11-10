@@ -78,7 +78,7 @@ export async function shareOneNote(
 		"hourglass",
 		i18next.t("informations.wait", { file: file.basename })
 	);
-	let frontmatter = frontmatterFromFile(file, PublisherManager.plugin, null);
+	let frontmatter = frontmatterFromFile(file, plugin, repository);
 	frontmatter = mergeFrontmatter(
 		frontmatter,
 		sourceFrontmatter,
