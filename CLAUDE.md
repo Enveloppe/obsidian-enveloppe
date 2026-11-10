@@ -37,6 +37,8 @@ A note can publish to several repositories, so repository config travels in thes
 
 `publish()` treats the caller's `repo.frontmatter` as the target and never mutates it: a note is only sent to the repositories of its own frontmatter that are part of that target (`getPublishTargets`). A note set to another repository is skipped by the other repositories' batch commands and by the deep scan of embeds.
 
+Read a note's frontmatter with `frontmatterFromFile(file, plugin, repository)`: it merges the repository's "set" file (without its share keys) and the linked frontmatter, so the note resolves the same repository as the command (`getProperties(…, null, true)`). Frontmatter objects from `metadataCache` are Obsidian's cache: copy them before deleting keys.
+
 ## Conventions
 
 - Keep comments short and only where they add something; do not add a JSDoc block to every function.

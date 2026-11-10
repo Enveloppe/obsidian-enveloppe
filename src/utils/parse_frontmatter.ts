@@ -608,24 +608,27 @@ export function frontmatterFromFile(
 	plugin: Enveloppe,
 	repo: Repository | null
 ) {
-	let frontmatter = null;
-	const setFrontmatter =
-		repo?.set && plugin.repositoryFrontmatter[repo.smartKey]
-			? plugin.repositoryFrontmatter[repo.smartKey]
-			: null;
-	if (file) {
-		frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
-		const linkedFrontmatter = getLinkedFrontmatter(frontmatter, file, plugin);
-		delete linkedFrontmatter?.[plugin.settings.plugin.shareKey];
-		frontmatter = merge.withOptions(
-			{ allowUndefinedOverrides: false },
-			setFrontmatter ?? {},
-			linkedFrontmatter ?? {},
-			frontmatter ?? {}
-		);
+	if (!file) return null;
+	const { shareKey } = plugin.settings.plugin;
+	// copies: these objects are the ones cached by Obsidian's metadata cache
+	const setFrontmatter: FrontMatterCache = {};
+	if (repo?.set && plugin.repositoryFrontmatter[repo.smartKey]) {
+		Object.assign(setFrontmatter, plugin.repositoryFrontmatter[repo.smartKey]);
+		// the set file gives the default settings of the repository, it must not share every note
+		delete setFrontmatter[shareKey];
+		delete setFrontmatter[repo.shareKey];
 	}
-
-	return frontmatter;
+	const frontmatter = plugin.app.metadataCache.getFileCache(file)?.frontmatter;
+	const linkedFrontmatter: FrontMatterCache = {
+		...getLinkedFrontmatter(frontmatter, file, plugin),
+	};
+	delete linkedFrontmatter[shareKey];
+	return merge.withOptions(
+		{ allowUndefinedOverrides: false },
+		setFrontmatter,
+		linkedFrontmatter,
+		frontmatter ?? {}
+	);
 }
 
 function settingsLink(

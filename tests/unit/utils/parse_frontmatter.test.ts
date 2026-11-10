@@ -1,6 +1,7 @@
 import type { EnveloppeSettings } from "@interfaces/main";
 import type Enveloppe from "src/main";
 import {
+	frontmatterFromFile,
 	frontmatterSettingsRepository,
 	getCategory,
 	getFrontmatterSettings,
@@ -9,7 +10,13 @@ import {
 } from "src/utils/parse_frontmatter";
 import { getPublishTargets } from "src/utils/data_validation_test";
 import { describe, expect, it } from "vitest";
-import { createProperties, createRepository, createSettings, fm } from "../fixtures";
+import {
+	createFile,
+	createProperties,
+	createRepository,
+	createSettings,
+	fm,
+} from "../fixtures";
 
 function createPlugin(overrides: Partial<EnveloppeSettings> = {}) {
 	return {
@@ -232,5 +239,63 @@ describe("publish targets from frontmatter", () => {
 			publishedTo(null, fm({ share: true, shortRepo: ["default", "blog"] }))
 		).toEqual(["main"]);
 		expect(publishedTo(other, fm({ shortRepo: ["default", "blog"] }))).toEqual(["blog"]);
+	});
+});
+
+describe("set file of a repository", () => {
+	const blog = createRepository({
+		smartKey: "blog",
+		user: "me",
+		repo: "blog",
+		branch: "main",
+		shareKey: "blog",
+		set: "set.md",
+	});
+	const setFrontmatter = fm({
+		blog: true,
+		share: true,
+		repo: "me/blog-set",
+		dataview: false,
+	});
+	const createSetPlugin = (note: Record<string, unknown>) =>
+		({
+			settings: createSettings({
+				github: { user: "me", repo: "main", branch: "main", otherRepo: [blog] } as never,
+			}),
+			repositoryFrontmatter: { blog: setFrontmatter },
+			app: { metadataCache: { getFileCache: () => ({ frontmatter: fm(note) }) } },
+		}) as unknown as Enveloppe;
+	const note = createFile({ path: "note.md" });
+
+	it("gives its settings to the note but never its share keys", () => {
+		const frontmatter = frontmatterFromFile(note as never, createSetPlugin({}), blog);
+		expect(frontmatter?.dataview).toBe(false);
+		expect(frontmatter?.blog).toBeUndefined();
+		expect(frontmatter?.share).toBeUndefined();
+	});
+
+	it("lets the note override the set file", () => {
+		const plugin = createSetPlugin({ blog: true, dataview: true });
+		const frontmatter = frontmatterFromFile(note as never, plugin, blog);
+		expect(frontmatter?.blog).toBe(true);
+		expect(frontmatter?.dataview).toBe(true);
+	});
+
+	it("does not mutate the cached frontmatter of the set file", () => {
+		frontmatterFromFile(note as never, createSetPlugin({}), blog);
+		getProperties(createSetPlugin({}), blog, null, true);
+		expect(setFrontmatter.blog).toBe(true);
+		expect(setFrontmatter.share).toBe(true);
+	});
+
+	it("resolves the same repository for the command and for the note", () => {
+		const plugin = createSetPlugin({ blog: true });
+		const target = getProperties(plugin, blog, null, true);
+		const noteRepos = getProperties(
+			plugin,
+			blog,
+			frontmatterFromFile(note as never, plugin, blog)
+		);
+		expect(getPublishTargets(noteRepos, target).map((p) => p.repo)).toEqual(["blog-set"]);
 	});
 });
