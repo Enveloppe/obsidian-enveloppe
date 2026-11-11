@@ -1,3 +1,22 @@
+## [8.0.0-2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.8.2...8.0.0-2) (2026-11-11)
+### ⚠ BREAKING CHANGES
+
+* Not compatible with previous obsidian version
+
+### Features
+
+* **embed:** add setting to strip path prefix from attachment links ([#412](https://github.com/Enveloppe/obsidian-enveloppe/issues/412)) ([d8922ff](https://github.com/Enveloppe/obsidian-enveloppe/commit/d8922ff9866090f395a994ed5ee1185264484dde))
+* release new settings workflow and visual ([8d7dd2a](https://github.com/Enveloppe/obsidian-enveloppe/commit/8d7dd2ad631374ae6e535abe21b02a01363e7fff))
+
+### Bug Fixes
+
+* clean up code formatting and improve frontmatter handling ([a8e5bcb](https://github.com/Enveloppe/obsidian-enveloppe/commit/a8e5bcbe85a6de7f16bc62c3fef869f0f62f1837))
+* **delete:** accept array frontmatter in deleteFromGithub ([d938d4b](https://github.com/Enveloppe/obsidian-enveloppe/commit/d938d4bbf194336a392040c4fc772c33e43f6c1e))
+* frontmatter links not transforming correctly ([32b136d](https://github.com/Enveloppe/obsidian-enveloppe/commit/32b136db827298bcf0ab6a8de4c52a6faf3c4b32)), closes [#406](https://github.com/Enveloppe/obsidian-enveloppe/issues/406)
+* improve frontmatter merging logic and add tests for repository settings ([a770db3](https://github.com/Enveloppe/obsidian-enveloppe/commit/a770db3254dce91905fe0e53b3be5cbaa49323b3))
+* only reuse an open PR matching the publishing head and base ([6ad3fe7](https://github.com/Enveloppe/obsidian-enveloppe/commit/6ad3fe702cbdcb4f7c5409fd51abd6008e34a15c)), closes [#423](https://github.com/Enveloppe/obsidian-enveloppe/issues/423)
+* slugify anchor strict duplicating anchor symbols ([#421](https://github.com/Enveloppe/obsidian-enveloppe/issues/421)) ([72be573](https://github.com/Enveloppe/obsidian-enveloppe/commit/72be5736fc80fce566426522855485fc48c7ce72))
+
 ## [8.0.0-1](https://github.com/Enveloppe/obsidian-enveloppe/compare/8.0.0-0...8.0.0-1) (2026-07-29)
 ### Features
 

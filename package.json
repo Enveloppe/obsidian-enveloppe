@@ -1,12 +1,12 @@
 {
 	"name": "obsidian-enveloppe",
-	"version": "8.0.0-1",
+	"version": "8.0.0-2",
 	"description": "Github Publisher is a plugin that help you to send file in a configured Github Repository, based on a frontmatter entry state.",
 	"main": "main.js",
 	"private": true,
 	"scripts": {
 		"lint": "biome format --write src/",
-		"prebuild": "tsc --noEmit --skipLibCheck",
+		"prebuild": "tsc6 --noEmit --skipLibCheck",
 		"typecheck:e2e": "tsc --noEmit --skipLibCheck -p e2e/tsconfig.json",
 		"build": "node esbuild.config.mjs --production",
 		"dev:prod": "node esbuild.config.mjs --vault",
