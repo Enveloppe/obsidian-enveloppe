@@ -1,3 +1,5 @@
+## [8.0.0-3](https://github.com/Enveloppe/obsidian-enveloppe/compare/8.0.0-2...8.0.0-3) (2026-11-14)
+
 ## [8.0.0-2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.8.2...8.0.0-2) (2026-11-11)
 ### ⚠ BREAKING CHANGES
 
