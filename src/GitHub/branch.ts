@@ -100,10 +100,13 @@ export class GithubBranch extends FilesManagement {
 	 * Create a pull request on prop.branch with the branchName
 	 * Run in a loop in the pullRequest function if Properties[] is passed
 	 * @param {Properties} prop The repo to use
-	 * @return {Promise<number>} False in case of error, the pull request number otherwise
+	 * @return {Promise<number>} 0 in case of error, the pull request number otherwise
+	 * Reuse the open pull request from the same head to the same base if it exists
 	 */
 
 	async pullRequestOnRepo(prop: Properties): Promise<number> {
+		const existing = await this.findPullRequest(prop);
+		if (existing) return existing;
 		try {
 			const pr = await this.octokit.request("POST /repos/{owner}/{repo}/pulls", {
 				owner: prop.owner,
@@ -115,6 +118,10 @@ export class GithubBranch extends FilesManagement {
 			});
 			return pr.status === 201 ? pr.data.number : 0;
 		} catch (e) {
+			this.console.trace(e);
+			// it may have been opened in the meantime
+			const created = await this.findPullRequest(prop);
+			if (created) return created;
 			const requestError = e as RequestError;
 			if (requestError?.status === 422) {
 				this.console.warn(
@@ -122,36 +129,42 @@ export class GithubBranch extends FilesManagement {
 					requestError?.response?.data
 				);
 			}
-			this.console.trace(e);
-			//creation failed: only reuse an open PR matching the publishing head and base
-			try {
-				const pr = await this.octokit.request("GET /repos/{owner}/{repo}/pulls", {
-					owner: prop.owner,
-					repo: prop.repo,
-					state: "open",
-					head: `${prop.owner}:${this.branchName}`,
-					base: prop.branch,
-				});
-				const existing = pr.data.find(
-					(openPr) =>
-						openPr.head?.ref === this.branchName &&
-						openPr.base?.ref === prop.branch &&
-						(!openPr.head?.repo?.owner?.login ||
-							openPr.head.repo.owner.login === prop.owner)
+			this.console.error(
+				new Error(
+					`Unable to create the pull request from ${this.branchName} to ${prop.branch}, and no matching open pull request exists.`
+				)
+			);
+			this.console.info(i18next.t("publish.branch.error", { error: e, repo: prop }));
+			return 0;
+		}
+	}
+
+	private async findPullRequest(prop: Properties): Promise<number> {
+		try {
+			const pr = await this.octokit.request("GET /repos/{owner}/{repo}/pulls", {
+				owner: prop.owner,
+				repo: prop.repo,
+				state: "open",
+				head: `${prop.owner}:${this.branchName}`,
+				base: prop.branch,
+			});
+			// GitHub logins are case-insensitive
+			const owner = prop.owner.toLowerCase();
+			const existing = pr.data.find(
+				(openPr) =>
+					openPr.head?.ref === this.branchName &&
+					openPr.base?.ref === prop.branch &&
+					(!openPr.head?.repo?.owner?.login ||
+						openPr.head.repo.owner.login.toLowerCase() === owner)
+			);
+			if (existing)
+				this.console.info(
+					`Using existing pull request #${existing.number} on ${prop.owner}/${prop.repo}`
 				);
-				if (!existing) {
-					this.console.error(
-						new Error(
-							`Unable to create the pull request from ${this.branchName} to ${prop.branch}, and no matching open pull request exists.`
-						)
-					);
-				}
-				return existing?.number || 0;
-			} catch (e) {
-				// there is no open PR and impossible to create a new one
-				this.console.info(i18next.t("publish.branch.error", { error: e, repo: prop }));
-				return 0;
-			}
+			return existing?.number ?? 0;
+		} catch (e) {
+			this.console.trace(e);
+			return 0;
 		}
 	}
 
