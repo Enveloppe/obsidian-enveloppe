@@ -36,7 +36,9 @@ describe("pullRequestOnRepo", () => {
 	});
 
 	it("returns 0 when only an unrelated PR is open", async () => {
-		listed = [{ number: 123, head: { ref: "dependabot/example" }, base: { ref: "main" } }];
+		listed = [
+			{ number: 123, head: { ref: "dependabot/example" }, base: { ref: "main" } },
+		];
 		const branch = createBranch(mockRequest(listed));
 		expect(await branch.pullRequestOnRepo(prop)).toBe(0);
 	});
@@ -46,8 +48,50 @@ describe("pullRequestOnRepo", () => {
 			{ number: 123, head: { ref: "dependabot/example" }, base: { ref: "main" } },
 			{ number: 124, head: { ref: "vault-date" }, base: { ref: "main" } },
 		];
+		const request = mockRequest(listed);
+		expect(await createBranch(request).pullRequestOnRepo(prop)).toBe(124);
+		expect(request).not.toHaveBeenCalledWith(
+			"POST /repos/{owner}/{repo}/pulls",
+			expect.anything()
+		);
+	});
+
+	it("compares the head owner case-insensitively", async () => {
+		listed = [
+			{
+				number: 126,
+				head: { ref: "vault-date", repo: { owner: { login: "Owner" } } },
+				base: { ref: "main" },
+			},
+		];
 		const branch = createBranch(mockRequest(listed));
-		expect(await branch.pullRequestOnRepo(prop)).toBe(124);
+		expect(await branch.pullRequestOnRepo(prop)).toBe(126);
+	});
+
+	it("ignores a PR whose head belongs to another owner", async () => {
+		listed = [
+			{
+				number: 127,
+				head: { ref: "vault-date", repo: { owner: { login: "someone" } } },
+				base: { ref: "main" },
+			},
+		];
+		const branch = createBranch(mockRequest(listed));
+		expect(await branch.pullRequestOnRepo(prop)).toBe(0);
+	});
+
+	it("reuses a PR opened while the creation failed", async () => {
+		const pr = { number: 128, head: { ref: "vault-date" }, base: { ref: "main" } };
+		let lookups = 0;
+		const request = vi.fn(async (route: string) => {
+			if (route.startsWith("POST")) {
+				throw Object.assign(new Error("A pull request already exists"), { status: 422 });
+			}
+			return { status: 200, data: lookups++ === 0 ? [] : [pr] };
+		});
+		const branch = createBranch(request);
+		expect(await branch.pullRequestOnRepo(prop)).toBe(128);
+		expect(branch.console.warn).not.toHaveBeenCalled();
 	});
 
 	it("ignores a PR with the same head but another base", async () => {

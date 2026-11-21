@@ -599,16 +599,32 @@ export default class Publisher {
 			return false;
 		// one minute of margin for the clock difference with GitHub
 		const since = new Date(Date.now() - 60_000).toISOString().replace(/\.\d{3}Z$/, "Z");
-		await this.octokit.request(
-			"POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
-			{
-				owner: prop.owner,
-				repo: prop.repo,
-				// biome-ignore lint/style/useNamingConvention: GitHub API :(
-				workflow_id: prop.workflowName,
-				ref: prop.branch,
-			}
-		);
+		try {
+			await this.octokit.request(
+				"POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches",
+				{
+					owner: prop.owner,
+					repo: prop.repo,
+					// biome-ignore lint/style/useNamingConvention: GitHub API :(
+					workflow_id: prop.workflowName,
+					ref: prop.branch,
+				}
+			);
+		} catch (e) {
+			// the notes are already published at this point
+			this.console.warn(e);
+			new Notice(
+				i18next.t("error.workflowDispatch", {
+					defaultValue:
+						"Published to {{- repo.owner}}/{{- repo.repo}}, but the workflow {{- workflow}} could not be started: {{- error}}",
+					repo: prop,
+					workflow: prop.workflowName,
+					error: (e as Error).message,
+				}),
+				this.noticeLength
+			);
+			return false;
+		}
 		for (let attempt = 0; attempt < WORKFLOW_MAX_ATTEMPTS; attempt++) {
 			await sleep(WORKFLOW_POLL_INTERVAL);
 			const runs = await this.octokit.request(
