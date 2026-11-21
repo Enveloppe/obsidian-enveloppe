@@ -332,7 +332,13 @@ export interface PluginBehavior {
 	 */
 	manifestDir?: string;
 	noticeLength?: number;
+	/** Where the published files manager opens
+	 * @default `right`
+	 */
+	fileManagerLocation?: FileManagerLocation;
 }
+
+export type FileManagerLocation = "tab" | "left" | "right";
 
 /**
  * @interface MetadataExtractor

@@ -82,6 +82,7 @@
 		"dedent": "^1.7.2",
 		"dotenv-cli": "^11.1.0",
 		"env-cmd": "^11.0.0",
+		"preact": "^10.29.6",
 		"ts-deepmerge": "^8.0.0",
 		"tslog": "^5.5.0"
 	},

@@ -114,5 +114,6 @@ export const DEFAULT_SETTINGS: Partial<EnveloppeSettings> = {
 		noticeError: false,
 		displayModalRepoEditing: false,
 		setFrontmatterKey: "Set",
+		fileManagerLocation: "right",
 	},
 };

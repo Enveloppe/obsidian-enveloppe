@@ -23,6 +23,12 @@ import {
 	getProperties,
 } from "src/utils/parse_frontmatter";
 
+/**
+ * GitHub lets the HTTP cache keep its answers for 60 seconds: a request with a
+ * conditional header skips it (fetch standard), and an empty ETag never matches.
+ */
+export const NO_CACHE = { "If-None-Match": "" };
+
 const isSharedNote = (file: TFile) =>
 	file.extension === "md" && !file.name.endsWith(".excalidraw.md");
 
@@ -386,11 +392,14 @@ export class FilesManagement extends Publisher {
 
 	/**
 	 * Get all file from the github Repo
+	 * `noCache` skips the HTTP cache (see `NO_CACHE`): a scan right after a
+	 * publication would miss it otherwise
 	 */
 
 	async getAllFileFromRepo(
 		branchToScan: string,
-		repo: Properties
+		repo: Properties,
+		{ throwOnError = false, noCache = false } = {}
 	): Promise<GithubRepo[]> {
 		const filesInRepo: GithubRepo[] = [];
 		try {
@@ -402,6 +411,7 @@ export class FilesManagement extends Publisher {
 					// biome-ignore lint/style/useNamingConvention: github api
 					tree_sha: branchToScan,
 					recursive: "true",
+					headers: noCache ? NO_CACHE : undefined,
 				}
 			);
 
@@ -419,6 +429,7 @@ export class FilesManagement extends Publisher {
 				}
 			}
 		} catch (e) {
+			if (throwOnError) throw e;
 			this.console.debug(e);
 		}
 		return filesInRepo;

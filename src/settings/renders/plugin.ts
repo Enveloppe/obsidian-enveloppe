@@ -1,6 +1,7 @@
 import { Placeholder } from "@interfaces/enum";
 import i18next from "i18next";
 import type { SettingDefinitionItem } from "obsidian";
+import { t as managerT } from "src/manager/i18n";
 import { type RenderContext, stringListPage, widenInput } from "./index";
 
 export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] => {
@@ -77,6 +78,20 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 					name: i18next.t("settings.plugin.editorMenu.title"),
 					desc: i18next.t("settings.plugin.editorMenu.desc"),
 					control: { type: "toggle", key: "plugin.editorMenu" },
+				},
+				{
+					name: managerT("location.title"),
+					desc: managerT("location.desc"),
+					control: {
+						type: "dropdown",
+						key: "plugin.fileManagerLocation",
+						defaultValue: "right",
+						options: {
+							right: managerT("location.right"),
+							left: managerT("location.left"),
+							tab: managerT("location.tab"),
+						},
+					},
 				},
 			],
 		},

@@ -8,6 +8,7 @@ import {
 	type MultiRepoProperties,
 	type Properties,
 } from "@interfaces";
+import type { ConvertedLink } from "@interfaces/main";
 import type { Octokit } from "@octokit/core";
 import i18next from "i18next";
 import { Base64 } from "js-base64";
@@ -24,6 +25,7 @@ import {
 } from "obsidian";
 import type { FilesManagement } from "src/GitHub/files";
 import type { ContentFile } from "src/GitHub/octokit_types";
+import type { ActivityLog } from "src/manager/activity";
 import { trimObject } from "src/utils";
 import {
 	getDryRunFolder,
@@ -104,9 +106,7 @@ async function deleteFromGithubOneRepo(
 		repoProperties.convert,
 		true
 	);
-	const allSharedConverted = allSharedFiles.map((file) => {
-		return { converted: file.converted, repo: file.prop, otherPath: file.otherPaths };
-	});
+	const allSharedConverted = toSharedPaths(allSharedFiles);
 	let deletedSuccess = 0;
 	let deletedFailed = 0;
 	const result: Deleted = {
@@ -115,20 +115,7 @@ async function deleteFromGithubOneRepo(
 		success: false,
 	};
 	for (const file of filesInRepo) {
-		const isInObsidian = allSharedConverted.some(
-			(f) => f.converted === file.file || f.otherPath?.includes(file.file)
-		);
-		const isMarkdownForAnotherRepo = file.file.trim().endsWith(".md")
-			? !allSharedConverted.some((f) => {
-					let prop = f.repo;
-					if (Array.isArray(prop)) {
-						prop = prop.find((r) => r.repo === repo.repo);
-					}
-					return (f.converted === file.file || f.otherPath?.includes(file.file)) && prop;
-				})
-			: false;
-		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
-		if (isNeedToBeDeleted) {
+		if (mustBeDeleted(file.file, allSharedConverted, repo)) {
 			const checkingIndex = file.file.contains(settings.upload.folderNote.rename)
 				? await checkIndexFiles(octokit, file.file, repo, branchName)
 				: false;
@@ -137,14 +124,16 @@ async function deleteFromGithubOneRepo(
 					`trying to delete file : ${file.file} from ${repo.owner}/${repo.repo}`
 				);
 				try {
-					await octokit.request("DELETE /repos/{owner}/{repo}/contents/{+path}", {
-						owner: repo.owner,
-						repo: repo.repo,
-						path: file.file,
-						message: `DELETE FILE : ${file.file}`,
-						sha: file.sha,
-						branch: branchName,
-					});
+					await trackDelete(filesManagement, file.file, repo, () =>
+						octokit.request("DELETE /repos/{owner}/{repo}/contents/{+path}", {
+							owner: repo.owner,
+							repo: repo.repo,
+							path: file.file,
+							message: `DELETE FILE : ${file.file}`,
+							sha: file.sha,
+							branch: branchName,
+						})
+					);
 					deletedSuccess++;
 					result.deleted.push(file.file);
 				} catch (e) {
@@ -168,6 +157,56 @@ async function deleteFromGithubOneRepo(
 	}
 	result.success = deletedFailed === 0;
 	return result;
+}
+
+/** Show the deletion in the file manager activity */
+export function trackDelete<T>(
+	filesManagement: FilesManagement,
+	path: string,
+	repo: Properties,
+	run: () => Promise<T>
+): Promise<T> {
+	const activity = filesManagement.plugin.activity as ActivityLog | undefined;
+	if (!activity) return run();
+	return activity.track("delete", path, `${repo.owner}/${repo.repo}`, run);
+}
+
+export interface SharedPath {
+	converted: string;
+	repo?: Properties | Properties[];
+	otherPath?: string[];
+}
+
+export function toSharedPaths(files: ConvertedLink[]): SharedPath[] {
+	return files.map((file) => ({
+		converted: file.converted,
+		repo: file.prop,
+		otherPath: file.otherPaths,
+	}));
+}
+
+/**
+ * A published file must be removed when no shared vault file produces it anymore,
+ * or when the markdown note producing it is published to another repository.
+ * @param {string} path path in the repository (or relative to the dry-run folder)
+ * @param {SharedPath[]} shared every shared file of the vault with its converted path
+ * @param {Properties} repo the repository being cleaned
+ */
+export function mustBeDeleted(
+	path: string,
+	shared: SharedPath[],
+	repo: Properties
+): boolean {
+	const producedBy = (f: SharedPath) =>
+		f.converted === path || f.otherPath?.includes(path);
+	if (!shared.some(producedBy)) return true;
+	if (!path.trim().endsWith(".md")) return false;
+	return !shared.some((f) => {
+		const prop = Array.isArray(f.repo)
+			? f.repo.find((r) => r.repo === repo.repo)
+			: f.repo;
+		return producedBy(f) && prop;
+	});
 }
 
 /**
@@ -321,11 +360,13 @@ function cleanDryRun(
 		)
 			dryRunFiles.push(file);
 	});
-	const allSharedFiles = filesManagement
-		.getAllFileWithPath(repoProperties.repository, repoProperties.convert, true)
-		.map((file) => {
-			return { converted: file.converted, repo: file.prop, otherPath: file.otherPaths };
-		});
+	const allSharedFiles = toSharedPaths(
+		filesManagement.getAllFileWithPath(
+			repoProperties.repository,
+			repoProperties.convert,
+			true
+		)
+	);
 	let deletedSuccess = 0;
 	const result: Deleted = {
 		deleted: [],
@@ -335,23 +376,7 @@ function cleanDryRun(
 	const deletedFolder: TAbstractFile[] = [];
 	for (const file of dryRunFiles) {
 		const convertedPath = normalizePath(file.path.replace(dryRunFolderPath, ""));
-		const isInObsidian = allSharedFiles.some(
-			(f) => f.converted === convertedPath || f.otherPath?.includes(convertedPath)
-		);
-		const isMarkdownForAnotherRepo = file.path.trim().endsWith(".md")
-			? !allSharedFiles.some((f) => {
-					let prop = f.repo;
-					if (Array.isArray(prop)) {
-						prop = prop.find((r) => r.repo === repo.repo);
-					}
-					return (
-						(f.converted === convertedPath || f.otherPath?.includes(convertedPath)) &&
-						prop
-					);
-				})
-			: false;
-		const isNeedToBeDeleted = isInObsidian ? isMarkdownForAnotherRepo : true;
-		if (isNeedToBeDeleted) {
+		if (mustBeDeleted(convertedPath, allSharedFiles, repo)) {
 			const indexFile = convertedPath.contains(settings.upload.folderNote.rename)
 				? indexFileDryRun(file, app.metadataCache)
 				: false;
@@ -359,7 +384,9 @@ function cleanDryRun(
 				pconsole.trace(
 					`[DRY-RUN] trying to delete file : ${file.path} from ${dryRunFolderPath}`
 				);
-				void app.fileManager.trashFile(file);
+				void trackDelete(filesManagement, convertedPath, repo, () =>
+					app.fileManager.trashFile(file)
+				);
 				deletedSuccess++;
 				deletedFolder.push(file);
 				result.deleted.push(file.path);

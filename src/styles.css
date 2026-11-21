@@ -472,3 +472,579 @@ span.enveloppe.icons svg.lucide-hourglass {
 .status-bar-item.plugin-obsidian-mkdocs-publisher svg.lucide-loader {
 	animation: hourglassRotation 1s linear infinite;
 }
+
+/* ---------- PUBLISHED FILES MANAGER ---------- */
+.enveloppe-manager {
+	--em-published: var(--color-green);
+	--em-modified: var(--color-orange);
+	--em-unpublished: var(--color-blue);
+	--em-orphan: var(--color-red);
+	display: flex;
+	flex-direction: column;
+	padding: 0 !important;
+	overflow: hidden !important;
+}
+
+.enveloppe-manager-header {
+	display: flex;
+	flex-direction: column;
+	gap: var(--size-4-2);
+	padding: var(--size-4-2) var(--size-4-3) 0;
+	border-bottom: var(--border-width) solid var(--background-modifier-border);
+	background: var(--background-secondary);
+}
+
+.enveloppe-manager-toolbar {
+	display: flex;
+	align-items: center;
+	gap: var(--size-4-1);
+}
+
+.enveloppe-manager-toolbar select {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.enveloppe-manager-tabs {
+	display: flex;
+	gap: var(--size-4-1);
+}
+
+.enveloppe-manager-tabs button {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--size-4-1);
+	padding: var(--size-4-1) var(--size-4-3);
+	background: transparent;
+	box-shadow: none;
+	border-radius: var(--radius-s) var(--radius-s) 0 0;
+	border-bottom: 2px solid transparent;
+	color: var(--text-muted);
+	font-size: var(--font-ui-small);
+}
+
+.enveloppe-manager-tabs button:hover {
+	color: var(--text-normal);
+	background: var(--background-modifier-hover);
+}
+
+.enveloppe-manager-tabs button.is-active {
+	color: var(--text-accent);
+	border-bottom-color: var(--interactive-accent);
+}
+
+.enveloppe-manager-pulse {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: var(--interactive-accent);
+	animation: enveloppe-manager-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes enveloppe-manager-pulse {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.25;
+	}
+}
+
+.enveloppe-manager-body {
+	flex: 1 1 auto;
+	overflow-y: auto;
+	padding: var(--size-4-2) var(--size-4-3) var(--size-4-6);
+	container-type: inline-size;
+}
+
+/* opened in a tab: keep the lines readable on a wide screen */
+.workspace-split.mod-root .enveloppe-manager-header > *,
+.workspace-split.mod-root .enveloppe-manager-body > * {
+	width: 100%;
+	max-width: 960px;
+	margin-inline: auto;
+}
+
+.enveloppe-manager-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+
+.enveloppe-manager-icon svg {
+	width: var(--icon-s);
+	height: var(--icon-s);
+}
+
+.enveloppe-manager-icon.is-spinning svg {
+	animation: enveloppe-manager-spin 1s linear infinite;
+}
+
+@keyframes enveloppe-manager-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.enveloppe-manager-icon-button.mod-warning:hover {
+	color: var(--text-error);
+}
+
+.enveloppe-manager-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 0 var(--size-4-1);
+	border-radius: var(--radius-s);
+	font-size: var(--font-ui-smaller);
+	font-weight: var(--font-semibold);
+	color: var(--text-muted);
+	background: var(--background-modifier-hover);
+	white-space: nowrap;
+}
+
+.enveloppe-manager-badge.mod-dry-run {
+	color: var(--text-on-accent);
+	background: var(--color-purple);
+}
+
+.enveloppe-manager-badge.mod-pr {
+	color: var(--color-purple);
+	background: rgba(var(--color-purple-rgb), 0.15);
+}
+
+/* status colours */
+.enveloppe-manager .status-all {
+	--em-color: var(--interactive-accent);
+}
+
+.enveloppe-manager .status-published {
+	--em-color: var(--em-published);
+}
+
+.enveloppe-manager .status-modified {
+	--em-color: var(--em-modified);
+}
+
+.enveloppe-manager .status-unpublished {
+	--em-color: var(--em-unpublished);
+}
+
+.enveloppe-manager .status-orphan {
+	--em-color: var(--em-orphan);
+}
+
+/* filters */
+.enveloppe-manager-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--size-4-1);
+	margin-bottom: var(--size-4-2);
+}
+
+.enveloppe-manager-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--size-4-1);
+	height: auto;
+	padding: 2px var(--size-4-2);
+	border-radius: var(--radius-l);
+	font-size: var(--font-ui-smaller);
+	background: var(--background-primary);
+	box-shadow: none;
+	border: var(--border-width) solid var(--background-modifier-border);
+}
+
+.enveloppe-manager-chip.is-active {
+	border-color: var(--em-color);
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+
+.enveloppe-manager-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--em-color);
+}
+
+.enveloppe-manager-count {
+	color: var(--text-faint);
+	font-variant-numeric: tabular-nums;
+}
+
+.enveloppe-manager-search {
+	display: flex;
+	align-items: center;
+	gap: var(--size-4-1);
+	margin-bottom: var(--size-4-2);
+	color: var(--text-faint);
+}
+
+.enveloppe-manager-search input {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+/* callouts, selection bar */
+.enveloppe-manager-callout {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--size-4-2);
+	padding: var(--size-4-2);
+	margin-bottom: var(--size-4-2);
+	border-radius: var(--radius-m);
+	background: rgba(var(--color-blue-rgb), 0.1);
+	font-size: var(--font-ui-small);
+}
+
+.enveloppe-manager-callout > span {
+	flex: 1 1 auto;
+}
+
+.enveloppe-manager-callout.mod-error {
+	background: rgba(var(--color-red-rgb), 0.1);
+	color: var(--text-error);
+}
+
+.enveloppe-manager-callout .enveloppe-manager-progress {
+	flex-basis: 100%;
+}
+
+.enveloppe-manager-selection {
+	position: sticky;
+	top: calc(-1 * var(--size-4-2));
+	z-index: 2;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--size-4-2);
+	padding: var(--size-4-2);
+	margin-bottom: var(--size-4-2);
+	border-radius: var(--radius-m);
+	background: var(--background-secondary-alt);
+	box-shadow: var(--shadow-s);
+}
+
+.enveloppe-manager-selection-count {
+	flex: 1 1 auto;
+	font-weight: var(--font-semibold);
+	font-size: var(--font-ui-small);
+}
+
+.enveloppe-manager-selection button:not(.clickable-icon) {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--size-4-1);
+}
+
+/* list */
+.enveloppe-manager-list-header {
+	display: flex;
+	align-items: center;
+	gap: var(--size-4-2);
+	padding: var(--size-4-1) var(--size-4-2);
+	color: var(--text-faint);
+	font-size: var(--font-ui-smaller);
+}
+
+.enveloppe-manager-list-meta:last-child {
+	margin-left: auto;
+}
+
+.enveloppe-manager-row {
+	display: grid;
+	grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+	align-items: center;
+	gap: var(--size-4-2);
+	padding: var(--size-4-1) var(--size-4-2);
+	border-radius: var(--radius-s);
+	border-left: 3px solid var(--em-color);
+	cursor: pointer;
+}
+
+.enveloppe-manager-row + .enveloppe-manager-row {
+	margin-top: 2px;
+}
+
+.enveloppe-manager-row:hover {
+	background: var(--background-modifier-hover);
+}
+
+.enveloppe-manager-row.is-selected {
+	background: var(--background-modifier-active-hover);
+}
+
+.enveloppe-manager-kind {
+	color: var(--text-muted);
+}
+
+.enveloppe-manager-row-main {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.enveloppe-manager-row-title,
+.enveloppe-manager-row-path {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.enveloppe-manager-row-title {
+	color: var(--text-normal);
+	text-decoration: none;
+	font-size: var(--font-ui-small);
+}
+
+a.enveloppe-manager-row-title:hover {
+	color: var(--text-accent);
+	text-decoration: underline;
+}
+
+.enveloppe-manager-row-path {
+	color: var(--text-faint);
+	font-size: var(--font-ui-smaller);
+	font-family: var(--font-monospace);
+}
+
+.enveloppe-manager-badges {
+	display: flex;
+	align-items: center;
+	gap: var(--size-4-1);
+}
+
+.enveloppe-manager-status {
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
+	color: var(--em-color);
+	font-size: var(--font-ui-smaller);
+}
+
+.enveloppe-manager-row-actions {
+	display: flex;
+	opacity: 0;
+	transition: opacity 0.1s ease-in-out;
+}
+
+.enveloppe-manager-row:hover .enveloppe-manager-row-actions,
+.enveloppe-manager-row:focus-within .enveloppe-manager-row-actions,
+.is-mobile .enveloppe-manager-row-actions {
+	opacity: 1;
+}
+
+.enveloppe-manager-more {
+	width: 100%;
+	margin-top: var(--size-4-2);
+}
+
+/* narrow sidebars: the status stays as a coloured icon */
+@container (max-width: 360px) {
+	.enveloppe-manager-status-label {
+		display: none;
+	}
+}
+
+.enveloppe-manager-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--size-4-3);
+	padding: var(--size-4-8) var(--size-4-4);
+	color: var(--text-muted);
+	text-align: center;
+}
+
+.enveloppe-manager-empty > .enveloppe-manager-icon svg {
+	width: var(--icon-xl);
+	height: var(--icon-xl);
+	color: var(--text-faint);
+}
+
+.enveloppe-manager-progress {
+	height: 4px;
+	overflow: hidden;
+	border-radius: 2px;
+	background: var(--background-modifier-border);
+}
+
+.enveloppe-manager-progress-bar {
+	height: 100%;
+	background: var(--interactive-accent);
+	transition: width 0.2s ease-out;
+}
+
+/* activity */
+.enveloppe-manager-section-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: var(--size-4-2) 0;
+}
+
+.enveloppe-manager-section-header h6 {
+	margin: 0;
+	color: var(--text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	font-size: var(--font-ui-smaller);
+}
+
+.enveloppe-manager-operations {
+	display: flex;
+	flex-direction: column;
+	gap: var(--size-4-2);
+}
+
+.enveloppe-manager-operation {
+	overflow: hidden;
+	border: var(--border-width) solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	background: var(--background-primary);
+}
+
+.enveloppe-manager-operation.is-error .enveloppe-manager-progress-bar {
+	background: var(--color-red);
+}
+
+.enveloppe-manager-operation.is-done .enveloppe-manager-progress-bar {
+	background: var(--color-green);
+}
+
+.enveloppe-manager-operation-header {
+	display: flex;
+	align-items: center;
+	gap: var(--size-4-2);
+	width: 100%;
+	height: auto;
+	padding: var(--size-4-2);
+	background: transparent;
+	box-shadow: none;
+	border-radius: 0;
+	color: var(--text-normal);
+	text-align: left;
+}
+
+.enveloppe-manager-operation-title {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: var(--font-ui-small);
+	font-weight: var(--font-semibold);
+}
+
+.enveloppe-manager-operation-meta {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--size-4-1);
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+	font-variant-numeric: tabular-nums;
+}
+
+.enveloppe-manager-errors {
+	padding: 0 4px;
+	border-radius: var(--radius-s);
+	color: var(--text-on-accent);
+	background: var(--color-red);
+}
+
+.enveloppe-manager-operation-items,
+.enveloppe-manager-log {
+	margin: 0;
+	padding: var(--size-4-1) var(--size-4-2);
+	list-style: none;
+	font-size: var(--font-ui-smaller);
+}
+
+.enveloppe-manager-operation-items {
+	max-height: 260px;
+	overflow-y: auto;
+}
+
+.enveloppe-manager-operation-items li,
+.enveloppe-manager-log-line {
+	display: flex;
+	align-items: center;
+	gap: var(--size-4-1);
+	padding: 2px 0;
+	min-width: 0;
+}
+
+.enveloppe-manager-item-label,
+.enveloppe-manager-log-path {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: var(--font-monospace);
+}
+
+.enveloppe-manager-item-message {
+	max-width: 45%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--text-faint);
+}
+
+.enveloppe-manager-log-time,
+.enveloppe-manager-log-target {
+	color: var(--text-faint);
+	font-variant-numeric: tabular-nums;
+	white-space: nowrap;
+}
+
+.enveloppe-manager-operation-items .is-done,
+.enveloppe-manager-log-line.is-done {
+	color: var(--text-normal);
+}
+
+.enveloppe-manager-operation-items .is-done > .enveloppe-manager-icon,
+.enveloppe-manager-log-line.is-done > .enveloppe-manager-icon:first-of-type {
+	color: var(--color-green);
+}
+
+.enveloppe-manager-operation-items .is-error,
+.enveloppe-manager-log-line.is-error {
+	color: var(--text-error);
+}
+
+.enveloppe-manager-operation-items .is-skipped,
+.enveloppe-manager-operation-items .is-queued {
+	color: var(--text-muted);
+}
+
+.enveloppe-manager-operation-items .is-running,
+.enveloppe-manager-log-line.is-running {
+	color: var(--text-accent);
+}
+
+/* confirmation */
+.enveloppe-manager-confirm-warning {
+	padding: var(--size-4-2);
+	margin-bottom: var(--size-4-2);
+	border-radius: var(--radius-m);
+	color: var(--text-warning);
+	background: rgba(var(--color-orange-rgb), 0.1);
+}
+
+.enveloppe-manager-confirm-list {
+	max-height: 200px;
+	overflow-y: auto;
+	font-family: var(--font-monospace);
+	font-size: var(--font-ui-smaller);
+}
+
+.enveloppe-manager-confirm-list .is-more {
+	list-style: none;
+	color: var(--text-muted);
+	font-family: var(--font-interface);
+}

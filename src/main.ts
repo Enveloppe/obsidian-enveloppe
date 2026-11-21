@@ -1,6 +1,7 @@
 import {
 	DEFAULT_SETTINGS,
 	type EnveloppeSettings,
+	type FileManagerLocation,
 	GithubTiersVersion,
 	type Repository,
 	type SetRepositoryFrontmatter,
@@ -33,6 +34,10 @@ import { ChooseWhichRepoToRun } from "src/commands/suggest_other_repo_commands_m
 import { getTitleField, regexOnFileName } from "src/conversion/file_path";
 import { GithubBranch } from "src/GitHub/branch";
 import { resources, translationLanguage } from "src/i18n/i18next";
+import { ActivityLog } from "src/manager/activity";
+import { t as managerT } from "src/manager/i18n";
+import { FileManager } from "src/manager/service";
+import { FileManagerView, leafLocation, VIEW_TYPE_FILE_MANAGER } from "src/manager/view";
 import { EnveloppeSettingsTab } from "src/settings";
 import { migrateSettings, migrateToSecret, type OldSettings } from "src/settings/migrate";
 import { createTokenPath } from "src/utils";
@@ -53,6 +58,8 @@ export default class Enveloppe extends Plugin {
 	branchName: string = "";
 	repositoryFrontmatter: SetRepositoryFrontmatter = {};
 	console!: Logs;
+	activity = new ActivityLog();
+	fileManager!: FileManager;
 
 	/**
 	 * Get the title field of a file
@@ -259,6 +266,23 @@ export default class Enveloppe extends Plugin {
 			.toLocaleDateString("en-US")
 			.replace(/\//g, "-")}`;
 		this.addSettingTab(new EnveloppeSettingsTab(this.app, this, this.branchName));
+		this.fileManager = new FileManager(this);
+		this.registerView(VIEW_TYPE_FILE_MANAGER, (leaf) => new FileManagerView(leaf, this));
+		this.addRibbonIcon(
+			"mail-open",
+			managerT("command"),
+			() => void this.openFileManager()
+		);
+		this.addCommand({
+			id: "open-file-manager",
+			name: managerT("command"),
+			callback: () => void this.openFileManager(),
+		});
+		this.addCommand({
+			id: "open-file-manager-tab",
+			name: managerT("commandTab"),
+			callback: () => void this.openFileManager("tab"),
+		});
 		// network calls and metadata cache reads must not delay Obsidian's startup
 		this.app.workspace.onLayoutReady(() => void this.verifyRepositories());
 
@@ -309,6 +333,34 @@ export default class Enveloppe extends Plugin {
 		this.addCommand(refreshAllSets(this));
 		this.registerDomEvent(window, "unhandledrejection", this.unhandledRejectionListener);
 		this.registerDomEvent(window, "error", this.errorListener);
+	}
+
+	/**
+	 * Reveal the file manager, or open it where the settings say.
+	 * With a location, the manager moves there; `remember` makes it the default one.
+	 */
+	async openFileManager(location?: FileManagerLocation, remember = false) {
+		const { workspace } = this.app;
+		const leaves = workspace.getLeavesOfType(VIEW_TYPE_FILE_MANAGER);
+		let leaf = location
+			? leaves.find((l) => leafLocation(workspace, l) === location)
+			: leaves[0];
+		if (remember && location && this.settings.plugin.fileManagerLocation !== location) {
+			this.settings.plugin.fileManagerLocation = location;
+			await this.saveSettings();
+		}
+		if (!leaf) {
+			for (const old of leaves) old.detach();
+			const where = location ?? this.settings.plugin.fileManagerLocation ?? "right";
+			leaf =
+				(where === "left"
+					? workspace.getLeftLeaf(false)
+					: where === "right"
+						? workspace.getRightLeaf(false)
+						: null) ?? workspace.getLeaf("tab");
+			await leaf.setViewState({ type: VIEW_TYPE_FILE_MANAGER, active: true });
+		}
+		await workspace.revealLeaf(leaf);
 	}
 
 	/**

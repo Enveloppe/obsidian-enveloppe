@@ -26,11 +26,12 @@ import type {
 	MultiProperties,
 	MultiRepoProperties,
 } from "src/interfaces/properties";
-import type { MetadataExtractor } from "src/interfaces/settings";
+import type { FileManagerLocation, MetadataExtractor } from "src/interfaces/settings";
 
 export type {
 	Deleted,
 	EnveloppeSettings,
+	FileManagerLocation,
 	GithubRepo,
 	LinkedNotes,
 	ListEditedFiles,

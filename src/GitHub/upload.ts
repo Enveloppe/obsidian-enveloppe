@@ -29,6 +29,7 @@ import { deleteFromGithub } from "src/GitHub/delete";
 import { FilesManagement } from "src/GitHub/files";
 import type { ContentFile } from "src/GitHub/octokit_types";
 import type Enveloppe from "src/main";
+import type { ActivityLog } from "src/manager/activity";
 import {
 	checkEmptyConfiguration,
 	forcePushAttachment,
@@ -471,25 +472,27 @@ export default class Publisher {
 			properties.frontmatter.general,
 			properties.frontmatter.prop
 		);
-		if (this.settings.github.dryRun.enable) {
-			const dryRunPath = this.dryRunPath(path, prop);
-			const existing = this.vault.getFileByPath(dryRunPath);
-			if (existing) {
-				const needToBeUpdated = imageFile.stat.mtime > existing.stat.mtime;
-				if (needToBeUpdated) await this.vault.modifyBinary(existing, imageBin);
+		return this.trackWrite(path, prop, async () => {
+			if (this.settings.github.dryRun.enable) {
+				const dryRunPath = this.dryRunPath(path, prop);
+				const existing = this.vault.getFileByPath(dryRunPath);
+				if (existing) {
+					const needToBeUpdated = imageFile.stat.mtime > existing.stat.mtime;
+					if (needToBeUpdated) await this.vault.modifyBinary(existing, imageBin);
+					return {
+						isUpdated: needToBeUpdated,
+						file: imageFile.name,
+					};
+				}
+				await this.createParentFolder(dryRunPath);
+				await this.vault.createBinary(dryRunPath, imageBin);
 				return {
-					isUpdated: needToBeUpdated,
+					isUpdated: true,
 					file: imageFile.name,
 				};
 			}
-			await this.createParentFolder(dryRunPath);
-			await this.vault.createBinary(dryRunPath, imageBin);
-			return {
-				isUpdated: true,
-				file: imageFile.name,
-			};
-		}
-		return await this.upload(image64, path, "", properties.frontmatter.prop);
+			return await this.upload(image64, path, "", prop);
+		});
 	}
 
 	/**
@@ -508,29 +511,40 @@ export default class Publisher {
 		prop: Properties
 	): Promise<UploadedFiles | undefined> {
 		if (this.settings.github.dryRun.enable) {
-			const newPath = this.dryRunPath(path, prop);
-			const existing = this.vault.getFileByPath(newPath);
-			if (existing) {
-				await this.vault.modify(existing, text);
+			return this.trackWrite(path, prop, async () => {
+				const newPath = this.dryRunPath(path, prop);
+				const existing = this.vault.getFileByPath(newPath);
+				if (existing) {
+					await this.vault.modify(existing, text);
+					return {
+						isUpdated: true,
+						file: title,
+					};
+				}
+				await this.createParentFolder(newPath);
+				await this.vault.create(newPath, text);
 				return {
-					isUpdated: true,
+					isUpdated: false,
 					file: title,
 				};
-			}
-			await this.createParentFolder(newPath);
-			await this.vault.create(newPath, text);
-			return {
-				isUpdated: false,
-				file: title,
-			};
+			});
 		}
 		try {
 			const contentBase64 = Base64.encode(text).toString();
-			return await this.upload(contentBase64, path, title, prop);
+			return await this.trackWrite(path, prop, () =>
+				this.upload(contentBase64, path, title, prop)
+			);
 		} catch (e) {
 			this.console.error(e as Error);
 			return undefined;
 		}
+	}
+
+	/** Show the write in the file manager activity, whatever the command running it */
+	protected trackWrite<T>(path: string, prop: Properties, run: () => Promise<T>) {
+		const activity = this.plugin.activity as ActivityLog | undefined;
+		if (!activity) return run();
+		return activity.track("push", path, `${prop.owner}/${prop.repo}`, run);
 	}
 
 	private dryRunPath(path: string, prop: Properties): string {

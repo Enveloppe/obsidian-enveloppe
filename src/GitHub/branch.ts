@@ -3,7 +3,7 @@ import type { RequestError } from "@octokit/request-error";
 import dedent from "dedent";
 import i18next from "i18next";
 import { Notice } from "obsidian";
-import { FilesManagement } from "src/GitHub/files";
+import { FilesManagement, NO_CACHE } from "src/GitHub/files";
 import { verifyToken } from "../utils/data_validation_test";
 import { EnveloppeErrors } from "../utils/logs";
 
@@ -41,12 +41,14 @@ export class GithubBranch extends FilesManagement {
 	 */
 
 	async newBranchOnRepo(prop: Properties): Promise<boolean> {
+		// a cached answer would start the branch from an older commit
 		const mainBranch = await this.octokit.request(
 			"GET /repos/{owner}/{repo}/branches/{branch}",
 			{
 				owner: prop.owner,
 				repo: prop.repo,
 				branch: prop.branch,
+				headers: NO_CACHE,
 			}
 		);
 		if (mainBranch.status !== 200) {

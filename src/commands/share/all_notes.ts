@@ -11,6 +11,7 @@ import {
 import type { GithubBranch } from "src/GitHub/branch";
 import { deleteFromGithub } from "src/GitHub/delete";
 import type Enveloppe from "src/main";
+import { type ActivityLog, errorMessage } from "src/manager/activity";
 import { ListChangedFiles } from "src/settings/modals/list_changed";
 import { createListEdited, getSettingsOfMetadataExtractor } from "src/utils";
 import { checkRepositoryValidityWithProperties } from "src/utils/data_validation_test";
@@ -106,11 +107,20 @@ export async function shareAllMarkedNotes(
 	);
 	const plugin = PublisherManager.plugin;
 	const prop = monoRepo.frontmatter;
+	// shown in the file manager activity
+	const activity = plugin.activity as ActivityLog | undefined;
+	const opId = activity?.startOperation(
+		"publish",
+		`${prop.owner}/${prop.repo}`,
+		sharedFiles.map((file) => ({ key: file.path, label: file.path }))
+	);
+	let failed = true;
 	try {
 		const fileError: string[] = [];
 		const listStateUploaded: UploadedFiles[] = [];
 		if (sharedFiles.length === 0) {
 			statusBar.remove();
+			failed = false;
 			return;
 		}
 		if (createGithubBranch) {
@@ -128,6 +138,7 @@ export async function shareAllMarkedNotes(
 		for (const sharedFile of sharedFiles) {
 			try {
 				statusBar.increment();
+				if (opId) activity?.updateItem(opId, sharedFile.path, "running");
 				const uploaded = await PublisherManager.publish(
 					sharedFile,
 					false,
@@ -139,7 +150,10 @@ export async function shareAllMarkedNotes(
 				if (uploaded) {
 					listStateUploaded.push(...uploaded.uploaded);
 				}
+				if (opId)
+					activity?.updateItem(opId, sharedFile.path, uploaded ? "done" : "skipped");
 			} catch (e) {
+				if (opId) activity?.updateItem(opId, sharedFile.path, "error", errorMessage(e));
 				fileError.push(sharedFile.name);
 				new Notice(
 					i18next.t("error.unablePublishNote", { file: sharedFile.name }),
@@ -161,6 +175,7 @@ export async function shareAllMarkedNotes(
 			}
 		}
 		const update = await PublisherManager.updateRepository(prop);
+		failed = !update;
 		if (update) {
 			await plugin.console.publisherNotification(
 				PublisherManager,
@@ -188,5 +203,7 @@ export async function shareAllMarkedNotes(
 		});
 		new Notice(errorFrag, PublisherManager.noticeLength);
 		statusBar.error(prop);
+	} finally {
+		if (opId) activity?.endOperation(opId, failed);
 	}
 }
