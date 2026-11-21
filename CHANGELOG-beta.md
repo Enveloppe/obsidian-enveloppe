@@ -1,3 +1,8 @@
+## [8.0.0-4](https://github.com/Enveloppe/obsidian-enveloppe/compare/8.0.0-3...8.0.0-4) (2026-11-21)
+### Features
+
+* ui with file manager ([ed59163](https://github.com/Enveloppe/obsidian-enveloppe/commit/ed5916375b6d8f496b3e0692e57b369f91e39691))
+
 ## [8.0.0-3](https://github.com/Enveloppe/obsidian-enveloppe/compare/8.0.0-2...8.0.0-3) (2026-11-14)
 
 ## [8.0.0-2](https://github.com/Enveloppe/obsidian-enveloppe/compare/7.8.2...8.0.0-2) (2026-11-11)
