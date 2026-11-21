@@ -1,3 +1,8 @@
+## [8.0.0-5](https://github.com/Enveloppe/obsidian-enveloppe/compare/8.0.0-4...8.0.0-5) (2026-11-21)
+### Bug Fixes
+
+* reuse the open publishing PR before creating one ([2919273](https://github.com/Enveloppe/obsidian-enveloppe/commit/29192736ef0153acfe5b66e24cb5bc2f06de92f3)), references [#423](https://github.com/Enveloppe/obsidian-enveloppe/issues/423)
+
 ## [8.0.0-4](https://github.com/Enveloppe/obsidian-enveloppe/compare/8.0.0-3...8.0.0-4) (2026-11-21)
 ### Features
 
