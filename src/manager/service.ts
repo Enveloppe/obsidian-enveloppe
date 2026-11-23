@@ -75,8 +75,13 @@ interface ScanResult {
 	local: ConvertedLink[];
 	remote: GithubRepo[];
 	managed: GithubRepo[];
-	/** last commit date of the notes looked at by `checkModified` */
-	commitDates: Map<string, Date | null>;
+	/** last commit of the published notes, with the sha it was looked up for */
+	commitDates: Map<string, CommitDate>;
+}
+
+interface CommitDate {
+	sha?: string;
+	date: Date | null;
 }
 
 const CHECK_CONCURRENCY = 4;
@@ -93,8 +98,10 @@ export class FileManager {
 		awaitingMerge: [],
 	};
 	private listeners = new Set<() => void>();
-	private cancelCheck = false;
+	/** bumped to stop the running check */
+	private checkRun = 0;
 	private rescanRequested = false;
+	private recheckRequested = false;
 	private openViews = 0;
 	private lastScan?: ScanResult;
 	/** by `owner/repo` */
@@ -153,7 +160,8 @@ export class FileManager {
 
 	selectRepository(key: string) {
 		if (key === this.state.repoKey) return;
-		this.cancelCheck = true;
+		this.checkRun++;
+		this.recheckRequested = false;
 		this.lastScan = undefined;
 		this.setState({
 			repoKey: key,
@@ -257,13 +265,16 @@ export class FileManager {
 				? { ...entry, status: "modified" }
 				: entry;
 		}
-		const date = scan.commitDates.get(entry.id);
-		return date !== undefined && isModified(entry.file.stat.mtime, date)
+		const commit = scan.commitDates.get(entry.id);
+		return commit &&
+			commit.sha === entry.sha &&
+			isModified(entry.file.stat.mtime, commit.date)
 			? { ...entry, status: "modified" }
 			: entry;
 	}
 
-	async scan() {
+	/** List the files, then look up the commit dates unknown yet, or all of them with `full` */
+	async scan(full = false) {
 		if (this.state.scanning) {
 			this.rescanRequested = true;
 			return;
@@ -296,9 +307,10 @@ export class FileManager {
 				commitDates:
 					this.lastScan?.target === target
 						? this.lastScan.commitDates
-						: new Map<string, Date | null>(),
+						: new Map<string, CommitDate>(),
 			};
 			this.refreshEntries({ scannedAt: Date.now(), stale: false });
+			void this.checkModified(full);
 		} catch (e) {
 			this.plugin.console.trace(e);
 			if (this.state.repoKey === repoKey) {
@@ -337,45 +349,64 @@ export class FileManager {
 	}
 
 	/** Compare the vault modification date with the last commit of each published note */
-	async checkModified() {
-		if (this.state.checking || this.dryRun) return;
+	private async checkModified(full: boolean) {
+		if (this.dryRun || !this.lastScan) return;
+		if (this.state.checking) {
+			this.recheckRequested = true;
+			return;
+		}
 		const repoKey = this.state.repoKey;
+		const known = this.lastScan.commitDates;
 		const toCheck = this.state.entries.filter(
 			(e) =>
-				e.kind === "note" && e.file && e.status !== "unpublished" && e.status !== "orphan"
+				e.kind === "note" &&
+				e.file &&
+				e.status !== "unpublished" &&
+				e.status !== "orphan" &&
+				(full || !known.has(e.id) || known.get(e.id)?.sha !== e.sha)
 		);
 		if (toCheck.length === 0) return;
-		this.cancelCheck = false;
+		const run = ++this.checkRun;
 		this.setState({ checking: { done: 0, total: toCheck.length } });
 		const ctx = await this.context();
-		const commitDates = new Map<string, Date | null>();
+		const commitDates = new Map<string, CommitDate>();
 		let done = 0;
 		const queue = [...toCheck];
 		const worker = async () => {
-			while (queue.length > 0 && !this.cancelCheck) {
+			while (queue.length > 0 && run === this.checkRun) {
 				const entry = queue.shift()!;
 				try {
 					const date = await ctx.publisher.getLastEditedTimeRepo(
 						{ file: entry.id, sha: entry.sha ?? "" },
 						ctx.prop
 					);
-					commitDates.set(entry.id, date);
+					commitDates.set(entry.id, { sha: entry.sha, date });
 				} catch (e) {
 					this.plugin.console.trace(e);
 				}
 				done++;
-				if (this.state.repoKey === repoKey)
+				if (run === this.checkRun)
 					this.setState({ checking: { done, total: toCheck.length } });
 			}
 		};
 		await Promise.all(Array.from({ length: CHECK_CONCURRENCY }, worker));
 		if (this.state.repoKey !== repoKey || !this.lastScan) return;
-		for (const [path, date] of commitDates) this.lastScan.commitDates.set(path, date);
+		for (const [path, commit] of commitDates) this.lastScan.commitDates.set(path, commit);
+		if (run !== this.checkRun) {
+			// stopped: keep what was found, without touching a newer check
+			if (!this.state.checking) this.refreshEntries();
+			return;
+		}
 		this.refreshEntries({ checking: null });
+		if (this.recheckRequested) {
+			this.recheckRequested = false;
+			void this.checkModified(false);
+		}
 	}
 
 	stopCheck() {
-		this.cancelCheck = true;
+		this.checkRun++;
+		this.recheckRequested = false;
 		this.setState({ checking: null });
 	}
 

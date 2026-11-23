@@ -143,7 +143,11 @@ export function FilesTab({ app, state }: { app: App; state: ManagerState }) {
 					) : (
 						<>
 							<p>{t("empty.never")}</p>
-							<button type="button" class="mod-cta" onClick={() => void manager.scan()}>
+							<button
+								type="button"
+								class="mod-cta"
+								onClick={() => void manager.scan(true)}
+							>
 								{t("actions.scan")}
 							</button>
 						</>

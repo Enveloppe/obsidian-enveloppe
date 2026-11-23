@@ -49,19 +49,11 @@ export function ManagerApp({
 					)}
 					<IconButton
 						icon="refresh-cw"
-						label={t("actions.scan")}
-						spin={state.scanning}
-						disabled={state.scanning || state.busy}
-						onClick={() => void manager.scan()}
+						label={t(manager.dryRun ? "actions.scan" : "actions.scanAndCheck")}
+						spin={state.scanning || !!state.checking}
+						disabled={state.scanning || !!state.checking || state.busy}
+						onClick={() => void manager.scan(true)}
 					/>
-					{!manager.dryRun && (
-						<IconButton
-							icon="git-compare"
-							label={t("actions.check")}
-							disabled={!state.scannedAt || !!state.checking || state.scanning}
-							onClick={() => void manager.checkModified()}
-						/>
-					)}
 					<IconButton
 						icon="layout-panel-left"
 						label={t("location.move")}

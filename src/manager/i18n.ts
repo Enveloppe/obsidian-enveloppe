@@ -22,8 +22,9 @@ const en = {
 	dryRun: "Dry-run",
 	tabs: { files: "Files", activity: "Activity" },
 	actions: {
-		scan: "Scan the repository",
-		check: "Look for notes edited since their publication",
+		scan: "Refresh the repository",
+		scanAndCheck:
+			"Refresh the repository and look for notes edited since their publication",
 		cancel: "Cancel",
 		refresh: "Refresh",
 		publish: "Publish",
@@ -122,8 +123,9 @@ const fr: DeepPartial<Dictionary> = {
 	dryRun: "Test à blanc",
 	tabs: { files: "Fichiers", activity: "Activité" },
 	actions: {
-		scan: "Analyser le dépôt",
-		check: "Chercher les notes modifiées depuis leur publication",
+		scan: "Actualiser le dépôt",
+		scanAndCheck:
+			"Actualiser le dépôt et chercher les notes modifiées depuis leur publication",
 		cancel: "Annuler",
 		refresh: "Actualiser",
 		publish: "Publier",
