@@ -1,3 +1,9 @@
+## [8.0.0-6](https://github.com/Enveloppe/obsidian-enveloppe/compare/8.0.0-5...8.0.0-6) (2026-11-25)
+### Features
+
+* **manager:** refresh the repository and check edited notes together ([34a6913](https://github.com/Enveloppe/obsidian-enveloppe/commit/34a691355f571202a00050250e26ec823846207d))
+* settings for logic in deletion\nsee [#425](https://github.com/Enveloppe/obsidian-enveloppe/issues/425) ([97f63a1](https://github.com/Enveloppe/obsidian-enveloppe/commit/97f63a1ee1197d7c644b5212809b5cb5c4673bb2))
+
 ## [8.0.0-5](https://github.com/Enveloppe/obsidian-enveloppe/compare/8.0.0-4...8.0.0-5) (2026-11-21)
 ### Bug Fixes
 
