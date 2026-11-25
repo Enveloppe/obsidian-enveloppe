@@ -1,3 +1,5 @@
+## [8.0.0-8](https://github.com/Enveloppe/obsidian-enveloppe/compare/8.0.0-7...8.0.0-8) (2026-11-25)
+
 ## [8.0.0-7](https://github.com/Enveloppe/obsidian-enveloppe/compare/8.0.0-6...8.0.0-7) (2026-11-25)
 ### Features
 
