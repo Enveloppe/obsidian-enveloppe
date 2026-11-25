@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import pkg from "ansi-colors";
 import { Command, Option } from "commander";
 import commitAndTagVersion from "commit-and-tag-version";
@@ -6,6 +7,19 @@ import dedent from "dedent";
 const { red, dim, gray, italic, bold, cyan, blue, green, underline, yellow, theme } = pkg;
 
 const program = new Command();
+
+// Adds the new version to versions.json with the minAppVersion from manifest.json
+const versionsUpdater = {
+	readVersion: (contents) => Object.keys(JSON.parse(contents)).at(-1),
+	writeVersion: (contents, version) => {
+		const versions = JSON.parse(contents);
+		if (version in versions) return contents;
+		const { minAppVersion } = JSON.parse(readFileSync("manifest.json", "utf8"));
+		versions[version] = minAppVersion;
+		const indent = contents.match(/^([ \t]+)"/m)?.[1] ?? "\t";
+		return `${JSON.stringify(versions, null, indent)}\n`;
+	},
+};
 
 theme({
 	danger: red,
@@ -64,10 +78,6 @@ if (opt.beta) {
 			filename: "package.json",
 			type: "json",
 		},
-		{
-			filename: "package-lock.json",
-			type: "json",
-		},
 	];
 	commitAndTagVersion({
 		infile: "CHANGELOG-beta.md",
@@ -77,7 +87,6 @@ if (opt.beta) {
 		tagPrefix: "",
 		scripts: {
 			postchangelog: "node hooks/_changelog.mjs -b",
-			postbump: "node hooks/_versions.mjs",
 		},
 	})
 		.then(() => {
@@ -103,12 +112,12 @@ if (opt.beta) {
 			type: "json",
 		},
 		{
-			filename: "package-lock.json",
+			filename: "manifest.json",
 			type: "json",
 		},
 		{
-			filename: "manifest.json",
-			type: "json",
+			filename: "versions.json",
+			updater: versionsUpdater,
 		},
 	];
 
@@ -120,7 +129,6 @@ if (opt.beta) {
 		releaseAs: opt.releaseAs,
 		scripts: {
 			postchangelog: "node hooks/_changelog.mjs",
-			postbump: "node hooks/_versions.mjs",
 		},
 	})
 		.then(() => {
