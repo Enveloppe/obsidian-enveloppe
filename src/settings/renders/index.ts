@@ -1,4 +1,5 @@
 import type { EnveloppeSettings } from "@interfaces";
+import i18next from "i18next";
 import {
 	type App,
 	Component,
@@ -30,6 +31,8 @@ export function stringListItems(
 		addItemName: string;
 		placeholder?: string;
 		values: string[];
+		/** A rejected value is flagged and not saved */
+		validate?: (value: string) => boolean;
 		save: () => Promise<void> | void;
 		visible?: boolean | (() => boolean);
 	}
@@ -85,6 +88,9 @@ export function stringListItems(
 						.setPlaceholder(options.placeholder ?? "")
 						.setValue(values[index])
 						.onChange(async (v) => {
+							const valid = options.validate?.(v) ?? true;
+							text.inputEl.toggleClass("error", !valid);
+							if (!valid) return;
 							values[index] = v;
 							await options.save();
 						});
@@ -113,6 +119,8 @@ export function stringListPage(
 		addItemName: string;
 		placeholder?: string;
 		values: string[];
+		/** A rejected value is flagged and not saved */
+		validate?: (value: string) => boolean;
 		save: () => Promise<void> | void;
 		visible?: boolean | (() => boolean);
 	}
@@ -129,6 +137,7 @@ export function stringListPage(
 				addItemName: options.addItemName,
 				placeholder: options.placeholder,
 				values: options.values,
+				validate: options.validate,
 				save: options.save,
 			}),
 		],
@@ -146,6 +155,74 @@ export function widenInput(
 ): TextComponent {
 	text.inputEl.addClass(cls);
 	return text;
+}
+
+/** The list of regexes applied on the copied links */
+export function linkRegexList(
+	ctx: RenderContext,
+	values: { regex: string; replacement: string }[],
+	visible: () => boolean
+): SettingDefinitionList {
+	const save = () => ctx.plugin.saveSettings();
+	return {
+		type: "list",
+		cls: "enveloppe",
+		heading: i18next.t("settings.plugin.copyLink.applyRegex.title"),
+		visible,
+		emptyState: i18next.t("settings.plugin.copyLink.applyRegex.desc"),
+		addItem: {
+			name: i18next.t("settings.plugin.copyLink.applyRegex.title"),
+			action: () => {
+				void (async () => {
+					values.push({ regex: "", replacement: "" });
+					await save();
+					ctx.update();
+				})();
+			},
+		},
+		onReorder: (oldIndex, newIndex) => {
+			void (async () => {
+				const [moved] = values.splice(oldIndex, 1);
+				values.splice(newIndex, 0, moved);
+				await save();
+				// Required despite the docs saying otherwise — see `stringListItems`.
+				ctx.update();
+			})();
+		},
+		onDelete: (index) => {
+			void (async () => {
+				values.splice(index, 1);
+				await save();
+				ctx.update();
+			})();
+		},
+		items: values.map((apply) => ({
+			name: "",
+			searchable: false,
+			render: (setting) => {
+				setting
+					.setClass("no-display")
+					.addText((text) => {
+						widenInput(text)
+							.setPlaceholder(i18next.t("common.regex"))
+							.setValue(apply.regex)
+							.onChange(async (value) => {
+								apply.regex = value;
+								await save();
+							});
+					})
+					.addText((text) => {
+						widenInput(text)
+							.setPlaceholder(i18next.t("regex.replace"))
+							.setValue(apply.replacement)
+							.onChange(async (value) => {
+								apply.replacement = value;
+								await save();
+							});
+					});
+			},
+		})),
+	};
 }
 
 /**

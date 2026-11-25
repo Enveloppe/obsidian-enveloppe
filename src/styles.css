@@ -216,13 +216,6 @@ a.enveloppe-download:hover {
 	flex: 1 1 0;
 }
 
-.enveloppe .enveloppe-repo-details {
-	margin-left: 1em;
-	margin-top: 0.5em;
-	padding-left: 1em;
-	border-left: 2px solid var(--background-modifier-border);
-}
-
 .setting-item-control.enveloppe-raw-content-control {
 	text-align: initial;
 	width: 100%;

@@ -1,7 +1,6 @@
 import {
 	type Deleted,
 	type EnveloppeSettings,
-	FIND_REGEX,
 	FolderSettings,
 	type GithubRepo,
 	type MonoRepoProperties,
@@ -24,7 +23,6 @@ import {
 	Vault,
 } from "obsidian";
 import type { FilesManagement } from "src/GitHub/files";
-import type { ContentFile } from "src/GitHub/octokit_types";
 import type { ActivityLog } from "src/manager/activity";
 import { trimObject } from "src/utils";
 import {
@@ -32,6 +30,7 @@ import {
 	isAttachment,
 	verifyRateLimitAPI,
 } from "src/utils/data_validation_test";
+import { buildExclusion } from "src/utils/exclusion";
 import { frontmatterSettingsRepository } from "src/utils/parse_frontmatter";
 
 /**
@@ -107,6 +106,7 @@ async function deleteFromGithubOneRepo(
 		true
 	);
 	const allSharedConverted = toSharedPaths(allSharedFiles);
+	const keepRule = getKeepRule(settings, repoProperties.repository);
 	let deletedSuccess = 0;
 	let deletedFailed = 0;
 	const result: Deleted = {
@@ -116,10 +116,17 @@ async function deleteFromGithubOneRepo(
 	};
 	for (const file of filesInRepo) {
 		if (mustBeDeleted(file.file, allSharedConverted, repo)) {
-			const checkingIndex = file.file.contains(settings.upload.folderNote.rename)
-				? await checkIndexFiles(octokit, file.file, repo, branchName)
-				: false;
-			if (!checkingIndex) {
+			let kept: boolean;
+			try {
+				kept = await isKeptInRepo(octokit, file, repo, keepRule);
+			} catch (e) {
+				// never delete a note that could not be checked
+				pconsole.trace(e);
+				deletedFailed++;
+				result.undeleted.push(file.file);
+				continue;
+			}
+			if (!kept) {
 				pconsole.trace(
 					`trying to delete file : ${file.file} from ${repo.owner}/${repo.repo}`
 				);
@@ -209,26 +216,15 @@ export function mustBeDeleted(
 	});
 }
 
-/**
- * Prevent deletion of specific file by checking their presence in the excludedFile list
- * @param {string} file file to eventually delete
- * @param {EnveloppeSettings} settings
- * @return {boolean} : true if the file is in the excludedFile list
- */
-function excludedFileFromDelete(file: string, settings: EnveloppeSettings): boolean {
-	const autoCleanExcluded = settings.upload.autoclean.excluded;
-	if (autoCleanExcluded.length > 0) {
-		for (const excludedFile of autoCleanExcluded) {
-			const isRegex = excludedFile.match(FIND_REGEX);
-			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
-			if (regex?.test(file)) {
-				return true;
-			} else if (file.trim().includes(excludedFile.trim()) && excludedFile.length > 0) {
-				return true;
-			}
-		}
-	}
-	return false;
+function getExclusion(settings: EnveloppeSettings): (path: string) => boolean {
+	return buildExclusion(
+		settings.upload.autoclean.excluded,
+		(e) =>
+			new Notice(
+				i18next.t("settings.regexReplacing.invalidRegex", { e: String(e) }),
+				settings.plugin.noticeLength
+			)
+	);
 }
 
 /**
@@ -249,6 +245,7 @@ export async function filterGithubFile(
 	prop: Properties
 ): Promise<GithubRepo[]> {
 	const sharedFilesInRepo: GithubRepo[] = [];
+	const isExcluded = getExclusion(settings);
 	for (const file of fileInRepo) {
 		const behavior = prop.path?.type ?? settings.upload.behavior;
 		const root = prop.path?.rootFolder ?? settings.upload.rootFolder;
@@ -261,7 +258,7 @@ export async function filterGithubFile(
 			(file.file.includes(defaultName) ||
 				(behavior === FolderSettings.Yaml && file.file.includes(root)) ||
 				(attachmentFolder.length > 0 && file.file.includes(attachmentFolder))) &&
-			!excludedFileFromDelete(file.file, settings) &&
+			!isExcluded(file.file) &&
 			(enabledAttachments || file.file.endsWith(".md"))
 		) {
 			sharedFilesInRepo.push(file);
@@ -271,64 +268,81 @@ export async function filterGithubFile(
 }
 
 /**
- * Parse the YAML metadata from github repository files.
- * @param {string} contents file contents to parse
- * @param filePath
- * @return {string} YAML metadata
+ * Parse the YAML metadata of a published file.
+ * @return the frontmatter, empty if there is none, or null if it can't be read
  */
-
-function parseYamlFrontmatter(contents: string): Record<string, unknown> {
+function parseYamlFrontmatter(contents: string): Record<string, unknown> | null {
 	const { exists, frontmatter } = getFrontMatterInfo(contents);
 	if (!exists) return {};
 	try {
-		return trimObject(parseYaml(frontmatter));
+		const parsed: unknown = parseYaml(frontmatter);
+		// nothing but blank lines or comments
+		if (parsed == null) return {};
+		return typeof parsed === "object" ? trimObject(parsed) : null;
 	} catch {
-		//probably not a valid frontmatter, skip
-		return {};
+		return null;
 	}
 }
 
-/**
- * If folder note, check if the index must be excluded or included in deletion.
- * Always ignore file with :
- * - index: true
- * - autoClean: false
- * - share: false
- * @param {Octokit} octokit GitHub API
- * @param {string} path path of the file to check
- * @param {Properties} prop repository informations
- * @param {string} branchName branch where the file will be deleted
- * @return {Promise<boolean>} true if the file must be kept
- */
+interface KeepRule {
+	shareKey: string;
+	keepUnshared: boolean;
+	/** `settings.upload.folderNote.rename` */
+	indexName: string;
+}
 
-async function checkIndexFiles(
+function getKeepRule(
+	settings: EnveloppeSettings,
+	repository: MonoRepoProperties["repository"]
+): KeepRule {
+	return {
+		shareKey: repository?.shareKey || settings.plugin.shareKey || "share",
+		// imported settings may lack the key: deleting must be an explicit choice
+		keepUnshared: settings.upload.autoclean.keepUnshared !== false,
+		indexName: settings.upload.folderNote.rename,
+	};
+}
+
+export function isIndexFile(path: string, indexName: string): boolean {
+	const name = path.trim().split("/").pop();
+	return !!indexName && (name === indexName || name === `${indexName}.md`);
+}
+
+/** `delete: false` protects every note, `index: true` only the index files */
+function isMarkedKept(frontmatter: Record<string, unknown>, isIndex: boolean): boolean {
+	// YAML gives booleans, but quoted values stay strings
+	const is = (value: unknown, expected: boolean) =>
+		value === expected || value === String(expected);
+	return is(frontmatter.delete, false) || (isIndex && is(frontmatter.index, true));
+}
+
+/**
+ * Check if a published file must be excluded from deletion:
+ * - any note with `delete: false`, or with an unreadable frontmatter
+ * - index files with `index: true`
+ * - index files with the share key missing or false, if `autoclean.keepUnshared` is enabled
+ */
+async function isKeptInRepo(
 	octokit: Octokit,
-	path: string,
+	file: GithubRepo,
 	prop: Properties,
-	branchName: string
+	keepRule: KeepRule
 ): Promise<boolean> {
-	const fileRequest = (await octokit.request(
-		"GET /repos/{owner}/{repo}/contents/{+path}",
-		{
-			owner: prop.owner,
-			repo: prop.repo,
-			path,
-			ref: branchName,
-		}
-	)) as { status: number; data: ContentFile };
-	if (fileRequest.status === 200) {
-		const fileContent = Base64.decode(fileRequest.data.content);
-		const fileFrontmatter = parseYamlFrontmatter(fileContent);
-		// YAML gives booleans, but quoted values stay strings
-		const is = (value: unknown, expected: boolean) =>
-			value === expected || value === String(expected);
-		return (
-			is(fileFrontmatter.index, true) ||
-			is(fileFrontmatter.delete, false) ||
-			!fileFrontmatter.share
-		);
-	}
-	return false;
+	const isIndex = isIndexFile(file.file, keepRule.indexName);
+	if (!isIndex && !file.file.trim().endsWith(".md")) return false;
+	// unlike the contents API, it has no 1 MB limit
+	const blob = await octokit.request("GET /repos/{owner}/{repo}/git/blobs/{file_sha}", {
+		owner: prop.owner,
+		repo: prop.repo,
+		// biome-ignore lint/style/useNamingConvention: GitHub API :(
+		file_sha: file.sha,
+	});
+	const frontmatter = parseYamlFrontmatter(Base64.decode(blob.data.content));
+	if (!frontmatter) return true;
+	return (
+		isMarkedKept(frontmatter, isIndex) ||
+		(isIndex && keepRule.keepUnshared && !frontmatter[keepRule.shareKey])
+	);
 }
 
 function cleanDryRun(
@@ -346,15 +360,13 @@ function cleanDryRun(
 	const dryRunFolder = vault.getFolderByPath(dryRunFolderPath);
 	if (!dryRunFolder) return { success: false, deleted: [], undeleted: [] };
 	const dryRunFiles: TFile[] = [];
+	const isExcluded = getExclusion(settings);
 	Vault.recurseChildren(dryRunFolder, (file: TAbstractFile) => {
 		const enabledAttachments =
 			settings.upload.autoclean.includeAttachments &&
 			isAttachment(file.path, settings.embed.unHandledObsidianExt);
 		if (
-			!excludedFileFromDelete(
-				normalizePath(file.path.replace(dryRunFolderPath, "")),
-				settings
-			) &&
+			!isExcluded(normalizePath(file.path.replace(dryRunFolderPath, ""))) &&
 			file instanceof TFile &&
 			(enabledAttachments || file.extension === "md")
 		)
@@ -367,6 +379,7 @@ function cleanDryRun(
 			true
 		)
 	);
+	const keepRule = getKeepRule(settings, repoProperties.repository);
 	let deletedSuccess = 0;
 	const result: Deleted = {
 		deleted: [],
@@ -377,10 +390,7 @@ function cleanDryRun(
 	for (const file of dryRunFiles) {
 		const convertedPath = normalizePath(file.path.replace(dryRunFolderPath, ""));
 		if (mustBeDeleted(convertedPath, allSharedFiles, repo)) {
-			const indexFile = convertedPath.contains(settings.upload.folderNote.rename)
-				? indexFileDryRun(file, app.metadataCache)
-				: false;
-			if (!indexFile) {
+			if (!isKeptInDryRun(file, convertedPath, app.metadataCache, keepRule)) {
 				pconsole.trace(
 					`[DRY-RUN] trying to delete file : ${file.path} from ${dryRunFolderPath}`
 				);
@@ -418,15 +428,17 @@ function cleanDryRun(
 	return result;
 }
 
-function indexFileDryRun(file: TFile, metadataCache: MetadataCache): boolean {
+function isKeptInDryRun(
+	file: TFile,
+	path: string,
+	metadataCache: MetadataCache,
+	keepRule: KeepRule
+): boolean {
 	const frontmatter = metadataCache.getFileCache(file)?.frontmatter;
-	if (frontmatter) {
-		const index = frontmatter.index as boolean | undefined;
-		const deleteFile = frontmatter.delete as boolean | undefined;
-		const share = frontmatter.share as boolean | undefined;
-		if (index === true || deleteFile === false || share === false) {
-			return true;
-		}
-	}
-	return false;
+	if (!frontmatter) return false;
+	const isIndex = isIndexFile(path, keepRule.indexName);
+	return (
+		isMarkedKept(frontmatter, isIndex) ||
+		(isIndex && keepRule.keepUnshared && frontmatter[keepRule.shareKey] === false)
+	);
 }

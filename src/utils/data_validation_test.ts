@@ -1,6 +1,5 @@
 import {
 	type EnveloppeSettings,
-	FIND_REGEX,
 	GithubTiersVersion,
 	type MultiProperties,
 	type Properties,
@@ -26,6 +25,7 @@ import {
 	mergeFrontmatter,
 } from "src/utils/parse_frontmatter";
 import { escapeRegex } from "../conversion/links";
+import { includesPath, parseRegexEntry } from "./exclusion";
 import { EnveloppeErrors } from "./logs";
 
 /**
@@ -169,9 +169,11 @@ export function isExcludedPath(
 		}
 	}
 	for (const folder of excludedFolder) {
-		const isRegex = folder.match(FIND_REGEX);
-		const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
-		if (regex?.test(file.path) || file.path.contains(folder.trim())) {
+		const regex = parseRegexEntry(folder);
+		if (
+			(regex && file.path.search(regex) >= 0) ||
+			includesPath(file.path, folder.trim())
+		) {
 			return true;
 		}
 	}
@@ -246,10 +248,10 @@ export function isAttachment(
 	if (attachmentExtern && attachmentExtern.length > 0) {
 		for (const att of attachmentExtern) {
 			const naturalExt = new RegExp(`\\.${escapeRegex(att)}$`, "i");
-			const isRegex = att.match(FIND_REGEX);
-			if (isRegex) {
-				const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
-				if (regex?.test(filename)) return filename.match(regex);
+			const regex = parseRegexEntry(att);
+			if (regex) {
+				const match = filename.match(regex);
+				if (match) return match;
 			} else if (filename.match(naturalExt)) return filename.match(naturalExt);
 		}
 	}
@@ -558,11 +560,12 @@ export async function verifyRateLimitAPI(
  */
 export function forcePushAttachment(file: TFile, settings: EnveloppeSettings): boolean {
 	const needToBeForPush = settings.embed.overrideAttachments.filter((path) => {
-		const isRegex = path.path.match(FIND_REGEX);
-		const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : null;
+		const regex = parseRegexEntry(path.path);
 		return (
 			path.forcePush &&
-			(regex?.test(file.path) || file.path === path.path || path.path.contains("{{all}}"))
+			((regex && file.path.search(regex) >= 0) ||
+				file.path === path.path ||
+				path.path.contains("{{all}}"))
 		);
 	});
 	return needToBeForPush.length !== 0;

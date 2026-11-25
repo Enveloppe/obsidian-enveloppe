@@ -16,7 +16,7 @@ import {
 import type { ContentFile, ContentsResponseData } from "src/GitHub/octokit_types";
 import type Enveloppe from "src/main";
 import type { EnveloppeSettingsTab } from "src/settings";
-import { migrateSettings, type OldSettings } from "src/settings/migrate";
+import { migrateExcluded, migrateSettings, type OldSettings } from "src/settings/migrate";
 import type { Logs } from "../../utils/logs";
 
 function censorData(settings: EnveloppeSettings, original: EnveloppeSettings) {
@@ -94,6 +94,7 @@ export class ImportModal extends Modal {
 
 							Object.assign(this.plugin.settings, importedSettings);
 							await this.censorRepositoryData(actualSettings);
+							await migrateExcluded(this.plugin);
 							await this.plugin.saveSettings();
 						}
 						this.close();

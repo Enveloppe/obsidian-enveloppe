@@ -17,6 +17,7 @@ import {
 	isInternalShared,
 	isShared,
 } from "src/utils/data_validation_test";
+import { parseRegexEntry } from "src/utils/exclusion";
 import {
 	frontmatterFromFile,
 	frontmatterSettingsRepository,
@@ -603,13 +604,11 @@ function applyOverriddenPath(
 	let overridden = false;
 	const isOverridden = settings.embed.overrideAttachments
 		.map((override) => {
-			const isRegex = override.path.match(FIND_REGEX);
-			const regex = isRegex ? new RegExp(isRegex[1], isRegex[2]) : undefined;
-			return { override, regex };
+			return { override, regex: parseRegexEntry(override.path) };
 		})
 		.filter(
 			({ override, regex }) =>
-				(regex?.test(filePath) ||
+				((regex && filePath.search(regex) >= 0) ||
 					filePath === override.path ||
 					override.path.contains("{{all}}")) &&
 				!override.destination.contains("{{default}}")

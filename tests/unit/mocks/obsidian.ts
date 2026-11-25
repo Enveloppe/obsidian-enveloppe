@@ -43,6 +43,16 @@ export class TFolder extends TAbstractFile {
 	children: TAbstractFile[] = [];
 }
 
+export class Vault {
+	static recurseChildren(root: TFolder, cb: (file: TAbstractFile) => void) {
+		cb(root);
+		for (const child of root.children) {
+			if (child instanceof TFolder) Vault.recurseChildren(child, cb);
+			else cb(child);
+		}
+	}
+}
+
 export class Notice {
 	constructor(_message?: unknown, _timeout?: number) {
 		// no-op: tests don't assert on the UI notice itself
@@ -116,3 +126,7 @@ export function parseFrontMatterTags(
 		.map((t) => (t.startsWith("#") ? t : `#${t}`));
 	return tags.length > 0 ? tags : null;
 }
+
+export const sanitizeHTMLToDom = (html: string) => html;
+
+export class AbstractInputSuggest {}

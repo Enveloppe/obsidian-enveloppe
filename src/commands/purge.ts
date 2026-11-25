@@ -74,7 +74,8 @@ async function purge(
 	if (!PublisherManager.settings.github.dryRun.enable)
 		await PublisherManager.newBranch(monoRepo.frontmatter);
 	const deleted = await deleteFromGithub(false, branchName, PublisherManager, monoRepo);
-	if (!PublisherManager.settings.github.dryRun.enable)
+	// without any commit, GitHub refuses the pull request (error 422)
+	if (!PublisherManager.settings.github.dryRun.enable && deleted.deleted.length > 0)
 		await PublisherManager.updateRepository(monoRepo.frontmatter);
 	if (PublisherManager.settings.plugin.displayModalRepoEditing)
 		new ListChangedFiles(PublisherManager.plugin.app, deleted).open();

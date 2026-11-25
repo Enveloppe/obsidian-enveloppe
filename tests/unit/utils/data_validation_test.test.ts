@@ -2,6 +2,7 @@ import type { PropertiesConversion } from "@interfaces/main";
 import {
 	checkIfRepoIsInAnother,
 	defaultRepo,
+	forcePushAttachment,
 	getDryRunFolder,
 	getPublishTargets,
 	isAttachment,
@@ -37,12 +38,10 @@ describe("isAttachment", () => {
 		expect(isAttachment("readme.csv", ["/\\.csv$/"])).not.toBeNull();
 	});
 
-	// FIND_REGEX (src/interfaces/constant.ts) only has one capture group for the
-	// pattern body, so the trailing flags in a "/pattern/flags" setting entry are
-	// matched syntactically but never actually reach `new RegExp(...)`. This
-	// documents the current behavior rather than the likely intent.
-	it("does not honor the flags of a /regex/flags external attachment entry", () => {
-		expect(isAttachment("readme.CSV", ["/\\.csv$/i"])).toBeNull();
+	it("honors the flags of a /regex/flags external attachment entry", () => {
+		expect(isAttachment("readme.CSV", ["/\\.csv$/"])).toBeNull();
+		expect(isAttachment("readme.CSV", ["/\\.csv$/i"])).not.toBeNull();
+		expect(isAttachment("readme.CSV", ["/\\.csv$/gi"])).not.toBeNull();
 	});
 });
 
@@ -161,6 +160,29 @@ describe("isExcludedPath", () => {
 		expect(isExcludedPath(settings, file as never, null)).toBe(false);
 	});
 
+	it("does not mistake the end of a folder path for flags", () => {
+		const settings = createSettings({
+			plugin: { excludedFolder: ["/assets/img"] } as never,
+		});
+		const isExcluded = (path: string) =>
+			isExcludedPath(settings, createFile({ path }) as never, null);
+		expect(isExcluded("assets/img/a.md")).toBe(true);
+		expect(isExcluded("assets/a.md")).toBe(false);
+	});
+
+	it("honors the flags of a /regex/flags excluded folder entry", () => {
+		const file = createFile({ path: "Archive/old.md" });
+		const isExcluded = (entry: string) =>
+			isExcludedPath(
+				createSettings({ plugin: { excludedFolder: [entry] } as never }),
+				file as never,
+				null
+			);
+		expect(isExcluded("/^archive\\//")).toBe(false);
+		expect(isExcluded("/^archive\\//gi")).toBe(true);
+		expect(isExcluded("/^archive\\//ii")).toBe(true);
+	});
+
 	it("supports a /regex/ excluded folder entry", () => {
 		const settings = createSettings({
 			plugin: { excludedFolder: ["/^archive\\//"] } as never,
@@ -257,5 +279,22 @@ describe("isShared", () => {
 		const settings = createSettings({ plugin: { shareKey: "share" } as never });
 		const file = createFile({ path: "note.md" });
 		expect(isShared(fm({}), settings, file as never, null)).toBe(false);
+	});
+});
+
+describe("forcePushAttachment", () => {
+	it("honors the flags of a /regex/flags entry", () => {
+		const file = createFile({ path: "assets/Photo.PNG" });
+		const isForced = (path: string) =>
+			forcePushAttachment(
+				file as never,
+				createSettings({
+					embed: {
+						overrideAttachments: [{ path, destination: "", forcePush: true }],
+					} as never,
+				})
+			);
+		expect(isForced("/\.png$/")).toBe(false);
+		expect(isForced("/\.png$/gi")).toBe(true);
 	});
 });

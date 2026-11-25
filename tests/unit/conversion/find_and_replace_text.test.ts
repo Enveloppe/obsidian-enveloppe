@@ -22,6 +22,11 @@ describe("createRegexFromText", () => {
 		expect(regex.flags).toBe("gi");
 	});
 
+	it("honors every flag FIND_REGEX accepts", () => {
+		expect(createRegexFromText("/foo/gs").flags).toBe("gs");
+		expect(createRegexFromText("/foo/u").flags).toBe("u");
+	});
+
 	it("dedupes repeated flag characters", () => {
 		const regex = createRegexFromText("/foo/gg");
 		expect(regex.flags).toBe("g");

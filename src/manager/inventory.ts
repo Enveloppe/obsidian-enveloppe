@@ -1,6 +1,6 @@
 import type { ConvertedLink, GithubRepo, Properties } from "@interfaces/main";
 import type { TFile } from "obsidian";
-import { mustBeDeleted, toSharedPaths } from "src/GitHub/delete";
+import { isIndexFile, mustBeDeleted, toSharedPaths } from "src/GitHub/delete";
 
 export type FileStatus = "published" | "modified" | "unpublished" | "orphan";
 export type EntryKind = "note" | "attachment";
@@ -76,7 +76,7 @@ export function buildInventory(source: InventorySource): InventoryEntry[] {
 			kind: file.file.endsWith(".md") ? "note" : "attachment",
 			status: "orphan",
 			sha: file.sha,
-			isIndex: !!indexName && file.file.includes(indexName),
+			isIndex: isIndexFile(file.file, indexName ?? ""),
 		});
 	}
 

@@ -12,7 +12,7 @@ import type Enveloppe from "../main";
 export function createRegexFromText(toReplace: string, withflag?: string): RegExp {
 	let flags = withflag;
 	if (!withflag) {
-		const flagsRegex = toReplace.match(/\/([gimy]+)$/);
+		const flagsRegex = toReplace.match(/\/([gimsuy]+)$/);
 		flags = flagsRegex ? Array.from(new Set(flagsRegex[1].split(""))).join("") : "";
 	}
 	return new RegExp(toReplace.replace(/\/(.+)\/.*/, "$1"), flags);

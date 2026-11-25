@@ -63,7 +63,7 @@
 		"klona": "^2.0.6",
 		"mocha": "^12.0.3",
 		"obsidian": "^1.14.4",
-		"obsidian-typings": "^6.59.0",
+		"obsidian-typings": "^6.64.0",
 		"slugify": "^1.6.9",
 		"ts-dedent": "^2.3.0",
 		"tslib": "^2.9.1",

@@ -5,10 +5,9 @@ import {
 	AbstractInputSuggest,
 	Notice,
 	SecretComponent,
-	Setting,
+	type SettingDefinition,
+	type SettingDefinitionItem,
 	type SettingDefinitionPage,
-	SettingGroup,
-	SettingPage,
 	type TFile,
 } from "obsidian";
 import type Enveloppe from "src/main";
@@ -16,7 +15,7 @@ import {
 	checkRepositoryValidity,
 	verifyRateLimitAPI,
 } from "src/utils/data_validation_test";
-import type { RenderContext } from "./index";
+import { linkRegexList, type RenderContext, rawContent, stringListPage } from "./index";
 
 class SetClassSuggester extends AbstractInputSuggest<TFile> {
 	plugin: Enveloppe;
@@ -57,8 +56,12 @@ class SetClassSuggester extends AbstractInputSuggest<TFile> {
 
 function defaultRepository(ctx: RenderContext): Repository {
 	const github = ctx.settings.github;
+	// the length alone gives a key already used once another repository was deleted
+	let index = github.otherRepo.length;
+	while (github.otherRepo.some((repo) => repo.smartKey === `smartkey-${index}`)) index++;
+	const smartKey = `smartkey-${index}`;
 	return {
-		smartKey: `smartkey-${github.otherRepo.length}`,
+		smartKey,
 		user: github.user,
 		repo: github.repo,
 		branch: github.branch,
@@ -86,266 +89,294 @@ function defaultRepository(ctx: RenderContext): Repository {
 	};
 }
 
-/**
- * Single imperative page for the whole "manage other repositories" feature: add,
- * rename, delete, and — expanded inline rather than through navigation — a
- * repository's full settings form. An imperative page can't open another page (no
- * `addPage`/`setNavigable` exists for imperative code), so "view details" is done by
- * expanding a row in place and re-rendering this same page, instead of navigating
- * anywhere. Since every mutation (including delete/rename) only ever calls
- * `this.display()` on this one already-constructed instance, none of it depends on the
- * framework re-resolving a page by name against a rebuilt tree — the failure mode that
- * broke navigation when this used to be declarative.
- */
-class ManageRepoPage extends SettingPage {
-	private expanded: Repository | null = null;
+const pageIds = new WeakMap<Repository, string>();
+let lastId = 0;
 
-	constructor(private ctx: RenderContext) {
-		super();
+/** The smartKey can be renamed and the index changes on deletion: neither identifies a page */
+function pageId(repo: Repository): string {
+	let id = pageIds.get(repo);
+	if (!id) {
+		id = `repository-${lastId++}`;
+		pageIds.set(repo, id);
 	}
+	return id;
+}
 
-	display(): void {
-		const { ctx } = this;
-		const github = ctx.settings.github;
-		this.containerEl.empty();
-		this.containerEl.addClass("enveloppe");
+/** Return the error preventing the repository from being renamed */
+function renameError(ctx: RenderContext, repo: Repository, smartKey: string) {
+	if (smartKey.length === 0) return "settings.github.smartRepo.modals.empty";
+	if (smartKey === "default") return "settings.github.smartRepo.modals.default";
+	const duplicate = ctx.settings.github.otherRepo.some(
+		(other) => other !== repo && other.smartKey === smartKey
+	);
+	return duplicate ? "settings.github.smartRepo.modals.duplicate" : null;
+}
 
-		this.containerEl.createEl("p", {
-			text: i18next.t("settings.github.smartRepo.modals.frontmatterInfo"),
-		});
-		this.containerEl.createEl("p", {
-			text: i18next.t("settings.plugin.shareKey.otherRepo"),
-		});
+export async function renameRepository(
+	ctx: RenderContext,
+	repo: Repository,
+	smartKey: string
+) {
+	const frontmatters = ctx.plugin.repositoryFrontmatter;
+	// the frontmatter of the "set" file is stored by smartKey
+	if (repo.smartKey in frontmatters) {
+		frontmatters[smartKey] = frontmatters[repo.smartKey];
+		delete frontmatters[repo.smartKey];
+	}
+	repo.smartKey = smartKey;
+	ctx.update();
+	await ctx.plugin.saveSettings();
+	await ctx.plugin.reloadCommands();
+}
 
-		const group = new SettingGroup(this.containerEl)
-			.setHeading(i18next.t("settings.github.smartRepo.modals.newRepo"))
-			.addExtraButton((button) => {
-				button.setIcon("plus").onClick(() => {
-					void (async () => {
-						const repo = defaultRepository(ctx);
-						github.otherRepo.push(repo);
-						await ctx.plugin.saveSettings();
-						this.expanded = null;
-						this.display();
-					})();
-				});
-			});
+export async function deleteRepository(ctx: RenderContext, repo: Repository) {
+	const { otherRepo } = ctx.settings.github;
+	const index = otherRepo.indexOf(repo);
+	if (index === -1) return;
+	otherRepo.splice(index, 1);
+	delete ctx.plugin.repositoryFrontmatter[repo.smartKey];
+	// synchronous, so the closed page is always the one of the repository
+	ctx.update();
+	ctx.app.setting.closePage?.();
+	await ctx.plugin.saveSettings();
+	await ctx.plugin.reloadCommands();
+}
 
-		for (const repo of github.otherRepo) {
-			if (this.expanded && this.expanded !== repo) continue;
-			group.addSetting((setting) => {
-				let draft = repo.smartKey;
-				setting
-					.setNoInfo()
-					.addText((text) => {
-						text
-							.setPlaceholder(Placeholder.Smartkey)
-							.setValue(repo.smartKey)
-							.onChange((value) => {
-								draft = value.toLowerCase();
-							});
-						text.inputEl.addEventListener("blur", () => {
-							void (async () => {
-								if (draft === repo.smartKey) return;
-								const duplicate = github.otherRepo.some(
-									(r) => r !== repo && r.smartKey === draft
-								);
-								if (draft.length === 0 || draft === "default" || duplicate) {
-									new Notice(
-										i18next.t(
-											duplicate
-												? "settings.github.smartRepo.modals.duplicate"
-												: draft === "default"
-													? "settings.github.smartRepo.modals.default"
-													: "settings.github.smartRepo.modals.empty"
-										),
-										ctx.settings.plugin.noticeLength
-									);
-									text.setValue(repo.smartKey);
-									return;
-								}
-								repo.smartKey = draft;
-								await ctx.plugin.saveSettings();
-								this.display();
-							})();
-						});
-					})
-					.addExtraButton((button) => {
-						button
-							.setIcon(this.expanded === repo ? "chevron-down" : "chevron-right")
-							.setTooltip(i18next.t("common.edit", { things: repo.smartKey }))
-							.onClick(() => {
-								this.expanded = this.expanded === repo ? null : repo;
-								this.display();
-							});
-					})
-					.addExtraButton((button) => {
-						button
-							.setIcon("trash")
-							.setTooltip(i18next.t("common.delete", { things: repo.smartKey }))
-							.onClick(() => {
-								void (async () => {
-									github.otherRepo.splice(github.otherRepo.indexOf(repo), 1);
-									if (this.expanded === repo) this.expanded = null;
-									await ctx.plugin.saveSettings();
-									await ctx.plugin.reloadCommands();
-									this.display();
-								})();
-							});
-					});
-			});
+function repositoryItems(ctx: RenderContext, repo: Repository): SettingDefinitionItem[] {
+	const save = () => ctx.plugin.saveSettings();
+	const copyLinkEnabled = () => ctx.settings.plugin.copyLink.enable;
 
-			if (this.expanded === repo) {
-				const details = this.containerEl.createDiv({ cls: "enveloppe-repo-details" });
-				this.renderRepositoryDetails(details, repo);
-			}
+	// not searchable: every repository would repeat the main settings
+	const row = (
+		name: string,
+		desc: string | DocumentFragment | undefined,
+		options: Pick<SettingDefinition, "visible"> & {
+			render: NonNullable<SettingDefinition["render"]>;
 		}
-	}
+	): SettingDefinition => ({ name, desc, searchable: false, ...options });
 
-	private renderRepositoryDetails(containerEl: HTMLElement, repo: Repository): void {
-		const { ctx } = this;
-		const save = () => ctx.plugin.saveSettings();
-
-		new Setting(containerEl)
-			.setName(i18next.t("settings.github.apiType.title"))
-			.setDesc(i18next.t("settings.github.apiType.desc"))
-			.addDropdown((dropdown) => {
-				dropdown
-					.addOption(
-						GithubTiersVersion.Free,
-						i18next.t("settings.github.apiType.dropdown.free")
-					)
-					.addOption(
-						GithubTiersVersion.Entreprise,
-						i18next.t("settings.github.apiType.dropdown.enterprise")
-					)
-					.setValue(repo.api.tiersForApi)
-					.onChange(async (value) => {
-						repo.api.tiersForApi = value as GithubTiersVersion;
-						await save();
-						this.display();
-					});
-			});
-
-		if (repo.api.tiersForApi === GithubTiersVersion.Entreprise) {
-			new Setting(containerEl)
-				.setName(i18next.t("settings.github.apiType.hostname.title"))
-				.setDesc(i18next.t("settings.github.apiType.hostname.desc"))
-				.addText((text) =>
-					text
-						.setPlaceholder("https://github.mycompany.com")
-						.setValue(repo.api.hostname)
+	const text = (
+		name: string,
+		desc: string | undefined,
+		placeholder: string,
+		get: () => string,
+		set: (value: string) => void,
+		visible?: () => boolean
+	) =>
+		row(name, desc, {
+			visible,
+			render: (setting) => {
+				setting.addText((component) =>
+					component
+						.setPlaceholder(placeholder)
+						.setValue(get())
 						.onChange(async (value) => {
-							repo.api.hostname = value.trim();
+							set(value);
 							await save();
 						})
 				);
-		}
-
-		new Setting(containerEl)
-			.setName(i18next.t("settings.github.username.title"))
-			.setDesc(i18next.t("settings.github.username.desc"))
-			.addText((text) =>
-				text
-					.setPlaceholder(i18next.t("settings.github.username.title"))
-					.setValue(repo.user)
-					.onChange(async (value) => {
-						repo.user = value.trim();
-						await save();
-					})
-			);
-
-		new Setting(containerEl)
-			.setName(i18next.t("settings.github.repoName.title"))
-			.setDesc(i18next.t("settings.github.repoName.desc"))
-			.addText((text) =>
-				text
-					.setPlaceholder(i18next.t("settings.github.repoName.placeholder"))
-					.setValue(repo.repo)
-					.onChange(async (value) => {
-						repo.repo = value.trim();
-						await save();
-					})
-			);
-
-		new Setting(containerEl)
-			.setName(i18next.t("settings.github.branch.title"))
-			.setDesc(i18next.t("settings.github.branch.desc"))
-			.addText((text) =>
-				text
-					.setPlaceholder(Placeholder.Main)
-					.setValue(repo.branch)
-					.onChange(async (value) => {
-						repo.branch = value.trim();
-						await save();
-					})
-			);
-
-		const descGhToken = createFragment();
-		descGhToken.createSpan(undefined, (span) => {
-			span.innerText = i18next.t("settings.github.ghToken.desc");
-			span.createEl("a", undefined, (link) => {
-				link.innerText = `${i18next.t("common.here")}.`;
-				link.href = "https://github.com/settings/tokens/new?scopes=repo,workflow";
-			});
+			},
 		});
-		new Setting(containerEl)
-			.setName(i18next.t("common.ghToken"))
-			.setDesc(descGhToken)
-			.addComponent((el) =>
-				new SecretComponent(ctx.app, el)
-					.setValue(repo.tokenSecret ?? ctx.settings.github.tokenSecret)
-					.onChange(async (value) => {
-						// Cleared secret: drop the override so the repo falls back to the default token.
-						repo.tokenSecret = value ?? undefined;
+
+	const toggle = (
+		name: string,
+		desc: string | undefined,
+		get: () => boolean,
+		set: (value: boolean) => void,
+		visible?: () => boolean
+	) =>
+		row(name, desc, {
+			visible,
+			render: (setting) => {
+				setting.addToggle((component) =>
+					component.setValue(get()).onChange(async (value) => {
+						set(value);
 						await save();
+						ctx.refresh();
 					})
-			);
+				);
+			},
+		});
 
-		new Setting(containerEl)
-			.setName(i18next.t("settings.github.automaticallyMergePR"))
-			.addToggle((toggle) =>
-				toggle.setValue(repo.automaticallyMergePR).onChange(async (value) => {
-					repo.automaticallyMergePR = value;
-					await save();
-				})
-			);
+	const dropdown = (
+		name: string,
+		desc: string | undefined,
+		options: Record<string, string>,
+		get: () => string,
+		set: (value: string) => void,
+		visible?: () => boolean
+	) =>
+		row(name, desc, {
+			visible,
+			render: (setting) => {
+				setting.addDropdown((component) =>
+					component
+						.addOptions(options)
+						.setValue(get())
+						.onChange(async (value) => {
+							set(value);
+							await save();
+							ctx.refresh();
+						})
+				);
+			},
+		});
 
-		new Setting(containerEl).setClass("no-display").addButton((button) =>
-			button
-				.setButtonText(i18next.t("settings.github.testConnection"))
-				.setClass("connect-button")
-				.onClick(async () => {
-					const octokit = await ctx.plugin.reloadOctokit(repo.smartKey);
-					repo.verifiedRepo = await checkRepositoryValidity(octokit, repo, null);
-					ctx.settings.github.rateLimit = await verifyRateLimitAPI(
-						octokit.octokit,
-						ctx.plugin
-					);
-					await save();
-				})
-		);
+	const ghTokenDesc = createFragment();
+	ghTokenDesc.createSpan(undefined, (span) => {
+		span.innerText = i18next.t("settings.github.ghToken.desc");
+		span.createEl("a", undefined, (link) => {
+			link.innerText = `${i18next.t("common.here")}.`;
+			link.href = "https://github.com/settings/tokens/new?scopes=repo,workflow";
+		});
+	});
 
-		new Setting(containerEl)
-			.setName(i18next.t("settings.github.smartRepo.modals.shortcuts.title"))
-			.setDesc(i18next.t("settings.github.smartRepo.modals.shortcuts.desc"))
-			.addToggle((toggle) =>
-				toggle.setValue(repo.createShortcuts).onChange(async (value) => {
-					repo.createShortcuts = value;
-					await save();
-				})
-			);
+	const excludedFileName = () =>
+		repo.shareAll?.excludedFileName ??
+		ctx.settings.plugin.shareAll?.excludedFileName ??
+		"DRAFT";
 
-		new Setting(containerEl).setName("GitHub workflow").setHeading();
-
-		new Setting(containerEl)
-			.setName(i18next.t("settings.githubWorkflow.prRequest.title"))
-			.setDesc(i18next.t("settings.githubWorkflow.prRequest.desc"))
-			.addText((text) =>
-				text
-					.setPlaceholder(Placeholder.Merge)
-					.setValue(repo.workflow.commitMessage)
-					.onChange(async (value) => {
+	return [
+		{
+			type: "group",
+			cls: "enveloppe",
+			items: [
+				row("Smartkey", undefined, {
+					render: (setting) => {
+						setting.addText((component) => {
+							let draft = repo.smartKey;
+							component
+								.setPlaceholder(Placeholder.Smartkey)
+								.setValue(repo.smartKey)
+								.onChange((value) => {
+									draft = value.trim().toLowerCase();
+								});
+							// on blur: each letter typed would rename the commands
+							component.inputEl.addEventListener("blur", () => {
+								if (draft === repo.smartKey) return;
+								const error = renameError(ctx, repo, draft);
+								if (error) {
+									new Notice(i18next.t(error), ctx.settings.plugin.noticeLength);
+									draft = repo.smartKey;
+									component.setValue(repo.smartKey);
+									return;
+								}
+								void renameRepository(ctx, repo, draft);
+							});
+						});
+					},
+				}),
+				dropdown(
+					i18next.t("settings.github.apiType.title"),
+					i18next.t("settings.github.apiType.desc"),
+					{
+						[GithubTiersVersion.Free]: i18next.t("settings.github.apiType.dropdown.free"),
+						[GithubTiersVersion.Entreprise]: i18next.t(
+							"settings.github.apiType.dropdown.enterprise"
+						),
+					},
+					() => repo.api.tiersForApi,
+					(value) => {
+						repo.api.tiersForApi = value as GithubTiersVersion;
+					}
+				),
+				text(
+					i18next.t("settings.github.apiType.hostname.title"),
+					i18next.t("settings.github.apiType.hostname.desc"),
+					"https://github.mycompany.com",
+					() => repo.api.hostname,
+					(value) => {
+						repo.api.hostname = value.trim();
+					},
+					() => repo.api.tiersForApi === GithubTiersVersion.Entreprise
+				),
+				text(
+					i18next.t("settings.github.username.title"),
+					i18next.t("settings.github.username.desc"),
+					i18next.t("settings.github.username.title"),
+					() => repo.user,
+					(value) => {
+						repo.user = value.trim();
+					}
+				),
+				text(
+					i18next.t("settings.github.repoName.title"),
+					i18next.t("settings.github.repoName.desc"),
+					i18next.t("settings.github.repoName.placeholder"),
+					() => repo.repo,
+					(value) => {
+						repo.repo = value.trim();
+					}
+				),
+				text(
+					i18next.t("settings.github.branch.title"),
+					i18next.t("settings.github.branch.desc"),
+					Placeholder.Main,
+					() => repo.branch,
+					(value) => {
+						repo.branch = value.trim();
+					}
+				),
+				row(i18next.t("common.ghToken"), ghTokenDesc, {
+					render: (setting) => {
+						setting.addComponent((el) =>
+							new SecretComponent(ctx.app, el)
+								.setValue(repo.tokenSecret ?? ctx.settings.github.tokenSecret)
+								.onChange(async (value) => {
+									// Cleared secret: drop the override so the repo falls back to the default token.
+									repo.tokenSecret = value ?? undefined;
+									await save();
+								})
+						);
+					},
+				}),
+				toggle(
+					i18next.t("settings.github.automaticallyMergePR"),
+					undefined,
+					() => repo.automaticallyMergePR,
+					(value) => {
+						repo.automaticallyMergePR = value;
+					}
+				),
+				row("", undefined, {
+					render: (setting) => {
+						setting.setClass("no-display").addButton((button) =>
+							button
+								.setButtonText(i18next.t("settings.github.testConnection"))
+								.setClass("connect-button")
+								.onClick(async () => {
+									const octokit = await ctx.plugin.reloadOctokit(repo.smartKey);
+									repo.verifiedRepo = await checkRepositoryValidity(octokit, repo, null);
+									ctx.settings.github.rateLimit = await verifyRateLimitAPI(
+										octokit.octokit,
+										ctx.plugin
+									);
+									await save();
+								})
+						);
+					},
+				}),
+				toggle(
+					i18next.t("settings.github.smartRepo.modals.shortcuts.title"),
+					i18next.t("settings.github.smartRepo.modals.shortcuts.desc"),
+					() => repo.createShortcuts,
+					(value) => {
+						repo.createShortcuts = value;
+					}
+				),
+			],
+		},
+		{
+			type: "group",
+			cls: "enveloppe",
+			heading: "GitHub workflow",
+			items: [
+				text(
+					i18next.t("settings.githubWorkflow.prRequest.title"),
+					i18next.t("settings.githubWorkflow.prRequest.desc"),
+					Placeholder.Merge,
+					() => repo.workflow.commitMessage,
+					(value) => {
 						if (value.trim().length === 0) {
 							value = Placeholder.Merge;
 							new Notice(
@@ -354,231 +385,183 @@ class ManageRepoPage extends SettingPage {
 							);
 						}
 						repo.workflow.commitMessage = value;
-						await save();
-					})
-			);
-
-		new Setting(containerEl)
-			.setName(i18next.t("settings.githubWorkflow.githubAction.title"))
-			.setDesc(i18next.t("settings.githubWorkflow.githubAction.desc"))
-			.addText((text) => {
-				text
-					.setPlaceholder(Placeholder.Ci)
-					.setValue(repo.workflow.name)
-					.onChange(async (value) => {
-						if (value.length > 0) {
-							value = value.trim();
+					}
+				),
+				text(
+					i18next.t("settings.githubWorkflow.githubAction.title"),
+					i18next.t("settings.githubWorkflow.githubAction.desc"),
+					Placeholder.Ci,
+					() => repo.workflow.name,
+					(value) => {
+						let name = value;
+						if (name.length > 0) {
+							name = name.trim();
 							const yamlEndings = [".yml", ".yaml"];
-							if (!yamlEndings.some((ending) => value.endsWith(ending))) {
-								value += yamlEndings[0];
-							}
+							if (!yamlEndings.some((ending) => name.endsWith(ending)))
+								name += yamlEndings[0];
 						}
-						repo.workflow.name = value;
-						await save();
-					});
-			});
-
-		new Setting(containerEl)
-			.setName(i18next.t("settings.github.smartRepo.modals.otherConfig"))
-			.setHeading();
-
-		new Setting(containerEl)
-			.setName(i18next.t("settings.plugin.setImport.title"))
-			.setDesc(i18next.t("settings.plugin.setImport.desc"))
-			.addSearch((search) => {
-				search.setValue(repo.set ?? "").setPlaceholder("path/to/file.md");
-				new SetClassSuggester(search.inputEl, ctx.plugin, (result) => {
-					repo.set = result.path;
-					ctx.plugin.repositoryFrontmatter[repo.smartKey] =
-						ctx.plugin.app.metadataCache.getFileCache(result)?.frontmatter;
-					void save();
-				});
-			});
-
-		new Setting(containerEl)
-			.setName(i18next.t("settings.plugin.shareKey.all.title"))
-			.setDesc(i18next.t("settings.plugin.shareKey.all.desc"))
-			.addToggle((toggle) =>
-				toggle.setValue(repo.shareAll?.enable ?? false).onChange(async (value) => {
-					repo.shareAll = {
-						enable: value,
-						excludedFileName:
-							repo.shareAll?.excludedFileName ??
-							ctx.settings.plugin.shareAll?.excludedFileName ??
-							"DRAFT",
-					};
-					await save();
-					this.display();
-				})
-			);
-
-		if (!repo.shareAll?.enable) {
-			new Setting(containerEl)
-				.setName(i18next.t("settings.plugin.shareKey.title"))
-				.setDesc(i18next.t("settings.plugin.shareKey.desc"))
-				.addText((text) =>
-					text
-						.setPlaceholder(Placeholder.Share)
-						.setValue(repo.shareKey)
-						.onChange(async (value) => {
-							repo.shareKey = value.trim();
-							await save();
-						})
-				);
-		} else {
-			new Setting(containerEl)
-				.setName(i18next.t("settings.plugin.shareKey.excludedFileName.title"))
-				.addText((text) =>
-					text
-						.setPlaceholder("DRAFT")
-						.setValue(
-							repo.shareAll?.excludedFileName ??
-								ctx.settings.plugin.shareAll?.excludedFileName ??
-								"DRAFT"
-						)
-						.onChange(async (value) => {
-							repo.shareAll!.excludedFileName = value.trim();
-							await save();
-						})
-				);
-		}
-
-		if (ctx.settings.plugin.copyLink.enable) {
-			new Setting(containerEl)
-				.setName(i18next.t("settings.plugin.copyLink.baselink.title"))
-				.setDesc(i18next.t("settings.plugin.copyLink.baselink.desc"))
-				.addText((text) =>
-					text
-						.setPlaceholder(ctx.settings.plugin.copyLink.links)
-						.setValue(repo.copyLink.links)
-						.onChange(async (value) => {
-							repo.copyLink.links = value.trim();
-							await save();
-						})
-				);
-
-			const removePartGroup = new SettingGroup(containerEl)
-				.setHeading(i18next.t("settings.plugin.copyLink.linkPathRemover.title"))
-				.addExtraButton((button) => {
-					button.setIcon("plus").onClick(() => {
-						void (async () => {
-							repo.copyLink.removePart.push("");
-							await save();
-							this.display();
-						})();
-					});
-				});
-			for (let index = 0; index < repo.copyLink.removePart.length; index++) {
-				removePartGroup.addSetting((setting) => {
-					setting
-						.setClass("no-display")
-						.addText((text) => {
-							text
-								.setPlaceholder(Placeholder.Docs)
-								.setValue(repo.copyLink.removePart[index])
-								.onChange(async (value) => {
-									repo.copyLink.removePart[index] = value;
-									await save();
+						repo.workflow.name = name;
+					}
+				),
+			],
+		},
+		{
+			type: "group",
+			cls: "enveloppe",
+			heading: i18next.t("settings.github.smartRepo.modals.otherConfig"),
+			items: [
+				row(
+					i18next.t("settings.plugin.setImport.title"),
+					i18next.t("settings.plugin.setImport.desc"),
+					{
+						render: (setting) => {
+							setting.addSearch((search) => {
+								search.setValue(repo.set ?? "").setPlaceholder("path/to/file.md");
+								new SetClassSuggester(search.inputEl, ctx.plugin, (result) => {
+									repo.set = result.path;
+									ctx.plugin.repositoryFrontmatter[repo.smartKey] =
+										ctx.plugin.app.metadataCache.getFileCache(result)?.frontmatter;
+									void save();
 								});
-						})
-						.addExtraButton((button) => {
-							button.setIcon("trash").onClick(() => {
-								void (async () => {
-									repo.copyLink.removePart.splice(index, 1);
-									await save();
-									this.display();
-								})();
 							});
-						});
-				});
-			}
-
-			new Setting(containerEl)
-				.setName(i18next.t("settings.plugin.copyLink.toUri.title"))
-				.setDesc(i18next.t("settings.plugin.copyLink.toUri.desc"))
-				.addToggle((toggle) =>
-					toggle.setValue(repo.copyLink.transform.toUri).onChange(async (value) => {
+						},
+					}
+				),
+				toggle(
+					i18next.t("settings.plugin.shareKey.all.title"),
+					i18next.t("settings.plugin.shareKey.all.desc"),
+					() => repo.shareAll?.enable ?? false,
+					(value) => {
+						repo.shareAll = { enable: value, excludedFileName: excludedFileName() };
+					}
+				),
+				text(
+					i18next.t("settings.plugin.shareKey.title"),
+					i18next.t("settings.plugin.shareKey.desc"),
+					Placeholder.Share,
+					() => repo.shareKey,
+					(value) => {
+						repo.shareKey = value.trim();
+					},
+					() => !repo.shareAll?.enable
+				),
+				text(
+					i18next.t("settings.plugin.shareKey.excludedFileName.title"),
+					undefined,
+					"DRAFT",
+					excludedFileName,
+					(value) => {
+						repo.shareAll = { enable: true, excludedFileName: value.trim() };
+					},
+					() => !!repo.shareAll?.enable
+				),
+				text(
+					i18next.t("settings.plugin.copyLink.baselink.title"),
+					i18next.t("settings.plugin.copyLink.baselink.desc"),
+					ctx.settings.plugin.copyLink.links,
+					() => repo.copyLink.links,
+					(value) => {
+						repo.copyLink.links = value.trim();
+					},
+					copyLinkEnabled
+				),
+				stringListPage(ctx, {
+					name: i18next.t("settings.plugin.copyLink.linkPathRemover.title"),
+					desc: i18next.t("settings.plugin.copyLink.linkPathRemover.desc"),
+					addItemName: i18next.t("common.add", { things: "part" }),
+					placeholder: Placeholder.Docs,
+					values: repo.copyLink.removePart,
+					save,
+					visible: copyLinkEnabled,
+				}),
+				toggle(
+					i18next.t("settings.plugin.copyLink.toUri.title"),
+					i18next.t("settings.plugin.copyLink.toUri.desc"),
+					() => repo.copyLink.transform.toUri,
+					(value) => {
 						repo.copyLink.transform.toUri = value;
-						await save();
-					})
-				);
+					},
+					copyLinkEnabled
+				),
+				dropdown(
+					i18next.t("settings.conversion.links.slugify.title"),
+					undefined,
+					{
+						disable: i18next.t("settings.conversion.links.slugify.disable"),
+						strict: i18next.t("settings.conversion.links.slugify.strict"),
+						lower: i18next.t("settings.conversion.links.slugify.lower"),
+					},
+					() => repo.copyLink.transform.slugify,
+					(value) => {
+						repo.copyLink.transform.slugify = value as "disable" | "strict" | "lower";
+					},
+					copyLinkEnabled
+				),
+			],
+		},
+		linkRegexList(ctx, repo.copyLink.transform.applyRegex, copyLinkEnabled),
+		{
+			type: "group",
+			cls: "enveloppe",
+			items: [
+				// Obsidian gives no delete button to the pages of a list
+				row("", undefined, {
+					render: (setting) => {
+						setting.setClass("no-display").addButton((button) =>
+							button
+								.setButtonText(i18next.t("common.delete", { things: repo.smartKey }))
+								.setDestructive()
+								.setClass("max-width")
+								.onClick(() => void deleteRepository(ctx, repo))
+						);
+					},
+				}),
+			],
+		},
+	];
+}
 
-			new Setting(containerEl)
-				.setName(i18next.t("settings.conversion.links.slugify.title"))
-				.addDropdown((dropdown) => {
-					dropdown
-						.addOptions({
-							disable: i18next.t("settings.conversion.links.slugify.disable"),
-							strict: i18next.t("settings.conversion.links.slugify.strict"),
-							lower: i18next.t("settings.conversion.links.slugify.lower"),
-						})
-						.setValue(repo.copyLink.transform.slugify)
-						.onChange(async (value) => {
-							repo.copyLink.transform.slugify = value as "disable" | "strict" | "lower";
-							await save();
-						});
-				});
-
-			new SettingGroup(containerEl)
-				.setHeading(i18next.t("settings.plugin.copyLink.applyRegex.title"))
-				.addExtraButton((button) => {
-					button.setIcon("plus").onClick(() => {
-						void (async () => {
-							repo.copyLink.transform.applyRegex.push({ regex: "", replacement: "" });
-							await save();
-							this.display();
-						})();
-					});
-				});
-
-			if (repo.copyLink.transform.applyRegex.length === 0) {
-				containerEl.createEl("p", {
-					text: i18next.t("settings.plugin.copyLink.applyRegex.desc"),
-					cls: "setting-item-description",
-				});
-			}
-
-			for (const apply of repo.copyLink.transform.applyRegex) {
-				new Setting(containerEl)
-					.setClass("no-display")
-					.addText((text) => {
-						text
-							.setPlaceholder(Placeholder.Docs)
-							.setValue(apply.regex)
-							.onChange(async (value) => {
-								apply.regex = value;
-								await save();
-							});
-					})
-					.addText((text) => {
-						text
-							.setPlaceholder(i18next.t("regex.replace"))
-							.setValue(apply.replacement)
-							.onChange(async (value) => {
-								apply.replacement = value;
-								await save();
-							});
-					})
-					.addExtraButton((button) => {
-						button.setIcon("trash").onClick(() => {
-							void (async () => {
-								repo.copyLink.transform.applyRegex =
-									repo.copyLink.transform.applyRegex.filter((item) => item !== apply);
-								await save();
-								this.display();
-							})();
-						});
-					});
-			}
-		}
-	}
+function buildRepositoryPage(
+	ctx: RenderContext,
+	repo: Repository
+): SettingDefinitionPage {
+	return {
+		type: "page",
+		id: pageId(repo),
+		name: repo.smartKey,
+		displayValue: () => `${repo.user}/${repo.repo}`,
+		items: repositoryItems(ctx, repo),
+	};
 }
 
 export function buildManageRepoPage(ctx: RenderContext): SettingDefinitionPage {
+	const github = ctx.settings.github;
 	return {
 		type: "page",
+		id: "manage-repositories",
 		name: i18next.t("settings.github.smartRepo.button"),
 		desc: i18next.t("settings.github.smartRepo.modals.desc"),
-		page: () => new ManageRepoPage(ctx),
+		items: [
+			rawContent((el) => {
+				el.createEl("p", {
+					text: i18next.t("settings.github.smartRepo.modals.frontmatterInfo"),
+				});
+				el.createEl("p", { text: i18next.t("settings.plugin.shareKey.otherRepo") });
+			}),
+			{
+				type: "list",
+				cls: "enveloppe",
+				heading: i18next.t("settings.github.smartRepo.modals.title"),
+				addItem: {
+					name: i18next.t("settings.github.smartRepo.modals.newRepo"),
+					action: () => {
+						github.otherRepo.push(defaultRepository(ctx));
+						ctx.update();
+						void ctx.plugin.saveSettings();
+					},
+				},
+				items: github.otherRepo.map((repo) => buildRepositoryPage(ctx, repo)),
+			},
+		],
 	};
 }

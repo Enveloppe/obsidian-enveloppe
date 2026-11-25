@@ -8,6 +8,7 @@ import i18next from "i18next";
 import { normalizePath } from "obsidian";
 import type Enveloppe from "src/main";
 import { createTokenPath } from "src/utils";
+import { splitLegacyEntry } from "src/utils/exclusion";
 
 /**
  * Fields that used to exist in settings/repository objects in older plugin
@@ -84,7 +85,10 @@ export async function migrateSettings(
 	plugin: Enveloppe,
 	imported?: boolean
 ) {
-	if (plugin.settings.plugin.migrated && !imported) return;
+	if (plugin.settings.plugin.migrated && !imported) {
+		await migrateExcluded(plugin);
+		return;
+	}
 
 	await migrateOldSettings(plugin, old);
 	await migrateReplaceTitle(plugin);
@@ -93,7 +97,18 @@ export async function migrateSettings(
 	await migrateWorFlow(plugin);
 	await migrateToSecret(plugin);
 	await migrateOtherRepository(plugin);
+	await migrateExcluded(plugin);
 	plugin.settings.plugin.migrated = true;
+	await plugin.saveSettings();
+}
+
+/** The exclusion list was a comma-separated text, sometimes kept in a single entry */
+export async function migrateExcluded(plugin: Enveloppe) {
+	const autoclean = plugin.settings.upload?.autoclean;
+	if (!autoclean || autoclean.excludedSplit) return;
+	const excluded = autoclean.excluded as string[] | string | undefined;
+	autoclean.excluded = [excluded ?? []].flat().flatMap(splitLegacyEntry);
+	autoclean.excludedSplit = true;
 	await plugin.saveSettings();
 }
 
@@ -382,6 +397,7 @@ async function migrateOldSettings(plugin: Enveloppe, old: OldSettings) {
 						? [old.autoCleanUpExcluded]
 						: old.autoCleanUpExcluded,
 				includeAttachments: old.autoCleanUp,
+				keepUnshared: true,
 			},
 			folderNote: {
 				enable: old.folderNote,

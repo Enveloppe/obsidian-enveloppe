@@ -4,7 +4,8 @@ import i18next from "i18next";
 import type { SettingDefinitionItem } from "obsidian";
 import { AutoCleanPopup } from "src/settings/modals/popup";
 import { autoCleanCondition } from "src/settings/style";
-import { type RenderContext, stringListItems } from "./index";
+import { isValidExclusion } from "src/utils/exclusion";
+import { type RenderContext, stringListPage } from "./index";
 import { buildRegexFilePathPage } from "./pages";
 
 export const buildUploadItems = (ctx: RenderContext): SettingDefinitionItem[] => {
@@ -182,26 +183,36 @@ export const buildUploadItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 				});
 			},
 		},
-		{
+		stringListPage(ctx, {
 			name: i18next.t("settings.githubWorkflow.excludedFiles.title"),
 			desc: i18next.t("settings.githubWorkflow.excludedFiles.desc"),
+			addItemName: i18next.t("common.add", { things: "folder" }),
+			placeholder: Placeholder.AutoCleanFolder,
+			values: uploadSettings.autoclean.excluded,
+			validate: isValidExclusion,
+			save: () => ctx.plugin.saveSettings(),
 			visible: () => uploadSettings.autoclean.enable,
-		},
-		{
-			...stringListItems(ctx, {
-				heading: i18next.t("settings.githubWorkflow.excludedFiles.title"),
-				addItemName: i18next.t("common.add", { things: "folder" }),
-				placeholder: Placeholder.AutoCleanFolder,
-				values: uploadSettings.autoclean.excluded,
-				save: () => ctx.plugin.saveSettings(),
-			}),
-			visible: () => uploadSettings.autoclean.enable,
-		},
+		}),
 		{
 			name: i18next.t("settings.githubWorkflow.includeAttachments.title"),
 			desc: i18next.t("settings.githubWorkflow.includeAttachments.desc"),
 			visible: () => uploadSettings.autoclean.enable,
 			control: { type: "toggle", key: "upload.autoclean.includeAttachments" },
+		},
+		{
+			name: i18next.t("settings.githubWorkflow.keepUnshared.title", {
+				defaultValue: "Keep unshared index files",
+			}),
+			desc: i18next.t("settings.githubWorkflow.keepUnshared.desc", {
+				defaultValue:
+					'Keep the index files (folder notes) of the repository whose share key is missing or false. When disabled, they are deleted if they no longer exist in the vault, unless they have "index: true" or "delete: false" in their frontmatter.',
+			}),
+			visible: () => uploadSettings.autoclean.enable,
+			control: {
+				type: "toggle",
+				key: "upload.autoclean.keepUnshared",
+				defaultValue: true,
+			},
 		},
 	];
 };

@@ -1,8 +1,8 @@
 import { FolderSettings, GithubTiersVersion } from "src/interfaces/enum";
 import type { EnveloppeSettings } from "src/interfaces/main";
 
-/** Find a regex encapsuled in // */
-export const FIND_REGEX = /^\/(.*)\/[igmsuy]*$/;
+/** Find a regex encapsuled in //, with its flags */
+export const FIND_REGEX = /^\/(.*)\/([igmsuy]*)$/;
 
 export const DOCUMENTATION_LINK = "https://enveloppe.ovh/";
 /**
@@ -48,6 +48,7 @@ export const DEFAULT_SETTINGS: Partial<EnveloppeSettings> = {
 		replacePath: [],
 		autoclean: {
 			includeAttachments: true,
+			keepUnshared: true,
 			enable: false,
 			excluded: [],
 		},

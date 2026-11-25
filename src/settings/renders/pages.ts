@@ -107,6 +107,7 @@ export function buildRegexFilePathPage(ctx: RenderContext): SettingDefinitionPag
 
 	return {
 		type: "page",
+		id: "regex-file-path",
 		name:
 			upload.behavior === FolderSettings.Fixed
 				? i18next.t("settings.upload.regexFilePathTitle.title.titleOnly")

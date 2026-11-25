@@ -43,6 +43,6 @@ export enum Placeholder {
 	Banner = "banner",
 	ExcludedFolder = "_assets, Archive, /^_(.*)/gi",
 	FieldName = "field_name",
-	AutoCleanFolder = "docs/assets/js, docs/assets/logo, /\\.js$/",
+	AutoCleanFolder = "docs/assets/js",
 	Merge = "[PUBLISHER] MERGE",
 }

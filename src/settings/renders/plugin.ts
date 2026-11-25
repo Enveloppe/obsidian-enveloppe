@@ -2,7 +2,7 @@ import { Placeholder } from "@interfaces/enum";
 import i18next from "i18next";
 import type { SettingDefinitionItem } from "obsidian";
 import { t as managerT } from "src/manager/i18n";
-import { type RenderContext, stringListPage, widenInput } from "./index";
+import { linkRegexList, type RenderContext, stringListPage } from "./index";
 
 export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] => {
 	const pluginSettings = ctx.settings.plugin;
@@ -151,69 +151,11 @@ export const buildPluginItems = (ctx: RenderContext): SettingDefinitionItem[] =>
 				},
 			],
 		},
-		{
-			type: "list",
-			cls: "enveloppe",
-			heading: i18next.t("settings.plugin.copyLink.applyRegex.title"),
-			visible: () => pluginSettings.copyLink.enable,
-			emptyState: i18next.t("settings.plugin.copyLink.applyRegex.desc"),
-			addItem: {
-				name: i18next.t("settings.plugin.copyLink.applyRegex.title"),
-				action: () => {
-					void (async () => {
-						pluginSettings.copyLink.transform.applyRegex.push({
-							regex: "",
-							replacement: "",
-						});
-						await ctx.plugin.saveSettings();
-						ctx.update();
-					})();
-				},
-			},
-			onReorder: (oldIndex, newIndex) => {
-				void (async () => {
-					const applyRegex = pluginSettings.copyLink.transform.applyRegex;
-					const [moved] = applyRegex.splice(oldIndex, 1);
-					applyRegex.splice(newIndex, 0, moved);
-					await ctx.plugin.saveSettings();
-					// Required despite the docs saying otherwise — see `stringListItems`.
-					ctx.update();
-				})();
-			},
-			onDelete: (index) => {
-				void (async () => {
-					pluginSettings.copyLink.transform.applyRegex.splice(index, 1);
-					await ctx.plugin.saveSettings();
-					ctx.update();
-				})();
-			},
-			items: pluginSettings.copyLink.transform.applyRegex.map((apply) => ({
-				name: "",
-				searchable: false,
-				render: (setting) => {
-					setting
-						.setClass("no-display")
-						.addText((text) => {
-							widenInput(text)
-								.setPlaceholder(i18next.t("common.regex"))
-								.setValue(apply.regex)
-								.onChange(async (value) => {
-									apply.regex = value;
-									await ctx.plugin.saveSettings();
-								});
-						})
-						.addText((text) => {
-							widenInput(text)
-								.setPlaceholder(i18next.t("regex.replace"))
-								.setValue(apply.replacement)
-								.onChange(async (value) => {
-									apply.replacement = value;
-									await ctx.plugin.saveSettings();
-								});
-						});
-				},
-			})),
-		},
+		linkRegexList(
+			ctx,
+			pluginSettings.copyLink.transform.applyRegex,
+			() => pluginSettings.copyLink.enable
+		),
 		{
 			type: "group",
 			cls: "enveloppe",

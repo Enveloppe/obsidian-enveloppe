@@ -1,5 +1,6 @@
-import { stripAttachmentPathPrefix } from "src/conversion/file_path";
+import { getImagePath, stripAttachmentPathPrefix } from "src/conversion/file_path";
 import { describe, expect, it } from "vitest";
+import { createFile, createPlugin, createProperties } from "../fixtures";
 
 describe("stripAttachmentPathPrefix", () => {
 	it.each([
@@ -24,5 +25,22 @@ describe("stripAttachmentPathPrefix", () => {
 		["file directly under prefix", "public/resume.pdf", "public", "/resume.pdf"],
 	])("%s", (_name, linkPath, prefix, expected) => {
 		expect(stripAttachmentPathPrefix(linkPath, prefix)).toBe(expected);
+	});
+});
+
+describe("getImagePath", () => {
+	it.each([
+		["/PHOTO/", "photo-x.png"],
+		["/PHOTO/i", "x-PHOTO.png"],
+		["/PHOTO/gi", "x-x.png"],
+	])("honors the flags of the override %s", (path, expected) => {
+		const plugin = createPlugin({
+			embed: {
+				overrideAttachments: [{ path, destination: "x", forcePush: false }],
+				folder: "",
+			} as never,
+		});
+		const file = createFile({ path: "photo-PHOTO.png" });
+		expect(getImagePath(file as never, plugin, null, createProperties())).toBe(expected);
 	});
 });
