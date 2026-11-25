@@ -1,3 +1,8 @@
+## [8.0.0-7](https://github.com/Enveloppe/obsidian-enveloppe/compare/8.0.0-6...8.0.0-7) (2026-11-25)
+### Features
+
+* implement version bumping and exclusion utilities ([92cbf49](https://github.com/Enveloppe/obsidian-enveloppe/commit/92cbf49f3b7f31d6b274738a635820637ad8467d))
+
 ## [8.0.0-6](https://github.com/Enveloppe/obsidian-enveloppe/compare/8.0.0-5...8.0.0-6) (2026-11-25)
 ### Features
 
